@@ -175,7 +175,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $categories[] = $cat1->id;
 
             $selectedGames = $this->gamelist($categories, false);
-            $otherGames = $this->gamelist($categories, true);
+
+            $cat1 = \VanguardLTE\Category::whereNotIn('href', [$category, 'hot', 'wazdan','vision','bingo','card','roulette','keno','new']);
+            $categories = $cat1->where('shop_id', $shop_id)->pluck('id')->toArray();
+
+            $otherGames = $this->gamelist($categories, false);
             return response()->json(['error' => false, 'games' => $selectedGames, 'others' => $otherGames]);
         }
 
