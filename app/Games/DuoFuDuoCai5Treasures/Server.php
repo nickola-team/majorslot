@@ -30,8 +30,8 @@ namespace VanguardLTE\Games\DuoFuDuoCai5Treasures
             \DB::beginTransaction();
             $userId = \Auth::id();// changed by game developer
             
-            $serverAddress = '172.16.73.131';
-            $serverPort = '9556';
+            $serverAddress = '42.127.251.83';
+            $serverPort = '8555';
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
             $slotSettings = new SlotSettings($game, $userId, $credits);

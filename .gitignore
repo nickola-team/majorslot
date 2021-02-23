@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/back
 /public/storage
 /storage/*.key
 storage/
@@ -26,3 +27,5 @@ public/socket_live_config.json
 resources/lang/ko.zip
 public/frontend/Major.zip
 app/Games/Games.zip
+/PTWebSocket
+/PTWebSocket/node_modules

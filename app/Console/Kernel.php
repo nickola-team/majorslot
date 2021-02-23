@@ -145,7 +145,7 @@ namespace VanguardLTE\Console
                             $newJackpot->save();
                         }
                     }
-                    /*
+
                     $jackpots_df = \VanguardLTE\JPGDuofu::where('shop_id', 0)->get();
                     if( count($jackpots_df) ) 
                     {
@@ -155,7 +155,7 @@ namespace VanguardLTE\Console
                             $newJackpot->shop_id = $shop->id;
                             $newJackpot->save();
                         }
-                    }*/
+                    }
 
                     $bank = \VanguardLTE\GameBank::where('shop_id', 0)->first();
                     if( $bank ) 

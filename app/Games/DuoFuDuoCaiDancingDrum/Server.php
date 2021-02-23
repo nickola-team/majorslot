@@ -43,7 +43,7 @@ namespace VanguardLTE\Games\DuoFuDuoCaiDancingDrum
                 if($gameData[0] == 200037){
                     // AccountLoginSecretErrorRespond, AccountLoginRespond
                     $response = $this->encryptMessage('{"err":0,"res":3,"vals":[0,200038,1,1,2,2,3,{"0":0,"1":"'. $user->username .'","99":""}],"msg":null}');
-                    $response = $response . '------' . $this->encryptMessage('{"err":0,"res":3,"vals":[0,1,1,1,2,2,3,{"0":18120,"1":0,"2":"localhost","3":9556,"4":true}],"msg":null}');
+                    $response = $response . '------' . $this->encryptMessage('{"err":0,"res":3,"vals":[0,1,1,1,2,2,3,{"0":18120,"1":0,"2":"42.127.251.83","3":8555,"4":true}],"msg":null}');
                 }else if($gameData[0] == 2){
                     // LobbyLoginRespond
                     $response = '{"err":0,"res":3,"vals":[0,3,1,8,2,3,3,{"0":13443,"1":0,"2":"","3":0,"4":' . ($slotSettings->GetBalance() * 100) . ',"5":-1,"6":0,"9":0,"7":0,"8":0,"11":{},"10":0,"12":' . floor(microtime(true) * 1000) .',"13":false,"14":48,"15":3,"16":' . floor(microtime(true) * 1000) .',"17":0,"18":0,"19":"KRW","20":2}],"msg":null}';
