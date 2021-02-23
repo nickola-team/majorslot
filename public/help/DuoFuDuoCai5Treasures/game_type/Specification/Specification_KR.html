@@ -1,0 +1,366 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Instructions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="robots" content="all" />
+
+    <!--遊戲搜尋書簽-->
+    <meta name="description" content="Instructions" />
+    <meta name="keywords" content="WaterMargin，博弈，Instructions，遊戲說明" />
+    <meta property="og:title" content="Instructions" />
+    <meta property="og:description" content="Instructions" />
+    <!--遊戲搜尋書簽-->
+
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="Instructions" />
+    <meta property="fb:app_id" content="zengshen" />
+    <meta name="Copyright" content="">
+    <link rel="shortcut icon" href="img/16_Icon.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=640,user-scalable=1">
+
+    <link rel="stylesheet" type="text/css" href="../css/Instructions.css" />
+    <link rel="stylesheet" type="text/css" href="../css/magnific-popup.css" />
+
+
+    <!--    匯入jQuery    -->
+    <script src="../JS/jquery-2.0.0.min.js"></script>
+    <!-- <script src="../JS/jquery.mousewheel.min.../JS"></script>
+    <script type="text/javascript" src="../JS/jquery.magnific-popup.min.../JS"></script>
+    <script type="text/javascript" src="../JS/popup.../JS"></script>-->
+
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>게임규칙</h1>
+        <hr class="MainTarget_01">
+
+
+        <!--==============================Game Rules===================================-->
+        <div class="H2BG_Subtitle">
+            <div class="H2BG_01">
+                <h2 class="H2_Text">게임규칙</h2>
+            </div>
+        </div>
+        <hr class="MainTarget_02">
+
+
+        <div id="Introduce">
+            <div class="Content">
+                <p>1.배팅 레벨은 배팅 레벨 지정을 사용하여 설정됩니다.</p>
+                <p>2.코인 값은 코인 값 선택자를 사용하여 설정됩니다.</p>
+                <p>3.코인은 배팅 할 수있는 코인의 수를 표시합니다.</p>
+                <p>4.자동플레이는 선택한 라운드 수만큼 게임을 자동으로 실행합니다.</p>
+                <p>5.와일드 기호는 보너스 또는 무료 스핀 기호를 제외한 모든 기호를 대신합니다.</p>
+                <p>6.조합에 따라 승점 조합 및 상금 지급이 이루어집니다.</p>
+                <p>7.배팅레벨은 배팅 라인 당 배팅 한 코인의 수입니다.</p>
+                <p>8.코인에서의 배팅 라인 우승은 페이테이블에 표시된 값과 배팅 레벨을 곱한 값과 같습니다.</p>
+                <p>9.배팅 라인이 통화로 승리하는 것은 코인의 승점과 코인값을 곱한 것과 같습니다.</p>
+                <p>10.배팅 라인 당 최고 득점수만 지급됩니다.</p>
+                <p>11.다른 배팅 라인의 동시 승점이 추가됩니다.</p>
+                <p>12.모든 코인 우승은 보너스 게임의 승점을 제외하고는 배팅 라인에서만 지불합니다.</p>
+            </div>
+        </div>
+        <!--Introduce-->
+
+        <hr class="MainTarget_01">
+
+        <!--==============================Main Game===================================-->
+
+
+
+        <!--============主要遊戲============-->
+        <div class="H2BG_Subtitle">
+            <div class="H2BG_01">
+                <h2 class="H2_Text">메인게임</h2>
+            </div>
+        </div>
+        <hr class="MainTarget_02">
+
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/start.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>스핀버튼</p>
+                <p>현재 배팅 라인, 배팅 레벨 및 코인 값으로 게임을 시작하려면 누르십시오.</p>
+                <p>보너스 게임이나 프리 게임에서는 스핀 버튼이 일반 스핀으로 돌아갈 때까지 보이지않습니다.</p>
+                <p>빠른정지 : 스핀이 멈추는 동안 게임 영역을 누릅니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_01">
+
+
+        <!--============自动玩与快速停轮============-->
+        <div class="H2BG_Subtitle">
+            <div class="H2BG_01">
+                <h2 class="H2_Text">자동플레이 와 빠른스핀</h2>
+            </div>
+        </div>
+        <hr class="MainTarget_02">
+
+        <!--自動玩-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/autoplay01.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>자동플레이 와 빠른스핀</p>
+                <p>자동플레이를 시작하려면 누르십시오. 선택한 스핀 수가 버튼에 표시됩니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--停止自动玩-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/stopautoplay.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>자동플레이 정지</p>
+                <p>자동 재생을 중지하려면 누르십시오. 남은 스핀 수가 버튼에 표시됩니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--快速停轮-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/faststop.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>빠른스핀</p>
+                <p>빠른스핀을 시작하려면 누르십시오.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--设定-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/set.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>메뉴</p>
+                <p>게임 설정 및 게임 정보에 액세스하려면 누릅니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--音乐与音效-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/sound.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>소리</p>
+                <p>설정 메뉴로 이동하지 않고 클릭하여 소리를 켜거나 끄십시오.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--自动玩-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/autoplay01.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>자동플레이</p>
+                <p>설정 메뉴로 이동하지 않고 자동 실행을 사용 또는 사용 중지하려면 탭하세요. 기본적으로 50 라운드가 설정됩니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--快速停轮-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/faststop.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>빠른스핀</p>
+                <p>탭하여 설정 메뉴로 이동하지 않고 빠른 스핀을 켜거나 끕니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--离开-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/home.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>나가기</p>
+                <p>게임을 나가려면 누르십시오.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_01">
+
+        <!--============游戏设定与资讯============-->
+        <div class="H2BG_Subtitle">
+            <div class="H2BG_01">
+                <h2 class="H2_Text">게임 설정 및 게임 정보</h2>
+            </div>
+        </div>
+        <hr class="MainTarget_02">
+
+        <!--Sound Settings-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/soundset.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>소리 설정</p>
+                <p>게임 음악 : 스위치를 살짝 눌러 소리를 켜거나 끕니다.</p>
+                <p>게임 소리 : 스위치를 살짝 눌러 소리를 켜거나 끕니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--自动玩设定-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/autoset.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>스핀설정</p>
+                <p>자동플레이:슬라이더를 드래그하거나 살짝 눌러 자동 재생을 활성화하면 자동 재생 옵션과 라운드 수를 설정할 수 있습니다. 자동 재생은 선택한 횟수만큼 회전합니다.</p>
+                <p>참고 : 게임 도중 연결이 끊어지면 게임을 다시로드 할 때 모든 자동 실행 설정이 기본값으로 돌아갑니다.</p>
+                <p>참고 : 일부 자동 재생 옵션은 일부 관할 지역에서 필수입니다.</p>
+                <p>빠른스핀 : 빠른 스핀을 켜거나 끌 때 스위치를 가볍게 누르십시오.</p>
+                <p>왼손 모드 : 왼쪽 버튼을 켜거나 끌 때를 살짝 누르십시오.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--下注设定-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/betset.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>배팅설정</p>
+                <p>현금배팅 : 선택한 통화로 귀하의 배팅 금액을 보여줍니다.</p>
+                <p>배팅레벨 : 슬라이더를 드래그하거나 탭하여 배팅 라인 당 배팅 할 코인 수를 선택하십시오.</p>
+                <p>코인값 : 슬라이더를 드래그하거나 탭하여 코인 값을 선택하십시오.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--倍率表-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/magnification.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>페이테이블</p>
+                <p>득점 조합과 승점을 보려면 탭하세요.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--游戏规范-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/specification.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>게임규칙</p>
+                <p>게임 규칙을 보려면 누르십시오.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--游戏历史纪录-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/history.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>게임기록</p>
+                <p>게임 기록을 보려면 누르십시오.</p>
+                <p>게임 기록은 화폐 플레이 기록만 확인됩니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+        <hr class="MainTarget_02">
+
+        <!--返回-->
+        <div id="Introduce_Rules">
+            <div class="IMG_Rules"><img class="ContentIMG" style="float: left; " src="icon/return.png" alt="ContentIMG" width="100%;"></div>
+            <div class="Content_Rules">
+                <p>돌아가기</p>
+                <p>메인 게임으로 돌아가려면 누릅니다.</p>
+            </div>
+        </div>
+        <!--Introduce_Rules-->
+
+        <!--
+	<hr class="MainTarget_01">
+	<div id="Introduce_Rules">
+		<div class="Content_Rules">
+			<p>참고 : 일부 운영자는 나열된 게임 설정을 모두 제공하지 않을 수도 있습니다.</p>
+		</div>
+	</div><!--Introduce_Rules-->
+        <!--<hr class="MainTarget_01">-->
+
+        <!--==============================Game Rules===================================-->
+
+        <!--============返还率============-->
+        <!--
+	<div class="H2BG_Subtitle">
+		<div class="H2BG_01">
+			<h2 class="H2_Text">플레이어로 돌아가기</h2>
+		</div>
+	</div>
+	<hr class="MainTarget_02">
+	
+	<div id="Introduce">
+		<div class="Content">
+			<p>이 게임에 대한 이론적인 수익은 95 ~ 96.5 %입니다.</p>
+		</div>
+	</div><!--Introduce-->
+
+        <!--<hr class="MainTarget_02">-->
+
+
+        <!--============额外规范============-->
+        <!--
+	<div class="H2BG_Subtitle">
+		<div class="H2BG_01">
+			<h2 class="H2_Text">추가정보</h2>
+		</div>
+	</div>
+	<hr class="MainTarget_02">
+	
+	<div id="Introduce">
+		<div class="Content">
+			<p>다음 게임 기능 및 설정은 게임 사이트 이용 약관의 적용을받을 수 있습니다. 다음 내용에 대한 자세한 내용은 게임 웹 사이트를 참조하십시오.</p>
+			<p>미완성 게임 라운드를 관리하는 데 사용되는 절차.</p>
+                        <p>비활성 게임 세션이 자동 종료되는 시간입니다.</p>
+			<p>게임 하드웨어 / 소프트웨어가 오작동하는 경우, 영향을받는 모든 게임배팅과 지불금은 무효화되며 모든 영향을 받은 배팅은 환불됩니다.</p>
+		</div>
+	</div><!--Introduce-->
+
+        <hr class="MainTarget_02">
+
+        <div id="Introduce">
+            <div class="Content">
+                <p>생성된 게임규칙:</p>
+                <p>2018-11-21 00:00:00（UTC）</p>
+            </div>
+        </div>
+        <!--Introduce-->
+
+    </div>
+    <!--/container-->
+
+
+
+    <!-- =========Copyright========= -->
+
+    <!--<h3>※游戏出现故障时，所有赔付和游戏都视为无效</h3>
+		
+		
+        <hr class="MainTarget"></hr>
+        <div id="Copyright"></div>
+        -->
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+@extends('backend.layouts.app')
+
+@section('page-title', '입출금관리')
+@section('page-heading', '입출금관리')
+
+@section('content')
+
+	<section class="content-header">
+		@include('backend.partials.messages')
+	</section>
+
+	<section class="content">
+
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">입출금관리</h3>
+			</div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+					<thead>
+					<tr>
+						@if(auth()->user()->hasRole('distributor'))
+						<th>매장이름</th>
+						@else
+						<th>파트너이름</th>
+						@endif
+						<th>입금</th>
+						<th>출금</th>
+						<th>계좌번호</th>
+						<th>예금주</th>
+						<th>시간</th>
+						<th>상태</th>
+						<th>승인</th>
+						<th>취소</th>
+					</tr>
+					</thead>
+					<tbody>
+					@if (count($in_out_logs))
+						@foreach ($in_out_logs as $in_out_log)
+							@include('backend.adjustment.partials.row_in_out')
+						@endforeach
+					@else
+						<tr><td colspan="8">@lang('app.no_data')</td></tr>
+					@endif
+					</tbody>
+					<thead>
+					<tr>
+						@if(auth()->user()->hasRole('distributor'))
+						<th>매장이름</th>
+						@else
+						<th>파트너이름</th>
+						@endif
+						<th>입금</th>
+						<th>출금</th>
+						<th>계좌번호</th>
+						<th>예금주</th>
+						<th>시간</th>
+						<th>상태</th>
+						<th>승인</th>
+						<th>최소</th>
+					</tr>
+					</thead>
+                    </table>
+                    </div>
+						{{-- {{ $games->appends(Request::except('page'))->links() }} --}}
+                    </div>			
+		</div>
+	</section>
+
+	<div class="modal fade" id="openAllowModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="{{ route('frontend.api.allow_in_out') }}" method="POST" id="outForm">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">심사</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="OutSum">승인하시겠습니까</label>
+							<input type="hidden" id="in_out_id" name="in_out_id">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">취소</button>
+						<button type="submit" class="btn btn-primary">확인</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="openRejectModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="{{ route('frontend.api.reject_in_out') }}" method="POST" id="outForm">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">심사</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="OutSum">거절하시겠습니까</label>
+							<input type="hidden" id="out_id" name="out_id">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">취소</button>
+						<button type="submit" class="btn btn-primary">확인</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+@stop
+
+@section('scripts')
+	<script>
+		$('.allowPayment').click(function(event){
+			if( $(event.target).is('.newPayment') ){
+				var id = $(event.target).attr('data-id');
+			}else{
+				var id = $(event.target).parents('.newPayment').attr('data-id');
+			}
+			$('#in_out_id').val(id);
+
+		});
+
+		$('.rejectPayment').click(function(event){
+			if( $(event.target).is('.newPayment') ){
+				var id = $(event.target).attr('data-id');
+			}else{
+				var id = $(event.target).parents('.newPayment').attr('data-id');
+			}
+			$('#out_id').val(id);
+		});
+	</script>
+@stop

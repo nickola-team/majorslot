@@ -1,0 +1,625 @@
+@import url("reset.css");		
+@charset "UTF-8";  
+
+/* CSS Document */
+
+    html{
+		width:100%;
+		max-height:100%;
+		background:top center no-repeat c ;
+		background-attachment: fixed;
+		overflow:auto;
+		
+		font-family: Verdana,Microsoft JhengHei ;
+		
+    } 
+    body{
+		width:100%;
+		height:100%;
+		margin: 0;
+		padding: 0;
+		background: #11202c;
+
+    }
+	.container{
+		width:900px;
+		height:auto;
+		margin:0 auto;
+	}
+
+/* 嵌入字型設定 */
+@font-face {
+    font-family: "CJNgaiHKS" ;
+	src: url(../Font/CJNgaiHKS.otf);
+}
+
+/*Dasis*/
+	h1{ 
+		width: 96%;
+		padding: 55px 0 0px 0;
+		margin: 0 auto;
+		
+		color: #FFFFFF;
+		font-size: 2.3em;
+		font-weight: 200;
+		text-align: center;
+		font-family: Verdana,Microsoft JhengHei;
+	}
+
+	h2{
+		width: 100%;
+		padding: 5px 0px 5px 0px;
+		margin: 0 auto;
+		
+		color: #FFFFFF;
+		font-size: 2em;
+		font-weight: 200;
+		text-align:center;		
+		font-family: Verdana,Microsoft JhengHei;
+	}
+
+	h3{
+		width: 80%;
+		padding: 50px 10%;
+		margin: 0 auto;
+		
+		color: #ffb0b0;
+		font-size: 1em;
+		font-weight: bold;
+		text-align: center;
+		font-family: Verdana,Microsoft JhengHei;
+		float: left;
+	}
+	h4{
+    padding: 10px;
+    color: #ffffff;
+    font-size: 2em;
+    text-align: center;
+    font-family: Verdana,Microsoft JhengHei;
+    text-shadow: 0px 5px 5px #000000;
+	}
+
+
+	.H2BG{
+    width: auto;
+    height: auto;
+    margin: 30px auto;
+    text-align: center;
+	padding-top: 5px;
+    background-image: linear-gradient(to right, rgba(31,98,134,0), rgba(31,98,134,0.75), rgba(31,98,134,0));
+	}
+
+	.H2BG_01{
+		width: 100%;
+		height: 50px;
+		margin: 30px 0px;	
+	}
+
+
+	.H2BG_Subtitle{
+		width: 100%;
+		margin: 0 auto;
+		float: left;
+	}
+	.H2_Text{
+		text-align: left;
+		padding: 5px 0px 5px 0px;
+
+	}
+
+
+	hr.MainTarget{
+		width: 100%;
+		height: 3px;
+		
+		border: 0;
+		background-image: linear-gradient(to right, rgba(96,145,169,0), rgba(96,145,169,0.75), rgba(96,145,169,0));	
+	}
+
+	hr.MainTarget_01{
+		width: 100%;
+		height: 3px;
+		
+		border: 0;
+		background-image: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.75), rgba(255,255,255,0));	
+		float:left;
+	}
+	hr.MainTarget_02{
+		width: 90%;
+		height: 3px;
+		
+		border: 0;
+		border-top: 1px solid rgba(0,0,0,0.1);
+		border-bottom: 1px solid rgba(255,255,255,0.3);
+		float: left;
+
+	}
+
+	p{
+		font-size: 1.15em;
+		padding: 1% 0 ;
+		color: #FFFFFF;
+	    font-family: Verdana,Microsoft JhengHei;
+	}
+
+
+/*Symbol Payout Valves + Any Combination Of All*/
+
+	#Description{
+		width: 90%;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.Column{
+		width: 40%;
+		/* height: 150px; */
+		margin: 0 0 5% 6.5%;
+		float: left;
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		border-style: solid;
+		border-color: #44528A;
+		position: relative;
+		display: flex;
+		height: auto !important;
+	}
+	
+	.IconIMG{
+		width: 310px;
+		height: auto;
+		float: left;
+		margin: auto;
+		-webkit-border-top-left-radius: 10px;
+		-webkit-border-bottom-left-radius: 10px;
+		-moz-border-radius-topleft: 10px;
+		-moz-border-radius-bottomleft: 10px;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+	}
+
+	.IconIMG_BG{
+		width: 200px;
+		height: auto;
+		float: left;
+		margin: auto;
+		-webkit-border-top-left-radius: 10px;
+		-webkit-border-bottom-left-radius: 10px;
+		-moz-border-radius-topleft: 10px;
+		-moz-border-radius-bottomleft: 10px;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+	}
+
+	.Column_Line{
+		width: 3px;
+		/* height: 100%; */
+		background: #44528A;
+		/* float: left; */
+	}
+
+	.Column_Content {
+    width: 100%;
+    /* height: 150px; */
+    float: left;
+    margin: auto;
+    -webkit-border-top-right-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    -moz-border-radius-bottomright: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+    line-height: 26px;
+	}
+
+	.Column_Content p{
+		font-size: 1em;
+		padding: 0 35px;
+	    font-family:  Verdana,Microsoft JhengHei;
+		font-weight: bold;
+	}
+
+
+/**/
+
+
+	#Introduce{
+		width: 90%;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.IMG_Rules{
+		width: 16%;
+		height: 23vh;
+		float: left;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.ContentIMG{
+		height: auto;
+		margin: 0 auto;
+		display:block;
+	}
+.ContentIMG_S{
+    height: 40px;
+    line-height: 50px;
+    text-align: left;
+	}
+
+	.Content{
+		width: 100%;
+		margin: 0 auto;
+		padding: 1.5% 0 2.5% 0%;
+		float: left;
+	}
+
+
+
+	#Introduce_Rules{
+		width: 80%;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.Content_Rules{
+		width: 80%;
+		margin: 0 auto;
+		padding: 1.5% 0 2.5% 0%;
+		float: right;
+		font-size:130%;
+	}
+
+
+
+/*mobile 641~768 */
+
+@media only screen and (min-width: 769px) and (max-width: 850px) {
+	
+
+	.container{
+		width:100%;
+		height:auto;
+		margin:0 auto;
+	}
+
+
+
+/*Symbol Payout Valves + Any Combination Of All*/
+
+	#Description{
+		width: 90%;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.Column{
+		width: 40%;
+		height: 100%;
+		margin: 0 0 5% 6.5%;
+		float: left;
+		
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		border-style: solid;
+		border-color: #44528A;
+	}
+	
+	.IconIMG{
+		width: 100%;
+		height: 100%;
+		float: left;
+		background:neno;
+
+	}
+	
+	.IconIMG_BG{
+		width: 25%;
+		-webkit-border-top-left-radius: 10px;
+		-webkit-border-top-right-radius: 10px;
+		-moz-border-radius-topleft: 10px;
+		-moz-border-radius-topright: 10px;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;		
+
+	}
+
+	.Column_Line{
+		width: 3px;
+		height: 100%;
+		background: #44528A;
+		float: left;
+	}
+
+	.Column_Content {
+		width: 100%;
+		height: 100%;
+		float: left;
+		-webkit-border-bottom-right-radius: 10px;
+		-webkit-border-bottom-left-radius: 10px;
+		-moz-border-radius-bottomright: 10px;
+		-moz-border-radius-bottomleft: 10px;
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+	}
+
+	.Column_Content p{
+		font-size: 1em;
+		padding: 0;
+	    font-family:  Verdana,Microsoft JhengHei;
+		text-align: left;
+	}
+
+	h4{
+
+    font-size: 1em;
+
+	}
+	
+	
+}/*mobile 641~768 */
+
+
+
+
+
+
+
+
+
+
+
+
+/*mobile 641~768 */
+
+@media only screen and (min-width: 641px) and (max-width: 768px) {
+
+	.container{
+		width:100%;
+		height:auto;
+		margin:0 auto;
+	}
+
+
+
+/*Symbol Payout Valves + Any Combination Of All*/
+
+	#Description{
+		width: 90%;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.Column{
+		width: 77%;
+		height: 100%;
+		margin: 0 0 5% 11.5%;
+		float: left;
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		border-style: solid;
+		border-color: #44528A;
+	}
+	
+	.IconIMG{
+		width: 100%;
+		height: 100%;
+		float: left;
+		background:neno;
+
+	}
+	
+.IconIMG_BG{
+		width: 50%;
+		-webkit-border-top-left-radius: 10px;
+		-webkit-border-top-right-radius: 10px;
+		-moz-border-radius-topleft: 10px;
+		-moz-border-radius-topright: 10px;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;		
+
+	}
+
+	.Column_Line{
+		width: 3px;
+		height: 100%;
+		background: #44528A;
+		float: left;
+	}
+
+	.Column_Content {
+		width: 100%;
+		height: 100%;
+		float: left;
+		-webkit-border-bottom-right-radius: 10px;
+		-webkit-border-bottom-left-radius: 10px;
+		-moz-border-radius-bottomright: 10px;
+		-moz-border-radius-bottomleft: 10px;
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+	}
+
+	.Column_Content p{
+		font-size: 1em;
+		padding: 0;
+	    font-family:  Verdana,Microsoft JhengHei;
+		text-align: left;
+	}
+
+h4{
+
+    font-size: 1em;
+
+	}
+	
+}/*mobile 641~768 */
+
+
+
+
+
+
+
+
+
+
+
+/*mobile 265~640 */
+
+@media only screen and (min-width: 265px) and (max-width: 640px) {
+	
+	.container{
+		width:100%;
+		height:auto;
+		margin:0 auto;
+	}
+
+
+
+/*Symbol Payout Valves + Any Combination Of All*/
+
+	#Description{
+		width: 90%;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.Column{
+		width: 87%;
+		height: 100%;
+		margin: 0 0 5% 6.5%;
+		float: left;
+		
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		border-style: solid;
+		border-color: #44528A;
+	}
+	
+	.IconIMG{
+		width: 100%;
+		height: 100%;
+		float: left;
+		background:none;
+
+	}
+	
+	.IconIMG_BG{
+		width: 50%;
+		-webkit-border-top-left-radius: 10px;
+		-webkit-border-top-right-radius: 10px;
+		-moz-border-radius-topleft: 10px;
+		-moz-border-radius-topright: 10px;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;		
+
+	}
+
+	.Column_Line{
+		width: 3px;
+		height: 100%;
+		background: #44528A;
+		float: left;
+	}
+
+	.Column_Content {
+		width: 100%;
+		height: 100%;
+		float: left;
+		-webkit-border-bottom-right-radius: 10px;
+		-webkit-border-bottom-left-radius: 10px;
+		-moz-border-radius-bottomright: 10px;
+		-moz-border-radius-bottomleft: 10px;
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+	}
+
+	.Column_Content p{
+		font-size: 1em;
+		padding: 0;
+	    font-family:  Verdana,Microsoft JhengHei;
+		text-align: left;
+	}
+
+	h4{
+
+    font-size: 1em;
+
+	}
+	
+} /*mobile */
+.Column_00{ width: 87%;}
+		.Column_Content_00{ width: 78.2%;}
+		
+	@media only screen and (min-width: 769px) and (max-width: 850px) {
+		
+		.Column_00{ width: 87%;}
+		.Column_Content_00{ width:72.8%; height: 169px;}
+		.IconIMG_00{
+				width: 60%;
+				margin: 0 auto;
+				display: block;
+				}	
+	}
+	
+	@media only screen and (min-width: 641px) and (max-width: 768px) {
+		.Column_00{ width: 77%;}
+		.Column_Content_00{ width:100%;}
+		.IconIMG_00{
+				width: 50%;
+				float: none;
+				margin: 0 auto;
+				display: block;
+				}			
+		
+	}
+
+	
+	@media only screen and (min-width: 265px) and (max-width: 640px) {
+		.Column_Content_00{ width:100%;}
+		.IconIMG_00{
+				width: 50%;
+				float: none;
+				margin: 0 auto;
+				display: block;
+				}				
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

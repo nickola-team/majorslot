@@ -1,0 +1,34 @@
+<tr>
+	<td>{{ $jackpot->id }}</td>
+	<td><a href="{{ route('backend.jpgame.edit', $jackpot->id) }}">{{ $jackpot->name }}</a></td>
+	<td>{{ number_format($jackpot->balance,2) }}</td> 
+	<td>{{ number_format($jackpot->start_balance,2) }}</td>
+	<td>{{ number_format($jackpot->pay_sum,2) }}</td>
+	<td>{{ number_format($jackpot->pay_sum_new,2) }}</td>
+	<td>{{ $jackpot->percent }}</td>
+	<td>
+		@if(!$jackpot->view)
+			<small><i class="fa fa-circle text-red"></i></small>
+		@else
+			<small><i class="fa fa-circle text-green"></i></small>
+		@endif
+	</td>
+	<td>
+		@if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('distributor') )
+		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $jackpot->id }}" >
+		<button type="button" class="btn btn-block btn-success btn-xs">입금</button>
+		</a>
+		@else
+			<button type="button" class="btn btn-block btn-success disabled btn-xs">입금</button>
+		@endif
+	</td>
+	<td>
+		@if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('distributor') )
+		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $jackpot->id }}" >
+		<button type="button" class="btn btn-block btn-danger btn-xs">출금</button>
+		</a>
+		@else
+			<button type="button" class="btn btn-block btn-danger disabled btn-xs">출금</button>
+		@endif
+	</td>
+</tr>
