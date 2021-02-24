@@ -15,10 +15,10 @@
 .hot_wrap {float:left; width:100%; position:relative; margin:15px 0 0 0;}
 .hot_box {max-width: 1200px; margin:0px auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;}
 .hot_wrap p.title{animation: floating-text .5s ease alternate infinite;text-align: center;}
-.hot_wrap .title span {font-family: 'nanumsquare', sans-serif;font-weight: 600;font-size: 34px;background: -webkit-linear-gradient(-86deg, #ffffff 5%, #ffffff 53%, #ffffff 90%);-webkit-background-clip: text;-webkit-text-stroke: 1px transparent;color: #07a021;letter-spacing: 1px;}
-.hot_wrap .title strong {font-family: 'nanumsquare', sans-serif;font-weight: 400;font-size: 34x;background: -webkit-linear-gradient(-86deg, #000000 5%, #000000 53%, #000000 90%);-webkit-background-clip: text;-webkit-text-stroke: 1px transparent;color: #ff0055;letter-spacing: 3px;padding-left: 10px;}
-@keyframes floating-text {0% {transform: translateY(.4em);text-shadow:0 0 .5em rgba(255,255,255,.4),0 0 .2em rgb(255 144 255 / 30%),0 .3em .2em rgb(255 94 249 / 30%);}
-100% {text-shadow:2px 0 10px rgb(241 76 255 / 70%),0 0 10px rgb(255 104 227 / 30%),0 0 10px rgb(193 90 255 / 30%);}}
+.hot_wrap .title span {font-family: 'nanumsquare', sans-serif;font-weight: 600;font-size: 34px;background: #ffffff;-webkit-background-clip: text;-webkit-text-stroke: 3px transparent;color: #07a021;letter-spacing: 3px;}
+.hot_wrap .title strong {font-family: 'nanumsquare', sans-serif;font-weight: 400;font-size: 34x;background: #ffffff;;-webkit-background-clip: text;-webkit-text-stroke: 3px transparent;color: #ff0055;letter-spacing: 3px;padding-left: 10px;}
+@keyframes floating-text {0% {transform: translateY(.4em);}
+100% {}}
 /* Image zoom on hover + Overlay colour */
 .parent {
     width: 20%;
