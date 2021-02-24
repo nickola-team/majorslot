@@ -1,6 +1,6 @@
 ﻿@charset "utf-8";
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css); 
-#wrap {float:left; width:100%; overflow-x:hidden; background:url("../images/bg.jpg") center top no-repeat;}
+#wrap {float:left; width:100%; overflow-x:hidden; background:url("../images/bg.jpg") center top;background-size: cover;}
 * {box-sizing: border-box;	-ms-box-sizing: border-box;	-webkit-box-sizing: border-box;}
 
 /*-------------------------------------------------------------------------------------*
@@ -11,25 +11,91 @@
 
 .logo         {float:left; width:100%; text-align:center;}
 
-.hot_wrap {float:left; width:100%;}
-.hot_box {margin:0px auto; width:1076px;}
-.hot {
-    float: left;
-    width: 100%;
-    height: 250px;
-    line-height: 44px;
-    font-family: 'nanumgothic', sans-serif;
-    font-size: 14px;
-    letter-spacing: -1px;
-    font-weight: 700;
-    color: #000000;
-    background-color: #484848;
-    padding: 0 15px 0 15px;
-    border: solid thin #ffb74b;
-    display: table;
+
+.hot_wrap {float:left; width:100%; position:relative; margin:15px 0 0 0;}
+.hot_box {max-width: 1200px; margin:0px auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;}
+.hot_wrap p.title{animation: floating-text .5s ease alternate infinite;text-align: center;}
+.hot_wrap .title span {font-family: 'nanumsquare', sans-serif;font-weight: 600;font-size: 34px;background: -webkit-linear-gradient(-86deg, #ffffff 5%, #ffffff 53%, #ffffff 90%);-webkit-background-clip: text;-webkit-text-stroke: 1px transparent;color: #07a021;letter-spacing: 1px;}
+.hot_wrap .title strong {font-family: 'nanumsquare', sans-serif;font-weight: 400;font-size: 34x;background: -webkit-linear-gradient(-86deg, #000000 5%, #000000 53%, #000000 90%);-webkit-background-clip: text;-webkit-text-stroke: 1px transparent;color: #ff0055;letter-spacing: 3px;padding-left: 10px;}
+@keyframes floating-text {0% {transform: translateY(.4em);text-shadow:0 0 .5em rgba(255,255,255,.4),0 0 .2em rgb(255 144 255 / 30%),0 .3em .2em rgb(255 94 249 / 30%);}
+100% {text-shadow:2px 0 10px rgb(241 76 255 / 70%),0 0 10px rgb(255 104 227 / 30%),0 0 10px rgb(193 90 255 / 30%);}}
+/* Image zoom on hover + Overlay colour */
+.parent {
+    width: 20%;
+    margin: 5px;
+    height: 180px;
+    border: 1px solid blue;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
 }
 
-.hot ul li    {display:inline-block; margin:0 25px 0 25px; width:48px;}
+.child {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+}
+
+
+.parent a {
+    display: none;
+    font-size: 22px;
+    color: #f0e6e4 !important;
+    font-family: sans-serif;
+    text-align: center;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 50px;
+    cursor: pointer;
+    /*text-decoration: none;*/
+}
+.parent:hover .child, .parent:focus .child {
+    -ms-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.parent:hover .child:before, .parent:focus .child:before {
+    display: block;
+}
+
+.parent:hover a, .parent:focus a {
+    display: block;
+}
+
+.child:before {
+    content: "";
+    display: none;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(52,73,94,0.75);
+}
+
+/* Media Queries */
+@media screen and (max-width: 960px) {
+    .parent {width: 100%; margin: 20px 0px}
+    .wrapper {padding: 20px 20px;}
+}
+
+
+
+
+.hello {display: none}
 
 .gnb {
     float: left;

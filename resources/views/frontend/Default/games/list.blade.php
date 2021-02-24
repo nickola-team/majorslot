@@ -185,6 +185,7 @@
 </div>
 
 <!-- 광고 슬라이드 -->
+
 <div class="slideshow2_wrap">
     <div class="slideshow2_wrap_center">
         <div id="number_slideshow" class="number_slideshow">
@@ -199,10 +200,67 @@
         </div>
     </div>
 </div>
-<!-- 인기게임 슬라이드 -->
 
+<!-- 인기게임 슬라이드 -->
+<div class="hot_wrap">
+    <div class="hot_box">
+        <p class="title">
+            <span>이번주 인기게임들</span>
+        </p>
+    </div>
+</div>
+
+<div class="hot_wrap">
+    <div class="hot_box">
+        <div class="parent" onclick="">
+            <div class="child">
+                <img src="/frontend/Default/ico/DuoFuDuoCai5Treasures.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
+                @if (Auth::check())
+                    <a href="#" onclick="startGame('DuoFuDuoCai5Treasures');">
+                @else
+                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
+                @endif
+                <p>파이브 트레저</p><p> 다복이</p></a>
+            </div>
+        </div>
+        <div class="parent" onclick="">
+            <div class="child">
+                <img src="/frontend/Default/ico/DuoFuDuoCai88Fortune.jpg" style="width: 100%; height: 100%;" alt="88 포춘">
+                @if (Auth::check())
+                    <a href="#" onclick="startGame('DuoFuDuoCai88Fortune');">
+                @else
+                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
+                @endif
+                <p>88 포춘</p><p> 다복이</p></a>                
+            </div>
+        </div>
+        <div class="parent" onclick="">
+            <div class="child">
+                <img src="/frontend/Default/ico/DuoFuDuoCaiDancingDrum.jpg" style="width: 100%; height: 100%;" alt="댄싱 드럼">
+                @if (Auth::check())
+                    <a href="#" onclick="startGame('DuoFuDuoCaiDancingDrum');">
+                @else
+                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
+                @endif
+                <p>댄싱 드럼</p><p> 다복이</p></a>                
+            </div>
+        </div>
+        <div class="parent" onclick="">
+            <div class="child">
+                <img src="/frontend/Default/ico/JumanjiNET.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
+                @if (Auth::check())
+                    <a href="#" onclick="startGame('DuoFuDuoCai5Treasures');">
+                @else
+                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
+                @endif
+                <p>쥬만지</p></a>                
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- 공지사항 -->
+{{--
 <div class="notice_wrap">
     <div class="notice_box">
         <div class="notice">
@@ -226,8 +284,16 @@
         </div>
     </div>
 </div>
+--}}
 
 <!--슬롯리스트-->
+<div class="hot_wrap">
+    <div class="hot_box">
+        <p class="title">
+            <span><strong>SLOT GAMES</strong></span>
+        </p>
+    </div>
+</div>
 <div class="main_slot_wrap">
     <div class="sc-inner">
     @if ($categories && count($categories))
