@@ -249,7 +249,7 @@
             <div class="child">
                 <img src="/frontend/Default/ico/JumanjiNET.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
                 @if (Auth::check())
-                    <a href="#" onclick="startGame('DuoFuDuoCai5Treasures');">
+                    <a href="#" onclick="startGame('JumanjiNET');">
                 @else
                     <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
                 @endif
