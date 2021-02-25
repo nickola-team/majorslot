@@ -93,6 +93,8 @@
 .minor_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/minorjp.png") center top no-repeat; background-size: contain;margin:15px 0 15px 0}
 .mini_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/minijp.png") center top no-repeat; background-size: contain;margin:15px 0 15px 0}
 .jackpot_sum { padding: 80px; font-size: 30px; color:#f0e6e4;font-family:'nanumgothic', sans-serif;font-weight:bold;}
+
+
 /* Media Queries */
 @media screen and (max-width: 960px) {
     .parent {width: 100%; margin: 20px 0px}

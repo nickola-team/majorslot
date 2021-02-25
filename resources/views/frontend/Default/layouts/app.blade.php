@@ -31,6 +31,7 @@
 	<script src="/frontend/Major/js/swiper.min.js"></script>
 	<script src="/frontend/Major/js/paging.min.js"></script>
 	<script src="/frontend/Major/js/odometer.min.js"></script>
+	<script src="/frontend/Major/js/jquery.animateNumber.min.js"></script>
 </head>
 
 <body>

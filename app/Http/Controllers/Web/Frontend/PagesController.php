@@ -51,16 +51,25 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'content' => [], 
                 'i' => 1
             ];
+            $diffs = [rand(40, 50), rand(30, 40), rand(10, 20), rand(0, 10)];
+            $jackpots = [0, 0, 0, 0];
             $data = \VanguardLTE\JPG::where('shop_id', $request->id)->get();
-            foreach( $data as $jackpot ) 
+            foreach( $data as $i => $jackpot ) 
             {
+                $fake_new_jp = $jackpot->fake_balance + $diffs[$i];
+                if($jackpot->pay_sum_new > 0 && $fake_new_jp > $jackpot->pay_sum_new){
+                    //$jackpots[$i] = $jpgs[$i]->start_balance;
+                    $fake_new_jp = $jackpot->balance;
+                }
+                $ret = $jackpot->update(['fake_balance' => $fake_new_jp]);
+                
                 $res['content'][] = [
                     'name' => $jNames[$jCnt], 
-                    'jackpot' => $jackpot->balance, 
+                    'jackpot' => $fake_new_jp, 
                     'user' => ''
                 ];
                 $jCnt++;
-                if( $jCnt > 5 ) 
+                if( $jCnt > 3 ) 
                 {
                     break;
                 }

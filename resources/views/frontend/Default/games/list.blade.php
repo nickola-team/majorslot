@@ -756,90 +756,99 @@
         window.open("/game/" + gamename, gamename, "width=1280, height=742, left=100, top=50");
         
     }
-    $( document ).ready(function() {
-        console.log( "ready!" );
-        var odometers = [ "#minijp", "#minorjp", "#majorjp", "#grandjp"];
-        var updateTime = 3;
-        var apiUrl="/jpstv.json";
-        var timeout;
-        var updateJackpots = function (callback) {
-            if (true) {
-                $.ajax({
-                    url: apiUrl,
-                    type: "GET",
-                    data: {'cmd':'jackpotShow', 'id': 
-                        @if (Auth::check())
-                            {{auth()->user()->shop_id}} },
-                        @else
-                        0},
-                        @endif
-                    dataType: 'json',
-                    success: function (data) {
-                        var jackpots=data.content;
-                        var communities=undefined;
-                        var won=[];
-                        if (Array.isArray(jackpots) && jackpots.length > 0) {
-                            /*jackpots.sort(function(a,b) {
-                                return jackpotsSort[a.name]-jackpotsSort[b.name];
-                            }); */
-                            jackpots.forEach(function (item, index) {
-                                /*
-                                if (item['type']!==undefined) {
-                                    index=jackpotsSort[item['type']];
-                                } else {
-                                    index=jackpotsSort[item['name']];
-                                }
-                                
-                                if (item['dateTie']!==undefined) {
-                                    if (savedJackpots[item['dateTie']]===undefined) {
-                                        savedJackpots[item['dateTie']]=true;
-                                        won.push({'jackpot_id':index,'event_id':event_id++,credit:item['jackpot'],winner:String(item['user'])});
-                                    }
-                                    return;
-                                } */
-
-                                $(odometers[index]).text(item['jackpot'].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));    
-
-                            });
-                        } else {
-                            alert('Incorrect server answer');
-                            return false;
-                        }
-                        /*
-                        if (won.length > 0) {
-                            won.forEach(function (item) {
-                                if (jackpot_events_played.indexOf(item['event_id']) == -1) {
-                                    hit_play_queue.push(item['jackpot_id']);
-                                    jackpot_events_played.push(item['event_id']);
-                                    jackpot_win_data.push({credit: item['credit'], winner: item['winner']});
-                                }
-                            });
-                        } 
-
-                        if (init) {
-                            $('#password-wrapper').hide();
-                            $('#jackpot-wrapper').show();
-                            init = false;
-                        }*/
-                        timeout = setTimeout(updateJackpots, updateTime);
-                        if (callback != null) callback();
-                    },
-                    error: function () {
-                        timeout = setTimeout(updateJackpots, updateTime);
-                        if (callback != null) callback();
-                    }
-                });
-            } else {
-                clearTimeout(timeout);
-            }
-        };
-
-        @if (Auth::check())
-            timeout = setTimeout(updateJackpots, updateTime);
-        @endif
-    });
-    
     </script>
 @endif
+    <script>
+        $( document ).ready(function() {
+            console.log( "ready!" );
+            var odometers = [ "#minijp", "#minorjp", "#majorjp", "#grandjp"];
+            var updateTime = 1000;
+            var apiUrl="/jpstv.json";
+            var timeout;
+            var updateJackpots = function (callback) {
+                if (true) {
+                    $.ajax({
+                        url: apiUrl,
+                        type: "GET",
+                        data: {'cmd':'jackpotShow', 'id': 
+                            @if (Auth::check())
+                                {{auth()->user()->shop_id}} },
+                            @else
+                            0},
+                            @endif
+                        dataType: 'json',
+                        success: function (data) {
+                            var jackpots=data.content;
+                            var communities=undefined;
+                            var won=[];
+                            if (Array.isArray(jackpots) && jackpots.length > 0) {
+                                /*jackpots.sort(function(a,b) {
+                                    return jackpotsSort[a.name]-jackpotsSort[b.name];
+                                }); */
+                                jackpots.forEach(function (item, index) {
+                                    /*
+                                    if (item['type']!==undefined) {
+                                        index=jackpotsSort[item['type']];
+                                    } else {
+                                        index=jackpotsSort[item['name']];
+                                    }
+                                    
+                                    if (item['dateTie']!==undefined) {
+                                        if (savedJackpots[item['dateTie']]===undefined) {
+                                            savedJackpots[item['dateTie']]=true;
+                                            won.push({'jackpot_id':index,'event_id':event_id++,credit:item['jackpot'],winner:String(item['user'])});
+                                        }
+                                        return;
+                                    } */
 
+                                    //$(odometers[index]).text(item['jackpot'].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));    
+                                    var comma_separator_number_step = $.animateNumber.numberStepFactories.separator(',');
+                                    $(odometers[index]).animateNumber(
+                                        {
+                                            number: item['jackpot'],
+                                            numberStep: comma_separator_number_step
+                                        },
+                                        {
+                                            easing: 'swing',
+                                            duration: 1000
+                                        }
+                                    );
+
+                                });
+                            } else {
+                                alert('Incorrect server answer');
+                                return false;
+                            }
+                            /*
+                            if (won.length > 0) {
+                                won.forEach(function (item) {
+                                    if (jackpot_events_played.indexOf(item['event_id']) == -1) {
+                                        hit_play_queue.push(item['jackpot_id']);
+                                        jackpot_events_played.push(item['event_id']);
+                                        jackpot_win_data.push({credit: item['credit'], winner: item['winner']});
+                                    }
+                                });
+                            } 
+
+                            if (init) {
+                                $('#password-wrapper').hide();
+                                $('#jackpot-wrapper').show();
+                                init = false;
+                            }*/
+                            timeout = setTimeout(updateJackpots, updateTime);
+                            if (callback != null) callback();
+                        },
+                        error: function () {
+                            timeout = setTimeout(updateJackpots, updateTime);
+                            if (callback != null) callback();
+                        }
+                    });
+                } else {
+                    clearTimeout(timeout);
+                }
+            };
+
+            timeout = setTimeout(updateJackpots, updateTime);
+        });
+    </script>
 @stop
