@@ -39,7 +39,7 @@
     <div id="wrap">
         <div id="header_wrap">
             <div class="header_box">
-                <div class="logo"><a href="./"><img src="/frontend/Major/major/images/logo.png"></a></div>
+                <div class="logo"><a href="{{url('/') }}"><img src="/frontend/Major/major/images/logo.png"></a></div>
                 <div class="gnb">
                     <ul>
 						@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
