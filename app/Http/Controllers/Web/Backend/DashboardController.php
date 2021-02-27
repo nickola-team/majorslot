@@ -377,9 +377,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function game_stat(\Illuminate\Http\Request $request)
         {
-            $users = auth()->user()->hierarchyUsersOnly();
-            // $statistics = \VanguardLTE\StatGame::select('stat_game.*')->whereIn('stat_game.shop_id', auth()->user()->availableShops())->orderBy('stat_game.date_time', 'DESC');
-            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
+            //$users = auth()->user()->hierarchyUsersOnly();
+            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->whereIn('stat_game.shop_id', auth()->user()->availableShops())->orderBy('stat_game.date_time', 'DESC');
+            //$statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
             //$statistics = $statistics->whereIn('stat_game.user_id', $users);
             if( $request->game != '' ) 
             {

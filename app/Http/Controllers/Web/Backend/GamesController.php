@@ -654,27 +654,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
             }
             $shop = \VanguardLTE\Shop::find(auth()->user()->shop_id);
-            if( auth()->user()->hasRole('distributor') ) 
+            if( auth()->user()->hasRole('admin') ) 
             {
-                if( $request->summ > 0 && $shop->balance < $request->summ ) 
+                /*if( $request->summ > 0 && $shop->balance < $request->summ ) 
                 {
                     return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
                         'name' => $shop->name, 
                         'balance' => $shop->balance
                     ])]);
-                }
+                } */
                 $gamebank = \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->first();
                 if( !$gamebank ) 
                 {
                     $gamebank = \VanguardLTE\GameBank::create(['shop_id' => auth()->user()->shop_id]);
                 }
                 $old = $gamebank->{$request->type};
-                $shop->decrement('balance', $request->summ);
-                $open_shift->increment('balance_out', abs($request->summ));
+                //$shop->decrement('balance', $request->summ);
+                $open_shift->increment('balance_in', abs($request->summ));
                 $gamebank->increment($request->type, abs($request->summ));
                 $type = ($request->type == 'table_bank' ? 'table' : $request->type);
                 \VanguardLTE\BankStat::create([
-                    'name' => ucfirst($type), 
+                    'name' => ucfirst($type) . "[$shop->name]", 
                     'user_id' => \Illuminate\Support\Facades\Auth::id(), 
                     'type' => 'add', 
                     'sum' => $request->summ, 
@@ -700,7 +700,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
             }
             $shop = \VanguardLTE\Shop::find(auth()->user()->shop_id);
-            if( auth()->user()->hasRole('distributor') ) 
+            if( auth()->user()->hasRole('admin') ) 
             {
                 $gamebank = \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->first();
                 $old = $gamebank->{$request->type};
@@ -713,7 +713,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $open_shift->decrement('balance_out', $old);
                 $gamebank->update([$request->type => 0]);
                 \VanguardLTE\BankStat::create([
-                    'name' => ucfirst($type), 
+                    'name' => ucfirst($type) . "[ $shop->name ]", 
                     'user_id' => \Illuminate\Support\Facades\Auth::id(), 
                     'type' => 'add', 
                     'sum' => $old, 

@@ -182,8 +182,8 @@
             @endif
             @endpermission --}}
 
-            {{-- @permission('happyhours.manage')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
+            @permission('happyhours.manage')
+            @if( auth()->user()->hasRole('admin') )
             <li class="{{ Request::is('backend/happyhours*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.happyhour.list') }}">
                     <i class="fa fa-server"></i>
@@ -191,7 +191,7 @@
                 </a>
             </li>
             @endif
-            @endpermission --}}
+            @endpermission
 
 
             {{-- @permission('jpgame.manage')
@@ -355,7 +355,7 @@
                         <a  href="{{ route('backend.bank_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.bank_stats') --}}
-                            잭팟입출금내역
+                            게임뱅크입출금내역
                         </a>
                     </li>
                     @endpermission

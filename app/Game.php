@@ -619,7 +619,8 @@ namespace VanguardLTE
                 'slots', 
                 'little', 
                 'table_bank', 
-                'fish'
+                'fish',
+                'bonus'
             ]
         ];
         public $shortNames = [

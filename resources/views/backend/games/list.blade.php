@@ -12,7 +12,8 @@
 	<section class="content">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<form id="change-shop-form"  name = "set_shop" action="{{ route('backend.profile.setshop') }}" method="POST">
+				<div class="col-md-6">
+					<form id="change-shop-form"  name = "set_shop" action="{{ route('backend.profile.setshop') }}" method="POST">
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>매장</label>
@@ -21,7 +22,9 @@
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						</div>
 					</div>
-				</form>	
+					</form>	
+				</div>
+				
 			</div>
 		</div>
 		@permission('games.info')
@@ -124,9 +127,9 @@
 					<div class="icon">
 						<i class="fa fa-line-chart"></i>
 					</div>
-					@if( auth()->user()->hasRole('distributor') )
-						<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="bonus">@lang('app.gamebank') @lang('app.pay_in') <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
+					{{-- @if( auth()->user()->hasRole('distributor') ) --}}
+						<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="bonus">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
+					{{-- @endif --}}
 				</div>
 			</div>
 			<!-- ./col -->
@@ -140,9 +143,9 @@
 					<div class="icon">
 						<i class="fa fa-refresh"></i>
 					</div>
-					@if( auth()->user()->hasRole('distributor') )
-					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="slots">@lang('app.gamebank') @lang('app.pay_in') <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
+					{{-- @if( auth()->user()->hasRole('distributor') ) --}}
+					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="slots">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
+					{{-- @endif --}}
 				</div>
 			</div>
 			<div class="col-lg-3 col-xs-6">
@@ -321,9 +324,6 @@
                     <button type="submit" class="btn btn-primary">
                         @lang('app.filter')
                     </button>
-					<a href="?clear" class="btn btn-default">
-						@lang('app.clear')
-					</a>
 
                 </div>
 			</div>

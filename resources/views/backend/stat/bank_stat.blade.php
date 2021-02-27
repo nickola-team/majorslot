@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '잭팟입출금내역')
-@section('page-heading', '잭팟입출금내역')
+@section('page-title', '게임뱅크입출금내역')
+@section('page-heading', '게임뱅크입출금내역')
 
 @section('content')
 
@@ -84,7 +84,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				{{-- <h3 class="box-title">@lang('app.bank_stats')</h3> --}}
-				<h3 class="box-title">잭팟입출금내역</h3>
+				<h3 class="box-title">게임뱅크입출금내역</h3>
 			</div>
                     <div class="box-body">
                         <div class="table-responsive">
