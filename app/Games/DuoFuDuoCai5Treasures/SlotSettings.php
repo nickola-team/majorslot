@@ -756,11 +756,17 @@ namespace VanguardLTE\Games\DuoFuDuoCai5Treasures
             if ($this->happyhouruser)
             {
                 $bonus_spin = rand(1, 10);
-                if ($bonus_spin <= 5) {
+                $bonus_percent = 5;
+                $spin_percent = 8;
+                if ($this->happyhouruser->current_bank <= 10000)
+                {
+                    $bonus_percent = 3;
+                }
+                if ($bonus_spin <= $bonus_percent) {
                     $bonusWin = 1;
                     $spinWin = 0;
                 }
-                else if ($bonus_spin < 8)
+                else if ($bonus_spin < $spin_percent)
                 {
                     $bonusWin = 0;
                     $spinWin = 1;
