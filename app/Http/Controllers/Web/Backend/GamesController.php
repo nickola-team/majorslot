@@ -709,8 +709,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     return redirect()->back()->withErrors([trans('app.gamebank_cleared')]);
                 }
                 $type = ($request->type == 'table_bank' ? 'table' : $request->type);
-                $shop->increment('balance', $old);
-                $open_shift->decrement('balance_out', $old);
+                //$shop->increment('balance', $old);
+                //$open_shift->decrement('balance_out', $old);
                 $gamebank->update([$request->type => 0]);
                 \VanguardLTE\BankStat::create([
                     'name' => ucfirst($type) . "[ $shop->name ]", 
