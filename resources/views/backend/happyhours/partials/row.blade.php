@@ -1,13 +1,16 @@
 <tr>
 	<td>{{ $happyhour->id }}</td>
-	<td><a href="{{ route('backend.happyhour.edit', $happyhour->id) }}">{{ $happyhour->multiplier }}</a></td>
-	<td>{{ $happyhour->wager }}</td>
+	<td><a href="{{ route('backend.happyhour.edit', $happyhour->id) }}">{{ $happyhour->user->username }}</a></td>
+	<td>{{ $happyhour->total_bank }}</td>
+	<td>{{ $happyhour->current_bank }}</td>
 	<td>{{ \VanguardLTE\HappyHour::$values['time'][$happyhour->time] }}</td>
 	<td>
-		@if(!$happyhour->status)
-			<small><i class="fa fa-circle text-red"></i></small>
+		@if($happyhour->status == 0)
+			차단
+		@elseif($happyhour->status == 1)
+			활성
 		@else
-			<small><i class="fa fa-circle text-green"></i></small>
+			완료
 		@endif
 	</td>
 

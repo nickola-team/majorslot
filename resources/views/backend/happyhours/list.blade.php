@@ -12,7 +12,7 @@
 	<section class="content">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">@lang('app.happyhours') - @lang('app.time') {{ \Carbon\Carbon::now()->format('H:i:s') }}</h3>
+				<h3 class="box-title">@lang('app.happyhours') - 현재 @lang('app.time') {{ \Carbon\Carbon::now()->format('H:i:s') }}</h3>
 				@permission('happyhours.add')
 				<div class="pull-right box-tools">
 					<a href="{{ route('backend.happyhour.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
@@ -25,8 +25,9 @@
 					<thead>
 					<tr>
 						<th>@lang('app.id')</th>
-						<th>@lang('app.multiplier')</th>
-						<th>@lang('app.wager')</th>
+						<th>회원아이디</th>
+						<th>총 당첨금</th>
+						<th>남은당첨금</th>
 						<th>@lang('app.time')</th>
 						<th>@lang('app.status')</th>
 					</tr>
@@ -42,9 +43,10 @@
 					</tbody>
 					<thead>
 					<tr>
-						<th>@lang('app.id')</th>
-						<th>@lang('app.multiplier')</th>
-						<th>@lang('app.wager')</th>
+					<th>@lang('app.id')</th>
+						<th>회원아이디</th>
+						<th>총 당첨금</th>
+						<th>남은당첨금</th>
 						<th>@lang('app.time')</th>
 						<th>@lang('app.status')</th>
 					</tr>

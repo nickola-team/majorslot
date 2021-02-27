@@ -555,11 +555,7 @@ namespace VanguardLTE\Games\DuoFuDuoCai5Treasures
             {
                 $this->toGameBanks = $sum;
             }
-            if( $_obf_bonus_systemmoney > 0 ) 
-            {
-                $sum -= $_obf_bonus_systemmoney;
-                $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-            }
+            
             if ($this->happyhouruser)
             {
                 // if current bank has small balance, finish this happy hour.
@@ -572,6 +568,11 @@ namespace VanguardLTE\Games\DuoFuDuoCai5Treasures
             }
             else
             {
+                if( $_obf_bonus_systemmoney > 0 ) 
+                {
+                    $sum -= $_obf_bonus_systemmoney;
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }

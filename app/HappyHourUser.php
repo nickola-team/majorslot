@@ -43,6 +43,11 @@ namespace VanguardLTE
         {
             parent::boot();
         }
+
+        public function user()
+        {
+            return $this->belongsTo('VanguardLTE\User');
+        }
     }
 
 }

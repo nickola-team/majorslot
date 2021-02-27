@@ -1,19 +1,16 @@
 <div class="col-md-6">
     <div class="form-group">
-        <label>@lang('app.multiplier')</label>
+        <label>회원아이디</label>
         @php
-            $multipliers = array_combine(\VanguardLTE\HappyHour::$values['multiplier'], \VanguardLTE\HappyHour::$values['multiplier']);
+            $users = auth()->user()->hierarchyUserNamesOnly();
         @endphp
-        {!! Form::select('multiplier', $multipliers, $edit ? $happyhour->multiplier : '', ['class' => 'form-control']) !!}
+        {!! Form::select('user_id', $users, $edit ? $happyhour->user_id : '', ['class' => 'form-control']) !!}
     </div>
 </div>
 <div class="col-md-6">
     <div class="form-group">
-        <label>@lang('app.wager')</label>
-        @php
-            $wagers = array_combine(\VanguardLTE\HappyHour::$values['wager'], \VanguardLTE\HappyHour::$values['wager']);
-        @endphp
-        {!! Form::select('wager', $wagers, $edit ? $happyhour->wager : '', ['class' => 'form-control']) !!}
+        <label>총 당첨금</label>
+        <input type="text" class="form-control" id="total_bank" name="total_bank" placeholder="0.00" value="{{ $edit ? $happyhour->total_bank : '' }}">
     </div>
 </div>
 <div class="col-md-6">

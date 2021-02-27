@@ -24,7 +24,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('frontend.page.error_license');
             }
 			*/
-            $happyhours = \VanguardLTE\HappyHour::where('shop_id', \Auth::user()->shop_id)->get();
+            $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->orderBy('happyhour_users.created_at', 'DESC')->get();
+            //$happyhours = \VanguardLTE\HappyHour::where('shop_id', \Auth::user()->shop_id)->get();
             return view('backend.happyhours.list', compact('happyhours'));
         }
         public function create()
@@ -33,66 +34,67 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function store(\Illuminate\Http\Request $request)
         {
-            $request->validate([
+            /*$request->validate([
                 'multiplier' => 'required|in:' . implode(',', \VanguardLTE\HappyHour::$values['wager']), 
                 'wager' => 'required|in:' . implode(',', \VanguardLTE\HappyHour::$values['wager'])
-            ]);
-            $uniq = \VanguardLTE\HappyHour::where([
+            ]); */
+            $uniq = \VanguardLTE\HappyHourUser::where([
                 'time' => $request->time, 
-                'shop_id' => auth()->user()->shop_id
+                'user_id' => $request->user_id
             ])->count();
             if( $uniq ) 
             {
                 return redirect()->route('backend.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
             }
             $data = $request->all();
-            $data['shop_id'] = auth()->user()->shop_id;
-            $happyhour = \VanguardLTE\HappyHour::create($data);
+            $data['current_bank'] = $data['total_bank'];
+            $happyhour = \VanguardLTE\HappyHourUser::create($data);
             return redirect()->route('backend.happyhour.list')->withSuccess(trans('app.happyhour_created'));
         }
         public function edit($happyhour)
         {
-            $happyhour = \VanguardLTE\HappyHour::where('id', $happyhour)->first();
-            if( !in_array($happyhour->shop_id, auth()->user()->availableShops()) ) 
+            $happyhour = \VanguardLTE\HappyHourUser::where('id', $happyhour)->first();
+            /*if( !in_array($happyhour->shop_id, auth()->user()->availableShops()) ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
-            }
+            } */
             return view('backend.happyhours.edit', compact('happyhour'));
         }
-        public function update(\Illuminate\Http\Request $request, \VanguardLTE\HappyHour $happyhour)
+        public function update(\Illuminate\Http\Request $request, \VanguardLTE\HappyHourUser $happyhour)
         {
-            if( !in_array($happyhour->shop_id, auth()->user()->availableShops()) ) 
+            /*if( !in_array($happyhour->shop_id, auth()->user()->availableShops()) ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
             $request->validate([
                 'multiplier' => 'required|in:' . implode(',', \VanguardLTE\HappyHour::$values['wager']), 
                 'wager' => 'required|in:' . implode(',', \VanguardLTE\HappyHour::$values['wager'])
-            ]);
+            ]);*/
             $data = $request->only([
-                'multiplier', 
-                'wager', 
+                'user_id', 
+                'total_bank', 
                 'time', 
                 'status'
             ]);
-            $uniq = \VanguardLTE\HappyHour::where([
+            $uniq = \VanguardLTE\HappyHourUser::where([
                 'time' => $request->time, 
-                'shop_id' => auth()->user()->shop_id
+                'user_id' => $request->user_id
             ])->where('id', '!=', $happyhour->id)->count();
             if( $uniq ) 
             {
                 return redirect()->route('backend.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
             }
+            $data['current_bank'] = $data['total_bank'];
             $happyhour->update($data);
             return redirect()->route('backend.happyhour.list')->withSuccess(trans('app.happyhour_updated'));
         }
-        public function delete(\VanguardLTE\HappyHour $happyhour)
+        public function delete(\VanguardLTE\HappyHourUser $happyhour)
         {
-            if( !in_array($happyhour->shop_id, auth()->user()->availableShops()) ) 
+            /*if( !in_array($happyhour->shop_id, auth()->user()->availableShops()) ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
-            }
-            \VanguardLTE\HappyHour::where('id', $happyhour->id)->delete();
+            } */
+            \VanguardLTE\HappyHourUser::where('id', $happyhour->id)->delete();
             return redirect()->route('backend.happyhour.list')->withSuccess(trans('app.happyhour_deleted'));
         }
 /*        public function security()

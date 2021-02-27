@@ -324,7 +324,9 @@
                     <button type="submit" class="btn btn-primary">
                         @lang('app.filter')
                     </button>
-
+					<a href="?clear" class="btn btn-default">
+						@lang('app.clear')
+					</a>
                 </div>
 			</div>
 		</form>
