@@ -752,11 +752,11 @@ namespace VanguardLTE\Games\DuoFuDuoCai88Fortune
             if ($this->happyhouruser)
             {
                 $bonus_spin = rand(1, 10);
-                if ($bonus_spin < 2) {
+                if ($bonus_spin <= 5) {
                     $bonusWin = 1;
                     $spinWin = 0;
                 }
-                else if ($bonus_spin < 7)
+                else if ($bonus_spin < 8)
                 {
                     $bonusWin = 0;
                     $spinWin = 1;
@@ -764,7 +764,7 @@ namespace VanguardLTE\Games\DuoFuDuoCai88Fortune
                 else
                 {
                     $bonusWin = 0;
-                    $spinWin = 1;
+                    $spinWin = 0;
                 }
             }
             
