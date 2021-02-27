@@ -555,10 +555,10 @@ namespace VanguardLTE\Games\DuoFuDuoCai88Fortune
             if ($this->happyhouruser)
             {
                 // if current bank has small balance, finish this happy hour.
-                if ($this->happyhouruser->current_bank + $sum < abs($sum))
+                /*if ($this->happyhouruser->current_bank + $sum < abs($sum))
                 {
                     $this->happyhouruser->update(['status' => 2]);
-                }
+                } */
                 $this->happyhouruser->increment('current_bank', $sum);
                 $this->happyhouruser->save();
             }
