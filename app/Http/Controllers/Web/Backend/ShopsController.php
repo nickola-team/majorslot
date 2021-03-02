@@ -250,6 +250,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $data = $request->all();
+            $parent = auth()->user();
+            if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+            {
+                return redirect()->route('backend.shop.list')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
+            }            
             $shop = \VanguardLTE\Shop::create($data + ['user_id' => auth()->user()->id]);
             $user = \VanguardLTE\User::find(\Auth::id());
             if( isset($request->categories) && count($request->categories) ) 
@@ -586,6 +591,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 //'percent' => 'required|in:' . implode(',', \VanguardLTE\Shop::$values['percent']), 
                 'orderby' => 'required|in:' . implode(',', \VanguardLTE\Shop::$values['orderby'])
             ]);
+            $parent = auth()->user();
+            if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+            {
+                return redirect()->route('backend.shop.list')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
+            }
             $shop->update($data);
             //added by shev for random win
             $percent = $request['percent'];
