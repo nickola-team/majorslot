@@ -10,7 +10,7 @@
 @endif
 <!-- 팝업메시지 -->
 <div class="modal fade in" id="liveperson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 118px;">
+    <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 58px;">
         <div class="modal-content" style="border: 0;">
             <div class="modal-body" style="padding:0;">
                 <img src="/frontend/Major/major/images/adv_20210303.png" style="width: 100%;vertical-align: bottom;">
@@ -238,7 +238,7 @@
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
-            <span>이번주 인기게임들</span>
+            <span>다복이게임</span>
         </p>
     </div>
 </div>
@@ -278,7 +278,7 @@
                 <p>댄싱 드럼</p><p> 다복이</p></a>                
             </div>
         </div>
-        <div class="parent" onclick="">
+{{--        <div class="parent" onclick="">
             <div class="child">
                 <img src="/frontend/Default/ico/JumanjiNET.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
                 @if (Auth::check())
@@ -288,7 +288,7 @@
                 @endif
                 <p>쥬만지</p></a>                
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 
@@ -319,31 +319,25 @@
 </div>
 --}}
 
+
 <!--슬롯리스트-->
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
-            <span><strong>SLOT GAMES</strong></span>
+            <span><strong>인기게임</strong></span>
         </p>
     </div>
 </div>
 <div class="main_slot_wrap">
     <div class="sc-inner">
-    @if ($categories && count($categories))
-        @foreach($categories AS $index=>$category)
-            @if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-            && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
+        @foreach($special_games AS $index=>$game)
                 @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check())
-                    <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');" class="slot_pop_open slot-btn">
+                    <a href="javascript:;" onclick="startGame('{{ $game['href'] }}');" class="slot-btn">
                         <div class="inner">
                             <div class="check">
-                                <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'] .'.jpg' }}" />
                                 <span style="font-size:26px;">
-                                @if ($category->trans)
-                                    {{ $category->trans->trans_title }}
-                                @else
-                                    {{ $category->title }}
-                                @endif
+                                    {{ $game['title']}}
                                 </span>
                             </div>
                         </div>
@@ -352,23 +346,18 @@
                     <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');" class="slot-btn">
                         <div class="inner">
                             <div class="check">
-                                <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'].'.jpg' }}" />
                                 <span style="font-size:26px;">
-                                @if ($category->trans)
-                                    {{ $category->trans->trans_title }}
-                                @else
-                                    {{ $category->title }}
-                                @endif
+                                {{ $game['title']}}
                                 </span>
                             </div>
                         </div>
                     </a>
                 @endif
-            @endif
         @endforeach
-    @endif
     </div>
 </div>
+
 @stop
 
 @section('popup')
@@ -778,7 +767,7 @@
     <script>
         $( document ).ready(function() {
             $("#banner-close").click(function() {
-                if ($("#hide-today").val() == "on")
+                if ($("#hide-today").is(":checked") == true)
                 {
                     $.cookie('hide-today', 'done', { expires: 1 });
                 }

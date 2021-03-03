@@ -234,7 +234,72 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $currentSliderNum = 'all';
             }
-            return view('frontend.' . $frontend . '.games.list', compact('games', 'category1', 'cat1', 'categories', 'currentSliderNum', 'title', 'body', 'keywords', 'description', 'jpgs', 'shop', 'devices'));
+
+            $special_games[] = [
+                'href' => 'GreatRhinoPM',
+                'title' => '그레이트라이노'
+                ];
+            $special_games[] = [
+            'href' => 'PandaFortune',
+            'title' => '판다포츈'
+            ];
+            $special_games[] = [
+            'href' => 'MustangGold',
+            'title' => '무스탕골드'
+            ];
+            $special_games[] = [
+            'href' => 'BuffaloKing',
+            'title' => '버팔로킹'
+            ];
+            $special_games[] = [
+            'href' => 'JohnHunterTOSQ',
+            'title' => '존헌터TOSQ'
+            ];
+            $special_games[] = [
+            'href' => 'DogHouse',
+            'title' => '도그하우스'
+            ];
+            $special_games[] = [
+            'href' => 'SheriffOfNotinghamISB',
+            'title' => '노팅험쉐리프'
+            ];
+            $special_games[] = [
+            'href' => 'HotSpinDeluxeISB',
+            'title' => '핫스핀디럭스'
+            ];
+            $special_games[] = [
+            'href' => 'CoinCoinCoinPT',
+            'title' => '코인코인코인'
+            ];
+            $special_games[] = [
+            'href' => 'KatanaGT',
+            'title' => '카타나'
+            ];
+            $special_games[] = [
+            'href' => 'JumanjiNET',
+            'title' => '쥬만지'
+            ];
+            $special_games[] = [
+            'href' => 'VikingsNET',
+            'title' => '바이킹'
+            ];
+            $special_games[] = [
+            'href' => 'GoldenShanghaiKA',
+            'title' => '골든상하이'
+            ];
+            $special_games[] = [
+            'href' => 'LiveStreamingStarKA',
+            'title' => '스트리밍스타'
+            ];
+            $special_games[] = [
+            'href' => 'ImperialGirlsKA',
+            'title' => '임페이얼걸'
+            ];
+            $special_games[] = [
+            'href' => 'PartyGirlWaysKA',
+            'title' => '파티걸웨이'
+            ];
+            return view('frontend.' . $frontend . '.games.list', compact('games','special_games', 'category1', 'cat1', 'categories', 'currentSliderNum', 'title', 'body', 'keywords', 'description', 'jpgs', 'shop', 'devices'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {
