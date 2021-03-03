@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/frontend/Default/img/favicon.png" >
 
+	<link rel="stylesheet" href="/back/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
 	<link rel="stylesheet" href="/frontend/Major/major/css/common.css">
 	<link rel="stylesheet" href="/frontend/Major/major/css/layout.css">
 	<link rel="stylesheet" href="/frontend/Major/major/css/animations.css">
@@ -17,6 +19,7 @@
 	<link rel="stylesheet" href="/frontend/Major/fonts/fas/css/all.min.css">
 
 	<script src="/frontend/Major/jquery-1.12.2.min.js"></script>
+	<script src="/frontend/Major/js/jquery.cookie.js"></script>
 	<script src="/frontend/Major/major/js/showid.js"></script>
 	<script src="/frontend/Major/major/jq/popup/popup.js"></script>
 	<script src="/frontend/Major/major/js/sk_opacity.js"></script>
@@ -32,6 +35,7 @@
 	<script src="/frontend/Major/js/paging.min.js"></script>
 	<script src="/frontend/Major/js/odometer.min.js"></script>
 	<script src="/frontend/Major/js/jquery.animateNumber.min.js"></script>
+	<script src="/back/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
 
 <body>

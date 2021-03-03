@@ -8,6 +8,23 @@
         alert('{{ session('status') }}');
     </script>
 @endif
+<!-- 팝업메시지 -->
+<div class="modal fade in" id="liveperson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 118px;">
+        <div class="modal-content" style="border: 0;">
+            <div class="modal-body" style="padding:0;">
+                <img src="/frontend/Major/major/images/adv_20210303.png" style="width: 100%;vertical-align: bottom;">
+            </div>
+        </div>
+        <div style="text-align: right;margin: 0 auto;display: block;font-size: 14px;color: #fff;background: #2B2B2B;line-height: 29px;padding-right: 5px;">
+            <label >
+                <input type="checkbox" id="hide-today" style="margin-right: 5px;">오늘 하루동안 이 창을 열지 않음
+            </label>
+            &nbsp;&nbsp;
+            <a style="color: red;font-weight:bold; cursor: pointer; " id="banner-close">닫기</a>
+        </div>
+    </div>
+</div>
 
 <!-- 퀵위치 랭킹-->
 {{-- <div class="quick1_wrap">
@@ -760,6 +777,17 @@
 @endif
     <script>
         $( document ).ready(function() {
+            $("#banner-close").click(function() {
+                if ($("#hide-today").val() == "on")
+                {
+                    $.cookie('hide-today', 'done', { expires: 1 });
+                }
+                $('#liveperson').modal('hide');
+            });
+            console.log($.cookie('hide-today'));
+            if ($.cookie('hide-today') != 'done') {
+                $('#liveperson').modal('show');
+            }
             console.log( "ready!" );
             var odometers = [ "#minijp", "#minorjp", "#majorjp", "#grandjp"];
             var updateTime = 1000;
