@@ -224,12 +224,13 @@
         <div id="number_slideshow" class="number_slideshow">
             <ul>
                 <li><a><img src="/frontend/Major/major/images/slideshow1.png"></a></li>
-                <li><a><img src="/frontend/Major/major/images/slideshow2.png"></a></li>
+                <li><a><img src="/frontend/Major/major/images/slideshow1.png"></a></li>
+<!--                <li><a><img src="/frontend/Major/major/images/slideshow2.png"></a></li> -->
             </ul>
-            <ul class="number_slideshow_nav">
+<!--            <ul class="number_slideshow_nav">
                 <li><a href="#"></a></li>
                 <li><a href="#"></a></li>
-            </ul>
+            </ul> -->
         </div>
     </div>
 </div>
@@ -336,7 +337,7 @@
                         <div class="inner">
                             <div class="check">
                                 <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'] .'.jpg' }}" />
-                                <span style="font-size:26px;">
+                                <span style="font-size:16px;">
                                     {{ $game['title']}}
                                 </span>
                             </div>
@@ -347,7 +348,7 @@
                         <div class="inner">
                             <div class="check">
                                 <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'].'.jpg' }}" />
-                                <span style="font-size:26px;">
+                                <span style="font-size:16px;">
                                 {{ $game['title']}}
                                 </span>
                             </div>

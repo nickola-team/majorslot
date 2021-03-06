@@ -28,8 +28,8 @@
 
 	<script src="/frontend/Major/major/js/common.js"></script>
 	<script src="/frontend/Major/major/jq/slot/slot.js"></script>
-	<script src="/frontend/Major/major/jq/slideshow2/jquery.easing.1.3.js"></script>
-	<script src="/frontend/Major/major/jq/slideshow2/slideshow.js"></script>
+<!--	<script src="/frontend/Major/major/jq/slideshow2/jquery.easing.1.3.js"></script>
+	<script src="/frontend/Major/major/jq/slideshow2/slideshow.js"></script> !-->
 	<script src="/frontend/Major/js/sweetalert2.min.js"></script>
 	<script src="/frontend/Major/js/swiper.min.js"></script>
 	<script src="/frontend/Major/js/paging.min.js"></script>

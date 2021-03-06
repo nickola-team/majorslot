@@ -13,7 +13,7 @@
 
 
 .hot_wrap {float:left; width:100%; position:relative; margin:15px 0 0 0;}
-.hot_box {max-width: 1200px; margin:0px auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;}
+.hot_box {max-width: 1400px; margin:0px auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;}
 .hot_wrap p.title{animation: floating-text .5s ease alternate infinite;text-align: center;}
 .hot_wrap .title span {font-family: 'nanumsquare', sans-serif;font-weight: 600;font-size: 34px;background: #ffffff;-webkit-background-clip: text;-webkit-text-stroke: 3px transparent;color: #07a021;letter-spacing: 3px;}
 .hot_wrap .title strong {font-family: 'nanumsquare', sans-serif;font-weight: 400;font-size: 34x;background: #ffffff;;-webkit-background-clip: text;-webkit-text-stroke: 3px transparent;color: #ff0055;letter-spacing: 3px;padding-left: 10px;}
@@ -23,7 +23,7 @@
 .parent {
     width: 30%;
     margin: 5px;
-    height: 250px;
+    height: 320px;
     border: 1px solid blue;
     overflow: hidden;
     position: relative;
@@ -681,8 +681,8 @@
 .level_table tr td img {height:20px; }
 
 /* 점검중 */
-.check {float:left; width:252px; height:180px; background:rgba(0,0,0,0.3); border:2px solid #ff4ace; position: static; z-index:10000; text-align:center; font-family:'nanumgothic', sans-serif; letter-spacing:-1px; font-weight:bold; color:#f0e6e4; padding:0 0 0 0;
-    top:0px; left:0px; font-size: 30px; display: block;}
+.check {float:left; width:130px; height:80px; background:rgba(0,0,0,0.3); border:2px solid #ff4ace; position: static; z-index:10000; text-align:center; font-family:'nanumgothic', sans-serif; letter-spacing:-1px; font-weight:bold; color:#f0e6e4; padding:0 0 0 0;
+    top:0px; left:0px; display: block;}
 
 
 /* 양쪽 퀵메뉴 */
