@@ -382,19 +382,19 @@ namespace VanguardLTE\Games\DuoFuDuoCaiDancingDrum
                 {
                     $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $bet / 100 * $this->jpgs[$i]->percent + $this->jpgs[$i]->balance;
                 }
-                if( $this->jpgs[$i]->pay_sum < $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] && $this->jpgs[$i]->pay_sum > 0 ) 
+                if( $this->jpgs[$i]->pay_sum_new < $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] && $this->jpgs[$i]->pay_sum_new > 0 ) 
                 {
-                    $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = $this->jpgs[$i]->pay_sum / $this->CurrentDenom;
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] - $this->jpgs[$i]->pay_sum;
-                    $this->SetBalance($this->jpgs[$i]->pay_sum / $this->CurrentDenom);
+                    $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = $this->jpgs[$i]->pay_sum_new / $this->CurrentDenom;
+                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] - $this->jpgs[$i]->pay_sum_new;
+                    $this->SetBalance($this->jpgs[$i]->pay_sum_new / $this->CurrentDenom);
                     $type = $i;
-                    if( $this->jpgs[$i]->pay_sum > 0 ) 
+                    if( $this->jpgs[$i]->pay_sum_new > 0 ) 
                     {
                         \VanguardLTE\StatGame::create([
                             'user_id' => $this->playerId, 
                             'balance' => $this->Balance * $this->CurrentDenom, 
                             'bet' => 0, 
-                            'win' => $this->jpgs[$i]->pay_sum, 
+                            'win' => $this->jpgs[$i]->pay_sum_new, 
                             'game' => $this->game->name . ' JPG ' . $this->jpgs[$i]->id, 
                             'percent' => 0, 
                             'percent_jps' => 0, 
