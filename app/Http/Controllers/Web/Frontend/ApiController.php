@@ -510,7 +510,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if ($distr) {
                     \VanguardLTE\WithdrawDeposit::create([
                         'user_id' => $user->id,
-                        'payeer_id' => $user->parent_id,
+                        'payeer_id' => $distr->parent_id,
                         'type' => 'out',
                         'sum' => $request->money,
                         'status' => 0,

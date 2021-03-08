@@ -1266,9 +1266,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
 
                 if($user->hasRole('manager')){
+                    //send it to agent.
+                    $distr = $user->referral;
                     \VanguardLTE\WithdrawDeposit::create([
                         'user_id' => $user->id,
-                        'payeer_id' => $user->parent_id,
+                        'payeer_id' => $distr->parent_id,
                         'type' => 'out',
                         'sum' => $summ,
                         'status' => 0,
