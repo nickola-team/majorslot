@@ -125,7 +125,7 @@
             var apiUrl="/api/inoutlist.json";
             var timeout;
             var lastRequest = 0;
-            var audio = new Audio('door-bell.mp3');
+            var audio = new Audio('../frontend/Major/major/audio/door-bell.mp3');
             $("#adj_newmark").hide();
             $("#inout_newmark").hide();
             var updateInOutRequest = function (callback) {
