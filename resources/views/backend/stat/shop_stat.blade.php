@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '매장입출금내역')
-@section('page-heading', '매장입출금내역')
+@section('page-title', '매장충환전내역')
+@section('page-heading', '매장충환전내역')
 
 @section('content')
 
@@ -34,19 +34,19 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>입/출금</label>
+								<label>충/환전</label>
 								{!! Form::select('type', ['' => 'All', 'add' => 'Add', 'out' => 'Out'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>최소입출금</label>
+								<label>최소충환전금</label>
 								<input type="text" class="form-control" name="sum_from" value="{{ Request::get('sum_from') }}">
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>최대입출금</label>
+								<label>최대충환전금</label>
 								<input type="text" class="form-control" name="sum_to" value="{{ Request::get('sum_to') }}">
 							</div>
 						</div>
@@ -84,7 +84,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				{{-- <h3 class="box-title">@lang('app.shop_stats')</h3> --}}
-				<h3 class="box-title">매장입출금내역</h3>
+				<h3 class="box-title">매장충환전내역</h3>
 			</div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -93,8 +93,8 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -113,8 +113,8 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>

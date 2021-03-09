@@ -230,8 +230,8 @@
 							</div>
 						@endif
 						<div class="form-group">
-							<label for="OutSum">입금금액</label>
-							<input type="text" class="form-control" id="OutSum" name="summ" placeholder="입금금액" required autofocus>
+							<label for="OutSum">충전금액</label>
+							<input type="text" class="form-control" id="OutSum" name="summ" placeholder="충전금액" required autofocus>
 							<input type="hidden" name="type" value="add">
 							<input type="hidden" id="AddId" name="user_id">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -257,8 +257,8 @@
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="OutSum">출금금액</label>
-							<input type="text" class="form-control" id="OutSum" name="summ" placeholder="출금금액"  required autofocus>
+							<label for="OutSum">환전금액</label>
+							<input type="text" class="form-control" id="OutSum" name="summ" placeholder="환전금액"  required autofocus>
 							<input type="hidden" name="type" value="out">
 							<input type="hidden" id="outAll" name="all" value="0">
 							<input type="hidden" id="OutId" name="user_id">

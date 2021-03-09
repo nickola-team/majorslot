@@ -69,8 +69,8 @@
 					<thead>
 					<tr>
 						<th>이름(아이디)</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>딜비수익</th>
@@ -91,8 +91,8 @@
 					<thead>
 					<tr>
 						<th>이름(아이디)</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>딜비수익</th>

@@ -16,19 +16,19 @@
 	<td>
 		@if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('distributor') )
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $jackpot->id }}" >
-		<button type="button" class="btn btn-block btn-success btn-xs">입금</button>
+		<button type="button" class="btn btn-block btn-success btn-xs">충전</button>
 		</a>
 		@else
-			<button type="button" class="btn btn-block btn-success disabled btn-xs">입금</button>
+			<button type="button" class="btn btn-block btn-success disabled btn-xs">충전</button>
 		@endif
 	</td>
 	<td>
 		@if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('distributor') )
 		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $jackpot->id }}" >
-		<button type="button" class="btn btn-block btn-danger btn-xs">출금</button>
+		<button type="button" class="btn btn-block btn-danger btn-xs">환전</button>
 		</a>
 		@else
-			<button type="button" class="btn btn-block btn-danger disabled btn-xs">출금</button>
+			<button type="button" class="btn btn-block btn-danger disabled btn-xs">환전</button>
 		@endif
 	</td>
 </tr>

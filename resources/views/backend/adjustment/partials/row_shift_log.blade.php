@@ -9,6 +9,10 @@
 	<td>{{ number_format($shift_log->old_total,2) }}</td>
 	<td>{{ number_format($shift_log->balance_in,2) }}</td>
 	<td>{{ number_format($shift_log->balance_out,2) }}</td>
+	@if($adjustment->partner instanceof \VanguardLTE\Shop)
+	<td>{{ number_format($adjustment->open_shift->money_in,2) }}</td>
+	<td>{{ number_format($adjustment->open_shift->money_out,2) }}</td>
+	@endif	
 	<td>{{ number_format($shift_log->deal_profit,2)}}</td>
 	<td>{{ number_format($shift_log->mileage,2)}}</td>
 	<td>{{ number_format($shift_log->convert_deal,2) }}</td>

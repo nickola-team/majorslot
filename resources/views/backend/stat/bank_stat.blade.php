@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '게임뱅크입출금내역')
-@section('page-heading', '게임뱅크입출금내역')
+@section('page-title', '게임뱅크충환전내역')
+@section('page-heading', '게임뱅크충환전내역')
 
 @section('content')
 
@@ -34,19 +34,19 @@
 						</div> --}}
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>입/출금</label>
+								<label>충/환전</label>
 								{!! Form::select('type', ['' => 'All', 'add' => 'Add', 'out' => 'Out'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>최소입출금</label>
+								<label>최소충환전금</label>
 								<input type="text" class="form-control" name="sum_from" value="{{ Request::get('sum_from') }}">
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>최대입출금</label>
+								<label>최대충환전금</label>
 								<input type="text" class="form-control" name="sum_to" value="{{ Request::get('sum_to') }}">
 							</div>
 						</div>
@@ -84,7 +84,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				{{-- <h3 class="box-title">@lang('app.bank_stats')</h3> --}}
-				<h3 class="box-title">게임뱅크입출금내역</h3>
+				<h3 class="box-title">게임뱅크충환전내역</h3>
 			</div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -95,8 +95,8 @@
 						{{-- <th>@lang('app.user')</th> --}}
 						<th>변동전금액</th>
 						<th>변동후금액</th>
-						<th>입금금액</th>
-						<th>출금금액</th>
+						<th>충전금액</th>
+						<th>환전금액</th>
 						<th>시간</th>
 					</tr>
 					</thead>
@@ -115,8 +115,8 @@
 						{{-- <th>@lang('app.user')</th> --}}
 						<th>변동전금액</th>
 						<th>변동후금액</th>
-						<th>입금금액</th>
-						<th>출금금액</th>
+						<th>충전금액</th>
+						<th>환전금액</th>
 						<th>시간</th>
 					</tr>
 					</thead>

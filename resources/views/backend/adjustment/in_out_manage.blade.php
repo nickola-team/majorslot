@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '입출금관리')
-@section('page-heading', '입출금관리')
+@section('page-title', '충환전관리')
+@section('page-heading', '충환전관리')
 
 @section('content')
 
@@ -13,7 +13,7 @@
 
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">입출금관리</h3>
+				<h3 class="box-title">충환전관리</h3>
 			</div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -25,8 +25,8 @@
 						@else
 						<th>파트너이름</th>
 						@endif
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>계좌번호</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -51,8 +51,8 @@
 						@else
 						<th>파트너이름</th>
 						@endif
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>계좌번호</th>
 						<th>예금주</th>
 						<th>시간</th>

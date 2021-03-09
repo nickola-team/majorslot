@@ -513,9 +513,9 @@
                 <div class="popup_tab_wrap">
                     <ul class="popup_tab">
                         <li class="myinfo"><a href="javascript:;" onclick="openMenu('myinfo');"><span>My페이지</span></a></li>
-                        <li class="deposit"><a href="javascript:;" onclick="openMenu('deposit');"><span>입금신청</span></a></li>
-                        <li class="withdraw"><a href="javascript:;" onclick="openMenu('withdraw');"><span>출금신청</span></a></li>
-                        <li class="moneyhistory"><a href="javascript:;" onclick="openMenu('moneyhistory');"><span>입금/출금내역</span></a></li>
+                        <li class="deposit"><a href="javascript:;" onclick="openMenu('deposit');"><span>충전신청</span></a></li>
+                        <li class="withdraw"><a href="javascript:;" onclick="openMenu('withdraw');"><span>환전신청</span></a></li>
+                        <li class="moneyhistory"><a href="javascript:;" onclick="openMenu('moneyhistory');"><span>충/환전내역</span></a></li>
                         <li class="memo"><a href="javascript:;" onclick="openMenu('memo');"><span>쪽지함</span></a></li>
                         <li class="question"><a href="javascript:;" onclick="openMenu('question');"><span>1:1문의</span></a></li>
                         <li class="faq"><a href="javascript:;" onclick="openMenu('faq');"><span>FAQ</span></a></li>
@@ -587,7 +587,7 @@
                     </div>
                     <div id="deposit" class="content popup_none">
                         <div class="title1">
-                            입금신청
+                        충전신청
                         </div>
                         <div class="con_box10">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="write_title_top">
@@ -635,7 +635,7 @@
                         <div class="con_box10">
                             <div class="btn_wrap_center">
                                 <ul>
-                                    <li><button class="btn3_1" onclick="deposit();">입금하기</button></li>
+                                    <li><button class="btn3_1" onclick="deposit();">충전하기</button></li>
                                     <li><button class="btn3_2 menu_pop_close">취소하기</button></li>
                                 </ul>
                             </div>
@@ -643,7 +643,7 @@
                     </div>
                     <div id="withdraw" class="content popup_none">
                         <div class="title1">
-                            출금신청
+                            환전신청
                         </div>
                         <div class="con_box10">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="write_title_top">
@@ -653,7 +653,7 @@
                                     <td class="write_basic"><span class="cur_money">0 원</span></td>
                                 </tr>
                                 <tr>
-                                    <td class="write_title">출금금액</td>
+                                    <td class="write_title">환전금액</td>
                                     <td class="write_td"></td>
                                     <td class="write_basic">
                                         <input class="tmp_money" type="hidden" value="0" />
@@ -677,7 +677,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="write_title">출금비밀번호</td>
+                                    <td class="write_title">환전비밀번호</td>
                                     <td class="write_td"></td>
                                     <td class="write_basic"><input class="input1 refundpassword" type="password" value="" /></td>
                                 </tr>
@@ -686,7 +686,7 @@
                         <div class="con_box10">
                             <div class="btn_wrap_center">
                                 <ul>
-                                    <li><button class="btn3_1" onclick="withdraw();">출금하기</button></li>
+                                    <li><button class="btn3_1" onclick="withdraw();">환전하기</button></li>
                                     <li><button class="btn3_2 menu_pop_close">취소하기</button></li>
                                 </ul>
                             </div>
@@ -694,7 +694,7 @@
                     </div>
                     <div id="moneyhistory" class="content popup_none">
                         <div class="title1">
-                            입금/출금내역
+                        충/환전내역
                         </div>
                         <div class="con_box10">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -711,7 +711,7 @@
                         <div class="con_box10">
                             <div class="btn_wrap_center">
                                 <ul>
-                                    <li><button class="btn3_1" onclick="delMoneyHistory();">입출금내역 전체삭제</button></li>
+                                    <li><button class="btn3_1" onclick="delMoneyHistory();">충환전내역 전체삭제</button></li>
                                 </ul>
                             </div>
                         </div>

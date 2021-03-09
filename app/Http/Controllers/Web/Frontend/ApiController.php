@@ -341,7 +341,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json([
                     'error' => true, 
-                    'msg' => '입금금액을 입력해주세요'
+                    'msg' => '충전금액을 입력해주세요'
                 ], 200);
             }
             if($user->hasRole('manager')){
@@ -402,7 +402,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json([
                     'error' => true, 
-                    'msg' => '출금금액을 입력해주세요',
+                    'msg' => '환전금액을 입력해주세요',
                     'code' => '001'
                 ], 200);
             }
@@ -411,7 +411,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if($request->money > $user->shop->balance) {
                     return response()->json([
                         'error' => true, 
-                        'msg' => '출금금액은 보유금액을 초과할수 없습니다',
+                        'msg' => '환전금액은 보유금액을 초과할수 없습니다',
                         'code' => '002'
                     ], 200);
                 }
@@ -420,7 +420,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if($request->money > $user->balance) {
                     return response()->json([
                         'error' => true, 
-                        'msg' => '출금금액은 보유금액을 초과할수 없습니다',
+                        'msg' => '환전금액은 보유금액을 초과할수 없습니다',
                         'code' => '002'
                     ], 200);
                 }

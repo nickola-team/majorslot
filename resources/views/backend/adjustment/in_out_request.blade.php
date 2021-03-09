@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '입출금신청')
-@section('page-heading', '입출금신청')
+@section('page-title', '충환전신청')
+@section('page-heading', '충환전신청')
 
 @section('content')
 
@@ -13,7 +13,7 @@
 		
 		<div class="box">
 			<div class="box-header with-border">
-				<h3 class="box-title">입출금신청</h3>
+				<h3 class="box-title">충환전신청</h3>
 			</div>
 
 			<input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
@@ -121,8 +121,8 @@
 			<div class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
-						<label>입/출금금액:</label>
-						<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="입/출금금액을 입력하세요.">
+						<label>충/환전금액:</label>
+						<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요.">
 					</div>
 				</div>
 			</div>
@@ -153,10 +153,10 @@
 
 			<div class="box-footer">
 				<button class="btn btn-danger" id="withdraw-balance-btn" onclick="withdraw_balance();">
-					출금신청
+					환전신청
 				</button>
 				<button class="btn btn-success" id="deposit-balance-btn" onclick="deposit_balance();">
-					입금신청
+					충전신청
 				</button>
 				<button class="btn btn-success" id="convert-deal-balance-btn" onclick="convert_deal_balance();">
 					수익금전환
@@ -206,7 +206,7 @@
 
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">입출금신청내역</h3>
+				<h3 class="box-title">충환전신청내역</h3>
 			</div>
 			<div class="box-body">
 				<div class="table-responsive">
@@ -218,8 +218,8 @@
 							@else
 							<th>파트너이름</th>
 							@endif
-							<th>입금</th>
-							<th>출금</th>
+							<th>충전</th>
+							<th>환전</th>
 							<th>계좌번호</th>
 							<th>예금주</th>
 							<th>신청시간</th>
@@ -296,7 +296,7 @@
                         }
                         return;
                     }
-                    alert('출금 신청이 완료되었습니다.');
+                    alert('환전 신청이 완료되었습니다.');
                     location.reload(true);
                 },
                 error: function (err, xhr) {
@@ -329,7 +329,7 @@
                         }
                         return;
                     }
-                    alert('입금 신청이 완료되었습니다.');
+                    alert('충전 신청이 완료되었습니다.');
                     location.reload(true);
                 },
                 error: function (err, xhr) {
@@ -362,7 +362,7 @@
                         }
                         return;
                     }
-                    alert('출금 신청이 완료되었습니다.');
+                    alert('환전 신청이 완료되었습니다.');
                     location.reload(true);
                 },
                 error: function (err, xhr) {

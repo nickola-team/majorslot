@@ -251,7 +251,7 @@
                     <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_request') }}">
                             <i class="fa fa-circle-o"></i>
-                            입출금신청
+                            충환전신청
                         </a>
                     </li>
                     @endpermission
@@ -261,7 +261,7 @@
                     <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_manage') }}">
                             <i class="fa fa-circle-o"></i>
-                            입출금관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                            충환전관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
                         </a>
                     </li>
                     @endpermission
@@ -325,7 +325,7 @@
                         <a  href="{{ route('backend.statistics') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.statistics') --}}
-                            회원입출금내역
+                            회원충환전내역
                         </a>
                     </li>
                     @endpermission
@@ -335,7 +335,7 @@
                         <a  href="{{ route('backend.statistics_partner') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.statistics') --}}
-                            파트너입출금내역
+                            파트너충환전내역
                         </a>
                     </li>
                     @endpermission
@@ -355,7 +355,7 @@
                         <a  href="{{ route('backend.bank_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.bank_stats') --}}
-                            게임뱅크입출금내역
+                            게임뱅크충환전내역
                         </a>
                     </li>
                     @endpermission
@@ -365,7 +365,7 @@
                         <a href="{{ route('backend.shop_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.shop_stats') --}}
-                            매장입출금내역
+                            매장충환전내역
                         </a>
                     </li>
                     @endpermission

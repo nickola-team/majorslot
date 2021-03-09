@@ -647,21 +647,23 @@ namespace VanguardLTE
                     ]);
                 }
             }
-            if ($payeer->hasRole(['admin','agent','distributor'])) 
+            if ($this->hasRole(['agent','distributor'])) 
             {
                 $open_shift = OpenShift::where([
+                    'user_id' => $this->id, 
+                    'type' => 'partner',
+                    'end_date' => null
+                ])->first();
+            }
+            if ($payeer->hasRole(['admin','agent'])) 
+            {
+                $payeer_open_shift = OpenShift::where([
                     'user_id' => $payeer->id, 
                     'type' => 'partner',
                     'end_date' => null
                 ])->first();
-                /*if( !$open_shift ) 
-                {
-                    return response()->json([
-                        'status' => 'error', 
-                        'message' => trans('app.shift_not_opened')
-                    ]);
-                } */
             }
+            
             
             $happyhour = HappyHour::where([
                 'shop_id' => $payeer->shop_id, 
@@ -733,14 +735,14 @@ namespace VanguardLTE
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && $this->hasRole('user') ) 
             {
                 $shop->update(['balance' => $shop->balance - $summ]);
-                if( $type == 'out' ) 
+                /*if( $type == 'out' ) 
                 {
                     $open_shift->increment('balance_in', abs($summ));
                 }
                 else
                 {
                     $open_shift->increment('balance_out', abs($summ));
-                }
+                } */
                 if( $type == 'out' ) 
                 {
                     $open_shift->increment('money_out', abs($summ));
@@ -750,23 +752,27 @@ namespace VanguardLTE
                     $open_shift->increment('money_in', abs($summ));
                 }
             }
-            if ($payeer->hasRole(['admin','agent','distributor']) && $open_shift) 
+            if ($payeer->hasRole(['admin','agent'])) 
             {
                 if( $type == 'out' ) 
                 {
-                    $open_shift->increment('balance_in', abs($summ));
+                    if ($open_shift) $open_shift->increment('balance_out', abs($summ));
+                    if ($payeer_open_shift) $payeer_open_shift->increment('balance_in', abs($summ));
                 }
                 else
                 {
-                    $open_shift->increment('balance_out', abs($summ));
+                    if ($open_shift) $open_shift->increment('balance_in', abs($summ));
+                    if ($payeer_open_shift) $payeer_open_shift->increment('balance_out', abs($summ));
                 }
                 if( $type == 'out' ) 
                 {
-                    $open_shift->increment('money_out', abs($summ));
+                    if ($open_shift) $open_shift->increment('money_out', abs($summ));
+                    if ($payeer_open_shift) $payeer_open_shift->increment('money_in', abs($summ));
                 }
                 else
                 {
-                    $open_shift->increment('money_in', abs($summ));
+                    if ($open_shift) $open_shift->increment('money_in', abs($summ));
+                    if ($payeer_open_shift) $payeer_open_shift->increment('money_out', abs($summ));
                 }
             }
             if( $this->balance == 0 ) 

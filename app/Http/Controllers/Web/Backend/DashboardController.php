@@ -1134,8 +1134,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $partners = \VanguardLTE\Shop::whereIn('id', $shop_users)->get();
 
                 foreach($partners as $shop){
+
+                    $summ = \VanguardLTE\User::where([
+                        'shop_id' => $shop->id, 
+                        'role_id' => 1
+                    ])->sum('balance');
     
                     $adjustment = new \VanguardLTE\Adjustment();
+                    $adjustment->total_in = $summ;
                     $adjustment->partner = $shop;
                     
                     $open_shift = \VanguardLTE\OpenShift::where('shop_id', $shop->id);
@@ -1246,14 +1252,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $summ = $request->summ;
                 if($summ > $partner->balance + $partner->deal_balance - $partner->mileage) {
-                    return redirect()->route('backend.adjustment_shift')->withErrors(['출금금액이 보유금액보다 클수 없습니다.']);
+                    return redirect()->route('backend.adjustment_shift')->withErrors(['환전금액이 보유금액보다 클수 없습니다.']);
                 }
                 $remain_balance = $partner->balance + $partner->deal_balance - $partner->mileage - $summ;
 
 
                 $user = auth()->user();
                 if(!$user->hasRole('admin') && ($user->bank_name == null || $user->bank_name == '')){
-                    return redirect()->route('backend.adjustment_shift')->withErrors(['입출금신청페이지에서 계좌정보를 입력해주세요.']);
+                    return redirect()->route('backend.adjustment_shift')->withErrors(['충환전신청페이지에서 계좌정보를 입력해주세요.']);
                 }
 
                 //update balance for partner or shop

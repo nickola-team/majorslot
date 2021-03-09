@@ -10,11 +10,16 @@
 	<td>{{ number_format($adjustment->open_shift->old_total,2) }}</td>
 	<td>{{ number_format($adjustment->open_shift->balance_in,2) }}</td>
 	<td>{{ number_format($adjustment->open_shift->balance_out,2) }}</td>
+	@if($adjustment->partner instanceof \VanguardLTE\Shop)
+	<td>{{ number_format($adjustment->open_shift->money_in,2) }}</td>
+	<td>{{ number_format($adjustment->open_shift->money_out,2) }}</td>
+	<td>{{ number_format($adjustment->total_in,2) }}</td>
+	@endif
 	<td>{{ number_format($adjustment->open_shift->deal_profit,2)}}</td>
 	<td>{{ number_format($adjustment->open_shift->mileage,2)}}</td>
 	<td>{{ number_format($adjustment->open_shift->convert_deal,2) }}</td>
 	<td>{{ number_format($adjustment->open_shift->deal_profit - $adjustment->open_shift->mileage - $adjustment->open_shift->convert_deal,2) }}</td>
-	<td>{{ number_format($adjustment->partner->balance,2) }}</td>
+	<td>{{ number_format($adjustment->partner->balance+$adjustment->total_in,2) }}</td>
 	@else
 		<td colspan =9>정산을 시작하지 않았습니다.</td>
 	@endif

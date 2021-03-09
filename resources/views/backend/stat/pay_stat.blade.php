@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '회원입출금내역')
-@section('page-heading', '회원입출금내역')
+@section('page-title', '회원충환전내역')
+@section('page-heading', '회원충환전내역')
 
 @section('content')
 
@@ -28,11 +28,11 @@
 						</div> --}}
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>입/출금</label>
+								<label>충/환전</label>
 								<select name="type" class="form-control">
 									<option value="" @if (Request::get('type') == '') selected @endif>@lang('app.all')</option>
-									<option value="add" @if (Request::get('type') == 'add') selected @endif>입금</option>
-									<option value="out" @if (Request::get('type') == 'out') selected @endif>출금</option>
+									<option value="add" @if (Request::get('type') == 'add') selected @endif>충전</option>
+									<option value="out" @if (Request::get('type') == 'out') selected @endif>환전</option>
 								</select>
 							</div>
 						</div>
@@ -94,7 +94,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				{{-- <h3 class="box-title">@lang('app.pay_stats')</h3> --}}
-				<h3 class="box-title">회원입출금내역</h3>
+				<h3 class="box-title">회원충환전내역</h3>
 			</div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -104,8 +104,8 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>매장</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>시간</th>
 					</tr>
 					</thead>
@@ -127,8 +127,8 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>매장</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
 						<th>시간</th>
 					</tr>
 					</thead>

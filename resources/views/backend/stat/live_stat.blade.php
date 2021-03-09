@@ -28,7 +28,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>@lang('app.type')</label>
-                                {!! Form::select('type', ['' => '모두', 'PayStat' => '입출금내역', 'StatGame' => '게임베팅내역', 'BankStat' => '잭팟입출금내역', 'ShopStat' => '매장입출금내역'], $filter, ['id' => 'type', 'class' => 'form-control']) !!}
+                                {!! Form::select('type', ['' => '모두', 'PayStat' => '충환전내역', 'StatGame' => '게임베팅내역', 'BankStat' => '게임뱅크충환전내역', 'ShopStat' => '매장충환전내역'], $filter, ['id' => 'type', 'class' => 'form-control']) !!}
                             </div>
                         </div>
                     </div>

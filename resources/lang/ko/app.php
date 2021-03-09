@@ -3,7 +3,7 @@
 return [
     'home' => '홈',
 	'game_stats' => '게임 통계',
-	'bank_stats' => '입출금 통계',
+	'bank_stats' => '충환전 통계',
 	'live_stats' => '실시간 통계',
     'my_profile' => '내 프로필',
     'active_sessions' => '접속현황',
@@ -102,11 +102,11 @@ return [
 	'payer' => '플레이어',
 	'system' => '파트너',
 
-    'latest_pay_stats' => '최근 입출금내역',
+    'latest_pay_stats' => '최근 충환전내역',
     'latest_game_stats' => '최근 게임베팅내역',
     'latest_shops' => '최근 매장',
     'latest_bank_stat' => '최근 잭팟충전내역',
-    'latest_shop_stats' => '최근 매장입출금내역',
+    'latest_shop_stats' => '최근 매장충환전내역',
     'latest_stats' => '최신 통계',
 
     // Dashboard
@@ -283,8 +283,8 @@ return [
     'hard_delete' => '삭제',
 	
 	'balance' => '보유금액',
-	'pay_in' => '입금',
-	'pay_out' => '출금',
+	'pay_in' => '충전',
+	'pay_out' => '환전',
 	'sum' => '금액',
 	'balance_updated' => '보유머니가 업데이트되었습니다.',
 	
@@ -376,8 +376,8 @@ return [
 	'yes_reset_him' => '네, 리셋하세요!',
 	'are_you_sure_reset_bank' => '이 게임의 뱅크를 재설정 하시겠습니까?',
     'total_banks' => '총 거래',
-    'total_in' => '총 입금액',
-    'total_out' => '총 출금액',
+    'total_in' => '총 충전액',
+    'total_out' => '총 환전액',
     'average_RTP' => '평균 RTP',
     'shop_is_creating' => '매장정보 생성중입니다.',
     'games_will_be_added_in_few_minutes' => '몇 분 안에 게임이 추가됩니다...',
@@ -560,7 +560,7 @@ return [
     'multiplier' => '승수',
     'time' => '시간',
     'time_server' => '시간서버',
-    'all_player_deposits' => '모든 플레이어 입금',
+    'all_player_deposits' => '모든 플레이어 충전',
 
 
     'jpg' => 'JP Game',
@@ -574,8 +574,8 @@ return [
     'date_start' => 'Date start',
     'date_end' => 'Date end',
     'credit' => '보유금액',
-    'in' => '입금',
-    'out' => '출금',
+    'in' => '충전',
+    'out' => '환전',
     'total' => '합계',
     'banks' => 'Banks',
     'money' => 'Money',

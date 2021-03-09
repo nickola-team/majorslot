@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '기간별정산')
-@section('page-heading', '기간별정산')
+@section('page-title', '딜비정산')
+@section('page-heading', '딜비정산')
 
 @section('content')
 
@@ -13,7 +13,7 @@
 		
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">기간별정산</h3>
+				<h3 class="box-title">딜비정산</h3>
 				@if($user != null)
 					<a href="{{ route('backend.adjustment_shift', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
@@ -25,7 +25,7 @@
 						@endforeach
 						]
 					</a>
-					@endif
+				@endif
 			</div>
 			<div class="box-body">
 				<div class="table-responsive">
@@ -36,8 +36,13 @@
 						<th>정산시작시간</th>
 						<th>정산마감시간</th>
 						<th>이월된 보유금</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
+						@if(auth()->user()->hasRole('manager') || (($user != null) && ($user->hasRole('distributor'))))
+						<th>회원충전</th>
+						<th>회원환전</th>
+						<th>회원보유금</th>
+						@endif
 						<th>딜비수익</th>
 						<th>하위수익</th>
 						<th>딜비전환</th>
@@ -52,7 +57,7 @@
 							@include('backend.adjustment.partials.row_shift')
 						@endforeach
 					@else
-						<tr><td colspan="4">@lang('app.no_data')</td></tr>
+						<tr><td colspan="12">@lang('app.no_data')</td></tr>
 					@endif
 					{{-- @if (count($shift_logs))
 						@foreach ($shift_logs as $shift_log)
@@ -80,8 +85,12 @@
 						<th>정산시작시간</th>
 						<th>정산마감시간</th>
 						<th>이월된 보유금</th>
-						<th>입금</th>
-						<th>출금</th>
+						<th>충전</th>
+						<th>환전</th>
+						@if(auth()->user()->hasRole('manager') || (($user != null) && ($user->hasRole('distributor'))))
+						<th>회원충전</th>
+						<th>회원환전</th>
+						@endif
 						<th>딜비수익</th>
 						<th>하위수익</th>
 						<th>딜비전환</th>
@@ -96,7 +105,7 @@
 							@include('backend.adjustment.partials.row_shift_log')
 						@endforeach
 					@else
-						<tr><td colspan="11">@lang('app.no_data')</td></tr>
+						<tr><td colspan="12">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					</table>
@@ -118,8 +127,8 @@
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="OutSum">출금금액</label>
-							<input type="text" class="form-control" id="OutSum" name="summ" placeholder="출금금액"   required autofocus>
+							<label for="OutSum">환전금액</label>
+							<input type="text" class="form-control" id="OutSum" name="summ" placeholder="환전금액"   required autofocus>
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						</div>
 					</div>

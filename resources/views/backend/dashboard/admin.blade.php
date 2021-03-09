@@ -90,7 +90,7 @@
                                 <thead>
                                 <tr>
                                     <th>@lang('app.system')</th>
-                                    <th>입/출금액</th>
+                                    <th>충/환전금액</th>
                                     <th>회원/파트너</th>
                                     <th>@lang('app.date')</th>
                                 </tr>
@@ -342,7 +342,7 @@
                                 {{--    <th>@lang('app.user')</th> --}}
                                     <th>@lang('app.old')</th>
                                     <th>@lang('app.new')</th>
-                                    <th>입/출금금액</th>
+                                    <th>충/환전금액</th>
                                     <th>@lang('app.date')</th>
                                 </tr>
                                 </thead>
@@ -394,7 +394,7 @@
                                 <tr>
                                     <th>@lang('app.name')</th>
                                     <th>파트너이름</th>
-                                    <th>입/출금액</th>
+                                    <th>충/환전액</th>
                                     <th>@lang('app.date')</th>
                                 </tr>
                                 </thead>
