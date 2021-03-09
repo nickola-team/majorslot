@@ -119,5 +119,56 @@
 
 @yield('scripts')
 
+<script>
+        $( document ).ready(function() {
+            var updateTime = 3000;
+            var apiUrl="/api/inoutlist.json";
+            var timeout;
+            var lastRequest = 0;
+            var audio = new Audio('door-bell.mp3');
+            $("#adj_newmark").hide();
+            $("#inout_newmark").hide();
+            var updateInOutRequest = function (callback) {
+                if (true) {
+                    $.ajax({
+                        url: apiUrl,
+                        type: "GET",
+                        data: {'last':lastRequest, 'id': 
+                            @if (Auth::check())
+                                {{auth()->user()->id}} },
+                            @else
+                            0},
+                            @endif
+                        dataType: 'json',
+                        success: function (data) {
+                            var inouts=data;
+                            lastRequest = inouts['now'];
+                            if (inouts['count'] > 0)
+                            {
+                                audio.play();
+                                $("#adj_newmark").show();
+                                $("#inout_newmark").show();
+                            }
+                            else
+                            {
+                                $("#adj_newmark").hide();
+                                $("#inout_newmark").hide();
+                            }
+                            timeout = setTimeout(updateInOutRequest, updateTime);
+                            if (callback != null) callback();
+                        },
+                        error: function () {
+                            timeout = setTimeout(updateInOutRequest, updateTime);
+                            if (callback != null) callback();
+                        }
+                    });
+                } else {
+                    clearTimeout(timeout);
+                }
+            };
+
+            timeout = setTimeout(updateInOutRequest, updateTime);
+        });
+    </script>
 </body>
 </html>

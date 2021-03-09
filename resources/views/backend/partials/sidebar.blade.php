@@ -209,7 +209,7 @@
                 || Request::is('backend/adjustment_shift*') || Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
-                    <span>정산관리</span>
+                    <span>정산관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -241,7 +241,7 @@
                     <li class="{{ Request::is('backend/adjustment_shift') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.adjustment_shift') }}">
                             <i class="fa fa-circle-o"></i>
-                            기간별정산
+                            딜비정산
                         </a>
                     </li>
                     @endpermission
@@ -261,7 +261,7 @@
                     <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_manage') }}">
                             <i class="fa fa-circle-o"></i>
-                            입출금관리
+                            입출금관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
                         </a>
                     </li>
                     @endpermission

@@ -131,6 +131,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $games = $games->get();
             return $games;
         }
+        public function inoutList_json(\Illuminate\Http\Request $request)
+        {
+            $res['now'] = \Carbon\Carbon::now();
+            $transactions = \VanguardLTE\WithdrawDeposit::where([
+                'status' => 0,
+                'payeer_id' => $request->id])->get();
+            $res['count'] = $transactions->count();
+            return json_encode($res);
+        }
 
         public function getgamelist(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
@@ -313,91 +322,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         public function withdrawDealMoney(\Illuminate\Http\Request $request){
             return response()->json(['error' => true, 'msg' => 'not implemented']);
-            if( !\Illuminate\Support\Facades\Auth::check() ) {
-                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
-            }
-
-            $user = \VanguardLTE\User::find(\Auth::id());
-            if($user->bank_name == null || $user->bank_name == ''){
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '계좌정보를 입력해주세요',
-                    'code' => '004'
-                ], 200);
-            }
-            if( !$request->money ) 
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '출금금액을 입력해주세요',
-                    'code' => '001'
-                ], 200);
-            }
-
-            if($user->hasRole('manager')){
-                if($request->money > ($user->shop->deal_balance - $user->shop->mileage)) {
-                    return response()->json([
-                        'error' => true, 
-                        'msg' => '출금금액은 보유한 딜비금액을 초과할수 없습니다',
-                        'code' => '002'
-                    ], 200);
-                }
-            }
-            else {
-                if($request->money > ($user->deal_balance - $user->mileage)) {
-                    return response()->json([
-                        'error' => true, 
-                        'msg' => '출금금액은 보유한 딜비금액을 초과할수 없습니다',
-                        'code' => '002'
-                    ], 200);
-                }
-            }
-
-            if(auth()->user()->hasRole('manager')){
-                
-                \VanguardLTE\WithdrawDeposit::create([
-                    'user_id' => auth()->user()->id,
-                    'payeer_id' => auth()->user()->parent_id,
-                    'type' => 'deal_out',
-                    'sum' => $request->money,
-                    'status' => 0,
-                    'shop_id' => auth()->user()->shop_id,
-                    'created_at' => \Carbon\Carbon::now(),
-                    'updated_at' => \Carbon\Carbon::now(),
-                    'bank_name' => $user->bank_name,
-                    'account_no' => $user->account_no,
-                    'recommender' => $user->recommender,
-                    'partner_type' => 'shop'
-                ]);
-
-
-                $shop = \VanguardLTE\Shop::where('id', auth()->user()->shop_id)->get()->first();
-                $shop->update([
-                    'deal_balance' => $shop->deal_balance - $request->money,
-                ]);
-            }
-            else {
-                \VanguardLTE\WithdrawDeposit::create([
-                    'user_id' => auth()->user()->id,
-                    'payeer_id' => auth()->user()->parent_id,
-                    'type' => 'deal_out',
-                    'sum' => $request->money,
-                    'status' => 0,
-                    'shop_id' => auth()->user()->shop_id,
-                    'created_at' => \Carbon\Carbon::now(),
-                    'updated_at' => \Carbon\Carbon::now(),
-                    'bank_name' => $user->bank_name,
-                    'account_no' => $user->account_no,
-                    'recommender' => $user->recommender,
-                    'partner_type' => 'partner'
-                ]);
-
-                auth()->user()->update([
-                    'deal_balance' => auth()->user()->deal_balance - $request->money
-                ]);
-            }
-
-            return response()->json(['error' => false]);
         }
 
         public function deposit(\Illuminate\Http\Request $request){

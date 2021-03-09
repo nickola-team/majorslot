@@ -297,6 +297,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@rejectInOut',
     ]);
 
+    Route::get('api/inoutlist.json', [
+        'as' => 'frontend.api.inoutlist',
+        'uses' => 'ApiController@inoutList_json',
+    ]);
+
     //**************/
 });
 
