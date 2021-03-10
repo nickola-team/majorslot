@@ -192,7 +192,7 @@
                         <input type="password" name="password" id="password" class="input_login" placeholder="비밀번호">
                     </li>
                     <li>
-                        <span class="login_btn1" onclick="loginProc();">@lang('app.log_in')</span>
+                        <span class="login_btn1" onclick="loginProc();">로그인</span>
                     </li>
                     <li><a href="#" class="join_pop_open"><span class="login_btn2">회원가입</span></a></li>
                 </ul>
