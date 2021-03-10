@@ -591,7 +591,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 //'percent' => 'required|in:' . implode(',', \VanguardLTE\Shop::$values['percent']), 
                 'orderby' => 'required|in:' . implode(',', \VanguardLTE\Shop::$values['orderby'])
             ]);
-            $parent = auth()->user();
+            //$parent = auth()->user();
+            $managers = $shop->getUsersByRole('manager');
+            if (count($managers) == 0)
+            {
+                return redirect()->route('backend.shop.list')->withErrors(['매장관리자를 찾을수 없습니다.']);
+            }
+            $parent = $managers->first()->referral;
             if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
             {
                 return redirect()->route('backend.shop.list')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
