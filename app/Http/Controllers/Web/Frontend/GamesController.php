@@ -240,8 +240,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'title' => '그레이트라이노'
                 ];
             $special_games[] = [
-            'href' => 'PandaFortune',
-            'title' => '판다포츈'
+            'href' => 'DolphinsPearlDXGT',
+            'title' => '돌고래보물'
             ];
             $special_games[] = [
             'href' => 'MustangGold',
