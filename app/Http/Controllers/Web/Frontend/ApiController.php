@@ -3,7 +3,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
     class ApiController extends \VanguardLTE\Http\Controllers\Controller
     {
-        public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request)
+        public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
             $throttles = settings('throttle_enabled');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
@@ -42,17 +42,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => trans('app.your_account_is_banned')]);
             }
-            \Auth::login($user, settings('remember_me') && $request->get('remember'));
-            if( settings('reset_authentication') && count($sessionRepository->getUserSessions(\Auth::id())) ) 
+            
+            if(count($sessionRepository->getUserSessions($user->id)) ) 
             {
-                foreach( $sessionRepository->getUserSessions($user->id) as $session ) 
-                {
-                    if( $session->id != session()->getId() ) 
-                    {
-                        $sessionRepository->invalidateSession($session->id);
-                    }
-                }
+                return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
             }
+
+            \Auth::login($user, settings('remember_me') && $request->get('remember'));
 
             return response()->json(['error' => false, 'msg' => '성공']);
         }

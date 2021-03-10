@@ -5,7 +5,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
 	
 	Route::get('login', [
 		'as' => 'frontend.auth.login',
-		'uses' => 'Auth\AuthController@getLogin'
+		'uses' => 'GamesController@index'
 	]);
 
 	Route::get('launcher/{game}/{token}/{mode}','Auth\AuthController@apiLogin' );
@@ -61,7 +61,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
             'uses' => 'Auth\PasswordController@postReset'
         ]);
     }
-    */
+    
 	
 	
 	Route::get('new-license', [
@@ -77,7 +77,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.page.error_license',
         'uses' => 'PagesController@error_license'
     ]);
-
+*/
     Route::get('jpstv/{id?}', [
         'as' => 'frontend.jpstv',
         'uses' => 'PagesController@jpstv'
