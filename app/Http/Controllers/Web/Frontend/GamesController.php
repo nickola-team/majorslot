@@ -240,9 +240,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'title' => '그레이트라이노'
                 ];
             $special_games[] = [
-            'href' => 'DolphinsPearlDXGT',
-            'title' => '돌고래보물'
-            ];
+                'href' => 'PandaFortune',
+                'title' => '판다포츈'
+                ];
             $special_games[] = [
             'href' => 'MustangGold',
             'title' => '무스탕골드'
@@ -260,20 +260,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             'title' => '도그하우스'
             ];
             $special_games[] = [
-            'href' => 'SheriffOfNotinghamISB',
-            'title' => '노팅험쉐리프'
+                'href' => 'CherryLovePT',
+                'title' => '체리러브'
             ];
             $special_games[] = [
-            'href' => 'HotSpinDeluxeISB',
-            'title' => '핫스핀디럭스'
+            'href' => 'GeishaStoryPT',
+            'title' => '게이샤이야기'
+            ];
+            $special_games[] = [
+            'href' => 'BeautyWarriorAM',
+            'title' => '여전사'
             ];
             $special_games[] = [
             'href' => 'CoinCoinCoinPT',
             'title' => '코인코인코인'
-            ];
-            $special_games[] = [
-            'href' => 'KatanaGT',
-            'title' => '카타나'
             ];
             $special_games[] = [
             'href' => 'JumanjiNET',
