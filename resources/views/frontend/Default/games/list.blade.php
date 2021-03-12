@@ -331,14 +331,21 @@
 </div>
 <div class="main_slot_wrap">
     <div class="sc-inner">
-        @foreach($special_games AS $index=>$game)
+    @if ($categories && count($categories))
+        @foreach($categories AS $index=>$category)
+            @if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
+            && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
                 @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check())
-                    <a href="javascript:;" onclick="startGame('{{ $game['href'] }}');" class="slot-btn">
+                <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');" class="slot_pop_open slot-btn">
                         <div class="inner">
                             <div class="check">
-                                <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'] .'.jpg' }}" />
+                            <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
                                 <span style="font-size:16px;">
-                                    {{ $game['title']}}
+                                @if ($category->trans)
+                                    {{ $category->trans->trans_title }}
+                                @else
+                                    {{ $category->title }}
+                                @endif
                                 </span>
                             </div>
                         </div>
@@ -347,15 +354,21 @@
                     <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');" class="slot-btn">
                         <div class="inner">
                             <div class="check">
-                                <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'].'.jpg' }}" />
+                            <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
                                 <span style="font-size:16px;">
-                                {{ $game['title']}}
+                                @if ($category->trans)
+                                    {{ $category->trans->trans_title }}
+                                @else
+                                    {{ $category->title }}
+                                @endif
                                 </span>
                             </div>
                         </div>
                     </a>
                 @endif
+            @endif
         @endforeach
+    @endif
     </div>
 </div>
 
