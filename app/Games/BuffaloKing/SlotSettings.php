@@ -1012,7 +1012,7 @@ namespace VanguardLTE\Games\BuffaloKing
                 $rc = count($key);
                 $key[-1] = $key[$rc - 1];
                 $key[$rc] = $key[0];
-                $reel['reel' . $index][-1] = $key[$value - 1];
+                $reel['reel' . $index][-1] = rand(3, 10);
                 if($winType == 'win'){
                     $diffNum = rand(1, 3);
                 }else{
