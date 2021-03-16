@@ -3,6 +3,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     class CQ9Controller extends \VanguardLTE\Http\Controllers\Controller
     {
+        function validRFC3339Date($date) {
+            if (preg_match('/^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$/', $date)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         public function checkmtcode($mtcode)
         {
@@ -27,6 +34,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'status' => [
                         'code' => '1003',
                         'message' => 'incorrect parameter',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
+            if (!$this->validRFC3339Date($eventTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
                         'datetime' => date(DATE_RFC3339_EXTENDED)
                     ]
                 ]);
@@ -151,6 +170,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            if (!$this->validRFC3339Date($createTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
             $transaction = [
                 'action' => 'endround',
                 'target' => [
@@ -169,14 +199,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
-                $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
-                $transaction['status']['status'] = 'failed';
-                $transaction['status']['message'] = 'failed';
-                \VanguardLTE\CQ9Transaction::create([
-                    'mtcode' => $mtcode, 
-                    'data' => json_encode($transaction)
-                ]);
-
                 return response()->json([
                     'data' => null,
                     'status' => [
@@ -218,6 +240,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             foreach ($mtcodes_record as $record)
             {
+                if ($this->checkmtcode($record))
+                {
+                    $user->balance = $user->balance - $totalamount;
+                    $user->save();
+                    return response()->json([
+                        'data' => null,
+                        'status' => [
+                            'code' => '2009',
+                            'message' => 'Duplicate MTCode.',
+                            'datetime' => date(DATE_RFC3339_EXTENDED)
+                        ]
+                    ]);
+                }
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $record, 
                     'data' => json_encode($transaction)
@@ -250,6 +285,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'status' => [
                         'code' => '1003',
                         'message' => 'incorrect parameter',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            if (!$this->validRFC3339Date($eventTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
                         'datetime' => date(DATE_RFC3339_EXTENDED)
                     ]
                 ]);
@@ -370,6 +416,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'status' => [
                         'code' => '1003',
                         'message' => 'incorrect parameter',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            if (!$this->validRFC3339Date($eventTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
                         'datetime' => date(DATE_RFC3339_EXTENDED)
                     ]
                 ]);
@@ -547,6 +604,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
+            if (!$this->validRFC3339Date($eventTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
             if ($this->checkmtcode($mtcode))
             {
                 return response()->json([
@@ -659,7 +728,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($user && $user->hasRole('user'))
             {
                 return response()->json([
-                    'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
+                    'data' => ['balance' => number_format ($user->balance,4,'.',''), 'currency' => 'KRW'],
                     'status' => [
                         'code' => '0',
                         'message' => 'Success',
