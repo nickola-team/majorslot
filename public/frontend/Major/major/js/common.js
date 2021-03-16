@@ -272,16 +272,32 @@ function openGroup(obj, category) {
             if (data.games.length > 0) {
                 for (var i = 0; i < data.games.length; i++) {
                     strHtml += '<div style="width: 18%; height: 200px; margin: 10px; float:left; text-align:center;">';
-                    strHtml += '<a href="javascript:;" onclick="startGame(\'' + data.games[i].name + '\');">';
-                    //</a>strHtml += '<a href="javascript:;" onclick="comingSoon();">';
-                    if(data.games[i].name != '')
+
+                    if (data.games[i].provider)
                     {
-                        strHtml += '<img src="/frontend/Default/ico/' + data.games[i].name + '.jpg" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                        strHtml += '<a href="javascript:;" onclick="startGameByProvider(\'' + data.games[i].provider + '\',\'' + data.games[i].name + '\',\'' + data.games[i].gamecode + '\');">';
+                        if(data.games[i].name != '')
+                        {
+                            strHtml += '<img src="/frontend/Default/ico/' + data.games[i].provider + "/" + data.games[i].gamecode + "_" + data.games[i].name + '.jpg" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                        }
+                        else{
+                            strHtml += '<img src="" style="width: 100%;" alt=""></img>';
+                        }
+                        strHtml += '</a>';
                     }
-                    else{
-                        strHtml += '<img src="" style="width: 100%;" alt=""></img>';
+                    else
+                    {
+                        strHtml += '<a href="javascript:;" onclick="startGame(\'' + data.games[i].name + '\');">';
+                        //</a>strHtml += '<a href="javascript:;" onclick="comingSoon();">';
+                        if(data.games[i].name != '')
+                        {
+                            strHtml += '<img src="/frontend/Default/ico/' + data.games[i].name + '.jpg" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                        }
+                        else{
+                            strHtml += '<img src="" style="width: 100%;" alt=""></img>';
+                        }
+                        strHtml += '</a>';
                     }
-                    strHtml += '</a>';
                     strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:18px;">' + data.games[i].title + '</span>';
                     strHtml += '</div>';
                 }
@@ -307,9 +323,6 @@ function openGroup(obj, category) {
                     strHtml += '</div>';
                 }
             } else {
-                strHtml += '<div style="text-align: center;">';
-                strHtml += '<img src="/frontend/Major/major/images/coming_soon.png" style="margin-top: 150px;">';
-                strHtml += '</div>';
             }
             $("#slot_pop .popup_content_wrap").html(strHtml);
         },

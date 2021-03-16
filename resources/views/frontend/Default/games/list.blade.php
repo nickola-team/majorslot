@@ -236,6 +236,7 @@
 </div>
 
 <!-- 인기게임 슬라이드 -->
+{{-- 
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
@@ -279,7 +280,7 @@
                 <p>댄싱 드럼</p><p> 다복이</p></a>                
             </div>
         </div>
-{{--        <div class="parent" onclick="">
+       <div class="parent" onclick="">
             <div class="child">
                 <img src="/frontend/Default/ico/JumanjiNET.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
                 @if (Auth::check())
@@ -774,6 +775,29 @@
         
         //location.href = "/game/" + gamename;
         window.open("/game/" + gamename, gamename, "width=1280, height=742, left=100, top=50");
+        
+    }
+    function startGameByProvider(provider, gamename, gamecode) {
+        var formData = new FormData();
+        formData.append("provider", provider);
+        formData.append("gamecode", gamecode);
+        $.ajax({
+        type: "POST",
+        url: "/api/getgamelink",
+        data: formData,
+        processData: false,
+        contentType: false,
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            window.open(data.data.url, gamename, "width=1280, height=742, left=100, top=50");
+        }
+        });
+        
         
     }
     </script>

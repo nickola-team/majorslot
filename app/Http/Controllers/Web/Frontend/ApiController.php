@@ -1,6 +1,8 @@
 <?php 
+
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
+    use Illuminate\Support\Facades\Http;
     class ApiController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
@@ -51,6 +53,85 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
 
             return response()->json(['error' => false, 'msg' => '성공']);
+        }
+        public function getgamelink(\Illuminate\Http\Request $request)
+        {
+            $detect = new \Detection\MobileDetect();
+            $user = auth()->user();
+            $provider = $request->provider;
+            $gamecode = $request->gamecode;
+            if ($provider == 'cq9')
+            {
+                $response = Http::withHeaders([
+                    'Authorization' => config('app.cq9token'),
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
+                    'account' => $user->username,
+                    'gamehall' => 'cq9',
+                    'gamecode' => $gamecode,
+                    'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB'
+                ]);
+                if (!$response->ok())
+                {
+                    return response()->json(['error' => true, 'msg' => '요청이 잘못되었습니다.']);
+                }
+                $data = $response->json();
+                if ($data['status']['code'] == 0){
+                    return response()->json(['error' => false, 'data' => $data['data']]);
+                }
+                else{
+                    return response()->json(['error' => true, 'msg' => '응답이 잘못되었습니다.']);
+                }
+                
+            }
+
+        }
+        public function gamelistbyProvider($provider)
+        {
+            if ($provider == 'cq9')
+            {
+                $response = Http::withHeaders([
+                    'Authorization' => config('app.cq9token'),
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->get(config('app.cq9api') . '/gameboy/game/list/cq9');
+                if (!$response->ok())
+                {
+                    return null;
+                }
+                $data = $response->json();
+                if ($data['status']['code'] == 0){
+                    $gameList = [];
+                    foreach ($data['data'] as $game)
+                    {
+                        if ($game['gametype'] == "slot" && $game['status'])
+                        {
+                            $selLan = 'ko';
+                            if (!in_array($selLan, $game['lang']))
+                            {
+                                $selLan = 'en';
+                                if (!in_array($selLan, $game['lang']))
+                                {
+                                    continue;
+                                }
+                            }
+                            foreach ($game['nameset'] as $title)
+                            {
+                                if ($title['lang'] == $selLan)
+                                {
+                                    $gameList[] = [
+                                        'provider' => 'cq9',
+                                        'gamecode' => $game['gamecode'],
+                                        'name' => preg_replace('/\s+/', '', $game['gamename']),
+                                        'title' => $title['name'],
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                    return $gameList;
+                }
+            }
+            return null;
         }
 
         public function gamelist($categoryIDs, $wherenot=false)
@@ -179,13 +260,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             ])->pluck('id')->toArray();
             $categories[] = $cat1->id;
 
-            $selectedGames = $this->gamelist($categories, false);
+            if ($cat1->provider != null)
+            {
+                $selectedGames = $this->gamelistbyProvider($cat1->provider);
+            }
+            else{
+                $selectedGames = $this->gamelist($categories, false);
+            }
+
+            
 
             $cat1 = \VanguardLTE\Category::whereNotIn('href', [$category, 'hot', 'wazdan','vision','bingo','card','roulette','keno','new']);
             $categories = $cat1->where('shop_id', $shop_id)->pluck('id')->toArray();
 
             $otherGames = $this->gamelist($categories, false);
-            return response()->json(['error' => false, 'games' => $selectedGames, 'others' => $otherGames]);
+            //return response()->json(['error' => false, 'games' => $selectedGames, 'others' => $otherGames]);
+            //for cq9
+            return response()->json(['error' => false, 'games' => $selectedGames, 'others' => []]);
         }
 
         public function changeBankAccount(\Illuminate\Http\Request $request){

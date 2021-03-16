@@ -9,6 +9,7 @@ namespace VanguardLTE
             'parent', 
             'position', 
             'href', 
+            'provider',
             'original_id', 
             'shop_id'
         ];

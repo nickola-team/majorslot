@@ -265,6 +265,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@getgamelist',
     ]);
 
+    Route::post('api/getgamelink', [
+        'as' => 'frontend.api.getgamelink',
+        'uses' => 'ApiController@getgamelink',
+    ]);
+
     //added by shev
     Route::post('api/change_bank_account', [
         'as' => 'frontend.api.change_bank_account',
@@ -1168,3 +1173,18 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
 	});
 });
 
+
+/**
+ * CQ9 Game Provider
+ */
+Route::group(['middleware' => ['cq9']], function () {
+	Route::post('/transaction/game/bet', 'GameProviders\CQ9Controller@bet');
+	Route::post('/transaction/game/endround', 'GameProviders\CQ9Controller@endround');
+    Route::post('/transaction/game/debit', 'GameProviders\CQ9Controller@debit');
+    Route::post('/transaction/game/credit', 'GameProviders\CQ9Controller@credit');
+    Route::post('/transaction/game/refund', 'GameProviders\CQ9Controller@refund');
+    Route::post('/transaction/user/payoff', 'GameProviders\CQ9Controller@payoff');
+	Route::get('/transaction/record/{mtcode}', 'GameProviders\CQ9Controller@record');
+    Route::get('/transaction/balance/{account}', 'GameProviders\CQ9Controller@balance');
+    Route::get('/player/check/{account}', 'GameProviders\CQ9Controller@checkplayer');
+});

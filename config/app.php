@@ -94,6 +94,14 @@ return [
     'date_time_format' => 'Y-m-d H:i:s',
 
     /*
+    CQ9 Auth key
+    */
+
+    'cq9api' => 'http://api.cqgame.games',
+    'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDNjNGMxNmZlMjZkZjAwMDFiODJiZDUiLCJhY2NvdW50IjoibWFqb3Jfc3ciLCJvd25lciI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsInBhcmVudCI6InNlbGYiLCJjdXJyZW5jeSI6IktSVyIsImp0aSI6IjE4OTkxNTM3MiIsImlhdCI6MTYxNDU2NDM3NCwiaXNzIjoiQ3lwcmVzcyIsInN1YiI6IlNTVG9rZW4ifQ.d0wckd9veGYALObeu729LGBO3W6eZ6JFeS_1KGUs2bo'),
+    
+
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------

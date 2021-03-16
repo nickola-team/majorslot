@@ -1,4 +1,5 @@
 <?php 
+
 namespace VanguardLTE\Http\Middleware
 {
     class IpMiddleware
@@ -11,7 +12,7 @@ namespace VanguardLTE\Http\Middleware
             }
             if( !$request->shop_id ) 
             {
-                $response = Response::json(['error' => 'Shop is empty or not exist'], 401, []);
+                $response = \Response::json(['error' => 'Shop is empty or not exist'], 401, []);
                 $response->header('Content-Type', 'application/json');
                 return $response;
             }
