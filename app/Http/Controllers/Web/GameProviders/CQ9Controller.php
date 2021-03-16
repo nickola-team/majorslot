@@ -128,7 +128,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transaction['before'] = floatval($user->balance);
             
-            $user->balance = $user->balance - $amount;
+            $user->balance = $user->balance - floatval($amount);
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -140,7 +140,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             
             return response()->json([
-                'data' => ['balance' => $user->balance, 'currency' => 'KRW'],
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
@@ -226,13 +226,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             ]
                         ]);
                     }
+                    if (!$this->validRFC3339Date($round['eventTime']))
+                    {
+                        return response()->json([
+                            'data' => null,
+                            'status' => [
+                                'code' => '1004',
+                                'message' => 'wrong time format',
+                                'datetime' => date(DATE_RFC3339_EXTENDED)
+                            ]
+                        ]);
+                    }
                     $mtcodes_record[] = $round['mtcode'];
                     $totalamount += $round['amount'];
                 }
             }
             $transaction['before'] = floatval($user->balance);
 
-            $user->balance = $user->balance + $totalamount;
+            $user->balance = $user->balance + floatval($totalamount);
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -242,7 +253,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if ($this->checkmtcode($record))
                 {
-                    $user->balance = $user->balance - $totalamount;
+                    $user->balance = $user->balance - floatval($totalamount);
                     $user->save();
                     return response()->json([
                         'data' => null,
@@ -260,7 +271,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             return response()->json([
-                'data' => ['balance' => $user->balance, 'currency' => 'KRW'],
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
@@ -378,7 +389,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transaction['before'] = floatval($user->balance);
             
-            $user->balance = $user->balance - $amount;
+            $user->balance = $user->balance - floatval($amount);
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -390,7 +401,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             
             return response()->json([
-                'data' => ['balance' => $user->balance, 'currency' => 'KRW'],
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
@@ -491,7 +502,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             $transaction['before'] = floatval($user->balance);
             
-            $user->balance = $user->balance + $amount;
+            $user->balance = $user->balance + floatval($amount);
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -503,7 +514,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             
             return response()->json([
-                'data' => ['balance' => $user->balance, 'currency' => 'KRW'],
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
@@ -569,14 +580,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             foreach ($data['event'] as $event) {
                 $totalamount += $event['amount'];
             }
-            $user->balance = $user->balance + $totalamount;
+            $data['status']['status'] ='refund';
+            $data['before'] = floatval($user->balance);
+            
+            $user->balance = $user->balance + floatval($totalamount);
             $user->save();
+
+            $data['balance'] = floatval($user->balance);
             
             $record->refund = 1;
+            $record->data = json_encode($data);
             $record->save();
 
             return response()->json([
-                'data' => ['balance' => $user->balance, 'currency' => 'KRW'],
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
@@ -675,7 +692,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             $transaction['before'] = floatval($user->balance);
             
-            $user->balance = $user->balance + $amount;
+            $user->balance = $user->balance + floatval($amount);
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -687,7 +704,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             
             return response()->json([
-                'data' => ['balance' => $user->balance, 'currency' => 'KRW'],
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
@@ -727,7 +744,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if ($user && $user->hasRole('user'))
             {
-                return response()->json([
+                $resjson = json_encode([
                     'data' => ['balance' => number_format ($user->balance,4,'.',''), 'currency' => 'KRW'],
                     'status' => [
                         'code' => '0',
@@ -735,6 +752,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'datetime' => date(DATE_RFC3339_EXTENDED)
                     ]
                 ]);
+                $pattern = '/("balance":)"([.\d]+)"/x';
+                $replacement = '${1}${2}';
+                
+                return response(preg_replace($pattern, $replacement, $resjson), 200)->header('Content-Type', 'application/json');
             }
             else
             {
