@@ -136,11 +136,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transaction['before'] = floatval($user->balance);
             
-<<<<<<< HEAD
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
-=======
-            $user->balance =  $user->balance - floatval($amount);
->>>>>>> 2eeca2725d3c9b2472e05548fb5bb15bde930cd2
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -255,11 +251,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transaction['before'] = floatval($user->balance);
 
-<<<<<<< HEAD
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($totalamount)));
-=======
-            $user->balance = $user->balance + floatval($totalamount);
->>>>>>> 2eeca2725d3c9b2472e05548fb5bb15bde930cd2
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -269,11 +261,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if ($this->checkmtcode($record))
                 {
-<<<<<<< HEAD
                     $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($totalamount)));
-=======
-                    $user->balance = $user->balance - floatval($totalamount);
->>>>>>> 2eeca2725d3c9b2472e05548fb5bb15bde930cd2
                     $user->save();
                     return response()->json([
                         'data' => null,
@@ -409,11 +397,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transaction['before'] = floatval($user->balance);
             
-<<<<<<< HEAD
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
-=======
-            $user->balance = $user->balance - floatval($amount);
->>>>>>> 2eeca2725d3c9b2472e05548fb5bb15bde930cd2
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -525,11 +509,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             
             $transaction['before'] = floatval($user->balance);
-<<<<<<< HEAD
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
-=======
-            $user->balance = $user->balance + floatval($amount);
->>>>>>> 2eeca2725d3c9b2472e05548fb5bb15bde930cd2
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
@@ -610,11 +590,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['status']['status'] ='refund';
             $data['before'] = floatval($user->balance);
             
-<<<<<<< HEAD
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($totalamount)));
-=======
-            $user->balance =$user->balance + floatval($totalamount);
->>>>>>> 2eeca2725d3c9b2472e05548fb5bb15bde930cd2
             $user->save();
 
             $data['balance'] = floatval($user->balance);
@@ -723,11 +699,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             $transaction['before'] = floatval($user->balance);
             
-<<<<<<< HEAD
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
-=======
-            $user->balance =  $user->balance + floatval($amount);
->>>>>>> 2eeca2725d3c9b2472e05548fb5bb15bde930cd2
             $user->save();
 
             $transaction['balance'] = floatval($user->balance);
