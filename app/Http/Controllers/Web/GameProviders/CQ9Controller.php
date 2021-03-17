@@ -1,8 +1,12 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
+    use Illuminate\Support\Facades\Http;
     class CQ9Controller extends \VanguardLTE\Http\Controllers\Controller
     {
+        /*
+        * UTILITY FUNCTION
+        */
         function validRFC3339Date($date) {
             if (preg_match('/^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$/', $date)) {
                 return true;
@@ -16,6 +20,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record = \VanguardLTE\CQ9Transaction::Where('mtcode',$mtcode)->get()->first();
             return $record;
         }
+
+        /*
+        * FROM CQ9, BACK API
+        */
         public function bet(\Illuminate\Http\Request $request)
         {
             $account = $request->account;
@@ -787,7 +795,81 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         }
 
+        /*
+        * FROM CONTROLLER, API
+        */
         
+        public static function getgamelist()
+        {
+            $response = Http::withHeaders([
+                'Authorization' => config('app.cq9token'),
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ])->get(config('app.cq9api') . '/gameboy/game/list/cq9');
+            if (!$response->ok())
+            {
+                return null;
+            }
+            $data = $response->json();
+            if ($data['status']['code'] == 0){
+                $gameList = [];
+                foreach ($data['data'] as $game)
+                {
+                    if ($game['gametype'] == "slot" && $game['status'])
+                    {
+                        $selLan = 'ko';
+                        if (!in_array($selLan, $game['lang']))
+                        {
+                            $selLan = 'en';
+                            if (!in_array($selLan, $game['lang']))
+                            {
+                                continue;
+                            }
+                        }
+                        foreach ($game['nameset'] as $title)
+                        {
+                            if ($title['lang'] == $selLan)
+                            {
+                                $gameList[] = [
+                                    'provider' => 'cq9',
+                                    'gamecode' => $game['gamecode'],
+                                    'name' => preg_replace('/\s+/', '', $game['gamename']),
+                                    'title' => $title['name'],
+                                ];
+                            }
+                        }
+                    }
+                }
+                return $gameList;
+            }
+            return null;
+
+        }
+
+        public static function getgamelink($gamecode)
+        {
+            $user = auth()->user();
+            $detect = new \Detection\MobileDetect();
+            $response = Http::withHeaders([
+                'Authorization' => config('app.cq9token'),
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ])->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
+                'account' => $user->username,
+                'gamehall' => 'cq9',
+                'gamecode' => $gamecode,
+                'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB'
+            ]);
+            if (!$response->ok())
+            {
+                return ['error' => true, 'msg' => '요청이 잘못되었습니다.'];
+            }
+            $data = $response->json();
+            if ($data['status']['code'] == 0){
+                return ['error' => false, 'data' => $data['data']];
+            }
+            else{
+                return ['error' => true, 'msg' => '응답이 잘못되었습니다.'];
+            }
+        }
     }
 
 }

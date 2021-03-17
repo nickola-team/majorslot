@@ -2,7 +2,8 @@
 
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
-    use Illuminate\Support\Facades\Http;
+    use VanguardLTE\Http\Controllers\Web\GameProviders\CQ9Controller;
+
     class ApiController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
@@ -56,33 +57,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
-            $detect = new \Detection\MobileDetect();
-            $user = auth()->user();
             $provider = $request->provider;
             $gamecode = $request->gamecode;
             if ($provider == 'cq9')
             {
-                $response = Http::withHeaders([
-                    'Authorization' => config('app.cq9token'),
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
-                    'account' => $user->username,
-                    'gamehall' => 'cq9',
-                    'gamecode' => $gamecode,
-                    'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB'
-                ]);
-                if (!$response->ok())
-                {
-                    return response()->json(['error' => true, 'msg' => '요청이 잘못되었습니다.']);
-                }
-                $data = $response->json();
-                if ($data['status']['code'] == 0){
-                    return response()->json(['error' => false, 'data' => $data['data']]);
-                }
-                else{
-                    return response()->json(['error' => true, 'msg' => '응답이 잘못되었습니다.']);
-                }
-                
+                $res = CQ9Controller::getgamelink($gamecode);
+                return response()->json($res);
             }
 
         }
@@ -90,46 +70,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             if ($provider == 'cq9')
             {
-                $response = Http::withHeaders([
-                    'Authorization' => config('app.cq9token'),
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->get(config('app.cq9api') . '/gameboy/game/list/cq9');
-                if (!$response->ok())
-                {
-                    return null;
-                }
-                $data = $response->json();
-                if ($data['status']['code'] == 0){
-                    $gameList = [];
-                    foreach ($data['data'] as $game)
-                    {
-                        if ($game['gametype'] == "slot" && $game['status'])
-                        {
-                            $selLan = 'ko';
-                            if (!in_array($selLan, $game['lang']))
-                            {
-                                $selLan = 'en';
-                                if (!in_array($selLan, $game['lang']))
-                                {
-                                    continue;
-                                }
-                            }
-                            foreach ($game['nameset'] as $title)
-                            {
-                                if ($title['lang'] == $selLan)
-                                {
-                                    $gameList[] = [
-                                        'provider' => 'cq9',
-                                        'gamecode' => $game['gamecode'],
-                                        'name' => preg_replace('/\s+/', '', $game['gamename']),
-                                        'title' => $title['name'],
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                    return $gameList;
-                }
+                return CQ9Controller::getgamelist();
             }
             return null;
         }

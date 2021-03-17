@@ -88,7 +88,9 @@ namespace VanguardLTE
                     return $model;
                 }
             }
-            $model->user->processBetDealerMoney($model->bet, $model->game);
+            if ($model->bet > 0) {
+                $model->user->processBetDealerMoney($model->bet, $model->game);
+            }
             return $model;
         }
     }
