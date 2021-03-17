@@ -21,6 +21,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $record;
         }
 
+        public function generateCode($limit){
+            $code = 0;
+            for($i = 0; $i < $limit; $i++) { $code .= mt_rand(0, 9); }
+            return $code;
+        }
+
         /*
         * FROM CQ9, BACK API
         */
@@ -73,6 +79,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
             $transaction = [
+                '_id' => $this->generateCode(24),
                 'action' => 'bet',
                 'target' => [
                     'account' => $account,
@@ -190,6 +197,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $transaction = [
+                '_id' => $this->generateCode(24),
                 'action' => 'endround',
                 'target' => [
                     'account' => $account,
@@ -334,6 +342,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
             $transaction = [
+                '_id' => $this->generateCode(24),
                 'action' => 'debit',
                 'target' => [
                     'account' => $account,
@@ -465,6 +474,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
             $transaction = [
+                '_id' => $this->generateCode(24),
                 'action' => 'credit',
                 'target' => [
                     'account' => $account,
@@ -654,6 +664,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
             $transaction = [
+                '_id' => $this->generateCode(24),
                 'action' => 'payoff',
                 'target' => [
                     'account' => $account,
@@ -735,7 +746,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $data = json_decode($record->data, true);
-            $data['_id'] = $record->id;
 
             return response()->json([
                 'data' => $data,
