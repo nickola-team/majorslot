@@ -1188,3 +1188,18 @@ Route::group(['middleware' => 'cq9', 'prefix' => 'cq9',], function () {
     Route::get('/transaction/balance/{account}', 'GameProviders\CQ9Controller@balance');
     Route::get('/player/check/{account}', 'GameProviders\CQ9Controller@checkplayer');
 });
+
+/**
+ * Pragmatic Play Game Provider
+ */
+Route::group(['middleware' => 'pp', 'prefix' => 'pp',], function () {
+	Route::post('/auth', 'GameProviders\PPController@auth');
+	Route::post('/balance', 'GameProviders\PPController@balance');
+    Route::post('/bet', 'GameProviders\PPController@bet');
+    Route::post('/result', 'GameProviders\PPController@result');
+    Route::post('/bonuswin', 'GameProviders\PPController@bonuswin');
+    Route::post('/jackpotwin', 'GameProviders\PPController@jackpotwin');
+	Route::post('/endround', 'GameProviders\PPController@endround');
+    Route::post('/refund', 'GameProviders\PPController@refund');
+    Route::post('/promowin', 'GameProviders\PPController@promowin');
+});
