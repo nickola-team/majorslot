@@ -862,11 +862,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response = Http::withHeaders([
                 'Authorization' => config('app.cq9token'),
                 'Content-Type' => 'application/x-www-form-urlencoded'
-            ])->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
+            ])->asForm()->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
                 'account' => $user->username,
                 'gamehall' => 'cq9',
                 'gamecode' => $gamecode,
-                'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB'
+                'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
+                'lang' => 'ko'
             ]);
             if (!$response->ok())
             {
