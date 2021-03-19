@@ -780,7 +780,7 @@
         window.open("/game/" + gamename, gamename, "width=1280, height=742, left=100, top=50");
         
     }
-    function startGameByProvider(provider, gamename, gamecode) {
+    function startGameByProvider(provider, gamecode) {
         var formData = new FormData();
         formData.append("provider", provider);
         formData.append("gamecode", gamecode);
@@ -797,7 +797,7 @@
                 alert(data.msg);
                 return;
             }
-            window.open(data.data.url, gamename, "width=1280, height=742, left=100, top=50");
+            window.open(data.data.url, "game", "width=1280, height=742, left=100, top=50");
         }
         });
         
