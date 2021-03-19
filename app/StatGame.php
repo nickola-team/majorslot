@@ -48,8 +48,8 @@ namespace VanguardLTE
                             'IN_JPS' => number_format($model->percent_jps, 4, '.', ''), 
                             'IN_JPG' => number_format($model->percent_jpg, 4, '.', ''), 
                             'Profit' => number_format($model->profit, 4, '.', ''), 
-                            'user_id' => \Auth::id(), 
-                            'shop_id' => \Auth::user()->shop_id, 
+                            'user_id' => $model->user->id, 
+                            'shop_id' => $model->user->shop_id, 
                             'Date' => date(config('app.date_time_format')), 
                             'domain' => request()->getHost()
                         ]

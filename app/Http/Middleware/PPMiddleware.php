@@ -14,16 +14,8 @@ namespace VanguardLTE\Http\Middleware
             }
 
             $params = $request->except('hash');
-            ksort($params);
-            $str_params = implode('&', array_map(
-                function ($v, $k) {
-                    return $k.'='.$v;
-                }, 
-                $params, 
-                array_keys($params)
-            ));
-            $calc_hash = md5($str_params . config('app.ppsecretkey'));
-            if (false /*$request->hash != $calc_hash */)
+            $calc_hash = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::calcHash($params);
+            if ($request->hash != $calc_hash )
             {
                 $response = \Response::json(['error' => 5, 'description' => 'hash is incorrect'], 200, []);
                 $response->header('Content-Type', 'application/json');

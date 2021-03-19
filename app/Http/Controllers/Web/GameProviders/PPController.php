@@ -7,6 +7,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         /*
         * UTILITY FUNCTION
         */
+        public static function calcHash($params)
+        {
+            ksort($params);
+            $str_params = implode('&', array_map(
+                function ($v, $k) {
+                    return $k.'='.$v;
+                }, 
+                $params, 
+                array_keys($params)
+            ));
+            $calc_hash = md5($str_params . config('app.ppsecretkey'));
+            return $calc_hash;
+        }
         public function checkreference($reference)
         {
             $record = \VanguardLTE\PPTransaction::Where('reference',$reference)->get()->first();
@@ -424,75 +437,59 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist()
         {
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+            ];
+            $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
-                'Authorization' => config('app.cq9token'),
                 'Content-Type' => 'application/x-www-form-urlencoded'
-            ])->get(config('app.cq9api') . '/gameboy/game/list/cq9');
+                ])->get(config('app.ppapi') . '/getCasinoGames/', $data);
             if (!$response->ok())
             {
-                return null;
+                return $response->body();
             }
             $data = $response->json();
-            if ($data['status']['code'] == 0){
+            if ($data['error'] == "0"){
                 $gameList = [];
-                foreach ($data['data'] as $game)
+                foreach ($data['gameList'] as $game)
                 {
-                    if ($game['gametype'] == "slot" && $game['status'])
+                    if ($game['gameTypeID'] == "vs")
                     {
-                        $selLan = 'ko';
-                        if (!in_array($selLan, $game['lang']))
-                        {
-                            $selLan = 'en';
-                            if (!in_array($selLan, $game['lang']))
-                            {
-                                continue;
-                            }
-                        }
-                        foreach ($game['nameset'] as $title)
-                        {
-                            if ($title['lang'] == $selLan)
-                            {
-                                $gameList[] = [
-                                    'provider' => 'cq9',
-                                    'gamecode' => $game['gamecode'],
-                                    'name' => preg_replace('/\s+/', '', $game['gamename']),
-                                    'title' => $title['name'],
-                                ];
-                            }
-                        }
+                        $gameList[] = [
+                            'provider' => 'pp',
+                            'gamecode' => $game['gameID'],
+                            'name' => preg_replace('/\s+/', '', $game['gameName']),
+                            'title' => $game['gameName'],
+                            'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png'
+                        ];
                     }
                 }
                 return $gameList;
             }
-            return null;
-
+            return [];
         }
 
         public static function getgamelink($gamecode)
         {
-            $user = auth()->user();
             $detect = new \Detection\MobileDetect();
-            $response = Http::withHeaders([
-                'Authorization' => config('app.cq9token'),
-                'Content-Type' => 'application/x-www-form-urlencoded'
-            ])->asForm()->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
-                'account' => $user->username,
-                'gamehall' => 'cq9',
-                'gamecode' => $gamecode,
-                'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
-                'lang' => 'ko'
-            ]);
-            if (!$response->ok())
-            {
-                return ['error' => true, 'msg' => '요청이 잘못되었습니다.'];
-            }
-            $data = $response->json();
-            if ($data['status']['code'] == 0){
-                return ['error' => false, 'data' => $data['data']];
-            }
-            else{
-                return ['error' => true, 'msg' => '응답이 잘못되었습니다.'];
-            }
+            $key = [
+                'token' => auth()->user()->username,
+                'symbol' => $gamecode,
+                'language' => 'ko',
+                'technology' => 'H5',
+                'platform' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
+                'cashierUrl' => \URL::to('/'),
+                'lobbyUrl' => \URL::to('/'),
+            ];
+            $str_params = implode('&', array_map(
+                function ($v, $k) {
+                    return $k.'='.$v;
+                }, 
+                $key,
+                array_keys($key)
+            ));
+            $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . 'stylename=rare_stake';
+            return ['error' => false, 'data' => ['url' => $url]];
         }
     }
 

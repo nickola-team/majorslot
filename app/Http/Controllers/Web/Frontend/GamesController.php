@@ -218,7 +218,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     //$categories = \VanguardLTE\Category::whereIn('id', $cat_ids)->orderBy('position', 'ASC')->get();
                     //for cq9
-                    $categories = \VanguardLTE\Category::where(['href' => 'cq9', 'shop_id' => $shop_id])->orderBy('position', 'ASC')->get();
+                    $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->
+                    whereIn('href', ['cq9', 'pp'])->orderBy('position', 'ASC')->get();
                     if( $category1 != '' ) 
                     {
                         foreach( $categories as $index => $cat ) 

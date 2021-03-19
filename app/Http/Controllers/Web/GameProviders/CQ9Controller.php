@@ -27,6 +27,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $code;
         }
 
+        public function gamecodetoname($code)
+        {
+            $gameList = \Illuminate\Support\Facades\Redis::get('cq9list');
+            $gamename = $code;
+            if ($gameList)
+            {
+                $games = json_decode($gameList, true);
+                foreach($games as $game)
+                {
+                    if ($game['gamecode'] == $code)
+                    {
+                        $gamename = $game['name'];
+                        break;
+                    }
+                }
+            }
+            return $gamename;
+        }
+
         /*
         * FROM CQ9, BACK API
         */
@@ -151,6 +170,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
                 'data' => json_encode($transaction)
+            ]);
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => floatval($amount), 
+                'win' => 0, 
+                'game' => $this->gamecodetoname($gamecode) . $gamehall, 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
             ]);
 
             
@@ -286,6 +319,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
+            if (floatval($totalamount) > 0) {
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => floatval($user->balance), 
+                    'bet' => 0, 
+                    'win' => floatval($totalamount), 
+                    'game' => $this->gamecodetoname($gamecode) . $gamehall, 
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id
+                ]);
+            }
+
             return response()->json([
                 'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
@@ -415,6 +464,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'mtcode' => $mtcode, 
                 'data' => json_encode($transaction)
             ]);
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => floatval($amount), 
+                'win' => 0, 
+                'game' => $this->gamecodetoname($gamecode) . $gamehall . '_debit', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
 
             
             return response()->json([
@@ -529,6 +591,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => json_encode($transaction)
             ]);
 
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($amount), 
+                'game' => $this->gamecodetoname($gamecode) . $gamehall . '_credit', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
+
             
             return response()->json([
                 'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
@@ -608,6 +684,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record->refund = 1;
             $record->data = json_encode($data);
             $record->save();
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($totalamount), 
+                'game' => $this->gamecodetoname($gamecode) . $gamehall . '_refund', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
 
             return response()->json([
                 'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
@@ -718,6 +808,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
                 'data' => json_encode($transaction)
+            ]);
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($amount), 
+                'game' => $this->gamecodetoname($gamecode) . $gamehall . '_payoff', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
             ]);
 
             
@@ -849,6 +952,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
+                \Illuminate\Support\Facades\Redis::set('cq9list', json_encode($gameList));
                 return $gameList;
             }
             return null;

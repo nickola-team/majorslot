@@ -3,6 +3,7 @@
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
     use VanguardLTE\Http\Controllers\Web\GameProviders\CQ9Controller;
+    use VanguardLTE\Http\Controllers\Web\GameProviders\PPController;
 
     class ApiController extends \VanguardLTE\Http\Controllers\Controller
     {
@@ -64,6 +65,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $res = CQ9Controller::getgamelink($gamecode);
                 return response()->json($res);
             }
+            if ($provider == 'pp')
+            {
+                $res = PPController::getgamelink($gamecode);
+                return response()->json($res);
+            }
 
         }
         public function gamelistbyProvider($provider)
@@ -71,6 +77,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($provider == 'cq9')
             {
                 return CQ9Controller::getgamelist();
+            }
+            if ($provider == 'pp')
+            {
+                return PPController::getgamelist();
             }
             return null;
         }

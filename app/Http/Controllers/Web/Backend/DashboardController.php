@@ -920,6 +920,35 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             return view('backend.adjustment.adjustment_partner', compact('partners', 'total_bets', 'total_wins', 'adjustments', 'start_date', 'end_date', 'user'));
         }
+        public function adjustment_game_new(\Illuminate\Http\Request $request)
+        {
+            $saved_category = $request->category;
+            if($saved_category != null && $saved_category != "0"){
+                $category = \VanguardLTE\Category::where([
+                    'id' => $saved_category, 
+                ])->get()->first();
+                if ($category->provider != null)
+                {
+                    $gameList = \Illuminate\Support\Facades\Redis::get('cq9list');
+                    if (!$gameList)
+                    {
+                        
+                    }
+                    $game_names = [$category->provider];
+                }
+                else
+                {
+                    $game_ids = \VanguardLTE\GameCategory::where('category_id', $saved_category)->get()->pluck('game_id')->toArray();
+                    $game_names = $games->whereIn('id', $game_ids)->pluck('name')->toArray();
+                }
+            }
+
+            $game_name = $request->search;
+            if($game_name != null && $game_name != ''){
+                
+            }
+
+        }
 
         public function adjustment_game(\Illuminate\Http\Request $request)
         {
@@ -944,7 +973,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             //$start_date = date("Y-m-d ",strtotime("-1 days"));
             $end_date = date("Y-m-d H:i:s");
             if($dates != null && $dates != ''){
-                $dates = explode(' - ', $request->dates);
+                $dates_tmp = explode(' - ', $request->dates);
                 $start_date = $dates_tmp[0] . "00:00:00";
                 $end_date = $dates_tmp[1] . "00:00:00";
             }
@@ -986,6 +1015,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
 
             $adjustments = [];
+
             foreach($games as $game){
                 $total_win = 0;
                 $total_bet = 0;

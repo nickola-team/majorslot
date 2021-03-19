@@ -278,7 +278,13 @@ function openGroup(obj, category) {
                         strHtml += '<a href="javascript:;" onclick="startGameByProvider(\'' + data.games[i].provider + '\',\'' + data.games[i].gamecode + '\');">';
                         if(data.games[i].name != '')
                         {
-                            strHtml += '<img src="/frontend/Default/ico/' + data.games[i].provider + "/" + data.games[i].gamecode + "_" + data.games[i].name + '.jpg" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                            if (data.games[i].icon)
+                            {
+                                strHtml += '<img src="' + data.games[i].icon + '" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                            }
+                            else {
+                                strHtml += '<img src="/frontend/Default/ico/' + data.games[i].provider + "/" + data.games[i].gamecode + "_" + data.games[i].name + '.jpg" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                            }
                         }
                         else{
                             strHtml += '<img src="" style="width: 100%;" alt=""></img>';
