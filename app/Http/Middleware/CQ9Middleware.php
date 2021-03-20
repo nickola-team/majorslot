@@ -13,22 +13,13 @@ namespace VanguardLTE\Http\Middleware
                 $response->header('Content-Type', 'application/json');
                 return $response;
             }
-            $key = \VanguardLTE\Api::where([
-                'keygen' => $wtoken, 
-                'status' => 1
-            ])->first();
-            if( !$key ) 
+            $key = config('app.cq9wtoken');
+            if( $key != $wtoken) 
             {
                 $response = \Response::json(['error' => 'wtoken is invalid'], 401, []);
                 $response->header('Content-Type', 'application/json');
                 return $response;
             }
-            /*if( $key->ip && $request->ip() != $key->ip ) 
-            {
-                $response = Response::json(['error' => 'IP not in White List. Your ip is ' . $request->ip()], 401, []);
-                $response->header('Content-Type', 'application/json');
-                return $response;
-            }*/
             return $next($request);
         }
     }

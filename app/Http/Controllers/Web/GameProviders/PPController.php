@@ -25,7 +25,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record = \VanguardLTE\PPTransaction::Where('reference',$reference)->get()->first();
             return $record;
         }
-
+        public function generateCode($limit){
+            $code = 0;
+            for($i = 0; $i < $limit; $i++) { $code .= mt_rand(0, 9); }
+            return $code;
+        }
         /*
         * FROM Pragmatic Play, BACK API
         */
@@ -111,7 +115,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($transaction)
             {
                 return response()->json([
-                    'transactionId' => $transaction->timestamp,
+                    'transactionId' => strval($transaction->timestamp),
                     'currency' => 'KRW',
                     'cash' => floatval($user->balance),
                     'bonus' => 0,
@@ -137,7 +141,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
 
             return response()->json([
-                'transactionId' => $transaction->timestamp,
+                'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
                 'cash' => floatval($user->balance),
                 'bonus' => 0,
@@ -173,7 +177,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($transaction)
             {
                 return response()->json([
-                    'transactionId' => $transaction->timestamp,
+                    'transactionId' => strval($transaction->timestamp),
                     'currency' => 'KRW',
                     'cash' => floatval($user->balance),
                     'bonus' => 0,
@@ -192,7 +196,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
 
             return response()->json([
-                'transactionId' => $transaction->timestamp,
+                'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
                 'cash' => floatval($user->balance),
                 'bonus' => 0,
@@ -224,7 +228,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($transaction)
             {
                 return response()->json([
-                    'transactionId' => $transaction->timestamp,
+                    'transactionId' => strval($transaction->timestamp),
                     'currency' => 'KRW',
                     'cash' => floatval($user->balance),
                     'bonus' => 0,
@@ -242,7 +246,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
 
             return response()->json([
-                'transactionId' => $transaction->timestamp,
+                'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
                 'cash' => floatval($user->balance),
                 'bonus' => 0,
@@ -278,7 +282,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($transaction)
             {
                 return response()->json([
-                    'transactionId' => $transaction->timestamp,
+                    'transactionId' => strval($transaction->timestamp),
                     'currency' => 'KRW',
                     'cash' => floatval($user->balance),
                     'bonus' => 0,
@@ -295,7 +299,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
 
             return response()->json([
-                'transactionId' => $transaction->timestamp,
+                'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
                 'cash' => floatval($user->balance),
                 'bonus' => 0,
@@ -346,13 +350,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$transaction)
             {
                 return response()->json([
-                    'error' => 7,
+                    'transactionId' => strval($this->generateCode(24)),
+                    'error' => 0,
                     'description' => 'reference not found']);
             } 
             if ($transaction->refund > 0)
             {
                 return response()->json([
-                    'transactionId' => $transaction->timestamp,
+                    'transactionId' => strval('refund-' . $transaction->timestamp),
                     'error' => 0,
                     'description' => 'success']);
             }
@@ -374,7 +379,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
             return response()->json([
-                'transactionId' => $transaction->timestamp,
+                'transactionId' => strval($transaction->timestamp),
                 'error' => 0,
                 'description' => 'success']);
         }
@@ -406,7 +411,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($transaction)
             {
                 return response()->json([
-                    'transactionId' => $transaction->timestamp,
+                    'transactionId' => strval($transaction->timestamp),
                     'currency' => 'KRW',
                     'cash' => floatval($user->balance),
                     'bonus' => 0,
@@ -423,7 +428,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
 
             return response()->json([
-                'transactionId' => $transaction->timestamp,
+                'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
                 'cash' => floatval($user->balance),
                 'bonus' => 0,
@@ -460,10 +465,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'gamecode' => $game['gameID'],
                             'name' => preg_replace('/\s+/', '', $game['gameName']),
                             'title' => $game['gameName'],
-                            'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png'
+                            'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
+                            'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
                         ];
                     }
                 }
+                \Illuminate\Support\Facades\Redis::set('pplist', json_encode($gameList));
                 return $gameList;
             }
             return [];

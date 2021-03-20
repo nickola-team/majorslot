@@ -96,7 +96,7 @@ return [
     /*
     CQ9 Auth key
     */
-
+    'cq9wtoken' => env('CQ9_WTOKEN', 'cq9cFEKtvTWSA'),
     'cq9api' => 'http://api.cqgame.games',
     'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDUwMWY4NWZlMjZkZjAwMDFiYWQ5MGMiLCJhY2NvdW50IjoibWFqb3IiLCJvd25lciI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsInBhcmVudCI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsImN1cnJlbmN5IjoiS1JXIiwianRpIjoiNDMxNDg0MjAyIiwiaWF0IjoxNjE1ODYzNjg1LCJpc3MiOiJDeXByZXNzIiwic3ViIjoiU1NUb2tlbiJ9.C7mJrZ69a7F-o4ZO2RQYf8miRAcvOQ2_qXDL6d3_hEs'),
 
