@@ -462,7 +462,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($data['amount']), 
-                'game' => $this->gamecodetoname($gameId) . '_pp refund', 
+                'game' => $this->gamecodetoname($data['gameId']) . '_pp refund', 
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
