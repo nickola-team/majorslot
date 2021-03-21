@@ -146,17 +146,6 @@ namespace VanguardLTE\Console
                         }
                     }
 
-                    $jackpots_df = \VanguardLTE\JPGDuofu::where('shop_id', 0)->get();
-                    if( count($jackpots_df) ) 
-                    {
-                        foreach( $jackpots_df as $jackpot ) 
-                        {
-                            $newJackpot = $jackpot->replicate();
-                            $newJackpot->shop_id = $shop->id;
-                            $newJackpot->save();
-                        }
-                    }
-
                     $bank = \VanguardLTE\GameBank::where('shop_id', 0)->first();
                     if( $bank ) 
                     {

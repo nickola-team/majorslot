@@ -74,15 +74,11 @@
                             <table class="table table-bordered table-striped">
 					<thead>
 					<tr>
-						<th>게임이름</th>
 						<th>카테고리</th>
+						<th>게임이름</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
-						@if(auth()->user()->hasRole('admin'))
-						<th>환수금</th>
-						<th>잭팟금</th>
 						<th>수익금</th>
-						@endif
 						<th>베팅횟수</th>
 						<th>딜비수익</th>
 						<th>하위수익</th>
@@ -90,25 +86,44 @@
 					</tr>
 					</thead>
 					<tbody>
-					@if (count($adjustments))
-						@foreach ($adjustments as $adjustment)
+					@if (count($filtered_adjustment))
+						@foreach ($filtered_adjustment as $adjustment)
+						<tr>
+						<td rowspan="{{count($adjustment['games']) + 1}}"> {{ $adjustment['category'] }}</td>
 							@include('backend.adjustment.partials.row_game')
+						</tr>
+						@if ($adjustment['category'])
+						<tr>
+							<td style="color:green;">합계</td>
+							<td style="color:green;">{{ number_format($adjustment['total_bet'],2) }}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_win'],2)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_bet'] - $adjustment['total_win'],2)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_bet_count'])}}</td>
+							@if(auth()->user()->hasRole('admin'))
+							<td style="color:green;">0</td>
+							<td style="color:green;">{{ number_format($adjustment['total_deal'],2)}}</td>
+							<td style="color:green;">{{ number_format(-$adjustment['total_deal'],2)}}</td>
+
+							@else
+							<td style="color:green;">{{ number_format($adjustment['total_deal'],2)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_mileage'],2)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_deal'] - $adjustment['total_mileage'],2)}}</td>
+
+							@endif
+						</tr>
+						@endif
+
 						@endforeach
 					@else
-						<tr><td colspan="4">@lang('app.no_data')</td></tr>
+						<tr><td colspan="8">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
-					<thead>
+{{--					<thead>
 					<tr>
 						<td><span class="text-red">합계</span></td>
 						<td></td>
 						<td><span class="text-red">{{number_format($sum_adjustment->total_bet,2)}}</span></th>
 						<td><span class="text-red">{{number_format($sum_adjustment->total_win,2)}}</span></td>
-						@if(auth()->user()->hasRole('admin'))
-						<td><span class="text-red">{{number_format($sum_adjustment->total_percent,2)}}</span></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_percent_jps+$sum_adjustment->total_percent_jpg,2)}}</span></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_profit,2)}}</span></td>
-						@endif
 						<td><span class="text-red">{{number_format($sum_adjustment->total_bet_count)}}</span></td>
 						<td><span class="text-red">{{number_format($sum_adjustment->total_deal,2)}}</span></td>
 						<td><span class="text-red">{{number_format($sum_adjustment->total_mileage,2)}}</span></td>
@@ -118,11 +133,11 @@
 						<td><span class="text-red">{{number_format($sum_adjustment->total_deal - $sum_adjustment->total_mileage,2)}}</span></td>
 						@endif
 					</tr>
-					</thead>
+					</thead>--}}
                     </table>
-                    </div>
+                    {{--</div>
 						{{ $games->appends(Request::except('page'))->links() }}
-                    </div>			
+                    </div> --}}
 		</div>
 	</section>
 

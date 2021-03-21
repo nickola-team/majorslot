@@ -30,6 +30,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             for($i = 0; $i < $limit; $i++) { $code .= mt_rand(0, 9); }
             return $code;
         }
+
+        public function gamecodetoname($code)
+        {
+            $gameList = \Illuminate\Support\Facades\Redis::get('pplist');
+            if (!$gameList)
+            {
+                $gameList = \PPController::getgamelist();
+            }
+            $gamename = $code;
+            if ($gameList)
+            {
+                $games = json_decode($gameList, true);
+                foreach($games as $game)
+                {
+                    if ($game['gamecode'] == $code)
+                    {
+                        $gamename = $game['name'];
+                        break;
+                    }
+                }
+            }
+            return $gamename;
+        }
         /*
         * FROM Pragmatic Play, BACK API
         */
@@ -139,6 +162,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => time(),
                 'data' => json_encode($request->all())
             ]);
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => floatval($amount), 
+                'win' => 0, 
+                'game' => $this->gamecodetoname($gameId) . '_pp', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
@@ -160,6 +196,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $providerId = $request->providerId;
             $timestamp = $request->timestamp;
             $roundDetails = $request->roundDetails;
+            $promoWinAmount = $request->promoWinAmount;
+            $bonusCode = $request->bonusCode;
             if (!$userId || !$gameId || !$roundId || !$amount || !$reference || !$providerId || !$timestamp || $amount < 0)
             {
                 return response()->json([
@@ -185,8 +223,37 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'success']);
             }
 
-
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($amount), 
+                'game' => $this->gamecodetoname($gameId) . '_pp' . $bonusCode?' bonus':'', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
+            if ($promoWinAmount)
+            {
+                $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($promoWinAmount)));
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => floatval($user->balance), 
+                    'bet' => 0, 
+                    'win' => floatval($promoWinAmount), 
+                    'game' => $this->gamecodetoname($gameId) . '_pp promo', 
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id
+                ]);
+            }
             $user->save();
 
             $transaction = \VanguardLTE\PPTransaction::create([
@@ -194,6 +261,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => time(),
                 'data' => json_encode($request->all())
             ]);
+            
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
@@ -237,8 +305,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
 
-            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
-            $user->save();
+            //$user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+            //$user->save();
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
                 'timestamp' => time(),
@@ -296,6 +364,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'reference' => $reference, 
                 'timestamp' => time(),
                 'data' => json_encode($request->all())
+            ]);
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($amount), 
+                'game' => $this->gamecodetoname($gameId) . '_pp JP', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
             ]);
 
             return response()->json([
@@ -376,6 +457,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction->refund = 1;
             $transaction->save();
 
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($data['amount']), 
+                'game' => $this->gamecodetoname($gameId) . '_pp refund', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
+
 
 
             return response()->json([
@@ -427,6 +522,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => json_encode($request->all())
             ]);
 
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($amount), 
+                'game' => $this->gamecodetoname($gameId) . '_pp promo', 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
+
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
@@ -451,7 +560,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ])->get(config('app.ppapi') . '/getCasinoGames/', $data);
             if (!$response->ok())
             {
-                return $response->body();
+                return [];
             }
             $data = $response->json();
             if ($data['error'] == "0"){
