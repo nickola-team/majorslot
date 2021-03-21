@@ -53,6 +53,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return $gamename;
         }
+
+        public function microtime_string()
+        {
+            list($usec, $sec) = explode(" ", microtime());
+            $microstr =  strval(((float)$usec + (float)$sec));
+            $microstr = str_replace('.', '', $microstr);
+            return $microstr;
+        }
         /*
         * FROM Pragmatic Play, BACK API
         */
@@ -159,7 +167,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
-                'timestamp' => time(),
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
             \VanguardLTE\StatGame::create([
@@ -258,7 +266,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
-                'timestamp' => time(),
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
             
@@ -309,7 +317,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //$user->save();
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
-                'timestamp' => time(),
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
 
@@ -362,7 +370,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->save();
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
-                'timestamp' => time(),
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
             \VanguardLTE\StatGame::create([
@@ -518,7 +526,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->save();
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
-                'timestamp' => time(),
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
 
