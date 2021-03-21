@@ -527,7 +527,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($amount), 
-                'game' => $this->gamecodetoname($gameId) . '_pp promo', 
+                'game' => 'PragmaticPlay_pp promo', 
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
