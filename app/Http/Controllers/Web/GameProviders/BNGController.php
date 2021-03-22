@@ -124,7 +124,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [
                 'uid' => $uid,
                 'player' => [
-                    'id' => $user->id,
+                    'id' => strval($user->id),
                     'brand' => 'major',
                     'currency' => 'KRW',
                     'mode' => 'REAL',
