@@ -35,7 +35,7 @@ namespace VanguardLTE\Http\Middleware
                 return $response;
             }
             $calc_hash = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::calcSecurityHash($request->getContent());
-            if (false/*$securityhash != $calc_hash*/)
+            if ($securityhash != $calc_hash)
             {
                 $response = \Response::json(['uid' => '', 'error' => ['code' => "security hash is invalid"]], 503, []);
                 $response->header('Content-Type', 'application/json');
