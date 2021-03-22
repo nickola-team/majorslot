@@ -1203,3 +1203,10 @@ Route::group(['middleware' => 'pp', 'prefix' => 'pp',], function () {
     Route::post('/refund', 'GameProviders\PPController@refund');
     Route::post('/promowin', 'GameProviders\PPController@promowin');
 });
+
+/**
+ * Booongo Game Provider
+ */
+Route::group(['middleware' => 'bng', 'prefix' => 'bng',], function () {
+	Route::post('/betman/', 'GameProviders\BNGController@betman');
+});
