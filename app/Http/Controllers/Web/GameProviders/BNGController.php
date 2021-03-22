@@ -276,38 +276,65 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist()
         {
+            $gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
+            if ($gameList)
+            {
+                $games = json_decode($gameList, true);
+                return $games;
+            }
+
             $data = [
-                'secureLogin' => config('app.ppsecurelogin'),
+                'api_token' => config('app.bng_api_token'),
             ];
-            $data['hash'] = PPController::calcHash($data);
+            $reqbody = json_encode($data);
             $response = Http::withHeaders([
-                'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->get(config('app.ppapi') . '/getCasinoGames/', $data);
+                'Security-Hash' => BNGController::calcSecurityHash($reqbody)
+                ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/provider/list/');
             if (!$response->ok())
             {
                 return [];
             }
+            $providerId = 1;
             $data = $response->json();
-            if ($data['error'] == "0"){
-                $gameList = [];
-                foreach ($data['gameList'] as $game)
+            $gameList = [];
+
+            if (isset($data['items'])){
+                foreach ($data['items'] as $item)
                 {
-                    if ($game['gameTypeID'] == "vs")
+                    $data1 = [
+                        'api_token' => config('app.bng_api_token'),
+                        'provider_id' => $item['provider_id']
+                    ];
+                    $reqbody = json_encode($data1);
+                    $response = Http::withHeaders([
+                        'Security-Hash' => BNGController::calcSecurityHash($reqbody)
+                        ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/game/list/');
+                    
+                    if (!$response->ok())
                     {
-                        $gameList[] = [
-                            'provider' => 'pp',
-                            'gamecode' => $game['gameID'],
-                            'name' => preg_replace('/\s+/', '', $game['gameName']),
-                            'title' => $game['gameName'],
-                            'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
-                            'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
-                        ];
+                        return [];
                     }
+                    $data1 = $response->json();
+                    foreach ($data1['items'] as $game)
+                    {
+                        if ($game['type'] == "SLOT")
+                        {
+                            $gameList[] = [
+                                'provider' => 'bng',
+                                'gamecode' => $game['game_id'],
+                                'name' => preg_replace('/\s+/', '', $game['game_name']),
+                                'title' => $game['i18n']['en']['title'],
+                                'icon' => $game['i18n']['en']['banner_path'],
+                            ];
+                        }
+                    }
+                    \Illuminate\Support\Facades\Redis::set('bnglist', json_encode($gameList));
                 }
-                \Illuminate\Support\Facades\Redis::set('pplist', json_encode($gameList));
-                return $gameList;
             }
-            return [];
+            return $gameList;
+
+
+            
         }
 
         public static function getgamelink($gamecode)
@@ -315,12 +342,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $detect = new \Detection\MobileDetect();
             $key = [
                 'token' => auth()->user()->username,
-                'symbol' => $gamecode,
-                'language' => 'ko',
-                'technology' => 'H5',
-                'platform' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
-                'cashierUrl' => \URL::to('/'),
-                'lobbyUrl' => \URL::to('/'),
+                'game' => $gamecode,
+                'ts' => time(),
+                'lang' => 'ko',
+                'platform' => ($detect->isMobile() || $detect->isTablet())?'mobile':'desktop',
             ];
             $str_params = implode('&', array_map(
                 function ($v, $k) {
@@ -329,7 +354,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $key,
                 array_keys($key)
             ));
-            $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . 'stylename=rare_stake';
+            $url = config('app.bng_game_server') . config('app.bng_project_name') . '/game.html?'.$str_params;
             return ['error' => false, 'data' => ['url' => $url]];
         }
     }

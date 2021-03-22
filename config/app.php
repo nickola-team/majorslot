@@ -108,6 +108,13 @@ return [
     'ppapi' => 'https://api.prerelease-env.biz/IntegrationService/v3/http/CasinoGameAPI',
     'ppgameserver' => 'https://major-sg0.prerelease-env.biz',
     
+    /*
+    Booongo  keys
+    */
+    'bng_wallet_sign_key' => env('BNG_WALLET_SIGN_KEY', '91V2hjYmzpH8MTGmn8xpoDr6O'),
+    'bng_api_token' => 'fMRpC6ocPgywuzu2kRhgREHWL',
+    'bng_game_server' => 'https://gate-stage.betsrv.com/op/',
+    'bng_project_name' => 'major-stage',
 
     /*
     |--------------------------------------------------------------------------

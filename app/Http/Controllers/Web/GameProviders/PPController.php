@@ -559,6 +559,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist()
         {
+            $gameList = \Illuminate\Support\Facades\Redis::get('pplist');
+            if ($gameList)
+            {
+                $games = json_decode($gameList, true);
+                return $games;
+            }
+
             $data = [
                 'secureLogin' => config('app.ppsecurelogin'),
             ];

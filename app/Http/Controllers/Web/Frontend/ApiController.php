@@ -60,29 +60,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             $provider = $request->provider;
             $gamecode = $request->gamecode;
-            if ($provider == 'cq9')
-            {
-                $res = CQ9Controller::getgamelink($gamecode);
-                return response()->json($res);
-            }
-            if ($provider == 'pp')
-            {
-                $res = PPController::getgamelink($gamecode);
-                return response()->json($res);
-            }
+            $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
+            return response()->json($res);
 
         }
         public function gamelistbyProvider($provider)
         {
-            if ($provider == 'cq9')
-            {
-                return CQ9Controller::getgamelist();
-            }
-            if ($provider == 'pp')
-            {
-                return PPController::getgamelist();
-            }
-            return null;
+            $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist');
+            return $games;
         }
 
         public function gamelist($categoryIDs, $wherenot=false)

@@ -914,6 +914,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist()
         {
+            $gameList = \Illuminate\Support\Facades\Redis::get('cq9list');
+            if ($gameList)
+            {
+                $games = json_decode($gameList, true);
+                return $games;
+            }
+            
             $response = Http::withHeaders([
                 'Authorization' => config('app.cq9token'),
                 'Content-Type' => 'application/x-www-form-urlencoded'
