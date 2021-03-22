@@ -1111,6 +1111,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             $filtered_games[] = $game;
                         }
                     }
+                    usort($filtered_games, function($element1, $element2)
+                    {
+                        return $element2['total_bet'] - $element1['total_bet'];
+                    });
                     $adj['games'] = $filtered_games;
                     $filtered_adjustment[] = $adj;
                 }
