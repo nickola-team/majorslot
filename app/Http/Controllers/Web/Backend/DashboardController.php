@@ -1033,7 +1033,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     foreach ($adj['games'] as $j => $game)
                     {
-                        if(strpos($stat_game->game, $game['name']) === 0)
+                        $real_gamename = explode(' ', $stat_game->game)[0];
+                        if (strpos($real_gamename, '_') !== false)
+                        {
+                            $real_gamename = explode('_', $real_gamename)[0];
+                        }
+                        if($real_gamename == $game['name'])
                         {
                             $game['total_bet'] = $game['total_bet'] + $stat_game->totalbet;
                             $game['total_win'] = $game['total_win'] + $stat_game->totalwin;
@@ -1065,7 +1070,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     foreach ($adj['games'] as $j => $game)
                     {
-                        if(strpos($deal_log->game, $game['name']) !== false)
+                        if(strpos($deal_log->game, $game['name']) === 0)
                         {
                             $game['total_deal'] = $game['total_deal'] + $deal_log->total_deal;
                             $game['total_mileage'] = $game['total_mileage'] + $deal_log->total_mileage;
