@@ -1033,7 +1033,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     foreach ($adj['games'] as $j => $game)
                     {
-                        if(strpos($stat_game->game, $game['name']) == 0)
+                        if(strpos($stat_game->game, $game['name']) === 0)
                         {
                             $game['total_bet'] = $game['total_bet'] + $stat_game->totalbet;
                             $game['total_win'] = $game['total_win'] + $stat_game->totalwin;
