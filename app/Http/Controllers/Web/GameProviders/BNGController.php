@@ -71,7 +71,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record = $this->checkuid($uid);
             if ($record)
             {
-                return response($record->response, 200)->header('Content-Type', 'application/json');
+                $securityhash = BNGController::calcSecurityHash(json_encode($record->response));
+                return response($record->response, 200)->header([
+                    'Content-Type' => 'application/json',
+                    'Security-Hash' => $securityhash
+                ]);
             }
 
             $response = [];
