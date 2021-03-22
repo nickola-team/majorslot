@@ -97,7 +97,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $response = $this->logout($data);
                     break;
                 default:
-                    $response = ['uid' => $uid, 'error' => ['code' => "invalid command name"]];
+                    $response = ['uid' => $uid, 'error' => ['code' => "FATAL_ERROR"]];
             }
 
             $transaction = \VanguardLTE\BNGTransaction::create([
@@ -151,7 +151,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
-                    'error' => [ 'code' => 'INVALID_USER']];
+                    'error' => [ 'code' => 'FATAL_ERROR']];
             }
             
             if (!isset($args['bonus']) && $args['bet'])
@@ -195,7 +195,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
-                    'error' => [ 'code' => 'INVALID_USER']];
+                    'error' => [ 'code' => 'FATAL_ERROR']];
             }
 
             $record = $this->checkuid($transaction_uid);
@@ -203,13 +203,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return [
                     'uid' => $uid,
-                    'error' => [ 'code' => 'TRANSACTION NOT FOUND']];
+                    'balance' => [
+                        'value' => strval($user->balance),
+                        'version' => time()
+                    ],
+                ];
             }
             if ($record->refund > 0)
             {
                 return [
                     'uid' => $uid,
-                    'error' => [ 'code' => 'ALREADY REFUNDED']];
+                    'balance' => [
+                        'value' => strval($user->balance),
+                        'version' => time()
+                    ],
+                ];
             }
 
             if ($args['bet'])
@@ -254,7 +262,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
-                    'error' => [ 'code' => 'INVALID_USER']];
+                    'error' => [ 'code' => 'FATAL_ERROR']];
             }
 
             return [
