@@ -107,7 +107,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'response' => json_encode($response)
             ]);
             $securityhash = BNGController::calcSecurityHash(json_encode($response));
-            if (isset($response['error']))
+            if (isset($response['error']) && !isset($response['balance']))
             {
                 return response()->json($response, 503)->header('Security-Hash', $securityhash);
             }
