@@ -321,12 +321,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist()
         {
-            /*$gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
+            $gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
             if ($gameList)
             {
                 $games = json_decode($gameList, true);
                 return $games;
-            } */
+            }
 
             $data = [
                 'api_token' => config('app.bng_api_token'),
