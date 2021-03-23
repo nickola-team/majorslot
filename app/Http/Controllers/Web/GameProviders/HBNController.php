@@ -178,6 +178,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }else{
                     //if the debit failed, then return...
                     $response['fundtransferresponse']['status']['message'] = "Insufficient funds";
+                    $response['fundtransferresponse']['status']['nofunds'] = $debitResult['NoFunds'];
                     $response['fundtransferresponse']['balance'] = $debitResult['BalanceAfterTransaction']; //set back the current balance after the credit
                 }
     
