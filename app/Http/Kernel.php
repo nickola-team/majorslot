@@ -45,6 +45,7 @@ namespace VanguardLTE\Http
             'cq9' => 'VanguardLTE\Http\Middleware\CQ9Middleware', 
             'pp' => 'VanguardLTE\Http\Middleware\PPMiddleware', 
             'bng' => 'VanguardLTE\Http\Middleware\BNGMiddleware', 
+            'hbn' => 'VanguardLTE\Http\Middleware\HBNMiddleware',
         ];
     }
 

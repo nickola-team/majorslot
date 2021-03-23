@@ -1210,3 +1210,10 @@ Route::group(['middleware' => 'pp', 'prefix' => 'pp',], function () {
 Route::group(['middleware' => 'bng', 'prefix' => 'bng',], function () {
 	Route::post('/betman/', 'GameProviders\BNGController@betman');
 });
+
+/**
+ * Habanero Game Provider
+ */
+Route::group(['middleware' => 'hbn', 'prefix' => 'hbn',], function () {
+	Route::post('/endpoint', 'GameProviders\HBNController@endpoint');
+});
