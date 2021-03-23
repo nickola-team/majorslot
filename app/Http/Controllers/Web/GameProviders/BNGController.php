@@ -107,10 +107,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'response' => json_encode($response)
             ]);
             $securityhash = BNGController::calcSecurityHash(json_encode($response));
-            /*if (isset($response['error']) && !isset($response['balance']))
-            {
-                return response()->json($response, 503)->header('Security-Hash', $securityhash);
-            } */
             return response()->json($response, 200)->header('Security-Hash', $securityhash);
         }
 
@@ -146,6 +142,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $uid = $data['uid'];
             $args = $data['args'];
+            $gamename = $data['game_name'];
             $userId = $args['player']['id'];
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
@@ -153,7 +150,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'uid' => $uid,
                     'error' => [ 'code' => 'FATAL_ERROR']];
             }
-            
+            $bet = 0;
+            $win = 0;
             if (!isset($args['bonus']) && $args['bet'])
             {
                 if ($user->balance < $args['bet'])
@@ -168,13 +166,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
 
                 $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($args['bet'])));
+                $bet = floatval($args['bet']);
             }
             if ($args['win'])
             {
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($args['win'])));
+                $win = floatval($args['win']);
             }
 
             $user->save();
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => $bet, 
+                'win' => $win, 
+                'game' => preg_replace('/[_\s]+/', '', $gamename) . '_bng',
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
 
             return [
                 'uid' => $uid,
@@ -188,6 +202,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function rollback($data)
         {
             $uid = $data['uid'];
+            $gamename = $data['game_name'];
             $args = $data['args'];
             $transaction_uid = $args['transaction_uid'];
             $userId = $args['player']['id'];
@@ -219,10 +234,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ],
                 ];
             }
+            $bet = 0;
+            $win = 0;
 
             if ($args['bet'])
             {
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($args['bet'])));
+                $bet = floatval($args['bet']);
             }
 
             if ($args['win'])
@@ -238,7 +256,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'error' => [ 'code' => 'FUNDS_EXCEED']];
                 }
                 $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($args['win'])));
+                $win = floatval($args['win']);
             }
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => $win, 
+                'win' => $bet, 
+                'game' => preg_replace('/[_\s]+/', '', $gamename) . '_bng RB',
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id
+            ]);
             $user->save();
             $record->refund = 1;
             $record->save();
@@ -288,12 +321,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist()
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
+            /*$gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
             if ($gameList)
             {
                 $games = json_decode($gameList, true);
                 return $games;
-            }
+            } */
 
             $data = [
                 'api_token' => config('app.bng_api_token'),
@@ -334,7 +367,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $gameList[] = [
                                 'provider' => 'bng',
                                 'gamecode' => $game['game_id'],
-                                'name' => preg_replace('/\s+/', '', $game['game_name']),
+                                'name' => preg_replace('/[_\s]+/', '', $game['game_name']),
                                 'title' => $game['i18n']['en']['title'],
                                 'icon' => $game['i18n']['en']['banner_path'],
                             ];
