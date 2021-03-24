@@ -147,8 +147,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $externalResponse['fundtransferresponse'] = $fundsReponse;
                 return $externalResponse;
             }
-            $playerResponse = $this->playerResponse();
-            $playerResponse['status']['autherror'] = false;
+            $response['fundtransferresponse']['status']['autherror'] = false;
     
             if($fundtransferrequest->funds->debitandcredit == true){
                 // Debit as well as credit is passed
