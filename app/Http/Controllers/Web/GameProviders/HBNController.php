@@ -298,7 +298,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $transactions = \VanguardLTE\HBNTransaction::where('gameinstanceid', $gameinstanceid)->get();
-            foreach ($trasactions as $tr)
+            foreach ($transactions as $tr)
             {
                 $data = json_decode($tr->data);
                 if ($data->gamestatemode == 2) //round is already ended
