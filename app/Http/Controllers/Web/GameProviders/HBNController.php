@@ -150,6 +150,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return $externalResponse;
             }
             $response['fundtransferresponse']['status']['autherror'] = false;
+            $total_bet = 0;
+            $total_win = 0;
     
             if($fundtransferrequest->funds->debitandcredit == true){
                 // Debit as well as credit is passed
@@ -160,12 +162,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $debitResult = $this->updateBalance($user,$debit->amount, $fundtransferrequest->gameinstanceid, $debit);
     
                 if($debitResult['Success'] == true){
+                    if ($debit->amount < 0)  {
+                        $total_bet = $total_bet + abs($debit->amount);
+                    }
+                    else
+                    {
+                        $total_win = $total_win + abs($debit->amount);
+                    }
                     $response['fundtransferresponse']['status']['successdebit'] = true;			
                     //now do the Credit
                     $creditResult = $this->updateBalance($user, $credit->amount, $fundtransferrequest->gameinstanceid, $credit);
                             
                     if ($creditResult['Success'])
                     {
+                        if ($credit->amount < 0)  {
+                            $total_bet = $total_bet + abs($credit->amount);
+                        }
+                        else
+                        {
+                            $total_win = $total_win + abs($credit->amount);
+                        }
+
                         $response['fundtransferresponse']['status']['successcredit'] = true;
                         $response['fundtransferresponse']['status']['success'] = true;
                     }
@@ -184,6 +201,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
     
                 $response['fundtransferresponse']['remotetransferid'] = uniqid('', true);
+
+                if ($total_bet > 0 || $total_win > 0)
+                {
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $user->id, 
+                        'balance' => floatval($user->balance), 
+                        'bet' => $total_bet, 
+                        'win' => $total_win, 
+                        'game' => $fundtransferrequest->gamedetails->keyname . '_HBN', 
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'shop_id' => $user->shop_id
+                    ]);
+                }
     
                 return $response;
             }
@@ -208,6 +242,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if($originalTransfer != null){
                         $refundResult = $this->updateBalance($user, $refund->amount, $fundtransferrequest->gameinstanceid, $refund);
                         if($refundResult['Success']){
+                            if ($refund->amount < 0)  {
+                                $total_bet = $total_bet + abs($refund->amount);
+                            }
+                            else
+                            {
+                                $total_win = $total_win + abs($refund->amount);
+                            }
+
                             $response['fundtransferresponse']['status']['success'] = true;
                             $response['fundtransferresponse']['status']['refundstatus'] = "1";
                         }else{
@@ -222,6 +264,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
     
                     $response['fundtransferresponse']['balance'] = $user->balance;
+                    if ($total_bet > 0 || $total_win > 0)
+                    {
+                        \VanguardLTE\StatGame::create([
+                            'user_id' => $user->id, 
+                            'balance' => floatval($user->balance), 
+                            'bet' => $total_bet, 
+                            'win' => $total_win, 
+                            'game' => $fundtransferrequest->gamedetails->keyname . '_HBN refund', 
+                            'percent' => 0, 
+                            'percent_jps' => 0, 
+                            'percent_jpg' => 0, 
+                            'profit' => 0, 
+                            'denomination' => 0, 
+                            'shop_id' => $user->shop_id
+                        ]);
+                    }
                     return $response;
                 }
     
@@ -241,10 +299,33 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     //credit the amount
                     $recreditResult = $this->updateBalance($user, $recreditRequest->amount, $fundtransferrequest->gameinstanceid, $recreditRequest);
                     if($recreditResult['Success']){
+                        if ($recreditRequest->amount < 0)  {
+                            $total_bet = $total_bet + abs($recreditRequest->amount);
+                        }
+                        else
+                        {
+                            $total_win = $total_win + abs($recreditRequest->amount);
+                        }
                         $response['fundtransferresponse']['status']['autherror'] = false;
                         $response['fundtransferresponse']['status']['success'] = true;
                         $response['fundtransferresponse']['balance'] = $user->balance;
                         $response['fundtransferresponse']['status']['message'] = "Original request never credited, so we did the re-credit";
+                    }
+                    if ($total_bet > 0 || $total_win > 0)
+                    {
+                        \VanguardLTE\StatGame::create([
+                            'user_id' => $user->id, 
+                            'balance' => floatval($user->balance), 
+                            'bet' => $total_bet, 
+                            'win' => $total_win, 
+                            'game' => $fundtransferrequest->gamedetails->keyname . '_HBN recredit', 
+                            'percent' => 0, 
+                            'percent_jps' => 0, 
+                            'percent_jpg' => 0, 
+                            'profit' => 0, 
+                            'denomination' => 0, 
+                            'shop_id' => $user->shop_id
+                        ]);
                     }
                     return $response;
                 }
@@ -255,6 +336,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transferResult = $this->updateBalance($user, $transferRequest->amount, $fundtransferrequest->gameinstanceid, $transferRequest);
         
                 if($transferResult['Success']){
+                    if ($transferRequest->amount < 0)  {
+                        $total_bet = $total_bet + abs($transferRequest->amount);
+                    }
+                    else
+                    {
+                        $total_win = $total_win + abs($transferRequest->amount);
+                    }
                     $response['fundtransferresponse']['status']['success'] = true;				
                 }else{
                     $response['fundtransferresponse']['status']['success'] = false;
@@ -267,6 +355,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     
                 if($response['fundtransferresponse']['balance'] == 0){
                     $response['fundtransferresponse']['balance'] = $user->balance;
+                }
+                if ($total_bet > 0 || $total_win > 0)
+                {
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $user->id, 
+                        'balance' => floatval($user->balance), 
+                        'bet' => $total_bet, 
+                        'win' => $total_win, 
+                        'game' => $fundtransferrequest->gamedetails->keyname . '_HBN', 
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'shop_id' => $user->shop_id
+                    ]);
                 }
                 return $response;
             }
