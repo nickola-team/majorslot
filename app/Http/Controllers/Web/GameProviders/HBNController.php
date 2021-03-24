@@ -232,7 +232,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if($originalTransfer != null){
                         $response['fundtransferresponse']['status']['autherror'] = false;
                         $response['fundtransferresponse']['status']['success'] = true;
-                        $response['fundtransferresponse']['balance'] = "0";
+                        $response['fundtransferresponse']['balance'] = $user->balance;
                         $response['fundtransferresponse']['status']['message'] = "Orignal Credit was done - so no need to do it again.";
                         return $response;
                     }
@@ -242,7 +242,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if($recreditResult['Success']){
                         $response['fundtransferresponse']['status']['autherror'] = false;
                         $response['fundtransferresponse']['status']['success'] = true;
-                        $response['fundtransferresponse']['balance'] = "0";
+                        $response['fundtransferresponse']['balance'] = $user->balance;
                         $response['fundtransferresponse']['status']['message'] = "Original request never credited, so we did the re-credit";
                     }
                     return $response;
