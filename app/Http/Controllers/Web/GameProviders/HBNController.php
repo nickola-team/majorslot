@@ -157,12 +157,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $debit = $fundtransferrequest->funds->fundinfo[0];
                 $credit = $fundtransferrequest->funds->fundinfo[1];
     
-                $debitResult = $this->updateBalance($user,$debit->amount, $debit);
+                $debitResult = $this->updateBalance($user,$debit->amount, $fundtransferrequest->gameinstanceid, $debit);
     
                 if($debitResult['Success'] == true){
                     $response['fundtransferresponse']['status']['successdebit'] = true;			
                     //now do the Credit
-                    $creditResult = $this->updateBalance($user, $credit->amount,  $credit);
+                    $creditResult = $this->updateBalance($user, $credit->amount, $fundtransferrequest->gameinstanceid, $credit);
                             
                     if ($creditResult['Success'])
                     {
@@ -206,7 +206,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     
                     $originalTransfer = $this->checktransfer($refund->originaltransferid);
                     if($originalTransfer != null){
-                        $refundResult = $this->updateBalance($user, $refund->amount, $refund);
+                        $refundResult = $this->updateBalance($user, $refund->amount, $fundtransferrequest->gameinstanceid, $refund);
                         if($refundResult['Success']){
                             $response['fundtransferresponse']['status']['success'] = true;
                             $response['fundtransferresponse']['status']['refundstatus'] = "1";
@@ -239,7 +239,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     
                     //credit the amount
-                    $recreditResult = $this->updateBalance($user, $recreditRequest->amount, $recreditRequest);
+                    $recreditResult = $this->updateBalance($user, $recreditRequest->amount, $fundtransferrequest->gameinstanceid, $recreditRequest);
                     if($recreditResult['Success']){
                         $response['fundtransferresponse']['status']['autherror'] = false;
                         $response['fundtransferresponse']['status']['success'] = true;
@@ -252,7 +252,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 //**** It's not a Refund and not a Recredit, then its just a regular single transaction for debit OR credit ***
                 $transferRequest = $fundtransferrequest->funds->fundinfo[0];
                 
-                $transferResult = $this->updateBalance($user, $transferRequest->amount, $transferRequest);
+                $transferResult = $this->updateBalance($user, $transferRequest->amount, $fundtransferrequest->gameinstanceid, $transferRequest);
         
                 if($transferResult['Success']){
                     $response['fundtransferresponse']['status']['success'] = true;				
@@ -271,7 +271,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return $response;
             }
         }
-        public function updateBalance($user, $amount, $fundinfo){
+        public function updateBalance($user, $amount, $gameinstanceid, $fundinfo){
 
             $result = array(
                 'NoFunds' => false,
@@ -279,6 +279,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'BalanceAfterTransaction' => 0,
                 'TransactionId' => ''
             );
+
             $continueTransaction = false;
     
             if($amount < 0){
@@ -295,6 +296,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 // It is a credit
                 $continueTransaction = true;
             }
+
+            $transactions = \VanguardLTE\HBNTransaction::where('gameinstanceid', $gameinstanceid)->get();
+            foreach ($trasactions as $tr)
+            {
+                $data = json_decode($tr->data);
+                if ($data->gamestatemode == 2) //round is already ended
+                {
+                    $continueTransaction = false;
+                    break;
+                }
+            }
     
             if($continueTransaction){
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
@@ -305,6 +317,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $transaction = \VanguardLTE\HBNTransaction::create([
                 'transferid' => $fundinfo->transferid, 
+                'gameinstanceid' => $gameinstanceid,
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($fundinfo),
             ]);

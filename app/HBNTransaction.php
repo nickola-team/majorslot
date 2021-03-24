@@ -6,6 +6,7 @@ namespace VanguardLTE
         protected $table = 'hbntransaction';
         protected $fillable = [
             'transferid', 
+            'gameinstanceid',
             'timestamp', 
             'data',
             'refund'
