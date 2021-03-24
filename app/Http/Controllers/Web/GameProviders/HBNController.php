@@ -19,29 +19,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $code;
         }
 
-        public function gamecodetoname($code)
-        {
-            $gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
-            if (!$gameList)
-            {
-                $gameList = \BNGController::getgamelist();
-            }
-            $gamename = $code;
-            if ($gameList)
-            {
-                $games = json_decode($gameList, true);
-                foreach($games as $game)
-                {
-                    if ($game['gamecode'] == $code)
-                    {
-                        $gamename = $game['name'];
-                        break;
-                    }
-                }
-            }
-            return $gamename;
-        }
-
         public function microtime_string()
         {
             list($usec, $sec) = explode(" ", microtime());
@@ -435,7 +412,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * FROM CONTROLLER, API
         */
         
-        public static function getgamelist()
+        public static function getgamelist($href)
         {
             $gameList = \Illuminate\Support\Facades\Redis::get('hbnlist');
             if ($gameList)

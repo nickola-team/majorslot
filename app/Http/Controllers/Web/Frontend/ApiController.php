@@ -64,9 +64,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return response()->json($res);
 
         }
-        public function gamelistbyProvider($provider)
+        public function gamelistbyProvider($provider, $href)
         {
-            $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist');
+            $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist', $href);
             return $games;
         }
 
@@ -198,7 +198,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($cat1->provider != null)
             {
-                $selectedGames = $this->gamelistbyProvider($cat1->provider);
+                $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
             }
             else{
                 $selectedGames = $this->gamelist($categories, false);

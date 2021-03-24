@@ -36,7 +36,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameList = \Illuminate\Support\Facades\Redis::get('pplist');
             if (!$gameList)
             {
-                $gameList = \PPController::getgamelist();
+                $gameList = \PPController::getgamelist('pp');
             }
             $gamename = $code;
             if ($gameList)
@@ -557,7 +557,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * FROM CONTROLLER, API
         */
         
-        public static function getgamelist()
+        public static function getgamelist($href)
         {
             $gameList = \Illuminate\Support\Facades\Redis::get('pplist');
             if ($gameList)

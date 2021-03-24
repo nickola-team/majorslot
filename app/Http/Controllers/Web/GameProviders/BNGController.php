@@ -24,28 +24,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $code;
         }
 
-        public function gamecodetoname($code)
-        {
-            $gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
-            if (!$gameList)
-            {
-                $gameList = \BNGController::getgamelist();
-            }
-            $gamename = $code;
-            if ($gameList)
-            {
-                $games = json_decode($gameList, true);
-                foreach($games as $game)
-                {
-                    if ($game['gamecode'] == $code)
-                    {
-                        $gamename = $game['name'];
-                        break;
-                    }
-                }
-            }
-            return $gamename;
-        }
 
         public function microtime_string()
         {
@@ -319,9 +297,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * FROM CONTROLLER, API
         */
         
-        public static function getgamelist()
+        public static function getgamelist($href)
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
+            $gameList = \Illuminate\Support\Facades\Redis::get($href.'list');
             if ($gameList)
             {
                 $games = json_decode($gameList, true);
@@ -346,39 +324,43 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (isset($data['items'])){
                 foreach ($data['items'] as $item)
                 {
-                    $data1 = [
-                        'api_token' => config('app.bng_api_token'),
-                        'provider_id' => $item['provider_id']
-                    ];
-                    $reqbody = json_encode($data1);
-                    $response = Http::withHeaders([
-                        'Security-Hash' => BNGController::calcSecurityHash($reqbody)
-                        ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/game/list/');
-                    
-                    if (!$response->ok())
+                    if ($item['provider_name'] == $href)
                     {
-                        return [];
+                        $providerId = $item['provider_id'];
+                        break;
                     }
-                    $data1 = $response->json();
-                    foreach ($data1['items'] as $game)
-                    {
-                        if ($game['type'] == "SLOT")
-                        {
-                            $gameList[] = [
-                                'provider' => 'bng',
-                                'gamecode' => $game['game_id'],
-                                'name' => preg_replace('/[_\s]+/', '', $game['game_name']),
-                                'title' => $game['i18n']['en']['title'],
-                                'icon' => $game['i18n']['en']['banner_path'],
-                            ];
-                        }
-                    }
-                    \Illuminate\Support\Facades\Redis::set('bnglist', json_encode($gameList));
                 }
             }
+
+            $data1 = [
+                'api_token' => config('app.bng_api_token'),
+                'provider_id' => $providerId
+            ];
+            $reqbody = json_encode($data1);
+            $response = Http::withHeaders([
+                'Security-Hash' => BNGController::calcSecurityHash($reqbody)
+                ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/game/list/');
+            
+            if (!$response->ok())
+            {
+                return [];
+            }
+            $data1 = $response->json();
+            foreach ($data1['items'] as $game)
+            {
+                if ($game['type'] == "SLOT")
+                {
+                    $gameList[] = [
+                        'provider' => 'bng',
+                        'gamecode' => $game['game_id'],
+                        'name' => preg_replace('/[_\s]+/', '', $game['game_name']),
+                        'title' => $game['i18n']['en']['title'],
+                        'icon' => $game['i18n']['en']['banner_path'],
+                    ];
+                }
+            }
+            \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
-
-
             
         }
 

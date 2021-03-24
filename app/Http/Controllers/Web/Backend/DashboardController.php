@@ -945,7 +945,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
                 if ($cat->provider != null)
                 {
-                    $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist');
+                    $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist', $cat->href);
                     foreach ($games as $game)
                     {
                         if($game_name != null && $game_name != '' &&  strpos($game['name'], $game_name) === false){

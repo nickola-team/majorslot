@@ -30,6 +30,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function gamecodetoname($code)
         {
             $gameList = \Illuminate\Support\Facades\Redis::get('cq9list');
+            if (!$gameList)
+            {
+                $gameList = \CQ9Controller::getgamelist('cq9');
+            }
             $gamename = $code;
             if ($gameList)
             {
@@ -912,7 +916,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * FROM CONTROLLER, API
         */
         
-        public static function getgamelist()
+        public static function getgamelist($href)
         {
             $gameList = \Illuminate\Support\Facades\Redis::get('cq9list');
             if ($gameList)
