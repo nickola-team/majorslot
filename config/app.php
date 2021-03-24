@@ -120,8 +120,10 @@ return [
     HABANERO Auth key
     */
     'hbn_passkey' => env('HBN_PASSKEY', 'LX7cztKu81D7eU7'),
-    'hbn_api' => 'http://api.cqgame.games',
-    'hbn_token' => env('HBN_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDUwMWY4NWZlMjZkZjAwMDFiYWQ5MGMiLCJhY2NvdW50IjoibWFqb3IiLCJvd25lciI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsInBhcmVudCI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsImN1cnJlbmN5IjoiS1JXIiwianRpIjoiNDMxNDg0MjAyIiwiaWF0IjoxNjE1ODYzNjg1LCJpc3MiOiJDeXByZXNzIiwic3ViIjoiU1NUb2tlbiJ9.C7mJrZ69a7F-o4ZO2RQYf8miRAcvOQ2_qXDL6d3_hEs'),
+    'hbn_brandid' => '7079049e-a38b-eb11-b566-00155db545d0',
+    'hbn_apikey' => '54030C41-1C71-4834-B09F-11272FF73BD0',
+    'hbn_api' => 'https://ws-test.insvr.com/jsonapi',
+    'hbn_game_server' => 'https://app-test.insvr.com',
 
     /*
     |--------------------------------------------------------------------------

@@ -42,7 +42,8 @@ namespace VanguardLTE
             'mileage',
             'bank_name',
             'recommender',
-            'account_no'
+            'account_no',
+            'api_token'
         ];
 
 

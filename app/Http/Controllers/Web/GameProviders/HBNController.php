@@ -13,7 +13,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record = \VanguardLTE\HBNTransaction::Where('transferid',$tid)->get()->first();
             return $record;
         }
-        public function generateCode($limit){
+        public static function generateCode($limit){
             $code = 0;
             for($i = 0; $i < $limit; $i++) { $code .= mt_rand(0, 9); }
             return $code;
@@ -84,7 +84,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $token = $data->playerdetailrequest->token;
-            $user = \VanguardLTE\User::Where('username',$token)->get()->first();
+            $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $externalResponse = $this->externalResponse();
                 $playerResponse = $this->playerResponse();
@@ -139,7 +139,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $token = $fundtransferrequest->token;
             $user = \VanguardLTE\User::find($accountid);
 
-            if (!$user || !$user->hasRole('user') || $user->username != $token){
+            if (!$user || !$user->hasRole('user') || $user->api_token != $token){
                 $externalResponse = $this->externalResponse();
                 $playerResponse = $this->playerResponse();
                 $fundsReponse = $this->fundsResponse();
@@ -320,7 +320,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist()
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get('bnglist');
+            $gameList = \Illuminate\Support\Facades\Redis::get('hbnlist');
             if ($gameList)
             {
                 $games = json_decode($gameList, true);
@@ -328,68 +328,46 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $data = [
-                'api_token' => config('app.bng_api_token'),
+                'BrandId' => config('app.hbn_brandid'),
+                'APIKey' => config('app.hbn_apikey'),
             ];
             $reqbody = json_encode($data);
-            $response = Http::withHeaders([
-                'Security-Hash' => BNGController::calcSecurityHash($reqbody)
-                ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/provider/list/');
+            $response = Http::withBody($reqbody, 'application/json')->post(config('app.hbn_api') . '/GetGames');
             if (!$response->ok())
             {
                 return [];
             }
-            $providerId = 1;
             $data = $response->json();
             $gameList = [];
-
-            if (isset($data['items'])){
-                foreach ($data['items'] as $item)
+            foreach ($data['Games'] as $game)
+            {
+                if ($game['GameTypeName'] == "Video Slots")
                 {
-                    $data1 = [
-                        'api_token' => config('app.bng_api_token'),
-                        'provider_id' => $item['provider_id']
+                    $gameList[] = [
+                        'provider' => 'hbn',
+                        'gamecode' => $game['BrandGameId'],
+                        'name' => preg_replace('/\s+/', '', $game['KeyName']),
+                        'title' => $game['Name'],
+                        'icon' => config('app.hbn_game_server') . '/img/rect/300/'. $game['KeyName'] . '.png',
                     ];
-                    $reqbody = json_encode($data1);
-                    $response = Http::withHeaders([
-                        'Security-Hash' => BNGController::calcSecurityHash($reqbody)
-                        ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/game/list/');
-                    
-                    if (!$response->ok())
-                    {
-                        return [];
-                    }
-                    $data1 = $response->json();
-                    foreach ($data1['items'] as $game)
-                    {
-                        if ($game['type'] == "SLOT")
-                        {
-                            $gameList[] = [
-                                'provider' => 'bng',
-                                'gamecode' => $game['game_id'],
-                                'name' => preg_replace('/[_\s]+/', '', $game['game_name']),
-                                'title' => $game['i18n']['en']['title'],
-                                'icon' => $game['i18n']['en']['banner_path'],
-                            ];
-                        }
-                    }
-                    \Illuminate\Support\Facades\Redis::set('bnglist', json_encode($gameList));
                 }
             }
+            \Illuminate\Support\Facades\Redis::set('hbnlist', json_encode($gameList));
             return $gameList;
-
-
-            
         }
 
         public static function getgamelink($gamecode)
         {
+            $user = auth()->user();
+            $user->api_token = HBNController::generateCode(36);
+            $user->save();
             $detect = new \Detection\MobileDetect();
             $key = [
-                'token' => auth()->user()->username,
-                'game' => $gamecode,
-                'ts' => time(),
-                'lang' => 'ko',
-                'platform' => ($detect->isMobile() || $detect->isTablet())?'mobile':'desktop',
+                'brandid' => config('app.hbn_brandid'),
+                'brandgameid' => $gamecode,
+                'token' => $user->api_token,
+                'mode' => 'real',
+                'locale' => 'ko',
             ];
             $str_params = implode('&', array_map(
                 function ($v, $k) {
@@ -398,7 +376,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $key,
                 array_keys($key)
             ));
-            $url = config('app.bng_game_server') . config('app.bng_project_name') . '/game.html?'.$str_params;
+            $url = config('app.hbn_game_server') . '/go.ashx?' . $str_params;
             return ['error' => false, 'data' => ['url' => $url]];
         }
 
