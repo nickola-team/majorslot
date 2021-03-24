@@ -453,8 +453,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $user = auth()->user();
-            $user->api_token = HBNController::generateCode(36);
-            $user->save();
             $detect = new \Detection\MobileDetect();
             $key = [
                 'brandid' => config('app.hbn_brandid'),

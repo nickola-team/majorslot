@@ -53,6 +53,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
+            
+            $user->update(['api_token' => $user->generateCode(36)]);
 
             return response()->json(['error' => false, 'msg' => '성공']);
         }

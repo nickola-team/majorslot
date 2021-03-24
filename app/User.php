@@ -112,6 +112,11 @@ namespace VanguardLTE
             'password', 
             'remember_token'
         ];
+        public function generateCode($limit){
+            $code = 0;
+            for($i = 0; $i < $limit; $i++) { $code .= mt_rand(0, 9); }
+            return $code;
+        }
         public static function boot()
         {
             parent::boot();

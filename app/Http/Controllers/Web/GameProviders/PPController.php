@@ -77,7 +77,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
 
-            $user = \VanguardLTE\User::Where('username',$token)->get()->first();
+            $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 return response()->json([
                     'error' => 2,
@@ -604,7 +604,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $detect = new \Detection\MobileDetect();
             $key = [
-                'token' => auth()->user()->username,
+                'token' => auth()->user()->api_token,
                 'symbol' => $gamecode,
                 'language' => 'ko',
                 'technology' => 'H5',
