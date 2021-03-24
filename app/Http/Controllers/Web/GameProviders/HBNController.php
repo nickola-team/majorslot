@@ -139,7 +139,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $token = $fundtransferrequest->token;
             $user = \VanguardLTE\User::find($accountid);
 
-            if (!$user || !$user->hasRole('user')){
+            if (!$user || !$user->hasRole('user') || ($fundtransferrequest->isretry==false && $user->api_token != $token)){
                 $externalResponse = $this->externalResponse();
                 $playerResponse = $this->playerResponse();
                 $fundsReponse = $this->fundsResponse();
