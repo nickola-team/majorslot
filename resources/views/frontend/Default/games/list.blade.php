@@ -293,10 +293,10 @@
                 @endif
                 <p>쥬만지</p></a>                
             </div>
-        </div> --}}
+        </div> 
     </div>
 </div>
-
+--}}
 <!-- 공지사항 -->
 {{--
 <div class="notice_wrap">
@@ -329,7 +329,7 @@
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
-            <span><strong>인기게임</strong></span>
+            <span><strong>SLOT GAMES</strong></span>
         </p>
     </div>
 </div>
@@ -337,14 +337,12 @@
     <div class="sc-inner">
     @if ($categories && count($categories))
         @foreach($categories AS $index=>$category)
-            @if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-            && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
                 @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check())
                 <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');" class="slot_pop_open slot-btn">
                         <div class="inner">
                             <div class="check">
                             <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                <span style="font-size:16px;">
+                                <span style="font-size:22px;">
                                 @if ($category->trans)
                                     {{ $category->trans->trans_title }}
                                 @else
@@ -359,7 +357,7 @@
                         <div class="inner">
                             <div class="check">
                             <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                <span style="font-size:16px;">
+                                <span style="font-size:22px;">
                                 @if ($category->trans)
                                     {{ $category->trans->trans_title }}
                                 @else
@@ -370,7 +368,6 @@
                         </div>
                     </a>
                 @endif
-            @endif
         @endforeach
     @endif
     </div>
@@ -748,8 +745,7 @@
                         @if ($categories && count($categories))
 
                             @foreach($categories AS $index=>$category)
-                                @if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-                            && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
+                                
                                 <li class="tab{{ $category->id }}">
                                     <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');">
                                         <span>
@@ -761,7 +757,6 @@
                                         </span>
                                     </a>
                                 </li>
-                                @endif
                             @endforeach
                         @endif
                     </ul>

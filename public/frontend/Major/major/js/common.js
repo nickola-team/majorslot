@@ -274,7 +274,7 @@ function openGroup(obj, category) {
             var strHtml = '';
             if (data.games.length > 0) {
                 for (var i = 0; i < data.games.length; i++) {
-                    strHtml += '<div style="width: 18%; height: 250px; margin: 10px; float:left; text-align:center;">';
+                    strHtml += '<div style="width: 18%; height: 220px; margin: 10px; float:left; text-align:center;">';
 
                     if (data.games[i].provider)
                     {
@@ -283,10 +283,10 @@ function openGroup(obj, category) {
                         {
                             if (data.games[i].icon)
                             {
-                                strHtml += '<img src="' + data.games[i].icon + '" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                                strHtml += '<img src="' + data.games[i].icon + '" style="width: 100%; height: 60%;" alt="' + data.games[i].title + '"></img>';
                             }
                             else {
-                                strHtml += '<img src="/frontend/Default/ico/' + data.games[i].provider + "/" + data.games[i].gamecode + "_" + data.games[i].name + '.jpg" style="width: 100%; height: 70%;" alt="' + data.games[i].title + '"></img>';
+                                strHtml += '<img src="/frontend/Default/ico/' + data.games[i].provider + "/" + data.games[i].gamecode + "_" + data.games[i].name + '.jpg" style="width: 100%; height: 60%;" alt="' + data.games[i].title + '"></img>';
                             }
                         }
                         else{
@@ -311,7 +311,7 @@ function openGroup(obj, category) {
                     if (data.games[i].demo)
                     {
                         strHtml += '<p><a href="javascript:;" onclick="openDemoApp(\'' + data.games[i].demo +'\');">';
-                        strHtml += '<img src="/frontend/Default/img/playdemo.png" style="width: 100%;" alt=""></img>';
+                        strHtml += '<span class="demo_btn">데모보기</span>';
                         //strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:18px;">DemoPlay</span>';
                         strHtml += '</a>';
                     }
