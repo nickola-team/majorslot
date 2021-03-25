@@ -356,6 +356,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/[_\s]+/', '', $game['game_name']),
                         'title' => $game['i18n']['en']['title'],
                         'icon' => $game['i18n']['en']['banner_path'],
+                        'demo' => BNGController::makegamelink($game['game_id'], "fun")
                     ];
                 }
             }
@@ -364,7 +365,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function getgamelink($gamecode)
+        public static function makegamelink($gamecode, $mode)
         {
             $detect = new \Detection\MobileDetect();
             $key = [
@@ -374,6 +375,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'lang' => 'ko',
                 'platform' => ($detect->isMobile() || $detect->isTablet())?'mobile':'desktop',
             ];
+            if ($mode == "fun")
+            {
+                $key['wl'] = 'demo';
+            }
             $str_params = implode('&', array_map(
                 function ($v, $k) {
                     return $k.'='.$v;
@@ -381,7 +386,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $key,
                 array_keys($key)
             ));
-            $url = config('app.bng_game_server') . config('app.bng_project_name') . '/game.html?'.$str_params;
+            return $url = config('app.bng_game_server') . config('app.bng_project_name') . '/game.html?'.$str_params;
+        }
+
+        public static function getgamelink($gamecode)
+        {
+            $url = BNGController::makegamelink($gamecode, "real");
             return ['error' => false, 'data' => ['url' => $url]];
         }
     }

@@ -443,6 +443,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['KeyName']),
                         'title' => $game['Name'],
                         'icon' => config('app.hbn_game_server') . '/img/rect/300/'. $game['KeyName'] . '.png',
+                        'demo' => HBNController::makegamelink($game['BrandGameId'], 'fun')
                     ];
                 }
             }
@@ -450,7 +451,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $gameList;
         }
 
-        public static function getgamelink($gamecode)
+        public static function makegamelink($gamecode, $mode)
         {
             $user = auth()->user();
             $detect = new \Detection\MobileDetect();
@@ -458,7 +459,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'brandid' => config('app.hbn_brandid'),
                 'brandgameid' => $gamecode,
                 'token' => $user->api_token,
-                'mode' => 'real',
+                'mode' => $mode,
                 'locale' => 'ko',
             ];
             $str_params = implode('&', array_map(
@@ -468,7 +469,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $key,
                 array_keys($key)
             ));
-            $url = config('app.hbn_game_server') . '/go.ashx?' . $str_params;
+            return  config('app.hbn_game_server') . '/go.ashx?' . $str_params;
+        }
+
+        public static function getgamelink($gamecode)
+        {
+            $url = HBNController::makegamelink($gamecode, 'real');
             return ['error' => false, 'data' => ['url' => $url]];
         }
 
