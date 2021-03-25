@@ -588,7 +588,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'provider' => 'pp',
                             'gamecode' => $game['gameID'],
                             'name' => preg_replace('/\s+/', '', $game['gameName']),
-                            'title' => $game['gameName'],
+                            'title' => __('gameprovider.'.$game['gameName']),
                             'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
                             'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
                         ];

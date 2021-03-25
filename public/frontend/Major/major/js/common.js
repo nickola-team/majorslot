@@ -307,7 +307,7 @@ function openGroup(obj, category) {
                         }
                         strHtml += '</a>';
                     }
-                    strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:18px;">' + data.games[i].title + '</span>';
+                    strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:16px;">' + data.games[i].title + '</span>';
                     if (data.games[i].demo)
                     {
                         strHtml += '<p><a href="javascript:;" onclick="openDemoApp(\'' + data.games[i].demo +'\');">';

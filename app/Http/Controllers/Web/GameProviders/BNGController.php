@@ -354,7 +354,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'provider' => 'bng',
                         'gamecode' => $game['game_id'],
                         'name' => preg_replace('/[_\s]+/', '', $game['game_name']),
-                        'title' => $game['i18n']['en']['title'],
+                        'title' => __('gameprovider.'.$game['i18n']['en']['title']),
                         'icon' => $game['i18n']['en']['banner_path'],
                         'demo' => BNGController::makegamelink($game['game_id'], "fun")
                     ];

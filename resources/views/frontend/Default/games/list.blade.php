@@ -9,7 +9,7 @@
     </script>
 @endif
 <!-- 팝업메시지 -->
-{{--
+
 <div class="modal fade in" id="liveperson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 58px;">
         <div class="modal-content" style="border: 0;">
@@ -26,7 +26,7 @@
         </div>
     </div>
 </div>
---}}
+
 <!-- 퀵위치 랭킹-->
 {{-- <div class="quick1_wrap">
     <div class="quick1_box">
@@ -172,7 +172,7 @@
                 </div>
                 <div onclick="openMenu('moneyhistory');" class="menu_pop_open">
                     <i class="fas fa-won-sign"></i>
-                    <p id="cur_money">{{ Auth::user()->balance }} 원</p>
+                    <p id="cur_money">{{ number_format(Auth::user()->balance,2) }} 원</p>
                 </div>
                 <div onclick="openMenu('question');" class="menu_pop_open">
                     <i class="fa fa-comment"></i>
@@ -202,7 +202,7 @@
     </div>
 </div>
 <!-- 잭팟 슬라이드 -->
-{{--
+
 <div class="jackpot_left_wrap">
     <div class="grand_jackpot_box">
         <p class="jackpot_sum" id="grandjp">10,000,000</p>
@@ -219,7 +219,7 @@
     <p class="jackpot_sum" id="minijp">10,000</p>
     </div>
 </div>
---}}
+
 <!-- 광고 슬라이드 -->
 
 <div class="slideshow2_wrap">

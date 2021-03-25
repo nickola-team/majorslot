@@ -933,12 +933,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
+            $detect = new \Detection\MobileDetect();
+            $plat = ($detect->isMobile() || $detect->isTablet())?'mobile':'web';
             $data = $response->json();
             if ($data['status']['code'] == 0){
                 $gameList = [];
                 foreach ($data['data'] as $game)
                 {
-                    if ($game['gametype'] == "slot" && $game['status'])
+                    if ($game['gametype'] == "slot" && $game['status'] && $game['gameplat'] == $plat)
                     {
                         $selLan = 'ko';
                         if (!in_array($selLan, $game['lang']))
@@ -957,7 +959,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'provider' => 'cq9',
                                     'gamecode' => $game['gamecode'],
                                     'name' => preg_replace('/\s+/', '', $game['gamename']),
-                                    'title' => $title['name'],
+                                    'title' => $selLan=='en'?__('gameprovider.'.$title['name']) : $title['name'],
                                 ];
                             }
                         }
