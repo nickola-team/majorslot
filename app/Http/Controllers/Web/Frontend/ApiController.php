@@ -144,7 +144,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             $games = $games->get();
-            return $games;
+            $data = [];
+            foreach ($games as $game)
+            {
+                $data[] = [
+                    'name' => $game->name,
+                    'title' => __('gamename.' . $game->title)
+                ];
+            }
+            return $data;
         }
         public function inoutList_json(\Illuminate\Http\Request $request)
         {

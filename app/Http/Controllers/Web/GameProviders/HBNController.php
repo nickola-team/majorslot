@@ -441,7 +441,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'provider' => 'hbn',
                         'gamecode' => $game['BrandGameId'],
                         'name' => preg_replace('/\s+/', '', $game['KeyName']),
-                        'title' => $game['Name'],
+                        'title' => __('gameprovider.'.$game['Name']),
                         'icon' => config('app.hbn_game_server') . '/img/rect/300/'. $game['KeyName'] . '.png',
                         'demo' => HBNController::makegamelink($game['BrandGameId'], 'fun')
                     ];
