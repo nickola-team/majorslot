@@ -789,5 +789,8 @@ return [
     "Zhao Cai Jin Bao" => "JP 조 카 진 바오 JP",
     "Zhao Cai Tong Zi" => "조 카 통 지",
     "Zodiac Wheel" => "조디악 휠",
+    "5Treasures" => "5 트레져 다복이",
+    "88Fortune" => "88포츈 다복이",
+    "DancingDrum" => "댄싱드럼 다복이",
 
 ];
