@@ -572,7 +572,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->get(config('app.ppapi') . '/getCasinoGames/', $data);
+                ])->get(config('app.ppapi') . '/CasinoGameAPI/getCasinoGames/', $data);
             if (!$response->ok())
             {
                 return [];
@@ -621,6 +621,60 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ));
             $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . 'stylename=rare_stake';
             return ['error' => false, 'data' => ['url' => $url]];
+        }
+
+        public static function createfrb($frbdata)
+        {
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'currency' => 'KRW',
+            ];
+            $data = $data + $frbdata;
+            $data['hash'] = PPController::calcHash($data);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.ppapi') . '/FreeRoundsBonusAPI/createFRB', $data);
+            if (!$response->ok())
+            {
+                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            }
+            $data = $response->json();
+            return $data;
+        }
+        public static function cancelfrb($bonusCode)
+        {
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'bonusCode' => $bonusCode
+            ];
+            $data['hash'] = PPController::calcHash($data);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.ppapi') . '/FreeRoundsBonusAPI/cancelFRB', $data);
+            if (!$response->ok())
+            {
+                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            }
+            $data = $response->json();
+            return $data;
+        }
+
+        public static function getplayersfrb($userid)
+        {
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'playerId' => $userid
+            ];
+            $data['hash'] = PPController::calcHash($data);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.ppapi') . '/FreeRoundsBonusAPI/getPlayersFRB', $data);
+            if (!$response->ok())
+            {
+                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            }
+            $data = $response->json();
+            return $data;
         }
     }
 

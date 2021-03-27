@@ -151,36 +151,6 @@
             </li>
             @endif
             @endpermission
-            {{-- @permission('shops.manage')
-            <li class="{{ Request::is('backend/shops*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.shop.list') }}">
-                    <i class="fa fa-users"></i>
-                    <span>매장관리</span>
-                </a>
-            </li>
-            @endpermission --}}
-
-            {{-- @permission('categories.manage')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
-            <li class="{{ Request::is('backend/category*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.category.list') }}">
-                    <i class="fa fa-server"></i>
-                    <span>게임카테고리관리</span>
-                </a>
-            </li>
-            @endif
-            @endpermission --}}
-
-            {{-- @permission('returns.manage')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
-            <li class="{{ Request::is('backend/returns*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.returns.list') }}">
-                    <i class="fa fa-server"></i>
-                    <span>@lang('app.returns')</span>
-                </a>
-            </li>
-            @endif
-            @endpermission --}}
 
             @permission('happyhours.manage')
             @if( auth()->user()->hasRole('admin') )
@@ -192,6 +162,32 @@
             </li>
             @endif
             @endpermission
+
+            @if( auth()->user()->hasRole('admin') )
+            <li class="treeview {{ Request::is('backend/bonus*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-gift"></i>
+                    <span>게임제공사 보너스</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class=" treeview-menu" id="stats-dropdown">
+                    <li class="{{ Request::is('backend/bonus/pp*') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.bonus.pp') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>프라그메틱 보너스</span>
+                        </a>
+                    </li>
+                    {{--<li class="{{ Request::is('backend/bonus/bng') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.category.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>부웅고 보너스</span>
+                        </a>
+                    </li>              --}}
+                </ul>
+            </li>
+            @endif
 
 
             {{-- @permission('jpgame.manage')

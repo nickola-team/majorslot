@@ -105,7 +105,7 @@ return [
     */
     'ppsecretkey' =>  env('PP_SECRETKEY', 'testKey'),
     'ppsecurelogin' =>  env('PP_SECURELOGIN', 'mjr_major'),
-    'ppapi' => 'https://api.prerelease-env.biz/IntegrationService/v3/http/CasinoGameAPI',
+    'ppapi' => 'https://api.prerelease-env.biz/IntegrationService/v3/http',
     'ppgameserver' => 'https://major-sg0.prerelease-env.biz',
     
     /*
