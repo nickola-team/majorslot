@@ -30,6 +30,7 @@
 							<th>지급된 프리스핀수</th>
                             <th>시작시간</th>
                             <th>만료시간</th>
+							<th>상태</th>
                             <th>====</th>
                         </tr>
                         </thead>
@@ -44,6 +45,7 @@
 								<td>{{ $bonus['roundsPlayed'] }} </td>
 								<td>{{ $bonus['startDate'] }} </td>
 								<td>{{ date(config('app.date_time_format'),intval($bonus['expirationDate'])) }} </td>
+								<td>{{ $bonus['status']?'활성':'비활성' }} </td>
 								<td>
 								<a href="{{ route('backend.bonus.ppcancel', $bonus['bonusCode']) }}"
 									class="btn btn-danger btn-block"
@@ -70,6 +72,7 @@
 							<th>지급된 프리스핀</th>
                             <th>시작시간</th>
                             <th>만료시간</th>
+							<th>상태</th>
                             <th>====</th>
                         </tr>
                         </thead>

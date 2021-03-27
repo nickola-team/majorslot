@@ -17,6 +17,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $bdata = $bonus->toArray();
                 $bdata['username'] = $bonus->user->username;
                 $bdata['roundsPlayed'] = 0;
+                $bdata['status'] = 0;
                 if ($res['error'] == '0')
                 {
                     foreach ($res['bonuses'] as $frb)
@@ -25,6 +26,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         {
                             $bdata['roundsPlayed'] = $frb['roundsPlayed'];
                             $bdata['rounds'] = $frb['rounds'];
+                            $bdata['status'] = 1;
                         }
                     }
                 }
