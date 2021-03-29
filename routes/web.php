@@ -211,6 +211,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.providers.pp.render',
         'uses' => 'RenderingController@pragmaticrender'
     ]);
+    Route::get('gs2c/minilobby/start', [
+        'as' => 'frontend.providers.pp.minilobby',
+        'uses' => 'RenderingController@pragmaticminilobby'
+    ]);
+
 	/*
 	Route::get('games', [
         'as' => 'frontend.game.list',
@@ -1238,6 +1243,14 @@ Route::group(['middleware' => 'pp', 'prefix' => 'pp',], function () {
 	Route::post('/endround', 'GameProviders\PPController@endround');
     Route::post('/refund', 'GameProviders\PPController@refund');
     Route::post('/promowin', 'GameProviders\PPController@promowin');
+});
+Route::group(['prefix' => 'gs2c',], function () {
+    Route::get('/promo/active', 'GameProviders\PPController@promoactive');
+    Route::get('/promo/race/details', 'GameProviders\PPController@promoracedetails');
+    Route::get('/promo/race/prizes', 'GameProviders\PPController@promoraceprizes');
+    Route::post('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
+    Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
+    Route::get('/promo/tournament/v2/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
 });
 
 /**

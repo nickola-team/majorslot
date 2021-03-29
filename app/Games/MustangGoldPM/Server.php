@@ -1,10 +1,10 @@
 <?php 
-namespace VanguardLTE\Games\MustangGold
+namespace VanguardLTE\Games\MustangGoldPM
 {
     include('CheckReels.php');
     class Server
     {
-        public function get($request, $game)
+        public function get($request, $game, $userId) // changed by game developer
         {
             /*if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
             {
@@ -27,10 +27,10 @@ namespace VanguardLTE\Games\MustangGold
             }*/
             $response = '';
             \DB::beginTransaction();
-            $userId = \Auth::id();
+            // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$userId = 7;
+            	$userId = 1;
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
@@ -50,7 +50,8 @@ namespace VanguardLTE\Games\MustangGold
             $slotEvent['slotEvent'] = $slotEvent['action'];
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
-                $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"' . $slotSettings->GetBalance() . '"}';
+                $Balance = $slotSettings->GetBalance();
+                $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
                 exit( $response );
             }
             if( $slotEvent['slotEvent'] == 'doInit' ) 
@@ -373,9 +374,6 @@ namespace VanguardLTE\Games\MustangGold
                 }
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
-                if($winType == 'win'){
-                    $test = 1;
-                }
                 $_winAvaliableMoney = $_spinSettings[1];
                 $_moneyValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];                
                 $slotSettings->SetGameData($slotSettings->slotId . 'JackpotWin', 0);
@@ -687,7 +685,7 @@ namespace VanguardLTE\Games\MustangGold
                         $strMoneySymbolResponse = $strMoneySymbolResponse . '&mo_tv=' . ($moneyTotalWin / $betline) . '&mo_c=1&mo_tw=' . $moneyTotalWin;
                     }
                 }
-                $response = 'tw='.$totalWin.'&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine. $strFreeSpinResponse. $strMoneySymbolResponse.'&stime=' . floor(microtime(true) * 1000) .
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine. $strFreeSpinResponse. $strMoneySymbolResponse.'&stime=' . floor(microtime(true) * 1000) .
                         '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&s='.$strLastReel.'&w='.$totalWin;
                 
 

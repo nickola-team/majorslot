@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DogHouse
+namespace VanguardLTE\Games\TheDogHousePM
 {
     class SlotSettings
     {

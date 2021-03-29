@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\MustangGold
+namespace VanguardLTE\Games\MustangGoldPM
 {
     class GameReel
     {
@@ -21,7 +21,7 @@ namespace VanguardLTE\Games\MustangGold
         ];
         public function __construct()
         {
-            $temp = file(base_path() . '/app/Games/MustangGold/reels.txt');
+            $temp = file(base_path() . '/app/Games/MustangGoldPM/reels.txt');
             foreach( $temp as $str ) 
             {
                 $str = explode('=', $str);

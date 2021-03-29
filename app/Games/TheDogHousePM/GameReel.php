@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DogHouse
+namespace VanguardLTE\Games\TheDogHousePM
 {
     class GameReel
     {
@@ -21,7 +21,7 @@ namespace VanguardLTE\Games\DogHouse
         ];
         public function __construct()
         {
-            $temp = file(base_path() . '/app/Games/DogHouse/reels.txt');
+            $temp = file(base_path() . '/app/Games/TheDogHousePM/reels.txt');
             foreach( $temp as $str ) 
             {
                 $str = explode('=', $str);

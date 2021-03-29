@@ -35,7 +35,7 @@ document.location.href='../../';
 
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/DogHouse/index.html?lang=en&cur=@if( auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs20doghouse8&websiteUrl=&lobbyURL=' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/TheDogHousePM/index.html?lang=en&cur=@if( auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs20doghouse8&websiteUrl=&lobbyURL=' allowfullscreen>
 
 
 </iframe>

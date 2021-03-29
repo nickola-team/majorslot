@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\MustangGold
+namespace VanguardLTE\Games\MustangGoldPM
 {
     class SlotSettings
     {
