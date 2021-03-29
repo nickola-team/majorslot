@@ -582,11 +582,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
                 {
-                    if ($game['gameTypeID'] == "vs")
+                    if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
                     {
                         $gameList[] = [
                             'provider' => 'pp',
                             'gamecode' => $game['gameID'],
+                            'enname' => $game['gameName'],
                             'name' => preg_replace('/\s+/', '', $game['gameName']),
                             'title' => __('gameprovider.'.$game['gameName']),
                             'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
@@ -685,6 +686,265 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
          * FROM CLIENT
          */
 
+        public function minilobby_games_json(\Illuminate\Http\Request $request)
+        {
+            $data = [
+                "error" => 0,
+                "description" => "OK",
+                "gameLaunchURL" => "/gs2c/minilobby/start",
+                "gameIconsURL" => "/frontend/Default/ico/pp",
+            ];
+            $allGames = [
+                "categorySymbol" => "all",
+                "categoryName" => "All games",
+                "lobbyGames" => []
+            ];
+            $newGames = [
+                "categorySymbol" => "new",
+                "categoryName" => "New games",
+                "lobbyGames" => []
+            ];
+            $hotGames = [
+                "categorySymbol" => "hot",
+                "categoryName" => "Hot games",
+                "lobbyGames" => []
+            ];
+            $allGamesId = [
+                "vs25mmouse",
+                "vs1fortunetree",
+                "vs25scarabqueen",
+                "vs243lionsgold",
+                "vs5spjoker",
+                "vs243mwarrior",
+                "vs18mashang",
+                "vs40pirate",
+                "vs25goldrush",
+                "vs10egyptcls",
+                "vs20doghouse",
+                "vs25davinci",
+                "vs7776secrets",
+                "vs5aztecgems",
+                "vs243caishien",
+                "vs1dragon8",
+                "vs25wolfgold",
+                "vs9madmonkey",
+                "vs243fortune",
+                "vs9hotroll",
+                "vs20rhino",
+                "vs10firestrike",
+                "vs10vampwolf",
+                "vs20chicken",
+                "bndt",
+                "vs5trjokers",
+                "vs20fruitsw",
+                "vs20wildpix",
+                "vs10fruity2",
+                "vs25gladiator",
+                "vs25goldpig",
+                "vs50safariking",
+                "vs25mustang",
+                "vs20egypttrs",
+                "vs20leprexmas",
+                "vs5trdragons",
+                "vs20vegasmagic",
+                "vs9chen",
+                "vs20leprechaun",
+                "vs25peking",
+                "vs1024butterfly",
+                "vs10madame",
+                "vs25asgard",
+                "vs243lions",
+                "vs25champ",
+                "scwolfgoldai",
+                "scsafariai",
+                "scqogai",
+                "scpandai",
+                "scgoldrushai",
+                "scdiamondai",
+                "sc7piggiesai",
+                "vs5joker",
+                "vs7fire88",
+                "vs15fairytale",
+                "vs25chilli",
+                "vs1tigers",
+                "vs10egypt",
+                "vs25newyear",
+                "bjmb",
+                "vs20santa",
+                "cs5moneyroll",
+                "vs25pandagold",
+                "vs15diamond",
+                "vs25wildspells",
+                "vs7pigs",
+                "vs25vegas",
+                "vs50pixie",
+                "vs4096jurassic",
+                "vs20eightdragons",
+                "vs3train",
+                "vs25kingdoms",
+                "cs3irishcharms",
+                "vs25queenofgold",
+                "cs5triple8gold",
+                "vs25pantherqueen",
+                "vs1024atlantis",
+                "vs25dragonkingdom",
+                "vs50aladdin",
+                "vs50hercules",
+                "vs30catz",
+                "vs25journey",
+                "vs50chinesecharms",
+                "vs25dwarves_new",
+                "vs40beowulf",
+                "vs25romeoandjuliet",
+                "vs25safari",
+                "vs9hockey",
+                "vs20godiva",
+                "vs9catz",
+                "vs50kingkong",
+                "vs15ktv",
+                "vs243crystalcave",
+                "vs20hockey",
+                "vs50amt",
+                "vs13ladyofmoon",
+                "vs7monkeys_jp",
+                "vs7monkeys",
+                "vs20cw",
+                "vs20egypt",
+                "vs25dwarves",
+                "vs20rome",
+                "vs20cms",
+                "vs20cmv",
+                "vs20cm",
+                "vs25sea",
+                "vs20bl",
+                "vs20gg",
+                "bca",
+                "bjma",
+                "cs3w",
+                "rla",
+                "vs25h",
+                "vs13g",
+                "vs15b",
+            ];
+            $newgameId = ["vs25pyramid",
+                        "vs25mmouse",
+                        "vs10firestrike",
+                        "bjmb",
+                        "vs5spjoker",
+                        "vs1fortunetree",
+                        "vs9hotroll",
+                        "vs10vampwolf",
+                        "vs20chicken",
+                        "vs7776secrets",
+                        "vs5trjokers",
+                        "vs243lionsgold",
+                        "vs20wildpix",
+                        "vs20fruitsw",
+                        "vs243mwarrior",
+                        "vs243caishien",
+                        "vs40pirate",
+                        "vs20doghouse",
+                        "vs20egypttrs",
+                        "vs10fruity2",
+                        "vs25gladiator",
+                        "vs18mashang",
+                        "vs25goldpig",
+                        "vs50safariking",
+                        "vs25scarabqueen",];
+            $hotgameId = [
+                "vs25pyramid",
+                "vs25mmouse",
+                "vs243caishien",
+                "vs243fortune",
+                "vs18mashang",
+                "vs25wolfgold",
+                "vs9madmonkey",
+                "vs1dragon8",
+                "vs25goldpig",
+                "vs5aztecgems",
+                "vs243lions",
+                "vs5joker",
+                "vs25journey",
+                "vs1tigers",
+                "vs20rhino",
+                "vs25newyear",
+                "cs5triple8gold",
+                "vs7fire88",
+                "vs25dragonkingdom",
+                "vs20eightdragons",
+                "vs25wildspells",
+                "vs25chilli",
+            ];
+            $gamelist = PPController::getgamelist('pp');
+            foreach ($gamelist as $game)
+            {
+                $gamedata = [
+                    "name" => $game['enname'],
+                    "symbol" => $game['gamecode'],
+                    "promoKeys"=> [
+                        [
+                            "type" => "TM",
+                            "id" => 6488
+                        ],
+                        [
+                            "type" => "MR",
+                            "id" => 4426
+                        ]
+                    ]
+                ];
+                if (in_array($game['gamecode'], $allGamesId))
+                {
+                    $allGames["lobbyGames"][] = $gamedata;
+                }
+                if (in_array($game['gamecode'], $newgameId))
+                {
+                    $newGames["lobbyGames"][] = $gamedata;
+                }
+                if (in_array($game['gamecode'], $hotgameId))
+                {
+                    $hotGames["lobbyGames"][] = $gamedata;
+                }
+            }
+            $data["lobbyCategories"] = [
+                $allGames,
+                $newGames,
+                $hotGames
+            ];
+
+            $data['activePromos'] = [
+                "tournaments" => [
+                    [
+                        "id" => 6488,
+                        "status"=> "O",
+                        "name"=> "Spring Fortune Tournament",
+                        "clientMode"=> "V",
+                        "startDate"=> 1615888800,
+                        "endDate" => 1616493540,
+                        "optin"=> true
+                    ]
+                ],
+                "races" => [
+                    [
+                        "id"=> 4426,
+                        "status" => "O",
+                        "name" => "Spring Fortune Cash Drop",
+                        "clientMode" => "V",
+                        "startDate"=> 1615888800,
+                        "endDate" => 1616493540,
+                        "clientStyle" => "AS",
+                        "optin" => true
+                    ]
+                ]
+            ];
+            return response()->json($data);
+
+        }
+
+        public function minilobby_start(\Illuminate\Http\Request $request)
+        {
+            $gamecode = $request->gameSymbol;
+            return redirect(route('frontend.providers.pp.render', $gamecode) . '?lobby=mini');
+        }
         
         public function promoactive(\Illuminate\Http\Request $request)
         {

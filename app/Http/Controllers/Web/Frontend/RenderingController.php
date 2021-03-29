@@ -35,12 +35,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return view('frontend.Default.games.pragmatic', compact('url'));
             }
         }
-
-        public function pragmaticminilobby(\Illuminate\Http\Request $request)
-        {
-            $gamecode = $request->gameSymbol;
-            return redirect(route('frontend.providers.pp.render', $gamecode) . '?lobby=mini');
-        }
     }
 
 }

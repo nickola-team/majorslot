@@ -211,10 +211,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.providers.pp.render',
         'uses' => 'RenderingController@pragmaticrender'
     ]);
-    Route::get('gs2c/minilobby/start', [
-        'as' => 'frontend.providers.pp.minilobby',
-        'uses' => 'RenderingController@pragmaticminilobby'
-    ]);
+
 
 	/*
 	Route::get('games', [
@@ -1251,7 +1248,10 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::post('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
     Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
     Route::get('/promo/tournament/v2/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
+    Route::get('/minilobby/games.json', 'GameProviders\PPController@minilobby_games_json');
+    Route::get('/minilobby/start', 'GameProviders\PPController@minilobby_start');
 });
+
 
 /**
  * Booongo Game Provider
