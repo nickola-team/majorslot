@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '프라그메틱 보너스')
-@section('page-heading', '프라그메틱 보너스')
+@section('page-title', '부웅고 보너스')
+@section('page-heading', '부웅고 보너스')
 
 @section('content')
 
@@ -14,7 +14,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">프리스핀 보너스</h3>
                 <div class="pull-right box-tools">
-                    <a href="{{ route('backend.bonus.ppadd') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+                    <a href="{{ route('backend.bonus.bngadd') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
                 </div>
 			</div>
             <div class="box-body">
@@ -26,8 +26,9 @@
                             <th>회원이름</th>
                             <th>보너스코드</th>
                             <th>게임이름</th>
-                            <th>프리스핀갯수</th>
-							<th>지급된 프리스핀수</th>
+                            <th>보너스금</th>
+							<th>베팅금</th>
+							<th>당첨금</th>
                             <th>시작시간</th>
                             <th>만료시간</th>
 							<th>상태</th>
@@ -39,15 +40,16 @@
 								<tr>
 								<td>{{ $loop->index + 1 }} </td>
 								<td>{{ $bonus['username'] }} </td>
-								<td>{{ $bonus['bonusCode'] }} </td>
+								<td>{{ $bonus['campaign'] }} </td>
 								<td>{{ $bonus['gamename'] }} </td>
-								<td>{{ $bonus['rounds'] }} </td>
-								<td>{{ $bonus['roundsPlayed'] }} </td>
-								<td>{{ $bonus['startDate'] }} </td>
-								<td>{{ date(config('app.date_time_format'),intval($bonus['expirationDate'])) }} </td>
-								<td>{{ $bonus['status']?'활성':'비활성' }} </td>
+								<td>{{ $bonus['total_bet'] }} </td>
+								<td>{{ $bonus['played_bet'] }} </td>
+								<td>{{ $bonus['played_win'] }} </td>
+								<td>{{ $bonus['start_date'] }} </td>
+								<td>{{ $bonus['end_date'] }} </td>
+								<td>{{$bonus['status'] }}</td>
 								<td>
-								<a href="{{ route('backend.bonus.ppcancel', $bonus['bonusCode']) }}"
+								<a href="{{ route('backend.bonus.bngcancel', $bonus['bonus_id']) }}"
 									class="btn btn-danger btn-block"
 									data-method="DELETE"
 									data-confirm-title="보너스취소"
@@ -68,8 +70,9 @@
                             <th>회원이름</th>
                             <th>보너스코드</th>
                             <th>게임이름</th>
-                            <th>프리스핀갯수</th>
-							<th>지급된 프리스핀</th>
+                            <th>보너스금</th>
+							<th>베팅금</th>
+							<th>당첨금</th>
                             <th>시작시간</th>
                             <th>만료시간</th>
 							<th>상태</th>

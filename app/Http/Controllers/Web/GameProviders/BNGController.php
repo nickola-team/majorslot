@@ -394,6 +394,98 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = BNGController::makegamelink($gamecode, "real");
             return ['error' => false, 'data' => ['url' => $url]];
         }
+
+        public static function bonuscreate($data)
+        {
+            $requestdata = [
+                'api_token' => config('app.bng_api_token'),
+                'mode' => 'REAL',
+                'campaign' => $data['campaign'],
+                'game_id' => strval($data['game_id']),
+                'bonus_type' => 'FLEXIBLE_FREEBET',
+                'currency' => 'KRW',
+                'total_bet' => strval($data['total_bet']),
+                'start_date' => null,
+                'end_date' => $data['end_date'],
+                'bonuses' => [
+                    [
+                        'player_id' => $data['player_id'],
+                        'ext_bonus_id' => '',
+                        'brand' => 'major'
+                    ]
+                ]
+            ];
+
+            $reqbody = json_encode($requestdata);
+            $response = Http::withHeaders([
+                'Security-Hash' => BNGController::calcSecurityHash($reqbody)
+                ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/bonus/create/');
+            if (!$response->ok())
+            {
+                return null;
+            }
+            $res = $response->json();
+            return $res['items'][0];
+        }
+
+        public static function bonuscancel($bonus_id)
+        {
+            $requestdata = [
+                'api_token' => config('app.bng_api_token'),
+                'bonus_id' => intval($bonus_id)
+            ];
+
+            $reqbody = json_encode($requestdata);
+            $response = Http::withHeaders([
+                'Security-Hash' => BNGController::calcSecurityHash($reqbody)
+                ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/bonus/delete/');
+            if (!$response->ok())
+            {
+                return null;
+            }
+            $res = $response->json();
+            return $res;
+        }
+
+        public static function bonuslist()
+        {
+            
+            $requestdata = [
+                'api_token' => config('app.bng_api_token'),
+                'mode' => 'REAL',
+                'campaign' => null,
+                'game_id' => null,
+                'player_id' => null,
+                'brand' => 'major',
+                'include_expired' => true,
+                'fetch_size' => 100,
+                'fetch_state' => null
+            ];
+
+            $reslist = [];
+            $bcontinue = true;
+            while ($bcontinue) {
+                $reqbody = json_encode($requestdata);
+                $response = Http::withHeaders([
+                    'Security-Hash' => BNGController::calcSecurityHash($reqbody)
+                    ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/bonus/list/');
+                if (!$response->ok())
+                {
+                    break;
+                }
+                $res = $response->json();
+                $reslist = array_merge($reslist, $res['items']);
+                if ($res['fetch_state'] === null)
+                {
+                    $bcontinue = false;
+                }
+                else
+                {
+                    $requestdata['fetch_state'] = $res['fetch_state'];
+                }
+            }
+            return $reslist;
+        }
     }
 
 }

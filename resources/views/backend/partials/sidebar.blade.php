@@ -179,12 +179,12 @@
                             <span>프라그메틱 보너스</span>
                         </a>
                     </li>
-                    {{--<li class="{{ Request::is('backend/bonus/bng') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.category.list') }}">
+                    <li class="{{ Request::is('backend/bonus/bng*') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.bonus.bng') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>부웅고 보너스</span>
                         </a>
-                    </li>              --}}
+                    </li>
                 </ul>
             </li>
             @endif

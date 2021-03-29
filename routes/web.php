@@ -468,11 +468,22 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.bonus.ppcancel',
         'uses' => 'BonusController@pp_cancel'
     ]);
-    Route::get('/bonus/bng', [
+    Route::get('/bonus/bnglist', [
         'as' => 'backend.bonus.bng',
         'uses' => 'BonusController@bng_index'
     ]);
-
+    Route::get('/bonus/bngadd', [
+        'as' => 'backend.bonus.bngadd',
+        'uses' => 'BonusController@bng_add'
+    ]);
+    Route::post('/bonus/bngstore', [
+        'as' => 'backend.bonus.bngstore',
+        'uses' => 'BonusController@bng_store'
+    ]);
+    Route::delete('/bonus/bngcancel/{bonusCode}', [
+        'as' => 'backend.bonus.bngcancel',
+        'uses' => 'BonusController@bng_cancel'
+    ]);
 
    
 	
