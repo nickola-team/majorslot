@@ -12,7 +12,7 @@
 	<section class="content">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">프리스핀 보너스</h3>
+				<h3 class="box-title">보너스</h3>
                 <div class="pull-right box-tools">
                     <a href="{{ route('backend.bonus.bngadd') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
                 </div>
@@ -24,7 +24,7 @@
                         <tr>
                             <th>아이디</th>
                             <th>회원이름</th>
-                            <th>보너스코드</th>
+                            <th>캠페인</th>
                             <th>게임이름</th>
                             <th>보너스금</th>
 							<th>베팅금</th>
@@ -61,14 +61,14 @@
 								</td>
 								</tr>
 							@empty
-                            <tr><td colspan="9">@lang('app.no_data')</td></tr>
+                            <tr><td colspan="11">@lang('app.no_data')</td></tr>
 							@endforelse
                         </tbody>
                         <thead>
                         <tr>
                             <th>아이디</th>
                             <th>회원이름</th>
-                            <th>보너스코드</th>
+                            <th>캠페인</th>
                             <th>게임이름</th>
                             <th>보너스금</th>
 							<th>베팅금</th>

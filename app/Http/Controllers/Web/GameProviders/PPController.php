@@ -600,7 +600,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [];
         }
 
-        public static function getgamelink($gamecode)
+        public static function getgamelink_pp($gamecode)
         {
             $detect = new \Detection\MobileDetect();
             $key = [
@@ -621,6 +621,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ));
             $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . 'stylename=rare_stake';
             return ['error' => false, 'data' => ['url' => $url]];
+        }
+        public static function getgamelink($gamecode)
+        {
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.pp.render', $gamecode)]];
         }
 
         public static function createfrb($frbdata)

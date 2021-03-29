@@ -207,6 +207,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.game.search',
         'uses' => 'GamesController@search'
     ]);
+    Route::get('providers/pp/{gamecode}', [
+        'as' => 'frontend.providers.pp.render',
+        'uses' => 'RenderingController@pragmaticrender'
+    ]);
 	/*
 	Route::get('games', [
         'as' => 'frontend.game.list',
