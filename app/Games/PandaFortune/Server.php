@@ -50,10 +50,9 @@ namespace VanguardLTE\Games\PandaFortune
             $slotEvent['slotEvent'] = $slotEvent['action'];
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
-                // $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"' . $slotSettings->GetBalance() . '"}';
-                // exit( $response );
                 $Balance = $slotSettings->GetBalance();
                 $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
+                exit( $response );
             }else if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
                 $lastEvent = $slotSettings->GetHistory();
@@ -610,7 +609,7 @@ namespace VanguardLTE\Games\PandaFortune
                     }                    
                 }
                 $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse . $strJackpotWin . $strJackpotPos .'&msr=' . $bonusSymbol . '&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .
-                '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5'.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&s='.$strLastReel.'&w='.$totalWin;
+                '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5'.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&s='.$strLastReel.'&w='.($totalWin - $jackpotWin);
 
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
