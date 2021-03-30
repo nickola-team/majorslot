@@ -61,6 +61,7 @@ namespace VanguardLTE\Games\PandasFortunePM
         public $jackpotSymbolChance = null;
         public $scatterODSymbol = [];
         public $wildODSymbol = [];
+        public $happyhouruser = null;
         public function __construct($sid, $playerId, $credits = null)
         {
            /* if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
@@ -86,6 +87,11 @@ namespace VanguardLTE\Games\PandasFortunePM
             $this->playerId = $playerId;
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                'time' => date('G')
+            ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
@@ -457,6 +463,11 @@ namespace VanguardLTE\Games\PandasFortunePM
         }
         public function GetBank($slotState = '')
         {
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
@@ -508,6 +519,8 @@ namespace VanguardLTE\Games\PandasFortunePM
             {
                 $slotState = '';
             }
+            $sum = $sum * $this->CurrentDenom;
+            $game = $this->game;
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {
                 if($slotState == 'bonus'){
@@ -518,8 +531,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                     $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                 }
             }
-            $sum = $sum * $this->CurrentDenom;
-            $game = $this->game;
+
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet') 
             {
@@ -561,13 +573,21 @@ namespace VanguardLTE\Games\PandasFortunePM
             {
                 $this->toGameBanks = $sum;
             }
-            if( $_obf_bonus_systemmoney > 0 ) 
+            if ($this->happyhouruser)
             {
-                $sum -= $_obf_bonus_systemmoney;
-                $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
             }
-            $game->set_gamebank($sum, 'inc', $slotState);
-            $game->save();
+            else
+            {
+                if( $_obf_bonus_systemmoney > 0 ) 
+                {
+                    $sum -= $_obf_bonus_systemmoney;
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                }
+                $game->set_gamebank($sum, 'inc', $slotState);
+                $game->save();
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -762,6 +782,34 @@ namespace VanguardLTE\Games\PandasFortunePM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
+            if ($this->happyhouruser)
+            {
+                $bonus_spin = rand(1, 10);
+                $bonus_percent = 2;
+                $spin_percent = 9;
+                if ($this->happyhouruser->current_bank <= 10000)
+                {
+                    $bonus_percent = 1;
+                }
+                if ($garantType == 'freespin')
+                {
+                    $bonus_percent = 1;
+                }
+                if ($bonus_spin <= $bonus_percent) {
+                    $bonusWin = 1;
+                    $spinWin = 0;
+                }
+                else if ($bonus_spin < $spin_percent)
+                {
+                    $bonusWin = 0;
+                    $spinWin = 1;
+                }
+                else
+                {
+                    $bonusWin = 0;
+                    $spinWin = 0;
+                }
+            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;

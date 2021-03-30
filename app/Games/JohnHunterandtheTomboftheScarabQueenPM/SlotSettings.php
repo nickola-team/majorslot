@@ -796,6 +796,10 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                 {
                     $bonus_percent = 1;
                 }
+                if ($garantType == 'freespin')
+                {
+                    $bonus_percent = 1;
+                }
                 if ($bonus_spin <= $bonus_percent) {
                     $bonusWin = 1;
                     $spinWin = 0;
