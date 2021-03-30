@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\JohnHunterTOSQ
+namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
 {
     class GameReel
     {
@@ -29,7 +29,7 @@ namespace VanguardLTE\Games\JohnHunterTOSQ
         ];
         public function __construct()
         {
-            $temp = file(base_path() . '/app/Games/JohnHunterTOSQ/reels.txt');
+            $temp = file(base_path() . '/app/Games/JohnHunterandtheTomboftheScarabQueenPM/reels.txt');
             foreach( $temp as $str ) 
             {
                 $str = explode('=', $str);

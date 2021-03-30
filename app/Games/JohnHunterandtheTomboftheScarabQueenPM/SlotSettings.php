@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\JohnHunterTOSQ
+namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
 {
     class SlotSettings
     {

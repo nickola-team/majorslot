@@ -1,10 +1,10 @@
 <?php 
-namespace VanguardLTE\Games\JohnHunterTOSQ
+namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
 {
     include('CheckReels.php');
     class Server
     {
-        public function get($request, $game)
+        public function get($request, $game, $userId) // changed by game developer
         {
             /*if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
             {
@@ -27,10 +27,10 @@ namespace VanguardLTE\Games\JohnHunterTOSQ
             }*/
             $response = '';
             \DB::beginTransaction();
-            $userId = \Auth::id();
+            // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$userId = 7;
+            	$userId = 1;
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
@@ -50,7 +50,8 @@ namespace VanguardLTE\Games\JohnHunterTOSQ
             $slotEvent['slotEvent'] = $slotEvent['action'];
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
-                $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"' . $slotSettings->GetBalance() . '"}';
+                $Balance = $slotSettings->GetBalance();
+                $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
                 exit( $response );
             }
             if( $slotEvent['slotEvent'] == 'doInit' ) 
