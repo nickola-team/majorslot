@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\BuffaloKing
+namespace VanguardLTE\Games\BuffaloKingPM
 {
     class SlotSettings
     {
