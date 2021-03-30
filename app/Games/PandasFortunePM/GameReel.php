@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\PandaFortune
+namespace VanguardLTE\Games\PandasFortunePM
 {
     class GameReel
     {
@@ -21,7 +21,7 @@ namespace VanguardLTE\Games\PandaFortune
         ];
         public function __construct()
         {
-            $temp = file(base_path() . '/app/Games/PandaFortune/reels.txt');
+            $temp = file(base_path() . '/app/Games/PandasFortunePM/reels.txt');
             foreach( $temp as $str ) 
             {
                 $str = explode('=', $str);

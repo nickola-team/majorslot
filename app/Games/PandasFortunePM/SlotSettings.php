@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\PandaFortune
+namespace VanguardLTE\Games\PandasFortunePM
 {
     class SlotSettings
     {
