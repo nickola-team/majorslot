@@ -495,10 +495,8 @@ namespace VanguardLTE\Games\GreatRhinoPM
             // {
             //     $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
             // }
-
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
-            
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {
                 if($slotState == 'bonus'){
@@ -509,7 +507,6 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                 }
             }
-            
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet' ) 
             {
@@ -1054,6 +1051,12 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $reel['reel' . $index][3] = $key[$value + 3];
                 $reel['rp'][] = $value;
             }
+            // $reel['reel2'][0] = 3;
+            // $reel['reel2'][1] = 3;
+            // $reel['reel2'][2] = 3;
+            // $reel['reel5'][0] = 3;
+            // $reel['reel5'][1] = 3;
+            // $reel['reel5'][2] = 3;
             return $reel;
         }
         public function GetNoDuplicationSymbol($first, $second){

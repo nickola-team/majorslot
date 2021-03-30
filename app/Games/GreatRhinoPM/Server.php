@@ -4,7 +4,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
     include('CheckReels.php');
     class Server
     {
-        public function get($request, $game)
+        public function get($request, $game, $userId) // changed by game developer
         {
             /*if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
             {
@@ -27,7 +27,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
             }*/
             $response = '';
             \DB::beginTransaction();
-            $userId = \Auth::id();
+            // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
             	$userId = 1;
@@ -50,7 +50,8 @@ namespace VanguardLTE\Games\GreatRhinoPM
             $slotEvent['slotEvent'] = $slotEvent['action'];
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
-                $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"' . $slotSettings->GetBalance() . '"}';
+                $Balance = $slotSettings->GetBalance();
+                $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
                 exit( $response );
             }
             
@@ -745,12 +746,12 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 }else{
                     $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bonus state"}';
                     exit( $response );
+                    // $test=1;
                 }
 
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') + 1);
                 $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                 $Balance = $slotSettings->GetBalance();
-                // $slotSettings->UpdateJackpots($betline * $lines);
                 $lastReel = $slotSettings->GetGameData($slotSettings->slotId . 'LastReel');
                 $tempReels = [];
                 for($i = 0; $i < 5; $i++){
@@ -763,8 +764,8 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $rhinoSymbol = 3;
                 for($i = 0; $i < 2000; $i++){
                     $respinChanged = false;
-                    $rhinoCount = 0;
                     $totalWin = 0;
+                    $rhinoCount = 0;
                     $reels = [];
                     $strWinLine = '';
                     for($r = 0; $r < 5; $r++){
@@ -846,11 +847,8 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 if($respinChanged == true && $rhinoCount < 14){
                     $slotSettings->SetGameData($slotSettings->slotId . 'RespinGames', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') + $slotSettings->slotRespinCount);
                 }else{
-                    // $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') + 1);
-                    if($rhinoCount > 13 || ($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') 
-                    && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0)){
+                    if($rhinoCount > 13 || ($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames')<= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0)){
                         $isEndRespin = true;
-                        // $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', 3);
                     }
                 }
                 for($k = 0; $k < 3; $k++){
