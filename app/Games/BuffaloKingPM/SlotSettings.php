@@ -1112,7 +1112,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     $reel['reel' . $index][-1] = rand(8, 13);
                     $reel['reel' . $index][4] = rand(8, 13);
                 }else{
-                    $reel['reel' . $index][4] = $key[($value + 4)%$rc];
+                    $reel['reel' . $index][4] = rand(8, 13);
                 }
                 $reel['rp'][] = $value;
             }
