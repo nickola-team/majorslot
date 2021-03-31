@@ -1099,6 +1099,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             //remove total bet is zero
             $filtered_adjustment = [];
+
             foreach ($adjustments as $index => $adj)
             {
                 if ($adj['total_bet'] > 0)
@@ -1115,6 +1116,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     {
                         return $element2['total_bet'] - $element1['total_bet'];
                     });
+
                     $adj['games'] = $filtered_games;
                     $filtered_adjustment[] = $adj;
                 }
@@ -1124,6 +1126,39 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return $element2['total_bet'] - $element1['total_bet'];
             });
+
+            if (!auth()->user()->hasRole('admin'))
+            {
+                //merge pragmatic and pragmatic play games if not admin
+                $pp_adj = null;
+                $pragmatic_adj = null;
+                $pp_index = 0;
+                $pragmatic_index = 0;
+                foreach ($filtered_adjustment as $index => $adj)
+                {
+                    if ($adj['category'] == 'Pragmatic Play')
+                    {
+                        $pp_adj = $adj;
+                        $pp_index = $index;
+                    }
+                    if ($adj['category'] == 'Pragmatic')
+                    {
+                        $pragmatic_adj = $adj;
+                        $pragmatic_index = $index;
+                    }
+                }
+                if ($pp_adj && $pragmatic_adj)
+                {
+                    $pp_adj['games'] = array_merge($pp_adj['games'] , $pragmatic_adj['games']);
+                    $pp_adj['total_win'] = $pp_adj['total_win'] + $pragmatic_adj['total_win'];
+                    $pp_adj['total_bet'] = $pp_adj['total_bet'] + $pragmatic_adj['total_bet'];
+                    $pp_adj['total_bet_count'] = $pp_adj['total_bet_count'] + $pragmatic_adj['total_bet_count'];
+                    $pp_adj['total_deal'] = $pp_adj['total_deal'] + $pragmatic_adj['total_deal'];
+                    $pp_adj['total_mileage'] = $pp_adj['total_mileage'] + $pragmatic_adj['total_mileage'];
+                    $filtered_adjustment[$pp_index] = $pp_adj;
+                    unset($filtered_adjustment[$pragmatic_index]);
+                }
+            }
 
             $filtered_adjustment[] = [
                 'category' => null,
