@@ -603,11 +603,11 @@ namespace VanguardLTE\Games\BuffaloKingPM
             }
             else
             {
-                if( $_obf_bonus_systemmoney > 0 ) 
-                {
-                    $sum -= $_obf_bonus_systemmoney;
-                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }
+            if( $_obf_bonus_systemmoney > 0 ) 
+            {
+                $sum -= $_obf_bonus_systemmoney;
+                $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+            }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -1059,12 +1059,12 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 $rc = count($key);
                 $key[-1] = $key[$rc - 1];
                 $key[$rc] = $key[0];
-                $reel['reel' . $index][-1] = rand(3, 10);
-                if($winType == 'win'){
-                    $diffNum = rand(1, 3);
-                }else{
+                $reel['reel' . $index][-1] = rand(8, 13);
+                //if($winType == 'win'){
+                //    $diffNum = rand(1, 3);
+                //}else{
                     $diffNum = 1;
-                }
+                //}
                 
                 // $randomPos = $this->GetRandomNumber(0, $rc, 3);
                 // $reel['reel' . $index][0] = $key[$randomPos[0]];
@@ -1097,7 +1097,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 for($r = 0; $r < 4; $r++){
                     if($reel['reel' . $index][$r] == 1){
                         if($scatterPos >= 0){
-                            $reel['reel' . $index][$r] = rand(3, 10);
+                            $reel['reel' . $index][$r] = rand(8, 13);
                         }else{
                             $scatterPos = $r;
                         }
@@ -1107,12 +1107,12 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 }
                 if($scatterPos >= 0){
                     if($wildPos >= 0){                        
-                        $reel['reel' . $index][$wildPos] = rand(3, 10);
+                        $reel['reel' . $index][$wildPos] = rand(8, 13);
                     }
-                    $reel['reel' . $index][-1] = rand(3, 10);
-                    $reel['reel' . $index][4] = rand(3, 10);
+                    $reel['reel' . $index][-1] = rand(8, 13);
+                    $reel['reel' . $index][4] = rand(8, 13);
                 }else{
-                    $reel['reel' . $index][4] = $key[($value + 4) % $rc];
+                    $reel['reel' . $index][4] = $key[($value + 4)%$rc];
                 }
                 $reel['rp'][] = $value;
             }
