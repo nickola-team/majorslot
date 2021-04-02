@@ -20,7 +20,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getplayersfrb($bonus->playerId);
                 $bdata = $bonus->toArray();
-                $bdata['username'] = $bonus->user->username;
+                $bdata['username'] = $bonus->user?$bonus->user->username:'unknown';
                 $bdata['roundsPlayed'] = 0;
                 $bdata['gamename'] = '';
                 $bdata['status'] = 0;
