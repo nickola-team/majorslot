@@ -114,7 +114,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             foreach ($bonuses as $bonus)
             {
                 $bdata = $bonus->toArray();
-                $bdata['username'] = $bonus->user->username;
+                $bdata['username'] = $bonus->user?$bonus->user->username:'unknown';
                 $bdata['played_win'] = 0;
                 $bdata['played_bet'] = 0;
                 $bdata['status'] = '';
