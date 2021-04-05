@@ -324,7 +324,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     $scatter = 0;
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $iwcenterpos = -1;
+                    $iwcenterposes = [];
                     if($isRespin == true){
                         $tempReels = $slotSettings->GetReelStrips($winType, 'freespin', false);
                     }else{
@@ -350,19 +350,25 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                             }
                         }
                     }else if($respinType == 'iw'){
-                        $posx = rand(0, 4);
-                        $posy = rand(0, 3);
-                        $iwcenterpos = $posx + $posy * 5;
-                        for($k = -1; $k < 2; $k++){
-                            if(($posx + $k) >= 0 && ($posx + $k) < 5){
-                                $respinWildPos[$posx + $k][$posy] = 2;
-                            }
-                            if(($posy + $k) >= 0 && ($posy + $k) < 4){
-                                $respinWildPos[$posx][$posy + $k] = 2;
+                        $iwcount = $slotSettings->GetIWCount();
+                        while($iwcount > 0){
+                            $posx = rand(0, 4);
+                            $posy = rand(0, 3);
+                            if($respinWildPos[$posx][$posy] != 2){
+                                $iwcount--;
+                                array_push($iwcenterposes, $posx + $posy * 5);
+                                for($k = -1; $k < 2; $k++){
+                                    if(($posx + $k) >= 0 && ($posx + $k) < 5){
+                                        $respinWildPos[$posx + $k][$posy] = 2;
+                                    }
+                                    if(($posy + $k) >= 0 && ($posy + $k) < 4){
+                                        $respinWildPos[$posx][$posy + $k] = 2;
+                                    }
+                                }
                             }
                         }
                     }else if($respinType == 'lwb'){
-                        $wildcount = rand(1, 2);
+                        $wildcount = $slotSettings->GetLWBCount();
                         while($wildcount >= 0){
                             $pos = rand(0, 19);  
                             if($tempReels['reel' . ($pos % 5 + 1)][floor($pos / 5)] != 2){
@@ -600,11 +606,18 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                             if($respinType == 'iw'){
                                 $iwwildposes = [];
                                 for($k = 0; $k < count($wildPoses); $k++){
-                                    if($wildPoses[$k] != $iwcenterpos){
+                                    $issame = false;
+                                    for($r = 0; $r < count($iwcenterposes); $r++){
+                                        if($wildPoses[$k] == $iwcenterposes[$r]){
+                                            $issame = true;
+                                            break;
+                                        }
+                                    }
+                                    if($issame == false){
                                         array_push($iwwildposes, $wildPoses[$k]);
                                     }
                                 }
-                                $strOtherResponse = $strOtherResponse . '&rwd=2~' . implode(',', $iwwildposes) . ';16~' . $iwcenterpos;
+                                $strOtherResponse = $strOtherResponse . '&rwd=2~' . implode(',', $iwwildposes) . ';16~' . implode(',', $iwcenterposes);
                             }else{
                                 $strOtherResponse = $strOtherResponse . '&rwd=2~' . implode(',', $wildPoses);
                             }
@@ -853,7 +866,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                                 }
                             }
                             if($type == 'wc' || $type == 'ws'){
-                                $newWildCount = rand(1, 3);
+                                $newWildCount = $slotSettings->GetLWBCount();
                                 while($newWildCount > 0){
                                     $posx = rand(0, 4);
                                     $posy = rand(0, 3);

@@ -43,6 +43,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
         public $slotGamble = null;
         public $Paytable = [];
         public $slotSounds = [];
+        private $lockingWildTypes = [];
         private $jpgs = null;
         private $Bank = null;
         private $Percent = null;
@@ -192,6 +193,8 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
+            
+            $this->lockingWildTypes = ['c', 's', 'ws', 'wc', 'mc', 'sc'];
             $this->gameLine = [
                 1, 
                 2, 
@@ -678,6 +681,24 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             }
             return 0;
         }
+        public function GetLWBCount(){
+            $sum = rand(0, 100);
+            if($sum <= 70){
+                return 1;
+            }else if($sum <= 95){
+                return 2;
+            }else{
+                return 3;
+            }
+        }
+        public function GetIWCount(){
+            $sum = rand(0, 100);
+            if($sum <= 60){
+                return 2;
+            }else{
+                return 1;
+            }
+        }
         public function GenerateFreeSpinCount(){
             $freeSpinNums = [];
             $totalFreeNum = rand(7, 9);
@@ -700,22 +721,11 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             return $freeSpinNums;
         }
         public function GetKrakenLockWild(){
-            $types = ['c', 's', 'ws', 'wc', 'mc', 'sc'];
             $count = 0;
             $result = [];
-            while($count < 3){
-                $type = $types[rand(0, 5)];
-                $isSame = false;
-                for($i = 0; $i < count($result); $i++){
-                    if($result[$i] == $type){
-                        $isSame = true;
-                        break;
-                    }
-                }
-                if($isSame == false){
-                    array_push($result, $type);
-                    $count++;
-                }
+            shuffle($this->lockingWildTypes);
+            for($k = 0; $k < 3; $k++){
+                array_push($result, $this->lockingWildTypes[$k]);
             }
             return $result;
         }
