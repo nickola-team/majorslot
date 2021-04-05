@@ -219,6 +219,10 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $_wildValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildValues');
                     $_wildPos = $slotSettings->GetGameData($slotSettings->slotId . 'WildPos');
                     $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
+                    if($leftFreeGames <= 1 && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') <= 0){
+                        $winType = 'win';
+                        $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                    }
                 }
                 else
                 {

@@ -249,8 +249,12 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'JackpotWin', 0);
                 $isRespin = false;
                 $respinType = '';
+                $isGeneration = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $isBuyFreeSpin = false;
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= 2 && rand(0, 1) == 1){
+                        $isGeneration = true;
+                    }
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                 }
@@ -327,7 +331,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     $wildPoses = [];
                     $wildPosCount = 0;
                     if($slotEvent['slotEvent'] == 'freespin'){
-                        if(rand(0, 100) > 90){
+                        if(rand(0, 100) > 90 || $isGeneration == true){
                             $pos = rand(0, 19);  
                             $tempReels['reel' . ($pos % 5 + 1)][floor($pos / 5)] = 2;
                         }
@@ -356,7 +360,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                             }
                         }
                     }else if($respinType == 'lwb'){
-                        $wildcount = rand(2, 4);
+                        $wildcount = rand(1, 2);
                         while($wildcount >= 0){
                             $pos = rand(0, 19);  
                             if($tempReels['reel' . ($pos % 5 + 1)][floor($pos / 5)] != 2){
@@ -720,7 +724,8 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                         $level = $level + 1;
                         $subLevel = 1;
                         $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
-                        if($level > 2 && rand(0, 100) > 80){
+                        $limitBoxCount = rand(4, 6);
+                        if(($level > 3 && rand(0, 100) > 80) || $level >= $limitBoxCount){
                             $winType = 'none';
                         }else{
                             $winType = 'win';
@@ -805,15 +810,16 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                         $level = $level + 1;
                         $subLevel = 1;
                         $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
-                        if($level > 2 && rand(0, 100) > 80){
+                        if($level > 3 && rand(0, 100) > 80){
                             $winType = 'none';
                         }else{
                             $winType = 'win';
                         }
+                        $limitBoxCount = rand(4, 5);
                         while(true){                            
                             $win_mask = $slotSettings->GetKrakenLockWild();
                             $type = $win_mask[$ind];
-                            if($level == 1){
+                            if($level < $limitBoxCount){
                                 if($type == 'c' || $type == 'wc' || $type == 'mc' || $type == 'sc'){
                                     continue;
                                 }else{
