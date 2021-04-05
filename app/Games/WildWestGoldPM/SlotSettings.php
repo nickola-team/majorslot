@@ -809,7 +809,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     'bonus', 
                     $_obf_currentbank
                 ];
-                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
+                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet && $_obf_currentbank > $bet * $lines * 10) ) 
                 {
                     $return = [
                         'none', 

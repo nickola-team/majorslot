@@ -252,11 +252,13 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 $isGeneration = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $isBuyFreeSpin = false;
-                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= 2 && rand(0, 1) == 1){
+                    $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') == 1 && rand(0, 100) < 50){
+                        $isGeneration = true;
+                    }else if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') == 2 && $bonusMpl <= 1){
                         $isGeneration = true;
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
-                    $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                 }
                 else
                 {

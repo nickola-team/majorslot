@@ -680,16 +680,22 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
         }
         public function GenerateFreeSpinCount(){
             $freeSpinNums = [];
-            $rand = rand(5, 9);
-            for($i = 0; $i < $rand; $i++){
+            $totalFreeNum = rand(7, 9);
+            while($totalFreeNum > 0){
                 $sum = rand(0, 100);
-                if($sum <= 80){
-                    $freeSpinNums[$i] = 1;
-                }else if($sum <= 96){
-                    $freeSpinNums[$i] = 2;
+                if($sum <= 70){
+                    $freeNum = 1;
+                }else if($sum <= 90){
+                    $freeNum = 2;
                 }else{
-                    $freeSpinNums[$i] = 3;
+                    $freeNum = 3;
                 }
+                if($totalFreeNum < $freeNum){
+                    $freeNum = $totalFreeNum;
+                }else{
+                    $totalFreeNum = $totalFreeNum - $freeNum;
+                }
+                array_push($freeSpinNums, $freeNum);
             }
             return $freeSpinNums;
         }
