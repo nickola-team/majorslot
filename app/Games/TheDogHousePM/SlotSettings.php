@@ -704,6 +704,32 @@ namespace VanguardLTE\Games\TheDogHousePM
         }
         public function GenerateFreeSpinCount(){
             $freeSpinNums = [];
+            $probabilities = [
+                ['p' => 98, 'c' => 15, 'r' => [[1,1,1,1,2,2,2,2,3],[1,1,1,1,1,2,2,3,3],[1,1,1,1,1,1,3,3,3],[1,1,1,2,2,2,2,2,2]]],
+                ['p' => 92, 'c' => 14, 'r' => [[1,1,1,1,1,2,2,2,3],[1,1,1,1,1,1,2,3,3],[1,1,1,1,2,2,2,2,2]]],
+                ['p' => 85, 'c' => 13, 'r' => [[1,1,1,1,1,1,2,2,3],[1,1,1,1,1,1,1,3,3],[1,1,1,1,1,2,2,2,2]]],
+                ['p' => 55, 'c' => 12, 'r' => [[1,1,1,1,1,1,1,2,3],[1,1,1,1,1,1,2,2,2]]],
+                ['p' => 30, 'c' => 11, 'r' => [[1,1,1,1,1,1,1,1,3],[1,1,1,1,1,1,1,2,2]]],
+                ['p' => 15, 'c' => 10, 'r' => [[1,1,1,1,1,1,1,1,2]]],
+                ['p' => 0, 'c' => 9, 'r' => [[1,1,1,1,1,1,1,1,1]]],
+            ];
+            $c = 9;
+            $r = [[1,1,1,1,1,1,1,1,1]];
+            $sum = mt_rand(0, 100);
+            foreach ($probabilities as $p)
+            {
+                if ($sum >= $p['p'])
+                {
+                    $c = $p['c'];
+                    $r = $p['r'];
+                    break;
+                }
+            }
+            $idx = mt_rand(0, count($r)-1);
+            $freeSpinNums = $r[$idx];
+            shuffle($freeSpinNums);
+            return $freeSpinNums;
+/*
             for($i = 0; $i < 9; $i++){
                 $sum = rand(0, 100);
                 if($sum <= 88){
@@ -714,7 +740,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $freeSpinNums[$i] = 3;
                 }
             }
-            return $freeSpinNums;
+            return $freeSpinNums;*/
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
