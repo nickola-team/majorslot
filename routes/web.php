@@ -1246,6 +1246,7 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('/promo/race/details', 'GameProviders\PPController@promoracedetails');
     Route::get('/promo/race/prizes', 'GameProviders\PPController@promoraceprizes');
     Route::post('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
+    Route::get('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
     Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
     Route::get('/promo/tournament/v2/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
     Route::get('/minilobby/games.json', 'GameProviders\PPController@minilobby_games_json');
