@@ -628,7 +628,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                     {
                         $isEnd = true;
-                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=0';
+                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=0';
                     }
                     else
                     {
@@ -648,8 +648,15 @@ namespace VanguardLTE\Games\TheDogHousePM
                         }
                     }
                     $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . $strWildResponse .'&balance='.$Balance.'&index='. $slotEvent['index'] . '&balance_cash='.$Balance.'&is='. $strLastTempReel .'&balance_bonus=0.00&na='.$spinType.
-                        '&mbri=1,2,3'.$strWinLine .'&stime=' . floor(microtime(true) * 1000).'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3'.
-                        '&sh=3&c='.$betline.'&sty='.$strSty.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&w='.$totalWin.'&mbr='. implode(',',$_wildReelValue);
+                        '&mbri=1,2,3'.$strWinLine .'&stime=' . floor(microtime(true) * 1000).'&sa='.$strReelSa.'&sb='.$strReelSb.
+                        '&sh=3&c='.$betline.'&sty='.$strSty.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&mbr='. implode(',',$_wildReelValue);
+                    if ($isEnd == true){
+                        $w = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                        $response = $response . '&w='.$w;
+                    }
+                    else{
+                        $response = $response . '&w='.$totalWin;
+                    }
                 }else
                 {
                     // $_obf_0D5C3B1F210914123C222630290E271410213E320B0A11 = $totalWin;
