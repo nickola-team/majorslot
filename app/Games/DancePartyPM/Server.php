@@ -112,7 +112,6 @@ namespace VanguardLTE\Games\DancePartyPM
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
-                
                 $lastEvent = $slotSettings->GetHistory();
                 $slotEvent['slotBet'] = $slotEvent['c'];
                 $slotEvent['slotLines'] = 20;
@@ -342,12 +341,13 @@ namespace VanguardLTE\Games\DancePartyPM
                     if($freeSpinNum > 0 ){
                         $spinType = 's';
                         $incmuls = [1,2,3];                        
+                        $n_reel_set = 1;              
                         $slotSettings->SetGameData($slotSettings->slotId . 'IncMplValue', $incmuls[$scattersCount - 5]);
                         $n_reel_set = $n_reel_set.'&fsmul=1&apwa=0.00&apt=fs_inc_mul&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&apv='.$incmuls[$scattersCount - 5].'&fswin=0.00&fs=1&fslim=60'; 
                     }
 
                     $response = 'tw='.$totalWin .'&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .
-                        '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&n_reel_set='.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&w='.$totalWin;
+                        '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&reel_set='.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&w='.$totalWin;
                 }
 
 

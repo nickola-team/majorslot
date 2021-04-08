@@ -1022,6 +1022,20 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                     $reel['reel' . $index][1] = $key[abs($value + (1 - $scatterPos) * $diffNum) % $rc];
                     $reel['reel' . $index][2] = $key[abs($value + (2 - $scatterPos) * $diffNum) % $rc];
                 }
+                for($k = 0; $k < 3; $k++){
+                    if($reel['reel' . $index][$k] == 3 && rand(0, 100) < 70){
+                        $reel['reel' . $index][$k] = rand(6, 13);
+                    }
+                }
+                if($reel['reel' . $index][0] == $reel['reel' . $index][1] && ($reel['reel' . $index][0] != 2)){
+                    $reel['reel' . $index][1] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][2]);
+                }
+                if($reel['reel' . $index][0] == $reel['reel' . $index][2] && ($reel['reel' . $index][0] != 2)){
+                    $reel['reel' . $index][2] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][1]);
+                }
+                if($reel['reel' . $index][1] == $reel['reel' . $index][2] && ($reel['reel' . $index][1] != 2)){
+                    $reel['reel' . $index][2] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][1]);
+                }
                 $reel['reel' . $index][3] = rand(6, 13);
                 $reel['rp'][] = $value;
             }
