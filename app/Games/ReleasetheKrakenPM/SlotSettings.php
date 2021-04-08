@@ -702,7 +702,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
         }
         public function GetLWBCount(){
             $sum = rand(0, 100);
-            if($sum <= 70){
+            if($sum <= 85){
                 return 1;
             }else if($sum <= 95){
                 return 2;
