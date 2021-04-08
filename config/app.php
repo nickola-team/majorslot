@@ -64,6 +64,7 @@ return [
 
     'url' => env('APP_URL', 'http://kadeh.de/'),
 
+    'server_addr' => '42.125.249.196',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

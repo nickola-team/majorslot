@@ -30,7 +30,7 @@ namespace VanguardLTE\Games\DuoFuDuoCai88Fortune
             \DB::beginTransaction();
             $userId = \Auth::id();// changed by game developer
             
-            $serverAddress = '42.127.251.83';
+            $serverAddress = config('app.server_addr');
             $serverPort = '8555';
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
