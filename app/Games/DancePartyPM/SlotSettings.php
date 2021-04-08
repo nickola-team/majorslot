@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\TheDogHousePM
+namespace VanguardLTE\Games\DancePartyPM
 {
     class SlotSettings
     {
@@ -56,15 +56,6 @@ namespace VanguardLTE\Games\TheDogHousePM
         public $game = null;
         public $shop = null;
         public $credits = null;
-        public $free_spins_in_base = [];
-        public $free_spins_in_free = [];
-        public $bonus_spins_in_base = [];
-        public $bonus_spins_in_bonus = [];
-        public $money_respin = [];
-        public $doubleWildChance = null;
-        public $scatterODSymbol = [];
-        public $wildODSymbol = [];
-        public $happyhouruser = null;
         public function __construct($sid, $playerId, $credits = null)
         {
            /* if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
@@ -90,11 +81,6 @@ namespace VanguardLTE\Games\TheDogHousePM
             $this->playerId = $playerId;
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
-            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
-                'user_id' => $user->id, 
-                'status' => 1,
-                'time' => date('G')
-            ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
@@ -105,49 +91,21 @@ namespace VanguardLTE\Games\TheDogHousePM
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
-
-            $this->doubleWildChance = 90;
-
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
             $this->Paytable[1] = [0,0,0,0,0,0];
             $this->Paytable[2] = [0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,0,50,150,750];
-            $this->Paytable[4] = [0,0,0,35,100,500];
-            $this->Paytable[5] = [0,0,0,25,60,300];
-            $this->Paytable[6] = [0,0,0,20,40,200];
-            $this->Paytable[7] = [0,0,0,12,25,150];
-            $this->Paytable[8] = [0,0,0,8,20,100];
-            $this->Paytable[9] = [0,0,0,5,10,50];
-            $this->Paytable[10] = [0,0,0,5,10,50];
-            $this->Paytable[11] = [0,0,0,2,5,25];
-            $this->Paytable[12] = [0,0,0,2,5,25];
-            $this->Paytable[13] = [0,0,0,2,5,25];
-            $this->scatterODSymbol[1] = [
-                [11, 12],
-                [12, 13]
-            ];
-            $this->scatterODSymbol[3] = [
-                [4, 6, 7, 8, 10],
-                [4, 5, 8, 10]
-            ];
-            $this->scatterODSymbol[5] = [
-                [4, 5, 8],
-                [5, 9]
-            ];
-            $this->wildODSymbol[2] = [
-                [11, 12, 13],
-                [9, 10]
-            ];
-            $this->wildODSymbol[3] = [
-                [10, 12, 13],
-                [11, 12]
-            ];
-            $this->wildODSymbol[4] = [
-                [5, 4, 8],
-                [10, 12, 13]
-            ];
+            $this->Paytable[3] = [0,0,0,30,60,150];
+            $this->Paytable[4] = [0,0,0,20,60,120];
+            $this->Paytable[5] = [0,0,0,16,40,100];
+            $this->Paytable[6] = [0,0,0,10,30,80];
+            $this->Paytable[7] = [0,0,0,6,10,50];
+            $this->Paytable[8] = [0,0,0,6,10,50];
+            $this->Paytable[9] = [0,0,0,4,8,40];
+            $this->Paytable[10] = [0,0,0,4,8,40];
+            $this->Paytable[11] = [0,0,0,0,0,0];
+            $this->Paytable[12] = [0,0,0,0,0,0];
             $reel = new GameReel();
             foreach( [
                 'reelStrip1', 
@@ -218,6 +176,8 @@ namespace VanguardLTE\Games\TheDogHousePM
             $this->slotExitUrl = '/';
             $this->slotWildMpl = 1;
             $this->GambleType = 1;
+            $this->slotFreeCount = 5;
+            $this->slotRespinCount = 3;
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
@@ -243,7 +203,12 @@ namespace VanguardLTE\Games\TheDogHousePM
                 17,
                 18,
                 19,
-                20
+                20,
+                21,
+                22,
+                23,
+                24,
+                25
             ];
             $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
             $this->Balance = $user->balance;
@@ -259,8 +224,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 '9', 
                 '10', 
                 '11', 
-                '12',
-                '13'
+                '12'
             ];
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -457,11 +421,6 @@ namespace VanguardLTE\Games\TheDogHousePM
         }
         public function GetBank($slotState = '')
         {
-            if ($this->happyhouruser)
-            {
-                $this->Bank = $this->happyhouruser->current_bank;
-                return $this->Bank / $this->CurrentDenom;
-            }
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
@@ -513,9 +472,6 @@ namespace VanguardLTE\Games\TheDogHousePM
             {
                 $slotState = '';
             }
-
-            $sum = $sum * $this->CurrentDenom;
-            $game = $this->game;
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {
                 if($slotState == 'bonus'){
@@ -526,8 +482,10 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                 }
             }
+            $sum = $sum * $this->CurrentDenom;
+            $game = $this->game;
             $_obf_bonus_systemmoney = 0;
-            if( $sum > 0 && $slotEvent == 'bet') 
+            if( $sum > 0 && $slotEvent == 'bet' ) 
             {
                 $this->toGameBanks = 0;
                 $this->toSlotJackBanks = 0;
@@ -567,21 +525,13 @@ namespace VanguardLTE\Games\TheDogHousePM
             {
                 $this->toGameBanks = $sum;
             }
-            if ($this->happyhouruser)
+            if( $_obf_bonus_systemmoney > 0 ) 
             {
-                $this->happyhouruser->increment('current_bank', $sum);
-                $this->happyhouruser->save();
+                $sum -= $_obf_bonus_systemmoney;
+                $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
             }
-            else
-            {
-                if( $_obf_bonus_systemmoney > 0 ) 
-                {
-                    $sum -= $_obf_bonus_systemmoney;
-                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }
-                $game->set_gamebank($sum, 'inc', $slotState);
-                $game->save();
-            }
+            $game->set_gamebank($sum, 'inc', $slotState);
+            $game->save();
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -691,45 +641,6 @@ namespace VanguardLTE\Games\TheDogHousePM
                 'shop_id' => $this->shop_id
             ]);
         }
-        public function CheckMultiWild(){
-            $wildReelValue = [];
-            for($i = 0; $i < 3; $i++){
-                if(rand(0, 100) < $this->doubleWildChance){
-                    array_push($wildReelValue, 2);
-                }else{
-                    array_push($wildReelValue, 3);
-                }
-            }
-            return $wildReelValue;
-        }
-        public function GenerateFreeSpinCount(){
-            $freeSpinNums = [];
-            $probabilities = [
-                ['p' => 98, 'c' => 15, 'r' => [[1,1,1,1,2,2,2,2,3],[1,1,1,1,1,2,2,3,3],[1,1,1,1,1,1,3,3,3],[1,1,1,2,2,2,2,2,2]]],
-                ['p' => 92, 'c' => 14, 'r' => [[1,1,1,1,1,2,2,2,3],[1,1,1,1,1,1,2,3,3],[1,1,1,1,2,2,2,2,2]]],
-                ['p' => 85, 'c' => 13, 'r' => [[1,1,1,1,1,1,2,2,3],[1,1,1,1,1,1,1,3,3],[1,1,1,1,1,2,2,2,2]]],
-                ['p' => 55, 'c' => 12, 'r' => [[1,1,1,1,1,1,1,2,3],[1,1,1,1,1,1,2,2,2]]],
-                ['p' => 30, 'c' => 11, 'r' => [[1,1,1,1,1,1,1,1,3],[1,1,1,1,1,1,1,2,2]]],
-                ['p' => 15, 'c' => 10, 'r' => [[1,1,1,1,1,1,1,1,2]]],
-                ['p' => 0, 'c' => 9, 'r' => [[1,1,1,1,1,1,1,1,1]]],
-            ];
-            $c = 9;
-            $r = [[1,1,1,1,1,1,1,1,1]];
-            $sum = mt_rand(0, 100);
-            foreach ($probabilities as $p)
-            {
-                if ($sum >= $p['p'])
-                {
-                    $c = $p['c'];
-                    $r = $p['r'];
-                    break;
-                }
-            }
-            $idx = mt_rand(0, count($r)-1);
-            $freeSpinNums = $r[$idx];
-            shuffle($freeSpinNums);
-            return $freeSpinNums;
-        }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
             $_obf_linecount = 10;
@@ -797,34 +708,6 @@ namespace VanguardLTE\Games\TheDogHousePM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
-            if ($this->happyhouruser)
-            {
-                $bonus_spin = rand(1, 10);
-                $bonus_percent = 2;
-                $spin_percent = 9;
-                if ($this->happyhouruser->current_bank <= 10000)
-                {
-                    $bonus_percent = 1;
-                }
-                if ($garantType == 'freespin')
-                {
-                    $bonus_percent = 1;
-                }
-                if ($bonus_spin <= $bonus_percent) {
-                    $bonusWin = 1;
-                    $spinWin = 0;
-                }
-                else if ($bonus_spin < $spin_percent)
-                {
-                    $bonusWin = 0;
-                    $spinWin = 1;
-                }
-                else
-                {
-                    $bonusWin = 0;
-                    $spinWin = 0;
-                }
-            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
@@ -922,40 +805,6 @@ namespace VanguardLTE\Games\TheDogHousePM
                 if( $rp[$i] == '1' ) 
                 {
                     array_push($_obf_scatterposes, $i);
-                    // if( $this->slotReelsConfig[0][2] == 4 ) 
-                    // {
-                    //     if( isset($rp[$i + 1]) && isset($rp[$i + 2]) && isset($rp[$i + 3]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i);
-                    //     }
-                    //     if( isset($rp[$i - 1]) && isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 1);
-                    //     }
-                    //     if( isset($rp[$i - 2]) && isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 2);
-                    //     }
-                    //     if( isset($rp[$i - 3]) && isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 3);
-                    //     }
-                    // }
-                    // else
-                    // {
-                    //     if( isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i);
-                    //     }
-                    //     if( isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 1);
-                    //     }
-                    //     if( isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 2);
-                    //     }
-                    // }
                 }
             }
             shuffle($_obf_scatterposes);
@@ -988,7 +837,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip));
                         }
                     }
                 }
@@ -1001,17 +850,10 @@ namespace VanguardLTE\Games\TheDogHousePM
                         4, 
                         5
                     ];
+                    $isScatter = true;
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
-                        if( $i == 0 || $i == 2 || $i == 4 ) 
-                        {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStripBonus' . $_obf_reelStripNumber[$i]});
-                            $isScatter = true;
-                        }
-                        else
-                        {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStripBonus' . $_obf_reelStripNumber[$i]}) - 3);
-                        }
+                        $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStripBonus' . $_obf_reelStripNumber[$i]});
                     }
                 }
             }else{
@@ -1029,7 +871,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip));
                         }
                     }
                 }
@@ -1042,17 +884,10 @@ namespace VanguardLTE\Games\TheDogHousePM
                         4, 
                         5
                     ];
+                    $isScatter = true;
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
-                        if( $i == 0 || $i == 2 || $i == 4 ) 
-                        {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
-                            $isScatter = true;
-                        }
-                        else
-                        {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStrip' . $_obf_reelStripNumber[$i]}) - 3);
-                        }
+                        $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
                     }
                 }
             }
@@ -1069,147 +904,30 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $rc = count($key);
                 $key[-1] = $key[$rc - 1];
                 $key[$rc] = $key[0];
-                $reel['reel' . $index][-1] = rand(7, 13);
-                if($slotEvent == 'freespin' && ($index == 1 || $index == 5)){
-                    $diffNum = 1;
+                $reel['reel' . $index][-1] = rand(4, 10);
+                if($isScatter == false){
                     $reel['reel' . $index][0] = $key[$value];
-                    $reel['reel' . $index][1] = $key[($value + $diffNum) % $rc];
-                    $reel['reel' . $index][2] = $key[($value + 2 * $diffNum) % $rc];
-                    if($reel['reel' . $index][1] == 3 && $reel['reel' . $index][0] != 3 && $reel['reel' . $index][2] != 3){
-                        $reel['reel' . $index][1] = rand(10, 11);
-                    }
+                    $reel['reel' . $index][1] = $key[($value + 1) % $rc];
+                    $reel['reel' . $index][2] = $key[($value + 2) % $rc];
                 }else{
-                    if($index == 5){
-                        $diffNum = rand(4, 6);
+                    $scatterPos = rand(0, 100);
+                    if($scatterPos < 33){
+                        $scatterPos = 0;
+                    }else if($scatterPos < 67){
+                        $scatterPos = 1;
                     }else{
-                        $diffNum = rand(2, 5);
+                        $scatterPos = 2;
                     }
-                    if($isScatter == false){
-                        $reel['reel' . $index][0] = $key[$value];
-                        $reel['reel' . $index][1] = $key[($value + $diffNum) % $rc];
-                        $reel['reel' . $index][2] = $key[($value + 2 * $diffNum) % $rc];
-                    }else{
-                        $scatterPos = rand(0, 100);
-                        if($scatterPos < 35){
-                            $scatterPos = 0;
-                        }else if($scatterPos < 70){
-                            $scatterPos = 1;
-                        }else if($scatterPos <= 100){
-                            $scatterPos = 2;
-                        }
-                        $reel['reel' . $index][0] = $key[abs($value - $scatterPos * $diffNum) % $rc];
-                        $reel['reel' . $index][1] = $key[abs($value + (1 - $scatterPos) * $diffNum) % $rc];
-                        $reel['reel' . $index][2] = $key[abs($value + (2 - $scatterPos) * $diffNum) % $rc];
-                    }
-                    $scatterPos = -1;
-                    $wildPos = -1;
-                    for($r = 0; $r < 3; $r++){
-                        if($reel['reel' . $index][$r] == 1){
-                            $scatterPos = $r;
-                            break;
-                        }else if($reel['reel' . $index][$r] == 2){
-                            $wildPos = $r;
-                            break;
-                        }
-                    }
-                    if($scatterPos >= 0 && $wildPos >= 0){
-                        $reel['reel' . $index][$wildPos] = rand(7, 13);
-                        $wildPos = -1;
-                    }
-                    if($scatterPos >= 0){
-                        $reel['reel' . $index][$scatterPos - 1] = $this->scatterODSymbol[$index][0][rand(1, count($this->scatterODSymbol[$index][0])) - 1];
-                        $reel['reel' . $index][$scatterPos + 1] = $this->scatterODSymbol[$index][1][rand(1, count($this->scatterODSymbol[$index][1])) - 1];
-                        if($scatterPos == 0){
-                            $reel['reel' . $index][2] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][1]);
-                        }else if($scatterPos == 2){
-                            $reel['reel' . $index][0] = $this->GetNoDuplicationSymbol($reel['reel' . $index][1], $reel['reel' . $index][2]);
-                        }else if($reel['reel' . $index][0] == $reel['reel' . $index][2]){
-                            while(true){
-                                $reel['reel' . $index][2] = $this->scatterODSymbol[$index][1][rand(1, count($this->scatterODSymbol[$index][1])) - 1];
-                                if($reel['reel' . $index][0] != $reel['reel' . $index][2]){
-                                    break;
-                                }
-                            }
-                        }
-                    }else if($wildPos >= 0){
-                        $reel['reel' . $index][$wildPos - 1] = $this->wildODSymbol[$index][0][rand(1, count($this->wildODSymbol[$index][0])) - 1];
-                        $reel['reel' . $index][$wildPos + 1] = $this->wildODSymbol[$index][1][rand(1, count($this->wildODSymbol[$index][1])) - 1];
-                        if($wildPos == 0){
-                            $reel['reel' . $index][2] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][1]);
-                        }else if($wildPos == 2){
-                            $reel['reel' . $index][0] = $this->GetNoDuplicationSymbol($reel['reel' . $index][1], $reel['reel' . $index][2]);
-                        }else if($reel['reel' . $index][0] == $reel['reel' . $index][2]){
-                            while(true){
-                                $reel['reel' . $index][2] = $this->wildODSymbol[$index][1][rand(1, count($this->wildODSymbol[$index][1])) - 1];
-                                if($reel['reel' . $index][0] != $reel['reel' . $index][2]){
-                                    break;
-                                }
-                            }
-                        }
-                    }else{
-                        if($reel['reel' . $index][2] == 3 || $reel['reel' . $index][1] == 3){
-                            if($reel['reel' . $index][0] > 3 && $reel['reel' . $index][0] < 7){
-                                $reel['reel' . $index][0] = rand(7, 13);
-                            }
-                            if($reel['reel' . $index][2] == 3){
-                                if($reel['reel' . $index][1] > 3 && $reel['reel' . $index][1] < 7){
-                                    $reel['reel' . $index][1] = rand(7, 13);
-                                }
-                            }
-                        }
-                        if($reel['reel' . $index][0] == $reel['reel' . $index][1] && ($reel['reel' . $index][0] != 2)){
-                            $reel['reel' . $index][1] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][2]);
-                        }
-                        if($reel['reel' . $index][0] == $reel['reel' . $index][2] && ($reel['reel' . $index][0] != 2)){
-                            $reel['reel' . $index][2] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][1]);
-                        }
-                        if($reel['reel' . $index][1] == $reel['reel' . $index][2] && ($reel['reel' . $index][1] != 2)){
-                            $reel['reel' . $index][2] = $this->GetNoDuplicationSymbol($reel['reel' . $index][0], $reel['reel' . $index][1]);
-                        }
-                    }
+                    $reel['reel' . $index][0] = $key[abs($value - $scatterPos) % $rc];
+                    $reel['reel' . $index][1] = $key[abs($value + (1 - $scatterPos)) % $rc];
+                    $reel['reel' . $index][2] = $key[abs($value + (2 - $scatterPos)) % $rc];
                 }
-                
-                
-                
-                $reel['reel' . $index][3] = rand(6, 13);
+                $reel['reel' . $index][3] = rand(4, 10);
+
+
                 $reel['rp'][] = $value;
             }
             return $reel;
-        }
-
-        public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=3){
-            $random = [];
-            $tmp_random = [];
-            $ino = 0;
-            for($i=$num_first;$i<=$num_last;$i++) {
-                $tmp_random[$ino] = $i;
-                $ino++;
-            }
-            $tmp_cnt = count($tmp_random);
-            $tmp_last = $tmp_cnt - 1;
-            for($i=0;$i<$get_cnt;$i++) {
-                $tmp_no=mt_rand(0,$tmp_last);
-                $random[$i] = $tmp_random[$tmp_no];
-                $tno = 0;
-                for($j=0;$j<$tmp_cnt;$j++) {
-                    if($random[$i] != $tmp_random[$j]) {
-                        $tmp_random[$tno] = $tmp_random[$j];               
-                        $tno++;
-                    }
-                }
-                $tmp_cnt = $tno;
-                $tmp_last = $tmp_cnt - 1;
-            }
-            return $random;
-        }
-
-        public function GetNoDuplicationSymbol($first, $second){
-            while(true){
-                $sym = rand(7, 13);
-                if($sym != $first && $sym != $second){
-                    return $sym;
-                }
-            }
         }
     }
 
