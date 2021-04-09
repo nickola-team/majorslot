@@ -37,15 +37,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $activities = $activities->where('ip_address', 'like', '%' . $request->ip . '%');
             }
-            if( count($ids) ) 
-            {
-                $activities = $activities->whereIn('user_id', $ids);
-            }
+            
             $activities = $activities->whereIn('shop_id', $shops);
             if( $request->username != '' ) 
             {
-                $activities = $activities->join('users', 'users.id', '=', 'user_activity.user_id');
-                $activities = $activities->where('users.username', 'like', '%' . $request->username . '%');
+                $user = \VanguardLTE\User::where('username', 'like', '%'.$request->username.'%')->first();
+                if ($user){
+                    $ids = [$user->id];
+                }
+            }
+            if( count($ids) ) 
+            {
+                $activities = $activities->whereIn('user_id', $ids);
             }
             $activities = $activities->paginate($perPage);
             return view('backend.activity.index', compact('activities', 'adminView'));
