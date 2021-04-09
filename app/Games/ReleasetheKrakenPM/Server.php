@@ -180,7 +180,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 }else if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')  <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0  ) 
                 {
                     $spinType = 's';
-                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&w=0.00&fsmul=1&ls=1&aw=0&wmt=sc' . '&wmv=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . '&gwm=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . '&awt=6rl';
+                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=0.00&fsmul=1&ls=1&aw=0&wmt=sc' . '&wmv=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . '&gwm=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . '&awt=6rl';
                     $currentReelSet = 1;
                 }
                 $lastReelStr = implode(',', $lastReel);
@@ -583,7 +583,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     }
                     else
                     {
-                        $strOtherResponse = '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') .'&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        $strOtherResponse = '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .'&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                     }
                     $strOtherResponse = $strOtherResponse . '&ls=1&is=' . $strInitReel .'&reel_set=1&aw=0&wmt=sc' . '&wmv='. $mul.'&gwm='. $mul .'&awt=6rl';
                     if(count($wildPoses) > 0){
@@ -646,7 +646,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'Wins', $wins);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Status', $status);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeSpinNums', $freeSpinNums);
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine. $strOtherResponse.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l='. $lines .'&s='.$strLastReel.'&w='.$totalWin;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin').'&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine. $strOtherResponse.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l='. $lines .'&s='.$strLastReel.'&w='.$totalWin;
                 
 
 
@@ -664,9 +664,9 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 if( $scattersCount >= 3 && $slotEvent['slotEvent']!='freespin') 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 }
             }
             else if( $slotEvent['slotEvent'] == 'doBonus' ){                

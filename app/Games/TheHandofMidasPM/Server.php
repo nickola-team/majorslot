@@ -132,7 +132,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                     }
                     
 
-                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&sty='.$strSty.'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&w=0.00&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . $strWildResponse;
+                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&sty='.$strSty.'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=0.00&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . $strWildResponse;
                     if($wildCount > 0){
                         $_obf_StrResponse = $_obf_StrResponse . '$is='. implode(',', $initReel);
                     }
@@ -552,7 +552,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                                 }
                             }
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $freemore);
-                            $spinType = 's&fsmul=1&trail='.implode(';', $arr_trail).'&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fsmore='.$freemore.'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&reel_set=1';
+                            $spinType = 's&fsmul=1&trail='.implode(';', $arr_trail).'&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fsmore='.$freemore.'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&reel_set=1';
                         }else{
                             $isEnd = true;
                             $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&reel_set=0';
@@ -560,7 +560,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                     }
                     else
                     {
-                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&reel_set=1';
+                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&reel_set=1';
                     }
                     $strSty = '';
                     for($r = 0; $r < count($_wildPos); $r++){
@@ -575,7 +575,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                         }
                     }
                     $strOtherResponse = '&s='.$strLastReel;
-                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . $strWildResponse .'&balance='.$Balance.'&index='. $slotEvent['index'] . '&ls=0&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine .'&stime=' . floor(microtime(true) * 1000).'&bl='. $bl_value .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sty='.$strSty.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l='.$lines.'&s='.$strLastReel.'&w='.$totalWin;
+                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strWildResponse .'&balance='.$Balance.'&index='. $slotEvent['index'] . '&ls=0&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine .'&stime=' . floor(microtime(true) * 1000).'&bl='. $bl_value .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sty='.$strSty.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l='.$lines.'&s='.$strLastReel.'&w='.$totalWin;
                     if($beforeWildCount > 0){
                         $response = $response . '&is='. $strLastTempReel;
                     }
@@ -638,9 +638,9 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 if( $scattersCount >= 3) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 }
             }
             else if( $slotEvent['slotEvent'] == 'doBonus' ){

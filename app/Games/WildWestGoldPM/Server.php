@@ -110,7 +110,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                         }
                     }
 
-                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&sty='.$strSty.'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&w=0.00&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . 
+                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&sty='.$strSty.'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=0.00&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . 
                     '&mbv='. implode(',', $wildValues) . '&mbp=' . implode(',', $wildPos) . '&mbr=' . implode(',', $wildReelValue).'$is='. $lastReelStr;
                     $currentReelSet = 1;
                 }else{
@@ -534,7 +534,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     }
                     else
                     {
-                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=1';
+                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=1';
                     }
 
                     $strSty = '';
@@ -568,7 +568,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                             }
                         }
                     }
-                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . $strFreeSpinNum. $strWildResponse .'&balance='.$Balance.'&index='. $slotEvent['index'] . '&ls=0&balance_cash='.$Balance.'&is='. $strLastTempReel .'&balance_bonus=0.00&na='.$spinType.
+                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strFreeSpinNum. $strWildResponse .'&balance='.$Balance.'&index='. $slotEvent['index'] . '&ls=0&balance_cash='.$Balance.'&is='. $strLastTempReel .'&balance_bonus=0.00&na='.$spinType.
                         '&mbri=1,2,3'.$strWinLine .'&stime=' . floor(microtime(true) * 1000).'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline.'&sty='.$strSty.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=40&s='.$strLastReel.'&w='.$totalWin.'&mbr='. implode(',',$_wildReelValue);
                 }else
                 {
@@ -604,9 +604,9 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 if( $scattersCount >= 3) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 }
             }
             else if( $slotEvent['slotEvent'] == 'doBonus' ){

@@ -90,7 +90,7 @@ namespace VanguardLTE\Games\DancePartyPM
                 {
                     $currentReelSet = 1;
 
-                    $_obf_StrResponse = '&apwa=0.00&apt=fs_inc_mul&apv='.$slotSettings->GetGameData($slotSettings->slotId . 'IncMplValue').'&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fslim=60&w=0.00&fsmul=1';
+                    $_obf_StrResponse = '&apwa=0.00&apt=fs_inc_mul&apv='.$slotSettings->GetGameData($slotSettings->slotId . 'IncMplValue').'&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&fslim=60&w=0.00&fsmul=1';
                     if($slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') > 1){
                         $_obf_StrResponse = $_obf_StrResponse . '&gwm=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                     }
@@ -329,7 +329,7 @@ namespace VanguardLTE\Games\DancePartyPM
                     if($freeSpinNum > 0){
                         $spinType = $spinType . '&fsmore=' . $freeSpinNum;
                     }
-                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&balance='.$Balance.'&index='. $slotEvent['index'] . '&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.'&reel_set='. $reelSet_Num.
+                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&balance='.$Balance.'&index='. $slotEvent['index'] . '&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.'&reel_set='. $reelSet_Num.
                         $strWinLine .'&stime=' . floor(microtime(true) * 1000).'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3'.
                         '&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&w='.$totalWin;
                 }else
@@ -366,9 +366,9 @@ namespace VanguardLTE\Games\DancePartyPM
                 if( $slotEvent['slotEvent'] != 'freespin' && $scattersCount >= 3) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 }
             }
             $slotSettings->SaveGameData();

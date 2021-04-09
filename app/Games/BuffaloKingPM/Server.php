@@ -89,7 +89,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 {
                     $currentReelSet = rand(3, 8);
 
-                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&w=0.00&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
+                    $_obf_StrResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=0.00&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                 }else{
                     $_obf_StrResponse = '';
                 }
@@ -503,7 +503,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     }
                     else
                     {
-                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                     }
                     
                     if($isWild){
@@ -513,7 +513,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                         $spinType = $spinType . '&slm_lmi='. implode(',', $winLineMulNums) .'&slm_lmv=' . implode(',', $winLineMuls);
                     }
                     
-                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&balance='.$Balance.'&index='. $slotEvent['index'] . '&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.'&reel_set='. $reelSet_Num.
+                    $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&balance='.$Balance.'&index='. $slotEvent['index'] . '&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.'&reel_set='. $reelSet_Num.
                         $strWinLine .'&stime=' . floor(microtime(true) * 1000).'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4'.
                         '&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=40&s='.$strLastReel.'&w='.$totalWin;
                 }else
@@ -550,9 +550,9 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 if( $slotEvent['slotEvent'] != 'freespin' && $scattersCount >= 3) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 }
             }
             $slotSettings->SaveGameData();
