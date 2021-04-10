@@ -628,7 +628,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                     {
                         $isEnd = true;
-                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=0';
+                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=0';
                     }
                     else
                     {
@@ -651,7 +651,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                         '&mbri=1,2,3'.$strWinLine .'&stime=' . floor(microtime(true) * 1000).'&sa='.$strReelSa.'&sb='.$strReelSb.
                         '&sh=3&c='.$betline.'&sty='.$strSty.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&mbr='. implode(',',$_wildReelValue);
                     if ($isEnd == true){
-                        $w = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                        $w = $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                         $response = $response . '&w='.$w;
                     }
                     else{
@@ -667,6 +667,8 @@ namespace VanguardLTE\Games\TheDogHousePM
                         $spinType = 'b';
                         $n_reel_set = '0&bgid=0&win_fs=0&wins=0,0,0,0,0,0,0,0,0&bgt=32&bw=1&sh=3&wins_mask=h,h,h,h,h,h,h,h,h&end=0&psym=1~' . $scattersWin.'~' . $_obf_scatterposes[0] .',' . $_obf_scatterposes[1] .',' . $_obf_scatterposes[2];
                     }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'WildValues', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'WildPos', []);
 
                     $response = 'tw='.$totalWin . $strWildResponse .'&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&mbri=1,2,3&stime=' . floor(microtime(true) * 1000) .
                         '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&n_reel_set='.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&w='.$totalWin.'&mbr='. implode(',',$_wildReelValue);
