@@ -918,8 +918,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         "status"=> "O",
                         "name"=> "Spring Fortune Tournament",
                         "clientMode"=> "V",
-                        "startDate"=> 1615888800,
-                        "endDate" => 1616493540,
+                        "startDate"=> 1617973200,
+                        "endDate" => 1620565200,
                         "optin"=> true
                     ]
                 ],
@@ -929,8 +929,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         "status" => "O",
                         "name" => "Spring Fortune Cash Drop",
                         "clientMode" => "V",
-                        "startDate"=> 1615888800,
-                        "endDate" => 1616493540,
+                        "startDate"=> 1617973200,
+                        "endDate" => 1620565200,
                         "clientStyle" => "AS",
                         "optin" => true
                     ]
@@ -960,8 +960,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         "status"=> "O",
                         "name"=> "Spring Fortune Tournament",
                         "clientMode"=> "V",
-                        "startDate"=> 1615888800,
-                        "endDate"=> 1616493540,
+                        "startDate"=> 1617973200,
+                        "endDate"=> 1620565200,
                         "optJurisdiction"=> [
                             "SE",
                             "UK"
@@ -975,8 +975,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         "status"=> "O",
                         "name"=> "Spring Fortune Cash Drop",
                         "clientMode"=> "V",
-                        "startDate"=> 1615888800,
-                        "endDate"=> 1616493540,
+                        "startDate"=> 1617973200,
+                        "endDate"=> 1620565200,
                         "clientStyle"=> "AS",
                         "showWinnersList"=> true,
                         "optin"=> true
