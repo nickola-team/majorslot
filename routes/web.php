@@ -1258,7 +1258,7 @@ Route::group(['prefix' => 'gs2c',], function () {
  * Booongo Game Provider
  */
 Route::group(['middleware' => 'bng', 'prefix' => 'bng',], function () {
-	Route::post('/betman/', 'GameProviders\BNGController@betman');
+	Route::post('/betman', 'GameProviders\BNGController@betman');
 });
 
 /**
