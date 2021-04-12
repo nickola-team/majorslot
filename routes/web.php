@@ -207,6 +207,12 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.game.search',
         'uses' => 'GamesController@search'
     ]);
+    Route::get('providers/pp/{gamecode}', [
+        'as' => 'frontend.providers.pp.render',
+        'uses' => 'RenderingController@pragmaticrender'
+    ]);
+
+
 	/*
 	Route::get('games', [
         'as' => 'frontend.game.list',
@@ -263,6 +269,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
     Route::post('api/getgamelist', [
         'as' => 'frontend.api.getgamelist',
         'uses' => 'ApiController@getgamelist',
+    ]);
+
+    Route::post('api/getgamelink', [
+        'as' => 'frontend.api.getgamelink',
+        'uses' => 'ApiController@getgamelink',
     ]);
 
     //added by shev
@@ -447,6 +458,38 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'DashboardController@in_out_manage'
     ]);
 
+    Route::get('/bonus/pplist', [
+        'as' => 'backend.bonus.pp',
+        'uses' => 'BonusController@pp_index'
+    ]);
+    Route::get('/bonus/ppadd', [
+        'as' => 'backend.bonus.ppadd',
+        'uses' => 'BonusController@pp_add'
+    ]);
+    Route::post('/bonus/ppstore', [
+        'as' => 'backend.bonus.ppstore',
+        'uses' => 'BonusController@pp_store'
+    ]);
+    Route::delete('/bonus/ppcancel/{bonusCode}', [
+        'as' => 'backend.bonus.ppcancel',
+        'uses' => 'BonusController@pp_cancel'
+    ]);
+    Route::get('/bonus/bnglist', [
+        'as' => 'backend.bonus.bng',
+        'uses' => 'BonusController@bng_index'
+    ]);
+    Route::get('/bonus/bngadd', [
+        'as' => 'backend.bonus.bngadd',
+        'uses' => 'BonusController@bng_add'
+    ]);
+    Route::post('/bonus/bngstore', [
+        'as' => 'backend.bonus.bngstore',
+        'uses' => 'BonusController@bng_store'
+    ]);
+    Route::delete('/bonus/bngcancel/{bonusCode}', [
+        'as' => 'backend.bonus.bngcancel',
+        'uses' => 'BonusController@bng_cancel'
+    ]);
 
    
 	
@@ -1168,3 +1211,59 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
 	});
 });
 
+
+/**
+ * CQ9 Game Provider
+ */
+Route::group(['middleware' => 'cq9', 'prefix' => 'cq9',], function () {
+	Route::post('/transaction/game/bet', 'GameProviders\CQ9Controller@bet');
+	Route::post('/transaction/game/endround', 'GameProviders\CQ9Controller@endround');
+    Route::post('/transaction/game/debit', 'GameProviders\CQ9Controller@debit');
+    Route::post('/transaction/game/credit', 'GameProviders\CQ9Controller@credit');
+    Route::post('/transaction/game/refund', 'GameProviders\CQ9Controller@refund');
+    Route::post('/transaction/user/payoff', 'GameProviders\CQ9Controller@payoff');
+	Route::get('/transaction/record/{mtcode}', 'GameProviders\CQ9Controller@record');
+    Route::get('/transaction/balance/{account}', 'GameProviders\CQ9Controller@balance');
+    Route::get('/player/check/{account}', 'GameProviders\CQ9Controller@checkplayer');
+});
+
+/**
+ * Pragmatic Play Game Provider
+ */
+Route::group(['middleware' => 'pp', 'prefix' => 'pp',], function () {
+	Route::post('/auth', 'GameProviders\PPController@auth');
+	Route::post('/balance', 'GameProviders\PPController@balance');
+    Route::post('/bet', 'GameProviders\PPController@bet');
+    Route::post('/result', 'GameProviders\PPController@result');
+    Route::post('/bonuswin', 'GameProviders\PPController@bonuswin');
+    Route::post('/jackpotwin', 'GameProviders\PPController@jackpotwin');
+	Route::post('/endround', 'GameProviders\PPController@endround');
+    Route::post('/refund', 'GameProviders\PPController@refund');
+    Route::post('/promowin', 'GameProviders\PPController@promowin');
+});
+Route::group(['prefix' => 'gs2c',], function () {
+    Route::get('/promo/active', 'GameProviders\PPController@promoactive');
+    Route::get('/promo/race/details', 'GameProviders\PPController@promoracedetails');
+    Route::get('/promo/race/prizes', 'GameProviders\PPController@promoraceprizes');
+    Route::post('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
+    Route::get('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
+    Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
+    Route::get('/promo/tournament/v2/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
+    Route::get('/minilobby/games.json', 'GameProviders\PPController@minilobby_games_json');
+    Route::get('/minilobby/start', 'GameProviders\PPController@minilobby_start');
+});
+
+
+/**
+ * Booongo Game Provider
+ */
+Route::group(['middleware' => 'bng', 'prefix' => 'bng',], function () {
+	Route::post('/betman/', 'GameProviders\BNGController@betman');
+});
+
+/**
+ * Habanero Game Provider
+ */
+Route::group(['middleware' => 'hbn', 'prefix' => 'hbn',], function () {
+	Route::post('/endpoint', 'GameProviders\HBNController@endpoint');
+});

@@ -9,6 +9,7 @@
     </script>
 @endif
 <!-- 팝업메시지 -->
+
 <div class="modal fade in" id="liveperson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 58px;">
         <div class="modal-content" style="border: 0;">
@@ -171,7 +172,7 @@
                 </div>
                 <div onclick="openMenu('moneyhistory');" class="menu_pop_open">
                     <i class="fas fa-won-sign"></i>
-                    <p id="cur_money">{{ Auth::user()->balance }} 원</p>
+                    <p id="cur_money">{{ number_format(Auth::user()->balance,2) }} 원</p>
                 </div>
                 <div onclick="openMenu('question');" class="menu_pop_open">
                     <i class="fa fa-comment"></i>
@@ -201,6 +202,7 @@
     </div>
 </div>
 <!-- 잭팟 슬라이드 -->
+
 <div class="jackpot_left_wrap">
     <div class="grand_jackpot_box">
         <p class="jackpot_sum" id="grandjp">10,000,000</p>
@@ -217,6 +219,7 @@
     <p class="jackpot_sum" id="minijp">10,000</p>
     </div>
 </div>
+
 <!-- 광고 슬라이드 -->
 
 <div class="slideshow2_wrap">
@@ -236,6 +239,7 @@
 </div>
 
 <!-- 인기게임 슬라이드 -->
+{{-- 
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
@@ -279,7 +283,7 @@
                 <p>댄싱 드럼</p><p> 다복이</p></a>                
             </div>
         </div>
-{{--        <div class="parent" onclick="">
+       <div class="parent" onclick="">
             <div class="child">
                 <img src="/frontend/Default/ico/JumanjiNET.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
                 @if (Auth::check())
@@ -289,10 +293,10 @@
                 @endif
                 <p>쥬만지</p></a>                
             </div>
-        </div> --}}
+        </div> 
     </div>
 </div>
-
+--}}
 <!-- 공지사항 -->
 {{--
 <div class="notice_wrap">
@@ -325,20 +329,25 @@
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
-            <span><strong>인기게임</strong></span>
+            <span><strong>SLOT GAMES</strong></span>
         </p>
     </div>
 </div>
 <div class="main_slot_wrap">
     <div class="sc-inner">
-        @foreach($special_games AS $index=>$game)
+    @if ($categories && count($categories))
+        @foreach($categories AS $index=>$category)
                 @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check())
-                    <a href="javascript:;" onclick="startGame('{{ $game['href'] }}');" class="slot-btn">
+                <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');" class="slot_pop_open slot-btn">
                         <div class="inner">
                             <div class="check">
-                                <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'] .'.jpg' }}" />
-                                <span style="font-size:16px;">
-                                    {{ $game['title']}}
+                            <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                <span style="font-size:22px;">
+                                @if ($category->trans)
+                                    {{ $category->trans->trans_title }}
+                                @else
+                                    {{ $category->title }}
+                                @endif
                                 </span>
                             </div>
                         </div>
@@ -347,15 +356,20 @@
                     <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');" class="slot-btn">
                         <div class="inner">
                             <div class="check">
-                                <img width="100%" height="80%" src="/frontend/Default/ico/{{ $game['href'].'.jpg' }}" />
-                                <span style="font-size:16px;">
-                                {{ $game['title']}}
+                            <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                <span style="font-size:22px;">
+                                @if ($category->trans)
+                                    {{ $category->trans->trans_title }}
+                                @else
+                                    {{ $category->title }}
+                                @endif
                                 </span>
                             </div>
                         </div>
                     </a>
                 @endif
         @endforeach
+    @endif
     </div>
 </div>
 
@@ -731,8 +745,7 @@
                         @if ($categories && count($categories))
 
                             @foreach($categories AS $index=>$category)
-                                @if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-                            && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
+                                
                                 <li class="tab{{ $category->id }}">
                                     <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');">
                                         <span>
@@ -744,7 +757,6 @@
                                         </span>
                                     </a>
                                 </li>
-                                @endif
                             @endforeach
                         @endif
                     </ul>
@@ -760,7 +772,29 @@
         // alert(game_id);
         
         //location.href = "/game/" + gamename;
-        window.open("/game/" + gamename, gamename, "width=1280, height=742, left=100, top=50");
+        window.open("/game/" + gamename, gamename, "width=1280, height=720, left=100, top=50");
+        
+    }
+    function startGameByProvider(provider, gamecode) {
+        var formData = new FormData();
+        formData.append("provider", provider);
+        formData.append("gamecode", gamecode);
+        $.ajax({
+        type: "POST",
+        url: "/api/getgamelink",
+        data: formData,
+        processData: false,
+        contentType: false,
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+        }
+        });
         
     }
     </script>

@@ -64,6 +64,7 @@ return [
 
     'url' => env('APP_URL', 'http://kadeh.de/'),
 
+    'server_addr' => 'major999.com',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -92,6 +93,38 @@ return [
     'time_format' => 'H:i:s',
 
     'date_time_format' => 'Y-m-d H:i:s',
+
+    /*
+    CQ9 Auth key
+    */
+    'cq9wtoken' => env('CQ9_WTOKEN', 'cq9KfvEKDmHTRcVMteiApFK'),
+    'cq9api' => 'https://apid.cqgame.cc',
+    'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDczYmFhYThjMDUyNTAwMDFlMDBmMDYiLCJhY2NvdW50IjoibWFqb3JfdGVzdCIsIm93bmVyIjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwicGFyZW50IjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwiY3VycmVuY3kiOiJLUlciLCJqdGkiOiIzODYzNjY2OTAiLCJpYXQiOjE2MTgxOTcxNjIsImlzcyI6IkN5cHJlc3MiLCJzdWIiOiJTU1Rva2VuIn0.syESetcCYmfb8MOYguVGb3wp6KUgdUtqJWJqyX-YbYk'),
+
+    /*
+    Pragmatic Play  keys
+    */
+    'ppsecretkey' =>  env('PP_SECRETKEY', 'testKey'),
+    'ppsecurelogin' =>  env('PP_SECURELOGIN', 'mjr_major'),
+    'ppapi' => 'https://api.prerelease-env.biz/IntegrationService/v3/http',
+    'ppgameserver' => 'https://major-sg0.prerelease-env.biz',
+    
+    /*
+    Booongo  keys
+    */
+    'bng_wallet_sign_key' => env('BNG_WALLET_SIGN_KEY', '91V2hjYmzpH8MTGmn8xpoDr6O'),
+    'bng_api_token' => 'fMRpC6ocPgywuzu2kRhgREHWL',
+    'bng_game_server' => 'https://gate-stage.betsrv.com/op/',
+    'bng_project_name' => 'major-stage',
+
+    /*
+    HABANERO Auth key
+    */
+    'hbn_passkey' => env('HBN_PASSKEY', 'LX7cztKu81D7eU7'),
+    'hbn_brandid' => '7079049e-a38b-eb11-b566-00155db545d0',
+    'hbn_apikey' => '54030C41-1C71-4834-B09F-11272FF73BD0',
+    'hbn_api' => 'https://ws-test.insvr.com/jsonapi',
+    'hbn_game_server' => 'https://app-test.insvr.com',
 
     /*
     |--------------------------------------------------------------------------

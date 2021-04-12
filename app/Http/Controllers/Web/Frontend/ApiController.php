@@ -1,6 +1,10 @@
 <?php 
+
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
+    use VanguardLTE\Http\Controllers\Web\GameProviders\CQ9Controller;
+    use VanguardLTE\Http\Controllers\Web\GameProviders\PPController;
+
     class ApiController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
@@ -49,8 +53,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
+            
+            $user->update(['api_token' => $user->generateCode(36)]);
 
             return response()->json(['error' => false, 'msg' => '성공']);
+        }
+        public function getgamelink(\Illuminate\Http\Request $request)
+        {
+            $provider = $request->provider;
+            $gamecode = $request->gamecode;
+            $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
+            return response()->json($res);
+
+        }
+        public function gamelistbyProvider($provider, $href)
+        {
+            $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist', $href);
+            return $games;
         }
 
         public function gamelist($categoryIDs, $wherenot=false)
@@ -125,7 +144,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             $games = $games->get();
-            return $games;
+            $data = [];
+            foreach ($games as $game)
+            {
+                $data[] = [
+                    'name' => $game->name,
+                    'title' => __('gamename.' . $game->title)
+                ];
+            }
+            return $data;
         }
         public function inoutList_json(\Illuminate\Http\Request $request)
         {
@@ -142,27 +169,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
 
-            $categories = [];
-            $game_ids = [];
-            $cat1 = false;
-            $title = trans('app.games');
-            $body = '';
-            $keywords = '';
-            $description = '';
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
-            $shop = \VanguardLTE\Shop::find($shop_id);
-            $games = \VanguardLTE\Game::where([
-                'view' => 1, 
-                'shop_id' => $shop_id
-            ]);
-
             $category = $request->category;
             if( $category == '' ) 
             {
                 return response()->json(['error' => true, 'msg' => '카테고리ID 에러', 'code' => '002']);
             }
-            //remove by khs
-            //\Illuminate\Support\Facades\Cookie::queue('currentCategory', $category, 2678400);
 
             $cat1 = \VanguardLTE\Category::where([
                 'href' => $category, 
@@ -173,19 +185,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => '존재하지 않는 카테고리입니다.', 'code' => '002']);
             }
 
-            $categories = \VanguardLTE\Category::where([
-                'parent' => $cat1->id, 
-                'shop_id' => $shop_id
-            ])->pluck('id')->toArray();
-            $categories[] = $cat1->id;
+            $categories = [$cat1->id];
+            if ($cat1->provider != null)
+            {
+                $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
+            }
+            else{
+                if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
+                {
+                    $selectedGames = [];
+                }
+                else
+                {
+                    $selectedGames = $this->gamelist($categories, false);
+                }
+            }
 
-            $selectedGames = $this->gamelist($categories, false);
-
-            $cat1 = \VanguardLTE\Category::whereNotIn('href', [$category, 'hot', 'wazdan','vision','bingo','card','roulette','keno','new']);
-            $categories = $cat1->where('shop_id', $shop_id)->pluck('id')->toArray();
-
-            $otherGames = $this->gamelist($categories, false);
-            return response()->json(['error' => false, 'games' => $selectedGames, 'others' => $otherGames]);
+            return response()->json(['error' => false, 'games' => $selectedGames, 'others' => []]);
         }
 
         public function changeBankAccount(\Illuminate\Http\Request $request){

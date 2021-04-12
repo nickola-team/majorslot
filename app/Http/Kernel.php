@@ -41,7 +41,11 @@ namespace VanguardLTE\Http
             'ipcheck' => 'VanguardLTE\Http\Middleware\IpMiddleware', 
             'siteisclosed' => 'VanguardLTE\Http\Middleware\SiteIsClosed', 
             'localization' => 'VanguardLTE\Http\Middleware\SelectLanguage', 
-            'shopzero' => 'VanguardLTE\Http\Middleware\ShopZero'
+            'shopzero' => 'VanguardLTE\Http\Middleware\ShopZero',
+            'cq9' => 'VanguardLTE\Http\Middleware\CQ9Middleware', 
+            'pp' => 'VanguardLTE\Http\Middleware\PPMiddleware', 
+            'bng' => 'VanguardLTE\Http\Middleware\BNGMiddleware', 
+            'hbn' => 'VanguardLTE\Http\Middleware\HBNMiddleware',
         ];
     }
 

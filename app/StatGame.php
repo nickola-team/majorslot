@@ -48,8 +48,8 @@ namespace VanguardLTE
                             'IN_JPS' => number_format($model->percent_jps, 4, '.', ''), 
                             'IN_JPG' => number_format($model->percent_jpg, 4, '.', ''), 
                             'Profit' => number_format($model->profit, 4, '.', ''), 
-                            'user_id' => \Auth::id(), 
-                            'shop_id' => \Auth::user()->shop_id, 
+                            'user_id' => $model->user->id, 
+                            'shop_id' => $model->user->shop_id, 
                             'Date' => date(config('app.date_time_format')), 
                             'domain' => request()->getHost()
                         ]
@@ -80,7 +80,7 @@ namespace VanguardLTE
         public static function create(array $attributes = [])
         {
             $model = static::query()->create($attributes);
-            $filterGames = [' FG', ' respin', ' RS'];
+            $filterGames = [' FG', ' respin', ' RS', ' JP', ' debit', ' credit', ' refund', ' payoff', ' RB', ' recredit'];
             foreach($filterGames as $ignoreGame) 
             {
                 if (substr_compare($model->game, $ignoreGame, -strlen($ignoreGame)) === 0)
@@ -88,7 +88,9 @@ namespace VanguardLTE
                     return $model;
                 }
             }
-            $model->user->processBetDealerMoney($model->bet, $model->game);
+            if ($model->bet > 0) {
+                $model->user->processBetDealerMoney($model->bet, $model->game);
+            }
             return $model;
         }
     }
