@@ -120,10 +120,10 @@ return [
     /*
     HABANERO Auth key
     */
-    'hbn_passkey' => env('HBN_PASSKEY', 'LX7cztKu81D7eU7'),
-    'hbn_brandid' => '7079049e-a38b-eb11-b566-00155db545d0',
-    'hbn_apikey' => '54030C41-1C71-4834-B09F-11272FF73BD0',
-    'hbn_api' => 'https://ws-test.insvr.com/jsonapi',
+    'hbn_passkey' => env('HBN_PASSKEY', 'mA%n@ajn!Yqv996'),
+    'hbn_brandid' => '9fa04080-569b-eb11-b566-0050f2388fc0',
+    'hbn_apikey' => '45BAC7EF-735F-4183-B885-9AFC908D4F23',
+    'hbn_api' => 'https://ws-a.insvr.com/jsonapi',
     'hbn_game_server' => 'https://app-test.insvr.com',
 
     /*
