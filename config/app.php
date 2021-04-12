@@ -112,10 +112,10 @@ return [
     /*
     Booongo  keys
     */
-    'bng_wallet_sign_key' => env('BNG_WALLET_SIGN_KEY', '91V2hjYmzpH8MTGmn8xpoDr6O'),
-    'bng_api_token' => 'fMRpC6ocPgywuzu2kRhgREHWL',
-    'bng_game_server' => 'https://gate-stage.betsrv.com/op/',
-    'bng_project_name' => 'major-stage',
+    'bng_wallet_sign_key' => env('BNG_WALLET_SIGN_KEY', 'vJITyizfNGbKSZXABlYp09zFO'),
+    'bng_api_token' => 'ibIIBDDIgo1gHsjd3BaeH4kCE',
+    'bng_game_server' => 'https://gate2.betsrv.com/op/',
+    'bng_project_name' => 'major',
 
     /*
     HABANERO Auth key
