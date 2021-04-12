@@ -7,6 +7,13 @@ namespace VanguardLTE\Console
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
             $schedule->command('queue:work --daemon')->everyMinute()->withoutOverlapping();
+            $schedule->call(function () {
+                \Illuminate\Support\Facades\Redis::del('pplist');
+                \Illuminate\Support\Facades\Redis::del('hbnlist');
+                \Illuminate\Support\Facades\Redis::del('booongolist');
+                \Illuminate\Support\Facades\Redis::del('playsonlist');
+                \Illuminate\Support\Facades\Redis::del('cq9list');
+            })->daily();
             $schedule->call(function()
             {
                 $users = \VanguardLTE\StatGame::where('date_time', '>', \Carbon\Carbon::now()->subHours()->format('Y-m-d H:i:s'))->groupBy('user_id')->pluck('user_id');
