@@ -104,10 +104,10 @@ return [
     /*
     Pragmatic Play  keys
     */
-    'ppsecretkey' =>  env('PP_SECRETKEY', 'testKey'),
+    'ppsecretkey' =>  env('PP_SECRETKEY', 'hmc7ZC55a88F6DhB'),
     'ppsecurelogin' =>  env('PP_SECURELOGIN', 'mjr_major'),
-    'ppapi' => 'https://api.prerelease-env.biz/IntegrationService/v3/http',
-    'ppgameserver' => 'https://major-sg0.prerelease-env.biz',
+    'ppapi' => 'https://api-sg0.pragmaticplay.net/IntegrationService/v3/http',
+    'ppgameserver' => 'https://major-sg0.pragmaticplay.net',
     
     /*
     Booongo  keys
