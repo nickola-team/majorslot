@@ -389,7 +389,13 @@ namespace VanguardLTE\Games\TheDogHousePM
                             {                                
                                 if($slotEvent['slotEvent'] == 'freespin'){
                                     if(($r == 2 && rand(0, 100) < 70) || $winType == 'none'){
-                                        $reels['reel' . ($r+1)][$k] = '' . rand(3, 10);
+                                        while(true){
+                                            $newSymbol = rand(4, 10);
+                                            if($reels['reel' . ($r+1)][0] != $newSymbol && $reels['reel' . ($r+1)][1] != $newSymbol && $reels['reel' . ($r+1)][2] != $newSymbol){
+                                                    $reels['reel' . ($r+1)][$k] = $newSymbol;
+                                                    break;
+                                            }
+                                        }
                                         $tempWildReels[$r][$k] = 0;    
                                     }else{
                                         if($r > 0 && $r < 4){
