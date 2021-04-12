@@ -323,6 +323,8 @@ return [
         "Hockey League Wild Match" => "하키 리그 와일드 매치",
         "3 Kingdoms - Battle of Red Cliffs" => "3 킹덤 -배틀 오브 레드 클리프",
         "7 Monkeys JP" => "7 몽키 JP",
+        "Amazing Money Machine" => "어메이징 머니 머신",
+        "Buffalo King Megaways" => "버팔로킹 메가웨이",
 
         /**
          * Booongo - Playson Play Games
