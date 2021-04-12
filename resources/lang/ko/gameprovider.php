@@ -385,6 +385,7 @@ return [
         /**
          * Habanero Games
          */
+        "Before Time Runs Out" => "비포 타임 런스아웃",
         "Orbs of Atlantis" => "오르스 오브 아를란티스",
         "Christmas Gift Rush" => "크리스마스 기프트 러시",
         "Totem Towers" => "토템 타워",
