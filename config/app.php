@@ -64,7 +64,7 @@ return [
 
     'url' => env('APP_URL', 'http://kadeh.de/'),
 
-    'server_addr' => '42.125.249.196',
+    'server_addr' => 'major999.com',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -97,9 +97,9 @@ return [
     /*
     CQ9 Auth key
     */
-    'cq9wtoken' => env('CQ9_WTOKEN', 'cq9cFEKtvTWSA'),
-    'cq9api' => 'http://api.cqgame.games',
-    'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDUwMWY4NWZlMjZkZjAwMDFiYWQ5MGMiLCJhY2NvdW50IjoibWFqb3IiLCJvd25lciI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsInBhcmVudCI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsImN1cnJlbmN5IjoiS1JXIiwianRpIjoiNDMxNDg0MjAyIiwiaWF0IjoxNjE1ODYzNjg1LCJpc3MiOiJDeXByZXNzIiwic3ViIjoiU1NUb2tlbiJ9.C7mJrZ69a7F-o4ZO2RQYf8miRAcvOQ2_qXDL6d3_hEs'),
+    'cq9wtoken' => env('CQ9_WTOKEN', 'cq9KfvEKDmHTRcVMteiApFK'),
+    'cq9api' => 'https://apid.cqgame.cc',
+    'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDczYmFhYThjMDUyNTAwMDFlMDBmMDYiLCJhY2NvdW50IjoibWFqb3JfdGVzdCIsIm93bmVyIjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwicGFyZW50IjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwiY3VycmVuY3kiOiJLUlciLCJqdGkiOiIzODYzNjY2OTAiLCJpYXQiOjE2MTgxOTcxNjIsImlzcyI6IkN5cHJlc3MiLCJzdWIiOiJTU1Rva2VuIn0.syESetcCYmfb8MOYguVGb3wp6KUgdUtqJWJqyX-YbYk'),
 
     /*
     Pragmatic Play  keys
