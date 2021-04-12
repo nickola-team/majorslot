@@ -124,7 +124,7 @@ return [
     'hbn_brandid' => '9fa04080-569b-eb11-b566-0050f2388fc0',
     'hbn_apikey' => '45BAC7EF-735F-4183-B885-9AFC908D4F23',
     'hbn_api' => 'https://ws-a.insvr.com/jsonapi',
-    'hbn_game_server' => 'https://app-test.insvr.com',
+    'hbn_game_server' => 'https://app-a.insvr.com',
 
     /*
     |--------------------------------------------------------------------------
