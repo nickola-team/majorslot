@@ -15,7 +15,74 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $frontend = 'Default';
 
             $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan'])->orderby('position')->get();
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'title'));
+            $hotgames = [];
+
+            $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');
+
+            if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
+            {
+                for ($i=0;$i<12;$i++)
+                {
+                    $exist = false;
+                    do {
+                        $idx = mt_rand(0, count($ppgames)-1);
+                        $exist = false;
+                        foreach ($hotgames as $game)
+                        {
+                            if ($game['gamecode'] == $ppgames[$idx]['gamecode'])
+                            {
+                                $exist = true;
+                            }
+                        }
+                    } while ($exist);
+                    $hotgames[] = $ppgames[$idx];
+                }
+            }
+            else
+            {
+                $pmId = \VanguardLTE\Category::where([
+                    'href' => 'pragmatic', 
+                    'shop_id' => 0
+                ])->first();
+                $games = \VanguardLTE\Game::select('games.*')->where('shop_id', 0)->orderBy('name', 'ASC');
+                $games = $games->join('game_categories', 'game_categories.game_id', '=', 'games.id');
+                $games = $games->where('game_categories.category_id', $pmId->id);
+                $ppgamenames = $games->get()->pluck('name')->toArray();
+                foreach ($ppgames as $pg)
+                {
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $pg['name']) . 'PM';
+                    if (in_array($gamename, $ppgamenames))
+                    {
+                        $hotgames[] = $pg;
+                    }
+                }
+                $hotgames[] = ['name' => 'DuoFuDuoCai5Treasures', 'title' => '5트레저 다복이'];
+                $hotgames[] = ['name' => 'DuoFuDuoCai88Fortune', 'title' => '88포츈 다복이'];
+                $hotgames[] = ['name' => 'DuoFuDuoCaiDancingDrum', 'title' => '댄싱드럼 다복이'];
+                if (count($hotgames) % 4 > 0)
+                {
+                    $len = 4 - count($hotgames) % 4;
+                    for ($i=0;$i<$len;$i++)
+                    {
+                        $exist = false;
+                        do {
+                            $idx = mt_rand(0, count($ppgames)-1);
+                            $exist = false;
+                            foreach ($hotgames as $game)
+                            {
+                                if (isset($game['gamecode']) && $game['gamecode'] == $ppgames[$idx]['gamecode'])
+                                {
+                                    $exist = true;
+                                }
+                            }
+                        } while ($exist);
+                        $hotgames[] = $ppgames[$idx];
+                    }
+                }
+            }
+            shuffle($hotgames);
+
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'title'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {

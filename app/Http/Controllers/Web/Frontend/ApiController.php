@@ -56,6 +56,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             
             $user->update(['api_token' => $user->generateCode(36)]);
 
+            event(new \VanguardLTE\Events\User\LoggedIn());
+
+
             return response()->json(['error' => false, 'msg' => '성공']);
         }
         public function getgamelink(\Illuminate\Http\Request $request)

@@ -250,50 +250,53 @@
 
 <div class="hot_wrap">
     <div class="hot_box">
-        <div class="parent" onclick="">
-            <div class="child">
-                <img src="/frontend/Default/ico/DuoFuDuoCai5Treasures.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
-                @if (Auth::check())
-                    <a href="#" onclick="startGame('DuoFuDuoCai5Treasures');">
-                @else
-                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
-                @endif
-                <p>파이브 트레저</p><p> 다복이</p></a>
+        <div class="carousel slide" id="myCarousel" style="background:black;padding:2px;">
+            <div class="carousel-inner">
+                @forelse ($hotgames as $hot)
+                    @if ($loop->index % 4 == 0)
+                    <div class="item {{$loop->index==0?'active':''}}">
+                    @endif
+                        <div class="col-xs-3">
+                            <div class="parent" onclick="">
+                            <div class="child">
+                                @if (isset($hot['provider']))
+
+                                    @if (isset($hot['icon']))
+                                        <img src="{{ $hot['icon']}}" style="width: 100%; height: 100%;">
+                                    @else
+                                        <img src="/frontend/Default/ico/{{ $hot['provider']}}/{{ $hot['gamecode']}}_{{ $hot['name']}}.jpg" style="width: 100%; height: 100%;">
+                                    @endif
+                                    @if (Auth::check())
+                                        <a href="#" onclick="startGameByProvider('{{$hot['provider']}}','{{$hot['gamecode']}}');">
+                                    @else
+                                        <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
+                                    @endif
+                                    <p>{{$hot['title']}}</p>
+                                    </a>
+                                @else
+                                    <img src="/frontend/Default/ico/{{ $hot['name']}}.jpg" style="width: 100%; height: 100%;">
+                                    @if (Auth::check())
+                                        <a href="#" onclick="startGame('{{$hot['name']}}');">
+                                    @else
+                                        <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
+                                    @endif
+                                    <p>{{$hot['title']}}</p>
+                                    </a>
+                                    
+                                @endif
+                            </div>
+                            </div>  
+                        </div>
+                    @if ($loop->index % 4 == 3)
+                    </div>
+                    @endif
+                @empty
+                    <p>인기게임이 없습니다</p>
+                @endforelse
             </div>
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev"> <i class="glyphicon glyphicon-chevron-left"> </i> </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next"> <i class="glyphicon glyphicon-chevron-right"> </i> </a>
         </div>
-        <div class="parent" onclick="">
-            <div class="child">
-                <img src="/frontend/Default/ico/DuoFuDuoCai88Fortune.jpg" style="width: 100%; height: 100%;" alt="88 포춘">
-                @if (Auth::check())
-                    <a href="#" onclick="startGame('DuoFuDuoCai88Fortune');">
-                @else
-                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
-                @endif
-                <p>88 포춘</p><p> 다복이</p></a>                
-            </div>
-        </div>
-        <div class="parent" onclick="">
-            <div class="child">
-                <img src="/frontend/Default/ico/DuoFuDuoCaiDancingDrum.jpg" style="width: 100%; height: 100%;" alt="댄싱 드럼">
-                @if (Auth::check())
-                    <a href="#" onclick="startGame('DuoFuDuoCaiDancingDrum');">
-                @else
-                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
-                @endif
-                <p>댄싱 드럼</p><p> 다복이</p></a>                
-            </div>
-        </div>
-       <div class="parent" onclick="">
-            <div class="child">
-                <img src="/frontend/Default/ico/JumanjiNET.jpg" style="width: 100%; height: 100%;" alt="파이브 트레저">
-                @if (Auth::check())
-                    <a href="#" onclick="startGame('JumanjiNET');">
-                @else
-                    <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');">
-                @endif
-                <p>쥬만지</p></a>                
-            </div>
-        </div> 
     </div>
 </div>
 
@@ -813,6 +816,9 @@
 @endif
     <script>
         $( document ).ready(function() {
+            $("#myCarousel").carousel({
+                interval: 5000
+            })
             $("#banner-close").click(function() {
                 if ($("#hide-today").is(":checked") == true)
                 {

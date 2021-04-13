@@ -21,10 +21,9 @@
 100% {}}
 /* Image zoom on hover + Overlay colour */
 .parent {
-    width: 24%;
+    width: 330px;
     margin: 5px;
-    height: 260px;
-    border: 1px solid blue;
+    height: 220px;
     overflow: hidden;
     position: relative;
     display: inline-block;
