@@ -145,6 +145,13 @@ return [
         "The Cupids" => "더 쿠피즈",
         "Oo Ga Cha Ka" => "오 가 차 카",
         "Burning Xi-You" => "버닝 시-유",
+        "Ninja Raccoon" => "닌자 라콘",
+        "Jewel Luxury" => "즈웰 럭셔리",
+        "Chicky Parm Parm" => "치키 팜 팜",
+        "Fruity Carnival" => "후루티 카니발",
+        "Wheel Money" => "윌 머니",
+        "RaveHigh" => "레이브하이",
+
 
         /**
          * Pragmatic Play Games
