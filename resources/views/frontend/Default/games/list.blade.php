@@ -14,7 +14,7 @@
     <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 58px;">
         <div class="modal-content" style="border: 0;">
             <div class="modal-body" style="padding:0;">
-                <img src="/frontend/Major/major/images/adv_20210303.png" style="width: 100%;vertical-align: bottom;">
+                <img src="/frontend/Major/major/images/adv_2021415.png" style="width: 100%;vertical-align: bottom;">
             </div>
         </div>
         <div style="text-align: right;margin: 0 auto;display: block;font-size: 14px;color: #fff;background: #2B2B2B;line-height: 29px;padding-right: 5px;">
