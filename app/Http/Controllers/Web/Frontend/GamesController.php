@@ -21,21 +21,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
             {
-                for ($i=0;$i<12;$i++)
-                {
-                    $exist = false;
-                    do {
-                        $idx = mt_rand(0, count($ppgames)-1);
+                if (count($ppgames) > 0){
+                    for ($i=0;$i<12;$i++)
+                    {
                         $exist = false;
-                        foreach ($hotgames as $game)
-                        {
-                            if ($game['gamecode'] == $ppgames[$idx]['gamecode'])
+                        do {
+                            $idx = mt_rand(0, count($ppgames)-1);
+                            $exist = false;
+                            foreach ($hotgames as $game)
                             {
-                                $exist = true;
+                                if ($game['gamecode'] == $ppgames[$idx]['gamecode'])
+                                {
+                                    $exist = true;
+                                }
                             }
-                        }
-                    } while ($exist);
-                    $hotgames[] = $ppgames[$idx];
+                        } while ($exist);
+                        $hotgames[] = $ppgames[$idx];
+                    }
                 }
             }
             else
@@ -48,12 +50,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $games = $games->join('game_categories', 'game_categories.game_id', '=', 'games.id');
                 $games = $games->where('game_categories.category_id', $pmId->id);
                 $ppgamenames = $games->get()->pluck('name')->toArray();
-                foreach ($ppgames as $pg)
-                {
-                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $pg['name']) . 'PM';
-                    if (in_array($gamename, $ppgamenames))
+                if (count($ppgames) > 0){
+                    foreach ($ppgames as $pg)
                     {
-                        $hotgames[] = $pg;
+                        $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $pg['name']) . 'PM';
+                        if (in_array($gamename, $ppgamenames))
+                        {
+                            $hotgames[] = $pg;
+                        }
                     }
                 }
                 $hotgames[] = ['name' => 'DuoFuDuoCai5Treasures', 'title' => '5트레저 다복이'];
@@ -62,21 +66,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if (count($hotgames) % 4 > 0)
                 {
                     $len = 4 - count($hotgames) % 4;
-                    for ($i=0;$i<$len;$i++)
-                    {
-                        $exist = false;
-                        do {
-                            $idx = mt_rand(0, count($ppgames)-1);
+                    if (count($ppgames) > 0){
+                        for ($i=0;$i<$len;$i++)
+                        {
                             $exist = false;
-                            foreach ($hotgames as $game)
-                            {
-                                if (isset($game['gamecode']) && $game['gamecode'] == $ppgames[$idx]['gamecode'])
+                            do {
+                                $idx = mt_rand(0, count($ppgames)-1);
+                                $exist = false;
+                                foreach ($hotgames as $game)
                                 {
-                                    $exist = true;
+                                    if (isset($game['gamecode']) && $game['gamecode'] == $ppgames[$idx]['gamecode'])
+                                    {
+                                        $exist = true;
+                                    }
                                 }
-                            }
-                        } while ($exist);
-                        $hotgames[] = $ppgames[$idx];
+                            } while ($exist);
+                            $hotgames[] = $ppgames[$idx];
+                        }
                     }
                 }
             }
