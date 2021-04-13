@@ -64,7 +64,7 @@ return [
 
     'url' => env('APP_URL', 'http://kadeh.de/'),
 
-    'server_addr' => 'major999.com',
+    'server_addr' => '42.125.249.196',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -97,34 +97,34 @@ return [
     /*
     CQ9 Auth key
     */
-    'cq9wtoken' => env('CQ9_WTOKEN', 'cq9KfvEKDmHTRcVMteiApFK'),
-    'cq9api' => 'https://apid.cqgame.cc',
-    'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDczYmFhYThjMDUyNTAwMDFlMDBmMDYiLCJhY2NvdW50IjoibWFqb3JfdGVzdCIsIm93bmVyIjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwicGFyZW50IjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwiY3VycmVuY3kiOiJLUlciLCJqdGkiOiIzODYzNjY2OTAiLCJpYXQiOjE2MTgxOTcxNjIsImlzcyI6IkN5cHJlc3MiLCJzdWIiOiJTU1Rva2VuIn0.syESetcCYmfb8MOYguVGb3wp6KUgdUtqJWJqyX-YbYk'),
+    'cq9wtoken' => env('CQ9_WTOKEN', 'cq9cFEKtvTWSA'),
+    'cq9api' => 'http://api.cqgame.games',
+    'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDUwMWY4NWZlMjZkZjAwMDFiYWQ5MGMiLCJhY2NvdW50IjoibWFqb3IiLCJvd25lciI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsInBhcmVudCI6IjYwM2M0YzE2ZmUyNmRmMDAwMWI4MmJkNSIsImN1cnJlbmN5IjoiS1JXIiwianRpIjoiNDMxNDg0MjAyIiwiaWF0IjoxNjE1ODYzNjg1LCJpc3MiOiJDeXByZXNzIiwic3ViIjoiU1NUb2tlbiJ9.C7mJrZ69a7F-o4ZO2RQYf8miRAcvOQ2_qXDL6d3_hEs'),
 
     /*
     Pragmatic Play  keys
     */
-    'ppsecretkey' =>  env('PP_SECRETKEY', 'hmc7ZC55a88F6DhB'),
+    'ppsecretkey' =>  env('PP_SECRETKEY', 'testKey'),
     'ppsecurelogin' =>  env('PP_SECURELOGIN', 'mjr_major'),
-    'ppapi' => 'https://api-sg0.pragmaticplay.net/IntegrationService/v3/http',
-    'ppgameserver' => 'https://major-sg0.pragmaticplay.net',
+    'ppapi' => 'https://api.prerelease-env.biz/IntegrationService/v3/http',
+    'ppgameserver' => 'https://major-sg0.prerelease-env.biz',
     
     /*
     Booongo  keys
     */
-    'bng_wallet_sign_key' => env('BNG_WALLET_SIGN_KEY', 'vJITyizfNGbKSZXABlYp09zFO'),
-    'bng_api_token' => 'ibIIBDDIgo1gHsjd3BaeH4kCE',
-    'bng_game_server' => 'https://gate2.betsrv.com/op/',
-    'bng_project_name' => 'major',
+    'bng_wallet_sign_key' => env('BNG_WALLET_SIGN_KEY', '91V2hjYmzpH8MTGmn8xpoDr6O'),
+    'bng_api_token' => 'fMRpC6ocPgywuzu2kRhgREHWL',
+    'bng_game_server' => 'https://gate-stage.betsrv.com/op/',
+    'bng_project_name' => 'major-stage',
 
     /*
     HABANERO Auth key
     */
-    'hbn_passkey' => env('HBN_PASSKEY', 'mA%n@ajn!Yqv996'),
-    'hbn_brandid' => '9fa04080-569b-eb11-b566-0050f2388fc0',
-    'hbn_apikey' => '45BAC7EF-735F-4183-B885-9AFC908D4F23',
-    'hbn_api' => 'https://ws-a.insvr.com/jsonapi',
-    'hbn_game_server' => 'https://app-a.insvr.com',
+    'hbn_passkey' => env('HBN_PASSKEY', 'LX7cztKu81D7eU7'),
+    'hbn_brandid' => '7079049e-a38b-eb11-b566-00155db545d0',
+    'hbn_apikey' => '54030C41-1C71-4834-B09F-11272FF73BD0',
+    'hbn_api' => 'https://ws-test.insvr.com/jsonapi',
+    'hbn_game_server' => 'https://app-test.insvr.com',
 
     /*
     |--------------------------------------------------------------------------
@@ -137,7 +137,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'ko'),
+    'locale' => env('APP_LOCALE', 'en'),
 
     /*
     |--------------------------------------------------------------------------
