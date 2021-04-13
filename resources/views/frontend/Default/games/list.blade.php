@@ -239,7 +239,7 @@
 </div>
 
 <!-- 인기게임 슬라이드 -->
-{{-- 
+
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
@@ -296,7 +296,7 @@
         </div> 
     </div>
 </div>
---}}
+
 <!-- 공지사항 -->
 {{--
 <div class="notice_wrap">
@@ -340,31 +340,43 @@
                 @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check())
                 <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');" class="slot_pop_open slot-btn">
                         <div class="inner">
-                            <div class="check">
-                            <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                <span style="font-size:24px;">
-                                @if ($category->trans)
-                                    {{ $category->trans->trans_title }}
-                                @else
-                                    {{ $category->title }}
-                                @endif
-                                </span>
+                            <div class="category">
+                                <div class="gameicon">
+                                    <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                    <span style="font-size:24px;">
+                                    @if ($category->trans)
+                                        {{ $category->trans->trans_title }}
+                                    @else
+                                        {{ $category->title }}
+                                    @endif
+                                    </span>
+                                </div>
+                                <div class="gameborder">
+                                    <img width="100%" height="100%" src="/frontend/Default/categories/border.png" />
+                                </div>
                             </div>
+                            
                         </div>
                     </a>
                 @else
                     <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');" class="slot-btn">
                         <div class="inner">
-                            <div class="check">
-                            <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                <span style="font-size:24px;">
-                                @if ($category->trans)
-                                    {{ $category->trans->trans_title }}
-                                @else
-                                    {{ $category->title }}
-                                @endif
-                                </span>
+                            <div class="category">
+                                <div class="gameicon">
+                                    <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                    <span style="font-size:24px;">
+                                    @if ($category->trans)
+                                        {{ $category->trans->trans_title }}
+                                    @else
+                                        {{ $category->title }}
+                                    @endif
+                                    </span>
+                                </div>
+                                <div class="gameborder">
+                                    <img width="100%" height="100%" src="/frontend/Default/categories/border.png" />
+                                </div>
                             </div>
+                            
                         </div>
                     </a>
                 @endif
