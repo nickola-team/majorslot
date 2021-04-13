@@ -21,9 +21,9 @@
 100% {}}
 /* Image zoom on hover + Overlay colour */
 .parent {
-    width: 30%;
+    width: 24%;
     margin: 5px;
-    height: 320px;
+    height: 260px;
     border: 1px solid blue;
     overflow: hidden;
     position: relative;
@@ -698,7 +698,7 @@
 .level_table tr td img {height:20px; }
 
 /* 점검중 */
-.check {float:left; width:240px; height:160px; background:rgba(0,0,0,0.3); border:2px solid #ff4ace; position: static; z-index:10000; text-align:center; font-family:'nanumgothic', sans-serif; letter-spacing:-1px; font-weight:bold; color:#f0e6e4; padding:0 0 0 0;
+.check {float:left; width:300px; height:200px; background:rgba(0,0,0,0.3); border:2px solid #ff4ace; position: static; z-index:10000; text-align:center; font-family:'nanumgothic', sans-serif; letter-spacing:-1px; font-weight:bold; color:#f0e6e4; padding:0 0 0 0;
     top:0px; left:0px; display: block;}
 
 

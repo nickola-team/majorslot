@@ -243,7 +243,7 @@
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
-            <span>다복이게임</span>
+            <span>인기게임들</span>
         </p>
     </div>
 </div>
@@ -341,8 +341,8 @@
                 <a href="javascript:;" onclick="openGroup('tab{{ $category->id }}', '{{ $category->href }}');" class="slot_pop_open slot-btn">
                         <div class="inner">
                             <div class="check">
-                            <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                <span style="font-size:22px;">
+                            <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                <span style="font-size:24px;">
                                 @if ($category->trans)
                                     {{ $category->trans->trans_title }}
                                 @else
@@ -356,8 +356,8 @@
                     <a href="#none" onclick="Swal.fire('로그인 하여 주세요.');" class="slot-btn">
                         <div class="inner">
                             <div class="check">
-                            <img width="100%" height="80%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                <span style="font-size:22px;">
+                            <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                <span style="font-size:24px;">
                                 @if ($category->trans)
                                     {{ $category->trans->trans_title }}
                                 @else
