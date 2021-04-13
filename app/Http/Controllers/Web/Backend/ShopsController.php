@@ -101,25 +101,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     {
                         foreach( $shop->users as $user ) 
                         {
-                            if( $user->user->hasRole('agent') ) 
-                            {
-                                $countAgents[$user->user->username] = 1;
-                            }
-                            if( $user->user->hasRole('distributor') ) 
-                            {
-                                $countDistributors[$user->user->username] = 1;
-                            }
-                            if( $user->user->hasRole('manager') ) 
-                            {
-                                $stats['managers']++;
-                            }
-                            if( $user->user->hasRole('cashier') ) 
-                            {
-                                $stats['cashiers']++;
-                            }
-                            if( $user->user->hasRole('user') ) 
-                            {
-                                $stats['users']++;
+                            if ($user->user){
+                                if( $user->user->hasRole('agent') ) 
+                                {
+                                    $countAgents[$user->user->username] = 1;
+                                }
+                                if( $user->user->hasRole('distributor') ) 
+                                {
+                                    $countDistributors[$user->user->username] = 1;
+                                }
+                                if( $user->user->hasRole('manager') ) 
+                                {
+                                    $stats['managers']++;
+                                }
+                                if( $user->user->hasRole('cashier') ) 
+                                {
+                                    $stats['cashiers']++;
+                                }
+                                if( $user->user->hasRole('user') ) 
+                                {
+                                    $stats['users']++;
+                                }
                             }
                         }
                     }

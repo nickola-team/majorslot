@@ -86,15 +86,14 @@
 						{{-- <th>변동전금액</th>
 						<th>변동후금액</th> --}}
 						<th>베팅금액</th>
-						<th>딜비금액</th>
-						<th>딜비%</th>
+						<th>수익금액</th>
 						<th>베팅시간</th>
 					</tr>
 					</thead>
 					<tbody>
 					@if (count($game_stat))
 						@foreach ($game_stat as $stat)
-							@include('backend.games.partials.row_deal_stat')
+							@include('backend.stat.partials.row_deal_stat')
 						@endforeach
 					@else
 						<tr><td colspan="11">@lang('app.no_data')</td></tr>
@@ -108,8 +107,7 @@
 						{{-- <th>변동전금액</th>
 						<th>변동후금액</th> --}}
 						<th>베팅금액</th>
-						<th>딜비금액</th>
-						<th>딜비%</th>
+						<th>수익금액</th>
 						<th>베팅시간</th>
 					</tr>
 					</thead>
