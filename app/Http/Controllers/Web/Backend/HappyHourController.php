@@ -85,6 +85,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
             }
             $data['current_bank'] = $data['total_bank'];
+            $data['over_bank'] = 0;
             $happyhour->update($data);
             return redirect()->route('backend.happyhour.list')->withSuccess(trans('app.happyhour_updated'));
         }
