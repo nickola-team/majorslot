@@ -105,7 +105,7 @@ return [
     'latest_pay_stats' => '최근 충환전내역',
     'latest_game_stats' => '최근 게임베팅내역',
     'latest_shops' => '최근 매장',
-    'latest_bank_stat' => '최근 잭팟충전내역',
+    'latest_bank_stat' => '최근 게임뱅크충환전내역',
     'latest_shop_stats' => '최근 매장충환전내역',
     'latest_stats' => '최신 통계',
 

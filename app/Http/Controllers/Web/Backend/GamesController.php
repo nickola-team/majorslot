@@ -715,7 +715,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 \VanguardLTE\BankStat::create([
                     'name' => ucfirst($type) . "[ $shop->name ]", 
                     'user_id' => \Illuminate\Support\Facades\Auth::id(), 
-                    'type' => 'add', 
+                    'type' => 'out', 
                     'sum' => $old, 
                     'old' => $old, 
                     'new' => 0, 
