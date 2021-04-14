@@ -28,6 +28,7 @@
 						<th>회원아이디</th>
 						<th>총 당첨금</th>
 						<th>남은당첨금</th>
+						<th>오버된당첨금</th>
 						<th>@lang('app.time')</th>
 						<th>@lang('app.status')</th>
 					</tr>
@@ -47,6 +48,7 @@
 						<th>회원아이디</th>
 						<th>총 당첨금</th>
 						<th>남은당첨금</th>
+						<th>오버된당첨금</th>
 						<th>@lang('app.time')</th>
 						<th>@lang('app.status')</th>
 					</tr>

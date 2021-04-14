@@ -7,6 +7,7 @@ namespace VanguardLTE
         protected $fillable = [
             'total_bank', 
             'current_bank', 
+            'over_bank',
             'time', 
             'status', 
             'user_id'
