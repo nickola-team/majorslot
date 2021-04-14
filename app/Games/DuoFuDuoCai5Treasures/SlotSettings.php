@@ -758,7 +758,7 @@ namespace VanguardLTE\Games\DuoFuDuoCai5Treasures
                 $bonus_spin = rand(1, 10);
                 $bonus_percent = 5;
                 $spin_percent = 8;
-                if ($this->happyhouruser->current_bank <= 10000)
+                if ($this->happyhouruser->current_bank <= $bet * 100)
                 {
                     $bonus_percent = 3;
                 }

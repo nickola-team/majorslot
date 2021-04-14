@@ -824,13 +824,14 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 $bonus_spin = rand(1, 10);
                 $bonus_percent = 2;
                 $spin_percent = 9;
-                if ($this->happyhouruser->current_bank <= 10000)
+                if ($this->happyhouruser->current_bank <= $bet * 100)
                 {
                     $bonus_percent = 1;
                 }
                 if ($garantType == 'freespin')
                 {
-                    $bonus_percent = 1;
+                    $bonus_percent = 0;
+                    $spin_percent = 3;
                 }
                 if ($bonus_spin <= $bonus_percent) {
                     $bonusWin = 1;
