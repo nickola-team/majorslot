@@ -509,8 +509,13 @@ namespace VanguardLTE\Games\PandasFortunePM
                             // exit( $response );
                             break;
                         }
+                        
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
+                        }
+                        else if ($scattersCount == 5)
+                        {
+                            
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
