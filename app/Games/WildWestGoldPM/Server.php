@@ -214,6 +214,11 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
                 if($slotEvent['slotEvent'] == 'freespin'){
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') == 1){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'WildValues', []);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'WildPos', []);
+                    }
+
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                     $_wildValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildValues');
