@@ -409,30 +409,27 @@
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title">@lang('app.balance') @lang('app.pay_in')</h4>
+							<h4 class="modal-title">환수금조절</h4>
 						</div>
 
 						<div class="modal-body">
 							<div class="form-group">
-								<input type="hidden" class="form-control" id="AddSum" name="summ" placeholder="@lang('app.sum')" required>
+								<input type="text" class="form-control" id="AddSum" name="summ" placeholder="@lang('app.sum')" required>
 								<input type="hidden" name="_token" value="{{ csrf_token() }}">
 								<br>
-
-									<button type="button" class="btn btn-default changeAddSum" data-value="100">100</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="200">200</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="300">300</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="400">400</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="500">500</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="1000">1000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="2000">2000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="3000">3000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="4000">4000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="5000">5000</button>
-
+									<button type="button" class="btn btn-default changeAddSum" data-value="10000">10000</button>
+									<button type="button" class="btn btn-default changeAddSum" data-value="20000">20000</button>
+									<button type="button" class="btn btn-default changeAddSum" data-value="30000">30000</button>
+									<button type="button" class="btn btn-default changeAddSum" data-value="50000">50000</button>
+									<button type="button" class="btn btn-default changeAddSum" data-value="100000">100000</button>
+									<button type="button" class="btn btn-default changeAddSum" data-value="200000">200000</button>
+									<button type="button" class="btn btn-default changeAddSum" data-value="300000">300000</button>
+									<button type="button" class="btn btn-default changeAddSum" data-value="500000">500000</button>
 							</div>
 						</div>
 						<div class="modal-footer" style="text-align: left;">
-							<a href="" class="btn btn-warning openAddClear"><b>@lang('app.reset')</b></a>
+							<a href="" class="btn btn-warning openAddClear">환수금초기화</a>
+							<button type="submit" class="btn btn-submit">금액추가</a>
 						</div>
 					</form>
 				</div>
@@ -451,8 +448,8 @@
 			$('#gamebank_add').attr('action', '{{ route('backend.game.gamebanks_add') }}?type=' + type)
 		});
 		$('.changeAddSum').click(function(event){
-			$('#AddSum').val($(event.target).data('value'));
-			$('#gamebank_add').submit();
+			$v = Number($('#AddSum').val());
+			$('#AddSum').val($v + $(event.target).data('value'));
 		});
 	</script>
 	<script>

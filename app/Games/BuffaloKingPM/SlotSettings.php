@@ -734,12 +734,12 @@ namespace VanguardLTE\Games\BuffaloKingPM
             if($slotEvent == 'freespin'){
                 $freeSpins = [
                     [50, 30, 10, 8, 2],
-                    [2, 3, 4, 5, 6]
+                    [2, 3, 4, 5, 5] //no need 6 frespins
                 ];
             }else{                
                 $freeSpins = [
                     [70, 20, 8, 2],
-                    [3, 4, 5, 6]
+                    [3, 4, 5, 5]//no need 6 frespins
                 ];
             }
             $percent = rand(0, 100);
