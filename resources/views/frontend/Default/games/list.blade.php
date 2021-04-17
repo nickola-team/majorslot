@@ -243,7 +243,7 @@
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
-            <span>인기게임들</span>
+            <span>인기게임</span>
         </p>
     </div>
 </div>
@@ -294,8 +294,8 @@
                     <p>인기게임이 없습니다</p>
                 @endforelse
             </div>
-            <a class="left carousel-control" href="#myCarousel" data-slide="prev"> <i class="glyphicon glyphicon-chevron-left"> </i> </a>
-            <a class="right carousel-control" href="#myCarousel" data-slide="next"> <i class="glyphicon glyphicon-chevron-right"> </i> </a>
+            <a class="left carousel-control" href="#myCarousel" style="width:10px;" data-slide="prev"> <i class="glyphicon glyphicon-chevron-left"> </i> </a>
+            <a class="right carousel-control" href="#myCarousel" style="width:10px;" data-slide="next"> <i class="glyphicon glyphicon-chevron-right"> </i> </a>
         </div>
     </div>
 </div>
