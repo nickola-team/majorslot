@@ -758,31 +758,8 @@ namespace VanguardLTE\Games\MustangGoldPM
             if ($this->happyhouruser)
             {
                 $bonus_spin = rand(1, 10);
-                $bonus_percent = 2;
-                $spin_percent = 9;
-                if ($this->happyhouruser->current_bank <= $bet * 100)
-                {
-                    $bonus_percent = 1;
-                }
-                if ($garantType == 'freespin')
-                {
-                    $bonus_percent = 0;
-                    $spin_percent = 3;
-                }
-                if ($bonus_spin <= $bonus_percent) {
-                    $bonusWin = 1;
-                    $spinWin = 0;
-                }
-                else if ($bonus_spin < $spin_percent)
-                {
-                    $bonusWin = 0;
-                    $spinWin = 1;
-                }
-                else
-                {
-                    $bonusWin = 0;
-                    $spinWin = 0;
-                }
+                $spin_percent = 5;
+                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
             }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
