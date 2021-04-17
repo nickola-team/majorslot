@@ -382,7 +382,7 @@ return [
     'shop_is_creating' => '매장정보 생성중입니다.',
     'games_will_be_added_in_few_minutes' => '몇 분 안에 게임이 추가됩니다...',
     'total_shops' => '매장',
-    'total_agents' => '부본사',
+    'total_agents' => '총 본사',
 
     'game_update' => '게임 업데이트',
     'add_or_change' => '추가 또는 변경',
@@ -759,8 +759,8 @@ return [
     'distributors_with_balance' => ':잔액이 0보다 큰 총판 수',
     'not_enough_money_in_the_shop' => '매장에 돈이 충분하지 않습니다. 만 : 균형',
     'not_enough_money_in_the_user_balance' => '사용자 잔액이 부족합니다. :',
-    'admin' => '본사',
-    'agent' => '부본사',
+    'admin' => '슈퍼어드민',
+    'agent' => '본사',
     'distributor' => '총판',
     'manager' => '관리자',
     'cashier' => '캐셔',
@@ -786,7 +786,7 @@ return [
     'lang' => '언어',
     'choose_shop' => '매장 폐쇠',
     'creator' => '만든이',
-    'agents' => '부본사',
+    'agents' => '본사',
     'distributors' => '총판',
     'use_all_categories' => '모든 카테고리 사용',
 

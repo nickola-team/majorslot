@@ -21,7 +21,7 @@
 			{{-- <li class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
-						<b>부본사은행계좌:</b> <a class="pull-right"></a>
+						<b>본사은행계좌:</b> <a class="pull-right"></a>
 					</div>
 				</div>
 			</li> --}}

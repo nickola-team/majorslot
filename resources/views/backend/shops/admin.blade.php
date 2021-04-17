@@ -40,7 +40,7 @@
 
                         {{-- <h4>{{ strtoupper($role_name) }}</h4> --}}
                         @if($role_name == 'agent')
-                            <h4>부본사</h4>
+                            <h4>본사</h4>
                         @elseif($role_name == 'distributor')
                             <h4>총판</h4>
                         @else
