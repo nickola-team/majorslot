@@ -79,6 +79,15 @@ namespace VanguardLTE
 
         public static function create(array $attributes = [])
         {
+            $filterGames = [' FG', ' respin', ' RS'];
+            foreach($filterGames as $ignoreGame) 
+            {
+                if (substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
+                {
+                    $attributes['bet'] = 0;
+                }
+            }
+
             $model = static::query()->create($attributes);
             $filterGames = [' FG', ' respin', ' RS', ' JP', ' debit', ' credit', ' refund', ' payoff', ' RB', ' recredit'];
             foreach($filterGames as $ignoreGame) 

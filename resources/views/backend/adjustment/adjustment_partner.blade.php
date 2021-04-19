@@ -68,7 +68,7 @@
                             <table class="table table-bordered table-striped">
 					<thead>
 					<tr>
-						<th>이름(아이디)</th>
+						<th>이름</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>베팅금</th>
@@ -77,6 +77,9 @@
 						<th>하위수익</th>
 						<th>최종수익</th>
 						<th>현재보유금</th>
+						@if(auth()->user()->hasRole('admin'))
+						<th>관리자수익</th>
+						@endif
 					</tr>
 					</thead>
 					<tbody>
@@ -90,7 +93,7 @@
 					</tbody>
 					<thead>
 					<tr>
-						<th>이름(아이디)</th>
+						<th>이름</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>베팅금</th>
@@ -99,6 +102,9 @@
 						<th>하위수익</th>
 						<th>최종수익</th>
 						<th>현재보유금</th>
+						@if(auth()->user()->hasRole('admin'))
+						<th>관리자수익</th>
+						@endif						
 					</tr>
 					</thead>
                     </table>

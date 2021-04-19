@@ -7,6 +7,8 @@
             <div class="pull-left image">
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
             </div>
+            @if(auth()->user()->hasRole('admin'))
+            @else
             <div class="pull-left info">
 			<p>보유금:
 
@@ -35,7 +37,7 @@
                     원
                 @endif
 
-        </p>
+            </p>
 
 			{{-- <a href="javascript:;" data-toggle="modal" data-target="#openChangeModal">
 				<i class="fa fa-circle text-success"></i>
@@ -43,6 +45,7 @@
 			</a> --}}
 
             </div>
+            @endif
         </div>
         <!-- search form -->
         {{--

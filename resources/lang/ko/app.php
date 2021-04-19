@@ -125,10 +125,10 @@ return [
     'my_sessions' => '내 세션',
     'activity' => '활동',
     'last_two_weeks' => '지난 2 주',
-    'total_credit' => '총 금액',
-    'total_distributors' => '총판',
-    'total_managers' => '총 관리자',
-    'total_cashiers' => '총 계산원',
+    'total_credit' => '전체 보유금액',
+    'total_distributors' => '전체 총판수',
+    'total_managers' => '전체 관리자수',
+    'total_cashiers' => '전체 계산원',
 
     // Auth
     'sign_up' => '가입하기',
@@ -381,8 +381,8 @@ return [
     'average_RTP' => '평균 RTP',
     'shop_is_creating' => '매장정보 생성중입니다.',
     'games_will_be_added_in_few_minutes' => '몇 분 안에 게임이 추가됩니다...',
-    'total_shops' => '매장',
-    'total_agents' => '총 본사',
+    'total_shops' => '전체 매장수',
+    'total_agents' => '전체 본사수',
 
     'game_update' => '게임 업데이트',
     'add_or_change' => '추가 또는 변경',

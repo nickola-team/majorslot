@@ -702,7 +702,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             return view('backend.stat.shift_stat', compact('open_shift', 'summ'));
         }
 
-
         public function adjustment_partner(\Illuminate\Http\Request $request)
         {
             $user_id = $request->input('parent');
@@ -730,9 +729,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
             }
             
-             $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
-            // $end_date = date("Y-m-d ")."23:59:59";
-            //$start_date = date("Y-m-d ",strtotime("-1 days"));
+            $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
             $end_date = date("Y-m-d H:i:s");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
@@ -741,184 +738,121 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $request->session()->put('dates', $dates);
             }
 
-            $index = 0;
-            $total_bets = [];
-            $total_wins = [];
             $adjustments = [];
 
             if($b_distributor){
                 $shop_users = \VanguardLTE\ShopUser::whereIn('user_id', $users)->get()->pluck('shop_id')->toArray();
-                $partners = \VanguardLTE\Shop::whereIn('id', $shop_users)->get();
+                $shops = \VanguardLTE\Shop::whereIn('id', $shop_users)->get();
 
-                foreach($partners as $shop){
-                    $bets = \VanguardLTE\StatGame::whereIn('user_id', $shop->users()->pluck('user_id')->toArray());
-                    $bets = $bets->where('date_time', '>=', $start_date);
-                    $bets = $bets->where('date_time', '<=', $end_date);
-                    $bets = $bets->get();
-                    $total_bet = 0;
-                    $total_win = 0;
-                    $total_in = 0;
-                    $total_out = 0;
-                    $total_deal = 0;
-                    $total_mileage = 0;
-    
-                    foreach($bets as $bet){
-                        $total_bet = $total_bet + $bet->bet;
-                        $total_win = $total_win + $bet->win;
-                    }
-    
-                    $total_bets[] = $total_bet;
-                    $total_wins[] = $total_win;
-    
-                    $adjustment = new \VanguardLTE\Adjustment();
-                    $adjustment->partner = $shop;
-                    $adjustment->total_bet = $total_bet;
-                    $adjustment->total_win = $total_win;
+                foreach($shops as $shop){
+                    $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add"';
+                    $in_out = \DB::select($query);
+                    $adj['totalin'] = $in_out[0]->totalin;
 
-                    $shop_stats = \VanguardLTE\ShopStat::where('shop_id', $shop->id);
-                    $shop_stats = $shop_stats->where('date_time', '>=', $start_date);
-                    $shop_stats = $shop_stats->where('date_time', '<=', $end_date);
-                    $shop_stats = $shop_stats->get();
+                    $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out"';
+                    $in_out = \DB::select($query);
+                    $adj['totalout'] = $in_out[0]->totalout;
 
-                    foreach($shop_stats as $shop_stat){
-                        if($shop_stat->type == 'add'){
-                            $total_in = $total_in + $shop_stat->sum;
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
+                    $user_in_out = \DB::select($query);
+                    $adj['moneyin'] = $user_in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
+                    $user_in_out = \DB::select($query);
+                    $adj['moneyout'] = $user_in_out[0]->moneyout;
+
+
+                    $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                    $game_bet = \DB::select($query);
+                    $adj['totalbet'] = $game_bet[0]->totalbet;
+                    $adj['totalwin'] = $game_bet[0]->totalwin;
+
+                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $shop->id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                    $deal_logs = \DB::select($query);
+                    $adj['total_deal'] = $deal_logs[0]->total_deal;
+                    $adj['total_mileage'] = $deal_logs[0]->total_mileage;
+                    $adj['balance'] = $shop->balance;
+                    $adj['name'] = $shop->name;
+                    if (auth()->user()->hasRole('admin')){
+                        $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_deal'];
+                        $managers = $shop->getUsersByRole('manager');
+                        if (count($managers) > 0)
+                        {
+                            $distr = $managers->first()->referral;
+                            if ($distr!=null)
+                            {
+                                $agent = $distr->referral;
+                                if ($agent!=null)
+                                {
+                                    $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id =' . $agent->id . ' AND shop_id='. $shop->id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                                    $deal_logs = \DB::select($query);
+                                    $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$deal_logs[0]->total_deal;
+                                }
+                            }
                         }
-                        else {
-                            $total_out = $total_out + $shop_stat->sum;
-                        }
                     }
-                    $adjustment->total_in = $total_in;
-                    $adjustment->total_out = $total_out;
-
-                    $deal_logs = \VanguardLTE\DealLog::where([
-                        'shop_id'=> $shop->id,
-                        'type' => 'shop'
-                        ]);
-                    $deal_logs = $deal_logs->where('date_time', '>=', $start_date);
-                    $deal_logs = $deal_logs->where('date_time', '<=', $end_date);
-                    $deal_logs = $deal_logs->get();
-
-                    foreach($deal_logs as $deal_log){
-                        $total_deal = $total_deal + $deal_log->deal_profit;
-                        $total_mileage = $total_mileage + $deal_log->mileage;
-                    }
-
-                    $adjustment->total_deal = $total_deal;
-                    $adjustment->total_mileage = $total_mileage;
-                    $adjustments[] = $adjustment;
+                    $adjustments[] = $adj;
                 }
             }
-            else {
+            else
+            {
                 $partners = \VanguardLTE\User::whereIn('id', $users)->get();
                 foreach($partners as $partner){
-                    $bets = \VanguardLTE\StatGame::whereIn('user_id', $partner->hierarchyUsersOnly());
-                    $bets = $bets->where('date_time', '>=', $start_date);
-                    $bets = $bets->where('date_time', '<=', $end_date);
-                    $bets = $bets->get();
-                    $total_bet = 0;
-                    $total_win = 0;
-                    $total_in = 0;
-                    $total_out = 0;
-                    
-    
-                    foreach($bets as $bet){
-                        $total_bet = $total_bet + $bet->bet;
-                        $total_win = $total_win + $bet->win;
-                    }
-    
-                    $total_bets[] = $total_bet;
-                    $total_wins[] = $total_win;
-    
-                    $adjustment = new \VanguardLTE\Adjustment();
-                    $adjustment->partner = $partner;
-                    $adjustment->total_bet = $total_bet;
-                    $adjustment->total_win = $total_win;
+                    $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
+                    $user_in_out = \DB::select($query);
+                    $adj['totalin'] = $user_in_out[0]->totalin;
 
+                    $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
+                    $user_in_out = \DB::select($query);
+                    $adj['totalout'] = $user_in_out[0]->totalout;
 
-                    $transactions = \VanguardLTE\Transaction::where('user_id', $partner->id)->orWhere('payeer_id', $partner->id);
-                    $transactions = $transactions->where('created_at', '>=', $start_date);
-                    $transactions = $transactions->where('created_at', '<=', $end_date);
-                    $transactions = $transactions->get();
+                    $adj['moneyin'] = 0;
+                    $adj['moneyout'] = 0;
 
-                    foreach($transactions as $transaction){
-                        if($transaction->type == 'add'){
-                            if ($transaction->user_id == $partner->id){
-                                $total_in = $total_in + $transaction->summ;
-                            }
-                            else
-                            {
-                                $total_out = $total_out + $transaction->summ;
-                            }
-                            
-                        }
-                        else {
-                            if ($transaction->user_id == $partner->id){
-                                $total_out = $total_out + $transaction->summ;
-                            }
-                            else
-                            {
-                                $total_in = $total_in + $transaction->summ;
-                            }
-                        }
-                    }
+                    $shop_ids = $partner->availableShops();
+                    $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                    $game_bet = \DB::select($query);
+                    $adj['totalbet'] = $game_bet[0]->totalbet;
+                    $adj['totalwin'] = $game_bet[0]->totalwin;
 
-                    $shop_stats = \VanguardLTE\ShopStat::where('user_id', $partner->id);
-                    $shop_stats = $shop_stats->where('date_time', '>=', $start_date);
-                    $shop_stats = $shop_stats->where('date_time', '<=', $end_date);
-                    $shop_stats = $shop_stats->get();
-
-                    foreach($shop_stats as $shop_stat){
-                        if($shop_stat->type == 'add'){ //it means add to shop, so it means out from partner
-                            $total_out = $total_out + $shop_stat->sum;
-                        }
-                        else {
-                            $total_in = $total_in + $shop_stat->sum;
-                        }
-                    }
-
-
-                    $adjustment->total_in = $total_in;
-                    $adjustment->total_out = $total_out;
-
-                    if($partner->hasRole(['admin'])){
-                        $partnerIds = $partner->childPartners();
-                        $deal_logs = \VanguardLTE\DealLog::whereIn('partner_id', $partnerIds);
-                        $deal_logs = $deal_logs->where('type', '=', 'partner');
-                    }
-                    else if($partner->hasRole(['agent','distributor'])){
-                        $deal_logs = \VanguardLTE\DealLog::where([
-                            'partner_id'=> $partner->id,
-                            'type' => 'partner'
-                        ]);
-                    }
-                    
-
-                    $deal_logs = $deal_logs->where('date_time', '>=', $start_date);
-                    $deal_logs = $deal_logs->where('date_time', '<=', $end_date);
-                    $deal_logs = $deal_logs->get();
-
-                    $total_deal = 0;
-                    $total_mileage = 0;
-                    foreach($deal_logs as $deal_log){
-                        $total_deal = $total_deal + $deal_log->deal_profit;
-                        $total_mileage = $total_mileage + $deal_log->mileage;
-                    }
-                    if($partner->hasRole(['admin'])){
-                        $adjustment->total_deal = 0;
-                        $adjustment->total_mileage = $total_deal;
+                    if ($partner->hasRole('admin'))
+                    {
+                        $agents = $partner->childPartners();
+                        $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
                     }
                     else
                     {
-                        $adjustment->total_deal = $total_deal;
-                        $adjustment->total_mileage = $total_mileage;
+                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
                     }
-
-                    $adjustments[] = $adjustment;
+                    $deal_logs = \DB::select($query);
+                    $adj['total_deal'] = $deal_logs[0]->total_deal;
+                    $adj['total_mileage'] = $deal_logs[0]->total_mileage;
+                    $adj['balance'] = $partner->balance;
+                    $adj['name'] = $partner->username;
+                    $adj['id'] = $partner->id;
+                    if (auth()->user()->hasRole('admin')){
+                        if ($partner->hasRole('admin')){
+                            $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_mileage'];
+                        }
+                        else if ($partner->hasRole('agent')) 
+                        {
+                            $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_deal'];
+                        }
+                        else if ($partner->hasRole('distributor')) 
+                        {
+                            $agent = $partner->referral;
+                            if ($agent!=null)
+                            {
+                                $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id =' . $agent->id . ' AND shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                                $deal_logs = \DB::select($query);
+                                $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$deal_logs[0]->total_deal;
+                            }
+                        }
+                    }
+                    $adjustments[] = $adj;
                 }
             }
-
-            return view('backend.adjustment.adjustment_partner', compact('partners', 'total_bets', 'total_wins', 'adjustments', 'start_date', 'end_date', 'user'));
+            return view('backend.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user'));
         }
         public function adjustment_game(\Illuminate\Http\Request $request)
         {
