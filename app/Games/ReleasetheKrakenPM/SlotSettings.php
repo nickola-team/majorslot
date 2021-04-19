@@ -115,7 +115,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 [0, 1, 2, 3, 5]
             ];
 
-            $this->respin_chance = 14;
+            $this->respin_chance = 5;
 
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
@@ -732,9 +732,10 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 }
                 if($totalFreeNum < $freeNum){
                     $freeNum = $totalFreeNum;
-                }else{
-                    $totalFreeNum = $totalFreeNum - $freeNum;
                 }
+
+                $totalFreeNum = $totalFreeNum - $freeNum;
+                
                 array_push($freeSpinNums, $freeNum);
             }
             return $freeSpinNums;
