@@ -106,6 +106,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'table_bank' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('table_bank'), 
                 'fish' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('fish'), 
                 'bonus' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('bonus'), 
+                'deal_profit' => \VanguardLTE\OpenShift::where([
+                    'shop_id' => auth()->user()->shop_id,
+                    'type' => 'shop',
+                    'end_date' => null])->sum('deal_profit'),
                 'games' => \VanguardLTE\Game::where([
                     'shop_id' => auth()->user()->shop_id, 
                     'view' => 1

@@ -59,13 +59,13 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>{{ number_format($stats['games']) }}</h3>
-                        <p>@lang('app.games')</p>
+                        <h3>{{ number_format($stats['todayprofit'],2) }}</h3>
+                        <p>오늘 수익금</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-desktop"></i>
                     </div>
-                    <a href="{{ route('backend.game.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('backend.adjustment_partner') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->

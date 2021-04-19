@@ -61,9 +61,9 @@
 				<div class="small-box bg-red">
 					<div class="inner">
 
-						<h3>{{ number_format($stats['games']) }}</h3>
+						<h3>{{ number_format($stats['deal_profit'],2) }}</h3>
 
-						<p>방문횟수</p>
+						<p>딜비수익금</p>
 					</div>
 					<div class="icon">
 						<i class="fa fa-line-chart"></i>
@@ -140,7 +140,7 @@
 						<h3>{{ number_format($stats['slots'], 2) }}</h3>
 						<p>일반환수금</p>
 					</div>
-					<div class="icon">
+					<div class="icon"> 
 						<i class="fa fa-refresh"></i>
 					</div>
 					{{-- @if( auth()->user()->hasRole('distributor') ) --}}
@@ -351,8 +351,8 @@
 						<tr>
 							<th>@lang('app.game')</th>
 							@permission('games.in_out')
-							<th>@lang('app.in')</th>
-							<th>@lang('app.out')</th>
+							<th>베팅금</th>
+							<th>당첨금</th>
 							<th>@lang('app.total')</th>
 							@endpermission
 							<th>베팅횟수</th>
@@ -378,8 +378,8 @@
 						<tr>
 							<th>@lang('app.game')</th>
 							@permission('games.in_out')
-							<th>@lang('app.in')</th>
-							<th>@lang('app.out')</th>
+							<th>베팅금</th>
+							<th>당첨금</th>
 							<th>@lang('app.total')</th>
 							@endpermission
 							<th>베팅횟수</th>

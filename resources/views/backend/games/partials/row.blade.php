@@ -19,11 +19,11 @@
 		@else
 			<span class="text-red">
 		@endif	
-		{{ number_format(abs($game->stat_in-$game->stat_out), 2) }}
+		{{ number_format($game->stat_in-$game->stat_out, 2) }}
 		</span>
 	</td>
 	@endpermission
-	<td>{{ number_format($game->bids,2) }}</td>
+	<td>{{ number_format($game->bids) }}</td>
 	{{-- <td>{{ $game->denomination }}</td> --}}
 {{-- <td>
 

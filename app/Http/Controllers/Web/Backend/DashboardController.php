@@ -30,11 +30,25 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $ids = auth()->user()->hierarchyUsers();
             $availableShops = auth()->user()->availableShops();
+
+            $start_date = date("Y-m-d");
+            $start_date = $start_date . " 00:00:00";
+            $end_date = date("Y-m-d H:i:s");
+            $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$availableShops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+            $game_bet = \DB::select($query);
+            $adj['totalbet'] = $game_bet[0]->totalbet;
+            $adj['totalwin'] = $game_bet[0]->totalwin;
+
+            $agents = auth()->user()->childPartners();
+            $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+            $deal_log = \DB::select($query);
+
             $usersPerMonth = $this->users->countOfNewUsersPerMonth(\Carbon\Carbon::now()->subYear()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth(), $ids);
             $stats = [
                 'total' => $this->users->count($ids), 
                 'new' => $this->users->newUsersCount($ids), 
                 'banned' => $this->users->countByStatus(\VanguardLTE\Support\Enum\UserStatus::BANNED, $ids), 
+                'todayprofit' => $game_bet[0]->totalbet-$game_bet[0]->totalwin-$deal_log[0]->total_deal,
                 'games' => \VanguardLTE\Game::where([
                     'shop_id' => \Auth::user()->shop_id, 
                     'view' => 1
@@ -52,6 +66,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $gamestat = \VanguardLTE\StatGame::whereIn('user_id', $ids)->orderBy('date_time', 'DESC')->take(5)->get();
             $bank_stat = \VanguardLTE\BankStat::whereIn('user_id', $ids)->orderBy('created_at', 'DESC')->take(5)->get();
             $shops_stat = \VanguardLTE\ShopStat::whereIn('user_id', $ids)->orderBy('date_time', 'DESC')->take(5)->get();
+
+
+
+
             return view('backend.dashboard.admin', compact('stats', 'latestRegistrations', 'usersPerMonth', 'user', 'statistics', 'gamestat', 'shops', 'open_shift', 'summ', 'bank_stat', 'shops_stat'));
         }
         public function live_stat(\Illuminate\Http\Request $request)
@@ -733,8 +751,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $end_date = date("Y-m-d H:i:s");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
-                $start_date = $dates_tmp[0] . "00:00:00";
-                $end_date = $dates_tmp[1] . "00:00:00";
+                $start_date = $dates_tmp[0] . " 00:00:00";
+                $end_date = $dates_tmp[1] . " 23:59:59";
                 $request->session()->put('dates', $dates);
             }
 
@@ -1335,6 +1353,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         [
                             'total_in' => 0,
                             'total_out' => 0
+                        ]
+                    );
+                    $shop_games = \VanguardLTE\Game::where([
+                        'shop_id' => auth()->user()->shop_id,
+                    ]);
+                    $shop_games->update(
+                        [
+                            'stat_in' => 0,
+                            'stat_out' => 0,
+                            'bids' => 0
                         ]
                     );
                 }
