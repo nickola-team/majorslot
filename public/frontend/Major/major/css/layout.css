@@ -87,6 +87,9 @@
 
 .jackpot_left_wrap {position:absolute; z-index:1;top:198px;}
 .jackpot_right_wrap {position:absolute; z-index:1;top:198px; right:0px;}
+@media screen and (max-width: 960px) {
+    .jackpot_right_wrap {position:absolute; z-index:1;top:198px; left:1000px;}
+}
 .grand_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/grandjp.png") center top no-repeat; background-size: contain; margin:15px 0 15px 0}
 .major_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/majorjp.png") center top no-repeat; background-size: contain;margin:15px 0 15px 0}
 .minor_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/minorjp.png") center top no-repeat; background-size: contain;margin:15px 0 15px 0}
@@ -122,8 +125,8 @@
 .top_wrap {float:left; width:100%; height:46px;}
 .top_notice {float:left; height:46px; line-height:46px;}
 
-.login_wrap {position:absolute; z-index:1; left:50%;}
-.login_box {position:absolute; left:-353px; top:198px; display: block; z-index:1;  width:706px; height:65px; background:url("../images/bg_login.png") center top no-repeat;}
+.login_wrap {margin-top:10px;margin-bottom:10px;float:left; width:100%;}
+.login_box {width:100%; height:65px; background:url("../images/bg_login.png") center top no-repeat;}
 .login        {float:left; width:100%; text-align:center; line-height:60px;}
 .login ul li  {display:inline-block; font-family:'nanumsquare', sans-serif; font-size:18px; letter-spacing:-1px; font-weight:400; color:#ffffff; font-weight:700;}
 
