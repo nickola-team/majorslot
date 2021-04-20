@@ -159,11 +159,10 @@
 <!-- 로그인 -->
 <div class="login_wrap">
     <div class="login_box">
-        <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
         @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
             <div class="after_login">
                 <div onclick="openMenu('myinfo');" class="menu_pop_open">
-                    <img class="level" src="/frontend/Major/major/images/level/lv_1.png">
+                <i class="fa fa-user"></i>
                     <p>{{ Auth::user()->username }}</p>
                 </div>
                 <div onclick="openMenu('memo');" class="menu_pop_open">
@@ -178,12 +177,13 @@
                     <i class="fa fa-comment"></i>
                     <p>1:1문의</p>
                 </div>
-                <div class="logout_btn" onclick="logoutProc();">
-                    <i class="fa fa-sign-out"></i>
+                <div onclick="logoutProc();">
+                    <i class="fa fa-ban"></i>
                     <p>로그아웃</p>
                 </div>
             </div>
         @else
+        <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
             <div class="login">
                 <ul>
                     <li>

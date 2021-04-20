@@ -184,26 +184,21 @@
 .input_login  {background-color:#5d5d5d; border:1px solid #5d5d5d; padding:5px 0 3px 10px; width:155px; height:36px; font-size:16px; font-family:'nanumgothic', sans-serif; color:#ffffff; border-radius:100px;}
 
 .after_login {
-    width: auto;
-    float: right;
-    margin-top: 12px;
-    margin-right: 24px;
+    float:left; width:100%; text-align:center;
 }
-
-.after_login div {
-    float: left;
+.after_login div{
+    display: inline-flex;
     width: auto;
     height: 28px;
     border: 1px solid #111;
     background: #444;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     border-radius: 10px;
     margin-left: 10px;
-    margin-top: 6px;
+    margin-top: 18px;
     cursor: pointer;
 }
-
 .after_login div:hover {
     color: #ffeb3b;
     border: 1px solid #f4a903;
@@ -258,10 +253,12 @@
 }
 
 .after_login div p {
-    float: left;
-    margin-top: 7px;
+    float: none;
+    margin-top: 5px;
     margin-right: 7px;
     color: #fff;
+    font-family: nanumgothic, sans-serif;
+
 }
 
 .after_login div .progress_cont {
