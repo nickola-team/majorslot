@@ -266,6 +266,31 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $shop = $user->shop;
                 $real_deal_balance = $shop->deal_balance - $shop->mileage;
                 if ($real_deal_balance > 0) {
+                    //out balance from master
+                    $distr = $user->referral;
+                    $agent = $distr->referral;
+                    $master = $agent->referral;
+                    if ($master->balance < $real_deal_balance)
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '본사보유금이 부족합니다',
+                            'code' => '001'
+                        ], 200);
+                    }
+                    $master->update(
+                        ['balance' => $master->balance - $real_deal_balance]
+                    );
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'user_id' => $master->id, 
+                        'type' => 'partner',
+                        'end_date' => null
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('balance_out', $real_deal_balance);
+                    }
+
                     $shop->balance = $shop->balance + $real_deal_balance;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'shop_id' => $shop->id, 
@@ -277,7 +302,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         $open_shift->increment('convert_deal', $real_deal_balance);
                     }
                     \VanguardLTE\ShopStat::create([
-                        'user_id' => $user->parent_id,
+                        'user_id' => $master->id,
                         'type' => 'add',
                         'sum' => $real_deal_balance,
                         'shop_id' => $shop->id,
@@ -287,6 +312,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $shop->deal_balance = 0;
                     $shop->mileage = 0;
                     $shop->save();
+
+                    
                 }
                 else{
                     return response()->json([
@@ -299,6 +326,43 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             else {
                 $real_deal_balance = $user->deal_balance - $user->mileage;
                 if ($real_deal_balance > 0) {
+                    //out balance from master
+                    $master = $user->referral;
+                    while ($master!=null && !$master->hasRole('master'))
+                    {
+                        $master = $master->referral;
+                    }
+
+                    if ($master == null)
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '본사를 찾을수 없습니다.',
+                            'code' => '001'
+                        ], 200);
+                    }
+                    
+                    if ($master->balance < $real_deal_balance)
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '본사보유금이 부족합니다',
+                            'code' => '001'
+                        ], 200);
+                    }
+                    $master->update(
+                        ['balance' => $master->balance - $real_deal_balance]
+                    );
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'user_id' => $master->id, 
+                        'type' => 'partner',
+                        'end_date' => null
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('balance_out', $real_deal_balance);
+                    }
+                    
                     $user->balance = $user->balance + $real_deal_balance;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $user->id, 
@@ -312,7 +376,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
                     \VanguardLTE\Transaction::create([
                         'user_id' => $user->id,
-                        'payeer_id' => $user->id,
+                        'payeer_id' => $master->id,
                         'system' => $user->username,
                         'type' => 'add',
                         'summ' => $real_deal_balance,
@@ -360,12 +424,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
             if($user->hasRole('manager')){
-                //send it to agent.
+                //send it to master.
                 $distr = $user->referral;
                 if ($distr) {
+                    $agent = $distr->referral;
                     \VanguardLTE\WithdrawDeposit::create([
                         'user_id' => $user->id,
-                        'payeer_id' => $distr->parent_id,
+                        'payeer_id' => $agent->parent_id,
                         'type' => 'add',
                         'sum' => $request->money,
                         'status' => 0,
@@ -380,9 +445,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             else {
+                if ($user->hasRole('distributor'))
+                {
+                    $agent = $user->referral;
+                }
+                else 
+                {
+                    $agent = $user;
+                }
                 \VanguardLTE\WithdrawDeposit::create([
                     'user_id' => $user->id,
-                    'payeer_id' => $user->parent_id,
+                    'payeer_id' => $agent->parent_id,
                     'type' => 'add',
                     'sum' => $request->money,
                     'status' => 0,
@@ -444,12 +517,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             
 
             if($user->hasRole('manager')){
-                //send it to agent.
+                //send it to master.
                 $distr = $user->referral;
                 if ($distr) {
+                    $agent = $distr->referral;
                     \VanguardLTE\WithdrawDeposit::create([
                         'user_id' => $user->id,
-                        'payeer_id' => $distr->parent_id,
+                        'payeer_id' => $agent->parent_id,
                         'type' => 'out',
                         'sum' => $request->money,
                         'status' => 0,
@@ -482,9 +556,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $user->update(
                     ['balance' => $user->balance - $request->money]
                 );
+                if ($user->hasRole('distributor'))
+                {
+                    $agent = $user->referral;
+                }
+                else 
+                {
+                    $agent = $user;
+                }
                 \VanguardLTE\WithdrawDeposit::create([
                     'user_id' => $user->id,
-                    'payeer_id' => $user->parent_id,
+                    'payeer_id' => $agent->parent_id,
                     'type' => 'out',
                     'sum' => $request->money,
                     'status' => 0,

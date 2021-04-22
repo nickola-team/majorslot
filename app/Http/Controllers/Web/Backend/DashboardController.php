@@ -24,7 +24,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('frontend.page.error_license');
             }*/
-            if( !\Auth::user()->hasPermission('dashboard') ) 
+            if( !\Auth::user()->hasRole('admin') ) 
             {
                 return redirect()->route('backend.user.list');
             }
@@ -469,7 +469,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->whereIn('deal_log.user_id', $shop->users()->pluck('user_id')->toArray());
                 $statistics = $statistics->where('type','=', 'shop');
             }
-            else if(auth()->user()->hasRole('agent') || auth()->user()->hasRole('distributor')){
+            else if(auth()->user()->hasRole(['master','agent','distributor'])){
                 $statistics = $statistics->whereIn('deal_log.partner_id', $users);
             }
 
@@ -852,7 +852,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         if ($partner->hasRole('admin')){
                             $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_mileage'];
                         }
-                        else if ($partner->hasRole('agent')) 
+                        else if ($partner->hasRole('master','agent')) 
                         {
                             $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_deal'];
                         }
@@ -968,7 +968,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $deal_logs = \DB::select($query);
 
             }
-            else if(auth()->user()->hasRole(['agent','distributor'])){
+            else if(auth()->user()->hasRole(['master','agent','distributor'])){
                 $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . auth()->user()->id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
                 $deal_logs = \DB::select($query);
 

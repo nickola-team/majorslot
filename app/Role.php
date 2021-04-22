@@ -8,5 +8,4 @@ namespace VanguardLTE
             return $this->permissions()->where(['permission_id' => $permission])->first();
         }
     }
-
 }

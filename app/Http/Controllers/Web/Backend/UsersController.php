@@ -101,13 +101,54 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function tree(\Illuminate\Http\Request $request)
         {
-            $users = \VanguardLTE\User::where('id', auth()->user()->id)->get();
-            if( auth()->user()->hasRole('admin') ) 
+            $user_id = $request->input('parent');
+            $users = [];
+            $user = null;
+            if($user_id == null || $user_id == 0)
             {
-                $users = \VanguardLTE\User::where('role_id', 5)->get();
+                $user_id = auth()->user()->id;
+                $users = [$user_id];
+                if (auth()->user()->hasRole('admin'))
+                {
+                    $users = auth()->user()->childPartners();
+                }
             }
-            $role = \jeremykenedy\LaravelRoles\Models\Role::where('id', auth()->user()->role_id - 1)->first();
-            return view('backend.user.tree', compact('users', 'role'));
+            else 
+            {
+                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                $users = $user->childPartners();
+            }
+            $partners = [];
+            $childs = \VanguardLTE\User::whereIn('id', $users)->get();
+            foreach($childs as $partner){
+                if ($partner->hasRole('manager'))
+                {
+                    $shop_users = \VanguardLTE\ShopUser::whereIn('user_id', [$partner->id])->get()->pluck('shop_id')->toArray();
+                    $shop = \VanguardLTE\Shop::whereIn('id', $shop_users)->get()->first();
+                    $partners[] = [
+                        'id' => $partner->id,
+                        'name' => $partner->username,
+                        'balance' => $shop->balance,
+                        'profit' => $shop->deal_balance - $shop->mileage,
+                        'deal_percent' => $shop->deal_percent,
+                        'role_id' => $partner->role_id,
+                        'shop' => $shop->name,
+                        'shop_id' => $shop->id,
+                    ];
+                }
+                else
+                {
+                    $partners[] = [
+                        'id' => $partner->id,
+                        'name' => $partner->username,
+                        'balance' => $partner->balance,
+                        'profit' => $partner->deal_balance - $partner->mileage,
+                        'deal_percent' => $partner->deal_percent,
+                        'role_id' => $partner->role_id
+                    ];
+                }
+            }
+            return view('backend.user.tree', compact('partners','user'));
         }
         public function view(\VanguardLTE\User $user, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)
         {

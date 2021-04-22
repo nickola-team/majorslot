@@ -67,7 +67,7 @@
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
-						<b>@lang('app.balance'):</b> <a class="pull-right">{{ auth()->user()->shop->balance }}</a>
+						<b>@lang('app.balance'):</b> <a class="pull-right">{{ number_format(auth()->user()->shop->balance,2) }}원</a>
 					</div>
 				</div>
 			</li>
@@ -75,16 +75,16 @@
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
-						<b>보유금:</b> <a class="pull-right">{{ auth()->user()->balance }}원</a>
+						<b>보유금:</b> <a class="pull-right">{{ number_format(auth()->user()->balance,2) }}원</a>
 					</div>
 				</div>
 			</li>
 			@endif
-			@if(auth()->user()->hasRole('agent') || auth()->user()->hasRole('distributor'))
+			@if(auth()->user()->hasRole(['agent','distributor']))
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
-						<b>수익금:</b> <a class="pull-right">{{ auth()->user()->deal_balance - auth()->user()->mileage }}원</a>
+						<b>수익금:</b> <a class="pull-right">{{ number_format(auth()->user()->deal_balance - auth()->user()->mileage,2) }}원</a>
 					</div>
 				</div>
 			</li>
@@ -94,7 +94,7 @@
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
-						<b>수익금:</b> <a class="pull-right">{{ auth()->user()->shop->deal_balance }}원</a>
+						<b>수익금:</b> <a class="pull-right">{{ number_format(auth()->user()->shop->deal_balance,2) }}원</a>
 					</div>
 				</div>
 			</li>
@@ -117,7 +117,6 @@
 				</li>
 			@endif --}}
 
-			@if(auth()->user()->hasRole('agent') || auth()->user()->hasRole('distributor') || auth()->user()->hasRole('manager'))
 			<div class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
@@ -155,14 +154,18 @@
 				<button class="btn btn-danger" id="withdraw-balance-btn" onclick="withdraw_balance();">
 					환전신청
 				</button>
+				
 				<button class="btn btn-success" id="deposit-balance-btn" onclick="deposit_balance();">
 					충전신청
 				</button>
+				@if(auth()->user()->hasRole('master'))
+				@else
 				<button class="btn btn-success" id="convert-deal-balance-btn" onclick="convert_deal_balance();">
 					수익금전환
 				</button>
+				@endif
 			</div>
-			@endif
+			
 
 				{{-- @if( $user->hasRole('user') )
 				<li class="list-group-item">

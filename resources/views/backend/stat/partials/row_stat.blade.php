@@ -12,7 +12,7 @@
 		{{ $stat->user->username }}
 @else
 	{{ $stat->user->username }} [ 
-	@foreach(['6' => 'app.admin','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+	@foreach(['7' => 'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
 		@if($role_id == $stat->user->role_id)
 			@lang($role_name)
 		@endif
@@ -27,7 +27,7 @@
 	{{ $stat->shop->name }}
 @else
 	{{ $stat->admin ? $stat->admin->username : $stat->system  }} [ 
-	@foreach(['6' => 'app.admin','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+	@foreach(['7' => 'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
 		@if($stat->admin && $role_id == $stat->admin->role_id)
 			@lang($role_name)
 		@endif

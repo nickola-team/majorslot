@@ -255,6 +255,7 @@ namespace VanguardLTE\Console
                         foreach( $rel_users as $user ) 
                         {
                             if( $user->hasRole([
+                                'master',
                                 'agent', 
                                 'distributor'
                             ]) ) 

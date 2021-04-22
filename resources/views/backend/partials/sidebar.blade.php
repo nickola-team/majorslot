@@ -23,7 +23,8 @@
                     @endif
 
 			</p>
-
+            @if(auth()->user()->hasRole('master'))
+            @else
             <p>수익금:
 
                 @if( Auth::user()->hasRole(['cashier', 'manager']) )
@@ -38,6 +39,7 @@
                 @endif
 
             </p>
+            @endif
 
 			{{-- <a href="javascript:;" data-toggle="modal" data-target="#openChangeModal">
 				<i class="fa fa-circle text-success"></i>
@@ -67,7 +69,7 @@
         <ul class="sidebar-menu" data-widget="tree">
 
             <li class="header" style="text-align: center; color:#b8c7ce;"><span style="color:red;">{{ Auth::user()->username }}</span>[
-            @foreach(['6' => 'app.admin','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+            @foreach(['7' => 'app.admin','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
                 @if($role_id == Auth::user()->role_id)
                     @lang($role_name)
                 @endif
@@ -75,12 +77,14 @@
             ]님 안녕하세요 </li> 
 
             @permission('dashboard')
+            @if (auth()->user()->hasRole('admin'))
             <li class="{{ Request::is('backend') ? 'active' : ''  }}">
                 <a href="{{ route('backend.dashboard') }}">
                     <i class="fa fa-home"></i>
                     <span>@lang('app.dashboard')</span>
                 </a>
             </li>
+            @endif
             @endpermission
 
             @permission('users.manage')
@@ -97,16 +101,15 @@
                 <a href="{{ route('backend.user.tree') }}">
                     <i class="fa fa-users"></i>
                     {{-- <span>{{ \VanguardLTE\Role::where('id', auth()->user()->role_id - 1)->first()->name }} @lang('app.tree')</span> --}}
-                    <span>파트너관리</span>
+                    <span>파트너생성</span>
                 </a>
             </li>
             @endpermission
-            @permission('shops.manage')
-            @if ( auth()->check() && auth()->user()->hasRole(['admin','agent', 'distributor']) )
+            @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
             <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
-                    <span>매장관리</span>
+                    <span>파트너관리</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -153,7 +156,6 @@
                 </ul>
             </li>
             @endif
-            @endpermission
 
             @permission('happyhours.manage')
             @if( auth()->user()->hasRole('admin') )
@@ -255,7 +257,7 @@
                     </li>
                     @endpermission
                     @endif
-                    @if(!auth()->user()->hasRole(['distributor','manager']))
+                    @if(auth()->user()->hasRole(['admin','master']))
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_manage') }}">
@@ -350,6 +352,7 @@
                     @endpermission
 
                     @permission('games.manage')
+                    @if (auth()->user()->hasRole('admin'))
                     <li class="{{ Request::is('backend/bank_stat') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.bank_stat') }}">
                             <i class="fa fa-circle-o"></i>
@@ -357,6 +360,7 @@
                             게임뱅크충환전내역
                         </a>
                     </li>
+                    @endif
                     @endpermission
 
                     @permission('stats.shop')
@@ -370,12 +374,15 @@
                     @endpermission
 
                     @permission('stats.shop')
+                    @if (auth()->user()->hasRole('master'))
+                    @else
                     <li class="{{ Request::is('backend/deal_stat*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.deal_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             딜비적립내역
                         </a>
                     </li>
+                    @endif
                     @endpermission
 
                     {{-- @permission('stats.shift')
@@ -402,7 +409,7 @@
             @endpermission
 
             @permission('permissions.manage')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
+            @if (auth()->user()->hasRole('admin') )
             <li  class="{{ Request::is('backend/permission*') ? 'active' : '' }}">
                 <a href="{{ route('backend.permission.index') }}">
                     <i class="fa fa-circle-o"></i>
@@ -431,7 +438,7 @@
             @endpermission --}}
 
             @permission('settings.general')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
+            @if (auth()->user()->hasRole('admin') )
             <li class="{{ Request::is('backend/settings') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.general') }}">
                     <i class="fa fa-circle-o"></i>
@@ -466,7 +473,7 @@
 				<div class="modal-body">
 					<div class="form-group">
 						{!! Form::select('shop_id',
-                            (Auth::user()->hasRole(['admin','agent']) ? [0 => __('app.no_shop')] : [])
+                            (Auth::user()->hasRole(['admin','master','agent']) ? [0 => __('app.no_shop')] : [])
                             +
                             Auth::user()->shops_array(), Auth::user()->shop_id, ['class' => 'form-control select2', 'style' => 'width: 100%;']) !!}
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">

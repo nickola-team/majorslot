@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
-@section('page-title', '파트너관리')
-@section('page-heading', '파트너관리')
+@section('page-title', '파트너생성')
+@section('page-heading', '파트너생성')
 
 @section('content')
 
@@ -13,10 +13,22 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 {{-- <h3 class="box-title">{{ $role->name }} @lang('app.tree')</h3> --}}
-                <h3 class="box-title">파트너관리</h3>
+                <h3 class="box-title">파트너목록</h3>
+                @if($user != null && !$user->hasRole('admin'))
+					<a href="{{ route('backend.user.tree', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
+						{{$user->username}}
+						[
+						@foreach(['7'=>'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
+						@if($role_id == $user->role_id)
+							@lang($role_name)
+						@endif
+						@endforeach
+						]
+					</a>
+				@endif
                 <div class="pull-right box-tools">
                     @permission('users.add')
-                    @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('agent') || Auth::user()->hasRole('distributor'))
+                    @if (Auth::user()->hasRole(['admin','master', 'agent','distributor']))
                     <a href="{{ route('backend.user.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
                     @endif
                     @endpermission
@@ -27,80 +39,41 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            @if( auth()->user()->hasRole(['admin','agent']) )
-                                <th>@lang('app.agent')</th>
-                                <th>보유금/수익금/딜비</th>
-                            @endif
-                            <th>@lang('app.distributor')</th>
-                            <th>보유금/수익금/딜비</th>
+                            <th>이름</th>
+                            <th>등급</th>
+                            @if ( ($user!=null && $user->hasRole('distributor')) )
                             <th>매장이름</th>
-                            <th>보유금/수익금/딜비</th>
-                            <th>매장관리자</th>
-                            {{-- <th>@lang('app.cashier')</th> --}}
+                            @endif
+                            <th>보유금</th>
+                            <th>수익금</th>
+                            <th>딜비</th>
+                            <th>편집</th>
                             <th>충전</th>
                             <th>환전</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @if (count($users))
-                            @foreach ($users as $user)
+                        @if (count($partners))
+                            @foreach ($partners as $partner)
                                 <tr>
-                                @if($user->hasRole('agent'))
-                                    <td rowspan="{{ $user->getRowspan() }}" style="vertical-align : middle;">
-                                    @if( auth()->user()->hasRole('admin') )
-                                        <a href="{{ route('backend.user.edit', $user->id) }}">
-                                            {{ $user->username ?: trans('app.n_a') }}
-                                        </a>
-                                    @else
-                                        {{ $user->username ?: trans('app.n_a') }}
-                                    @endif
-                                    </td>
-                                    <td rowspan="{{ $user->getRowspan() }}" style="vertical-align : middle;">
-                                    {{ number_format($user->balance,2)}}원 / {{ number_format($user->deal_balance - $user->mileage,2)}}원 / {{ $user->deal_percent}}%
-                                    </td>
-
-                                    @if( $distributors = $user->getInnerUsers() )
-                                        @foreach($distributors AS $distributor)
-                                            @include('backend.user.partials.distributor', ['agentCount' => $loop->index, 'agentRowSpan' => $user->getRowspan(), 'agentID' => $user->id ])
-                                        @endforeach
-                                    @else
-                                        <td colspan="5"></td>
-                                        @if( auth()->user()->hasRole('admin') )
-                                            <td rowspan="{{ $distributor->getRowspan() }}" style="vertical-align : middle;">
-                                            <a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user->id }}" >
-                                            <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
-                                            </a>
-                                            </td>
-                                            <td rowspan="{{ $distributor->getRowspan() }}" style="vertical-align : middle;">
-                                            <a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user->id }}" >
-                                            <button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
-                                            </a>
-                                            </td>
-                                        @endif
-                                        </tr><tr></tr><tr>
-                                    @endif
-                                @endif
-                                @if($user->hasRole('distributor'))
-                                    @include('backend.user.partials.distributor', ['distributor' => $user])
-                                @endif
+                                    @include('backend.user.partials.partner', ['user' => $partner])
                                 </tr>
                             @endforeach
                         @else
-                            <tr><td colspan="4">@lang('app.no_data')</td></tr>
+                            <tr><td colspan="8">@lang('app.no_data')</td></tr>
                         @endif
                         </tbody>
                         <thead>
                             <tr>
-                                @if( auth()->user()->hasRole(['admin','agent']) )
-                                    <th>@lang('app.agent')</th>
-                                    <th>보유금/수익금/딜비</th>
-                                @endif
-                                <th>@lang('app.distributor')</th>
-                                <th>보유금/수익금/딜비</th>
+                                <th>이름</th>
+                                <th>등급</th>
+                                @if ( ($user!=null && $user->hasRole('distributor')) )
                                 <th>매장이름</th>
-                                <th>보유금/수익금/딜비</th>
-                                <th>매장관리자</th>
-                                {{-- <th>@lang('app.cashier')</th> --}}
+                                @endif
+                                <th>보유금</th>
+                                <th>수익금</th>
+                                <th>딜비</th>
+                                <th>편집</th>
                                 <th>충전</th>
                                 <th>환전</th>
                             </tr>
@@ -199,8 +172,6 @@
 			$('#outAll').val('1');
 			$('form#outForm').submit();
 		});
-
-
 		});
 	</script>
 @stop

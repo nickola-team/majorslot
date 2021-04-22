@@ -127,10 +127,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                 }
             }
-            if( auth()->user()->hasRole('admin') ) 
+            if( auth()->user()->hasRole(['admin']) ) 
             {
                 $stats['agents'] = \VanguardLTE\User::where('role_id', 5)->count();
                 $stats['distributors'] = \VanguardLTE\User::where('role_id', 4)->count();
+            }
+            if( auth()->user()->hasRole(['master']) ) 
+            {
+                $agents = \VanguardLTE\User::where(['role_id' => 5,'parent_id' => auth()->user()->id]);
+                $stats['agents'] = $agents->count();
+                $stats['distributors'] = \VanguardLTE\User::where('role_id', 4)->whereIn('parent_id', $agents->pluck('id')->toArray())->count();
             }
             if( auth()->user()->hasRole('agent') ) 
             {
@@ -278,7 +284,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 \VanguardLTE\ShopUser::create([
                     'shop_id' => $shop->id, 
                     'user_id' => auth()->user()->parent_id
-                ]);
+                ]); //for agent
+                \VanguardLTE\ShopUser::create([
+                    'shop_id' => $shop->id, 
+                    'user_id' => auth()->user()->referral->parent_id
+                ]); //for master
             }
             $user->update(['shop_id' => $shop->id]);
             \VanguardLTE\Task::create([
@@ -351,6 +361,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function admin_store(\Illuminate\Http\Request $request)
         {
+            return redirect()->route('backend.shop.list')->withErrors(['Not implemented yet']);
             $shop = $request->only([
                 'name', 
                 'percent', 
@@ -533,6 +544,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'shop_id' => 0
             ])->get();
             if( \Auth::user()->hasRole([
+                'master', 
                 'agent', 
                 'distributor', 
                 'manager', 
@@ -566,6 +578,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository, \VanguardLTE\Shop $shop)
         {
             if( \Auth::user()->hasRole([
+                'master', 
                 'agent', 
                 'distributor', 
                 'manager', 
@@ -765,6 +778,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_user')]);
             }
             if( !\Auth::user()->hasRole([
+                'master', 
                 'agent', 
                 'distributor', 
                 'manager'

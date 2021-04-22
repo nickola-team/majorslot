@@ -161,6 +161,18 @@ namespace VanguardLTE
             {
                 $users = User::get();
             }
+            if( $this->hasRole(['master']) ) 
+            {
+                $agents = User::where([
+                    'role_id' => 5, 
+                    'parent_id' => $this->id
+                ])->get();
+                $distributors = User::where('role_id', 4)->whereIn('parent_id' , $agents->pluck('id')->toArray())->get();
+                $other = User::where('role_id', '<=', 3)->whereIn('shop_id', $this->availableShops())->get();
+                $users = $users->merge($agents);
+                $users = $users->merge($distributors);
+                $users = $users->merge($other);
+            }
             if( $this->hasRole(['agent']) ) 
             {
                 $distributors = User::where([
@@ -367,6 +379,7 @@ namespace VanguardLTE
             $shops = [$this->shop_id];
             if( $this->hasRole([
                 'admin', 
+                'master',
                 'agent', 
                 'distributor'
             ]) ) 
@@ -395,7 +408,7 @@ namespace VanguardLTE
         public function getRowspan()
         {
             $rowspan = 0;
-            if( $this->hasRole('agent') ) 
+            if( $this->hasRole(['master','agent']) ) 
             {
                 $rowspan = 0;
                 $distributors = User::where('parent_id', $this->id)->get();
@@ -492,7 +505,8 @@ namespace VanguardLTE
                 '3' => [1], 
                 '4' => [3], 
                 '5' => [4], 
-                '6' => [5]
+                '6' => [5],
+                '7' => [6]
             ];
             if( $withMe ) 
             {
@@ -527,6 +541,15 @@ namespace VanguardLTE
                         4, 
                         5, 
                         6
+                    ],
+                    '7' => [
+                        1, 
+                        2, 
+                        3, 
+                        4, 
+                        5, 
+                        6,
+                        7
                     ]
                 ];
             }
@@ -563,7 +586,14 @@ namespace VanguardLTE
             {
                 $payeer = User::where('id', auth()->user()->id)->first();
             }
-            if( $payeer->hasRole('admin') && !$this->hasRole('agent') ) 
+            if( $payeer->hasRole('admin') && !$this->hasRole('master') ) 
+            {
+                return response()->json([
+                    'status' => 'error', 
+                    'message' => trans('app.wrong_user')
+                ]);
+            }
+            if( $payeer->hasRole('master') && !$this->hasRole('agent') ) 
             {
                 return response()->json([
                     'status' => 'error', 
@@ -618,7 +648,7 @@ namespace VanguardLTE
                     ]);
                 }
             }
-            if( ($payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager')) && $type == 'add' && $payeer->balance < $summ ) 
+            if(/* ($payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager')) && */$payeer->hasRole(['master','agent','distributor']) && $type == 'add' && $payeer->balance < $summ ) 
             {
                 return response()->json([
                     'status' => 'error', 
@@ -653,7 +683,7 @@ namespace VanguardLTE
                     ]);
                 }
             }
-            if ($this->hasRole(['agent','distributor'])) 
+            if ($this->hasRole(['master','agent','distributor'])) 
             {
                 $open_shift = OpenShift::where([
                     'user_id' => $this->id, 
@@ -661,7 +691,7 @@ namespace VanguardLTE
                     'end_date' => null
                 ])->first();
             }
-            if ($payeer->hasRole(['admin','agent'])) 
+            if ($payeer->hasRole(['admin','master','agent'])) 
             {
                 $payeer_open_shift = OpenShift::where([
                     'user_id' => $payeer->id, 
@@ -734,7 +764,8 @@ namespace VanguardLTE
                     $this->update(['count_return' => $this->count_return + Lib\Functions::count_return($summ, $this->shop_id)]);
                 }
             }
-            if( $payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager') ) 
+            if(/* $payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager') */
+                $payeer->hasRole(['master','agent','distributor'])) 
             {
                 $payeer->update(['balance' => $payeer->balance - $summ]);
             }
@@ -758,7 +789,7 @@ namespace VanguardLTE
                     $open_shift->increment('money_in', abs($summ));
                 }
             }
-            if ($payeer->hasRole(['admin','agent'])) 
+            if ($payeer->hasRole(['admin','master','agent'])) 
             {
                 if( $type == 'out' ) 
                 {

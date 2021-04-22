@@ -25,7 +25,7 @@
 				</div>
 			</div>
 			<!-- ./col -->
-			@if(auth()->user()->hasRole('admin'))
+			@if(auth()->user()->hasRole(['admin','master']))
 			<div class="col-lg-3 col-xs-6">
 				<!-- small box -->
 				<div class="small-box bg-green">
@@ -40,7 +40,7 @@
 			</div>
 			<!-- ./col -->
 			@endif
-			@if(auth()->user()->hasRole(['admin','agent']))
+			@if(auth()->user()->hasRole(['admin','master','agent']))
 			<div class="col-lg-3 col-xs-6">
 				<!-- small box -->
 				<div class="small-box bg-yellow">
