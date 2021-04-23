@@ -985,14 +985,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stat_games = \DB::select($query);
 
 
-            if(auth()->user()->hasRole(['admin','master',])){
+            if(auth()->user()->hasRole(['admin','master'])){
                 $partners = auth()->user()->childPartners();
                 if (count($partners) == 0) {
                     return redirect()->back()->withError('정산할 부본사가 없습니다');
                 }
-                $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$partners) . ') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
+                $query = 'SELECT game, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$partners) . ') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
                 $deal_logs = \DB::select($query);
-
             }
             else if(auth()->user()->hasRole(['agent','distributor'])){
                 $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . auth()->user()->id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';

@@ -593,13 +593,13 @@ namespace VanguardLTE
                     'message' => trans('app.wrong_user')
                 ]);
             }
-            if( $payeer->hasRole('master') && !$this->hasRole('agent') ) 
+            /*if( $payeer->hasRole('master') && !$this->hasRole('agent') ) 
             {
                 return response()->json([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
                 ]);
-            }
+            } */
             if( $payeer->hasRole('agent') && (!$this->hasRole('distributor') && !$this->hasRole('user')) ) 
             {
                 return response()->json([

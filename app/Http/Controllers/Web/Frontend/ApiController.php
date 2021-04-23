@@ -362,7 +362,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         $open_shift->increment('balance_out', $real_deal_balance);
                     }
-                    
+
                     $user->balance = $user->balance + $real_deal_balance;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $user->id, 
@@ -667,9 +667,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else // for partners
             {
-
                 if($type == 'add'){
-
                     $result = $requestuser->addBalance('add', $amount, false, 0, $transaction->id);
                     $result = json_decode($result, true);
                     if ($result['status'] == 'error')

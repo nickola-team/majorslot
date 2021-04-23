@@ -97,13 +97,14 @@
             @endpermission
 
             @permission('users.tree')
+            @if (auth()->user()->hasRole(['admin','master','agent']))
             <li class="{{ Request::is('backend/tree*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.user.tree') }}">
                     <i class="fa fa-users"></i>
-                    {{-- <span>{{ \VanguardLTE\Role::where('id', auth()->user()->role_id - 1)->first()->name }} @lang('app.tree')</span> --}}
                     <span>파트너생성</span>
                 </a>
             </li>
+            @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
             <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
