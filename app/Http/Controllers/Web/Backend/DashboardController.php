@@ -834,15 +834,31 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $adj['moneyout'] = 0;
 
                     $shop_ids = $partner->availableShops();
-                    $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                    if (count($shop_ids) > 0 )
+                    {
+                        $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                    }
+                    else
+                    {
+                        $query = 'SELECT 0 as totalbet, 0 as totalwin';
+                    }
                     $game_bet = \DB::select($query);
                     $adj['totalbet'] = $game_bet[0]->totalbet;
                     $adj['totalwin'] = $game_bet[0]->totalwin;
-
                     if ($partner->hasRole('admin'))
                     {
+                        $query = 'SELECT 0 as total_deal, 0 as total_mileage';
+                    }
+                    else if ($partner->hasRole('master'))
+                    {
                         $agents = $partner->childPartners();
-                        $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                        if (count($agents) > 0){
+                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                        }
+                        else
+                        {
+                            $query = 'SELECT 0 as total_deal, 0 as total_mileage';
+                        }
                     }
                     else
                     {
@@ -854,12 +870,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $adj['balance'] = $partner->balance;
                     $adj['name'] = $partner->username;
                     $adj['id'] = $partner->id;
-                    if (auth()->user()->hasRole('admin')){
-                        if ($partner->hasRole('admin')){
-                            $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_mileage'];
-                        }
-                        else if ($partner->hasRole('master','agent')) 
-                        {
+                    if (auth()->user()->hasRole('admin'))
+                    {
+                        if ($partner->hasRole(['admin','master','agent'])){
                             $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_deal'];
                         }
                         else if ($partner->hasRole('distributor')) 
@@ -963,6 +976,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $shop_ids = auth()->user()->availableShops();
+
 
             $query = 'SELECT game, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
             $stat_games = \DB::select($query);

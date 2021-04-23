@@ -10,7 +10,7 @@ namespace VanguardLTE\Http\Middleware
             }
             if( auth()->user()->shop_id == 0 ) 
             {
-                if( auth()->user()->role_id == 6 ) 
+                if( auth()->user()->hasRole('admin')) 
                 {
                     return $next($request);
                 }
