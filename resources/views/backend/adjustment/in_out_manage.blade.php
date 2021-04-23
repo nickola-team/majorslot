@@ -166,5 +166,30 @@
 			}
 			$('#out_id').val(id);
 		});
+		function change_bank_account_info() {
+            var bank_name = $('#bank_name').val();
+			var account_no = $('#account_no').val();
+			var recommender = $('#recommender').val();
+            var _token = $('#_token').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/change_bank_account',
+                data: { bank_name: bank_name, account_no: account_no, recommender: recommender, _token: _token },
+                cache: false,
+                async: false,
+                success: function (data) {
+                    if (data.error) {
+                        alert(data.msg);
+                        return;
+                    }
+                    alert('입금 계좌가 변경되었습니다.');
+                    location.reload(true);
+                },
+                error: function (err, xhr) {
+                    alert(err.responseText);
+                }
+            });
+        }
 	</script>
 @stop
