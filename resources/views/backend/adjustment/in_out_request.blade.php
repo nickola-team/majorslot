@@ -18,18 +18,25 @@
 
 			<input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
 
-			{{-- <li class="list-group-item">
+			<li class="list-group-item">
 				<div class="row">
-					<div class="col-md-3">
-						<b>본사은행계좌:</b> <a class="pull-right"></a>
+					<div class="col-md-6">
+						<b>입금 은행계좌 : </b>
+						<button class="btn btn-primary" id="togglebankinfo">
+							보이기
+						</button>
+						<span class="text-red" id="bankinfo" style="display:none;">
+							{{$bankinfo}}
+						</span>
+
 					</div>
 				</div>
-			</li> --}}
+			</li>
 
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-3">
-						<b>은행계좌:</b> 
+						<b>본인 은행계좌:</b> 
 							@php
 								$banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
 							@endphp
@@ -273,7 +280,27 @@
 				$('.pay_stat_show').removeClass('collapsed-box');
 				$('.pay_stat_show .btn-box-tool i').removeClass('fa-plus').addClass('fa-minus');
 			}
+
+			$('#togglebankinfo').click(function() {
+				if($("#bankinfo").is(":visible")){
+					$("#bankinfo").hide();
+					$('#togglebankinfo').html('보이기');
+				}
+				else
+				{
+					$("#bankinfo").show();
+					$('#togglebankinfo').html('숨기기');
+				}
+				
+			});
 		});
+
+
+
+		function showbankinfo()
+		{
+
+		}
 
 		function withdraw_balance() {
             var money = $('#withdraw_money').val();

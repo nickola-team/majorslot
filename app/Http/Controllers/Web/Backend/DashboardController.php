@@ -1343,10 +1343,37 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
         public function in_out_request(\Illuminate\Http\Request $request) 
         {
-            $in_out_logs = \VanguardLTE\WithdrawDeposit::where('user_id', auth()->user()->id);
-            //$in_out_logs = $in_out_logs->where('status',0);
+            $user = auth()->user();
+
+            $in_out_logs = \VanguardLTE\WithdrawDeposit::where('user_id', $user->id);
+            
+            if ($user->hasRole('master'))
+            {
+                $master = $user->referral; // it is admin
+            }
+            else
+            {
+                $master = $user->referral;
+                while ($master!=null && !$master->hasRole('master'))
+                {
+                    $master = $master->referral;
+                }
+            }
+
+            $bankinfo = '없음';
+
+            if ($master != null) {
+                if ($master->bank_name !== '') {
+                    $bankinfo = "[$master->bank_name] $master->account_no, $master->recommender";
+                }
+                else
+                {
+                    $bankinfo = "입금계좌가 설정되어있지 않습니다.";
+                }
+            }
+
             $in_out_logs = $in_out_logs->get()->sortByDesc('created_at')->paginate(10);
-            return view('backend.adjustment.in_out_request', compact('in_out_logs'));
+            return view('backend.adjustment.in_out_request', compact('in_out_logs', 'bankinfo'));
         }
 
         public function in_out_manage(\Illuminate\Http\Request $request) 
