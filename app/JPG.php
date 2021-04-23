@@ -49,19 +49,19 @@ namespace VanguardLTE
             }
             if( !$shop ) 
             {
-                return redirect()->back()->withErrors([trans('app.wrong_shop')]);
+                return [
+                    'success' => false, 
+                    'text' => trans('app.wrong_shop')
+                ];
             }
             if( !$sum ) 
             {
-                return redirect()->back()->withErrors([trans('app.wrong_sum')]);
+                return [
+                    'success' => false, 
+                    'text' => trans('app.wrong_sum')
+                ];
             }
-            // if( $type == 'add' && $shop->balance < $sum ) 
-            // {
-            //     return [
-            //         'success' => false, 
-            //         'text' => 'Not enough money in the shop "' . $shop->name . '". Only ' . $shop->balance
-            //     ];
-            // }
+
             if( $type == 'out' && $this->balance < $sum ) 
             {
                 return [
@@ -69,17 +69,7 @@ namespace VanguardLTE
                     'text' => 'Not enough money in the jackpot balance "' . $this->name . '". Only ' . $this->balance
                 ];
             }
-            $open_shift = OpenShift::where([
-                'shop_id' => $this->shop_id, 
-                'end_date' => null
-            ])->first();
-            if( !$open_shift ) 
-            {
-                return [
-                    'success' => false, 
-                    'text' => trans('app.shift_not_opened')
-                ];
-            }
+            
             $sum = ($type == 'out' ? -1 * $sum : $sum);
             if( $this->balance + $sum < 0 ) 
             {
@@ -105,16 +95,24 @@ namespace VanguardLTE
             $this->update(['balance' => $this->balance + $sum]);
             // $shop->update(['balance' => $shop->balance - $sum]);
             //no need to update because the jpg is not shop's balance
-            if( $type == 'out' ) 
-            {
-                //$open_shift->increment('balance_in', abs($sum));
-            }
-            else
-            {
-                //$open_shift->increment('balance_out', abs($sum));
-            }
             if( $user ) 
             {
+                $open_shift = OpenShift::where([
+                    'user_id' => $user->id, 
+                    'end_date' => null
+                ])->first();
+                if( $open_shift ) 
+                {
+                    if( $type == 'out' ) 
+                    {
+                        $open_shift->increment('money_out', abs($sum));
+                    }
+                    else
+                    {
+                        $open_shift->increment('money_in', abs($sum));
+                    }
+                }
+            
                 BankStat::create([
                     'name' => 'JPS ' . $this->id, 
                     'user_id' => $user->id, 

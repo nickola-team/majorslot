@@ -15,6 +15,32 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">충환전관리</h3>
 			</div>
+			@if (auth()->user()->hasRole('admin'))
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-3">
+						<b>은행이름:</b> 
+							@php
+								$banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
+							@endphp
+							{!! Form::select('bank_name', $banks, auth()->user()->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name']) !!}		
+					</div>
+					<div class="col-md-3">
+						<b>계좌번호:</b> 
+						<input type="text" class="form-control" id="account_no" name="account_no" value="{{ auth()->user()->account_no ? auth()->user()->account_no : '' }}">
+					</div>
+					<div class="col-md-3">
+						<b>예금주:</b> 
+						<input type="text" class="form-control" id="recommender" name="recommender" value="{{ auth()->user()->recommender ? auth()->user()->recommender : '' }}">
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<button class="btn btn-primary" id="change-bank-account-btn" onclick="change_bank_account_info();">
+					계좌정보변경
+				</button>
+			</div>
+			@endif
                     <div class="box-body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">

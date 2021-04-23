@@ -18,7 +18,7 @@
 						<div class="form-group">
 							<label>매장</label>
 							{!! Form::select('shop_id',
-								Auth::user()->shops_array(), Auth::user()->shop_id, ['class' => 'form-control', 'style' => 'width: 100%;', 'id' => 'shop_id']) !!}
+								[0=>'기본매장']+Auth::user()->shops_array(), Auth::user()->shop_id, ['class' => 'form-control', 'style' => 'width: 100%;', 'id' => 'shop_id']) !!}
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						</div>
 					</div>
