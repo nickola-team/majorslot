@@ -794,22 +794,12 @@ namespace VanguardLTE
                 if( $type == 'out' ) 
                 {
                     if ($open_shift) $open_shift->increment('balance_out', abs($summ));
-                    if ($payeer_open_shift) $payeer_open_shift->increment('balance_in', abs($summ));
+                    if ($payeer_open_shift) $payeer_open_shift->increment('money_out', abs($summ));
                 }
                 else
                 {
                     if ($open_shift) $open_shift->increment('balance_in', abs($summ));
-                    if ($payeer_open_shift) $payeer_open_shift->increment('balance_out', abs($summ));
-                }
-                if( $type == 'out' ) 
-                {
-                    if ($open_shift) $open_shift->increment('money_out', abs($summ));
                     if ($payeer_open_shift) $payeer_open_shift->increment('money_in', abs($summ));
-                }
-                else
-                {
-                    if ($open_shift) $open_shift->increment('money_in', abs($summ));
-                    if ($payeer_open_shift) $payeer_open_shift->increment('money_out', abs($summ));
                 }
             }
             if( $this->balance == 0 ) 

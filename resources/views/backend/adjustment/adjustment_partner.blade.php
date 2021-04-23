@@ -71,6 +71,8 @@
 						<th>이름</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>하위충전</th>
+						<th>하위환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>딜비수익</th>
@@ -88,7 +90,7 @@
 							@include('backend.adjustment.partials.row_partner')
 						@endforeach
 					@else
-						<tr><td colspan="4">@lang('app.no_data')</td></tr>
+						<tr><td colspan="9">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>
@@ -96,6 +98,8 @@
 						<th>이름</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>하위충전</th>
+						<th>하위환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>딜비수익</th>

@@ -830,8 +830,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $user_in_out = \DB::select($query);
                     $adj['totalout'] = $user_in_out[0]->totalout;
 
-                    $adj['moneyin'] = 0;
-                    $adj['moneyout'] = 0;
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE payeer_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
+                    $user_in_out = \DB::select($query);
+                    $adj['moneyin'] = $user_in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE payeer_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
+                    $user_in_out = \DB::select($query);
+                    $adj['moneyout'] = $user_in_out[0]->moneyout;
 
                     $shop_ids = $partner->availableShops();
                     if (count($shop_ids) > 0 )
@@ -1266,26 +1271,42 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
         public function adjustment_shift_stat(\Illuminate\Http\Request $request)
         {
-            // $users = \VanguardLTE\User::where([
-            //     'shop_id' => \Auth::user()->shop_id, 
-            //     'role_id' => 1
-            // ])->where('balance', '>', 0)->count();
-            // if( $users ) 
-            // {
-            //     return redirect()->route('backend.adjustment_shift')->withErrors([trans('users_with_balance', ['count' => $users])]);
-            // }
-
+            if(auth()->user()->hasRole('manager')){
+                $shop_users = \VanguardLTE\User::where([
+                    'shop_id' => auth()->user()->shop_id,
+                    'role_id' => 1,
+                ]);
+                $shop_users->update(
+                    [
+                        'total_in' => 0,
+                        'total_out' => 0
+                    ]
+                );
+                $shop_games = \VanguardLTE\Game::where([
+                    'shop_id' => auth()->user()->shop_id,
+                ]);
+                $shop_games->update(
+                    [
+                        'stat_in' => 0,
+                        'stat_out' => 0,
+                        'bids' => 0
+                    ]
+                );
+            }
+            $summ = $request->summ;
+            $remain_balance = 0;
 
             if(auth()->user()->hasRole('manager')){
                 $partner_id = auth()->user()->shop_id;
                 $balance = auth()->user()->shop->balance;
                 $partner = auth()->user()->shop;
                 $type = 'shop';
-                $count = \VanguardLTE\OpenShift::where([
+                $shift = \VanguardLTE\OpenShift::where([
                     'shop_id' => $partner->id, 
                     'type' => 'shop',
                     'end_date' => null
                 ])->first();
+                $remain_balance = $partner->balance;
             }
             else
             {
@@ -1293,104 +1314,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $balance = auth()->user()->balance;
                 $partner = auth()->user();
                 $type = 'partner';
-                $count = \VanguardLTE\OpenShift::where([
+                $shift = \VanguardLTE\OpenShift::where([
                     'user_id' => $partner_id, 
                     'end_date' => null,
                     'type' => 'partner'
                 ])->first();
+                $remain_balance = $partner->balance;
             }
-            
-            $remain_balance = 0;
-            if( $count ) 
-            {
-                $summ = $request->summ;
-                if($summ > $partner->balance + $partner->deal_balance - $partner->mileage) {
-                    return redirect()->route('backend.adjustment_shift')->withErrors(['환전금액이 보유금액보다 클수 없습니다.']);
-                }
-                $remain_balance = $partner->balance + $partner->deal_balance - $partner->mileage - $summ;
-
-
-                $user = auth()->user();
-                if(!$user->hasRole('admin') && ($user->bank_name == null || $user->bank_name == '')){
-                    return redirect()->route('backend.adjustment_shift')->withErrors(['충환전신청페이지에서 계좌정보를 입력해주세요.']);
-                }
-
-                //update balance for partner or shop
-                if(!$user->hasRole('admin')) {
-                    $partner->update([
-                        'balance' => $remain_balance,
-                        'deal_balance' => 0,
-                        'mileage' => 0,
-                    ]);
-                }
-
-                if($user->hasRole('manager')){
-                    //send it to agent.
-                    $distr = $user->referral;
-                    \VanguardLTE\WithdrawDeposit::create([
-                        'user_id' => $user->id,
-                        'payeer_id' => $distr->parent_id,
-                        'type' => 'out',
-                        'sum' => $summ,
-                        'status' => 0,
-                        'shop_id' => $user->shop_id,
-                        'created_at' => \Carbon\Carbon::now(),
-                        'updated_at' => \Carbon\Carbon::now(),
-                        'bank_name' => $user->bank_name,
-                        'account_no' => $user->account_no,
-                        'partner_type' => 'shop'
-                    ]);
-
-                }
-                else if(!$user->hasRole('admin')) {
-                    \VanguardLTE\WithdrawDeposit::create([
-                        'user_id' => $user->id,
-                        'payeer_id' => $user->parent_id,
-                        'type' => 'out',
-                        'sum' => $summ,
-                        'status' => 0,
-                        'shop_id' => $user->shop_id,
-                        'created_at' => \Carbon\Carbon::now(),
-                        'updated_at' => \Carbon\Carbon::now(),
-                        'bank_name' => $user->bank_name,
-                        'account_no' => $user->account_no,
-                        'partner_type' => 'partner'
-                    ]);
-                }
-
-
-                $count->update([
+            if ($shift) {
+                $shift->update([
                     'end_date' => \Carbon\Carbon::now(), 
-                    'last_banks' => $count->banks(), 
+                    'last_banks' => $shift->banks(), 
                     'last_returns' => $summ, 
                     'balance' => $partner->balance,
                     'users' => 0,
                 ]);
-
-                
-
-                if(auth()->user()->hasRole('manager')){
-                    $shop_users = \VanguardLTE\User::where([
-                        'shop_id' => auth()->user()->shop_id,
-                        'role_id' => 1,
-                    ]);
-                    $shop_users->update(
-                        [
-                            'total_in' => 0,
-                            'total_out' => 0
-                        ]
-                    );
-                    $shop_games = \VanguardLTE\Game::where([
-                        'shop_id' => auth()->user()->shop_id,
-                    ]);
-                    $shop_games->update(
-                        [
-                            'stat_in' => 0,
-                            'stat_out' => 0,
-                            'bids' => 0
-                        ]
-                    );
-                }
             }
 
             \VanguardLTE\OpenShift::create([

@@ -675,6 +675,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $old = $gamebank->{$request->type};
                 //$shop->decrement('balance', $request->summ);
                 $open_shift->increment('balance_in', abs($request->summ));
+                $admin_shift = \VanguardLTE\OpenShift::where([
+                    'user_id' => auth()->user()->id, 
+                    'end_date' => null
+                ])->first();
+                if ($admin_shift)
+                {
+                    $admin_shift->increment('money_in', abs($request->summ));
+                }
                 $gamebank->increment($request->type, abs($request->summ));
                 $type = ($request->type == 'table_bank' ? 'table' : $request->type);
                 \VanguardLTE\BankStat::create([

@@ -328,7 +328,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     'count_return' => \VanguardLTE\Lib\Functions::count_return($sum, $user->shop_id)
                 ]);
                 $shop->update(['balance' => $shop->balance - $sum]);
-                $open_shift->increment('balance_out', abs($sum));
+                //$open_shift->increment('balance_out', abs($sum));
                 $open_shift->increment('money_in', abs($sum));
             }
             if( !$user->shop_id && $user->hasRole([

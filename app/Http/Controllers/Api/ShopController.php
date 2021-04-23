@@ -86,6 +86,11 @@ namespace VanguardLTE\Http\Controllers\Api
             {
                 return $this->errorWrongArgs(trans('app.shift_not_opened'));
             }
+            $user_shift = \VanguardLTE\OpenShift::where([
+                'user_id' => auth()->user()->id, 
+                'type' => 'partner',
+                'end_date' => null
+            ])->first();
             $sum = ($type == 'out' ? -1 * $request->summ : $request->summ);
             \VanguardLTE\ShopStat::create([
                 'user_id' => auth()->user()->id, 
@@ -96,10 +101,18 @@ namespace VanguardLTE\Http\Controllers\Api
             if( $type == 'out' ) 
             {
                 $open_shift->increment('balance_out', abs($sum));
+                if ($user_shift)
+                {
+                    $user_shift->increment('money_out', abs($sum));
+                }
             }
             else
             {
                 $open_shift->increment('balance_in', abs($sum));
+                if ($user_shift)
+                {
+                    $user_shift->increment('money_in', abs($sum));
+                }
             }
             $user->update([
                 'balance' => $user->balance - $sum, 

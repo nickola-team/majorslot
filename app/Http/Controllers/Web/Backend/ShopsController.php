@@ -830,20 +830,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             //update shift for partners
 
-            $open_shift = \VanguardLTE\OpenShift::where([
+            $user_shift = \VanguardLTE\OpenShift::where([
                 'user_id' => $user->id, 
                 'type' => 'partner',
                 'end_date' => null
             ])->first();
-            if( $open_shift ) 
+            if( $user_shift ) 
             {
                 if( $request->type == 'out' ) 
                 {
-                    $open_shift->increment('balance_in', abs($sum));
+                    $user_shift->increment('money_out', abs($sum));
                 }
                 else
                 {
-                    $open_shift->increment('balance_out', abs($sum));
+                    $user_shift->increment('money_in', abs($sum));
                 }
             }
 

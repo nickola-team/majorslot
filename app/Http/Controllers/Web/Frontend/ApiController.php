@@ -288,7 +288,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('balance_out', $real_deal_balance);
+                        $open_shift->increment('money_in', $real_deal_balance);
                     }
 
                     $shop->balance = $shop->balance + $real_deal_balance;
@@ -319,7 +319,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     return response()->json([
                         'error' => true, 
                         'msg' => '수익금이 없습니다.',
-                        'code' => '001'
+                        'code' => '000'
                     ], 200);
                 }
             }
@@ -360,7 +360,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('balance_out', $real_deal_balance);
+                        $open_shift->increment('money_in', $real_deal_balance);
                     }
 
                     $user->balance = $user->balance + $real_deal_balance;
@@ -391,7 +391,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     return response()->json([
                         'error' => true, 
                         'msg' => '수익금이 없습니다.',
-                        'code' => '001'
+                        'code' => '000'
                     ], 200);
                 }
             }
@@ -624,7 +624,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('balance_out', $amount);
+                        $open_shift->increment('money_in', $amount);
                     }
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'shop_id' => $shop->id, 
@@ -648,7 +648,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('balance_in', $amount);
+                        $open_shift->increment('money_out', $amount);
                     }
 
                 }
@@ -686,7 +686,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('balance_in', $amount);
+                        $open_shift->increment('money_out', $amount);
                     }
                     \VanguardLTE\Transaction::create([
                         'user_id' => $transaction->user_id,

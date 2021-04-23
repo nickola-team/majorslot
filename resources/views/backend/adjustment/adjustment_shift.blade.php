@@ -38,9 +38,9 @@
 						<th>이월된 보유금</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>하위충전</th>
+						<th>하위환전</th>
 						@if(auth()->user()->hasRole('manager') || (($user != null) && ($user->hasRole('distributor'))))
-						<th>회원충전</th>
-						<th>회원환전</th>
 						<th>회원보유금</th>
 						@endif
 						<th>딜비수익</th>
@@ -87,10 +87,8 @@
 						<th>이월된 보유금</th>
 						<th>충전</th>
 						<th>환전</th>
-						@if(auth()->user()->hasRole('manager') || (($user != null) && ($user->hasRole('distributor'))))
-						<th>회원충전</th>
-						<th>회원환전</th>
-						@endif
+						<th>하위충전</th>
+						<th>하위환전</th>
 						<th>딜비수익</th>
 						<th>하위수익</th>
 						<th>딜비전환</th>
@@ -134,7 +132,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
-						<button type="submit" class="btn btn-primary">확인</button>
+						<button type="submit" class="btn btn-primary" onclick="adjustment_shift_stat();">확인</button>
 					</div>
 				</form>
 			</div>
@@ -180,5 +178,58 @@
 			//$('#outAll').val('');
 		});
 		});
+
+		function withdraw_balance(onsuccess) {
+            var money = $('#OutSum').val();
+            var _token = $('#_token').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/withdraw',
+                data: { money: money, _token: _token },
+                cache: false,
+                async: false,
+                success: function (data) {
+                    if (data.error) {
+                        alert(data.msg);
+                        return;
+                    }
+					else if (onsuccess)
+					{
+						onsuccess();
+					}
+                    
+                },
+                error: function (err, xhr) {
+                    alert(err.responseText);
+                }
+            });
+        }
+
+		function adjustment_shift_stat() {
+            var _token = $('#_token').val();
+            $.ajax({
+                type: 'POST',
+                url: '/api/convert_deal_balance',
+                data: { _token: _token },
+                cache: false,
+                async: false,
+                success: function (data) {
+                    if (data.error && data.code != '000') {
+                        alert(data.msg);
+                        return;
+                    }
+					else {
+						withdraw_balance( function(){
+							$('#outForm').submit();
+							});
+					}
+                    
+                },
+                error: function (err, xhr) {
+                    alert(err.responseText);
+                }
+            });
+        }
 	</script>
 @stop
