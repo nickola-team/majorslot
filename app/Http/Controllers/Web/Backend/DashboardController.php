@@ -31,24 +31,30 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $ids = auth()->user()->hierarchyUsers();
             $availableShops = auth()->user()->availableShops();
 
+            
             $start_date = date("Y-m-d");
             $start_date = $start_date . " 00:00:00";
             $end_date = date("Y-m-d H:i:s");
-            $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$availableShops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-            $game_bet = \DB::select($query);
-            $adj['totalbet'] = $game_bet[0]->totalbet;
-            $adj['totalwin'] = $game_bet[0]->totalwin;
+            $todayprofit = 0;
+            if (count($availableShops) > 0){
+                $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$availableShops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                $game_bet = \DB::select($query);
+                $todayprofit = $game_bet[0]->totalbet-$game_bet[0]->totalwin;
+            }
 
             $agents = auth()->user()->childPartners();
-            $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-            $deal_log = \DB::select($query);
+            if (count($agents) > 0) {
+                $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                $deal_log = \DB::select($query);
+                $todayprofit = $todayprofit - $deal_log[0]->total_deal;
+            }
 
             $usersPerMonth = $this->users->countOfNewUsersPerMonth(\Carbon\Carbon::now()->subYear()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth(), $ids);
             $stats = [
                 'total' => $this->users->count($ids), 
                 'new' => $this->users->newUsersCount($ids), 
                 'banned' => $this->users->countByStatus(\VanguardLTE\Support\Enum\UserStatus::BANNED, $ids), 
-                'todayprofit' => $game_bet[0]->totalbet-$game_bet[0]->totalwin-$deal_log[0]->total_deal,
+                'todayprofit' => $todayprofit,
                 'games' => \VanguardLTE\Game::where([
                     'shop_id' => \Auth::user()->shop_id, 
                     'view' => 1
