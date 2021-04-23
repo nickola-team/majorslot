@@ -132,7 +132,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
-						<button type="submit" class="btn btn-primary" onclick="adjustment_shift_stat();">확인</button>
+						<button type="button" class="btn btn-primary" onclick="adjustment_shift_stat();">확인</button>
 					</div>
 				</form>
 			</div>
