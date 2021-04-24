@@ -948,8 +948,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public function promoactive(\Illuminate\Http\Request $request)
         {
-            /*$data = [];
-            return response($data, 200)->header('Content-Type', 'application/json'); */
+            $data = [];
+            return response($data, 200)->header('Content-Type', 'application/json'); 
             return response()->json([
                 'error' => 0,
                 'description' => 'OK',
