@@ -398,6 +398,14 @@
             </li>
 
             @endif
+            @if (auth()->user()->hasRole(['admin', 'master']))
+            <li class="{{ Request::is('backend/settings/notice') ? 'active' : ''  }}">
+                <a href="{{ route('backend.settings.notice') }}">
+                    <i class="fa fa-bell"></i>
+                    <span>공지관리</span>
+                </a>
+            </li>
+            @endif
 
             @permission('users.activity')
             <li class="{{ Request::is('backend/activity*') ? 'active' : ''  }}">
@@ -408,7 +416,7 @@
                 </a>
             </li>
             @endpermission
-
+            {{--
             @permission('permissions.manage')
             @if (auth()->user()->hasRole('admin') )
             <li  class="{{ Request::is('backend/permission*') ? 'active' : '' }}">
@@ -419,7 +427,7 @@
             </li>
             @endif
             @endpermission
-
+            --}}
             {{-- @permission('settings.generator')
             <li class="{{ Request::is('backend/generator*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.generator') }}">

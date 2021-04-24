@@ -6,8 +6,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function __construct()
         {
             $this->middleware('auth');
-            $this->middleware('permission:access.admin.panel');
-            $this->middleware('shopzero');
+            //$this->middleware('permission:access.admin.panel');
+            //$this->middleware('shopzero');
         }
         public function general()
         {
@@ -23,6 +23,44 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function auth()
         {
             return view('backend.settings.auth');
+        }
+        public function notice()
+        {
+            $notice = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->first();
+            return view('backend.settings.notice', compact('notice'));
+        }
+        public function noticeupdate(\Illuminate\Http\Request $request)
+        {
+            $popupimg = $request->file('popupimg');
+            $ext = $popupimg->extension(); 
+            $available_ext = ['png', 'jpg', 'jpeg'];
+            $notice = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->first();
+            if (in_array(strtolower($ext), $available_ext))
+            {
+                $fileName = auth()->user()->id . '_' . time().'.'.$ext;  
+                $popupimg->move(public_path('/frontend/uploads'), $fileName);
+                if ($notice){
+                    $notice->image = '/frontend/uploads/' . $fileName;
+                    $notice->save();
+                }
+                else
+                {
+                    $notice = \VanguardLTE\Notice::create([
+                            'user_id' => auth()->user()->id,
+                            'type' => 'popup',
+                            'image' => '/frontend/uploads/' . $fileName
+                        ]
+                    );
+                }
+                return view('backend.settings.notice', compact('notice'));
+
+            }
+            else
+            {
+                return view('backend.settings.notice', compact('notice'))->withError('PNG, JPG, JPEG형식의 이미지만 업로드할수 있습니다');
+            }
+            
+            
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

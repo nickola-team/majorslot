@@ -89,7 +89,21 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             shuffle($hotgames);
 
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'title'));
+            $notice = \VanguardLTE\Notice::where('user_id', 1)->first(); //for admin's popup
+
+            if ($shop_id != 0) { //it is logged in
+                $master = auth()->user()->referral;
+                while ($master!=null && !$master->hasRole('master'))
+                {
+                    $master = $master->referral;
+                }
+                if ($master)
+                {
+                    $notice = \VanguardLTE\Notice::where('user_id', $master->id)->first(); //for master's popup
+                }
+            }
+
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'title', 'notice'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {

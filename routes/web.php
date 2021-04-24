@@ -1132,6 +1132,15 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'SettingsController@update',
         'middleware' => 'permission:settings.general'
     ]);
+    Route::get('settings/notice', [
+        'as' => 'backend.settings.notice',
+        'uses' => 'SettingsController@notice',
+    ]);
+    Route::post('settings/notice', [
+        'as' => 'backend.settings.notice.update',
+        'uses' => 'SettingsController@noticeupdate',
+    ]);
+
     Route::get('settings/auth', [
         'as' => 'backend.settings.auth',
         'uses' => 'SettingsController@auth',

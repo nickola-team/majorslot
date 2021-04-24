@@ -9,12 +9,12 @@
     </script>
 @endif
 <!-- 팝업메시지 -->
-
+@if ($notice != null)
 <div class="modal fade in" id="liveperson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 58px;">
         <div class="modal-content" style="border: 0;">
             <div class="modal-body" style="padding:0;">
-                <img src="/frontend/Major/major/images/adv_20210414.png" style="width: 100%;vertical-align: bottom;">
+                <img src="{{$notice->image}}" style="width: 100%;vertical-align: bottom;">
             </div>
         </div>
         <div style="text-align: right;margin: 0 auto;display: block;font-size: 14px;color: #fff;background: #2B2B2B;line-height: 29px;padding-right: 5px;">
@@ -26,7 +26,7 @@
         </div>
     </div>
 </div>
-
+@endif
 <!-- 퀵위치 랭킹-->
 {{-- <div class="quick1_wrap">
     <div class="quick1_box">
@@ -822,12 +822,19 @@
             $("#banner-close").click(function() {
                 if ($("#hide-today").is(":checked") == true)
                 {
+                    @if (auth()->check())
+                    $.cookie('hide-today_user', 'done', { expires: 1 });
+                    @else
                     $.cookie('hide-today', 'done', { expires: 1 });
+                    @endif
                 }
                 $('#liveperson').modal('hide');
             });
-            console.log($.cookie('hide-today'));
+            @if (auth()->check())
+            if ($.cookie('hide-today_user') != 'done') {
+            @else
             if ($.cookie('hide-today') != 'done') {
+            @endif
                 $('#liveperson').modal('show');
             }
             console.log( "ready!" );
