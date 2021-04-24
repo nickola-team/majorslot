@@ -922,20 +922,22 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 if ($cat->provider != null)
                 {
                     $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist', $cat->href);
-                    foreach ($games as $game)
-                    {
-                        if($game_name != null && $game_name != '' &&  strpos($game['name'], $game_name) === false){
-                            continue;
+                    if ($games){
+                        foreach ($games as $game)
+                        {
+                            if($game_name != null && $game_name != '' &&  strpos($game['name'], $game_name) === false){
+                                continue;
+                            }
+                            $adj_game = [
+                                'name' => $game['name'],
+                                'total_win' => 0,
+                                'total_bet' => 0,
+                                'total_bet_count' => 0,
+                                'total_deal' => 0,
+                                'total_mileage' => 0,
+                            ];
+                            $adj['games'][] = $adj_game;
                         }
-                        $adj_game = [
-                            'name' => $game['name'],
-                            'total_win' => 0,
-                            'total_bet' => 0,
-                            'total_bet_count' => 0,
-                            'total_deal' => 0,
-                            'total_mileage' => 0,
-                        ];
-                        $adj['games'][] = $adj_game;
                     }
                 }
                 else
