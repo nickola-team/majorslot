@@ -103,11 +103,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                     if( $transaction->type == 'add' ) 
                     {
-                        $sum = '<span class="text-green">' . number_format(abs($transaction->summ), 4, '.', '') . '</span>';
+                        $sum = '<span class="text-green">' . number_format(abs($transaction->summ), 2) . '</span>';
                     }
                     else
                     {
-                        $sum = '<span class="text-red">' . number_format(abs($transaction->summ), 4, '.', '') . '</span>';
+                        $sum = '<span class="text-red">' . number_format(abs($transaction->summ), 2) . '</span>';
                     }
                     $usdata = '<a href="' . route('backend.statistics', ['user' => $transaction->user->username]) . '">' . $transaction->user->username . '</a>';
                     $statistics[] = [
@@ -119,8 +119,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'User' => $usdata, 
                         'System' => $sysdata, 
                         'Sum' => $sum, 
-                        'In' => ($transaction->type == 'add' ? $transaction->summ : ''), 
-                        'Out' => ($transaction->type != 'add' ? $transaction->summ : ''), 
+                        'In' => ($transaction->type == 'add' ? number_format($transaction->summ,2) : ''), 
+                        'Out' => ($transaction->type != 'add' ? number_format($transaction->summ,2) : ''), 
                         'Balance' => '', 
                         'Bet' => '', 
                         'Win' => '', 
@@ -149,13 +149,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'Sum' => '', 
                         'In' => '', 
                         'Out' => '', 
-                        'Balance' => number_format($stat->balance, 4, '.', ''), 
-                        'Bet' => number_format($stat->bet, 4, '.', ''), 
-                        'Win' => number_format($stat->win, 4, '.', ''), 
-                        'IN_GAME' => number_format($stat->percent, 4, '.', ''), 
-                        'IN_JPS' => number_format($stat->percent_jps, 4, '.', ''), 
-                        'IN_JPG' => number_format($stat->percent_jpg, 4, '.', ''), 
-                        'Profit' => number_format($stat->profit, 4, '.', ''), 
+                        'Balance' => number_format($stat->balance, 2), 
+                        'Bet' => number_format($stat->bet, 2), 
+                        'Win' => number_format($stat->win, 2), 
+                        'IN_GAME' => number_format($stat->percent, 2), 
+                        'IN_JPS' => number_format($stat->percent_jps, 2), 
+                        'IN_JPG' => number_format($stat->percent_jpg, 2), 
+                        'Profit' => number_format($stat->profit, 2), 
                         'Date' => strtotime($stat->date_time)
                     ];
                 }
@@ -169,14 +169,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $statistics[] = [
                         'type' => 'BankStat', 
                         'Name' => $stat->name, 
-                        'Old' => $stat->old, 
-                        'New' => $stat->new, 
+                        'Old' => number_format($stat->old,2), 
+                        'New' => number_format($stat->new,2), 
                         'Game' => '', 
                         'User' => $stat->user->username, 
                         'System' => '', 
-                        'Sum' => number_format($stat->sum, 4, '.', ''), 
-                        'In' => ($stat->type == 'add' ? $stat->sum : ''), 
-                        'Out' => ($stat->type != 'add' ? $stat->sum : ''), 
+                        'Sum' => number_format($stat->sum, 2), 
+                        'In' => ($stat->type == 'add' ? number_format($stat->sum,2) : ''), 
+                        'Out' => ($stat->type != 'add' ? number_format($stat->sum,2) : ''), 
                         'Balance' => '', 
                         'Bet' => '', 
                         'Win' => '', 
@@ -202,9 +202,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'Game' => '', 
                         'User' => $stat->shop->name, 
                         'System' => '', 
-                        'Sum' => number_format($stat->sum, 4, '.', ''), 
-                        'In' => ($stat->type == 'add' ? $stat->sum : ''), 
-                        'Out' => ($stat->type == 'add' ? '' : $stat->sum), 
+                        'Sum' => number_format($stat->sum, 2), 
+                        'In' => ($stat->type == 'add' ? number_format($stat->sum,2) : ''), 
+                        'Out' => ($stat->type == 'add' ? '' : number_format($stat->sum,2)), 
                         'Balance' => '', 
                         'Bet' => '', 
                         'Win' => '', 
