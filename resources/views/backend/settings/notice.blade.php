@@ -47,6 +47,11 @@
                 <button type="submit" class="btn btn-primary">
                     공지 설정
                 </button>
+                <a href="{{route('backend.settings.notice.del')}}">
+                <button type="button" class="btn btn-danger">
+                    공지 삭제
+                </button>
+                </a>
 
             </div>
 

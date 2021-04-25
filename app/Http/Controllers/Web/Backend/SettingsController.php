@@ -29,6 +29,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $notice = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->first();
             return view('backend.settings.notice', compact('notice'));
         }
+        public function noticedel(\Illuminate\Http\Request $request)
+        {
+            \VanguardLTE\Notice::where('user_id', auth()->user()->id)->delete();
+            return redirect()->route('backend.settings.notice')->withSuccess('공지를 삭제하였습니다');
+        }
         public function noticeupdate(\Illuminate\Http\Request $request)
         {
             $notice = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->first();

@@ -1136,6 +1136,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.settings.notice',
         'uses' => 'SettingsController@notice',
     ]);
+    Route::get('settings/notice/del', [
+        'as' => 'backend.settings.notice.del',
+        'uses' => 'SettingsController@noticedel',
+    ]);
     Route::post('settings/notice', [
         'as' => 'backend.settings.notice.update',
         'uses' => 'SettingsController@noticeupdate',
