@@ -31,34 +31,40 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function noticeupdate(\Illuminate\Http\Request $request)
         {
-            $popupimg = $request->file('popupimg');
-            $ext = $popupimg->extension(); 
-            $available_ext = ['png', 'jpg', 'jpeg'];
             $notice = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->first();
-            if (in_array(strtolower($ext), $available_ext))
+            if ($request->hasFile('popupimg'))
             {
-                $fileName = auth()->user()->id . '_' . time().'.'.$ext;  
-                $popupimg->move(public_path('/frontend/uploads'), $fileName);
-                if ($notice){
-                    $notice->image = '/frontend/uploads/' . $fileName;
-                    $notice->save();
+                $popupimg = $request->file('popupimg');
+                $ext = $popupimg->extension(); 
+                $available_ext = ['png', 'jpg', 'jpeg'];
+                
+                if (in_array(strtolower($ext), $available_ext))
+                {
+                    $fileName = auth()->user()->id . '_' . time().'.'.$ext;  
+                    $popupimg->move(public_path('/frontend/uploads'), $fileName);
+                    if ($notice){
+                        $notice->image = '/frontend/uploads/' . $fileName;
+                        $notice->save();
+                    }
+                    else
+                    {
+                        $notice = \VanguardLTE\Notice::create([
+                                'user_id' => auth()->user()->id,
+                                'type' => 'popup',
+                                'image' => '/frontend/uploads/' . $fileName
+                            ]
+                        );
+                    }
+                    return view('backend.settings.notice', compact('notice'));
+
                 }
                 else
                 {
-                    $notice = \VanguardLTE\Notice::create([
-                            'user_id' => auth()->user()->id,
-                            'type' => 'popup',
-                            'image' => '/frontend/uploads/' . $fileName
-                        ]
-                    );
+                    return view('backend.settings.notice', compact('notice'))->withErrors('PNG, JPG, JPEG형식의 이미지만 업로드할수 있습니다');
                 }
-                return view('backend.settings.notice', compact('notice'));
+            }
+            return view('backend.settings.notice', compact('notice'))->withErrors('이미지를 선택하세요');
 
-            }
-            else
-            {
-                return view('backend.settings.notice', compact('notice'))->withError('PNG, JPG, JPEG형식의 이미지만 업로드할수 있습니다');
-            }
             
             
         }
