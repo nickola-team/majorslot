@@ -54,7 +54,7 @@ namespace VanguardLTE\Games\BlackjackSurrenderPT
                 $umid = 0;
             }
             $_obf_0D08333E1D26032E03385B371A3631170E0B3C361B2601 = false;
-            if( $umid == '40124' && $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['action'] == '3' ) 
+            if( $umid == '40124' && $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['action'] == '3' ) //stand
             {
                 $allbet = $slotSettings->GetGameData($slotSettings->slotId . 'Bet');
                 $cardsArr = $slotSettings->GetGameData($slotSettings->slotId . 'Cards');
@@ -62,7 +62,7 @@ namespace VanguardLTE\Games\BlackjackSurrenderPT
                 $currentBox = $slotSettings->GetGameData($slotSettings->slotId . 'currentBox');
                 $state = -1;
                 $_obf_0D153F25383B3F0B113B2C2E021A3D1706222110323122[$currentBox]['state'] = 'stand';
-                $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"action":3,"cardsInfo":[],"index":' . $state . ',"windowId":"qOpl9d"},"ID":40122,"umid":290}';
+                $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"action":3,"cardsInfo":[],"index":' . $state . ',"windowId":"qOpl9d"},"ID":40122,"umid":290}'; //response
                 for( $i = $currentBox - 1; $i >= 0; $i-- ) 
                 {
                     $currentBox = $i;
@@ -166,7 +166,7 @@ namespace VanguardLTE\Games\BlackjackSurrenderPT
                 $response = '{"responseEvent":"spin","responseType":"bet","serverResponse":{"actions":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'actions')) . ',"Boxes":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'Boxes')) . ',"cardsArr":' . json_encode($cardsArr) . ',"state":"0","slotLines":1,"slotBet":' . $allbet . ',"totalFreeGames":0,"currentFreeGames":0,"Balance":' . $_obf_0D1A3E15343531081F13061E15332D2C3B403D0F100901 . ',"afterBalance":' . $_obf_0D1A3E15343531081F13061E15332D2C3B403D0F100901 . ',"bonusWin":0,"totalWin":0,"winLines":[]}}';
                 $slotSettings->SaveLogReport($response, 0, 1, 0, 'bet');
             }
-            if( $umid == '40124' && ($_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['action'] == '2' || $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['action'] == '4') ) 
+            if( $umid == '40124' && ($_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['action'] == '2' || $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['action'] == '4') ) //hit
             {
                 $allbet = $slotSettings->GetGameData($slotSettings->slotId . 'Bet');
                 $cardsArr = $slotSettings->GetGameData($slotSettings->slotId . 'Cards');
@@ -276,7 +276,7 @@ namespace VanguardLTE\Games\BlackjackSurrenderPT
                 $slotSettings->SetGameData($slotSettings->slotId . 'Cards', $cardsArr);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Boxes', $_obf_0D153F25383B3F0B113B2C2E021A3D1706222110323122);
             }
-            if( $umid == '49260' ) 
+            if( $umid == '49260' ) //bet
             {
                 $allbet = 0;
                 $_obf_0D153F25383B3F0B113B2C2E021A3D1706222110323122 = [];
@@ -392,13 +392,16 @@ namespace VanguardLTE\Games\BlackjackSurrenderPT
                             }
                         }
                     }
-                    if( $totalWin + $_obf_0D1C270D093C0C260D070A26232D065C322E08210C2E22 <= $bank ) 
+                    if ($_obf_0D1C270D093C0C260D070A26232D065C322E08210C2E22>0)
                     {
-                        if( $_obf_0D1C270D093C0C260D070A26232D065C322E08210C2E22 > 0 ) 
+                    }
+                    else if( $totalWin + $_obf_0D1C270D093C0C260D070A26232D065C322E08210C2E22 <= $bank ) 
+                    {
+                        /*if( $_obf_0D1C270D093C0C260D070A26232D065C322E08210C2E22 > 0 ) 
                         {
                             $slotSettings->SetGameData($slotSettings->slotId . 'BankReserved', $_obf_0D1C270D093C0C260D070A26232D065C322E08210C2E22);
                             $slotSettings->SetBank((isset($_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['slotEvent']) ? $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['slotEvent'] : ''), -1 * $_obf_0D1C270D093C0C260D070A26232D065C322E08210C2E22);
-                        }
+                        } */
                         break;
                     }
                 }
@@ -526,7 +529,7 @@ namespace VanguardLTE\Games\BlackjackSurrenderPT
                     $slotSettings->SetBank((isset($_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['slotEvent']) ? $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['slotEvent'] : ''), -1 * $totalWin);
                 }
                 $_obf_0D1A3E15343531081F13061E15332D2C3B403D0F100901 = sprintf('%01.2f', $slotSettings->GetBalance()) * 100;
-                $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"dsc":[' . implode(',', $_obf_0D342C03310A1F321D045C2B1A3931212D0B2C241F5B11) . '],"ds":' . $_obf_0D3E2D04253B2E36262C5B19120C23052E3C0634182A11['mainScore'] . ',"ww":' . $totalWin . ',"debug":' . json_encode($_obf_0D153F25383B3F0B113B2C2E021A3D1706222110323122) . ',"dealerCards":' . json_encode($_obf_0D25035C31183316381216122811401A1F2A17243E2B22) . ',"windowId":"mip3DY"},"ID":40125,"umid":43}';
+                $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"dsc":[' . implode(',', $_obf_0D342C03310A1F321D045C2B1A3931212D0B2C241F5B11) . '],"ds":' . $_obf_0D3E2D04253B2E36262C5B19120C23052E3C0634182A11['mainScore'] . ',"ww":' . $totalWin . ',"debug":' . json_encode($_obf_0D153F25383B3F0B113B2C2E021A3D1706222110323122) . ',"dealerCards":' . json_encode($_obf_0D25035C31183316381216122811401A1F2A17243E2B22) . ',"windowId":"mip3DY"},"ID":40125,"umid":43}'; //win result
                 $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"typeBalance":0,"currency":"' . $slotSettings->slotCurrency . '","balanceInCents":' . $_obf_0D1A3E15343531081F13061E15332D2C3B403D0F100901 . ',"deltaBalanceInCents":1},"ID":40085}';
                 $slotSettings->SetGameData($slotSettings->slotId . 'currentBox', $currentBox);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Cards', $cardsArr);
@@ -546,7 +549,7 @@ namespace VanguardLTE\Games\BlackjackSurrenderPT
                     $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"typeBalance":2,"balanceInCents":0},"ID":40083,"umid":3}';
                     $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"typeBalance":0,"currency":"' . $slotSettings->slotCurrency . '","balanceInCents":' . $_obf_0D1A3E15343531081F13061E15332D2C3B403D0F100901 . ',"deltaBalanceInCents":0},"ID":40083,"umid":4}';
                     $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"data":{"commandId":13218,"params":["0","null"]},"ID":50001,"umid":5}';
-                    $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"token":{"secretKey":"","currency":"USD","balance":0,"loginTime":""},"ID":10002,"umid":7}';
+                    $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"token":{"secretKey":"","currency":"KRW","balance":0,"loginTime":""},"ID":10002,"umid":7}';
                     break;
                 case '40294':
                     $_obf_0D0C042906245B03073E5C11081A210E351540320D2B01[] = '3:::{"nicknameInfo":{"nickname":""},"ID":10022,"umid":8}';
