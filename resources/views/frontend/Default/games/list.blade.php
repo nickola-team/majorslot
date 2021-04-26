@@ -17,12 +17,12 @@
                 <img src="{{$notice->image}}" style="width: 100%;vertical-align: bottom;">
             </div>
         </div>
-        <div style="text-align: right;margin: 0 auto;display: block;font-size: 14px;color: #fff;background: #2B2B2B;line-height: 29px;padding-right: 5px;">
+        <div style="text-align: right;margin: 0 auto;display: block;font-size: 20px;color: #fff;background: #2B2B2B;line-height: 30px;padding-right: 10px;">
             <label >
                 <input type="checkbox" id="hide-today" style="margin-right: 5px;">오늘 하루동안 이 창을 열지 않음
             </label>
             &nbsp;&nbsp;
-            <a style="color: red;font-weight:bold; cursor: pointer; " id="banner-close">닫기</a>
+            <a style="color: red;font-weight:bold; cursor: pointer; margin-right: 10px;" id="banner-close">닫기</a>
         </div>
     </div>
 </div>
