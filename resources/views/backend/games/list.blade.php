@@ -127,9 +127,9 @@
 					<div class="icon">
 						<i class="fa fa-line-chart"></i>
 					</div>
-					{{-- @if( auth()->user()->hasRole('distributor') ) --}}
+					@if( auth()->user()->hasRole('admin') )
 						<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="bonus">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
-					{{-- @endif --}}
+					@endif
 				</div>
 			</div>
 			<!-- ./col -->
@@ -138,26 +138,29 @@
 				<div class="small-box bg-light-blue">
 					<div class="inner">
 						<h3>{{ number_format($stats['slots'], 2) }}</h3>
-						<p>일반환수금</p>
+						<p>슬롯 환수금</p>
 					</div>
 					<div class="icon"> 
 						<i class="fa fa-refresh"></i>
 					</div>
-					{{-- @if( auth()->user()->hasRole('distributor') ) --}}
+					@if( auth()->user()->hasRole('admin') )
 					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="slots">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
-					{{-- @endif --}}
+					@endif
 				</div>
 			</div>
 			<div class="col-lg-3 col-xs-6">
 				<!-- small box -->
 				<div class="small-box  bg-green">
 					<div class="inner">
-						<h3>{{ number_format($stats['bank'],2) }}</h3>
-						<p>총 환수금</p>
+						<h3>{{ number_format($stats['table_bank'],2) }}</h3>
+						<p>테이블환수금</p>
 					</div>
 					<div class="icon">
 						<i class="fa fa-refresh"></i>
 					</div>
+					@if( auth()->user()->hasRole('admin') )
+					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="table_bank">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
+					@endif
 				</div>
 			</div>
 			<!-- ./col -->
