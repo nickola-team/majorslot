@@ -15,6 +15,12 @@
 </div>
 <div class="col-md-6">
     <div class="form-group">
+        <label>잭팟기능</label>
+        {!! Form::select('jackpot', ['0' => '비활성', '1' => '활성'], $edit ? $happyhour->jackpot : 0, ['id' => 'jackpot', 'class' => 'form-control']) !!}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
         <label>@lang('app.time')</label>
         @php
             $times = array_combine(\VanguardLTE\HappyHour::$values['time'], \VanguardLTE\HappyHour::$values['time']);
@@ -22,6 +28,7 @@
         {!! Form::select('time', \VanguardLTE\HappyHour::$values['time'], $edit ? $happyhour->time : '', ['class' => 'form-control']) !!}
     </div>
 </div>
+
 <div class="col-md-6">
     <div class="form-group">
         <label>@lang('app.status')</label>

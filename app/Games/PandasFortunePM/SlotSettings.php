@@ -62,6 +62,7 @@ namespace VanguardLTE\Games\PandasFortunePM
         public $scatterODSymbol = [];
         public $wildODSymbol = [];
         public $happyhouruser = null;
+        public $winLines = [];
         public function __construct($sid, $playerId, $credits = null)
         {
            /* if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
@@ -103,7 +104,14 @@ namespace VanguardLTE\Games\PandasFortunePM
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
 
-            $this->jackpotSymbolChance = 60;
+            if ($this->happyhouruser)
+            {
+                $this->jackpotSymbolChance = 0;
+            }
+            else
+            {
+                $this->jackpotSymbolChance = 60;
+            }
 
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
@@ -294,6 +302,181 @@ namespace VanguardLTE\Games\PandasFortunePM
                     }
                 }
             }
+            $this->winLines[0] = [
+                2, 
+                2, 
+                2, 
+                2, 
+                2
+            ];
+            $this->winLines[1] = [
+                1, 
+                1, 
+                1, 
+                1, 
+                1
+            ];
+            $this->winLines[2] = [
+                3, 
+                3, 
+                3, 
+                3, 
+                3
+            ];
+            $this->winLines[3] = [
+                1, 
+                2, 
+                3, 
+                2, 
+                1
+            ];
+            $this->winLines[4] = [
+                3, 
+                2, 
+                1, 
+                2, 
+                3
+            ];
+            $this->winLines[5] = [
+                2, 
+                1, 
+                1, 
+                1, 
+                2
+            ];
+            $this->winLines[6] = [
+                2, 
+                3, 
+                3, 
+                3, 
+                2
+            ];
+            $this->winLines[7] = [
+                1, 
+                1, 
+                2, 
+                3, 
+                3
+            ];
+            $this->winLines[8] = [
+                3, 
+                3, 
+                2, 
+                1, 
+                1
+            ];
+            $this->winLines[9] = [
+                2, 
+                3, 
+                2, 
+                1, 
+                2
+            ];
+            $this->winLines[10] = [
+                2, 
+                1, 
+                2, 
+                3, 
+                2
+            ];
+            $this->winLines[11] = [
+                1, 
+                2, 
+                2, 
+                2, 
+                1
+            ];
+            $this->winLines[12] = [
+                3, 
+                2, 
+                2, 
+                2, 
+                3
+            ];
+            $this->winLines[13] = [
+                1, 
+                2, 
+                1, 
+                2, 
+                1
+            ];
+            $this->winLines[14] = [
+                3, 
+                2, 
+                3, 
+                2, 
+                3
+            ];
+            $this->winLines[15] = [
+                2, 
+                2, 
+                1, 
+                2, 
+                2
+            ];
+            $this->winLines[16] = [
+                2, 
+                2, 
+                3, 
+                2, 
+                2
+            ];
+            $this->winLines[17] = [
+                1, 
+                1, 
+                3, 
+                1, 
+                1
+            ];
+            $this->winLines[18] = [
+                3, 
+                3, 
+                1, 
+                3, 
+                3
+            ];
+            $this->winLines[19] = [
+                1, 
+                3, 
+                3, 
+                3, 
+                1
+            ];
+            $this->winLines[20] = [
+                3, 
+                1, 
+                1, 
+                1, 
+                3
+            ];
+            $this->winLines[21] = [
+                2, 
+                3, 
+                1, 
+                3, 
+                2
+            ];
+            $this->winLines[22] = [
+                2, 
+                1, 
+                3, 
+                1, 
+                2
+            ];
+            $this->winLines[23] = [
+                1, 
+                3, 
+                1, 
+                3, 
+                1
+            ];
+            $this->winLines[24] = [
+                3, 
+                1, 
+                3, 
+                1, 
+                3
+            ];
         }
         public function SetGameData($key, $value)
         {
@@ -800,6 +983,13 @@ namespace VanguardLTE\Games\PandasFortunePM
                 $bonus_spin = rand(1, 10);
                 $spin_percent = 5;
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+                if ($this->happyhouruser->jackpot == 1)
+                {
+                    if ($this->happyhouruser->current_bank > $bet * 1000){
+                        $this->happyhouruser->progressive--;
+                        $this->happyhouruser->save();
+                    }
+                }
             }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
@@ -890,48 +1080,61 @@ namespace VanguardLTE\Games\PandasFortunePM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        public function GetRandomScatterPos($rp)
+        public function GenerateJackpotReel($grandjp = false)
+        {
+            if ($grandjp)
+            {
+                $sym = mt_rand(3,7);
+            }
+            else
+            {
+                $sym = mt_rand(8,13);
+            }
+
+            $lineId = mt_rand(0, count($this->winLines)-1);
+            $line = $this->winLines[$lineId];
+            $reel = [
+                'rp' => []
+            ];
+            for( $index=1;$index<=5;$index++ ) 
+            {
+                $value = mt_rand(0,10);
+                $reel['reel' . $index][-1] = mt_rand(3,13);
+                $lid = $line[$index-1]-1;
+                $reel['reel' . $index][$lid] = $sym;
+                $a = $this->GetNoDuplicationSymbol($sym, -1, 3, 13);
+                $b = $this->GetNoDuplicationSymbol($sym, $a, 3, 13);
+                if ($lid == 0)
+                {
+                    $reel['reel' . $index][1] = $a;
+                    $reel['reel' . $index][2] = $b;
+                }
+                else if ($lid == 1)
+                {
+                    $reel['reel' . $index][0] = $a;
+                    $reel['reel' . $index][2] = $b;
+                }
+                else if ($lid == 2)
+                {
+                    $reel['reel' . $index][0] = $a;
+                    $reel['reel' . $index][1] = $b;
+                }
+                
+                $reel['reel' . $index][3] = mt_rand(3,13);
+                
+                $reel['rp'][] = $value;
+            }
+            return $reel;
+
+        }
+        public function GetRandomSymPos($rp, $sym='1')
         {
             $_obf_scatterposes = [];
-            for( $i = 0; $i < count($rp); $i++ ) 
+            for( $i = 2; $i < count($rp) - 3; $i++ ) 
             {
-                if( $rp[$i] == '1' ) 
+                if( $rp[$i] == $sym ) 
                 {
                     array_push($_obf_scatterposes, $i);
-                    // if( $this->slotReelsConfig[0][2] == 4 ) 
-                    // {
-                    //     if( isset($rp[$i + 1]) && isset($rp[$i + 2]) && isset($rp[$i + 3]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i);
-                    //     }
-                    //     if( isset($rp[$i - 1]) && isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 1);
-                    //     }
-                    //     if( isset($rp[$i - 2]) && isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 2);
-                    //     }
-                    //     if( isset($rp[$i - 3]) && isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 3);
-                    //     }
-                    // }
-                    // else
-                    // {
-                    //     if( isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i);
-                    //     }
-                    //     if( isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 1);
-                    //     }
-                    //     if( isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                    //     {
-                    //         array_push($_obf_scatterposes, $i - 2);
-                    //     }
-                    // }
                 }
             }
             shuffle($_obf_scatterposes);
@@ -989,7 +1192,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                             }
                         }
                         if($issame == true){
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStripBonus' . $_obf_reelStripNumber[$i]});
+                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomSymPos($this->{'reelStripBonus' . $_obf_reelStripNumber[$i]});
                             $isScatter = true;
                         }else{
                             $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStripBonus' . $_obf_reelStripNumber[$i]}));
@@ -997,6 +1200,13 @@ namespace VanguardLTE\Games\PandasFortunePM
                     }
                 }
             }else{
+                if ($this->happyhouruser && $this->happyhouruser->jackpot=='1' && $this->happyhouruser->progressive <= 0)
+                {
+                    $reel = $this->GenerateJackpotReel(mt_rand(0, 100) < 10);
+                    $this->happyhouruser->progressive = mt_rand(30,50);
+                    $this->happyhouruser->save();
+                    return $reel;
+                }
                 if( $winType != 'bonus' ) 
                 {
                     $_obf_reelStripCounts = [];
@@ -1017,6 +1227,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                 }
                 else
                 {
+                    
                     $_obf_reelStripNumber = [
                         1, 
                         2, 
@@ -1036,7 +1247,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                             }
                         }
                         if($issame == true){
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
+                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomSymPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
                             $isScatter = true;
                         }else{
                             $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStrip' . $_obf_reelStripNumber[$i]}));
@@ -1217,9 +1428,9 @@ namespace VanguardLTE\Games\PandasFortunePM
             return $random;
         }
 
-        public function GetNoDuplicationSymbol($first, $second){
+        public function GetNoDuplicationSymbol($first, $second, $from=8, $to=13){
             while(true){
-                $sym = rand(8, 13);
+                $sym = rand($from, $to);
                 if($sym != $first && $sym != $second){
                     return $sym;
                 }

@@ -8,6 +8,8 @@ namespace VanguardLTE
             'total_bank', 
             'current_bank', 
             'over_bank',
+            'jackpot',
+            'progressive',
             'time', 
             'status', 
             'user_id'

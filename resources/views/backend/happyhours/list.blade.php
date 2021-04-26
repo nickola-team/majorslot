@@ -29,6 +29,7 @@
 						<th>총 당첨금</th>
 						<th>남은당첨금</th>
 						<th>오버된당첨금</th>
+						<th>잭팟기능</th>
 						<th>@lang('app.time')</th>
 						<th>@lang('app.status')</th>
 					</tr>
@@ -49,6 +50,7 @@
 						<th>총 당첨금</th>
 						<th>남은당첨금</th>
 						<th>오버된당첨금</th>
+						<th>잭팟기능</th>
 						<th>@lang('app.time')</th>
 						<th>@lang('app.status')</th>
 					</tr>
