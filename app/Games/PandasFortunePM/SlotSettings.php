@@ -975,7 +975,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                 $bonus_spin = rand(1, 10);
                 $spin_percent = 5;
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-                if ($this->happyhouruser->jackpot > 0 && $_obf_granttype=='_bonus')
+                if ($this->happyhouruser->jackpot > 0 && $_obf_granttype=='_bonus' && $spinWin == 1)
                 {
                     $multi = ($this->happyhouruser->jackpot==1)?300:1000;
                     if ($this->happyhouruser->current_bank > $bet * $multi){
@@ -1150,7 +1150,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                 {
                     $reel = $this->GenerateJackpotReel($this->happyhouruser->jackpot==2);
                     $this->jackpotSymbolChance = 0;
-                    $this->happyhouruser->progressive = mt_rand(5,20);
+                    $this->happyhouruser->progressive = mt_rand(5,10);
                     $this->happyhouruser->save();
                     return $reel;
                 }
