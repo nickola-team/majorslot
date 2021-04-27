@@ -33,3 +33,4 @@ bootstrap/cache/packages.php
 composer.lock
 bootstrap/cache/routes-v7.php
 bootstrap/cache/services.php
+/public/front/uploads
