@@ -99,6 +99,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error' => [ 'code' => 'INVALID_TOKEN']];
             }
 
+            $is_test = str_contains($user->username, 'testfor');
+
             return [
                 'uid' => $uid,
                 'player' => [
@@ -106,7 +108,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'brand' => 'major',
                     'currency' => 'KRW',
                     'mode' => 'REAL',
-                    'is_test' => false,
+                    'is_test' => $is_test,
                 ],
                 'balance' => [
                     'value' => strval($user->balance),
