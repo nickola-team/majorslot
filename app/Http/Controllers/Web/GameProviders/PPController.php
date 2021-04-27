@@ -582,17 +582,33 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
                 {
+
                     if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
                     {
-                        $gameList[] = [
-                            'provider' => 'pp',
-                            'gamecode' => $game['gameID'],
-                            'enname' => $game['gameName'],
-                            'name' => preg_replace('/\s+/', '', $game['gameName']),
-                            'title' => __('gameprovider.'.$game['gameName']),
-                            'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
-                            'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
-                        ];
+                        if ($game['gameID'] == 'vswayshammthor')
+                        {
+                            array_unshift($gameList, [
+                                'provider' => 'pp',
+                                'gamecode' => $game['gameID'],
+                                'enname' => $game['gameName'],
+                                'name' => preg_replace('/\s+/', '', $game['gameName']),
+                                'title' => __('gameprovider.'.$game['gameName']),
+                                'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
+                                'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
+                            ]);
+                        }
+                        else
+                        {
+                            $gameList[] = [
+                                'provider' => 'pp',
+                                'gamecode' => $game['gameID'],
+                                'enname' => $game['gameName'],
+                                'name' => preg_replace('/\s+/', '', $game['gameName']),
+                                'title' => __('gameprovider.'.$game['gameName']),
+                                'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
+                                'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
+                            ];
+                        }
                     }
                 }
                 \Illuminate\Support\Facades\Redis::set('pplist', json_encode($gameList));
