@@ -104,14 +104,6 @@ namespace VanguardLTE\Games\PandasFortunePM
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
 
-            if ($this->happyhouruser)
-            {
-                $this->jackpotSymbolChance = 0;
-            }
-            else
-            {
-                $this->jackpotSymbolChance = 60;
-            }
 
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
@@ -894,6 +886,15 @@ namespace VanguardLTE\Games\PandasFortunePM
             ]);
         }
         public function CheckJackpotSymbol(){
+            if ($this->happyhouruser && $this->happyhouruser->jackpot > 0 && $this->happyhouruser->progressive < 1)
+            {
+                $this->jackpotSymbolChance = 0;
+            }
+            else
+            {
+                $this->jackpotSymbolChance = 60;
+            }
+            
             if(rand(0, 100) < $this->jackpotSymbolChance){
                 return false;
             }else{
