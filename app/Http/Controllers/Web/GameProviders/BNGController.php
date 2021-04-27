@@ -114,6 +114,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'value' => strval($user->balance),
                     'version' => time()
                 ],
+                'c_at' => date(DATE_ISO8601),
+                'sent_at' => date(DATE_ISO8601),
                 'tag' => ''
             ];
         }
