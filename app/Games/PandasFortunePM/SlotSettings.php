@@ -103,7 +103,7 @@ namespace VanguardLTE\Games\PandasFortunePM
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
-
+            $this->jackpotSymbolChance = 60;
 
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
@@ -886,15 +886,6 @@ namespace VanguardLTE\Games\PandasFortunePM
             ]);
         }
         public function CheckJackpotSymbol(){
-            if ($this->happyhouruser && $this->happyhouruser->jackpot > 0 && $this->happyhouruser->progressive < 1)
-            {
-                $this->jackpotSymbolChance = 0;
-            }
-            else
-            {
-                $this->jackpotSymbolChance = 60;
-            }
-            
             if(rand(0, 100) < $this->jackpotSymbolChance){
                 return false;
             }else{
@@ -1158,6 +1149,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                 if ($this->happyhouruser && $this->happyhouruser->jackpot>0 && $this->happyhouruser->progressive <= 0)
                 {
                     $reel = $this->GenerateJackpotReel($this->happyhouruser->jackpot==2);
+                    $this->jackpotSymbolChance = 0;
                     $this->happyhouruser->progressive = mt_rand(5,20);
                     $this->happyhouruser->save();
                     return $reel;
