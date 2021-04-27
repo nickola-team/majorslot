@@ -462,16 +462,12 @@ namespace VanguardLTE
         {
             if( $this->hasRole('admin') ) 
             {
-                if( $onlyId ) 
-                {
-                    return Shop::pluck('id');
-                }
-                else
-                {
-                    return Shop::pluck('name', 'id');
-                }
+                $partners = $this->childPartners();
+                $shops = ShopUser::whereIn('user_id', $partners)->pluck('shop_id');
             }
-            $shops = ShopUser::where('user_id', $this->id)->pluck('shop_id');
+            else{
+                $shops = ShopUser::where('user_id', $this->id)->pluck('shop_id');
+            }
             if( count($shops) ) 
             {
                 if( $onlyId ) 
