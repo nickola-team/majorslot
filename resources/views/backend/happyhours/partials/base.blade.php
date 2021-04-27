@@ -16,7 +16,7 @@
 <div class="col-md-6">
     <div class="form-group">
         <label>잭팟기능</label>
-        {!! Form::select('jackpot', ['0' => '비활성', '1' => '활성'], $edit ? $happyhour->jackpot : 0, ['id' => 'jackpot', 'class' => 'form-control']) !!}
+        {!! Form::select('jackpot', ['0' => '비활성', '1' => '메이저', '2' => '그랜드'], $edit ? $happyhour->jackpot : 0, ['id' => 'jackpot', 'class' => 'form-control']) !!}
     </div>
 </div>
 <div class="col-md-6">

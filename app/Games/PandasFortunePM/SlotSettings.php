@@ -983,9 +983,10 @@ namespace VanguardLTE\Games\PandasFortunePM
                 $bonus_spin = rand(1, 10);
                 $spin_percent = 5;
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-                if ($this->happyhouruser->jackpot == 1)
+                if ($this->happyhouruser->jackpot > 0 && $_obf_granttype=='_bonus')
                 {
-                    if ($this->happyhouruser->current_bank > $bet * 1000){
+                    $multi = ($this->happyhouruser->jackpot==1)?300:1000;
+                    if ($this->happyhouruser->current_bank > $bet * $multi){
                         $this->happyhouruser->progressive--;
                         $this->happyhouruser->save();
                     }
@@ -1153,6 +1154,13 @@ namespace VanguardLTE\Games\PandasFortunePM
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
+                if ($this->happyhouruser && $this->happyhouruser->jackpot>0 && $this->happyhouruser->progressive <= 0)
+                {
+                    $reel = $this->GenerateJackpotReel($this->happyhouruser->jackpot==2);
+                    $this->happyhouruser->progressive = mt_rand(5,20);
+                    $this->happyhouruser->save();
+                    return $reel;
+                }
                 if( $winType != 'bonus' ) 
                 {
                     $_obf_reelStripCounts = [];
@@ -1200,13 +1208,6 @@ namespace VanguardLTE\Games\PandasFortunePM
                     }
                 }
             }else{
-                if ($this->happyhouruser && $this->happyhouruser->jackpot=='1' && $this->happyhouruser->progressive <= 0)
-                {
-                    $reel = $this->GenerateJackpotReel(mt_rand(0, 100) < 10);
-                    $this->happyhouruser->progressive = mt_rand(30,50);
-                    $this->happyhouruser->save();
-                    return $reel;
-                }
                 if( $winType != 'bonus' ) 
                 {
                     $_obf_reelStripCounts = [];

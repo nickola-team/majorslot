@@ -4,7 +4,7 @@
 	<td>{{ number_format($happyhour->total_bank,2) }}</td>
 	<td>{{ number_format($happyhour->current_bank,2) }}</td>
 	<td>{{ number_format($happyhour->over_bank,2) }}</td>
-	<td>{{ ($happyhour->jackpot==1)?'활성':'비활성' }}</td>
+	<td>{{ ['비활성','메이저','그랜드'][$happyhour->jackpot] }}</td>
 	<td>{{ \VanguardLTE\HappyHour::$values['time'][$happyhour->time] }}</td>
 	<td>
 		@if($happyhour->status == 0)
