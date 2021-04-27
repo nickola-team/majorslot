@@ -45,6 +45,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $sent_at = $data['sent_at'];
             $session = $data['session'];
             $args = $data['args'];
+            $c_at = date(DATE_ISO8601);
 
             $record = $this->checkuid($uid);
             if ($record)
@@ -84,6 +85,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => $request->getContent(),
                 'response' => json_encode($response)
             ]);
+            $sent_at = date(DATE_ISO8601);
+            $response['c_at'] = $c_at;
+            $response['sent_at'] = $sent_at;
             $securityhash = BNGController::calcSecurityHash(json_encode($response));
             return response()->json($response, 200)->header('Security-Hash', $securityhash);
         }
@@ -114,8 +118,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'value' => strval($user->balance),
                     'version' => time()
                 ],
-                'c_at' => date(DATE_ISO8601),
-                'sent_at' => date(DATE_ISO8601),
                 'tag' => ''
             ];
         }
