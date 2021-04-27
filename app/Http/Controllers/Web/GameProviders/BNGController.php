@@ -45,7 +45,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $sent_at = $data['sent_at'];
             $session = $data['session'];
             $args = $data['args'];
-            $c_at = date(DATE_ISO8601);
+            $c_at = date(sprintf('Y-m-d\TH:i:s%sP', substr(microtime(), 1, 8)));
 
             $record = $this->checkuid($uid);
             if ($record)
@@ -85,7 +85,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => $request->getContent(),
                 'response' => json_encode($response)
             ]);
-            $sent_at = date(DATE_ISO8601);
+            $sent_at = date(sprintf('Y-m-d\TH:i:s%sP', substr(microtime(), 1, 8)));
             $response['c_at'] = $c_at;
             $response['sent_at'] = $sent_at;
             $securityhash = BNGController::calcSecurityHash(json_encode($response));
