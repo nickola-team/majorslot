@@ -57,7 +57,7 @@
 							@include('backend.adjustment.partials.row_shift')
 						@endforeach
 					@else
-						<tr><td colspan="12">@lang('app.no_data')</td></tr>
+						<tr><td colspan="14">@lang('app.no_data')</td></tr>
 					@endif
 					{{-- @if (count($shift_logs))
 						@foreach ($shift_logs as $shift_log)
@@ -103,7 +103,7 @@
 							@include('backend.adjustment.partials.row_shift_log')
 						@endforeach
 					@else
-						<tr><td colspan="12">@lang('app.no_data')</td></tr>
+						<tr><td colspan="14">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					</table>

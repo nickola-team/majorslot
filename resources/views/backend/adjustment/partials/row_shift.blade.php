@@ -21,7 +21,7 @@
 	<td>{{ number_format($adjustment->open_shift->deal_profit - $adjustment->open_shift->mileage - $adjustment->open_shift->convert_deal,2) }}</td>
 	<td>{{ number_format($adjustment->partner->balance+$adjustment->total_in,2) }}</td>
 	@else
-		<td colspan =9>정산을 시작하지 않았습니다.</td>
+		<td colspan =12>정산을 시작하지 않았습니다.</td>
 	@endif
 	
 	<td>

@@ -159,7 +159,17 @@ namespace VanguardLTE
             $users = User::where(['id' => $this->id])->get();
             if( $this->hasRole(['admin']) ) 
             {
-                $users = User::get();
+                $masters = User::where([
+                    'role_id' => 6, 
+                    'parent_id' => $this->id
+                ])->get(); 
+                $agents = User::where('role_id', 5)->whereIn('parent_id' , $masters->pluck('id')->toArray())->get();
+                $distributors = User::where('role_id', 4)->whereIn('parent_id' , $agents->pluck('id')->toArray())->get();
+                $other = User::where('role_id', '<=', 3)->whereIn('shop_id', $this->availableShops())->get();
+                $users = $users->merge($masters);
+                $users = $users->merge($agents);
+                $users = $users->merge($distributors);
+                $users = $users->merge($other);
             }
             if( $this->hasRole(['master']) ) 
             {

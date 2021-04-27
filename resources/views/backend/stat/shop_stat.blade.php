@@ -106,7 +106,7 @@
 							@include('backend.stat.partials.row_shop_stat')
 						@endforeach
 					@else
-						<tr><td colspan="4">@lang('app.no_data')</td></tr>
+						<tr><td colspan="7">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>

@@ -5,6 +5,7 @@ namespace VanguardLTE
     {
         protected $table = 'happyhour_users';
         protected $fillable = [
+            'admin_id',
             'total_bank', 
             'current_bank', 
             'over_bank',

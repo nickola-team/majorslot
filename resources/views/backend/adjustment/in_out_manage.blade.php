@@ -67,7 +67,7 @@
 							@include('backend.adjustment.partials.row_in_out')
 						@endforeach
 					@else
-						<tr><td colspan="8">@lang('app.no_data')</td></tr>
+						<tr><td colspan="9">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>

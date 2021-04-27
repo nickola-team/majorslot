@@ -119,7 +119,7 @@
 							@endif
 						@endforeach
 					@else
-						<tr><td colspan="4">@lang('app.no_data')</td></tr>
+						<tr><td colspan="5">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>

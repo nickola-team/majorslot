@@ -84,7 +84,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->get();
             $stats = [
                 'shops' => $shops->count(), 
-                'agents' => 1, 
+                'masters' => 0, 
+                'agents' => 0, 
                 'distributors' => 0, 
                 'managers' => 0, 
                 'cashiers' => 0, 
@@ -129,8 +130,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( auth()->user()->hasRole(['admin']) ) 
             {
-                $stats['agents'] = \VanguardLTE\User::where('role_id', 5)->count();
-                $stats['distributors'] = \VanguardLTE\User::where('role_id', 4)->count();
+                $masters = auth()->user()->childPartners();
+                $stats['masters'] = count($masters);
+                if (count($masters) > 0){
+                    $agents = \VanguardLTE\User::where('role_id', 5)->whereIn('parent_id', $masters);
+                    $stats['agents'] = $agents->count();
+                    $stats['distributors'] = \VanguardLTE\User::where('role_id', 4)->whereIn('parent_id', $agents->pluck('id')->toArray())->count();
+                }
             }
             if( auth()->user()->hasRole(['master']) ) 
             {
