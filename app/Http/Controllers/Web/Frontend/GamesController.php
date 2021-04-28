@@ -14,7 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
             $frontend = 'Default';
             $excat = ['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan'];
-            if (str_contains($request->root(), '192.168.'))
+            if (str_contains($request->root(), env('ONYX_DOMAIN', 'onyx000.com')))
             {
                 $frontend = 'onyx';
                 $title = '오닉스';
