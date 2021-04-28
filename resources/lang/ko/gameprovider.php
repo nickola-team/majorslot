@@ -412,6 +412,7 @@ return [
         "Juice and Fruits" => "주이스 앤 후루츠",
         "Sky Way" => "스카이 웨이",
         "Lucky Pirates" => "럭키 파이레이츠",
+        "Hand of Gold" => "핸드 오브 골드",
 
         /**
          * Habanero Games
@@ -536,5 +537,6 @@ return [
         "Haunted House" => "하운티 하우스",
         "Disco Funk" => "디스코 펑크",
         "Cashosaurus" => "캐쇼사우러스",
+        "Return To The Feature" => "리턴 투 더 피쳐",
 
 ];
