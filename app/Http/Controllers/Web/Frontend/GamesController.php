@@ -13,8 +13,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $title = trans('app.games');
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
             $frontend = 'Default';
+            $excat = ['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan'];
+            if (str_contains($request->root(), '192.168.'))
+            {
+                $frontend = 'onyx';
+                $title = '오닉스';
+                $excat[] = 'virtualtech';
+                $excat[] = 'skywind';
+            }
 
-            $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan'])->orderby('position')->get();
+            $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position')->get();
             $hotgames = [];
 
             $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');
