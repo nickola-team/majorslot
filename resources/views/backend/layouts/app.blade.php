@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('page-title') - {{ settings('app_name') }}</title>
+    <title>@yield('page-title')</title>
 
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -65,7 +65,7 @@
         <div class="pull-right hidden-xs">
             <b>ver.</b> 7.1
         </div>
-        <strong><a href="http://major777.net/">메이져</a></strong> - Multi Shop System
+        Multi Shop System
     </footer>
 
 </div>

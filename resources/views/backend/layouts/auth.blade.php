@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>@yield('page-title') - {{ settings('app_name') }}</title>
+  <title>@yield('page-title')</title>
   
   
   <!-- Tell the browser to be responsive to screen width -->

@@ -20,7 +20,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             ]);
             $this->users = $users;
         }
-        public function getLogin()
+        public function getLogin(\Illuminate\Http\Request $request)
         {
             $directories = [];
             foreach( glob(resource_path() . '/lang/*', GLOB_ONLYDIR) as $fileinfo ) 
@@ -28,7 +28,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                 $dirname = basename($fileinfo);
                 $directories[$dirname] = $dirname;
             }
-            return view('backend.auth.login', compact('directories'));
+            $title = settings('app_name');
+            if (str_contains($request->root(), env('ONYX_DOMAIN', 'onyx000.com')))
+            {
+                $title = '오닉스';
+            }
+            return view('backend.auth.login', compact('directories','title'));
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

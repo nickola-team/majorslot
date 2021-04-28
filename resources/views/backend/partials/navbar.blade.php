@@ -2,7 +2,7 @@
     <!-- Logo -->
     <a class="logo" href="{{ url('/') }}">
         <span class="logo-mini"><b>G</b></span>
-        <span class="logo-lg"><b>메이져</span>
+        <span class="logo-lg"><b>관리자페이지</span>
     </a>
 
     <!-- Header Navbar: style can be found in header.less -->
