@@ -1,5 +1,5 @@
 function goHome() {
-    top.location.href = "/new/all#";
+    top.location.href = "/";
 }
 
 function goCasino() {
