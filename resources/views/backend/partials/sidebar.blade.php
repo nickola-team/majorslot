@@ -327,7 +327,7 @@
                         <a  href="{{ route('backend.statistics') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.statistics') --}}
-                            회원충환전내역
+                            회원수동지급내역
                         </a>
                     </li>
                     @endpermission

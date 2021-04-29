@@ -830,13 +830,34 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $user_in_out = \DB::select($query);
                     $adj['totalout'] = $user_in_out[0]->totalout;
 
-                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE payeer_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
-                    $user_in_out = \DB::select($query);
-                    $adj['moneyin'] = $user_in_out[0]->moneyin;
+                    $adj['moneyin'] = 0;
+                    $adj['moneyout'] = 0;
 
-                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE payeer_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
-                    $user_in_out = \DB::select($query);
-                    $adj['moneyout'] = $user_in_out[0]->moneyout;
+                    if ($partner->hasRole('distributor'))
+                    {
+                        $shops = $partner->availableShops();
+                        $query = 'SELECT SUM(sum) as moneyin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add"';
+                        $user_in_out = \DB::select($query);
+                        $adj['moneyin'] = $user_in_out[0]->moneyin;
+
+                        $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out"';
+                        $user_in_out = \DB::select($query);
+                        $adj['moneyout'] = $user_in_out[0]->moneyout;
+
+                    }
+                    else
+                    {
+                        $childpartners = $partner->childPartners();
+                        if (count($childpartners) > 0){
+                            $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
+                            $user_in_out = \DB::select($query);
+                            $adj['moneyin'] = $user_in_out[0]->moneyin;
+
+                            $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
+                            $user_in_out = \DB::select($query);
+                            $adj['moneyout'] = $user_in_out[0]->moneyout;
+                        }
+                    }
 
                     $shop_ids = $partner->availableShops();
                     if (count($shop_ids) > 0 )
