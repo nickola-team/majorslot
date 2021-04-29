@@ -335,7 +335,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stats = $statistics->get();
             $statistics = $stats->sortByDesc('created_at')->paginate(20);
             $partner = 0;
-            return view('backend.stat.pay_stat', compact('stat', 'statistics','partner'));
+            return view('backend.stat.pay_stat', compact('stats', 'statistics','partner'));
         }
 
         public function statistics_partner(\Illuminate\Http\Request $request)
@@ -397,7 +397,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stats = $statistics->get();            
             $statistics = $stats->sortByDesc('created_at')->paginate(20);
             $partner = 1;
-            return view('backend.stat.pay_stat_partner', compact('stat', 'statistics','partner'));
+            return view('backend.stat.pay_stat_partner', compact('stats', 'statistics','partner'));
         }
         public function game_stat(\Illuminate\Http\Request $request)
         {

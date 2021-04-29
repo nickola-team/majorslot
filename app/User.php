@@ -674,6 +674,7 @@ namespace VanguardLTE
                     ])
                 ]);
             }
+            $open_shift = null;
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager'))&& $this->hasRole('user')) 
             {
                 $open_shift = OpenShift::where([

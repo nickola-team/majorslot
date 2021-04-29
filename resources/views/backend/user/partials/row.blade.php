@@ -22,12 +22,7 @@
 	<td>미승인</td>
 	@endif
 	<td>
-		@if( 
-			(Auth::user()->hasRole('admin') && $user->hasRole(['agent'])) ||
-			(Auth::user()->hasRole('agent') && $user->hasRole(['distributor'])) ||
-			(Auth::user()->hasRole('manager') && $user->hasRole('user')) ||
-			(Auth::user()->hasRole('cashier') && $user->hasRole('user'))
-		)
+		@if (Auth::user()->hasRole(['master','manager']) && $user->hasRole('user'))
 		<a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user->id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 		</a>
@@ -36,15 +31,7 @@
 		@endif
 	</td>
 	<td>
-		@if(
-    		$user->wager == 0 &&
-    		(
-				(Auth::user()->hasRole('admin') && $user->hasRole(['agent'])) ||
-				(Auth::user()->hasRole('agent') && $user->hasRole(['distributor'])) ||
-				(Auth::user()->hasRole('manager') && $user->hasRole('user')) ||
-				(Auth::user()->hasRole('cashier') && $user->hasRole('user'))
-			)
-		)
+		@if (Auth::user()->hasRole(['master','manager']) && $user->hasRole('user'))
 		<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user->id }}" >
 		<button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 		</a>
