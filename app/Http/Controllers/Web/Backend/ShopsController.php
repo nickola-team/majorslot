@@ -127,6 +127,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                 }
             }
+            $distributors = [];
+            $agents = [];
             if( auth()->user()->hasRole(['admin']) ) 
             {
                 $masters = auth()->user()->childPartners();
@@ -134,21 +136,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 if (count($masters) > 0){
                     $agents = \VanguardLTE\User::where('role_id', 5)->whereIn('parent_id', $masters);
                     $stats['agents'] = $agents->count();
-                    $stats['distributors'] = \VanguardLTE\User::where('role_id', 4)->whereIn('parent_id', $agents->pluck('id')->toArray())->count();
+                    $distributors = \VanguardLTE\User::where('role_id', 4)->whereIn('parent_id', $agents->pluck('id')->toArray());
+                    $stats['distributors'] = $distributors->count();
+                    $distributors = $distributors->pluck('username', 'id')->toArray();
+                    $agents =$agents->pluck('username', 'id')->toArray();
                 }
             }
             if( auth()->user()->hasRole(['master']) ) 
             {
                 $agents = \VanguardLTE\User::where(['role_id' => 5,'parent_id' => auth()->user()->id]);
                 $stats['agents'] = $agents->count();
-                $stats['distributors'] = \VanguardLTE\User::where('role_id', 4)->whereIn('parent_id', $agents->pluck('id')->toArray())->count();
+                $distributors = \VanguardLTE\User::where('role_id', 4)->whereIn('parent_id', $agents->pluck('id')->toArray());
+                $stats['distributors'] = $distributors->count();
+                $distributors = $distributors->pluck('username', 'id')->toArray();
+                $agents =$agents->pluck('username', 'id')->toArray();
             }
             if( auth()->user()->hasRole('agent') ) 
             {
-                $stats['distributors'] = \VanguardLTE\User::where([
+                $distributors = \VanguardLTE\User::where([
                     'role_id' => 4, 
                     'parent_id' => auth()->user()->id
-                ])->count();
+                ]);
+                $stats['distributors'] = $distributors->count();
+                $distributors = $distributors->pluck('username', 'id')->toArray();
             }
             if( auth()->user()->hasRole('distributor') ) 
             {
@@ -158,24 +168,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $stats['distributors'] = 1;
             }
-            if( count($request->all()) ) 
+            /*if( count($request->all()) ) 
             {
                 $stats['agents'] = count($countAgents);
                 $stats['distributors'] = count($countDistributors);
-            }
-            $agents = \VanguardLTE\User::where('role_id', 5)->pluck('username', 'id')->toArray();
-            $distributors = [];
-            if( auth()->user()->hasRole(['admin']) ) 
-            {
-                $distributors = \VanguardLTE\User::where('role_id', 4)->pluck('username', 'id')->toArray();
-            }
-            else if( auth()->user()->hasRole(['agent']) ) 
-            {
-                $distributors = \VanguardLTE\User::where([
-                    'role_id' => 4, 
-                    'parent_id' => auth()->user()->id
-                ])->pluck('username', 'id')->toArray();
-            }
+            } */
+          
             $shops = $shops->paginate(25);
             return view('backend.shops.list', compact('shops', 'categories', 'stats', 'agents', 'distributors'));
         }
