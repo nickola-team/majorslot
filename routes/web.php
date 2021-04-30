@@ -586,6 +586,26 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@create',
         'middleware' => 'permission:users.add'
     ]);
+    Route::get('user/createuserfromcsv', [
+        'as' => 'backend.user.createuserfromcsv',
+        'uses' => 'UsersController@createuserfromcsv',
+        'middleware' => 'permission:users.add'
+    ]);
+    Route::post('user/createuserfromcsv', [
+        'as' => 'backend.user.storeuserfromcsv',
+        'uses' => 'UsersController@storeuserfromcsv',
+        'middleware' => 'permission:users.add'
+    ]);    
+    Route::get('user/createpartnerfromcsv', [
+        'as' => 'backend.user.createpartnerfromcsv',
+        'uses' => 'UsersController@createpartnerfromcsv',
+        'middleware' => 'permission:users.add'
+    ]);
+    Route::post('user/createpartnerfromcsv', [
+        'as' => 'backend.user.storepartnerfromcsv',
+        'uses' => 'UsersController@storepartnerfromcsv',
+        'middleware' => 'permission:users.add'
+    ]);
     Route::post('user/create', [
         'as' => 'backend.user.store',
         'uses' => 'UsersController@store',

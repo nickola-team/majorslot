@@ -26,12 +26,10 @@
 
             @if( $user->id != Auth::id() )
                 @if(
-
-                    (auth()->user()->hasRole('agent') && $user->hasRole('distributor'))
-                    ||
-                    (auth()->user()->hasRole('distributor') && $user->hasRole('manager'))
-                    ||
-                    (auth()->user()->hasRole('manager') && $user->hasRole('user'))
+                     (auth()->user()->hasRole('master') && $user->hasRole('agent'))
+                    || (auth()->user()->hasRole('agent') && $user->hasRole('distributor'))
+                    || (auth()->user()->hasRole('distributor') && $user->hasRole('manager'))
+                    || (auth()->user()->hasRole('manager') && $user->hasRole('user'))
                 )
                 @permission('users.delete')
                 <a href="{{ route('backend.user.delete', $user->id) }}"
@@ -48,8 +46,7 @@
                 @endpermission
                 @endif
 
-                @permission('users.delete')
-                @if(auth()->user()->hasRole('admin') && $user->hasRole(['agent','distributor']) )
+                @if(auth()->user()->hasRole('admin') && $user->hasRole(['master', 'agent', 'distributor']) )
                     <a href="{{ route('backend.user.hard_delete', $user->id) }}"
                         class="btn btn-danger btn-block"
                         data-method="DELETE"
@@ -58,7 +55,6 @@
                         data-confirm-delete="확인">
                         <b>파트너삭제</b></a>
                 @endif
-                @endpermission
 
             @endif
         </div>

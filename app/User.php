@@ -13,6 +13,8 @@ namespace VanguardLTE
             'birthday'
         ];
         protected $fillable = [
+            'first_name',
+            'phone',
             'password', 
             'email', 
             'username', 
@@ -282,36 +284,7 @@ namespace VanguardLTE
 
         public function hierarchyUsersOnly()
         {
-            $level = $this->level();
-            $users = User::where('id', $this->id)->get();
-            for( $i = $level; $i >= 1; $i-- ) 
-            {
-                foreach( $users as $user ) 
-                {
-                    if( $user->level() == $i) 
-                    {
-                        // if( auth()->user()->shop_id > 0 ) 
-                        // {
-                        //     $users = $users->merge(User::where('parent_id', $user->id)->whereHas('rel_shops', function($query)
-                        //     {
-                        //         $query->where('shop_id', $this->shop_id);
-                        //     })->get());
-                        // }
-                        // else
-                        // {
-                            $users = $users->merge(User::where('parent_id', $user->id)->get());
-                        // }
-                    }
-                }
-            }
-
-            for($i = count($users) - 1; $i >= 0; $i--) {
-                $user = $users[$i];
-                if($user->role_id != 1) {
-                    $users->forget($i);
-                }
-            }
-            return $users->pluck('id')->toArray();
+            return $this->availableUsersByRole('user');
         }
         public function hierarchyUserNamesOnly()
         {

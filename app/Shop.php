@@ -6,6 +6,7 @@ namespace VanguardLTE
         protected $table = 'shops';
         protected $fillable = [
             'name', 
+            'alias',
             'balance', 
             'percent', 
             'deal_balance',

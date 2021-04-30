@@ -99,6 +99,228 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->first();
             return view('backend.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour'));
         }
+        public function createuserfromcsv(\Illuminate\Http\Request $request)
+        {
+            return view('backend.user.createfromcsv', ['ispartner' => 0]);
+        }
+        public function createpartnerfromcsv(\Illuminate\Http\Request $request)
+        {
+            return view('backend.user.createfromcsv',  ['ispartner' => 1]);
+        }
+        public function storepartnerfromcsv(\Illuminate\Http\Request $request)
+        {
+            set_time_limit(0);
+            $shopcount = 0;
+            $partnercount = 0;
+            $fuser = [];
+            if ($request->hasFile('csvfile'))
+            {
+                $csvfile = $request->file('csvfile')->getRealPath();
+                $data = array_map('str_getcsv', file($csvfile));
+                $master = null;
+                $agent = null;
+                $distr = null;
+                $manager = null;
+                $parent = auth()->user()->id;
+                $roles = \jeremykenedy\LaravelRoles\Models\Role::get();
+                foreach ($data as $partner)
+                {
+                    $username = $partner[1];
+                    $role = 3;
+                    switch ($partner[3])
+                    {
+                        case '매장': //manager
+                            $parent = $distr->id;
+                            $username = $username . 'co';
+                            $role = 3;
+                            break;
+                        case '총판'://distributor
+                            $parent = $agent->id;
+                            $role = 4;
+                            break;
+                        case '부본사': //agent
+                            $parent = $master->id;
+                            $role = 5;
+                            break;
+                        case '본사'://master
+                            $parent = auth()->user()->id;
+                            $role = 6;
+                            break;
+                    }
+                    try
+                    {
+                        $user = \VanguardLTE\User::where('username', $username)->first();
+                        if ($user)
+                        {
+                            $partner[] = '파트너있음';
+                            $fuser[] = $partner;
+                            break;
+                        }
+                        $user = \VanguardLTE\User::create([
+                            'first_name' => $partner[0],
+                            'username' => $username,
+                            'password' => $partner[2],
+                            'role_id' => $role,
+                            'deal_percent' => $partner[6],
+                            'bank_name' => $partner[7],
+                            'account_no' => $partner[8],
+                            'recommender' => $partner[9],
+                            'parent_id' => $parent,
+                            'status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE, 
+                        ]);
+                        $user->attachRole($roles->find($role));
+                        $partnercount++;
+                    }
+                    catch (Exception $e)
+                    {
+                        $fuser[] = $partner;
+                    }
+
+                    switch ($role)
+                    {
+                        case 3: //manager
+                            $manager = $user;
+                            break;
+                        case 4://distributor
+                            $distr = $user;
+                            break;
+                        case 5: //agent
+                            $agent = $user;
+                            break;
+                        case 6://master
+                            $master = $user;
+                            break;
+                    }
+
+                    if ($role == 3) //if shop?, create a shop
+                    {
+                        try
+                        {
+                            $shop = \VanguardLTE\Shop::where('name', $partner[1])->first();
+                            if ($shop)
+                            {
+                                $partner[] = '매장있음';
+                                $manager->delete(); //delete manager
+                                $partnercount--;
+                                $fuser[] = $partner;
+                                continue;
+                            }
+                            $shop = \VanguardLTE\Shop::create([
+                                'user_id' => $distr->id,
+                                'name' => $partner[1],
+                                'alias' => $partner[0],
+                                'percent' => 90,
+                                'frontend' => 'Default',
+                                'currency' => 'KRW',
+                                'orderby' => 'AZ',
+                                'balance' => 0,
+                                'deal_percent' => $partner[6],
+                                ]);
+                            $open_shift = \VanguardLTE\OpenShift::create([
+                                'start_date' => \Carbon\Carbon::now(), 
+                                'balance' => $shop->balance, 
+                                'user_id' => $distr->id, 
+                                'shop_id' => $shop->id
+                            ]);
+
+                            foreach( [
+                                $master, 
+                                $agent, 
+                                $distr, 
+                                $manager
+                            ] as $user ) 
+                            {
+                                \VanguardLTE\ShopUser::create([
+                                    'shop_id' => $shop->id, 
+                                    'user_id' => $user->id
+                                ]);
+                                $user->update(['shop_id' => $shop->id]);
+                            }
+
+                            \VanguardLTE\Task::create([
+                                'category' => 'shop', 
+                                'action' => 'create', 
+                                'item_id' => $shop->id
+                            ]);
+                        }
+                        catch (Illuminate\Database\QueryException $e)
+                        {
+                            $fuser[] = $partner;
+                        }
+                        $shopcount++;
+                    }
+                }
+            }
+            $ispartner = 1;
+            $msg = $partnercount . '명의 파트너와 ' . $shopcount . '개의 매장을 생성하였습니다.';
+            return view('backend.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
+        }
+
+        public function storeuserfromcsv(\Illuminate\Http\Request $request)
+        {
+            set_time_limit(0);
+            $succeed = 0;
+            $failed = 0;
+            $fuser = [];
+            if ($request->hasFile('csvfile'))
+            {
+                $csvfile = $request->file('csvfile')->getRealPath();
+                $data = array_map('str_getcsv', file($csvfile));
+                $manager = null;
+                $roles = \jeremykenedy\LaravelRoles\Models\Role::get();
+                foreach ($data as $user)
+                {
+                    $shop = \VanguardLTE\Shop::where('name', $user[7])->first();
+                    $shopmanager = \VanguardLTE\User::where('username', $user[7].'co')->first();
+                    if ($shop && $shopmanager) {
+                        try
+                        {
+                            $checkuser = \VanguardLTE\User::where('username', $user[0])->first();
+                            if ($checkuser)
+                            {
+                                $user[] = '회원있음';
+                                $fuser[] = $user;
+                                $failed++;
+                                continue;
+                            }
+                            $newuser = \VanguardLTE\User::create([
+                                'first_name' => $user[2],
+                                'username' => $user[0],
+                                'password' => $user[1],
+                                'role_id' => 1,
+                                'phone' => $user[3],
+                                'bank_name' => $user[4],
+                                'account_no' => $user[5],
+                                'recommender' => $user[6],
+                                'shop_id' => $shop->id,
+                                'parent_id' => $shopmanager->id,
+                                'status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE, 
+                            ]);
+                            $newuser->attachRole($roles->find(1));
+                            \VanguardLTE\ShopUser::create([
+                                'shop_id' => $shop->id, 
+                                'user_id' => $newuser->id
+                            ]);
+                            $succeed++;
+                        }
+                        catch (Illuminate\Database\QueryException $e)
+                        {
+                            $error_code = $e->errorInfo[1];
+                            return redirect()->back()->withErrors($e->getMessage());
+                        }
+                    }
+                    else
+                    {
+                        $user[] = '매장없음';
+                        $fuser[] = $user;
+                        $failed++;
+                    }
+                }
+            }
+            $ispartner = 0;
+            $msg = $succeed . '명의 회원을 생성하였습니다. 실패 ' . $failed . '명';
+            return view('backend.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
+        }
         public function tree(\Illuminate\Http\Request $request)
         {
             $user_id = $request->input('parent');
@@ -699,11 +921,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.user.list')->withErrors(trans('app.you_cannot_delete_yourself'));
             }
             if( !(auth()->user()->hasRole('admin') && $user->hasRole([
+                'master',
                 'agent', 
                 'distributor'
             ])) ) 
             {
                 return redirect()->route('backend.user.list')->withErrors([trans('app.no_permission')]);
+            }
+            if( $user->hasRole('master') ) 
+            {
+                $agents = \VanguardLTE\User::where([
+                    'parent_id' => $user->id, 
+                    'role_id' => 5
+                ])->get();
+                $distributors = \VanguardLTE\User::where('role_id' , 4)->whereIn('parent_id', $agents->pluck('id')->toArray())->get();
             }
             if( $user->hasRole('agent') ) 
             {
@@ -755,11 +986,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if($user->hasRole('user')){
                 $bUser = true;
             }
-            if($user->hasRole('agent')) 
+            if ($agents)
+            {
+                foreach( $agents as $agent ) 
+                {
+                    event(new \VanguardLTE\Events\User\Deleted($agent));
+                    $agent->delete();
+                }
+            }
+            if($user->hasRole(['master','agent'])) 
             {
                 event(new \VanguardLTE\Events\User\Deleted($user));
                 $user->delete();
             }
+
             if($bUser){
                 return redirect()->route('backend.user.tree')->withSuccess(trans('app.user_deleted'));
             }
