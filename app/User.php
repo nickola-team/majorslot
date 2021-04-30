@@ -223,29 +223,7 @@ namespace VanguardLTE
         }
         public function hierarchyUsers()
         {
-            $level = $this->level();
-            $users = User::where('id', $this->id)->get();
-            for( $i = $level; $i >= 1; $i-- ) 
-            {
-                foreach( $users as $user ) 
-                {
-                    if( $user->level() == $i ) 
-                    {
-                        /*if( auth()->user()->shop_id > 0 ) 
-                        {
-                            $users = $users->merge(User::where('parent_id', $user->id)->whereHas('rel_shops', function($query)
-                            {
-                                $query->where('shop_id', $this->shop_id);
-                            })->get());
-                        }
-                        else
-                        {*/
-                            $users = $users->merge(User::where('parent_id', $user->id)->get());
-                        //}
-                    }
-                }
-            }
-            return $users->pluck('id')->toArray();
+            return $this->availableUsers();
         }
 
         public function hierarchyPartners()

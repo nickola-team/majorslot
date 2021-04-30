@@ -77,7 +77,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $shops = $shops->join('shops_user', 'shops_user.shop_id', '=', 'shops.id');
                 $shops = $shops->where('shops_user.user_id', $request->users);
             }
-            $shops = $shops->paginate(25);
             $categories = \VanguardLTE\Category::where([
                 'parent' => 0, 
                 'shop_id' => auth()->user()->shop_id
@@ -177,6 +176,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     'parent_id' => auth()->user()->id
                 ])->pluck('username', 'id')->toArray();
             }
+            $shops = $shops->paginate(25);
             return view('backend.shops.list', compact('shops', 'categories', 'stats', 'agents', 'distributors'));
         }
         public function create()

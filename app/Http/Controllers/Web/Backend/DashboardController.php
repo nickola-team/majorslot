@@ -28,7 +28,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.user.list');
             }
-            $ids = auth()->user()->hierarchyUsers();
+            $ids = auth()->user()->availableUsers();
             $availableShops = auth()->user()->availableShops();
 
             

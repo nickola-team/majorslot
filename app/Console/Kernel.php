@@ -198,7 +198,7 @@ namespace VanguardLTE\Console
                     }
                     $shop->update(['pending' => 0]);
                 }
-            })->everyFiveMinutes();
+            })->everyMinute();
             $schedule->call(function()
             {
                 $task = \VanguardLTE\Task::where([
