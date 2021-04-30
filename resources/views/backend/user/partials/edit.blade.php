@@ -22,18 +22,14 @@
         {!! Form::select('shops[]', $shops, ($edit && $user->hasRole(['admin', 'agent', 'distributor'])) ? $user->shops(true) : Auth::user()->shop_id,
             ['class' => 'form-control', 'id' => 'shops', ($edit) ? 'disabled' : '', ($edit && $user->hasRole(['agent','distributor'])) ? 'multiple' : '']) !!}
     </div>
-    @if($user->hasRole(['agent','distributor']))
-        {{-- <div class="form-group">
-            <label>@lang('app.free_shops')</label>
-            {!! Form::select('free_shops[]', $free_shops, [],
-                ['class' => 'form-control', 'id' => 'free_shops', 'multiple' => 'multiple']) !!}
-        </div> --}}
 
+    @if($user->hasRole(['agent','distributor']) || (auth()->user()->hasRole('admin') && $user->hasRole('master')))
         <div class="form-group">
             <label>딜비%</label>
             <input type="text" class="form-control" id="deal_percent" name="deal_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->deal_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
         </div>    
     @endif
+
 
     <div class="form-group">
         <label>@lang('app.status')</label>

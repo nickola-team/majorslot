@@ -501,6 +501,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
             }
+            if( $data['role_id'] == 5) //agent?
+            {
+                $parent = auth()->user();
+                if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+                {
+                    return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
+                }
+            }
             $user = $this->users->create($data);
             $user->detachAllRoles();
             $user->attachRole($role);
@@ -772,6 +780,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
+                }
+            }
+            if( $user->hasRole([
+                'agent',
+            ]))
+            {
+                $parent = $user->referral;
+                if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+                {
+                    return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
                 }
             }
             $this->users->update($user->id, $data);

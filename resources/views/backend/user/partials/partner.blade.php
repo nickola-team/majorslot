@@ -25,7 +25,7 @@
 </td>
 @endif
 <td>{{ number_format($user['balance'],2) }}</td>
-@if ($user['role_id']==6)
+@if (!auth()->user()->hasRole('admin') && $user['role_id']==6)
 <td>없음</td>
 <td>없음</td>
 @else
