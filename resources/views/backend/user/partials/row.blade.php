@@ -22,7 +22,7 @@
 	<td>미승인</td>
 	@endif
 	<td>
-		@if (Auth::user()->hasRole(['master','manager']) && $user->hasRole('user'))
+		@if (Auth::user()->hasRole(['admin','master','manager']) && $user->hasRole('user'))
 		<a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user->id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 		</a>
@@ -31,7 +31,7 @@
 		@endif
 	</td>
 	<td>
-		@if (Auth::user()->hasRole(['master','manager']) && $user->hasRole('user'))
+		@if (Auth::user()->hasRole(['admin','master','manager']) && $user->hasRole('user'))
 		<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user->id }}" >
 		<button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 		</a>

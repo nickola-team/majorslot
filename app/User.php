@@ -543,14 +543,14 @@ namespace VanguardLTE
             {
                 $payeer = User::where('id', auth()->user()->id)->first();
             }
-            if( $payeer->hasRole('admin') && !$this->hasRole('master') ) 
+            /*if( $payeer->hasRole('admin') && !$this->hasRole('master') ) 
             {
                 return response()->json([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
                 ]);
             }
-            /*if( $payeer->hasRole('master') && !$this->hasRole('agent') ) 
+            if( $payeer->hasRole('master') && !$this->hasRole('agent') ) 
             {
                 return response()->json([
                     'status' => 'error', 
