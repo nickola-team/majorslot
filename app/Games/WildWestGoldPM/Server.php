@@ -47,10 +47,10 @@ namespace VanguardLTE\Games\WildWestGoldPM
             {
                 return '';
             }
-            $isFreeSpin = false;
+            $buyFreeSpin = false;
             if( isset($slotEvent['pur']) && $slotEvent['pur'] == 0) 
             {
-                $isFreeSpin = true;
+                $buyFreeSpin = true;
             }
             $slotEvent['slotEvent'] = $slotEvent['action'];
             if( $slotEvent['slotEvent'] == 'update' ) 
@@ -185,8 +185,8 @@ namespace VanguardLTE\Games\WildWestGoldPM
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bet state"}';
                         exit( $response );
                     }
-                    if($slotEvent['slotEvent'] == 'freespin' && $isFreeSpin == true){
-                        $isFreeSpin = false;
+                    if($slotEvent['slotEvent'] == 'freespin' && $buyFreeSpin == true){
+                        $buyFreeSpin = false;
                     }
                 
                     if( $slotEvent['slotEvent'] == 'doSpin' && $slotSettings->GetBalance() < ($lines * $betline / 2 ) )
@@ -228,7 +228,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 else
                 {
                     $slotEvent['slotEvent'] = 'bet';
-                    if($isFreeSpin == true){
+                    if($buyFreeSpin == true){
                         $slotSettings->SetBalance(-1 * ($betline * 2000), $slotEvent['slotEvent']);
                         $winType = 'bonus';
                         $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
@@ -268,7 +268,14 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $scatter = '1';
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    if ($buyFreeSpin)
+                    {
+                        $reels = $slotSettings->GetBuyFreeSpinReels();
+                    }
+                    else
+                    {
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    }
                     $tempReels = [];
                     $tempWildReels = [];
                     $_wildReelValue = $slotSettings->CheckMultiWild();

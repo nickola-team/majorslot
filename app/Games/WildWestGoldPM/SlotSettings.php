@@ -989,6 +989,48 @@ namespace VanguardLTE\Games\WildWestGoldPM
             return $spinWin;
         }
 
+        public function GetBuyFreeSpinReels()
+        {
+            $reel['reel1'][-1] = rand(7, 13);
+            $reel['reel1'][0] = 11;
+            $reel['reel1'][1] = 1;
+            $reel['reel1'][2] = 12;
+            $reel['reel1'][3] = 12;
+            $reel['reel1'][4] = rand(7, 13);
+
+            $reel['reel2'][-1] = rand(7, 13);
+            $reel['reel2'][0] = 13;
+            $reel['reel2'][1] = 6;
+            $reel['reel2'][2] = 10;
+            $reel['reel2'][3] = 10;
+            $reel['reel2'][4] = rand(7, 13);
+
+            $reel['reel3'][-1] = rand(7, 13);
+            $reel['reel3'][0] = 11;
+            $reel['reel3'][1] = 11;
+            $reel['reel3'][2] = 7;
+            $reel['reel3'][3] = 1;
+            $reel['reel3'][4] = rand(7, 13);
+
+            $reel['reel4'][-1] = rand(7, 13);
+            $reel['reel4'][0] = 6;
+            $reel['reel4'][1] = 7;
+            $reel['reel4'][2] = 8;
+            $reel['reel4'][3] = 10;
+            $reel['reel4'][4] = rand(7, 13);
+
+            $reel['reel5'][-1] = rand(7, 13);
+            $reel['reel5'][0] = 1;
+            $reel['reel5'][1] = 9;
+            $reel['reel5'][2] = 9;
+            $reel['reel5'][3] = 6;
+            $reel['reel5'][4] = rand(7, 13);
+
+            $reel['rp'] = [2,12,2,2,6,9];
+
+            return $reel;
+        }
+
         public function GetReelStrips($winType, $slotEvent)
         {
             $isScatter = false;
