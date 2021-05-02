@@ -199,7 +199,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                         $isFreeSpin = false;
                     }
                 
-                    if( $slotSettings->GetBalance() < ($allbet) )
+                    if( $slotEvent['slotEvent'] == 'doSpin' && $slotSettings->GetBalance() < ($allbet) )
                     {
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid balance"}';
                         exit( $response );
