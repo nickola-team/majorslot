@@ -189,7 +189,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                         $isFreeSpin = false;
                     }
                 
-                    if( $slotSettings->GetBalance() < ($lines * $betline) )
+                    if( $slotSettings->GetBalance() < ($lines * $betline / 2 ) )
                     {
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid balance"}';
                         exit( $response );
