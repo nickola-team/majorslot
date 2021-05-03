@@ -5,7 +5,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     {
         public static function configDBConnection($brand)
         {
-            $site = \VanguardLTE\Website::Where('brand',$brand)->first();
+            $site = \VanguardLTE\WebSite::Where('brand',$brand)->first();
             if ($site)
             {
                 if (!config()->has('database.connections.' . $site->brand))
