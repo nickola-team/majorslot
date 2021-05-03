@@ -1009,12 +1009,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 foreach( $agents as $agent ) 
                 {
                     event(new \VanguardLTE\Events\User\Deleted($agent));
+                    \VanguardLTE\ShopUser::where('user_id', $agent->id)->delete();
                     $agent->delete();
                 }
             }
             if($user->hasRole(['master','agent'])) 
             {
                 event(new \VanguardLTE\Events\User\Deleted($user));
+                \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
                 $user->delete();
             }
 
