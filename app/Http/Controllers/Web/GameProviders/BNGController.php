@@ -447,7 +447,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function makegamelink($gamecode, $mode, $token=null)
         {
             if ($token == null){
-                $t = auth()->user()->api_token;
+                if ($mode == "fun")
+                {
+                    $t = '';
+                }
+                else
+                {
+                    $t = auth()->user()->api_token;
+                }
             }
             else{
                 $t = $token;
