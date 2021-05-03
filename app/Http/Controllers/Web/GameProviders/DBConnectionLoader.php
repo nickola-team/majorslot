@@ -1,7 +1,7 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
-    class DBConnectionLoader
+    class DBConnectionLoader extends \VanguardLTE\Http\Controllers\Controller
     {
         public static function configDBConnection($brand)
         {
