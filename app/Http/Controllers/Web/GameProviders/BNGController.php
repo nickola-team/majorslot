@@ -108,7 +108,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $brand = $tinfo[1];
                 //search the user at sub website's db
                 if (DBConnectionLoader::configDBConnection($brand)){
-                    $user = \VanguardLTE\User::on($brand)->Where('api_token',$token)->get()->first();
+                    $user = \VanguardLTE\User::on($brand)->Where('api_token',$tinfo[0])->first();
                 }
             }
             else //default website's user
