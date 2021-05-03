@@ -1,7 +1,7 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
-    class DBConnectionLoader extends \VanguardLTE\Http\Controllers\Controller
+    class DBConnectionLoader 
     {
         public static function configDBConnection($brand)
         {
@@ -10,7 +10,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if (!config()->has('database.connections.' . $site->brand))
                 {
-                    Config::set('database.connections.' . $site->brand, [
+                    \Config::set('database.connections.' . $site->brand, [
                         'driver' => 'mysql',
                         'url' => env('DATABASE_URL'),
                         'host' => $site->dbhost,
@@ -26,7 +26,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'strict' => false,
                         'engine' => null,
                         'options' => extension_loaded('pdo_mysql') ? array_filter([
-                            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                            \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
                         ]) : [],
                     ]);
                 }
