@@ -276,6 +276,16 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@getgamelink',
     ]);
 
+    Route::get('api/website/getgamelist', [
+        'as' => 'frontend.api.website.gamelist',
+        'uses' => 'ApiController@sitegamelist',
+    ]);
+
+    Route::get('api/website/getgamelink', [
+        'as' => 'frontend.api.website.gamelink',
+        'uses' => 'ApiController@sitegamelink',
+    ]);
+
     //added by shev
     Route::post('api/change_bank_account', [
         'as' => 'frontend.api.change_bank_account',
