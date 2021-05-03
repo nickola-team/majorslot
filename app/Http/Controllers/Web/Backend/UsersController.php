@@ -26,7 +26,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $statuses = ['' => trans('app.all')] + \VanguardLTE\Support\Enum\UserStatus::lists();
             $roles = \jeremykenedy\LaravelRoles\Models\Role::where('level', '<', \Illuminate\Support\Facades\Auth::user()->level())->pluck('name', 'id');
             $roles->prepend(trans('app.all'), '0');
-            $users = \VanguardLTE\User::orderBy('created_at', 'DESC');
+            $users = \VanguardLTE\User::orderBy('username', 'ASC');
             // if( !auth()->user()->shop_id ) 
             // {
             //     if( auth()->user()->hasRole('admin') ) 
