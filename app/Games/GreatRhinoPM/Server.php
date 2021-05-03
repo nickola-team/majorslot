@@ -581,7 +581,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                         // }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
-                            $_obf_CurrentAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                            $_obf_CurrentAvaliableMoney = $slotSettings->GetBank('bonus');
                             if( $_obf_CurrentAvaliableMoney < $_winAvaliableMoney ) 
                             {
                                 $_winAvaliableMoney = $_obf_CurrentAvaliableMoney;

@@ -433,14 +433,15 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
                             if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
                             {
                                 $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;
                             }
                             else
                             {
-                                if($freeSpinNum > 0){
+                                break;
+                                /*if($freeSpinNum > 0){
                                     if($_winAvaliableMoney > $totalWin * $freeSpinNum){
                                         break;
                                     }else{
@@ -448,7 +449,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                                     }
                                 }else{
                                     break;
-                                }
+                                }*/
                             }
                         }
                         else if( $totalWin > 0 && $totalWin <= $_winAvaliableMoney && $winType == 'win' ) 
