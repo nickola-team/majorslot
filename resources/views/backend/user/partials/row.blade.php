@@ -7,6 +7,16 @@
 	<td>
         {{ $user->shop->name}}
     </td>
+	<td>
+	@if ( isset($user->referral))
+        {{ $user->referral->username}}
+	@endif
+    </td>
+	<td>
+	@if ( isset($user->referral) && isset($user->referral->referral))
+		{{ $user->referral->referral->username}}
+	@endif
+    </td>
 
 	@permission('users.balance.manage')
 	<td>{{ number_format($user->balance,2) }}</td>

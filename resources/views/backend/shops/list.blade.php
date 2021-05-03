@@ -249,6 +249,7 @@
 						<th>@lang('app.name')</th>
 						{{-- <th>@lang('app.go_to_shop')</th> --}}
 						<th>@lang('app.distributor')</th>
+						<th>@lang('app.agent')</th>
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin'))
@@ -277,6 +278,7 @@
 						<th>@lang('app.name')</th>
 						{{-- <th>@lang('app.go_to_shop')</th> --}}
 						<th>@lang('app.distributor')</th>
+						<th>@lang('app.agent')</th>
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin'))
