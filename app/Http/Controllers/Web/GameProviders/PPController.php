@@ -36,7 +36,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameList = \Illuminate\Support\Facades\Redis::get('pplist');
             if (!$gameList)
             {
-                $gameList = \PPController::getgamelist('pp');
+                $gameList = PPController::getgamelist('pp');
             }
             $gamename = $code;
             if ($gameList)
@@ -620,6 +620,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink_pp($gamecode)
         {
             $detect = new \Detection\MobileDetect();
+            $user = auth()->user();
+            if ($user == null)
+            {
+                return ['error' => true, 'msg' => '로그인하세요'];
+            }
             $key = [
                 'token' => auth()->user()->api_token,
                 'symbol' => $gamecode,

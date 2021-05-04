@@ -975,6 +975,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $user = auth()->user();
+            if ($user == null)
+            {
+                return ['error' => true, 'msg' => '로그인하세요'];
+            }
             $detect = new \Detection\MobileDetect();
             $response = Http::withHeaders([
                 'Authorization' => config('app.cq9token'),

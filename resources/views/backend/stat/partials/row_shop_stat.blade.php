@@ -1,7 +1,19 @@
 <tr>
 	
-	<td>{{ $stat->shop->name }}</td>
-	<td>{{ $stat->user->username }}</td>
+	<td>
+	@if ($stat->shop)
+		{{ $stat->shop->name }}
+	@else
+		'unknown'
+	@endif
+	</td>
+	<td>
+	@if ($stat->user)
+		{{ $stat->user->username }}
+	@else
+		'unknown'
+	@endif
+	</td>
 	<td>
 		@if ($stat->type == 'add')
 			<span class="text-green">{{ number_format(abs($stat->sum),2) }}	</span>
