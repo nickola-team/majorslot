@@ -483,6 +483,8 @@ namespace VanguardLTE\Games\DancePartyPM
             {
                 $slotState = '';
             }
+            $sum = $sum * $this->CurrentDenom;
+            $game = $this->game;
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {
                 if($slotState == 'bonus'){
