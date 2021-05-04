@@ -374,8 +374,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function makegamelink($gamecode, $mode)
         {
             $detect = new \Detection\MobileDetect();
+            $user = auth()->user();
+            if ($user == null)
+            {
+                return null;
+            }
             $key = [
-                'token' => auth()->user()->api_token,
+                'token' => $user->api_token,
                 'game' => $gamecode,
                 'ts' => time(),
                 'lang' => 'ko',
@@ -398,7 +403,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $url = BNGController::makegamelink($gamecode, "real");
-            return ['error' => false, 'data' => ['url' => $url]];
+            if ($url)
+            {
+                return ['error' => false, 'data' => ['url' => $url]];
+            }
+            return ['error' => true, 'msg' => '로그인하세요'];
+            
         }
 
         public static function bonuscreate($data)

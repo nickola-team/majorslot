@@ -129,6 +129,10 @@
 							<input type="text" class="form-control" id="OutSum" name="summ" placeholder="환전금액"   required autofocus>
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						</div>
+						<div class="form-group">
+							<label for="DealSum">수익금전환</label>
+							<input type="text" class="form-control" id="DealSum" name="dealsumm" placeholder="전환금액"   required>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
@@ -171,11 +175,13 @@
 			$('.outPayment').click(function(event){
 			if( $(event.target).is('.newPayment') ){
 				var id = $(event.target).attr('data-id');
+				var id1 = $(event.target).attr('data-id1');
 			}else{
 				var id = $(event.target).parents('.newPayment').attr('data-id');
+				var id1 = $(event.target).parents('.newPayment').attr('data-id1');
 			}
 			$('#OutSum').val(id);
-			//$('#outAll').val('');
+			$('#DealSum').val(id1);
 		});
 		});
 
@@ -208,10 +214,11 @@
 
 		function adjustment_shift_stat() {
             var _token = $('#_token').val();
+			var _dealsum = $('#DealSum').val();
             $.ajax({
                 type: 'POST',
                 url: '/api/convert_deal_balance',
-                data: { _token: _token },
+                data: { _token: _token, summ: _dealsum },
                 cache: false,
                 async: false,
                 success: function (data) {

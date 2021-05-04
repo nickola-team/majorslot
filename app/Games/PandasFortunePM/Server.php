@@ -30,7 +30,8 @@ namespace VanguardLTE\Games\PandasFortunePM
             // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$userId = 1;
+            	$response = '{"responseEvent":"error","responseType":"","serverResponse":"invalid login"}';
+                exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
@@ -287,7 +288,14 @@ namespace VanguardLTE\Games\PandasFortunePM
                             $isJackpots[$k] = false;
                         }else{
                             $isJackpots[$k] = $slotSettings->CheckJackpotSymbol();
+                            if($isJackpots[$k] == true){
+                                array_push($arrJackpotPos, $initReels['reel5'][$k] . '~' . ($k * 5 + 4));
+                            }
                         }
+                    }
+
+                    if(count($arrJackpotPos) > 0){
+                        $strJackpotPos = '&gsf=' . implode(';', $arrJackpotPos);
                     }
 
                     for($k = 0; $k < count($jackpotWinLines); $k++){
@@ -305,11 +313,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                                     array_push($arrJackpotWin, $initReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[1]);
                                 }
                             }
-                            array_push($arrJackpotPos, $initReels['reel5'][$pos] . '~' . ($pos * 5 + 4));
                         }
-                    }
-                    if(count($arrJackpotPos) > 0){
-                        $strJackpotPos = '&gsf=' . implode(';', $arrJackpotPos);
                     }
                     if(count($arrJackpotWin) > 0){
                         $strJackpotWin = '&coef='. ($betline * $lines) .'&bw=1&end=1&gsf_a=' . implode(';', $arrJackpotWin). '&rw=' . $jackpotWin;
@@ -344,7 +348,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
                             if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
                             {
                                 $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;

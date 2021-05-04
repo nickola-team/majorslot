@@ -893,7 +893,6 @@
 
                                 });
                             } else {
-                                alert('Incorrect server answer');
                                 return false;
                             }
                             /*

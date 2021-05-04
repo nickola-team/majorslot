@@ -30,7 +30,8 @@ namespace VanguardLTE\Games\TheDogHousePM
             // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$userId = 1;
+            	$response = '{"responseEvent":"error","responseType":"","serverResponse":"invalid login"}';
+                exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
@@ -531,7 +532,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
                             if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
                             {
                                 $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;

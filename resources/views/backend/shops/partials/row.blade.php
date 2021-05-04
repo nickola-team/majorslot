@@ -7,10 +7,19 @@
 	</td> --}}
 	<td>
 	@if($shop->creator)
-		@if( Auth::user()->hasRole(['admin', 'agent']) )
+		@if( Auth::user()->hasRole(['admin', 'master', 'agent']) )
 			<a href="{{ route('backend.user.edit', $shop->creator->id) }}" >{{ $shop->creator->username }}</a>
 		@else	
 		{{ $shop->creator->username }}
+		@endif
+	@endif
+	</td>
+	<td>
+	@if($shop->creator && $shop->creator->referral)
+		@if( Auth::user()->hasRole(['admin', 'master', 'agent']) )
+			<a href="{{ route('backend.user.edit', $shop->creator->referral->id) }}" >{{ $shop->creator->referral->username }}</a>
+		@else	
+		{{ $shop->creator->referral->username }}
 		@endif
 	@endif
 	</td>
@@ -33,7 +42,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['master', 'distributor']) )
+		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) )
 		
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $shop->shop_id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs"> 충전</button>
@@ -43,7 +52,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['master', 'distributor']) )
+		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) )
 		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $shop->shop_id }}" >
 	    <button type="button" class="btn btn-block btn-danger btn-xs"> 환전</button>
 		</a>

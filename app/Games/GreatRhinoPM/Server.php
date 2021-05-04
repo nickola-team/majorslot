@@ -30,7 +30,8 @@ namespace VanguardLTE\Games\GreatRhinoPM
             // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$userId = 1;
+            	$response = '{"responseEvent":"error","responseType":"","serverResponse":"invalid login"}';
+                exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
@@ -581,7 +582,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                         // }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
-                            $_obf_CurrentAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                            $_obf_CurrentAvaliableMoney = $slotSettings->GetBank('bonus');
                             if( $_obf_CurrentAvaliableMoney < $_winAvaliableMoney ) 
                             {
                                 $_winAvaliableMoney = $_obf_CurrentAvaliableMoney;

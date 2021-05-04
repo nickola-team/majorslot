@@ -782,6 +782,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_user')]);
             }
             if( !\Auth::user()->hasRole([
+                'admin', 
                 'master', 
                 'agent', 
                 'distributor', 
@@ -794,7 +795,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
             }
-            if( $data['type'] == 'add' && $user->balance < $request->summ ) 
+            if( $data['type'] == 'add' && (!$user->hasRole('admin') && $user->balance < $request->summ ) )
             {
                 return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_user_balance', [
                     'name' => $user->username, 

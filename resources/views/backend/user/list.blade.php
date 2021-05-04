@@ -164,6 +164,8 @@
 							<tr>
 								<th>이름(아이디)</th>
 								<th>매장이름</th>
+								<th>총판</th>
+								<th>부본사</th>
 								@permission('users.balance.manage')
 								<th>@lang('app.balance')</th>
 								{{-- <th>@lang('app.bonus')</th> --}}
@@ -193,6 +195,8 @@
 							<tr>
 								<th>이름(아이디)</th>
 								<th>매장이름</th>
+								<th>총판</th>
+								<th>부본사</th>
 								@permission('users.balance.manage')
 								<th>@lang('app.balance')</th>
 								{{-- <th>@lang('app.bonus')</th> --}}

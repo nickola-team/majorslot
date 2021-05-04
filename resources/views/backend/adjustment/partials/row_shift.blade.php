@@ -28,7 +28,7 @@
 	@if(($adjustment->partner instanceof \VanguardLTE\User && $adjustment->partner->id == auth()->user()->id) || 
 		($adjustment->partner instanceof \VanguardLTE\Shop && auth()->user()->hasRole('manager') && $adjustment->partner->id == auth()->user()->shop_id))
 		@if($adjustment->open_shift)
-		<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $adjustment->partner->balance + $adjustment->partner->deal_balance - $adjustment->partner->mileage }}" >
+		<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ number_format($adjustment->partner->balance,2,'.','')}}" data-id1="{{ number_format($adjustment->partner->deal_balance - $adjustment->partner->mileage,2,'.','') }}">
 			<button type="button" class="btn btn-block btn-success btn-xs">정산</button>
 		</a>
 		@else

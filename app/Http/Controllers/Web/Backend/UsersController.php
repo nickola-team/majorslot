@@ -26,7 +26,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $statuses = ['' => trans('app.all')] + \VanguardLTE\Support\Enum\UserStatus::lists();
             $roles = \jeremykenedy\LaravelRoles\Models\Role::where('level', '<', \Illuminate\Support\Facades\Auth::user()->level())->pluck('name', 'id');
             $roles->prepend(trans('app.all'), '0');
-            $users = \VanguardLTE\User::orderBy('created_at', 'DESC');
+            $users = \VanguardLTE\User::orderBy('username', 'ASC');
             // if( !auth()->user()->shop_id ) 
             // {
             //     if( auth()->user()->hasRole('admin') ) 
@@ -1009,12 +1009,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 foreach( $agents as $agent ) 
                 {
                     event(new \VanguardLTE\Events\User\Deleted($agent));
+                    \VanguardLTE\ShopUser::where('user_id', $agent->id)->delete();
                     $agent->delete();
                 }
             }
             if($user->hasRole(['master','agent'])) 
             {
                 event(new \VanguardLTE\Events\User\Deleted($user));
+                \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
                 $user->delete();
             }
 
