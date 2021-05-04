@@ -130,7 +130,7 @@
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="OutSum">거절하시겠습니까</label>
+							<label for="OutSum">취소하시겠습니까</label>
 							<input type="hidden" id="out_id" name="out_id">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						</div>

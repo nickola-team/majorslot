@@ -254,6 +254,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = \VanguardLTE\User::find(\Auth::id());
+
             if(!$user->hasRole('manager') && !$user->hasRole('distributor') && !$user->hasRole('agent')){
                 return response()->json([
                     'error' => true, 
@@ -261,16 +262,33 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '001'
                 ], 200);
             }
+
+            $summ = $request->summ;
            
             if($user->hasRole('manager')){
                 $shop = $user->shop;
                 $real_deal_balance = $shop->deal_balance - $shop->mileage;
-                if ($real_deal_balance > 0) {
+                if ($summ )
+                {
+                    if ($real_deal_balance <= $summ)
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '수익금이 부족합니다.',
+                            'code' => '000'
+                        ], 200);
+                    }
+                }
+                else
+                {
+                    $summ = $real_deal_balance;
+                }
+                if ($summ > 0) {
                     //out balance from master
                     $distr = $user->referral;
                     $agent = $distr->referral;
                     $master = $agent->referral;
-                    if ($master->balance < $real_deal_balance)
+                    if ($master->balance < $summ)
                     {
                         return response()->json([
                             'error' => true, 
@@ -279,7 +297,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $real_deal_balance]
+                        ['balance' => $master->balance - $summ]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 
@@ -288,10 +306,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('money_in', $real_deal_balance);
+                        $open_shift->increment('money_in', $summ);
                     }
 
-                    $shop->balance = $shop->balance + $real_deal_balance;
+                    $shop->balance = $shop->balance + $summ;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'shop_id' => $shop->id, 
                         'type' => 'shop',
@@ -299,21 +317,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('convert_deal', $real_deal_balance);
+                        $open_shift->increment('convert_deal', $summ);
                     }
                     \VanguardLTE\ShopStat::create([
                         'user_id' => $master->id,
                         'type' => 'add',
-                        'sum' => $real_deal_balance,
+                        'sum' => $summ,
                         'shop_id' => $shop->id,
                         'date_time' => \Carbon\Carbon::now()
                     ]);
 
-                    $shop->deal_balance = 0;
+                    $shop->deal_balance = $real_deal_balance - $summ;
                     $shop->mileage = 0;
                     $shop->save();
-
-                    
+                   
                 }
                 else{
                     return response()->json([
@@ -325,7 +342,22 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else {
                 $real_deal_balance = $user->deal_balance - $user->mileage;
-                if ($real_deal_balance > 0) {
+                if ($summ )
+                {
+                    if ($real_deal_balance <= $summ)
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '수익금이 부족합니다.',
+                            'code' => '000'
+                        ], 200);
+                    }
+                }
+                else
+                {
+                    $summ = $real_deal_balance;
+                }
+                if ($summ > 0) {
                     //out balance from master
                     $master = $user->referral;
                     while ($master!=null && !$master->hasRole('master'))
@@ -342,7 +374,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     
-                    if ($master->balance < $real_deal_balance)
+                    if ($master->balance < $summ)
                     {
                         return response()->json([
                             'error' => true, 
@@ -351,7 +383,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $real_deal_balance]
+                        ['balance' => $master->balance - $summ]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 
@@ -360,10 +392,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('money_in', $real_deal_balance);
+                        $open_shift->increment('money_in', $summ);
                     }
 
-                    $user->balance = $user->balance + $real_deal_balance;
+                    $user->balance = $user->balance + $summ;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $user->id, 
                         'end_date' => null,
@@ -371,7 +403,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('convert_deal', $real_deal_balance);
+                        $open_shift->increment('convert_deal', $summ);
                     }
 
                     \VanguardLTE\Transaction::create([
@@ -379,11 +411,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'payeer_id' => $master->id,
                         'system' => $user->username,
                         'type' => 'add',
-                        'summ' => $real_deal_balance,
+                        'summ' => $summ,
                         'shop_id' => $user->shop_id
                     ]);
 
-                    $user->deal_balance = 0;
+                    $user->deal_balance = $real_deal_balance - $summ;
                     $user->mileage = 0;
                     $user->save();
                 }
