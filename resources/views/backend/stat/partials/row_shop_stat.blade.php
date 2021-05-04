@@ -4,14 +4,14 @@
 	@if ($stat->shop)
 		{{ $stat->shop->name }}
 	@else
-		'unknown'
+		unknown
 	@endif
 	</td>
 	<td>
 	@if ($stat->user)
 		{{ $stat->user->username }}
 	@else
-		'unknown'
+		unknown
 	@endif
 	</td>
 	<td>
