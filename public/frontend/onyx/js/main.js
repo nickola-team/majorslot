@@ -34,7 +34,7 @@ function loginSubmit(frm) {
         async: false,
         success: function (data, status) {
             if (data.error) {
-                alert('아이디 또는 비밀번호가 잘못되었습니다.');
+                alert(data.msg);
             }
 
             location.reload();
