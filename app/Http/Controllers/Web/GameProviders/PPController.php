@@ -33,16 +33,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function gamecodetoname($code)
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get('pplist');
-            if (!$gameList)
-            {
-                $gameList = PPController::getgamelist('pp');
-            }
+            $gamelist = PPController::getgamelist('pp');
             $gamename = $code;
             if ($gameList)
             {
-                $games = json_decode($gameList, true);
-                foreach($games as $game)
+                foreach($gameList as $game)
                 {
                     if ($game['gamecode'] == $code)
                     {
