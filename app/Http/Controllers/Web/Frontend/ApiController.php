@@ -61,6 +61,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             return response()->json(['error' => false, 'msg' => '성공']);
         }
+        public function getbalance(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
+
+            $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance,2);
+
+            return response()->json(['error' => false, 'balance' => $balance]);
+        }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
             $provider = $request->provider;
