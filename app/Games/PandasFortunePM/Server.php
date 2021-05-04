@@ -287,7 +287,14 @@ namespace VanguardLTE\Games\PandasFortunePM
                             $isJackpots[$k] = false;
                         }else{
                             $isJackpots[$k] = $slotSettings->CheckJackpotSymbol();
+                            if($isJackpots[$k] == true){
+                                array_push($arrJackpotPos, $initReels['reel5'][$k] . '~' . ($k * 5 + 4));
+                            }
                         }
+                    }
+
+                    if(count($arrJackpotPos) > 0){
+                        $strJackpotPos = '&gsf=' . implode(';', $arrJackpotPos);
                     }
 
                     for($k = 0; $k < count($jackpotWinLines); $k++){
@@ -305,11 +312,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                                     array_push($arrJackpotWin, $initReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[1]);
                                 }
                             }
-                            array_push($arrJackpotPos, $initReels['reel5'][$pos] . '~' . ($pos * 5 + 4));
                         }
-                    }
-                    if(count($arrJackpotPos) > 0){
-                        $strJackpotPos = '&gsf=' . implode(';', $arrJackpotPos);
                     }
                     if(count($arrJackpotWin) > 0){
                         $strJackpotWin = '&coef='. ($betline * $lines) .'&bw=1&end=1&gsf_a=' . implode(';', $arrJackpotWin). '&rw=' . $jackpotWin;
