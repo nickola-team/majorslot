@@ -68,7 +68,7 @@ return [
     'success' => '성공',
     'error' => '오류',
     'turned_off' => 'OFF',
-    'site_is_turned_off' => '사이트가 꺼져 있습니다.',
+    'site_is_turned_off' => '로그인 후 이용가능합니다.',
     'your_shop_is_blocked' => '매장이 불록되었습니다.',
     'percentage_of_JPG' => 'JPG 비율:이름 <b>:퍼센트%</b>',
     'percentage_of_JPS' => 'JPS 비율:이름 <b>:퍼센트%</b>',

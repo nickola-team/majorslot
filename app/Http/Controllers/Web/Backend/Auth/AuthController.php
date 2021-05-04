@@ -29,9 +29,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                 $directories[$dirname] = $dirname;
             }
             $title = settings('app_name');
-            if (str_contains($request->root(), env('ONYX_DOMAIN', 'onyx000.com')))
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            if ($site)
             {
-                $title = '오닉스';
+                $title = $site->title;
             }
             return view('backend.auth.login', compact('directories','title'));
         }
