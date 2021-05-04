@@ -35,9 +35,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist = PPController::getgamelist('pp');
             $gamename = $code;
-            if ($gameList)
+            if ($gamelist)
             {
-                foreach($gameList as $game)
+                foreach($gamelist as $game)
                 {
                     if ($game['gamecode'] == $code)
                     {
