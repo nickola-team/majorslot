@@ -549,6 +549,7 @@ namespace VanguardLTE
                     'message' => trans('app.wrong_sum')
                 ]);
             }
+            $summ = abs($summ);
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager'))&& $this->hasRole('user') ) 
             {
                 if( !$shop ) 
