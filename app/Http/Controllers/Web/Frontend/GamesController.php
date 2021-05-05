@@ -15,10 +15,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $frontend = 'Default';
             $excat = ['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan'];
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $adminid = 1;
             if ($site)
             {
                 $frontend = $site->frontend;
                 $title = $site->title;
+                $adminid = $site->adminid;
                 $excat[] = 'virtualtech';
                 $excat[] = 'skywind';
             }
@@ -99,7 +101,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             shuffle($hotgames);
 
-            $notice = \VanguardLTE\Notice::where('user_id', 1)->first(); //for admin's popup
+            $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->first(); //for admin's popup
 
             if ($shop_id != 0) { //it is logged in
                 $master = auth()->user()->referral;
@@ -109,7 +111,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 if ($master)
                 {
-                    $notice = \VanguardLTE\Notice::where('user_id', $master->id)->first(); //for master's popup
+                    $notice = \VanguardLTE\Notice::where(['user_id' => $master->id, 'active' => 1])->first(); //for master's popup
                 }
             }
 
