@@ -186,12 +186,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function inoutList_json(\Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'count' => 0, 'now' => \Carbon\Carbon::now()]);
+            }
+
+            if (isset($request->rating))
+            {
+                auth()->user()->rating = $request->rating;
+                auth()->user()->save();
+            }
+
             $res['now'] = \Carbon\Carbon::now();
             $transactions = \VanguardLTE\WithdrawDeposit::where([
                 'status' => 0,
                 'payeer_id' => $request->id])->get();
             $res['count'] = $transactions->count();
-            return json_encode($res);
+            $res['rating'] = auth()->user()->rating;
+            return response()->json($res);
         }
 
         public function getgamelist(\Illuminate\Http\Request $request){

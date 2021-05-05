@@ -14,6 +14,11 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">충환전관리</h3>
+				@if (auth()->user()->hasRole('master'))
+				<div class="pull-right box-tools">
+					<input type="checkbox" id="ratingOn" checked={{auth()->user()->rating>0?'true':'false'}}>
+						알림음 ON/OFF
+				@endif
 			</div>
 			@if (auth()->user()->hasRole('admin'))
 			<div class="box-body">
@@ -39,11 +44,14 @@
 				<button class="btn btn-primary" id="change-bank-account-btn" onclick="change_bank_account_info();">
 					계좌정보변경
 				</button>
+				<input type="checkbox" id="ratingOn" checked={{auth()->user()->rating>0?'true':'false'}}>
+						알림음 ON/OFF
 			</div>
 			@endif
-                    <div class="box-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
+			
+			<div class="box-body">
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped">
 					<thead>
 					<tr>
 						@if(auth()->user()->hasRole('distributor'))
@@ -165,6 +173,20 @@
 				var id = $(event.target).parents('.newPayment').attr('data-id');
 			}
 			$('#out_id').val(id);
+		});
+		$('#ratingOn').click(function (event) {
+			var rating = 0;
+			if($(this).is(":checked")){
+				rating = 1;
+			}
+			$.ajax({
+					url: "/api/inoutlist.json",
+					type: "GET",
+					data: {'rating': rating },
+					dataType: 'json',
+					success: function (data) {
+                    }
+				});
 		});
 		function change_bank_account_info() {
             var bank_name = $('#bank_name').val();
