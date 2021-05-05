@@ -220,7 +220,12 @@
 		var currentBalance = 0;
 		var userName = "";
 	@endif
-
+  $(document).ready(function() {
+    var prevTime = localStorage.getItem("hide_notification");
+    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+      $("#notification").hide();
+    }
+  })
 </script>
 
 
@@ -392,7 +397,30 @@
             2006~2021 스토리 SLOT All rights reserved.
           </div>
          </div>
-        <div></div>
+         <div>
+        @if ($notice != null)
+        <div class="pop01_popup1 draggable02" id="notification" style="position: absolute; top: 0px; left: 0px; z-index: 1000;">
+          <div class="pop01_popup_wrap">
+              <div class="pop01_popup_btn_wrap">
+                  <ul>
+                      <li><a href="#" onclick="closeNotification(false);"><span class="pop01_popup_btn">8시간동안 창을 열지 않음</span></a></li>
+                      <li><a href="#" onclick="closeNotification(true);"><span class="pop01_popup_btn">닫기 X</span></a></li>
+                  </ul>
+              </div>
+              <div class="pop01_popup_box">
+                  <div class="pop01_popup_text" style="padding: 30px; width: 500px;">
+                    <span class="pop01_popup_font1" style="border-bottom: 2px solid rgb(255, 255, 255); margin-bottom: 15px;"></span>
+                    <span class="pop01_popup_font2">
+                          <div>
+                              <?php echo $notice->content ?>
+                          </div>
+                    </span>
+                  </div>
+              </div>
+          </div>
+        </div>
+        </div>
+        @endif
       </div>
     </div>
 

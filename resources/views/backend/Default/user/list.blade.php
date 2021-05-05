@@ -94,52 +94,45 @@
 				</div>
 			</div>
 			<div class="box-body">
-				<div class="row">
-					<form action="" method="GET" id="users-form" >
-						@if (Auth::user()->hasRole('cashier'))
-							<div class="col-md-6">
-								<label>Search</label>
-								@endif
+			<form action="" method="GET" id="users-form" >
+					<div class="col-md-6">
+						<div class="form-group">
+						<label>이름(아이디)</label>
+						<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="@lang('app.search_for_users')">
+						</div>
+					</div>
+					<div class="col-md-6">
+					<div class="form-group">
+						<label>@lang('app.status')</label>
+						{!! Form::select('status', $statuses, Request::get('status'), ['id' => 'status', 'class' => 'form-control']) !!}
+					</div>
+					</div>
+				
+					<div class="col-md-6">
+					<div class="form-group">
+						<label>매장</label>
+						{!! Form::select('shop_id',
+							(Auth::user()->hasRole(['admin','agent']) ? [0 => __('app.no_shop')] : [])
+							+
+							Auth::user()->shops_array(), /*Auth::user()->shop_id*/Request::get('shop_id'), ['class' => 'form-control', 'style' => 'width: 100%;', 'id' => 'shop_id']) !!}
+					</div>
+					</div>
 
-								@if (!Auth::user()->hasRole('cashier'))
-									<div class="col-md-4">
-										{{-- <label>@lang('app.search')</label> --}}
-										<label>이름(아이디)</label>
-										@endif
-										<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="@lang('app.search_for_users')">
-									</div>
-									@if (Auth::user()->hasRole('cashier'))
-										<div class="col-md-6">
-											<label>@lang('app.status')</label>
-											@endif
+					<div class="col-md-6">
+					<div class="form-group">
+						<label>정렬순</label>
+						{!! Form::select('orderby',
+							['알파벳','보유금'], Request::get('orderby'), ['class' => 'form-control', 'style' => 'width: 100%;', 'id' => 'orderby']) !!}
+					</div>
+					</div>
+			</div>
+			<div class="box-footer">
+				<button type="submit" class="btn btn-primary">
+					@lang('app.filter')
+				</button>
+			</div>
+			</form>
 
-											@if (!Auth::user()->hasRole('cashier'))
-												<div class="col-md-4">
-													<label>@lang('app.status')</label>
-													@endif
-													{!! Form::select('status', $statuses, Request::get('status'), ['id' => 'status', 'class' => 'form-control']) !!}
-												</div>
-												<div class="col-md-4">
-													<label>매장</label>
-													{!! Form::select('shop_id',
-														(Auth::user()->hasRole(['admin','agent']) ? [0 => __('app.no_shop')] : [])
-														+
-														Auth::user()->shops_array(), /*Auth::user()->shop_id*/Request::get('shop_id'), ['class' => 'form-control', 'style' => 'width: 100%;', 'id' => 'shop_id']) !!}
-												</div>
-												{{-- @if (!Auth::user()->hasRole('cashier'))
-													<div class="col-md-4">
-														<label>@lang('app.role')</label>
-														{!! Form::select('role', $roles, Request::get('role'), ['id' => 'role', 'class' => 'form-control']) !!}
-													</div>
-												@endif --}}
-										</div>
-							</div>
-							<div class="box-footer">
-								<button type="submit" class="btn btn-primary">
-									@lang('app.filter')
-								</button>
-					</form>
-				</div>
 			</div>
 
 			<div class="box box-primary">

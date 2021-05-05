@@ -26,48 +26,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $statuses = ['' => trans('app.all')] + \VanguardLTE\Support\Enum\UserStatus::lists();
             $roles = \jeremykenedy\LaravelRoles\Models\Role::where('level', '<', \Illuminate\Support\Facades\Auth::user()->level())->pluck('name', 'id');
             $roles->prepend(trans('app.all'), '0');
-            $users = \VanguardLTE\User::orderBy('username', 'ASC');
-            // if( !auth()->user()->shop_id ) 
-            // {
-            //     if( auth()->user()->hasRole('admin') ) 
-            //     {
-            //         $users = $users->whereIn('role_id', [
-            //             4, 
-            //             5
-            //         ]);
-            //     }
-            //     if( auth()->user()->hasRole('agent') ) 
-            //     {
-            //         $distributors = auth()->user()->availableUsersByRole('distributor');
-            //         if( $distributors ) 
-            //         {
-            //             $users = $users->whereIn('id', $distributors);
-            //         }
-            //         else
-            //         {
-            //             $users = $users->where('id', 0);
-            //         }
-            //     }
-            //     if( auth()->user()->hasRole('distributor') ) 
-            //     {
-            //         $managers = auth()->user()->availableUsersByRole('manager');
-            //         if( $managers ) 
-            //         {
-            //             $users = $users->whereIn('id', $managers);
-            //         }
-            //         else
-            //         {
-            //             $users = $users->where('id', 0);
-            //         }
-            //     }
-            // }
-            // else
-            // {
-            //     $users = $users->whereIn('id', auth()->user()->hierarchyUsersOnly())->whereHas('rel_shops', function($query)
-            //     {
-            //         $query->where('shop_id', auth()->user()->shop_id);
-            //     });
-            // }
+            if($request->orderby)
+            {
+                if ($request->orderby == 0)
+                {
+                    $users = \VanguardLTE\User::orderBy('username', 'ASC');
+                }
+                else
+                {
+                    $users = \VanguardLTE\User::orderBy('balance', 'DESC');
+                }
+            }
+            else
+            {
+                $users = \VanguardLTE\User::orderBy('username', 'ASC');
+            }
+                
+
             if($request->shop_id != '' && $request->shop_id > 0)
             {
                 $shop = \VanguardLTE\Shop::where('id', $request->shop_id)->first();
@@ -849,6 +824,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $data['type'] = 'add';
             }
             $user = \VanguardLTE\User::find($request->user_id);
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
+            }
             $request->summ = floatval($request->summ);
             if( $request->all && $request->all == '1' ) 
             {

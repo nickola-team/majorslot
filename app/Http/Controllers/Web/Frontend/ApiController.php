@@ -47,10 +47,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.your_account_is_banned')]);
             }
             
-            if(count($sessionRepository->getUserSessions($user->id)) ) 
+            $sessions = $sessionRepository->getUserSessions($user->id);
+            $expiretime = env('EXPIRE_TIME_CLOSE'. 30);
+            $count = count($sessions);
+            if(count($sessions) > 0 ) 
             {
-                return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
+                foreach ($sessions as $s)
+                {
+                    if ($s->last_activity->diffInSeconds(\Carbon\Carbon::now()) >  $expiretime)
+                    {
+                        $count--;
+                    }
+                }
+                if ($count > 0){
+                    return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
+                }
             }
+
+            $sessionRepository->invalidateAllSessionsForUser($user->id);
 
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
             
@@ -73,6 +87,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
             $provider = $request->provider;
             $gamecode = $request->gamecode;
             $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
@@ -169,12 +186,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function inoutList_json(\Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'count' => 0, 'now' => \Carbon\Carbon::now()]);
+            }
+
+            if (isset($request->rating))
+            {
+                auth()->user()->rating = $request->rating;
+                auth()->user()->save();
+            }
+
             $res['now'] = \Carbon\Carbon::now();
             $transactions = \VanguardLTE\WithdrawDeposit::where([
                 'status' => 0,
                 'payeer_id' => $request->id])->get();
             $res['count'] = $transactions->count();
-            return json_encode($res);
+            $res['rating'] = auth()->user()->rating;
+            return response()->json($res);
         }
 
         public function getgamelist(\Illuminate\Http\Request $request){
@@ -451,6 +479,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
+            if ($user->hasRole('user'))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '개인충전은 지원하지 않습니다',
+                    'code' => '004'
+                ], 200);
+            }
             if($user->bank_name == null || $user->bank_name == ''){
                 return response()->json([
                     'error' => true, 
@@ -521,6 +557,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
+            if ($user->hasRole('user'))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '개인환전은 지원하지 않습니다',
+                    'code' => '004'
+                ], 200);
+            }
             if($user->bank_name == null || $user->bank_name == ''){
                 return response()->json([
                     'error' => true, 

@@ -592,7 +592,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if( $request->name != '' ) 
             {
                 $statistics = $statistics->join('shops', 'shops.id', '=', 'shops_stat.shop_id');
-                $statistics = $statistics->where('shops.id', $request->name);
+                $statistics = $statistics->where('shops.name', $request->name);
             }
             if( $request->sum_from != '' ) 
             {
@@ -922,7 +922,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $categories = \VanguardLTE\Category::where('shop_id', 0);
             $saved_category = $request->category;
             if($saved_category != null && $saved_category != "0"){
-                $category = $categories->where('category_id', $saved_category);
+                $category = $categories->where('id', $saved_category);
             }
             $categories = $categories->get();
             $adjustments = [];

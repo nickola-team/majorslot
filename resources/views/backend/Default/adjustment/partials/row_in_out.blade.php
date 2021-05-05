@@ -6,11 +6,14 @@
 	@endif
 	
 	@if($in_out_log->type == 'add' )
-	<td><span class="text-green">{{ number_format($in_out_log->sum,2) }}</span></td>
+	<td><span class="text-green">{{ number_format($in_out_log->sum,0) }}</span></td>
 	<td></td>
 	@elseif($in_out_log->type == 'out' )
 	<td></td>
-	<td><span class="text-red">{{ number_format($in_out_log->sum,2) }}</span></td>
+	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
+	@elseif($in_out_log->type == 'deal_out' )
+	<td></td>
+	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
 	@endif
 	<td>{{"[ " . $in_out_log->bank_name . " ] ". $in_out_log->account_no}}</td>
 

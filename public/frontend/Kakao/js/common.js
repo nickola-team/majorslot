@@ -541,6 +541,15 @@ function changeHeaderWorldList(world) {
         }
     );
 }
+function closeNotification(onlyOnce) {
+    if (onlyOnce) {
+        
+    }
+    else {
+        localStorage.setItem("hide_notification", Date.now());
+    }
 
+    $("#notification").hide();
+}
 
 //-->

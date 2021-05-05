@@ -145,7 +145,10 @@
                             lastRequest = inouts['now'];
                             if (inouts['count'] > 0)
                             {
-                                audio.play();
+                                if (inouts['rating'] > 0)
+                                {
+                                    audio.play();
+                                }
                                 $("#adj_newmark").show();
                                 $("#inout_newmark").show();
                             }

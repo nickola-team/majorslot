@@ -9,6 +9,7 @@ namespace VanguardLTE
             'type', 
             'content', 
             'image', 
+            'active',
             'date_time', 
         ];
         public $timestamps = false;

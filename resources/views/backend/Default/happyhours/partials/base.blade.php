@@ -1,10 +1,7 @@
 <div class="col-md-6">
     <div class="form-group">
         <label>회원아이디</label>
-        @php
-            $users = auth()->user()->hierarchyUserNamesOnly();
-        @endphp
-        {!! Form::select('user_id', $users, $edit ? $happyhour->user_id : '', ['class' => 'form-control']) !!}
+        <input type="text" class="form-control" name="username" value="{{$edit ? \VanguardLTE\User::find($happyhour->user_id)?\VanguardLTE\User::find($happyhour->user_id)->username:'unknown':'' }}">
     </div>
 </div>
 <div class="col-md-6">

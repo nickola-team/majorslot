@@ -70,96 +70,96 @@ $(document).ready(function(){
 
 <SCRIPT language="JavaScript">
 
-// function setCookie( name, value, expiredays ) {
-//     var todayDate = new Date();
-//     todayDate.setDate( todayDate.getDate() + expiredays );
-//     document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
-// }
+function setCookie( name, value, expiredays ) {
+    var todayDate = new Date();
+    todayDate.setDate( todayDate.getDate() + expiredays );
+    document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+}
 
-// function closeWin( popup, num, closeflag ) {
-// 	if(closeflag == true) {
-// 		setCookie( "divpopup" + num, "check" , 1);
-// 	}
-// 	popup.style.display='none';
-// }
+function closeWin( popup, num, closeflag ) {
+	if(closeflag == true) {
+		setCookie( "divpopup" + num, "check" , 1);
+	}
+	popup.style.display='none';
+}
 
-// function closeWin2( popup ) {
-// 	popup.style.display='none';
-// }
+function closeWin2( popup ) {
+	popup.style.display='none';
+}
 
-// function getCookie( name ) {
+function getCookie( name ) {
 
-// 	var nameOfCookie = name + "=";
-//     var x = 0;
+	var nameOfCookie = name + "=";
+    var x = 0;
 
-// 	//alert(document.cookie);
-// 	while ( x <= document.cookie.length ) {
-// 		var y = (x+nameOfCookie.length);
+	//alert(document.cookie);
+	while ( x <= document.cookie.length ) {
+		var y = (x+nameOfCookie.length);
 
-// 		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
-// 			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
-// 				endOfCookie = document.cookie.length;
-// 	        return unescape( document.cookie.substring( y, endOfCookie ) );
-// 	    }
-// 	    x = document.cookie.indexOf( " ", x ) + 1;
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+	        return unescape( document.cookie.substring( y, endOfCookie ) );
+	    }
+	    x = document.cookie.indexOf( " ", x ) + 1;
 
-// 	    if ( x == 0 ) break;
-// 	}
-// 	return "";
-// }
+	    if ( x == 0 ) break;
+	}
+	return "";
+}
 
-// var img_L = 0;
-// var img_T = 0;
-// var targetObj;
+var img_L = 0;
+var img_T = 0;
+var targetObj;
 
-// function getLeft(o) {
-// 	 return parseInt(o.style.left.replace('px', ''));
-// }
-// function getTop(o) {
-// 	 return parseInt(o.style.top.replace('px', ''));
-// }
+function getLeft(o) {
+	 return parseInt(o.style.left.replace('px', ''));
+}
+function getTop(o) {
+	 return parseInt(o.style.top.replace('px', ''));
+}
 
-// // 이미지 움직이기
-// function moveDrag(e) {
-// 	 var e_obj = window.event? window.event : e;
-// 	 var dmvx = parseInt(e_obj.clientX + img_L);
-// 	 var dmvy = parseInt(e_obj.clientY + img_T);
-// 	 targetObj.style.left = dmvx +"px";
-// 	 targetObj.style.top = dmvy +"px";
-// 	 return false;
-// }
+// 이미지 움직이기
+function moveDrag(e) {
+	 var e_obj = window.event? window.event : e;
+	 var dmvx = parseInt(e_obj.clientX + img_L);
+	 var dmvy = parseInt(e_obj.clientY + img_T);
+	 targetObj.style.left = dmvx +"px";
+	 targetObj.style.top = dmvy +"px";
+	 return false;
+}
 
-// // 드래그 시작
-// function startDrag(e, obj) {
-// 	 targetObj = obj;
-// 	 var e_obj = window.event? window.event : e;
-// 	 img_L = getLeft(obj) - e_obj.clientX;
-// 	 img_T = getTop(obj) - e_obj.clientY;
+// 드래그 시작
+function startDrag(e, obj) {
+	 targetObj = obj;
+	 var e_obj = window.event? window.event : e;
+	 img_L = getLeft(obj) - e_obj.clientX;
+	 img_T = getTop(obj) - e_obj.clientY;
 
-// 	 document.onmousemove = moveDrag;
-// 	 document.onmouseup = stopDrag;
-// 	 if(e_obj.preventDefault)e_obj.preventDefault();
-// }
+	 document.onmousemove = moveDrag;
+	 document.onmouseup = stopDrag;
+	 if(e_obj.preventDefault)e_obj.preventDefault();
+}
 
-// // 드래그 멈추기
-// function stopDrag() {
-// 	 document.onmousemove = null;
-// 	 document.onmouseup = null;
-// }
+// 드래그 멈추기
+function stopDrag() {
+	 document.onmousemove = null;
+	 document.onmouseup = null;
+}
 
 </SCRIPT>
 
 
 
-
-<!-- <div id="pop8" style="position:absolute; left:50px; top:50px; width:250px; height:400px; z-index:9999; background-color: #000000; border:1px solid white;">
+@if ($notice!=null)
+<div id="pop8" style="position:absolute; left:50px; top:50px; width:250px; height:400px; z-index:9999; background-color: #000000; border:1px solid white;">
 	<div style="position:absolute;left:15px;bottom:10px;width:200px;background-color:transparent;color:white;">
 		<input type="checkbox" name="notice8" id="notice8" value="" style="width:14px;"><label for="notice8" style="font-size:12px;">오늘 하루 열지 않음</label>
 		<a href="#" onclick="closeWin(document.getElementById('pop8'), 8, document.getElementById('notice8').checked);" style="color:white;margin-left:12px;font-size:12px;">[ 닫기 ]</a>
 	</div>
-	<div><p><b>오닉스 시스템점검 공지</b></p><p><b><br></b></p><p><b>날짜 : 2021-04-27 화요일</b></p><p><b>시간 : 오전 04:00~ 09:00 (예정)</b></p><p><b>(시스템점검 시간은 변동될수 있으며 완료되는데로 재공지드리겠습니다.)</b></p><p><b>내용 : 관리자 페이지 및 유저게임 이용 등 모든서비스 불가</b></p><p><b><br></b></p><p><b>*이 점을 확인하시여 게임이용에 착오가 없으시길 바랍니다.</b></p></div>
-</div> -->
-
+	<div><?php echo $notice->content ?></div>
+</div>
+@endif
 
 <div class="main_slide">
 	<div class="video_bg">
