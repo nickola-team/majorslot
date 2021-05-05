@@ -468,6 +468,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
+            if ($user->hasRole('user'))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '개인충전은 지원하지 않습니다',
+                    'code' => '004'
+                ], 200);
+            }
             if($user->bank_name == null || $user->bank_name == ''){
                 return response()->json([
                     'error' => true, 
@@ -538,6 +546,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
+            if ($user->hasRole('user'))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '개인환전은 지원하지 않습니다',
+                    'code' => '004'
+                ], 200);
+            }
             if($user->bank_name == null || $user->bank_name == ''){
                 return response()->json([
                     'error' => true, 
