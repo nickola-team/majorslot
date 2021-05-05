@@ -592,7 +592,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if( $request->name != '' ) 
             {
                 $statistics = $statistics->join('shops', 'shops.id', '=', 'shops_stat.shop_id');
-                $statistics = $statistics->where('shops.id', $request->name);
+                $statistics = $statistics->where('shops.name', $request->name);
             }
             if( $request->sum_from != '' ) 
             {
