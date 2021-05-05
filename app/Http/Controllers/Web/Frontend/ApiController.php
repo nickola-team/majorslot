@@ -73,6 +73,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
             $provider = $request->provider;
             $gamecode = $request->gamecode;
             $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
