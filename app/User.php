@@ -627,7 +627,7 @@ namespace VanguardLTE
                 'shop_id' => $payeer->shop_id, 
                 'time' => date('G')
             ])->first();
-            $summ = ($type == 'out' ? -1 * $summ : $summ);
+            $summ = ($type == 'out' ? -1 * abs($summ) : abs($summ));
             $balance = $summ;
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && $this->hasRole('user') && $type == 'add' && $happyhour ) 
             {
