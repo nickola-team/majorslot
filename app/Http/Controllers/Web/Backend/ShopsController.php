@@ -795,14 +795,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
             }
-            if( $data['type'] == 'add' && (!$user->hasRole('admin') && $user->balance < $request->summ ) )
+            $summ = abs($request->summ);
+            if( $data['type'] == 'add' && (!$user->hasRole('admin') && $user->balance < $summ  ) )
             {
                 return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_user_balance', [
                     'name' => $user->username, 
                     'balance' => $user->balance
                 ])]);
             }
-            if( $data['type'] == 'out' && $shop->balance < $request->summ ) 
+            if( $data['type'] == 'out' && $shop->balance < $summ  ) 
             {
                 return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
                     'name' => $shop->name, 
@@ -818,7 +819,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
             }
-            $sum = ($request->type == 'out' ? -1 * $request->summ : $request->summ);
+            $sum = ($request->type == 'out' ? -1 * $summ  : $summ );
             \VanguardLTE\ShopStat::create([
                 'user_id' => \Auth::id(), 
                 'shop_id' => $shop->id, 
