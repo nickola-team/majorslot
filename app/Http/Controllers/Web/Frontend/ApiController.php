@@ -47,10 +47,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.your_account_is_banned')]);
             }
             
-            if(count($sessionRepository->getUserSessions($user->id)) ) 
+            $sessions = $sessionRepository->getUserSessions($user->id);
+            $expiretime = env('EXPIRE_TIME_CLOSE'. 30);
+            $count = count($sessions);
+            if(count($sessions) > 0 ) 
             {
-                return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
+                foreach ($sessions as $s)
+                {
+                    if ($s->last_activity->diffInSeconds(\Carbon\Carbon::now()) >  $expiretime)
+                    {
+                        $count--;
+                    }
+                }
+                if ($count > 0){
+                    return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
+                }
             }
+
+            $sessionRepository->invalidateAllSessionsForUser($user->id);
 
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
             
