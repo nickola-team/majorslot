@@ -9,6 +9,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
+            $siteMaintence = env('MAINTANANCE', 0);
+
+            if( $siteMaintence==1 ) 
+            {
+                \Auth::logout();
+                return response()->json(['error' => true, 'msg' => '사이트 점검중입니다']);
+            }
+            
             $throttles = settings('throttle_enabled');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
             {
@@ -29,6 +37,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $user->update(['language' => $request->lang]);
             }
+
+
             if( !$user->hasRole('admin') && setting('siteisclosed') ) 
             {
                 \Auth::logout();
