@@ -849,6 +849,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $data['type'] = 'add';
             }
             $user = \VanguardLTE\User::find($request->user_id);
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
+            }
             $request->summ = floatval($request->summ);
             if( $request->all && $request->all == '1' ) 
             {
