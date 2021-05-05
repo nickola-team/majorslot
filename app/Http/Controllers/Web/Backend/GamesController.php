@@ -128,7 +128,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stats['bank'] = $stats['slots'] + $stats['little'] + $stats['table_bank'] + $stats['fish'] + $stats['bonus'];
             $stats['rtp'] = ($stats['in'] > 0 ? $stats['out'] / $stats['in'] * 100 : 0);
             $jpgs = \VanguardLTE\JPG::where('shop_id', auth()->user()->shop_id)->pluck('name', 'id')->toArray();
-            return view('backend.games.list', compact('games', 'views', 'jpgs', 'devices', 'categories', 'emptyGame', 'stats', 'savedCategory'));
+            return view('backend.Default.games.list', compact('games', 'views', 'jpgs', 'devices', 'categories', 'emptyGame', 'stats', 'savedCategory'));
         }
         public function index_json(\Illuminate\Http\Request $request)
         {
@@ -402,7 +402,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function view(\VanguardLTE\User $user, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)
         {
             $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
-            return view('backend.user.view', compact('user', 'userActivities'));
+            return view('backend.Default.user.view', compact('user', 'userActivities'));
         }
         public function create()
         {
@@ -411,7 +411,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'parent' => 0, 
                 'shop_id' => auth()->user()->shop_id
             ])->get();
-            return view('backend.games.add', compact('categories', 'game'));
+            return view('backend.Default.games.add', compact('categories', 'game'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -428,7 +428,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $game = \VanguardLTE\Game::where('id', $game)->firstOrFail();
             if( !in_array($game->shop_id, auth()->user()->availableShops()) ) 
             {
-                return redirect()->back('backend.game.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->back('backend.Default.game.list')->withErrors([trans('app.wrong_shop')]);
             }
             $game_stat = $game->statistics()->orderBy('date_time', 'DESC')->limit(5)->get();
             $categories = \VanguardLTE\Category::where([
@@ -437,7 +437,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->get();
             $cats = \VanguardLTE\GameCategory::where('game_id', $game->id)->pluck('category_id')->toArray();
             $jpgs = \VanguardLTE\JPG::where('shop_id', auth()->user()->shop_id)->pluck('name', 'id')->toArray();
-            return view('backend.games.edit', compact('edit', 'game', 'game_stat', 'categories', 'cats', 'jpgs'));
+            return view('backend.Default.games.edit', compact('edit', 'game', 'game_stat', 'categories', 'cats', 'jpgs'));
         }
         public function mass(\Illuminate\Http\Request $request)
         {
@@ -451,7 +451,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'shop_id' => auth()->user()->shop_id
             ])->get();
             $emptyGame = new \VanguardLTE\Game();
-            return view('backend.games.mass', compact('emptyGame', 'categories', 'ids'));
+            return view('backend.Default.games.mass', compact('emptyGame', 'categories', 'ids'));
         }
         public function go(\Illuminate\Http\Request $request, $game)
         {
@@ -459,7 +459,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $object = '\VanguardLTE\Games\\' . $game . '\SlotSettings';
             $slot = new $object($game, $userId);
             $game = \VanguardLTE\Game::where('name', $game)->first();
-            return view('backend.games.list.' . $game->name, compact('slot', 'game'));
+            return view('backend.Default.games.list.' . $game->name, compact('slot', 'game'));
         }
         public function server(\Illuminate\Http\Request $request, $game)
         {
@@ -537,7 +537,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $gameData->update($data);
             if( !in_array($gameData->shop_id, auth()->user()->availableShops()) ) 
             {
-                return redirect()->back('backend.game.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->back('backend.Default.game.list')->withErrors([trans('app.wrong_shop')]);
             }
             $matchEdited = false;
             $categoryEdited = false;
@@ -628,7 +628,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             if( !in_array($game->shop_id, auth()->user()->availableShops()) ) 
             {
-                return redirect()->back('backend.game.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->back('backend.Default.game.list')->withErrors([trans('app.wrong_shop')]);
             }
             event(new \VanguardLTE\Events\Game\DeleteGame($game));
             \VanguardLTE\GameWin::where('game_id', $game->id)->delete();

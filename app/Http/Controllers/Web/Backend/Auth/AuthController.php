@@ -34,7 +34,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             {
                 $title = $site->title;
             }
-            return view('backend.auth.login', compact('directories','title'));
+            return view('backend.Default.auth.login', compact('directories','title'));
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
@@ -156,7 +156,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
         }
         public function getRegister()
         {
-            return view('backend.auth.register');
+            return view('backend.Default.auth.register');
         }
         public function postRegister(\VanguardLTE\Http\Requests\Auth\RegisterRequest $request, \VanguardLTE\Repositories\Role\RoleRepository $roles)
         {

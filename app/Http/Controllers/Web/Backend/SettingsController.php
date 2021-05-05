@@ -18,16 +18,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $dirname = basename($fileinfo);
                 $directories[$dirname] = $dirname;
             }
-            return view('backend.settings.general', compact('shops', 'directories'));
+            return view('backend.Default.settings.general', compact('shops', 'directories'));
         }
         public function auth()
         {
-            return view('backend.settings.auth');
+            return view('backend.Default.settings.auth');
         }
         public function notice()
         {
             $notice = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->first();
-            return view('backend.settings.notice', compact('notice'));
+            return view('backend.Default.settings.notice', compact('notice'));
         }
         public function noticedel(\Illuminate\Http\Request $request)
         {
@@ -60,15 +60,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             ]
                         );
                     }
-                    return view('backend.settings.notice', compact('notice'));
+                    return view('backend.Default.settings.notice', compact('notice'));
 
                 }
                 else
                 {
-                    return view('backend.settings.notice', compact('notice'))->withErrors('PNG, JPG, JPEG형식의 이미지만 업로드할수 있습니다');
+                    return view('backend.Default.settings.notice', compact('notice'))->withErrors('PNG, JPG, JPEG형식의 이미지만 업로드할수 있습니다');
                 }
             }
-            return view('backend.settings.notice', compact('notice'))->withErrors('이미지를 선택하세요');
+            return view('backend.Default.settings.notice', compact('notice'))->withErrors('이미지를 선택하세요');
 
             
             
@@ -159,7 +159,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $text .= '";';
                 $text .= "\n";
             }
-            return view('backend.settings.generator', compact('shops', 'jackpots', 'games', 'categories', 'text', 'view', 'device', 'api'));
+            return view('backend.Default.settings.generator', compact('shops', 'jackpots', 'games', 'categories', 'text', 'view', 'device', 'api'));
         }
         public function sync()
         {

@@ -76,7 +76,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
 
 
-            return view('backend.dashboard.admin', compact('stats', 'latestRegistrations', 'usersPerMonth', 'user', 'statistics', 'gamestat', 'shops', 'open_shift', 'summ', 'bank_stat', 'shops_stat'));
+            return view('backend.Default.dashboard.admin', compact('stats', 'latestRegistrations', 'usersPerMonth', 'user', 'statistics', 'gamestat', 'shops', 'open_shift', 'summ', 'bank_stat', 'shops_stat'));
         }
         public function live_stat(\Illuminate\Http\Request $request)
         {
@@ -221,7 +221,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return $element2['Date'] - $element1['Date'];
             });
             $statistics = array_slice($statistics, 0, 50);
-            return view('backend.stat.live_stat', compact('stat', 'statistics', 'filter'));
+            return view('backend.Default.stat.live_stat', compact('stat', 'statistics', 'filter'));
         }
         public function start_shift(\Illuminate\Http\Request $request)
         {
@@ -335,7 +335,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stats = $statistics->get();
             $statistics = $stats->sortByDesc('created_at')->paginate(20);
             $partner = 0;
-            return view('backend.stat.pay_stat', compact('stats', 'statistics','partner'));
+            return view('backend.Default.stat.pay_stat', compact('stats', 'statistics','partner'));
         }
 
         public function statistics_partner(\Illuminate\Http\Request $request)
@@ -397,7 +397,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stats = $statistics->get();            
             $statistics = $stats->sortByDesc('created_at')->paginate(20);
             $partner = 1;
-            return view('backend.stat.pay_stat_partner', compact('stats', 'statistics','partner'));
+            return view('backend.Default.stat.pay_stat_partner', compact('stats', 'statistics','partner'));
         }
         public function game_stat(\Illuminate\Http\Request $request)
         {
@@ -457,7 +457,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $game_stat = $statistics->paginate(20);
-            return view('backend.stat.game_stat', compact('game_stat'));
+            return view('backend.Default.stat.game_stat', compact('game_stat'));
         }
 
         public function deal_stat(\Illuminate\Http\Request $request)
@@ -504,7 +504,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             
             $game_stat = $statistics->paginate(20);
-            return view('backend.stat.deal_stat', compact('game_stat'));
+            return view('backend.Default.stat.deal_stat', compact('game_stat'));
         }
 
         public function game_stat_clear()
@@ -574,7 +574,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $bank_stat = $statistics->paginate(20);
-            return view('backend.stat.bank_stat', compact('bank_stat'));
+            return view('backend.Default.stat.bank_stat', compact('bank_stat'));
         }
         public function shop_stat(\Illuminate\Http\Request $request)
         {
@@ -630,7 +630,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $shops_stat = $statistics->paginate(20);
-            return view('backend.stat.shop_stat', compact('shops_stat', 'shops'));
+            return view('backend.Default.stat.shop_stat', compact('shops_stat', 'shops'));
         }
         public function search(\Illuminate\Http\Request $request)
         {
@@ -697,7 +697,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $q2->where('name', 'like', '%' . $query . '%');
                 });
             })->take(25)->get();
-            return view('backend.dashboard.search', compact('query', 'happyhour', 'summ', 'users', 'pay_stats', 'game_stats', 'bank_stats', 'shop_stats', 'shift_stats'));
+            return view('backend.Default.dashboard.search', compact('query', 'happyhour', 'summ', 'users', 'pay_stats', 'game_stats', 'bank_stats', 'shop_stats', 'shift_stats'));
         }
         public function shift_stat(\Illuminate\Http\Request $request)
         {
@@ -723,7 +723,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->where('open_shift.start_date', '<=', $dates[1]);
             }
             $open_shift = $statistics->paginate(20);
-            return view('backend.stat.shift_stat', compact('open_shift', 'summ'));
+            return view('backend.Default.stat.shift_stat', compact('open_shift', 'summ'));
         }
 
         public function adjustment_partner(\Illuminate\Http\Request $request)
@@ -915,7 +915,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $adjustments[] = $adj;
                 }
             }
-            return view('backend.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user'));
+            return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user'));
         }
         public function adjustment_game(\Illuminate\Http\Request $request)
         {
@@ -1179,7 +1179,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $categories = \VanguardLTE\Category::where('shop_id', 0)->get();
 
-            return view('backend.adjustment.adjustment_game', compact('filtered_adjustment', 'categories', 'saved_category', 'start_date', 'end_date'));
+            return view('backend.Default.adjustment.adjustment_game', compact('filtered_adjustment', 'categories', 'saved_category', 'start_date', 'end_date'));
 
         }
 
@@ -1264,7 +1264,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
 
-            return view('backend.adjustment.adjustment_shift', compact('adjustments', 'shift_logs', 'user'));
+            return view('backend.Default.adjustment.adjustment_shift', compact('adjustments', 'shift_logs', 'user'));
         }
 
         public function adjustment_create_shift(\Illuminate\Http\Request $request)
@@ -1396,7 +1396,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $in_out_logs = $in_out_logs->get()->sortByDesc('created_at')->paginate(10);
-            return view('backend.adjustment.in_out_request', compact('in_out_logs', 'bankinfo'));
+            return view('backend.Default.adjustment.in_out_request', compact('in_out_logs', 'bankinfo'));
         }
 
         public function in_out_manage(\Illuminate\Http\Request $request) 
@@ -1410,7 +1410,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $in_out_logs = $in_out_logs->sortByDesc('created_at')->paginate(20);
 
-            return view('backend.adjustment.in_out_manage', compact('in_out_logs'));
+            return view('backend.Default.adjustment.in_out_manage', compact('in_out_logs'));
         }
 
 

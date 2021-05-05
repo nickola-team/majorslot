@@ -97,15 +97,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'shop_id' => auth()->user()->shop_id, 
                 'time' => date('G')
             ])->first();
-            return view('backend.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour'));
+            return view('backend.Default.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour'));
         }
         public function createuserfromcsv(\Illuminate\Http\Request $request)
         {
-            return view('backend.user.createfromcsv', ['ispartner' => 0]);
+            return view('backend.Default.user.createfromcsv', ['ispartner' => 0]);
         }
         public function createpartnerfromcsv(\Illuminate\Http\Request $request)
         {
-            return view('backend.user.createfromcsv',  ['ispartner' => 1]);
+            return view('backend.Default.user.createfromcsv',  ['ispartner' => 1]);
         }
         public function storepartnerfromcsv(\Illuminate\Http\Request $request)
         {
@@ -253,7 +253,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $ispartner = 1;
             $msg = $partnercount . '명의 파트너와 ' . $shopcount . '개의 매장을 생성하였습니다.';
-            return view('backend.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
+            return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
 
         public function storeuserfromcsv(\Illuminate\Http\Request $request)
@@ -319,7 +319,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $ispartner = 0;
             $msg = $succeed . '명의 회원을 생성하였습니다. 실패 ' . $failed . '명';
-            return view('backend.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
+            return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
         public function tree(\Illuminate\Http\Request $request)
         {
@@ -370,7 +370,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     ];
                 }
             }
-            return view('backend.user.tree', compact('partners','user'));
+            return view('backend.Default.user.tree', compact('partners','user'));
         }
         public function view(\VanguardLTE\User $user, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)
         {
@@ -379,7 +379,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.user.list');
             }
-            return view('backend.user.view', compact('user', 'userActivities'));
+            return view('backend.Default.user.view', compact('user', 'userActivities'));
         }
         public function create()
         {
@@ -436,7 +436,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 $availibleUsers = $me->merge($availibleUsers);
             }
-            return view('backend.user.add', compact('roles', 'statuses', 'shops', 'availibleUsers', 'happyhour'));
+            return view('backend.Default.user.add', compact('roles', 'statuses', 'shops', 'availibleUsers', 'happyhour'));
         }
         public function store(\VanguardLTE\Http\Requests\User\CreateUserRequest $request)
         {
@@ -737,7 +737,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]);
             $max_wins = \VanguardLTE\GameActivity::where('user_id', $user->id)->where('created_at', 'LIKE', $date . '%')->where('max_win', '!=', '')->groupBy('game')->orderBy('max_win', 'DESC')->take(5)->get();
             $max_bets = \VanguardLTE\GameActivity::where('user_id', $user->id)->where('created_at', 'LIKE', $date . '%')->where('max_bet', '!=', '')->groupBy('game')->orderBy('max_bet', 'DESC')->take(5)->get();
-            return view('backend.user.edit', compact('edit', 'user', 'roles', 'statuses', 'shops', 'free_shops', 'userActivities', 'hasActivities', 'langs', 'max_wins', 'max_bets', 'numbers'));
+            return view('backend.Default.user.edit', compact('edit', 'user', 'roles', 'statuses', 'shops', 'free_shops', 'userActivities', 'hasActivities', 'langs', 'max_wins', 'max_bets', 'numbers'));
         }
         public function updateDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
@@ -865,7 +865,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function statistics(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
         {
             $statistics = \VanguardLTE\Transaction::where('user_id', $user->id)->orderBy('created_at', 'DESC')->paginate(20);
-            return view('backend.stat.pay_stat', compact('user', 'statistics'));
+            return view('backend.Default.stat.pay_stat', compact('user', 'statistics'));
         }
         private function userIsBanned(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
         {
@@ -1066,7 +1066,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             $adminView = true;
             $sessions = $sessionRepository->getUserSessions($user->id);
-            return view('backend.user.sessions', compact('sessions', 'user', 'adminView'));
+            return view('backend.Default.user.sessions', compact('sessions', 'user', 'adminView'));
         }
         public function invalidateSession(\VanguardLTE\User $user, $session, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

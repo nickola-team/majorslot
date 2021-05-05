@@ -22,11 +22,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('frontend.page.error_license');
             }*/
             $jackpots = \VanguardLTE\JPG::where('shop_id', auth()->user()->shop_id)->get();
-            return view('backend.jpg.list', compact('jackpots'));
+            return view('backend.Default.jpg.list', compact('jackpots'));
         }
         public function create()
         {
-            return view('backend.jpg.add');
+            return view('backend.Default.jpg.add');
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -47,7 +47,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
-            return view('backend.jpg.edit', compact('jackpot'));
+            return view('backend.Default.jpg.edit', compact('jackpot'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\JPG $jackpot)
         {

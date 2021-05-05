@@ -67,11 +67,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 echo $downloader->array2csv($data, $keys);
                 exit();
             }
-            return view('backend.pincodes.list', compact('pincodes'));
+            return view('backend.Default.pincodes.list', compact('pincodes'));
         }
         public function create()
         {
-            return view('backend.pincodes.add');
+            return view('backend.Default.pincodes.add');
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -184,7 +184,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
-            return view('backend.pincodes.edit', compact('pincode'));
+            return view('backend.Default.pincodes.edit', compact('pincode'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Pincode $pincode)
         {

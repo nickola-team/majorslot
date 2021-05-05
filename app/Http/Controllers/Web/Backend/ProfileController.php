@@ -48,7 +48,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $free_shops[$shop->id] = $shop->name;
                 }
             }
-            return view('backend.user.profile', compact('user', 'edit', 'roles', 'statuses', 'shops', 'free_shops'));
+            return view('backend.Default.user.profile', compact('user', 'edit', 'roles', 'statuses', 'shops', 'free_shops'));
         }
         public function updateDetails(\VanguardLTE\Http\Requests\User\UpdateProfileDetailsRequest $request)
         {
@@ -92,14 +92,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             $user = $this->theUser;
             $activities = $activitiesRepo->paginateActivitiesForUser($user->id, $perPage = 20, $request->get('search'));
-            return view('backend.activity.index', compact('activities', 'user'));
+            return view('backend.Default.activity.index', compact('activities', 'user'));
         }
         public function sessions(\VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
             $profile = true;
             $user = $this->theUser;
             $sessions = $sessionRepository->getUserSessions($user->id);
-            return view('backend.user.sessions', compact('sessions', 'user', 'profile'));
+            return view('backend.Default.user.sessions', compact('sessions', 'user', 'profile'));
         }
         public function invalidateSession($session, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

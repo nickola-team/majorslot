@@ -13,11 +13,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function index(\Illuminate\Http\Request $request)
         {
             $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->where('admin_id', auth()->user()->id)->orderBy('happyhour_users.created_at', 'DESC')->get();
-            return view('backend.happyhours.list', compact('happyhours'));
+            return view('backend.Default.happyhours.list', compact('happyhours'));
         }
         public function create()
         {
-            return view('backend.happyhours.add');
+            return view('backend.Default.happyhours.add');
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -42,7 +42,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function edit($happyhour)
         {
             $happyhour = \VanguardLTE\HappyHourUser::where('id', $happyhour)->first();
-            return view('backend.happyhours.edit', compact('happyhour'));
+            return view('backend.Default.happyhours.edit', compact('happyhour'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\HappyHourUser $happyhour)
         {
