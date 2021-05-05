@@ -438,6 +438,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
                     if($scattersCount >=3 ){
+                        $spinType = 's';
                         $n_reel_set = '&n_reel_set=1';
                         $strOtherResponse = '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fs=1&fsres=0.00&psym=1~' . $scattersWin.'~' . implode(',', $_obf_scatterposes);
                     }                    
