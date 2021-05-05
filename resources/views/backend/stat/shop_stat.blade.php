@@ -23,7 +23,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>매장</label>
-								{!! Form::select('type', $shops, Request::get('name'), ['id' => 'name', 'class' => 'form-control']) !!}
+								{!! Form::select('name', $shops, Request::get('name'), ['id' => 'name', 'class' => 'form-control']) !!}
 							</div>
 						</div>
 						<div class="col-md-6">
