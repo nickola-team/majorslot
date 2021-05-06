@@ -113,7 +113,7 @@
 					</thead>
                     </table>
                     </div>
-						{{-- {{ $statistics->appends(Request::except('page'))->links() }} --}}
+						{{ $childs->appends(Request::except('page'))->links() }}
                     </div>			
 		</div>
 	</section>
