@@ -14,10 +14,21 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
                 \Illuminate\Support\Facades\Redis::del('cq9list');
                 $_daytime = strtotime("-1 days") * 10000;
+                
                 \VanguardLTE\PPTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\HBNTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\BNGTransaction::where('timestamp', '<', $_daytime)->delete();
-            })->dailyAt('07:00');
+
+                $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
+                \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
+
+                $start_date = date("Y-m-d H:i:s",strtotime("-30 days"));
+                \VanguardLTE\ShopsStat::where('date_time', '<', $start_date)->delete();
+                \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
+                \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
+                \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
+
+            })->dailyAt('08:00');
             $schedule->call(function()
             {
                 $users = \VanguardLTE\StatGame::where('date_time', '>', \Carbon\Carbon::now()->subHours()->format('Y-m-d H:i:s'))->groupBy('user_id')->pluck('user_id');

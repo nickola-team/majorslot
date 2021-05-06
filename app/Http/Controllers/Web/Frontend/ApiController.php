@@ -478,7 +478,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'system' => $user->username,
                         'type' => 'add',
                         'summ' => $summ,
-                        'shop_id' => $user->shop_id
+                        'shop_id' => 0
                     ]);
 
                     $user->deal_balance = $real_deal_balance - $summ;
