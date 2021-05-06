@@ -54,6 +54,24 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                 return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
             }
             $user = \Auth::getProvider()->retrieveByCredentials($credentials);
+            //check admin id per site
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $adminid = 1; //default admin id
+            if ($site)
+            {
+                $adminid = $site->adminid;
+            }
+
+            $admin = $user;
+            while ($admin !=null && !$admin ->hasRole('admin'))
+            {
+                $admin = $admin->referral;
+            }
+
+            if (!$admin || $admin->id != $adminid)
+            {
+                return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
+            }
             if( $request->lang ) 
             {
                 $user->update(['language' => $request->lang]);
