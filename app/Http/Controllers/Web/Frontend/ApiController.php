@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
-            $siteMaintence = env('MAINTANANCE', 0);
+            $siteMaintence = env('MAINTENANCE', 0);
 
             if( $siteMaintence==1 ) 
             {
