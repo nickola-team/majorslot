@@ -27,8 +27,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function microtime_string()
         {
-            list($usec, $sec) = explode(" ", microtime());
-            $microstr =  strval(((float)$usec + (float)$sec));
+            $microstr = sprintf('%.4f', microtime(TRUE));
             $microstr = str_replace('.', '', $microstr);
             return $microstr;
         }

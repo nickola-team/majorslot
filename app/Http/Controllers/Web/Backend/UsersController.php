@@ -752,7 +752,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]))
             {
                 $parent = $user->referral;
-                if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null && isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
@@ -762,7 +762,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]))
             {
                 $parent = $user->referral;
-                if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null && isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
                 }

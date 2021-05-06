@@ -13,7 +13,11 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('booongolist');
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
                 \Illuminate\Support\Facades\Redis::del('cq9list');
-            })->daily();
+                $_daytime = strtotime("-1 days") * 10000;
+                \VanguardLTE\PPTransaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\HBNTransaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\BNGTransaction::where('timestamp', '<', $_daytime)->delete();
+            })->dailyAt('07:00');
             $schedule->call(function()
             {
                 $users = \VanguardLTE\StatGame::where('date_time', '>', \Carbon\Carbon::now()->subHours()->format('Y-m-d H:i:s'))->groupBy('user_id')->pluck('user_id');

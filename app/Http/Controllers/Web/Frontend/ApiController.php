@@ -9,6 +9,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
+            $siteMaintence = env('MAINTENANCE', 0);
+
+            if( $siteMaintence==1 ) 
+            {
+                \Auth::logout();
+                return response()->json(['error' => true, 'msg' => '사이트 점검중입니다']);
+            }
+            
             $throttles = settings('throttle_enabled');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
             {
@@ -29,6 +37,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $user->update(['language' => $request->lang]);
             }
+
+            //check admin id per site
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $adminid = 1; //default admin id
+            if ($site)
+            {
+                $adminid = $site->adminid;
+            }
+
+            $admin = $user->referral;
+            while ($admin !=null && !$admin ->hasRole('admin'))
+            {
+                $admin = $admin->referral;
+            }
+
+            if (!$admin || $admin->id != $adminid)
+            {
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
+            }
+
             if( !$user->hasRole('admin') && setting('siteisclosed') ) 
             {
                 \Auth::logout();
