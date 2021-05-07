@@ -19,13 +19,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'name' => $gamename
                 ]
             )->get()->first();
-            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
+            /*if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
                 $url = url('/game/' . $gamename);
             }
-            else {
+            else {*/
                 $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelink_pp($gamecode);
                 $url = $data['data']['url'];
-            }
+            //}
             if ($lobby == 'mini')
             {
                 return redirect($url);
