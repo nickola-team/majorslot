@@ -122,6 +122,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $reference = $request->reference;
             $providerId = $request->providerId;
             $timestamp = $request->timestamp;
+            $herestamp = $this->microtime_string();
             if (!$userId || !$gameId || !$roundId || !$amount || !$reference || !$providerId || !$timestamp || $amount < 0)
             {
                 return response()->json([
@@ -159,11 +160,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
             $user->save();
 
-            $transaction = \VanguardLTE\PPTransaction::create([
-                'reference' => $reference, 
-                'timestamp' => $this->microtime_string(),
-                'data' => json_encode($request->all())
-            ]);
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -176,6 +172,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'profit' => 0, 
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
+            ]);
+
+            $req = $request->all();
+            $req['herestamp'] = $herestamp;
+
+            $transaction = \VanguardLTE\PPTransaction::create([
+                'reference' => $reference, 
+                'timestamp' => $this->microtime_string(),
+                'data' => json_encode($req)
             ]);
 
             return response()->json([
