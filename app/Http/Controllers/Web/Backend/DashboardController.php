@@ -438,7 +438,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->join('users', 'users.id', '=', 'stat_game.user_id');
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
             }
-            $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
+            $start_date = date("Y-m-d") . " 00:00:00";
             $end_date = date("Y-m-d H:i:s");
             if( $request->dates != '' ) 
             {

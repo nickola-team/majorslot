@@ -71,8 +71,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>기간</label>
-								<?php $today= Request::has('dates')?Request::get('dates') : date("Y-m-d H:i:s",strtotime("-1 days")) .' - '. date("Y-m-d H:i:s");?>
-								<input type="text" class="form-control" name="dates" value="{{ '2000-1-1 0:0:0 - 2000-2-1 0:0:0' }}">
+								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 							</div>
 						</div>
 						{{-- <div class="col-md-12">
@@ -177,7 +176,7 @@
 			$('input[name="dates"]').daterangepicker({
 				timePicker: true,
 				timePicker24Hour: true,
-				startDate: moment().subtract(1, 'day'),
+				startDate: moment().format('YYYY-MM-DD 00:00'),
 				endDate: moment().add(0, 'day'),
 
 				locale: {
