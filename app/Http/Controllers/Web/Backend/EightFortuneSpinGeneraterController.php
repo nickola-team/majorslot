@@ -145,7 +145,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }*/
             set_time_limit(0);
-            $records = \VanguardLTE\PPTransaction::orderBy('timestamp','DESC')->take(10000)->get();
+            $time = strtotime("-1 hours") * 10000;
+            $records = \VanguardLTE\PPTransaction::where('timestamp', '>', $time)->orderBy('timestamp','DESC')->get();
             $msg = '<table class="table table-bordered table-striped">
             <thead>
             <tr>
