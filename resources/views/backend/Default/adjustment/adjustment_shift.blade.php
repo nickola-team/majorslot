@@ -173,16 +173,16 @@
 			}
 
 			$('.outPayment').click(function(event){
-			if( $(event.target).is('.newPayment') ){
-				var id = $(event.target).attr('data-id');
-				var id1 = $(event.target).attr('data-id1');
-			}else{
-				var id = $(event.target).parents('.newPayment').attr('data-id');
-				var id1 = $(event.target).parents('.newPayment').attr('data-id1');
-			}
-			$('#OutSum').val(id);
-			$('#DealSum').val(id1);
-		});
+				if( $(event.target).is('.newPayment') ){
+					var id = $(event.target).attr('data-id');
+					var id1 = $(event.target).attr('data-id1');
+				}else{
+					var id = $(event.target).parents('.newPayment').attr('data-id');
+					var id1 = $(event.target).parents('.newPayment').attr('data-id1');
+				}
+				$('#OutSum').val(id);
+				$('#DealSum').val(id1);
+			});
 		});
 
 		function withdraw_balance(onsuccess) {

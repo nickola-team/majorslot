@@ -13,16 +13,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function index(\Illuminate\Http\Request $request)
         {
-/*            $checked = new \VanguardLTE\Lib\LicenseDK();
-            $license_notifications_array = $checked->aplVerifyLicenseDK(null, 0);
-            if( $license_notifications_array['notification_case'] != 'notification_license_ok' ) 
-            {
-                return redirect()->route('frontend.page.error_license');
-            }
-            if( !$this->security() ) 
-            {
-                return redirect()->route('frontend.page.error_license');
-            }*/
             $statuses = ['' => trans('app.all')] + \VanguardLTE\Support\Enum\UserStatus::lists();
             $roles = \jeremykenedy\LaravelRoles\Models\Role::where('level', '<', \Illuminate\Support\Facades\Auth::user()->level())->pluck('name', 'id');
             $roles->prepend(trans('app.all'), '0');
@@ -67,12 +57,25 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $users = $users->where('role_id', $request->role);
             }
+            $userIds = auth()->user()->hierarchyUsersOnly();
+            $shopIds = auth()->user()->availableShops();
+
+            $stat['totaluser'] = count($userIds);
+            $stat['onlineuser'] = 0;
+            if (count($userIds) > 0){
+                $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+                $query = 'SELECT count(*) as online FROM w_sessions WHERE user_id in (' . implode(',', $userIds) . ') AND last_activity>=' . $validTimestamp;
+                $qresult = \DB::select($query);
+                $stat['onlineuser'] = $qresult[0]->online;
+            }
+            $stat['totalbalance'] = \VanguardLTE\User::where('role_id' , 1)->whereIn('shop_id', $shopIds)->sum('balance');
+
             $users = $users->paginate(20);
             $happyhour = \VanguardLTE\HappyHour::where([
                 'shop_id' => auth()->user()->shop_id, 
                 'time' => date('G')
             ])->first();
-            return view('backend.Default.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour'));
+            return view('backend.Default.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour', 'stat'));
         }
         public function createuserfromcsv(\Illuminate\Http\Request $request)
         {

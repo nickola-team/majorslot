@@ -61,6 +61,7 @@
 						@endif
 						<th>충전</th>
 						<th>환전</th>
+						<th>수익금환전</th>
 						<th>계좌번호</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -87,6 +88,7 @@
 						@endif
 						<th>충전</th>
 						<th>환전</th>
+						<th>수익금환전</th>
 						<th>계좌번호</th>
 						<th>예금주</th>
 						<th>시간</th>

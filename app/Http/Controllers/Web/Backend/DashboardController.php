@@ -438,12 +438,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->join('users', 'users.id', '=', 'stat_game.user_id');
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
             }
+            $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
+            $end_date = date("Y-m-d H:i:s");
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);
-                $statistics = $statistics->where('stat_game.date_time', '>=', $dates[0]);
-                $statistics = $statistics->where('stat_game.date_time', '<=', $dates[1]);
+                $start_date = $dates[0];
+                $end_date = $dates[1];
             }
+
+            $statistics = $statistics->where('stat_game.date_time', '>=', $start_date);
+            $statistics = $statistics->where('stat_game.date_time', '<=', $end_date);
+
             if( $request->shifts != '' ) 
             {
                 $shift = \VanguardLTE\OpenShift::find($request->shifts);
@@ -766,16 +772,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             if($b_distributor){
                 $shop_users = \VanguardLTE\ShopUser::whereIn('user_id', $users)->get()->pluck('shop_id')->toArray();
-                $shops = \VanguardLTE\Shop::whereIn('id', $shop_users)->get();
-
-                foreach($shops as $shop){
-                    $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add"';
+                $childs = \VanguardLTE\Shop::whereIn('id', $shop_users)->get();
+                $childs = $childs->paginate(10);
+                foreach($childs as $shop){
+                    $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add" AND request_id IS NOT NULL';
                     $in_out = \DB::select($query);
                     $adj['totalin'] = $in_out[0]->totalin;
 
-                    $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out"';
+                    $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out" AND request_id IS NOT NULL';
                     $in_out = \DB::select($query);
                     $adj['totalout'] = $in_out[0]->totalout;
+
+                    $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="deal_out" AND request_id IS NOT NULL';
+                    $in_out = \DB::select($query);
+                    $adj['dealout'] = $in_out[0]->dealout;
 
                     $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
                     $user_in_out = \DB::select($query);
@@ -820,49 +830,52 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             else
             {
-                $partners = \VanguardLTE\User::whereIn('id', $users)->get();
-                foreach($partners as $partner){
-                    $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
-                    $user_in_out = \DB::select($query);
-                    $adj['totalin'] = $user_in_out[0]->totalin;
+                $childs = \VanguardLTE\User::whereIn('id', $users)->get();
+                $childs = $childs->paginate(10);
+                foreach($childs as $partner){
+                    $shops = $partner->availableShops();
+                    if( $partner->hasRole('admin') ) 
+                    {
+                        $partners = $partner->childPartners();
+                        $shops = \VanguardLTE\ShopUser::whereIn('user_id', $partners)->pluck('shop_id')->toArray();
+                    }
+                    else
+                    {
+                        $shops = \VanguardLTE\ShopUser::where('user_id', $partner->id)->pluck('shop_id')->toArray();
+                    }
+                    $adj['totalin'] = 0;
+                    $adj['totalout'] = 0;
+                    $adj['dealout'] = 0;
+                    if (count($shops) > 0 ){
+                        $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add" AND request_id IS NOT NULL';
+                        $user_in_out = \DB::select($query);
+                        $adj['totalin'] = $user_in_out[0]->totalin;
 
-                    $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id='.$partner->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
-                    $user_in_out = \DB::select($query);
-                    $adj['totalout'] = $user_in_out[0]->totalout;
+                        $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out" AND request_id IS NOT NULL';
+                        $user_in_out = \DB::select($query);
+                        $adj['totalout'] = $user_in_out[0]->totalout;
+
+                        $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="deal_out" AND request_id IS NOT NULL';
+                        $in_out = \DB::select($query);
+                        $adj['dealout'] = $in_out[0]->dealout;
+                    }
 
                     $adj['moneyin'] = 0;
                     $adj['moneyout'] = 0;
 
-                    if ($partner->hasRole('distributor'))
-                    {
-                        $shops = $partner->availableShops();
-                        $query = 'SELECT SUM(sum) as moneyin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add"';
+                    if (count($shops) > 0){
+                        $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
                         $user_in_out = \DB::select($query);
                         $adj['moneyin'] = $user_in_out[0]->moneyin;
 
-                        $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out"';
+                        $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
                         $user_in_out = \DB::select($query);
                         $adj['moneyout'] = $user_in_out[0]->moneyout;
-
-                    }
-                    else
-                    {
-                        $childpartners = $partner->childPartners();
-                        if (count($childpartners) > 0){
-                            $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
-                            $user_in_out = \DB::select($query);
-                            $adj['moneyin'] = $user_in_out[0]->moneyin;
-
-                            $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
-                            $user_in_out = \DB::select($query);
-                            $adj['moneyout'] = $user_in_out[0]->moneyout;
-                        }
                     }
 
-                    $shop_ids = $partner->availableShops();
-                    if (count($shop_ids) > 0 )
+                    if (count($shops) > 0 )
                     {
-                        $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                        $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
                     }
                     else
                     {

@@ -12,26 +12,13 @@
 
 
 	<section class="content">
-
-		@if(auth()->user()->hasRole('cashier') &&
-			$openshift = \VanguardLTE\OpenShift::where(['shop_id' => auth()->user()->shop_id, 'end_date' => NULL])->first())
-
-			@php $summ = \VanguardLTE\User::where(['shop_id' => auth()->user()->shop_id, 'role_id' => 1])->sum('balance'); @endphp
-
 			<div class="row">
-				<div class="col-lg-3 col-xs-6">
+				<div class="col-lg-4 col-xs-6">
 					<!-- small box -->
 					<div class="small-box bg-light-blue">
 						<div class="inner">
-							@php
-								$money = $openshift->users;
-                                if($openshift->end_date == NULL){
-                                    $money = $summ;
-                                }
-							@endphp
-
-							<h3>{{ number_format($money, 2) }}</h3>
-							<p>User @lang('app.balance')</p>
+							<h3>{{ number_format($stat['totaluser'], 0) }}</h3>
+							<p>전체 회원수</p>
 						</div>
 						<div class="icon">
 							<i class="fa fa-refresh"></i>
@@ -39,12 +26,12 @@
 					</div>
 				</div>
 				<!-- ./col -->
-				<div class="col-lg-3 col-xs-6">
+				<div class="col-lg-4 col-xs-6">
 					<!-- small box -->
 					<div class="small-box bg-green">
 						<div class="inner">
-							<h3>{{ number_format($openshift->money_in, 2) }}</h3>
-							<p>@lang('app.in')</p>
+							<h3>{{ number_format($stat['onlineuser'], 0) }}</h3>
+							<p>온라인 회원수</p>
 						</div>
 						<div class="icon">
 							<i class="fa fa-level-up"></i>
@@ -52,39 +39,20 @@
 					</div>
 				</div>
 				<!-- ./col -->
-				<div class="col-lg-3 col-xs-6">
+				<div class="col-lg-4 col-xs-6">
 					<!-- small box -->
 					<div class="small-box bg-yellow">
 						<div class="inner">
-							<h3>{{ number_format ($openshift->money_out, 2) }}</h3>
-							<p>@lang('app.out')</p>
+							<h3>{{ number_format ($stat['totalbalance'], 2) }}</h3>
+							<p>회원 보유금</p>
 						</div>
 						<div class="icon">
 							<i class="fa fa-level-down"></i>
 						</div>
 					</div>
 				</div>
-				<!-- ./col -->
-				<div class="col-lg-3 col-xs-6">
-					<!-- small box -->
-					<div class="small-box bg-red">
-						<div class="inner">
-							@php
-								$total = $openshift->money_in - $openshift->money_out;
-							@endphp
-
-							<h3>{{ number_format ($total, 2) }}</h3>
-							<p>@lang('app.total') Money</p>
-						</div>
-						<div class="icon">
-							<i class="fa fa-line-chart"></i>
-						</div>
-					</div>
-				</div>
-				<!-- ./col -->
 			</div>
 
-		@endif
 
 		<div class="box box-danger collapsed-box users_show">
 			<div class="box-header with-border">

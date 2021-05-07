@@ -10,6 +10,13 @@
 	<td>
 	@if ($stat->user)
 		{{ $stat->user->username }}
+		{{ $stat->user ? $stat->user->username : 'unknown'  }} [ 
+		@foreach(['7' => 'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+			@if($stat->user && $role_id == $stat->user->role_id)
+				@lang($role_name)
+			@endif
+		@endforeach
+		]
 	@else
 		unknown
 	@endif
@@ -20,7 +27,12 @@
 		@endif
 	</td>
 	<td>
-		@if ($stat->type != 'add')
+		@if ($stat->type == 'out')
+			<span class="text-red">{{ number_format(abs($stat->sum),2) }}</span>
+		@endif
+	</td>
+	<td>
+		@if ($stat->type == 'deal_out')
 			<span class="text-red">{{ number_format(abs($stat->sum),2) }}</span>
 		@endif
 	</td>

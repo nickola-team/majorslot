@@ -6,6 +6,7 @@
 	@endif
 	<td>{{ number_format($adjustment['totalin'],2) }}</td>
 	<td>{{ number_format($adjustment['totalout'],2) }}</td>
+	<td>{{ number_format($adjustment['dealout'],2) }}</td>
 	<td>{{ number_format($adjustment['moneyin'],2) }}</td>
 	<td>{{ number_format($adjustment['moneyout'],2) }}</td>
 	<td>{{ number_format($adjustment['totalbet'],2)}}</td>

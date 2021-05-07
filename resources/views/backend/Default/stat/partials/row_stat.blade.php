@@ -36,17 +36,21 @@
 @endif
 </td>
 <td>
-		@if ($stat->type == 'add')
-			<span class="text-green">{{ number_format(abs($stat->summ),2) }}</span>
-		@endif
+@if ($stat->type == 'add')
+	<span class="text-green">{{ number_format(abs($stat->summ),2) }}</span>
+@endif
 </td>
-	<td>
-		@if ($stat->type != 'add')
-			<span class="text-red">{{ number_format(abs($stat->summ),2) }}</span>
-		@endif
-	</td>
+<td>
+	@if ($stat->type == 'out')
+		<span class="text-red">{{ number_format(abs($stat->summ),2) }}</span>
+	@endif
 </td>
 @if ($partner==1)
+<td>
+	@if ($stat->type == 'deal_out')
+		<span class="text-green">{{ number_format(abs($stat->summ),2) }}</span>
+	@endif
+</td>
 @if($stat->requestInfo)
 <td> {{"[ " . $stat->requestInfo->bank_name . " ] ". $stat->requestInfo->account_no}} </td>
 <td>{{ $stat->requestInfo->recommender }}</td>

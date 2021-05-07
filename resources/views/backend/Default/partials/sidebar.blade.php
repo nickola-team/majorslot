@@ -241,9 +241,9 @@
                     
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/adjustment_shift') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.adjustment_shift') }}">
+                        <a  href="#"> {{--{{ route('backend.adjustment_shift') }}"> --}}
                             <i class="fa fa-circle-o"></i>
-                            딜비정산
+                            일별정산
                         </a>
                     </li>
                     @endpermission

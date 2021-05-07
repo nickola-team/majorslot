@@ -69,44 +69,36 @@
 				</button>
 			</div>
 
-
-			@if(auth()->user()->hasRole('manager'))
+			<?php
+			$dealvalue = auth()->user()->hasRole('manager')?auth()->user()->shop->deal_balance:auth()->user()->deal_balance - auth()->user()->mileage;
+			$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balace:auth()->user()->balance;
+			?>
 			<li class="list-group-item">
 				<div class="row">
-					<div class="col-md-3">
-						<b>@lang('app.balance'):</b> <a class="pull-right">{{ number_format(auth()->user()->shop->balance,2) }}원</a>
+					<div class="col-md-2">
+						<b>보유금:</b> <a class="pull-right">{{ number_format($balance,2) }}원</a>
 					</div>
 				</div>
 			</li>
-			@else
+			@if(auth()->user()->hasRole(['agent','distributor','manager']))
+			
 			<li class="list-group-item">
 				<div class="row">
-					<div class="col-md-3">
-						<b>보유금:</b> <a class="pull-right">{{ number_format(auth()->user()->balance,2) }}원</a>
+					<div class="col-md-2" style="line-height:2">
+						<b>수익금:</b> <a class="pull-right">{{ 
+							number_format($dealvalue,2) 
+							}}원</a>
 					</div>
-				</div>
-			</li>
-			@endif
-			@if(auth()->user()->hasRole(['agent','distributor']))
-			<li class="list-group-item">
-				<div class="row">
-					<div class="col-md-3">
-						<b>수익금:</b> <a class="pull-right">{{ number_format(auth()->user()->deal_balance - auth()->user()->mileage,2) }}원</a>
-					</div>
-				</div>
-			</li>
-			@endif
-
-			@if(auth()->user()->hasRole('manager'))
-			<li class="list-group-item">
-				<div class="row">
-					<div class="col-md-3">
-						<b>수익금:</b> <a class="pull-right">{{ number_format(auth()->user()->shop->deal_balance,2) }}원</a>
+					<div class="col-md-2">
+					<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal"  data-id="{{ (int)($dealvalue / 10000) * 10000 }}">
+							<button class="btn btn-success" id="convert-deal-balance-btn">
+							수익금전환
+							</button>
+						</a>
 					</div>
 				</div>
 			</li>
 			@endif
-
 
 			{{-- @if(auth()->user()->hasRole('agent'))
 				<div class="list-group-item">
@@ -162,15 +154,9 @@
 					환전신청
 				</button>
 				
-				<button class="btn btn-success" id="deposit-balance-btn" onclick="deposit_balance();">
+				<button class="btn btn-success" id="deposit-balance-btn" onclick="deposit_balance();" {{auth()->user()->hasRole(['agent','distributor'])?'disabled':''}}>
 					충전신청
 				</button>
-				@if(auth()->user()->hasRole('master'))
-				@else
-				<button class="btn btn-success" id="convert-deal-balance-btn" onclick="convert_deal_balance();">
-					수익금전환
-				</button>
-				@endif
 			</div>
 			
 
@@ -223,13 +209,16 @@
 					<table class="table table-bordered table-striped">
 						<thead>
 						<tr>
-							@if(auth()->user()->hasRole('manager'))
+							@if(auth()->user()->hasRole(['master','manager']))
 							<th>매장이름</th>
 							@else
 							<th>파트너이름</th>
 							@endif
 							<th>충전</th>
 							<th>환전</th>
+							@if(auth()->user()->hasRole(['master','manager']))
+							<th>수익금환전</th>
+							@endif
 							<th>계좌번호</th>
 							<th>예금주</th>
 							<th>신청시간</th>
@@ -251,6 +240,31 @@
 			</div>			
 		</div> 
 	</section>
+
+	<div class="modal fade" id="openOutModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="#" method="GET" id="outForm">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">정산</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="OutSum">수익금전환</label>
+							<input type="text" class="form-control" id="OutSum" name="OutSum" placeholder="전환금액"   required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
+						<button type="button" class="btn btn-primary" onclick="{{auth()->user()->hasRole('manager')?'withdraw_deal_balance();':'convert_deal_balance();'}}">확인</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 
 @stop
 
@@ -293,14 +307,17 @@
 				}
 				
 			});
+
+			$('.outPayment').click(function(event){
+				if( $(event.target).is('.newPayment') ){
+					var id = $(event.target).attr('data-id');
+				}else{
+					var id = $(event.target).parents('.newPayment').attr('data-id');
+				}
+				$('#OutSum').val(id);
+			});
 		});
 
-
-
-		function showbankinfo()
-		{
-
-		}
 
 		function withdraw_balance() {
             var money = $('#withdraw_money').val();
@@ -369,30 +386,22 @@
         }
 
 		function withdraw_deal_balance() {
-            var money = $('#withdraw_money').val();
             var _token = $('#_token').val();
+			var _dealsum = $('#OutSum').val();
 
             $.ajax({
                 type: 'POST',
                 url: '/api/deal_withdraw',
-                data: { money: money, _token: _token },
+                data: { summ: _dealsum, _token: _token },
                 cache: false,
                 async: false,
                 success: function (data) {
                     if (data.error) {
                         alert(data.msg);
-                        if (data.code == '001') {
-                            location.reload(true);
-                        }
-                        else if (data.code == '002') {
-                            $('#withdraw_money').focus();
-                        }
-                        else if (data.code == '003') {
-                            $('#withdraw_money').val('0');
-                        }
+						location.reload(true);
                         return;
                     }
-                    alert('환전 신청이 완료되었습니다.');
+                    alert('수익금환전 신청이 완료되었습니다.');
                     location.reload(true);
                 },
                 error: function (err, xhr) {
@@ -403,11 +412,12 @@
 
 		function convert_deal_balance() {
             var _token = $('#_token').val();
+			var _dealsum = $('#OutSum').val();
 
             $.ajax({
                 type: 'POST',
                 url: '/api/convert_deal_balance',
-                data: { _token: _token },
+                data: { _token: _token, summ: _dealsum },
                 cache: false,
                 async: false,
                 success: function (data) {
@@ -462,7 +472,6 @@
 		function reset_money() {
 			$('#withdraw_money').val(0);
 		}
-
 
 	</script>
 @stop

@@ -106,6 +106,7 @@
 						<th>상위파트너</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>수익금전환</th>
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -121,7 +122,7 @@
 							@endif
 						@endforeach
 					@else
-						<tr><td colspan="4">@lang('app.no_data')</td></tr>
+						<tr><td colspan="8">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>
@@ -131,6 +132,7 @@
 						<th>상위파트너</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>수익금전환</th>
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>
