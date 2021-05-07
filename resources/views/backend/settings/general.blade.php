@@ -52,9 +52,12 @@
                         <b>Sync</b></a>
                 @endif
 
-                {{-- <button class="btn btn-primary" id="generate-freespin" onclick="generate_freespin();">
-                    Generate Freespin
-                </button> --}}
+                <button type="button" class="btn btn-primary" id="generate-freespin" onclick="check_pp();">
+                    프라그메틱 체크
+                </button>
+            </div>
+            <div class="row" id="pplog">
+
             </div>
 
             
@@ -66,7 +69,7 @@
 
 @section('scripts')
     <script>
-        function generate_freespin() {
+        function check_pp() {
             
             var _token = $('#_token').val();
 
@@ -78,7 +81,8 @@
                 async: false,
                 success: function (data) {
                     if (data.error) {
-                        alert(data.msg);
+                        //alert(data.msg);
+                        $("#pplog").html(data.msg);
                         return;
                     }
                 },
