@@ -137,7 +137,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'player not found']);
             }
 
-            $transaction = $this->checkreference($reference);
+            /*$transaction = $this->checkreference($reference);
             if ($transaction)
             {
                 return response()->json([
@@ -148,7 +148,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'usedPromo' => 0,
                     'error' => 0,
                     'description' => 'success']);
-            }
+            } */
 
             if ($user->balance < $amount)
             {
@@ -218,7 +218,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error' => 2,
                     'description' => 'player not found']);
             }
-            $transaction = $this->checkreference($reference);
+            /*$transaction = $this->checkreference($reference);
             if ($transaction)
             {
                 return response()->json([
@@ -228,7 +228,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'bonus' => 0,
                     'error' => 0,
                     'description' => 'success']);
-            }
+            }*/
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
             \VanguardLTE\StatGame::create([
@@ -299,7 +299,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'player not found']);
             }
 
-            $transaction = $this->checkreference($reference);
+            /*$transaction = $this->checkreference($reference);
             if ($transaction)
             {
                 return response()->json([
@@ -309,7 +309,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'bonus' => 0,
                     'error' => 0,
                     'description' => 'success']);
-            }
+            }*/
 
 
             //$user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
@@ -353,7 +353,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'player not found']);
             }
 
-            $transaction = $this->checkreference($reference);
+            /*$transaction = $this->checkreference($reference);
             if ($transaction)
             {
                 return response()->json([
@@ -363,7 +363,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'bonus' => 0,
                     'error' => 0,
                     'description' => 'success']);
-            }
+            }*/
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
             $user->save();
@@ -509,7 +509,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error' => 2,
                     'description' => 'player not found']);
             }
-            $transaction = $this->checkreference($reference);
+            /*$transaction = $this->checkreference($reference);
             if ($transaction)
             {
                 return response()->json([
@@ -519,7 +519,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'bonus' => 0,
                     'error' => 0,
                     'description' => 'success']);
-            }
+            }*/
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
             $user->save();
