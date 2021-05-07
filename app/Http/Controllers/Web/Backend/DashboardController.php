@@ -734,6 +734,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
         public function adjustment_partner(\Illuminate\Http\Request $request)
         {
+            set_time_limit(0);
             $user_id = $request->input('parent');
             $users = [];
             $shops = [];
@@ -872,7 +873,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         $user_in_out = \DB::select($query);
                         $adj['moneyout'] = $user_in_out[0]->moneyout;
                     }
-
                     if (count($shops) > 0 )
                     {
                         $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
@@ -909,6 +909,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $adj['balance'] = $partner->balance;
                     $adj['name'] = $partner->username;
                     $adj['id'] = $partner->id;
+                    $adj['profit'] = 0;
                     if (auth()->user()->hasRole('admin'))
                     {
                         if ($partner->hasRole(['admin','master','agent'])){
@@ -919,16 +920,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             $agent = $partner->referral;
                             if ($agent!=null)
                             {
-                                $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id =' . $agent->id . ' AND shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                                $deal_logs = \DB::select($query);
-                                $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$deal_logs[0]->total_deal;
+                                if (count($shops) > 0){
+                                    $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id =' . $agent->id . ' AND shop_id in ('. implode(',',$shops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
+                                    $deal_logs = \DB::select($query);
+                                    $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$deal_logs[0]->total_deal;
+                                }
                             }
                         }
                     }
                     $adjustments[] = $adj;
                 }
             }
-            return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user'));
+            return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
         }
         public function adjustment_game(\Illuminate\Http\Request $request)
         {

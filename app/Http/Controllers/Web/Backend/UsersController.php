@@ -316,7 +316,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             else 
             {
                 $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-                $users = $user->childPartners();
+                if ($user) {
+                    $users = $user->childPartners();
+                }
+                else
+                {
+                    $users = [$user_id];
+                }
             }
             $partners = [];
             $childs = \VanguardLTE\User::whereIn('id', $users)->get();
@@ -928,6 +934,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.user.list')->withErrors([trans('app.no_permission')]);
             }
+            $agents = null;
             if( $user->hasRole('master') ) 
             {
                 $agents = \VanguardLTE\User::where([
