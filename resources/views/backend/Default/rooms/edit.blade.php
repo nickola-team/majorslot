@@ -11,7 +11,7 @@
 
     <section class="content">
 
-        {!! Form::open(['route' => array('backend.Default.room.update', $room->id), 'files' => true, 'id' => 'user-form']) !!}
+        {!! Form::open(['route' => array('backend.room.update', $room->id), 'files' => true, 'id' => 'user-form']) !!}
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">@lang('app.edit_room')</h3>

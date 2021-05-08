@@ -11,7 +11,7 @@
 
     <section class="content">
       <div class="box box-default">
-		{!! Form::open(['route' => array('backend.Default.happyhour.update', $happyhour->id), 'files' => true, 'id' => 'user-form']) !!}
+		{!! Form::open(['route' => array('backend.happyhour.update', $happyhour->id), 'files' => true, 'id' => 'user-form']) !!}
         <div class="box-header with-border">
           <h3 class="box-title">@lang('app.edit_happyhour')</h3>
         </div>
