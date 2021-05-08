@@ -29,11 +29,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                 $directories[$dirname] = $dirname;
             }
             $title = settings('app_name');
-            if (str_contains($request->root(), env('ONYX_DOMAIN', 'onyx000.com')))
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            if ($site)
             {
-                $title = '오닉스';
+                $title = $site->title;
             }
-            return view('backend.auth.login', compact('directories','title'));
+            return view('backend.Default.auth.login', compact('directories','title'));
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
@@ -53,6 +54,24 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                 return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
             }
             $user = \Auth::getProvider()->retrieveByCredentials($credentials);
+            //check admin id per site
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $adminid = 1; //default admin id
+            if ($site)
+            {
+                $adminid = $site->adminid;
+            }
+
+            $admin = $user;
+            while ($admin !=null && !$admin ->hasRole('admin'))
+            {
+                $admin = $admin->referral;
+            }
+
+            if (!$admin || $admin->id != $adminid)
+            {
+                return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
+            }
             if( $request->lang ) 
             {
                 $user->update(['language' => $request->lang]);
@@ -155,7 +174,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
         }
         public function getRegister()
         {
-            return view('backend.auth.register');
+            return view('backend.Default.auth.register');
         }
         public function postRegister(\VanguardLTE\Http\Requests\Auth\RegisterRequest $request, \VanguardLTE\Repositories\Role\RoleRepository $roles)
         {

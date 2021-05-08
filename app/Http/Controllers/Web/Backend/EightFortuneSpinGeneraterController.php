@@ -76,7 +76,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         
         public function generateFreespin()
         {
-            $freespin_types = [1];
+            /*$freespin_types = [1];
             $freespin_counts = [10];
 
             $lines = 88;
@@ -143,7 +143,42 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     ]);
 
                 }
+            }*/
+            set_time_limit(0);
+            $time = strtotime("-1 hours") * 10000;
+            $records = \VanguardLTE\PPTransaction::where('timestamp', '>', $time)->orderBy('timestamp','DESC')->get();
+            $msg = '<table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                        <th>레퍼런스</th>
+                        <th>요청시간</th>
+                        <th>수신시간</th>
+						<th>응답시간</th>
+						<th>인터넷시간</th>
+                        <th>처리시간</th>
+                        <th>전체시간</th>
+						</tr>
+                        </thead>
+					<tbody>';
+            foreach ($records as $record)
+            {
+                $timestamp = $record->timestamp;
+                $data = json_decode($record->data);
+                if (isset($data) && isset($data->timestamp) && $timestamp / 10 - $data->timestamp >= 5*1000)
+                {
+                    if (isset($data->herestamp)){
+                        $msg = $msg . "<tr><td>" . $record->reference . "</td><td>" .  $data->timestamp . "</td><td>". ($data->herestamp/10) . "</td><td>". $timestamp/ 10 ."</td><td>" . ($data->herestamp / 10 - $data->timestamp) . "</td><td>" . ($timestamp/10 - $data->herestamp / 10 ). "</td><td>" . ($timestamp / 10 - $data->timestamp) . "</td></tr>";
+                    }
+                    else
+                    {
+                        $msg = $msg . "<tr><td>" . $record->reference . "</td><td>" .  $data->timestamp . "</td><td>". '?' . "</td><td>". ($timestamp/ 10) ."</td><td>" . '?' . "</td><td>" . "?" ."</td><td>" . ($timestamp / 10 - $data->timestamp) . "</td></tr>";
+                    }
+                }
+                
             }
+            $msg = $msg . '</tbody></table>';
+            $res = ['error' => true, 'msg' => $msg];
+            return response()->json($res);
         }
 
 

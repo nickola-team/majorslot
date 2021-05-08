@@ -6,13 +6,10 @@ namespace VanguardLTE
         protected $table = 'website';
         protected $fillable = [
             'domain', 
-            'brand', 
+            'title', 
             'frontend', 
             'backend', 
-            'dbhost',
-            'dbdatabase',
-            'dbusername',
-            'dbpassword',
+            'adminid',
             'created_at'
         ];
         public $timestamps = false;

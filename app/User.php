@@ -228,29 +228,17 @@ namespace VanguardLTE
 
         public function hierarchyPartners()
         {
-            $level = $this->level();
-            $users = User::where('id', $this->id)->get();
-            for( $i = $level; $i >= 4; $i-- ) 
+            $users = $this->availableUsers();
+            if( !count($users) ) 
             {
-                foreach( $users as $user ) 
-                {
-                    if( $user->level() == $i ) 
-                    {
-                        /*if( auth()->user()->shop_id > 0 ) 
-                        {
-                            $users = $users->merge(User::where('parent_id', $user->id)->whereHas('rel_shops', function($query)
-                            {
-                                $query->where('shop_id', $this->shop_id);
-                            })->get());
-                        }
-                        else
-                        { */
-                            $users = $users->merge(User::where('parent_id', $user->id)->get());
-                        //}
-                    }
-                }
+                return [];
             }
-            return $users->pluck('id')->toArray();
+            $level = $this->level();
+            if ($level < 3)
+            {
+                return [];
+            }
+            return User::whereIn('role_id', range(3,$level-1))->whereIn('id', $users)->pluck('id')->toArray();
         }
 
         public function childPartners()
@@ -266,36 +254,12 @@ namespace VanguardLTE
         }
         public function hierarchyUserNamesOnly()
         {
-            $level = $this->level();
-            $users = User::where('id', $this->id)->get();
-            for( $i = $level; $i >= 1; $i-- ) 
+            $users = $this->availableUsers();
+            if( !count($users) ) 
             {
-                foreach( $users as $user ) 
-                {
-                    if( $user->level() == $i) 
-                    {
-                        // if( auth()->user()->shop_id > 0 ) 
-                        // {
-                        //     $users = $users->merge(User::where('parent_id', $user->id)->whereHas('rel_shops', function($query)
-                        //     {
-                        //         $query->where('shop_id', $this->shop_id);
-                        //     })->get());
-                        // }
-                        // else
-                        // {
-                            $users = $users->merge(User::where('parent_id', $user->id)->get());
-                        // }
-                    }
-                }
+                return [];
             }
-
-            for($i = count($users) - 1; $i >= 0; $i--) {
-                $user = $users[$i];
-                if($user->role_id != 1) {
-                    $users->forget($i);
-                }
-            }
-            return $users->pluck('username','id')->toArray();
+            return User::where('role_id', 1)->whereIn('id', $users)->pluck('username','id')->toArray();
         }
 
         public function isAvailable($user)
@@ -585,6 +549,7 @@ namespace VanguardLTE
                     'message' => trans('app.wrong_sum')
                 ]);
             }
+            $summ = abs($summ);
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager'))&& $this->hasRole('user') ) 
             {
                 if( !$shop ) 
@@ -663,7 +628,7 @@ namespace VanguardLTE
                 'shop_id' => $payeer->shop_id, 
                 'time' => date('G')
             ])->first();
-            $summ = ($type == 'out' ? -1 * $summ : $summ);
+            $summ = ($type == 'out' ? -1 * abs($summ) : abs($summ));
             $balance = $summ;
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && $this->hasRole('user') && $type == 'add' && $happyhour ) 
             {

@@ -13,61 +13,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function index(\Illuminate\Http\Request $request)
         {
-/*            $checked = new \VanguardLTE\Lib\LicenseDK();
-            $license_notifications_array = $checked->aplVerifyLicenseDK(null, 0);
-            if( $license_notifications_array['notification_case'] != 'notification_license_ok' ) 
-            {
-                return redirect()->route('frontend.page.error_license');
-            }
-            if( !$this->security() ) 
-            {
-                return redirect()->route('frontend.page.error_license');
-            }*/
             $statuses = ['' => trans('app.all')] + \VanguardLTE\Support\Enum\UserStatus::lists();
             $roles = \jeremykenedy\LaravelRoles\Models\Role::where('level', '<', \Illuminate\Support\Facades\Auth::user()->level())->pluck('name', 'id');
             $roles->prepend(trans('app.all'), '0');
-            $users = \VanguardLTE\User::orderBy('created_at', 'DESC');
-            // if( !auth()->user()->shop_id ) 
-            // {
-            //     if( auth()->user()->hasRole('admin') ) 
-            //     {
-            //         $users = $users->whereIn('role_id', [
-            //             4, 
-            //             5
-            //         ]);
-            //     }
-            //     if( auth()->user()->hasRole('agent') ) 
-            //     {
-            //         $distributors = auth()->user()->availableUsersByRole('distributor');
-            //         if( $distributors ) 
-            //         {
-            //             $users = $users->whereIn('id', $distributors);
-            //         }
-            //         else
-            //         {
-            //             $users = $users->where('id', 0);
-            //         }
-            //     }
-            //     if( auth()->user()->hasRole('distributor') ) 
-            //     {
-            //         $managers = auth()->user()->availableUsersByRole('manager');
-            //         if( $managers ) 
-            //         {
-            //             $users = $users->whereIn('id', $managers);
-            //         }
-            //         else
-            //         {
-            //             $users = $users->where('id', 0);
-            //         }
-            //     }
-            // }
-            // else
-            // {
-            //     $users = $users->whereIn('id', auth()->user()->hierarchyUsersOnly())->whereHas('rel_shops', function($query)
-            //     {
-            //         $query->where('shop_id', auth()->user()->shop_id);
-            //     });
-            // }
+            if($request->orderby)
+            {
+                if ($request->orderby == 0)
+                {
+                    $users = \VanguardLTE\User::orderBy('username', 'ASC');
+                }
+                else
+                {
+                    $users = \VanguardLTE\User::orderBy('balance', 'DESC');
+                }
+            }
+            else
+            {
+                $users = \VanguardLTE\User::orderBy('username', 'ASC');
+            }
+                
+
             if($request->shop_id != '' && $request->shop_id > 0)
             {
                 $shop = \VanguardLTE\Shop::where('id', $request->shop_id)->first();
@@ -92,20 +57,33 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $users = $users->where('role_id', $request->role);
             }
+            $userIds = auth()->user()->hierarchyUsersOnly();
+            $shopIds = auth()->user()->availableShops();
+
+            $stat['totaluser'] = count($userIds);
+            $stat['onlineuser'] = 0;
+            if (count($userIds) > 0){
+                $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+                $query = 'SELECT count(*) as online FROM w_sessions WHERE user_id in (' . implode(',', $userIds) . ') AND last_activity>=' . $validTimestamp;
+                $qresult = \DB::select($query);
+                $stat['onlineuser'] = $qresult[0]->online;
+            }
+            $stat['totalbalance'] = \VanguardLTE\User::where('role_id' , 1)->whereIn('shop_id', $shopIds)->sum('balance');
+
             $users = $users->paginate(20);
             $happyhour = \VanguardLTE\HappyHour::where([
                 'shop_id' => auth()->user()->shop_id, 
                 'time' => date('G')
             ])->first();
-            return view('backend.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour'));
+            return view('backend.Default.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour', 'stat'));
         }
         public function createuserfromcsv(\Illuminate\Http\Request $request)
         {
-            return view('backend.user.createfromcsv', ['ispartner' => 0]);
+            return view('backend.Default.user.createfromcsv', ['ispartner' => 0]);
         }
         public function createpartnerfromcsv(\Illuminate\Http\Request $request)
         {
-            return view('backend.user.createfromcsv',  ['ispartner' => 1]);
+            return view('backend.Default.user.createfromcsv',  ['ispartner' => 1]);
         }
         public function storepartnerfromcsv(\Illuminate\Http\Request $request)
         {
@@ -253,7 +231,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $ispartner = 1;
             $msg = $partnercount . '명의 파트너와 ' . $shopcount . '개의 매장을 생성하였습니다.';
-            return view('backend.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
+            return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
 
         public function storeuserfromcsv(\Illuminate\Http\Request $request)
@@ -319,7 +297,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $ispartner = 0;
             $msg = $succeed . '명의 회원을 생성하였습니다. 실패 ' . $failed . '명';
-            return view('backend.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
+            return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
         public function tree(\Illuminate\Http\Request $request)
         {
@@ -338,7 +316,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             else 
             {
                 $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-                $users = $user->childPartners();
+                if ($user) {
+                    $users = $user->childPartners();
+                }
+                else
+                {
+                    $users = [$user_id];
+                }
             }
             $partners = [];
             $childs = \VanguardLTE\User::whereIn('id', $users)->get();
@@ -370,7 +354,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     ];
                 }
             }
-            return view('backend.user.tree', compact('partners','user'));
+            return view('backend.Default.user.tree', compact('partners','user'));
         }
         public function view(\VanguardLTE\User $user, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)
         {
@@ -379,7 +363,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.user.list');
             }
-            return view('backend.user.view', compact('user', 'userActivities'));
+            return view('backend.Default.user.view', compact('user', 'userActivities'));
         }
         public function create()
         {
@@ -436,7 +420,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 $availibleUsers = $me->merge($availibleUsers);
             }
-            return view('backend.user.add', compact('roles', 'statuses', 'shops', 'availibleUsers', 'happyhour'));
+            return view('backend.Default.user.add', compact('roles', 'statuses', 'shops', 'availibleUsers', 'happyhour'));
         }
         public function store(\VanguardLTE\Http\Requests\User\CreateUserRequest $request)
         {
@@ -737,7 +721,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]);
             $max_wins = \VanguardLTE\GameActivity::where('user_id', $user->id)->where('created_at', 'LIKE', $date . '%')->where('max_win', '!=', '')->groupBy('game')->orderBy('max_win', 'DESC')->take(5)->get();
             $max_bets = \VanguardLTE\GameActivity::where('user_id', $user->id)->where('created_at', 'LIKE', $date . '%')->where('max_bet', '!=', '')->groupBy('game')->orderBy('max_bet', 'DESC')->take(5)->get();
-            return view('backend.user.edit', compact('edit', 'user', 'roles', 'statuses', 'shops', 'free_shops', 'userActivities', 'hasActivities', 'langs', 'max_wins', 'max_bets', 'numbers'));
+            return view('backend.Default.user.edit', compact('edit', 'user', 'roles', 'statuses', 'shops', 'free_shops', 'userActivities', 'hasActivities', 'langs', 'max_wins', 'max_bets', 'numbers'));
         }
         public function updateDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
@@ -777,7 +761,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]))
             {
                 $parent = $user->referral;
-                if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null && isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
@@ -787,7 +771,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]))
             {
                 $parent = $user->referral;
-                if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null && isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
                 }
@@ -849,6 +833,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $data['type'] = 'add';
             }
             $user = \VanguardLTE\User::find($request->user_id);
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
+            }
             $request->summ = floatval($request->summ);
             if( $request->all && $request->all == '1' ) 
             {
@@ -865,7 +853,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function statistics(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
         {
             $statistics = \VanguardLTE\Transaction::where('user_id', $user->id)->orderBy('created_at', 'DESC')->paginate(20);
-            return view('backend.stat.pay_stat', compact('user', 'statistics'));
+            return view('backend.Default.stat.pay_stat', compact('user', 'statistics'));
         }
         private function userIsBanned(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
         {
@@ -946,6 +934,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.user.list')->withErrors([trans('app.no_permission')]);
             }
+            $agents = null;
             if( $user->hasRole('master') ) 
             {
                 $agents = \VanguardLTE\User::where([
@@ -1009,12 +998,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 foreach( $agents as $agent ) 
                 {
                     event(new \VanguardLTE\Events\User\Deleted($agent));
+                    \VanguardLTE\ShopUser::where('user_id', $agent->id)->delete();
                     $agent->delete();
                 }
             }
             if($user->hasRole(['master','agent'])) 
             {
                 event(new \VanguardLTE\Events\User\Deleted($user));
+                \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
                 $user->delete();
             }
 
@@ -1064,7 +1055,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             $adminView = true;
             $sessions = $sessionRepository->getUserSessions($user->id);
-            return view('backend.user.sessions', compact('sessions', 'user', 'adminView'));
+            return view('backend.Default.user.sessions', compact('sessions', 'user', 'adminView'));
         }
         public function invalidateSession(\VanguardLTE\User $user, $session, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

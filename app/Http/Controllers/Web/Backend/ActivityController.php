@@ -51,7 +51,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $activities = $activities->whereIn('user_id', $ids);
             }
             $activities = $activities->paginate($perPage);
-            return view('backend.activity.index', compact('activities', 'adminView'));
+            return view('backend.Default.activity.index', compact('activities', 'adminView'));
         }
         public function userActivity(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
         {
@@ -62,7 +62,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_user')]);
             }
             $activities = $this->activities->paginateActivities($perPage, $request->get('search'), [$user->id]);
-            return view('backend.activity.index', compact('activities', 'user', 'adminView'));
+            return view('backend.Default.activity.index', compact('activities', 'user', 'adminView'));
         }
         public function clear()
         {

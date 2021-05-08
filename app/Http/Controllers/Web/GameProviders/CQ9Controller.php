@@ -29,16 +29,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function gamecodetoname($code)
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get('cq9list');
-            if (!$gameList)
-            {
-                $gameList = \CQ9Controller::getgamelist('cq9');
-            }
+            $gamelist = CQ9Controller::getgamelist('cq9');
             $gamename = $code;
-            if ($gameList)
+            if ($gamelist)
             {
-                $games = json_decode($gameList, true);
-                foreach($games as $game)
+                foreach($gamelist as $game)
                 {
                     if ($game['gamecode'] == $code)
                     {
@@ -975,6 +970,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $user = auth()->user();
+            if ($user == null)
+            {
+                return ['error' => true, 'msg' => '로그인하세요'];
+            }
             $detect = new \Detection\MobileDetect();
             $response = Http::withHeaders([
                 'Authorization' => config('app.cq9token'),

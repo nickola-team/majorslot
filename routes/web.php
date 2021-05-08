@@ -265,7 +265,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.login',
         'uses' => 'ApiController@login',
     ]);
-
+    Route::post('api/balance', [
+        'as' => 'frontend.api.balance',
+        'uses' => 'ApiController@getbalance',
+    ]);
     Route::post('api/getgamelist', [
         'as' => 'frontend.api.getgamelist',
         'uses' => 'ApiController@getgamelist',

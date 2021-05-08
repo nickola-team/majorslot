@@ -58,12 +58,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 $frbs[] = $bdata;
             }
-            return view('backend.bonus.pplist', compact('frbs'));
+            return view('backend.Default.bonus.pplist', compact('frbs'));
         }
         public function pp_add(\Illuminate\Http\Request $request)
         {
             $gamelist = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('');
-            return view('backend.bonus.ppadd', compact('gamelist'));
+            return view('backend.Default.bonus.ppadd', compact('gamelist'));
         }
         public function pp_cancel($bonusCode, \Illuminate\Http\Request $request)
         {
@@ -139,14 +139,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 $frbs[] = $bdata;
             }
-            return view('backend.bonus.bnglist', compact('frbs'));
+            return view('backend.Default.bonus.bnglist', compact('frbs'));
         }
         public function bng_add(\Illuminate\Http\Request $request)
         {
             $gamelist1 = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::getgamelist('booongo');
             $gamelist2 = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::getgamelist('playson');
             $gamelist = array_merge($gamelist1 , $gamelist2);
-            return view('backend.bonus.bngadd', compact('gamelist'));
+            return view('backend.Default.bonus.bngadd', compact('gamelist'));
         }
         public function bng_cancel($bonus_id, \Illuminate\Http\Request $request)
         {

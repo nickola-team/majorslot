@@ -13,24 +13,41 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function index(\Illuminate\Http\Request $request)
         {
             $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->where('admin_id', auth()->user()->id)->orderBy('happyhour_users.created_at', 'DESC')->get();
-            return view('backend.happyhours.list', compact('happyhours'));
+            return view('backend.Default.happyhours.list', compact('happyhours'));
         }
         public function create()
         {
-            return view('backend.happyhours.add');
+            return view('backend.Default.happyhours.add');
         }
         public function store(\Illuminate\Http\Request $request)
         {
+            $username = $request->username;
+            if (!$username)
+            {
+                return redirect()->route('backend.happyhour.create')->withErrors('회원이름을 입력하세요');
+            }
+            $user = \VanguardLTE\User::where('username', $username)->first();
+            if (!$user)
+            {
+                return redirect()->route('backend.happyhour.create')->withErrors('회원이 없습니다.');
+            }
             $uniq = \VanguardLTE\HappyHourUser::where([
                 'time' => $request->time, 
-                'user_id' => $request->user_id
+                'user_id' => $user->id
             ])->count();
             if( $uniq ) 
             {
                 return redirect()->route('backend.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
             }
-            $data = $request->all();
+            $data = $request->only([
+                'total_bank', 
+                'jackpot',
+                'time', 
+                'status'
+            ]);
             $data['current_bank'] = $data['total_bank'];
+            $data['user_id'] = $user->id;
+            $data['over_bank'] = 0;
             if ($data['jackpot'] > 0)
             {
                 $data['progressive'] = mt_rand(5,10);
@@ -42,12 +59,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function edit($happyhour)
         {
             $happyhour = \VanguardLTE\HappyHourUser::where('id', $happyhour)->first();
-            return view('backend.happyhours.edit', compact('happyhour'));
+            return view('backend.Default.happyhours.edit', compact('happyhour'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\HappyHourUser $happyhour)
         {
+            $username = $request->username;
+            if (!$username)
+            {
+                return redirect()->route('backend.happyhour.list')->withErrors('회원이름을 입력하세요');
+            }
+            $user = \VanguardLTE\User::where('username', $username)->first();
+            if (!$user)
+            {
+                return redirect()->route('backend.happyhour.list')->withErrors('회원이 없습니다.');
+            }
             $data = $request->only([
-                'user_id', 
                 'total_bank', 
                 'jackpot',
                 'time', 
@@ -55,13 +81,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]);
             $uniq = \VanguardLTE\HappyHourUser::where([
                 'time' => $request->time, 
-                'user_id' => $request->user_id
+                'user_id' => $user->id
             ])->where('id', '!=', $happyhour->id)->count();
             if( $uniq ) 
             {
                 return redirect()->route('backend.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
             }
             $data['current_bank'] = $data['total_bank'];
+            $data['user_id'] = $user->id;
             $data['over_bank'] = 0;
             if ($data['jackpot'] > 0)
             {

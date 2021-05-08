@@ -7,6 +7,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
+            $siteMaintence = env('MAINTENANCE', 0);
+
+            if( $siteMaintence==1 ) 
+            {
+                \Auth::logout();
+                return response()->json(['error' => true, 'msg' => '사이트 점검중입니다']);
+            }
+            
             $throttles = settings('throttle_enabled');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
             {
@@ -27,6 +35,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $user->update(['language' => $request->lang]);
             }
+
+            //check admin id per site
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $adminid = 1; //default admin id
+            if ($site)
+            {
+                $adminid = $site->adminid;
+            }
+
+            $admin = $user->referral;
+            while ($admin !=null && !$admin ->hasRole('admin'))
+            {
+                $admin = $admin->referral;
+            }
+
+            if (!$admin || $admin->id != $adminid)
+            {
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
+            }
+
             if( !$user->hasRole('admin') && setting('siteisclosed') ) 
             {
                 \Auth::logout();
@@ -45,10 +73,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.your_account_is_banned')]);
             }
             
-            if(count($sessionRepository->getUserSessions($user->id)) ) 
+            $sessions = $sessionRepository->getUserSessions($user->id);
+            $expiretime = env('EXPIRE_TIME_CLOSE'. 30);
+            $count = count($sessions);
+            if(count($sessions) > 0 ) 
             {
-                return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
+                foreach ($sessions as $s)
+                {
+                    if ($s->last_activity->diffInSeconds(\Carbon\Carbon::now()) >  $expiretime)
+                    {
+                        $count--;
+                    }
+                }
+                if ($count > 0){
+                    return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
+                }
             }
+
+            $sessionRepository->invalidateAllSessionsForUser($user->id);
 
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
             
@@ -59,8 +101,21 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             return response()->json(['error' => false, 'msg' => '성공']);
         }
+        public function getbalance(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
+
+            $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance,2);
+
+            return response()->json(['error' => false, 'balance' => $balance]);
+        }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
             $provider = $request->provider;
             $gamecode = $request->gamecode;
             $major_domain = env('MAJOR_DOMAIN', 'http://major999.com/');
@@ -209,12 +264,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function inoutList_json(\Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'count' => 0, 'now' => \Carbon\Carbon::now()]);
+            }
+
+            if (isset($request->rating))
+            {
+                auth()->user()->rating = $request->rating;
+                auth()->user()->save();
+            }
+
             $res['now'] = \Carbon\Carbon::now();
             $transactions = \VanguardLTE\WithdrawDeposit::where([
                 'status' => 0,
                 'payeer_id' => $request->id])->get();
             $res['count'] = $transactions->count();
-            return json_encode($res);
+            $res['rating'] = auth()->user()->rating;
+            return response()->json($res);
         }
 
         public function getgamelist(\Illuminate\Http\Request $request){
@@ -304,6 +370,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = \VanguardLTE\User::find(\Auth::id());
+
             if(!$user->hasRole('manager') && !$user->hasRole('distributor') && !$user->hasRole('agent')){
                 return response()->json([
                     'error' => true, 
@@ -311,16 +378,35 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '001'
                 ], 200);
             }
+
+            $summ = $request->summ;
            
             if($user->hasRole('manager')){
                 $shop = $user->shop;
                 $real_deal_balance = $shop->deal_balance - $shop->mileage;
-                if ($real_deal_balance > 0) {
+                if ($summ )
+                {
+                    $summ = abs($summ);
+                    if ($real_deal_balance <= $summ)
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '수익금이 부족합니다.',
+                            'code' => '000'
+                        ], 200);
+                    }
+
+                }
+                else
+                {
+                    $summ = $real_deal_balance;
+                }
+                if ($summ > 0) {
                     //out balance from master
                     $distr = $user->referral;
                     $agent = $distr->referral;
                     $master = $agent->referral;
-                    if ($master->balance < $real_deal_balance)
+                    if ($master->balance < $summ)
                     {
                         return response()->json([
                             'error' => true, 
@@ -329,7 +415,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $real_deal_balance]
+                        ['balance' => $master->balance - $summ]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 
@@ -338,10 +424,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('money_in', $real_deal_balance);
+                        $open_shift->increment('money_in', $summ);
                     }
 
-                    $shop->balance = $shop->balance + $real_deal_balance;
+                    $shop->balance = $shop->balance + $summ;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'shop_id' => $shop->id, 
                         'type' => 'shop',
@@ -349,21 +435,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('convert_deal', $real_deal_balance);
+                        $open_shift->increment('convert_deal', $summ);
                     }
                     \VanguardLTE\ShopStat::create([
                         'user_id' => $master->id,
                         'type' => 'add',
-                        'sum' => $real_deal_balance,
+                        'sum' => $summ,
                         'shop_id' => $shop->id,
                         'date_time' => \Carbon\Carbon::now()
                     ]);
 
-                    $shop->deal_balance = 0;
+                    $shop->deal_balance = $real_deal_balance - $summ;
                     $shop->mileage = 0;
                     $shop->save();
-
-                    
+                   
                 }
                 else{
                     return response()->json([
@@ -375,7 +460,22 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else {
                 $real_deal_balance = $user->deal_balance - $user->mileage;
-                if ($real_deal_balance > 0) {
+                if ($summ )
+                {
+                    if ($real_deal_balance <= $summ)
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '수익금이 부족합니다.',
+                            'code' => '000'
+                        ], 200);
+                    }
+                }
+                else
+                {
+                    $summ = $real_deal_balance;
+                }
+                if ($summ > 0) {
                     //out balance from master
                     $master = $user->referral;
                     while ($master!=null && !$master->hasRole('master'))
@@ -392,7 +492,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     
-                    if ($master->balance < $real_deal_balance)
+                    if ($master->balance < $summ)
                     {
                         return response()->json([
                             'error' => true, 
@@ -401,7 +501,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $real_deal_balance]
+                        ['balance' => $master->balance - $summ]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 
@@ -410,10 +510,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('money_in', $real_deal_balance);
+                        $open_shift->increment('money_in', $summ);
                     }
 
-                    $user->balance = $user->balance + $real_deal_balance;
+                    $user->balance = $user->balance + $summ;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $user->id, 
                         'end_date' => null,
@@ -421,19 +521,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('convert_deal', $real_deal_balance);
+                        $open_shift->increment('convert_deal', $summ);
                     }
 
                     \VanguardLTE\Transaction::create([
                         'user_id' => $user->id,
                         'payeer_id' => $master->id,
                         'system' => $user->username,
-                        'type' => 'add',
-                        'summ' => $real_deal_balance,
-                        'shop_id' => $user->shop_id
+                        'type' => 'deal_out',
+                        'summ' => $summ,
+                        'shop_id' => 0
                     ]);
 
-                    $user->deal_balance = 0;
+                    $user->deal_balance = $real_deal_balance - $summ;
                     $user->mileage = 0;
                     $user->save();
                 }
@@ -450,7 +550,90 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
 
         public function withdrawDealMoney(\Illuminate\Http\Request $request){
-            return response()->json(['error' => true, 'msg' => 'not implemented']);
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
+
+            $user = auth()->user();
+            if (!$user->hasRole('manager'))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '매장에서만 가능한 기능입니다',
+                    'code' => '004'
+                ], 200);
+            }
+            if($user->bank_name == null || $user->bank_name == ''){
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '계좌정보를 입력해주세요',
+                    'code' => '004'
+                ], 200);
+            }
+
+            if( !$request->summ ) 
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전금액을 입력해주세요',
+                    'code' => '001'
+                ], 200);
+            }
+
+            $summ = abs($request->summ);
+            $shop = \VanguardLTE\Shop::where('id', $user->shop_id)->first();
+
+            if (!$shop)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '유효하지 않은 매장입니다',
+                    'code' => '001'
+                ], 200);
+            }
+
+            if($summ > $shop->deal_balance) {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전금액은 수익금액을 초과할수 없습니다',
+                    'code' => '002'
+                ], 200);
+            }
+
+            //send it to master.
+            $distr = $user->referral;
+            if ($distr) {
+                $agent = $distr->referral;
+                \VanguardLTE\WithdrawDeposit::create([
+                    'user_id' => $user->id,
+                    'payeer_id' => $agent->parent_id,
+                    'type' => 'deal_out',
+                    'sum' => $summ,
+                    'status' => 0,
+                    'shop_id' => $user->shop_id,
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now(),
+                    'bank_name' => $user->bank_name,
+                    'account_no' => $user->account_no,
+                    'recommender' => $user->recommender,
+                    'partner_type' => 'shop'
+                ]);
+
+                $shop->update([
+                    'deal_balance' => $shop->deal_balance - $summ,
+                ]);
+
+                $open_shift = \VanguardLTE\OpenShift::where([
+                    'shop_id' => $shop->id, 
+                    'end_date' => null,
+                    'type' => 'shop'
+                ])->first();
+                if( $open_shift ) 
+                {
+                    $open_shift->increment('convert_deal', $summ);
+                }
+            }
+            return response()->json(['error' => false]);
         }
 
         public function deposit(\Illuminate\Http\Request $request){
@@ -459,6 +642,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
+            if ($user->hasRole('user'))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '개인충전은 지원하지 않습니다',
+                    'code' => '004'
+                ], 200);
+            }
             if($user->bank_name == null || $user->bank_name == ''){
                 return response()->json([
                     'error' => true, 
@@ -529,6 +720,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
+            if ($user->hasRole('user'))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '개인환전은 지원하지 않습니다',
+                    'code' => '004'
+                ], 200);
+            }
             if($user->bank_name == null || $user->bank_name == ''){
                 return response()->json([
                     'error' => true, 
@@ -575,7 +774,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'user_id' => $user->id,
                         'payeer_id' => $agent->parent_id,
                         'type' => 'out',
-                        'sum' => $request->money,
+                        'sum' => abs($request->money),
                         'status' => 0,
                         'shop_id' => $user->shop_id,
                         'created_at' => \Carbon\Carbon::now(),
@@ -618,7 +817,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'user_id' => $user->id,
                     'payeer_id' => $agent->parent_id,
                     'type' => 'out',
-                    'sum' => $request->money,
+                    'sum' => abs($request->money),
                     'status' => 0,
                     'shop_id' => 0,
                     'created_at' => \Carbon\Carbon::now(),
@@ -701,6 +900,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         $open_shift->increment('money_out', $amount);
                     }
 
+                }
+                else if($type == 'deal_out'){
+                    /*auth()->user()->update(
+                        ['balance' => auth()->user()->balance + $amount]
+                    ); */
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'user_id' => auth()->user()->id, 
+                        'end_date' => null,
+                        'type' => 'partner'
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('convert_deal', $amount);
+                    }
                 }
                 $transaction->update([
                     'status' => 1
@@ -787,6 +1000,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $shop->update([
                         'deal_balance' => $shop->deal_balance + $amount
                     ]);
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'shop_id' => $shop->id, 
+                        'end_date' => null,
+                        'type' => 'shop'
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->decrement('convert_deal', $amount);
+                    }
                 }
 
                 $shop_stat->update([
@@ -808,6 +1030,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     if($type == 'out'){
                         $shop->update([
                             'balance' => $shop->balance + $amount
+                        ]);
+                        $open_shift = \VanguardLTE\OpenShift::where([
+                            'shop_id' => $shop->id, 
+                            'end_date' => null,
+                            'type' => 'shop'
+                        ])->first();
+                        if( $open_shift ) 
+                        {
+                            $open_shift->decrement('balance_out', $amount);
+                        }
+                    }
+                    else if($type == 'deal_out'){
+                        $shop->update([
+                            'deal_balance' => $shop->deal_balance + $amount
                         ]);
                         $open_shift = \VanguardLTE\OpenShift::where([
                             'shop_id' => $shop->id, 

@@ -22,11 +22,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('frontend.page.error_license');
             }*/
             $jackpots = \VanguardLTE\Jackpot::where('shop_id', \Auth::user()->shop_id)->get();
-            return view('backend.jackpots.list', compact('jackpots'));
+            return view('backend.Default.jackpots.list', compact('jackpots'));
         }
         public function create()
         {
-            return view('backend.jackpots.add');
+            return view('backend.Default.jackpots.add');
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -49,7 +49,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.jackpot.list')->withErrors([trans('app.wrong_shop')]);
             }
             $jackpot_stat = $jackpot->statistics()->orderBy('id', 'DESC')->limit(8)->get();
-            return view('backend.jackpots.edit', compact('jackpot', 'jackpot_stat'));
+            return view('backend.Default.jackpots.edit', compact('jackpot', 'jackpot_stat'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Jackpot $jackpot)
         {

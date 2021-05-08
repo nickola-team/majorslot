@@ -21,8 +21,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function microtime_string()
         {
-            list($usec, $sec) = explode(" ", microtime());
-            $microstr =  strval(((float)$usec + (float)$sec));
+            $microstr = sprintf('%.4f', microtime(TRUE));
             $microstr = str_replace('.', '', $microstr);
             return $microstr;
         }
@@ -454,6 +453,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function makegamelink($gamecode, $mode)
         {
             $user = auth()->user();
+            if ($user == null)
+            {
+                return null;
+            }
             $detect = new \Detection\MobileDetect();
             $key = [
                 'brandid' => config('app.hbn_brandid'),
@@ -475,7 +478,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $url = HBNController::makegamelink($gamecode, 'real');
-            return ['error' => false, 'data' => ['url' => $url]];
+            if ($url){
+                return ['error' => false, 'data' => ['url' => $url]];
+            }
+            else
+            {
+                return ['error' => true, 'msg' => '로그인하세요'];
+            }
         }
 
         public static function playerResponse(){

@@ -175,7 +175,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             } */
           
             $shops = $shops->paginate(25);
-            return view('backend.shops.list', compact('shops', 'categories', 'stats', 'agents', 'distributors'));
+            return view('backend.Default.shops.list', compact('shops', 'categories', 'stats', 'agents', 'distributors'));
         }
         public function create()
         {
@@ -226,7 +226,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $blocks[1] = __('app.block');
             }
-            return view('backend.shops.add', compact('directories', 'categories', 'shop', 'availibleUsers', 'blocks'));
+            return view('backend.Default.shops.add', compact('directories', 'categories', 'shop', 'availibleUsers', 'blocks'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -361,7 +361,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $blocks[1] = __('app.block');
             }
             $statuses = \VanguardLTE\Support\Enum\UserStatus::lists();
-            return view('backend.shops.admin', compact('directories', 'categories', 'shop', 'availibleUsers', 'blocks', 'statuses'));
+            return view('backend.Default.shops.admin', compact('directories', 'categories', 'shop', 'availibleUsers', 'blocks', 'statuses'));
         }
         public function admin_store(\Illuminate\Http\Request $request)
         {
@@ -577,7 +577,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $blocks[1] = __('app.block');
             }
-            return view('backend.shops.edit', compact('shop', 'directories', 'categories', 'cats', 'blocks'));
+            return view('backend.Default.shops.edit', compact('shop', 'directories', 'categories', 'cats', 'blocks'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository, \VanguardLTE\Shop $shop)
         {
@@ -782,6 +782,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_user')]);
             }
             if( !\Auth::user()->hasRole([
+                'admin', 
                 'master', 
                 'agent', 
                 'distributor', 
@@ -794,14 +795,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
             }
-            if( $data['type'] == 'add' && $user->balance < $request->summ ) 
+            $summ = abs($request->summ);
+            if( $data['type'] == 'add' && (!$user->hasRole('admin') && $user->balance < $summ  ) )
             {
                 return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_user_balance', [
                     'name' => $user->username, 
                     'balance' => $user->balance
                 ])]);
             }
-            if( $data['type'] == 'out' && $shop->balance < $request->summ ) 
+            if( $data['type'] == 'out' && $shop->balance < $summ  ) 
             {
                 return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
                     'name' => $shop->name, 
@@ -817,7 +819,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
             }
-            $sum = ($request->type == 'out' ? -1 * $request->summ : $request->summ);
+            $sum = ($request->type == 'out' ? -1 * $summ  : $summ );
             \VanguardLTE\ShopStat::create([
                 'user_id' => \Auth::id(), 
                 'shop_id' => $shop->id, 

@@ -23,7 +23,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('frontend.page.error_license');
             }*/
             $returns = \VanguardLTE\Returns::where('shop_id', auth()->user()->shop_id)->get();
-            return view('backend.returns.list', compact('returns'));
+            return view('backend.Default.returns.list', compact('returns'));
         }
         public function create()
         {
@@ -46,7 +46,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
-            return view('backend.returns.edit', compact('return'));
+            return view('backend.Default.returns.edit', compact('return'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Returns $return)
         {

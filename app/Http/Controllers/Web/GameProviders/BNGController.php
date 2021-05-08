@@ -7,9 +7,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         /*
         * UTILITY FUNCTION
         */
-
-        public $mainBrandName = 'major';
-
         public static function calcSecurityHash($body)
         {
             $key = config('app.bng_wallet_sign_key');
@@ -30,8 +27,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function microtime_string()
         {
-            list($usec, $sec) = explode(" ", microtime());
-            $microstr =  strval(((float)$usec + (float)$sec));
+            $microstr = sprintf('%.4f', microtime(TRUE));
             $microstr = str_replace('.', '', $microstr);
             return $microstr;
         }
@@ -48,7 +44,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $sent_at = $data['sent_at'];
             $session = $data['session'];
             $args = $data['args'];
-
             $c_at = date(sprintf('Y-m-d\TH:i:s%sP', substr(microtime(), 1, 8)));
 
             $record = $this->checkuid($uid);
@@ -100,21 +95,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $uid = $data['uid'];
             $token = $data['token'];
-            $user = null;
-            $tinfo = explode('_',$token);
-            $brand = $this->mainBrandName;
-            if (count($tinfo) > 1) // sub website's user
-            {
-                $brand = $tinfo[1];
-                //search the user at sub website's db
-                if (DBConnectionLoader::configDBConnection($brand)){
-                    $user = \VanguardLTE\User::on($brand)->Where('api_token',$tinfo[0])->first();
-                }
-            }
-            else //default website's user
-            {
-                $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
-            }
+            $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
@@ -127,7 +108,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'uid' => $uid,
                 'player' => [
                     'id' => strval($user->id),
-                    'brand' => $brand,
+                    'brand' => 'major',
                     'currency' => 'KRW',
                     'mode' => 'REAL',
                     'is_test' => $is_test,
@@ -146,19 +127,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $args = $data['args'];
             $gamename = $data['game_name'];
             $userId = $args['player']['id'];
-            $brand = $args['player']['brand'];
-            $user = null;
-            if ($brand == $this->mainBrandName)//default website's user
-            {
-                $user = \VanguardLTE\User::find($userId);
-            }
-            else// sub website's user
-            {
-                //search the user at sub website's db
-                if (DBConnectionLoader::configDBConnection($brand)){
-                    $user = \VanguardLTE\User::on($brand)->find($userId);
-                }
-            }
+            $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
@@ -190,7 +159,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user->save();
 
-            $statdata = [
+            \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => $bet, 
@@ -202,17 +171,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'profit' => 0, 
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
-            ];
-            if ($brand == $this->mainBrandName)//default website's user
-            {
-                \VanguardLTE\StatGame::create($statdata);
-            }
-            else// sub website's user
-            {
-                if (DBConnectionLoader::configDBConnection($brand)){
-                    \VanguardLTE\StatGame::on($brand)->create($statdata);
-                }
-            }
+            ]);
+
             return [
                 'uid' => $uid,
                 'balance' => [
@@ -229,19 +189,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $args = $data['args'];
             $transaction_uid = $args['transaction_uid'];
             $userId = $args['player']['id'];
-            $brand = $args['player']['brand'];
-            $user = null;
-            if ($brand == $this->mainBrandName)//default website's user
-            {
-                $user = \VanguardLTE\User::find($userId);
-            }
-            else// sub website's user
-            {
-                //search the user at sub website's db
-                if (DBConnectionLoader::configDBConnection($brand)){
-                    $user = \VanguardLTE\User::on($brand)->find($userId);
-                }
-            }
+            $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
@@ -294,7 +242,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $win = floatval($args['win']);
             }
 
-            $statdata = [
+            \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => $win, 
@@ -306,18 +254,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'profit' => 0, 
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
-            ];
-            if ($brand == $this->mainBrandName)//default website's user
-            {
-                \VanguardLTE\StatGame::create($statdata);
-            }
-            else// sub website's user
-            {
-                if (DBConnectionLoader::configDBConnection($brand)){
-                    \VanguardLTE\StatGame::on($brand)->create($statdata);
-                }
-            }
-
+            ]);
             $user->save();
             $record->refund = 1;
             $record->save();
@@ -337,19 +274,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $uid = $data['uid'];
             $args = $data['args'];
             $userId = $args['player']['id'];
-            $brand = $args['player']['brand'];
-            $user = null;
-            if ($brand == $this->mainBrandName)//default website's user
-            {
-                $user = \VanguardLTE\User::find($userId);
-            }
-            else// sub website's user
-            {
-                //search the user at sub website's db
-                if (DBConnectionLoader::configDBConnection($brand)){
-                    $user = \VanguardLTE\User::on($brand)->find($userId);
-                }
-            }
+            $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
@@ -442,26 +367,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
+            
         }
 
-        public static function makegamelink($gamecode, $mode, $token=null)
+        public static function makegamelink($gamecode, $mode)
         {
-            if ($token == null){
-                if ($mode == "fun")
-                {
-                    $t = '';
-                }
-                else
-                {
-                    $t = auth()->user()->api_token;
-                }
-            }
-            else{
-                $t = $token;
-            }
             $detect = new \Detection\MobileDetect();
+            $user = auth()->user();
+            if ($user == null)
+            {
+                return null;
+            }
             $key = [
-                'token' => $t,
+                'token' => $user->api_token,
                 'game' => $gamecode,
                 'ts' => time(),
                 'lang' => 'ko',
@@ -481,10 +399,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url = config('app.bng_game_server') . config('app.bng_project_name') . '/game.html?'.$str_params;
         }
 
-        public static function getgamelink($gamecode, $token=null)
+        public static function getgamelink($gamecode)
         {
-            $url = BNGController::makegamelink($gamecode, "real", $token);
-            return ['error' => false, 'data' => ['url' => $url]];
+            $url = BNGController::makegamelink($gamecode, "real");
+            if ($url)
+            {
+                return ['error' => false, 'data' => ['url' => $url]];
+            }
+            return ['error' => true, 'msg' => '로그인하세요'];
+            
         }
 
         public static function bonuscreate($data)
