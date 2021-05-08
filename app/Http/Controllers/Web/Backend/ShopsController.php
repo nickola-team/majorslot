@@ -791,7 +791,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.only_for_distributors')]);
             }
-            if( !$request->summ ) 
+            if( !$request->summ || $request->summ==0 ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
             }
