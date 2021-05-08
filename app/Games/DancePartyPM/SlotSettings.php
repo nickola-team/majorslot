@@ -461,6 +461,7 @@ namespace VanguardLTE\Games\DancePartyPM
         {
             $_obf_strlog = '';
             $_obf_strlog .= "\n";
+            $_obf_strlog .= date("Y-m-d H:i:s") . ' ';
             $_obf_strlog .= ('{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}');
             $_obf_strlog .= "\n";
             $_obf_strlog .= ' ############################################### ';
@@ -471,7 +472,7 @@ namespace VanguardLTE\Games\DancePartyPM
                 $_obf_strinternallog = file_get_contents(storage_path('logs/') . $this->slotId . 'Internal.log');
             }
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
-            exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
+            //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '')
         {
@@ -498,14 +499,13 @@ namespace VanguardLTE\Games\DancePartyPM
                         {
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
-                        else
-                        {
-                            $game->set_gamebank($diffMoney, 'inc', '');
-                        }
+                        $game->set_gamebank($diffMoney, 'inc', '');
                     }
                     $sum = $sum - $diffMoney;
                 }else{
-                    $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    if ($sum < 0){
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
                 }
             }
             $sum = $sum * $this->CurrentDenom;
@@ -573,6 +573,7 @@ namespace VanguardLTE\Games\DancePartyPM
             if( $this->GetBalance() + $sum < 0 ) 
             {
                 $this->InternalError('Balance_   ' . $sum);
+                exit( '{"responseEvent":"error","responseType":"balane is low to add ' . $sum . '","serverResponse":"InternalError"}' );
             }
             $sum = $sum * $this->CurrentDenom;
             $user = $this->user;

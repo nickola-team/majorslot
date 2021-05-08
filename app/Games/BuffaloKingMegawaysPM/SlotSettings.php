@@ -477,6 +477,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
         {
             $_obf_strlog = '';
             $_obf_strlog .= "\n";
+            $_obf_strlog .= date("Y-m-d H:i:s") . ' ';
             $_obf_strlog .= ('{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}');
             $_obf_strlog .= "\n";
             $_obf_strlog .= ' ############################################### ';
@@ -487,7 +488,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $_obf_strinternallog = file_get_contents(storage_path('logs/') . $this->slotId . 'Internal.log');
             }
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
-            exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
+            //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isBuyFreespin = -1)
         {
@@ -513,7 +514,9 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                     $game->set_gamebank($diffMoney, 'inc', '');
                     $sum = $sum - $diffMoney;
                 }else{
-                    $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    if ($sum < 0) {
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
                 }
             }
             $_obf_bonus_systemmoney = 0;
@@ -571,6 +574,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             if( $this->GetBalance() + $sum < 0 ) 
             {
                 $this->InternalError('Balance_   ' . $sum);
+                exit( '{"responseEvent":"error","responseType":"balane is low to add ' . $sum . '","serverResponse":"InternalError"}' );
             }
             $sum = $sum * $this->CurrentDenom;
             $user = $this->user;
