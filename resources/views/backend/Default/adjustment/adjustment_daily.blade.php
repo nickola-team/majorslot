@@ -1,7 +1,7 @@
 @extends('backend.Default.layouts.app')
 
-@section('page-title', '실시간정산')
-@section('page-heading', '실시간정산')
+@section('page-title', '일별정산')
+@section('page-heading', '일별정산')
 
 @section('content')
 
@@ -35,11 +35,6 @@
 									<button type="submit" class="btn btn-primary">
 									@lang('app.filter')
 									</button>
-									<a href=" {{route('backend.adjustment_daily')}}">
-									<button type="button" class="btn btn-success">
-										일별정산 계산
-									</button>
-									</a>
 								</td>
 								</table>
 							</div>
@@ -52,7 +47,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">
-				실시간정산
+				일별정산
 				</h3>
 					@if($user != null)
 					<a href="{{ route('backend.adjustment_partner', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
@@ -74,6 +69,7 @@
 					<thead>
 					<tr>
 						<th>이름</th>
+						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금환전</th>
@@ -91,17 +87,37 @@
 					</tr>
 					</thead>
 					<tbody>
-					@if (count($adjustments))
-						@foreach ($adjustments as $adjustment)
-							@include('backend.Default.adjustment.partials.row_partner')
+					@if (count($summary))
+						@foreach ($summary as $adjustment)
+							@include('backend.Default.adjustment.partials.row_daily')
 						@endforeach
+						<tr>
+						<td><span class='text-red'></span></td>
+						<td><span class='text-red'>합계</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalin'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalout'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('dealout'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('moneyin'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('total_deal'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('total_mileage'),2)}}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),2) }}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('balance'),2) }}</span></td>
+						@if(auth()->user()->hasRole('admin'))
+						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),2) }}</span></td>
+						@endif
+
+						</tr>
 					@else
-						<tr><td colspan="9">@lang('app.no_data')</td></tr>
+						<tr><td colspan="13">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>
 					<tr>
 						<th>이름</th>
+						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금환전</th>
@@ -120,7 +136,7 @@
 					</thead>
                     </table>
                     </div>
-						{{ $childs->appends(Request::except('page'))->links() }}
+						{{ $summary->appends(Request::except('page'))->links() }}
                     </div>			
 		</div>
 	</section>

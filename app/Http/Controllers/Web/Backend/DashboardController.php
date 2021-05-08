@@ -731,7 +731,59 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $open_shift = $statistics->paginate(20);
             return view('backend.Default.stat.shift_stat', compact('open_shift', 'summ'));
         }
+        public function adjustment_daily(\Illuminate\Http\Request $request)
+        {
+            /*set_time_limit(0);
+            $records = \VanguardLTE\PPTransaction::orderBy('timestamp','DESC')->take(100000)->get();
+            foreach ($records as $record)
+            {
+                $timestamp = $record->timestamp;
+                $data = json_decode($record->data);
+                if (isset($data) && isset($data->timestamp) && $timestamp / 10 - $data->timestamp >= 5*1000)
+                {
+                    echo "<p>" . $record->reference . "," . $timestamp/ 10 . ",". $data->timestamp . ",". ($timestamp / 10 - $data->timestamp) ."</p>";
+                }
+                
+            }
+            $admins = \VanguardLTE\User::where('role_id',7)->get();
+            foreach ($admins as $admin)
+            {
+                \VanguardLTE\DailySummary::summary($admin->id, date("Y-m-d", strtotime("-4 days")));
+            }*/
 
+            $user_id = $request->input('parent');
+            $users = [];
+            $shops = [];
+            $user = null;
+            if($user_id == null || $user_id == 0)
+            {
+                $user_id = auth()->user()->id;
+                $users = [$user_id];
+                $request->session()->put('dates', null);
+                $dates = $request->dates;
+            }
+            else {
+                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                $users = $user->childPartners();
+                $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
+            }
+            
+            $start_date = date("Y-m-d",strtotime("-1 days"));
+            $end_date = date("Y-m-d");
+            if($dates != null && $dates != ''){
+                $dates_tmp = explode(' - ', $dates);
+                $start_date = $dates_tmp[0];
+                $end_date = $dates_tmp[1];
+                $request->session()->put('dates', $dates);
+            }
+
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
+            $summary = $summary->get();
+            $summary =  $summary->paginate(10);
+        
+            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
+        }
         public function adjustment_partner(\Illuminate\Http\Request $request)
         {
             set_time_limit(0);

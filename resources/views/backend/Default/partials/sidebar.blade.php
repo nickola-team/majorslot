@@ -208,7 +208,7 @@
             @endpermission --}}
 
             <li class="treeview {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*') ? 'active' : '' }}">
+                || Request::is('backend/adjustment_shift*') || Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
                     <span>정산관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -240,8 +240,8 @@
                     @endpermission
                     
                     @permission('stats.pay')
-                    <li class="{{ Request::is('backend/adjustment_shift') ? 'active' : ''  }}">
-                        <a  href="#"> {{--{{ route('backend.adjustment_shift') }}"> --}}
+                    <li class="{{ Request::is('backend/adjustment_daily') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.adjustment_daily') }}"> 
                             <i class="fa fa-circle-o"></i>
                             일별정산
                         </a>
