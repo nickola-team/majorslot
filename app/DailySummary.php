@@ -45,7 +45,7 @@ namespace VanguardLTE
 
             if (!$day)
             {
-                $day = date("Y-m-d");
+                $day = date("Y-m-d", strtotime("-1 days"));
             }
             
             $from =  $day . " 0:0:0";
