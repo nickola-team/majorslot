@@ -25,13 +25,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('frontend.page.error_license');
             }*/
             $roles = $this->roles->getAllWithUsersCount();
-            return view('backend.role.index', compact('roles'));
+            return view('backend.Default.role.index', compact('roles'));
         }
         public function create()
         {
             $edit = false;
             return redirect()->route('backend.dashboard');
-            return view('backend.role.add-edit', compact('edit'));
+            return view('backend.Default.role.add-edit', compact('edit'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -46,7 +46,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             $edit = true;
             return redirect()->route('backend.dashboard');
-            return view('backend.role.add-edit', compact('edit', 'role'));
+            return view('backend.Default.role.add-edit', compact('edit', 'role'));
         }
         public function update(\jeremykenedy\LaravelRoles\Models\Role $role, \Illuminate\Http\Request $request)
         {

@@ -1,69 +1,77 @@
 <?php 
-namespace VanguardLTE\Games\AztecGoldMegawaysISB
+namespace VanguardLTE\Games\BuffaloKingMegawaysPM
 {
     class GameReel
     {
         public $reelsStrip = [
-            'reelStrip0' => [], 
-            'reelStrip1' => [], 
-            'reelStrip2' => [], 
-            'reelStrip3' => [], 
-            'reelStrip4' => [], 
-            'reelStrip5' => [], 
-            'reelStrip6' => []
+            'reelStrip1_1' => [], 
+            'reelStrip1_2' => [], 
+            'reelStrip1_3' => [], 
+            'reelStrip1_4' => [], 
+            'reelStrip1_5' => [], 
+            'reelStrip1_6' => [], 
+            'reelStrip1_7' => [],
+            'reelStrip2_1' => [], 
+            'reelStrip2_2' => [], 
+            'reelStrip2_3' => [], 
+            'reelStrip2_4' => [], 
+            'reelStrip2_5' => [], 
+            'reelStrip2_6' => [], 
+            'reelStrip2_7' => [],
+            'reelStrip3_1' => [], 
+            'reelStrip3_2' => [], 
+            'reelStrip3_3' => [], 
+            'reelStrip3_4' => [], 
+            'reelStrip3_5' => [], 
+            'reelStrip3_6' => [], 
+            'reelStrip3_7' => [],
+            'reelStrip4_1' => [], 
+            'reelStrip4_2' => [], 
+            'reelStrip4_3' => [], 
+            'reelStrip4_4' => [], 
+            'reelStrip4_5' => [], 
+            'reelStrip4_6' => [], 
+            'reelStrip4_7' => [],
+            'reelStrip5_1' => [], 
+            'reelStrip5_2' => [], 
+            'reelStrip5_3' => [], 
+            'reelStrip5_4' => [], 
+            'reelStrip5_5' => [], 
+            'reelStrip5_6' => [], 
+            'reelStrip5_7' => [],
+            'reelStrip6_1' => [], 
+            'reelStrip6_2' => [], 
+            'reelStrip6_3' => [], 
+            'reelStrip6_4' => [], 
+            'reelStrip6_5' => [], 
+            'reelStrip6_6' => [], 
+            'reelStrip6_7' => [],
+            'reelStrip7_1' => [], 
+            'reelStrip7_2' => [], 
+            'reelStrip7_3' => [], 
+            'reelStrip7_4' => [], 
+            'reelStrip7_5' => [], 
+            'reelStrip7_6' => [], 
+            'reelStrip7_7' => []
         ];
-        public $reelsStripBonus = [
-            'reelStripBonus0' => [], 
-            'reelStripBonus1' => [], 
-            'reelStripBonus2' => [], 
-            'reelStripBonus3' => [], 
-            'reelStripBonus4' => [], 
-            'reelStripBonus5' => [], 
-            'reelStripBonus6' => []
-        ];
-        public $reel_set = 8;
-        public $reel_set_bonus = 12;
         public function __construct()
         {
-            $this->reel_set = 8;//mt_rand(0, 6) * 2;
-            $this->$reel_set_bonus = 12; //mt_rand(0, 6) * 2;
-
             $temp = file(base_path() . '/app/Games/BuffaloKingMegawaysPM/reels.txt');
             foreach( $temp as $str ) 
             {
                 $str = explode('=', $str);
-                $r_set = explode('_', $str[0]);
-                if ($r_set[1] == $this->reel_set || $r_set[1] == $this->reel_set+1) {
-                    if( isset($this->reelsStrip[$r_set[0]]) ) 
+                if( isset($this->reelsStrip[$str[0]]) ) 
+                {
+                    $data = explode(',', $str[1]);
+                    foreach( $data as $elem ) 
                     {
-                        $data = explode(',', $str[1]);
-                        foreach( $data as $elem ) 
+                        $elem = trim($elem);
+                        if( $elem != '' ) 
                         {
-                            $elem = trim($elem);
-                            if( $elem != '' ) 
-                            {
-                                $this->reelsStrip[$r_set[0]][] = $elem;
-                            }
+                            $this->reelsStrip[$str[0]][] = $elem;
                         }
                     }
                 }
-
-                if ($r_set[1] == $this->reel_set_bonus || $r_set[1] == $this->reel_set_bonus+1) {
-                    $rpl_bonus = str_replace("reelStrip","reelStripBonus", $r_set[0]);
-                    if( isset($this->reelsStripBonus[$rpl_bonus]) ) 
-                    {
-                        $data = explode(',', $str[1]);
-                        foreach( $data as $elem ) 
-                        {
-                            $elem = trim($elem);
-                            if( $elem != '' ) 
-                            {
-                                $this->reelsStripBonus[$rpl_bonus][] = $elem;
-                            }
-                        }
-                    }
-                }
-
             }
         }
     }

@@ -76,7 +76,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
 
 
-            return view('backend.dashboard.admin', compact('stats', 'latestRegistrations', 'usersPerMonth', 'user', 'statistics', 'gamestat', 'shops', 'open_shift', 'summ', 'bank_stat', 'shops_stat'));
+            return view('backend.Default.dashboard.admin', compact('stats', 'latestRegistrations', 'usersPerMonth', 'user', 'statistics', 'gamestat', 'shops', 'open_shift', 'summ', 'bank_stat', 'shops_stat'));
         }
         public function live_stat(\Illuminate\Http\Request $request)
         {
@@ -221,7 +221,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return $element2['Date'] - $element1['Date'];
             });
             $statistics = array_slice($statistics, 0, 50);
-            return view('backend.stat.live_stat', compact('stat', 'statistics', 'filter'));
+            return view('backend.Default.stat.live_stat', compact('stat', 'statistics', 'filter'));
         }
         public function start_shift(\Illuminate\Http\Request $request)
         {
@@ -335,7 +335,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stats = $statistics->get();
             $statistics = $stats->sortByDesc('created_at')->paginate(20);
             $partner = 0;
-            return view('backend.stat.pay_stat', compact('stats', 'statistics','partner'));
+            return view('backend.Default.stat.pay_stat', compact('stats', 'statistics','partner'));
         }
 
         public function statistics_partner(\Illuminate\Http\Request $request)
@@ -397,7 +397,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stats = $statistics->get();            
             $statistics = $stats->sortByDesc('created_at')->paginate(20);
             $partner = 1;
-            return view('backend.stat.pay_stat_partner', compact('stats', 'statistics','partner'));
+            return view('backend.Default.stat.pay_stat_partner', compact('stats', 'statistics','partner'));
         }
         public function game_stat(\Illuminate\Http\Request $request)
         {
@@ -438,12 +438,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->join('users', 'users.id', '=', 'stat_game.user_id');
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
             }
+            $start_date = date("Y-m-d") . " 00:00:00";
+            $end_date = date("Y-m-d H:i:s");
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);
-                $statistics = $statistics->where('stat_game.date_time', '>=', $dates[0]);
-                $statistics = $statistics->where('stat_game.date_time', '<=', $dates[1]);
+                $start_date = $dates[0];
+                $end_date = $dates[1];
             }
+
+            $statistics = $statistics->where('stat_game.date_time', '>=', $start_date);
+            $statistics = $statistics->where('stat_game.date_time', '<=', $end_date);
+
             if( $request->shifts != '' ) 
             {
                 $shift = \VanguardLTE\OpenShift::find($request->shifts);
@@ -457,7 +463,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $game_stat = $statistics->paginate(20);
-            return view('backend.stat.game_stat', compact('game_stat'));
+            return view('backend.Default.stat.game_stat', compact('game_stat'));
         }
 
         public function deal_stat(\Illuminate\Http\Request $request)
@@ -504,7 +510,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             
             $game_stat = $statistics->paginate(20);
-            return view('backend.stat.deal_stat', compact('game_stat'));
+            return view('backend.Default.stat.deal_stat', compact('game_stat'));
         }
 
         public function game_stat_clear()
@@ -574,7 +580,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $bank_stat = $statistics->paginate(20);
-            return view('backend.stat.bank_stat', compact('bank_stat'));
+            return view('backend.Default.stat.bank_stat', compact('bank_stat'));
         }
         public function shop_stat(\Illuminate\Http\Request $request)
         {
@@ -630,7 +636,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $shops_stat = $statistics->paginate(20);
-            return view('backend.stat.shop_stat', compact('shops_stat', 'shops'));
+            return view('backend.Default.stat.shop_stat', compact('shops_stat', 'shops'));
         }
         public function search(\Illuminate\Http\Request $request)
         {
@@ -697,7 +703,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $q2->where('name', 'like', '%' . $query . '%');
                 });
             })->take(25)->get();
-            return view('backend.dashboard.search', compact('query', 'happyhour', 'summ', 'users', 'pay_stats', 'game_stats', 'bank_stats', 'shop_stats', 'shift_stats'));
+            return view('backend.Default.dashboard.search', compact('query', 'happyhour', 'summ', 'users', 'pay_stats', 'game_stats', 'bank_stats', 'shop_stats', 'shift_stats'));
         }
         public function shift_stat(\Illuminate\Http\Request $request)
         {
@@ -723,7 +729,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->where('open_shift.start_date', '<=', $dates[1]);
             }
             $open_shift = $statistics->paginate(20);
-            return view('backend.stat.shift_stat', compact('open_shift', 'summ'));
+            return view('backend.Default.stat.shift_stat', compact('open_shift', 'summ'));
         }
 
         public function adjustment_partner(\Illuminate\Http\Request $request)
@@ -770,13 +776,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $childs = \VanguardLTE\Shop::whereIn('id', $shop_users)->get();
                 $childs = $childs->paginate(10);
                 foreach($childs as $shop){
-                    $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add"';
+                    $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add" AND request_id IS NOT NULL';
                     $in_out = \DB::select($query);
                     $adj['totalin'] = $in_out[0]->totalin;
 
-                    $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out"';
+                    $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out" AND request_id IS NOT NULL';
                     $in_out = \DB::select($query);
                     $adj['totalout'] = $in_out[0]->totalout;
+
+                    $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="deal_out" AND request_id IS NOT NULL';
+                    $in_out = \DB::select($query);
+                    $adj['dealout'] = $in_out[0]->dealout;
 
                     $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
                     $user_in_out = \DB::select($query);
@@ -836,14 +846,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                     $adj['totalin'] = 0;
                     $adj['totalout'] = 0;
+                    $adj['dealout'] = 0;
                     if (count($shops) > 0 ){
-                        $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add"';
+                        $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add" AND request_id IS NOT NULL';
                         $user_in_out = \DB::select($query);
                         $adj['totalin'] = $user_in_out[0]->totalin;
 
-                        $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out"';
+                        $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out" AND request_id IS NOT NULL';
                         $user_in_out = \DB::select($query);
                         $adj['totalout'] = $user_in_out[0]->totalout;
+
+                        $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="deal_out" AND request_id IS NOT NULL';
+                        $in_out = \DB::select($query);
+                        $adj['dealout'] = $in_out[0]->dealout;
                     }
 
                     $adj['moneyin'] = 0;
@@ -916,8 +931,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $adjustments[] = $adj;
                 }
             }
-            return view('backend.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
-
+            return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
         }
         public function adjustment_game(\Illuminate\Http\Request $request)
         {
@@ -1181,7 +1195,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $categories = \VanguardLTE\Category::where('shop_id', 0)->get();
 
-            return view('backend.adjustment.adjustment_game', compact('filtered_adjustment', 'categories', 'saved_category', 'start_date', 'end_date'));
+            return view('backend.Default.adjustment.adjustment_game', compact('filtered_adjustment', 'categories', 'saved_category', 'start_date', 'end_date'));
 
         }
 
@@ -1266,7 +1280,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
 
-            return view('backend.adjustment.adjustment_shift', compact('adjustments', 'shift_logs', 'user'));
+            return view('backend.Default.adjustment.adjustment_shift', compact('adjustments', 'shift_logs', 'user'));
         }
 
         public function adjustment_create_shift(\Illuminate\Http\Request $request)
@@ -1398,7 +1412,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $in_out_logs = $in_out_logs->get()->sortByDesc('created_at')->paginate(10);
-            return view('backend.adjustment.in_out_request', compact('in_out_logs', 'bankinfo'));
+            return view('backend.Default.adjustment.in_out_request', compact('in_out_logs', 'bankinfo'));
         }
 
         public function in_out_manage(\Illuminate\Http\Request $request) 
@@ -1412,7 +1426,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $in_out_logs = $in_out_logs->sortByDesc('created_at')->paginate(20);
 
-            return view('backend.adjustment.in_out_manage', compact('in_out_logs'));
+            return view('backend.Default.adjustment.in_out_manage', compact('in_out_logs'));
         }
 
 

@@ -40,7 +40,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $api = $api->where('status', $request->status);
             }
             $api = $api->get();
-            return view('backend.api.list', compact('api'));
+            return view('backend.Default.api.list', compact('api'));
         }
         public function json(\Illuminate\Http\Request $request)
         {
@@ -71,7 +71,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.shop.create');
             }
             $shops = auth()->user()->shops_array();
-            return view('backend.api.add', compact('shops'));
+            return view('backend.Default.api.add', compact('shops'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -104,7 +104,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
-            return view('backend.api.edit', compact('api', 'shops'));
+            return view('backend.Default.api.edit', compact('api', 'shops'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Api $api)
         {

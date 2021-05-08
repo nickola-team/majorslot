@@ -26,7 +26,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'parent' => 0, 
                 'shop_id' => auth()->user()->shop_id
             ])->orderBy('position')->get();
-            return view('backend.categories.list', compact('categories'));
+            return view('backend.Default.categories.list', compact('categories'));
         }
         public function create()
         {
@@ -36,7 +36,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->pluck('id', 'title')->toArray();
             $categories = array_merge(['Root' => 0], $categories);
             $categories = array_flip($categories);
-            return view('backend.categories.add', compact('categories'));
+            return view('backend.Default.categories.add', compact('categories'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -58,7 +58,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->pluck('id', 'title')->toArray();
             $categories = array_merge(['Root' => 0], $categories);
             $categories = array_flip($categories);
-            return view('backend.categories.edit', compact('category', 'categories'));
+            return view('backend.Default.categories.edit', compact('category', 'categories'));
         }
         public function update(\VanguardLTE\Category $category, \Illuminate\Http\Request $request)
         {

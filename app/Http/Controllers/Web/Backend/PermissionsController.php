@@ -27,12 +27,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }*/
             $roles = \VanguardLTE\Role::get();
             $permissions = \jeremykenedy\LaravelRoles\Models\Permission::orderBy('slug')->get();
-            return view('backend.permission.index', compact('roles', 'permissions'));
+            return view('backend.Default.permission.index', compact('roles', 'permissions'));
         }
         public function create()
         {
             $edit = false;
-            return view('backend.permission.add-edit', compact('edit'));
+            return view('backend.Default.permission.add-edit', compact('edit'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -46,7 +46,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function edit(\jeremykenedy\LaravelRoles\Models\Permission $permission)
         {
             $edit = true;
-            return view('backend.permission.add-edit', compact('edit', 'permission'));
+            return view('backend.Default.permission.add-edit', compact('edit', 'permission'));
         }
         public function update(\jeremykenedy\LaravelRoles\Models\Permission $permission, \Illuminate\Http\Request $request)
         {

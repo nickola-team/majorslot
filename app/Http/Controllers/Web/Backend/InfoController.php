@@ -26,12 +26,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $info = \VanguardLTE\Info::where('user_id', \Auth::id())->get();
             }
-            return view('backend.info.list', compact('info'));
+            return view('backend.Default.info.list', compact('info'));
         }
         public function create()
         {
             $roles = [];
-            return view('backend.info.add', compact('roles'));
+            return view('backend.Default.info.add', compact('roles'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
@@ -73,7 +73,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.info.list')->withErrors([trans('app.wrong_link')]);
             }
             $roles = explode('|', $info->roles);
-            return view('backend.info.edit', compact('info', 'roles'));
+            return view('backend.Default.info.edit', compact('info', 'roles'));
         }
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Info $info)
         {
