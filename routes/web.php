@@ -422,6 +422,11 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'middleware' => 'permission:stats.game',
     ]);
 
+    Route::get('/adjustment_daily', [
+        'as' => 'backend.adjustment_daily',
+        'uses' => 'DashboardController@adjustment_daily',
+    ]);
+
     Route::get('/adjustment_game', [
         'as' => 'backend.adjustment_game',
         'uses' => 'DashboardController@adjustment_game',

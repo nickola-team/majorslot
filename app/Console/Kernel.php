@@ -13,6 +13,14 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('booongolist');
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
                 \Illuminate\Support\Facades\Redis::del('cq9list');
+
+                set_time_limit(0);
+                $admins = \VanguardLTE\User::where('role_id',7)->get();
+                foreach ($admins as $admin)
+                {
+                    \VanguardLTE\DailySummary::summary($admin->id);
+                }
+
                 $_daytime = strtotime("-1 days") * 10000;
                 
                 \VanguardLTE\PPTransaction::where('timestamp', '<', $_daytime)->delete();
