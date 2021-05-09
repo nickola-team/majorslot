@@ -337,7 +337,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if ($summ )
                 {
                     $summ = abs($summ);
-                    if ($real_deal_balance <= $summ)
+                    if ($real_deal_balance < $summ)
                     {
                         return response()->json([
                             'error' => true, 
@@ -345,7 +345,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                             'code' => '000'
                         ], 200);
                     }
-
                 }
                 else
                 {
@@ -356,7 +355,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $distr = $user->referral;
                     $agent = $distr->referral;
                     $master = $agent->referral;
-                    if ($master->balance < $summ)
+                    if ($master->balance < $summ * 2)
                     {
                         return response()->json([
                             'error' => true, 
@@ -365,7 +364,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $summ]
+                        ['balance' => $master->balance - $summ * 2]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 
@@ -374,7 +373,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('money_in', $summ);
+                        $open_shift->increment('money_in', $summ * 2);
                     }
 
                     $old = $shop->balance;
@@ -416,7 +415,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $real_deal_balance = $user->deal_balance - $user->mileage;
                 if ($summ )
                 {
-                    if ($real_deal_balance <= $summ)
+                    $summ = abs($summ);
+                    if ($real_deal_balance < $summ)
                     {
                         return response()->json([
                             'error' => true, 
@@ -446,7 +446,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     
-                    if ($master->balance < $summ)
+                    if ($master->balance < $summ *2)
                     {
                         return response()->json([
                             'error' => true, 
@@ -455,7 +455,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $summ]
+                        ['balance' => $master->balance - $summ*2]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 

@@ -71,7 +71,7 @@
 
 			<?php
 			$dealvalue = auth()->user()->hasRole('manager')?auth()->user()->shop->deal_balance:auth()->user()->deal_balance - auth()->user()->mileage;
-			$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balace:auth()->user()->balance;
+			$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balance:auth()->user()->balance;
 			?>
 			<li class="list-group-item">
 				<div class="row">
@@ -217,7 +217,7 @@
 							<th>충전</th>
 							<th>환전</th>
 							@if(auth()->user()->hasRole(['master','manager']))
-							<th>수익금환전</th>
+							<th>수익금전환</th>
 							@endif
 							<th>계좌번호</th>
 							<th>예금주</th>
@@ -258,7 +258,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
-						<button type="button" class="btn btn-primary" onclick="{{auth()->user()->hasRole('manager')?'withdraw_deal_balance();':'convert_deal_balance();'}}">확인</button>
+						<button type="button" class="btn btn-primary" onclick="convert_deal_balance();">확인</button>
 					</div>
 				</form>
 			</div>
