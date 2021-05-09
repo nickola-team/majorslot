@@ -35,7 +35,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>충/환전</label>
-								{!! Form::select('type', ['' => 'All', 'add' => 'Add', 'out' => 'Out'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
+								{!! Form::select('type', ['' => '전체', 'add' => '충전', 'out' => '환전'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
 							</div>
 						</div>
 						<div class="col-md-3">
@@ -93,6 +93,8 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
+						<th>변동전금액</th>
+						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금환전</th>
@@ -114,6 +116,8 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
+						<th>변동전금액</th>
+						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금환전</th>

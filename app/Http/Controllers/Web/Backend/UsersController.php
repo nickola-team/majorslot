@@ -33,9 +33,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
                 
 
-            if($request->shop_id != '' && $request->shop_id > 0)
+            if($request->shopname != '')
             {
-                $shop = \VanguardLTE\Shop::where('id', $request->shop_id)->first();
+                $shop = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->first();
                 $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
             }
             else {

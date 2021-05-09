@@ -9,6 +9,8 @@ namespace VanguardLTE
             'user_id', 
             'type', 
             'sum', 
+            'old',
+            'new',
             'date_time',
             'request_id'
         ];

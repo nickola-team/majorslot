@@ -820,12 +820,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
             }
             $sum = ($request->type == 'out' ? -1 * $summ  : $summ );
-            \VanguardLTE\ShopStat::create([
-                'user_id' => \Auth::id(), 
-                'shop_id' => $shop->id, 
-                'type' => $request->type, 
-                'sum' => abs($sum)
-            ]);
+
             if( $request->type == 'out' ) 
             {
                 $open_shift->increment('balance_out', abs($sum));
@@ -857,7 +852,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'balance' => $user->balance - $sum, 
                 'count_balance' => $user->count_balance - $sum
             ]);
+            $old = $shop->balance;
             $shop->update(['balance' => $shop->balance + $sum]);
+            $shop = $shop->fresh();
+            \VanguardLTE\ShopStat::create([
+                'user_id' => \Auth::id(), 
+                'shop_id' => $shop->id, 
+                'type' => $request->type, 
+                'sum' => abs($sum),
+                'old' => $old,
+                'new' => $shop->balance,
+            ]);
             $user = $user->fresh();
             if( $user->balance == 0 ) 
             {

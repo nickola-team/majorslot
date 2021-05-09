@@ -502,6 +502,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->join('users', 'users.id', '=', 'deal_log.user_id');
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
             }
+            if( $request->partner != '' ) 
+            {
+                if ($request->type == 'shop')
+                {
+                    $statistics = $statistics->join('shops', 'shops.id', '=', 'deal_log.shop_id');
+                    $statistics = $statistics->where('shops.name', 'like', '%' . $request->partner . '%');
+                }
+                else if ($request->type == 'partner')
+                {
+                    $statistics = $statistics->join('users', 'users.id', '=', 'deal_log.partner_id');
+                    $statistics = $statistics->where('users.username', 'like', '%' . $request->partner . '%');
+                }
+                $statistics = $statistics->where('deal_log.type',$request->type);
+            }
+
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);

@@ -32,13 +32,13 @@
 								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label>최소베팅금액</label>
 								<input type="text" class="form-control" name="bet_from" value="{{ Request::get('bet_from') }}">
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label>최대베팅금액</label>
 								<input type="text" class="form-control" name="bet_to" value="{{ Request::get('bet_to') }}">
@@ -50,6 +50,20 @@
 								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 							</div>
 						</div>
+						@if (auth()->user()->hasRole('admin'))
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>파트너이름</label>
+								<input type="text" class="form-control" name="partner" value="{{ Request::get('partner') }}">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>타입</label>
+								{!! Form::select('type', ['partner' => '파트너', 'shop' => '매장'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
+							</div>
+						</div>
+						@endif
 					</div>
 				</div>
 				<div class="box-footer">

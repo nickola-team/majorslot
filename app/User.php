@@ -523,28 +523,28 @@ namespace VanguardLTE
             } */
             if( $payeer->hasRole('agent') && (!$this->hasRole('distributor') && !$this->hasRole('user')) ) 
             {
-                return response()->json([
+                return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
                 ]);
             }
             if( $payeer->hasRole('distributor') && !$this->hasRole('manager') ) 
             {
-                return response()->json([
+                return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
                 ]);
             }
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && !$this->hasRole('user')) 
             {
-                return response()->json([
+                return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
                 ]);
             }
             if( !$summ ) 
             {
-                return response()->json([
+                return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_sum')
                 ]);
@@ -554,14 +554,14 @@ namespace VanguardLTE
             {
                 if( !$shop ) 
                 {
-                    return response()->json([
+                    return json_encode([
                         'status' => 'error', 
                         'message' => trans('app.wrong_shop')
                     ]);
                 }
                 if( $type == 'add' && $shop->balance < $summ ) 
                 {
-                    return response()->json([
+                    return json_encode([
                         'status' => 'error', 
                         'message' => trans('app.not_enough_money_in_the_shop', [
                             'name' => $shop->name, 
@@ -572,7 +572,7 @@ namespace VanguardLTE
             }
             if(/* ($payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager')) && */$payeer->hasRole(['master','agent','distributor']) && $type == 'add' && $payeer->balance < $summ ) 
             {
-                return response()->json([
+                return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.not_enough_money_in_the_user_balance', [
                         'name' => $payeer->name, 
@@ -582,7 +582,7 @@ namespace VanguardLTE
             }
             if( $type == 'out' && $this->balance < $summ ) 
             {
-                return response()->json([
+                return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.not_enough_money_in_the_user_balance', [
                         'name' => $this->username, 
@@ -600,7 +600,7 @@ namespace VanguardLTE
                 ])->first();
                 if( !$open_shift ) 
                 {
-                    return response()->json([
+                    return json_encode([
                         'status' => 'error', 
                         'message' => trans('app.shift_not_opened')
                     ]);
@@ -748,7 +748,7 @@ namespace VanguardLTE
             {
                 $this->update(['count_balance' => 0]);
             }
-            return response()->json([
+            return json_encode([
                 'status' => 'success', 
                 'message' => trans('app.balance_updated')
             ]);

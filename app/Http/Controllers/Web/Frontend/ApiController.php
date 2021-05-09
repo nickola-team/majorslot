@@ -377,6 +377,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         $open_shift->increment('money_in', $summ);
                     }
 
+                    $old = $shop->balance;
                     $shop->balance = $shop->balance + $summ;
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'shop_id' => $shop->id, 
@@ -387,17 +388,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         $open_shift->increment('convert_deal', $summ);
                     }
-                    \VanguardLTE\ShopStat::create([
-                        'user_id' => $master->id,
-                        'type' => 'add',
-                        'sum' => $summ,
-                        'shop_id' => $shop->id,
-                        'date_time' => \Carbon\Carbon::now()
-                    ]);
 
                     $shop->deal_balance = $real_deal_balance - $summ;
                     $shop->mileage = 0;
                     $shop->save();
+                    $shop = $shop->fresh();
+                    \VanguardLTE\ShopStat::create([
+                        'user_id' => $master->id,
+                        'type' => 'deal_out',
+                        'sum' => $summ,
+                        'old' => $old,
+                        'new' => $shop->balance,
+                        'shop_id' => $shop->id,
+                        'date_time' => \Carbon\Carbon::now()
+                    ]);
                    
                 }
                 else{
@@ -811,7 +815,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     auth()->user()->update(
                         ['balance' => auth()->user()->balance - $amount]
                     );
-
+                    $old = $shop->balance;
                     $shop->update([
                         'balance' => $shop->balance + $amount
                     ]);
@@ -849,12 +853,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         $open_shift->increment('money_out', $amount);
                     }
+                    $old = $shop->balance + $amount;
 
                 }
                 else if($type == 'deal_out'){
-                    /*auth()->user()->update(
-                        ['balance' => auth()->user()->balance + $amount]
-                    ); */
+                    //out balance from master
+                    auth()->user()->update(
+                        ['balance' => auth()->user()->balance - $amount]
+                    ); 
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => auth()->user()->id, 
                         'end_date' => null,
@@ -864,15 +870,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         $open_shift->increment('convert_deal', $amount);
                     }
+                    $old = $shop->balance;
                 }
                 $transaction->update([
                     'status' => 1
                 ]);
+                $shop = $shop->fresh();
 
                 \VanguardLTE\ShopStat::create([
                     'user_id' => auth()->user()->id,
                     'type' => $type,
                     'sum' => $amount,
+                    'old' => $old,
+                    'new' => $shop->balance,
                     'request_id' => $transaction->id,
                     'shop_id' => $transaction->shop_id,
                     'date_time' => \Carbon\Carbon::now()
