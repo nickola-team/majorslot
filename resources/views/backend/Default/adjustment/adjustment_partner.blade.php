@@ -35,11 +35,6 @@
 									<button type="submit" class="btn btn-primary">
 									@lang('app.filter')
 									</button>
-									<a href=" {{route('backend.adjustment_daily')}}">
-									<button type="button" class="btn btn-success">
-										일별정산 계산
-									</button>
-									</a>
 								</td>
 								</table>
 							</div>

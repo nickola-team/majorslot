@@ -50,7 +50,7 @@
 				일별정산
 				</h3>
 					@if($user != null)
-					<a href="{{ route('backend.adjustment_partner', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
+					<a href="{{ route('backend.adjustment_daily', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
 						[
 						@foreach(['7'=>'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
