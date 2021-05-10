@@ -303,10 +303,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->join('users', 'users.id', '=', 'transactions.user_id');
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
             }
-            else if( $request->payeer != '' ) 
+            else if( $request->shopname != '' ) 
             {
-                $statistics = $statistics->join('users', 'users.id', '=', 'transactions.payeer_id');
-                $statistics = $statistics->where('users.username', 'like', '%' . $request->payeer . '%');
+                $statistics = $statistics->join('shops', 'shops.id', '=', 'transactions.shop_id');
+                $statistics = $statistics->where('shops.name', 'like', '%' . $request->shopname . '%');
             }
             if( $request->dates != '' ) 
             {
