@@ -1151,7 +1151,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                 {
                     $reel = $this->GenerateJackpotReel($this->happyhouruser->jackpot==2);
                     $this->jackpotSymbolChance = 0;
-                    $this->happyhouruser->progressive = mt_rand(5,10);
+                    $this->happyhouruser->progressive = mt_rand(2,5);
                     $this->happyhouruser->save();
                     return $reel;
                 }
