@@ -847,11 +847,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $user_shift->increment('money_in', abs($sum));
                 }
             }
-
             $user->update([
                 'balance' => $user->balance - $sum, 
                 'count_balance' => $user->count_balance - $sum
             ]);
+            $user = $user->fresh();
+
             $old = $shop->balance;
             $shop->update(['balance' => $shop->balance + $sum]);
             $shop = $shop->fresh();
@@ -862,8 +863,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'sum' => abs($sum),
                 'old' => $old,
                 'new' => $shop->balance,
+                'balance' => $user->balance,
             ]);
-            $user = $user->fresh();
             if( $user->balance == 0 ) 
             {
                 $user->update([

@@ -366,6 +366,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $master->update(
                         ['balance' => $master->balance - $summ * 2]
                     );
+                    $master = $master->fresh();
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 
                         'type' => 'partner',
@@ -398,6 +399,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'sum' => $summ,
                         'old' => $old,
                         'new' => $shop->balance,
+                        'balance' => $master->balance,
                         'shop_id' => $shop->id,
                         'date_time' => \Carbon\Carbon::now()
                     ]);
@@ -811,17 +813,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $amount = $transaction->sum;
             $type = $transaction->type;
             $requestuser = \VanguardLTE\User::where('id', $transaction->user_id)->get()->first();
-
+            $user = auth()->user();
             if ($requestuser->hasRole('manager')) // for shops
             {
                 $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
                 if($type == 'add'){
-                    if(auth()->user()->balance < $amount) {
+                    if($user->balance < $amount) {
                         return redirect()->route('backend.in_out_manage')->withErrors(['보유금액이 충분하지 않습니다.']);
                     }
 
-                    auth()->user()->update(
-                        ['balance' => auth()->user()->balance - $amount]
+                    $user->update(
+                        ['balance' => $user->balance - $amount]
                     );
                     $old = $shop->balance;
                     $shop->update([
@@ -829,7 +831,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ]);
 
                     $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => auth()->user()->id, 
+                        'user_id' => $user->id, 
                         'end_date' => null,
                         'type' => 'partner'
                     ])->first();
@@ -849,11 +851,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
                 }
                 else if($type == 'out'){
-                    auth()->user()->update(
-                        ['balance' => auth()->user()->balance + $amount]
+                    $user->update(
+                        ['balance' => $user->balance + $amount]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => auth()->user()->id, 
+                        'user_id' => $user->id, 
                         'end_date' => null,
                         'type' => 'partner'
                     ])->first();
@@ -866,11 +868,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 else if($type == 'deal_out'){
                     //out balance from master
-                    auth()->user()->update(
-                        ['balance' => auth()->user()->balance - $amount]
+                    $user->update(
+                        ['balance' => $user->balance - $amount]
                     ); 
                     $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => auth()->user()->id, 
+                        'user_id' => $user->id, 
                         'end_date' => null,
                         'type' => 'partner'
                     ])->first();
@@ -880,17 +882,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     }
                     $old = $shop->balance;
                 }
+
                 $transaction->update([
                     'status' => 1
                 ]);
                 $shop = $shop->fresh();
+                $user = $user->fresh();
 
                 \VanguardLTE\ShopStat::create([
-                    'user_id' => auth()->user()->id,
+                    'user_id' => $user->id,
                     'type' => $type,
                     'sum' => $amount,
                     'old' => $old,
                     'new' => $shop->balance,
+                    'balance' => $user->balance,
                     'request_id' => $transaction->id,
                     'shop_id' => $transaction->shop_id,
                     'date_time' => \Carbon\Carbon::now()
@@ -907,11 +912,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     }
                 }
                 else if($type == 'out'){
-                    auth()->user()->update(
-                        ['balance' => auth()->user()->balance + $amount]
+                    $user->update(
+                        ['balance' => $user->balance + $amount]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => auth()->user()->id, 
+                        'user_id' => $user->id, 
                         'end_date' => null,
                         'type' => 'partner'
                     ])->first();
@@ -922,8 +927,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $old = $requestuser->balance + $amount;
                     \VanguardLTE\Transaction::create([
                         'user_id' => $transaction->user_id,
-                        'payeer_id' => auth()->user()->id,
-                        'system' => auth()->user()->username,
+                        'payeer_id' => $user->id,
+                        'system' => $user->username,
                         'type' => $type,
                         'summ' => $amount,
                         'old' => $old,

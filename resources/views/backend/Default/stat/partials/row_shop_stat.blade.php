@@ -21,6 +21,9 @@
 	@endif
 	</td>
 	<td>
+		{{number_format($stat->balance,2)}}
+	</td>
+	<td>
 		{{ number_format($stat->old,2) }}
 	</td>
 	<td>
