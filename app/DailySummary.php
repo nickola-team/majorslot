@@ -131,6 +131,13 @@ namespace VanguardLTE
                     $adj['moneyout'] = $childSummary->sum('moneyout');
                     $adj['totalbet'] = $childSummary->sum('totalbet');
                     $adj['totalwin'] = $childSummary->sum('totalwin');
+                    //agent, distributor's deal out
+                    if( $user->hasRole(['agent','distributor'])) 
+                    {
+                        $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id= '.$user->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="deal_out"';
+                        $in_out = \DB::select($query);
+                        $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
+                    }
                 }
                 $query = null;
                 if ($user->hasRole('master'))

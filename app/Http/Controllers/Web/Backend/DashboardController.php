@@ -926,6 +926,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="deal_out" AND request_id IS NOT NULL';
                         $in_out = \DB::select($query);
                         $adj['dealout'] = $in_out[0]->dealout;
+                        
+                        //agent, distributor's deal out
+                        $partner_users = $partner->availableUsers();
+                        if( count($partner_users) > 0) 
+                        {
+                            $level = $partner->level();
+                            $childpartners = \VanguardLTE\User::whereIn('role_id', range(4,$level))->whereIn('id', $partner_users)->pluck('id')->toArray();
+
+                            if (count($childpartners) > 0){
+                                $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="deal_out"';
+                                $in_out = \DB::select($query);
+                                $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
+                            }
+                        }
+                        
                     }
 
                     $adj['moneyin'] = 0;
