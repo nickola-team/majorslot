@@ -93,7 +93,9 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
 						<th>파트너보유금</th>
+						@endif
 						<th>변동전금액</th>
 						<th>변동후금액</th>
 						<th>충전</th>
@@ -117,7 +119,9 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
 						<th>파트너보유금</th>
+						@endif
 						<th>변동전금액</th>
 						<th>변동후금액</th>
 						<th>충전</th>

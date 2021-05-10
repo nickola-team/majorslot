@@ -20,9 +20,11 @@
 		unknown
 	@endif
 	</td>
+	@if (auth()->user()->hasRole(['admin', 'master']))
 	<td>
 		{{number_format($stat->balance,2)}}
 	</td>
+	@endif
 	<td>
 		{{ number_format($stat->old,2) }}
 	</td>
