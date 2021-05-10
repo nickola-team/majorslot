@@ -42,12 +42,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $todayprofit = $game_bet[0]->totalbet-$game_bet[0]->totalwin;
             }
 
-            $agents = auth()->user()->childPartners();
-            if (count($agents) > 0) {
-                $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                $deal_log = \DB::select($query);
-                $todayprofit = $todayprofit - $deal_log[0]->total_deal;
-            }
 
             $usersPerMonth = $this->users->countOfNewUsersPerMonth(\Carbon\Carbon::now()->subYear()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth(), $ids);
             $stats = [
