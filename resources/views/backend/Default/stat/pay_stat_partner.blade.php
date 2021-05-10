@@ -38,7 +38,7 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>@lang('app.user')</label>
+								<label>파트너</label>
 								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
 							</div>
 						</div>

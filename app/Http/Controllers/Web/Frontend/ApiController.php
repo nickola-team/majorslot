@@ -803,6 +803,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
 
         public function allowInOut(\Illuminate\Http\Request $request){
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return redirect()->route('backend.in_out_manage')->withErrors(['로그인하세요']);
+            }
             $in_out_id = $request->in_out_id;
             $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->get()->first();
             $amount = $transaction->sum;
@@ -814,7 +817,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
                 if($type == 'add'){
                     if(auth()->user()->balance < $amount) {
-                        return redirect()->route('backend.in_out_manage')->withSuccess(['보유금액이 충분하지 않습니다.']);
+                        return redirect()->route('backend.in_out_manage')->withErrors(['보유금액이 충분하지 않습니다.']);
                     }
 
                     auth()->user()->update(

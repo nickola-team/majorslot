@@ -1,16 +1,12 @@
 <tr>
-{{-- <td>
-	<a href="{{ route('backend.statistics', ['system_str' => $stat->admin ? $stat->admin->username : $stat->system])  }}">
-		{{ $stat->admin ? $stat->admin->username : $stat->system }}
-	</a>
-	@if( $stat->value ) {{ $stat->value }} @endif
-</td> --}}
-
 <td>
-	<a href="{{ route('backend.statistics', ['user' => $stat->user->username])  }}">
 @if ($partner==0)	
+	<a href="{{ route('backend.statistics', ['user' => $stat->user->username])  }}">
+
 		{{ $stat->user->username }}
 @else
+	<a href="{{ route('backend.statistics_partner', ['user' => $stat->user->username])  }}">
+
 	{{ $stat->user->username }} [ 
 	@foreach(['7' => 'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
 		@if($role_id == $stat->user->role_id)
