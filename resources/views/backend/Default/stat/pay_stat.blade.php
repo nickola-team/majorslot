@@ -103,7 +103,10 @@
 					<tr>
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
-						<th>매장</th>
+						<th>매장관리자</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<th>보유금</th>
+						@endif
 						<th>변동전금액</th>
 						<th>변동후금액</th>
 						<th>충전</th>
@@ -128,7 +131,10 @@
 					<tr>
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
-						<th>매장</th>
+						<th>매장관리자</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<th>보유금</th>
+						@endif
 						<th>변동전금액</th>
 						<th>변동후금액</th>						
 						<th>충전</th>

@@ -486,6 +486,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $user->save();
                     $user = $user->fresh();
 
+                    $master = $master->fresh();
+
                     \VanguardLTE\Transaction::create([
                         'user_id' => $user->id,
                         'payeer_id' => $master->id,
@@ -494,6 +496,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'summ' => $summ,
                         'old' => $old,
                         'new' => $user->balance,
+                        'balance' => $master->balance,
                         'shop_id' => 0
                     ]);
 
@@ -925,6 +928,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         $open_shift->increment('money_out', $amount);
                     }
                     $old = $requestuser->balance + $amount;
+                    $user = $user->fresh();
                     \VanguardLTE\Transaction::create([
                         'user_id' => $transaction->user_id,
                         'payeer_id' => $user->id,
@@ -933,6 +937,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'summ' => $amount,
                         'old' => $old,
                         'new' => $requestuser->balance,
+                        'balance' => $user->balance,
                         'request_id' => $transaction->id,
                         'shop_id' => $transaction->shop_id,
                         'created_at' => \Carbon\Carbon::now(),

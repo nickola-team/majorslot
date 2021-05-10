@@ -13,6 +13,7 @@ namespace VanguardLTE
             'summ', 
             'old',
             'new',
+            'balance',
             'request_id', 
             'shop_id'
         ];

@@ -681,14 +681,19 @@ namespace VanguardLTE
                     $this->update(['count_return' => $this->count_return + Lib\Functions::count_return($summ, $this->shop_id)]);
                 }
             }
+            $payer_balance = 0;
             if(/* $payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager') */
                 $payeer->hasRole(['master','agent','distributor'])) 
             {
                 $payeer->update(['balance' => $payeer->balance - $summ]);
+                $payeer = $payeer->fresh();
+                $payer_balance = $payeer->balance;
             }
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && $this->hasRole('user') ) 
             {
                 $shop->update(['balance' => $shop->balance - $summ]);
+                $shop = $shop->fresh();
+                $payer_balance = $shop->balance;
                 if( $type == 'out' ) 
                 {
                     $open_shift->increment('money_out', abs($summ));
@@ -710,6 +715,7 @@ namespace VanguardLTE
                     if ($open_shift) $open_shift->increment('balance_in', abs($summ));
                     if ($payeer_open_shift) $payeer_open_shift->increment('money_in', abs($summ));
                 }
+
             }
             Transaction::create([
                 'user_id' => $this->id, 
@@ -718,6 +724,7 @@ namespace VanguardLTE
                 'summ' => abs($summ), 
                 'old' => $old,
                 'new' => $this->balance,
+                'balance' => $payer_balance,
                 'request_id' => $request_id,
                 'shop_id' => ($this->hasRole('user') ? $this->shop_id : 0)
             ]);

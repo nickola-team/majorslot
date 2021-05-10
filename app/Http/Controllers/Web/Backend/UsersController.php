@@ -534,6 +534,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'summ' => $sum, 
                         'old' => 0,
                         'new' => $sum, 
+                        'balance' => auth()->user()->balance,
                         'shop_id' => auth()->user()->shop_id
                     ]);
                 }
