@@ -466,6 +466,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         $open_shift->increment('money_in', $summ);
                     }
+                    $old = $user->balance;
 
                     $user->balance = $user->balance + $summ;
                     $open_shift = \VanguardLTE\OpenShift::where([
@@ -478,18 +479,22 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         $open_shift->increment('convert_deal', $summ);
                     }
 
+                    $user->deal_balance = $real_deal_balance - $summ;
+                    $user->mileage = 0;
+                    $user->save();
+                    $user = $user->fresh();
+
                     \VanguardLTE\Transaction::create([
                         'user_id' => $user->id,
                         'payeer_id' => $master->id,
                         'system' => $user->username,
                         'type' => 'deal_out',
                         'summ' => $summ,
+                        'old' => $old,
+                        'new' => $user->balance,
                         'shop_id' => 0
                     ]);
 
-                    $user->deal_balance = $real_deal_balance - $summ;
-                    $user->mileage = 0;
-                    $user->save();
                 }
                 else{
                     return response()->json([
@@ -911,12 +916,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         $open_shift->increment('money_out', $amount);
                     }
+                    $old = $requestuser->balance + $amount;
                     \VanguardLTE\Transaction::create([
                         'user_id' => $transaction->user_id,
                         'payeer_id' => auth()->user()->id,
                         'system' => auth()->user()->username,
                         'type' => $type,
                         'summ' => $amount,
+                        'old' => $old,
+                        'new' => $requestuser->balance,
                         'request_id' => $transaction->id,
                         'shop_id' => $transaction->shop_id,
                         'created_at' => \Carbon\Carbon::now(),

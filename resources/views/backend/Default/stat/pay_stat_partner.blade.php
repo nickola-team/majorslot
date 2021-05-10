@@ -104,6 +104,8 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>상위파트너</th>
+						<th>변동전금액</th>
+						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금전환</th>
@@ -130,6 +132,8 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>상위파트너</th>
+						<th>변동전금액</th>
+						<th>변동후금액</th>						
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금전환</th>

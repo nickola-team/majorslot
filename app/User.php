@@ -630,7 +630,8 @@ namespace VanguardLTE
             ])->first();
             $summ = ($type == 'out' ? -1 * abs($summ) : abs($summ));
             $balance = $summ;
-            if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && $this->hasRole('user') && $type == 'add' && $happyhour ) 
+            $old = $this->balance;
+            /*if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && $this->hasRole('user') && $type == 'add' && $happyhour ) 
             {
                 $transactionSum = $summ * intval(str_replace('x', '', $happyhour->multiplier));
                 $bonus = $transactionSum - $summ;
@@ -649,16 +650,9 @@ namespace VanguardLTE
                 $balance = $transactionSum;
             }
             else
-            {
-                Transaction::create([
-                    'user_id' => $this->id, 
-                    'payeer_id' => $payeer->id, 
-                    'type' => $type, 
-                    'summ' => abs($summ), 
-                    'request_id' => $request_id,
-                    'shop_id' => ($this->hasRole('user') ? $this->shop_id : 0)
-                ]);
-            }
+            {*/
+                
+            //}
             if( !$this->hasRole('admin') ) 
             {
                 $this->increment('balance', $balance);
@@ -695,14 +689,6 @@ namespace VanguardLTE
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && $this->hasRole('user') ) 
             {
                 $shop->update(['balance' => $shop->balance - $summ]);
-                /*if( $type == 'out' ) 
-                {
-                    $open_shift->increment('balance_in', abs($summ));
-                }
-                else
-                {
-                    $open_shift->increment('balance_out', abs($summ));
-                } */
                 if( $type == 'out' ) 
                 {
                     $open_shift->increment('money_out', abs($summ));
@@ -725,6 +711,16 @@ namespace VanguardLTE
                     if ($payeer_open_shift) $payeer_open_shift->increment('money_in', abs($summ));
                 }
             }
+            Transaction::create([
+                'user_id' => $this->id, 
+                'payeer_id' => $payeer->id, 
+                'type' => $type, 
+                'summ' => abs($summ), 
+                'old' => $old,
+                'new' => $this->balance,
+                'request_id' => $request_id,
+                'shop_id' => ($this->hasRole('user') ? $this->shop_id : 0)
+            ]);
             if( $this->balance == 0 ) 
             {
                 $this->update([

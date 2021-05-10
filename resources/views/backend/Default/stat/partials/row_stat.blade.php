@@ -36,6 +36,12 @@
 @endif
 </td>
 <td>
+{{number_format($stat->old,2)}}
+</td>
+<td>
+{{number_format($stat->new,2)}}
+</td>
+<td>
 @if ($stat->type == 'add')
 	<span class="text-green">{{ number_format(abs($stat->summ),2) }}</span>
 @endif

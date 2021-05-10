@@ -532,6 +532,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'user_id' => $user->id, 
                         'payeer_id' => \Illuminate\Support\Facades\Auth::id(), 
                         'summ' => $sum, 
+                        'old' => 0,
+                        'new' => $sum, 
                         'shop_id' => auth()->user()->shop_id
                     ]);
                 }
