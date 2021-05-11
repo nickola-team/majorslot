@@ -134,7 +134,7 @@ namespace VanguardLTE
                     //agent, distributor's deal out
                     if( $user->hasRole(['agent','distributor'])) 
                     {
-                        $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id= '.$user->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="deal_out"';
+                        $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id= '.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
                         $in_out = \DB::select($query);
                         $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
                     }
