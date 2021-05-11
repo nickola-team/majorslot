@@ -584,7 +584,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                     if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
                     {
-                        if ($game['gameID'] == 'vswayshammthor')
+                        if (in_array($game['gameID'] , ['vswayshammthor','vswaysbufking']))
                         {
                             array_unshift($gameList, [
                                 'provider' => 'pp',
