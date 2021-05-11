@@ -380,11 +380,42 @@ namespace VanguardLTE\Console
                 }
                 $this->info("End summary daily adjustment.");
             });
+
             \Artisan::command('daily:promo', function () {
                 set_time_limit(0);
                 $this->info("Begin pp game promotions");
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
                 $this->info($res['msg']);
+            });
+
+            \Artisan::command('daily:buffaloking', function () {
+                set_time_limit(0);
+                $this->info("Begin adding buffaloking megaway game to all shop");
+                
+                $buffgame = \VanguardLTE\Game::where('id', 974)->first();
+                if (!$buffgame)
+                {
+                    $this->error('Can not find original game of buffaloking megaway');
+                    return;
+                }
+                $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
+                $data = $buffgame->toArray();
+                foreach ($shop_ids as $id)
+                {
+                    if (\VanguardLTE\Game::where(['shop_id'=> $id, 'original_id' => 974])->first())
+                    {
+                        $this->info("Game already exist in " . $id . " shop");
+                    }
+                    else{
+                        $data['shop_id'] = $id;
+                        $game = \VanguardLTE\Game::create($data);
+                        $ppcat = \VanguardLTE\Category::where(['shop_id' => $id, 'href' => 'pragmatic'])->first();
+                        if ($ppcat){
+                            \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$ppcat->id]);
+                        }
+                    }
+                }
+                $this->info('End');
             });
         }
     }
