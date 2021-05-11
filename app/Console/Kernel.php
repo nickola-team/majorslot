@@ -361,6 +361,23 @@ namespace VanguardLTE\Console
         protected function commands()
         {
             require(base_path('routes/console.php'));
+
+            \Artisan::command('daily:summary {date=today}', function ($date) {
+                set_time_limit(0);
+                $this->info("Begin summary daily adjustment.");
+
+                $admins = \VanguardLTE\User::where('role_id',7)->get();
+                foreach ($admins as $admin)
+                {
+                    if ($date == 'today') {
+                        \VanguardLTE\DailySummary::summary($admin->id);
+                    }
+                    else{
+                        \VanguardLTE\DailySummary::summary($admin->id, $date);
+                    }
+                }
+                $this->info("End summary daily adjustment.");
+            });
         }
     }
 
