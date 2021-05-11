@@ -1031,7 +1031,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function syncpromo()
         {
-            $anyuser = \VanguardLTE\User::whereNotNull('api_token')->first();
+            $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNotNull('api_token')->first();
             if (!$anyuser)
             {
                 return ['error' => true, 'msg' => 'not found any available user.'];
