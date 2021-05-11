@@ -616,16 +616,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [];
         }
 
-        public static function getgamelink_pp($gamecode)
+        public static function getgamelink_pp($gamecode, $token)
         {
             $detect = new \Detection\MobileDetect();
-            $user = auth()->user();
-            if ($user == null)
-            {
-                return ['error' => true, 'msg' => '로그인하세요'];
-            }
             $key = [
-                'token' => auth()->user()->api_token,
+                'token' => $token,
                 'symbol' => $gamecode,
                 'language' => 'ko',
                 'technology' => 'H5',
@@ -1032,6 +1027,76 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = '';
             }
             return response($data, 200)->header('Content-Type', 'application/json');
+        }
+
+        public static function syncpromo()
+        {
+            $anyuser = \VanguardLTE\User::whereNotNull('api_token')->first();
+            if (!$anyuser)
+            {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+            $url = PPController::getgamelink_pp('vs5aztecgems', $anyuser->api_token);
+            $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                        break;
+                    }
+                }
+                if (!$mgckey){
+                    return ['error' => true, 'msg' => 'could not find mgckey value'];
+                }
+                $promo = \VanguardLTE\PPPromo::take(1)->first();
+                if (!$promo)
+                {
+                    $promo = \VanguardLTE\PPPromo::create();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/active/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->active = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentdetails = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->racedetails = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v2/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentleaderboard = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->raceprizes = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->racewinners = $response->body();
+                }
+
+                $promo->save();
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
+            }
+            else
+            {
+                return ['error' => true, 'msg' => 'server response is not 302.'];
+            }
+            
         }
 
     }

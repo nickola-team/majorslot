@@ -36,6 +36,8 @@ namespace VanguardLTE\Console
                 \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
 
+                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
+
             })->dailyAt('08:00');
             $schedule->call(function()
             {
@@ -377,6 +379,12 @@ namespace VanguardLTE\Console
                     }
                 }
                 $this->info("End summary daily adjustment.");
+            });
+            \Artisan::command('daily:promo', function () {
+                set_time_limit(0);
+                $this->info("Begin pp game promotions");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
+                $this->info($res['msg']);
             });
         }
     }
