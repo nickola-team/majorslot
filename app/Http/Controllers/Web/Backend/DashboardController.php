@@ -869,24 +869,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $adj['total_mileage'] = $deal_logs[0]->total_mileage;
                     $adj['balance'] = $shop->balance;
                     $adj['name'] = $shop->name;
-                    if (auth()->user()->hasRole('admin')){
-                        $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_deal'];
-                        $managers = $shop->getUsersByRole('manager');
-                        if (count($managers) > 0)
-                        {
-                            $distr = $managers->first()->referral;
-                            if ($distr!=null)
-                            {
-                                $agent = $distr->referral;
-                                if ($agent!=null)
-                                {
-                                    $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id =' . $agent->id . ' AND shop_id='. $shop->id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                                    $deal_logs = \DB::select($query);
-                                    $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$deal_logs[0]->total_deal;
-                                }
-                            }
-                        }
-                    }
                     $adjustments[] = $adj;
                 }
             }
@@ -986,24 +968,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $adj['name'] = $partner->username;
                     $adj['id'] = $partner->id;
                     $adj['profit'] = 0;
-                    if (auth()->user()->hasRole('admin'))
-                    {
-                        if ($partner->hasRole(['admin','master','agent'])){
-                            $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$adj['total_deal'];
-                        }
-                        else if ($partner->hasRole('distributor')) 
-                        {
-                            $agent = $partner->referral;
-                            if ($agent!=null)
-                            {
-                                if (count($shops) > 0){
-                                    $query = 'SELECT SUM(deal_profit) as total_deal FROM w_deal_log WHERE type="partner" AND partner_id =' . $agent->id . ' AND shop_id in ('. implode(',',$shops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                                    $deal_logs = \DB::select($query);
-                                    $adj['profit'] = $adj['totalbet']-$adj['totalwin']-$deal_logs[0]->total_deal;
-                                }
-                            }
-                        }
-                    }
                     $adjustments[] = $adj;
                 }
             }
