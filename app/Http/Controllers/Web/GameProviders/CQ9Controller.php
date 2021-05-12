@@ -121,6 +121,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
@@ -130,6 +132,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'mtcode' => $mtcode, 
                     'data' => json_encode($transaction)
                 ]);
+                \DB::commit();
 
                 return response()->json([
                     'data' => null,
@@ -149,6 +152,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'mtcode' => $mtcode, 
                     'data' => json_encode($transaction)
                 ]);
+                \DB::commit();
 
                 return response()->json([
                     'data' => null,
@@ -185,7 +189,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'shop_id' => $user->shop_id
             ]);
 
-            
+            \DB::commit();
             return response()->json([
                 'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
                 'status' => [
@@ -245,8 +249,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'currency' => 'KRW',
             ];
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'data' => null,
                     'status' => [
@@ -265,6 +272,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     if ($round['amount'] < 0)
                     {
+                        \DB::commit();
                         return response()->json([
                             'data' => null,
                             'status' => [
@@ -276,6 +284,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     if (!$this->validRFC3339Date($round['eventtime']))
                     {
+                        \DB::commit();
                         return response()->json([
                             'data' => null,
                             'status' => [
@@ -303,6 +312,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($totalamount)));
                     $user->save();
+                    \DB::commit();
                     return response()->json([
                         'data' => null,
                         'status' => [
@@ -333,6 +343,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'shop_id' => $user->shop_id
                 ]);
             }
+
+            \DB::commit();
 
             return response()->json([
                 'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
@@ -414,6 +426,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
@@ -423,6 +437,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'mtcode' => $mtcode, 
                     'data' => json_encode($transaction)
                 ]);
+                \DB::commit();
 
                 return response()->json([
                     'data' => null,
@@ -442,6 +457,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'mtcode' => $mtcode, 
                     'data' => json_encode($transaction)
                 ]);
+                \DB::commit();
 
                 return response()->json([
                     'data' => null,
@@ -476,6 +492,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+
+            \DB::commit();
 
             
             return response()->json([
@@ -559,6 +577,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
@@ -568,6 +588,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'mtcode' => $mtcode, 
                     'data' => json_encode($transaction)
                 ]);
+                \DB::commit();
 
                 return response()->json([
                     'data' => null,
@@ -603,6 +624,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+
+            \DB::commit();
 
             
             return response()->json([
@@ -656,9 +679,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $data = json_decode($record->data, true);
+
+            \DB::beginTransaction();
             
             $user = \VanguardLTE\User::Where('username',$data['target']['account'])->get()->first();
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'data' => null,
                     'status' => [
@@ -697,6 +723,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+
+            \DB::commit();
 
             return response()->json([
                 'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
@@ -777,6 +805,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
@@ -786,6 +816,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'mtcode' => $mtcode, 
                     'data' => json_encode($transaction)
                 ]);
+                \DB::commit();
 
                 return response()->json([
                     'data' => null,
@@ -821,6 +852,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+
+            \DB::commit();
 
             
             return response()->json([

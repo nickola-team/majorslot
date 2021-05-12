@@ -16,26 +16,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $statuses = ['' => trans('app.all')] + \VanguardLTE\Support\Enum\UserStatus::lists();
             $roles = \jeremykenedy\LaravelRoles\Models\Role::where('level', '<', \Illuminate\Support\Facades\Auth::user()->level())->pluck('name', 'id');
             $roles->prepend(trans('app.all'), '0');
+            $users = \VanguardLTE\User::orderBy('username', 'ASC');
             if($request->orderby)
             {
-                if ($request->orderby == 0)
-                {
-                    $users = \VanguardLTE\User::orderBy('username', 'ASC');
-                }
-                else
+                if ($request->orderby == 1)
                 {
                     $users = \VanguardLTE\User::orderBy('balance', 'DESC');
                 }
             }
-            else
+            if($request->shopname != '')
             {
-                $users = \VanguardLTE\User::orderBy('username', 'ASC');
-            }
-                
-
-            if($request->shop_id != '' && $request->shop_id > 0)
-            {
-                $shop = \VanguardLTE\Shop::where('id', $request->shop_id)->first();
+                $shop = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->first();
                 $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
             }
             else {
@@ -532,6 +523,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'user_id' => $user->id, 
                         'payeer_id' => \Illuminate\Support\Facades\Auth::id(), 
                         'summ' => $sum, 
+                        'old' => 0,
+                        'new' => $sum, 
+                        'balance' => auth()->user()->balance,
                         'shop_id' => auth()->user()->shop_id
                     ]);
                 }

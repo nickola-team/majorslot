@@ -38,7 +38,7 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>@lang('app.user')</label>
+								<label>파트너</label>
 								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
 							</div>
 						</div>
@@ -104,6 +104,11 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>상위파트너</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<th>보유금</th>
+						@endif						
+						<th>변동전금액</th>
+						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금전환</th>
@@ -130,6 +135,11 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>상위파트너</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<th>보유금</th>
+						@endif						
+						<th>변동전금액</th>
+						<th>변동후금액</th>						
 						<th>충전</th>
 						<th>환전</th>
 						<th>수익금전환</th>

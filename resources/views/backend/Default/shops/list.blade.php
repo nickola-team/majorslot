@@ -319,6 +319,15 @@
 							<input type="hidden" name="type" value="add">
 							<input type="hidden" id="AddId" name="shop_id">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+							<br>
+							<button type="button" class="btn btn-default changeAddSum" data-value="10000">10000</button>
+							<button type="button" class="btn btn-default changeAddSum" data-value="20000">20000</button>
+							<button type="button" class="btn btn-default changeAddSum" data-value="30000">30000</button>
+							<button type="button" class="btn btn-default changeAddSum" data-value="50000">50000</button>
+							<button type="button" class="btn btn-default changeAddSum" data-value="100000">100000</button>
+							<button type="button" class="btn btn-default changeAddSum" data-value="200000">200000</button>
+							<button type="button" class="btn btn-default changeAddSum" data-value="300000">300000</button>
+							<button type="button" class="btn btn-primary changeAddSum" data-value="0">초기화</button>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -347,6 +356,15 @@
 							<input type="hidden" name="type" value="out">
 							<input type="hidden" id="OutId" name="shop_id">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+							<br>
+							<button type="button" class="btn btn-default changeOutSum" data-value="10000">10000</button>
+							<button type="button" class="btn btn-default changeOutSum" data-value="20000">20000</button>
+							<button type="button" class="btn btn-default changeOutSum" data-value="30000">30000</button>
+							<button type="button" class="btn btn-default changeOutSum" data-value="50000">50000</button>
+							<button type="button" class="btn btn-default changeOutSum" data-value="100000">100000</button>
+							<button type="button" class="btn btn-default changeOutSum" data-value="200000">200000</button>
+							<button type="button" class="btn btn-default changeOutSum" data-value="300000">300000</button>
+							<button type="button" class="btn btn-primary changeOutSum" data-value="0">초기화</button>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -372,6 +390,29 @@
 			var item = $(event.target).hasClass('addPayment') ? $(event.target) : $(event.target).parent();
 			var id = item.attr('data-id');
 			$('#AddId').val(id);
+		});
+		$('.changeAddSum').click(function(event){
+			$v = Number($('#AddSum').val());
+			if ($(event.target).data('value') == 0)
+			{
+				$('#AddSum').val(0);
+			}
+			else
+			{
+				$('#AddSum').val($v + $(event.target).data('value'));
+			}
+		});
+
+		$('.changeOutSum').click(function(event){
+			$v = Number($('#OutSum').val());
+			if ($(event.target).data('value') == 0)
+			{
+				$('#OutSum').val(0);
+			}
+			else
+			{
+				$('#OutSum').val($v + $(event.target).data('value'));
+			}
 		});
 
 		$('.outPayment').click(function(event){

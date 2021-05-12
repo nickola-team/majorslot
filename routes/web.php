@@ -432,6 +432,11 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'middleware' => 'permission:stats.game',
     ]);
 
+    Route::get('/adjustment_daily', [
+        'as' => 'backend.adjustment_daily',
+        'uses' => 'DashboardController@adjustment_daily',
+    ]);
+
     Route::get('/adjustment_game', [
         'as' => 'backend.adjustment_game',
         'uses' => 'DashboardController@adjustment_game',
@@ -1292,6 +1297,7 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('/promo/race/details', 'GameProviders\PPController@promoracedetails');
     Route::get('/promo/race/prizes', 'GameProviders\PPController@promoraceprizes');
     Route::post('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
+    Route::post('/promo/tournament/player/choice/OPTIN', 'GameProviders\PPController@promochoice');
     Route::get('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
     Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
     Route::get('/promo/tournament/v2/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');

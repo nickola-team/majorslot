@@ -25,7 +25,7 @@
             </ul>
 
             @if( $user->id != Auth::id() )
-                @if(
+                @if(auth()->user()->hasRole(['admin','master']) || 
                      (auth()->user()->hasRole('master') && $user->hasRole('agent'))
                     || (auth()->user()->hasRole('agent') && $user->hasRole('distributor'))
                     || (auth()->user()->hasRole('distributor') && $user->hasRole('manager'))

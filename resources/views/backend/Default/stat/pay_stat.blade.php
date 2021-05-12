@@ -42,22 +42,22 @@
 								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
 							</div>
 						</div>
-						{{-- <div class="col-md-6">
-							<div class="form-group">
-								<label>@lang('app.payeer')</label>
-								<input type="text" class="form-control" name="payeer" value="{{ Request::get('payeer') }}">
-							</div>
-						</div> --}}
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label>최소금액</label>
 								<input type="text" class="form-control" name="sum_from" value="{{ Request::get('sum_from') }}">
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label>최대금액</label>
 								<input type="text" class="form-control" name="sum_to" value="{{ Request::get('sum_to') }}">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>매장이름</label>
+								<input type="text" class="form-control" name="shopname" value="{{ Request::get('shopname') }}">
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -103,7 +103,12 @@
 					<tr>
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
-						<th>매장</th>
+						<th>매장관리자</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<th>보유금</th>
+						@endif
+						<th>변동전금액</th>
+						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
 						<th>시간</th>
@@ -126,7 +131,12 @@
 					<tr>
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
-						<th>매장</th>
+						<th>매장관리자</th>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<th>보유금</th>
+						@endif
+						<th>변동전금액</th>
+						<th>변동후금액</th>						
 						<th>충전</th>
 						<th>환전</th>
 						<th>시간</th>

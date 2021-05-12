@@ -11,7 +11,7 @@
 
     <section class="content">
 
-        {!! Form::open(['route' => array('backend.Default.pincode.update', $pincode->id), 'files' => true, 'id' => 'user-form']) !!}
+        {!! Form::open(['route' => array('backend.pincode.update', $pincode->id), 'files' => true, 'id' => 'user-form']) !!}
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">@lang('app.pincode_details')</h3>

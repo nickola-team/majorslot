@@ -50,7 +50,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $data['over_bank'] = 0;
             if ($data['jackpot'] > 0)
             {
-                $data['progressive'] = mt_rand(5,10);
+                $data['progressive'] = mt_rand(2,5);
             }
             $data['admin_id'] = auth()->user()->id;
             $happyhour = \VanguardLTE\HappyHourUser::create($data);
@@ -92,7 +92,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $data['over_bank'] = 0;
             if ($data['jackpot'] > 0)
             {
-                $data['progressive'] = mt_rand(5,10);
+                $data['progressive'] = mt_rand(2,5);
             }
             $data['admin_id'] = auth()->user()->id;
             $happyhour->update($data);

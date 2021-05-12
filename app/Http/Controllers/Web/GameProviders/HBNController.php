@@ -35,6 +35,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $type = $data->type;
 
             $response = [];
+            \DB::beginTransaction();
             switch ($type)
             {
                 case 'playerdetailrequest':
@@ -49,6 +50,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 default:
                     $response = ['error' => 'Invalid Message type.'];
             }
+            \DB::commit();
             return response()->json($response, 200);
         }
 

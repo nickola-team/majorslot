@@ -13,6 +13,14 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('booongolist');
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
                 \Illuminate\Support\Facades\Redis::del('cq9list');
+
+                set_time_limit(0);
+                $admins = \VanguardLTE\User::where('role_id',7)->get();
+                foreach ($admins as $admin)
+                {
+                    \VanguardLTE\DailySummary::summary($admin->id);
+                }
+
                 $_daytime = strtotime("-1 days") * 10000;
                 
                 \VanguardLTE\PPTransaction::where('timestamp', '<', $_daytime)->delete();
@@ -27,6 +35,8 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
                 \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
+
+                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
             })->dailyAt('08:00');
             $schedule->call(function()
@@ -353,6 +363,60 @@ namespace VanguardLTE\Console
         protected function commands()
         {
             require(base_path('routes/console.php'));
+
+            \Artisan::command('daily:summary {date=today}', function ($date) {
+                set_time_limit(0);
+                $this->info("Begin summary daily adjustment.");
+
+                $admins = \VanguardLTE\User::where('role_id',7)->get();
+                foreach ($admins as $admin)
+                {
+                    if ($date == 'today') {
+                        \VanguardLTE\DailySummary::summary($admin->id);
+                    }
+                    else{
+                        \VanguardLTE\DailySummary::summary($admin->id, $date);
+                    }
+                }
+                $this->info("End summary daily adjustment.");
+            });
+
+            \Artisan::command('daily:promo', function () {
+                set_time_limit(0);
+                $this->info("Begin pp game promotions");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
+                $this->info($res['msg']);
+            });
+
+            \Artisan::command('daily:buffaloking', function () {
+                set_time_limit(0);
+                $this->info("Begin adding buffaloking megaway game to all shop");
+                
+                $buffgame = \VanguardLTE\Game::where('id', 974)->first();
+                if (!$buffgame)
+                {
+                    $this->error('Can not find original game of buffaloking megaway');
+                    return;
+                }
+                $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
+                $data = $buffgame->toArray();
+                foreach ($shop_ids as $id)
+                {
+                    if (\VanguardLTE\Game::where(['shop_id'=> $id, 'original_id' => 974])->first())
+                    {
+                        $this->info("Game already exist in " . $id . " shop");
+                    }
+                    else{
+                        $data['shop_id'] = $id;
+                        $game = \VanguardLTE\Game::create($data);
+                        $ppcat = \VanguardLTE\Category::where(['shop_id' => $id, 'href' => 'pragmatic'])->first();
+                        if ($ppcat){
+                            \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$ppcat->id]);
+                        }
+                    }
+                }
+                $this->info('End');
+            });
         }
     }
 

@@ -23,8 +23,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $url = url('/game/' . $gamename);
             }
             else {
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelink_pp($gamecode);
-                $url = $data['data']['url'];
+                $user = auth()->user();
+                if (!$user)
+                {
+                    $url = url('/');
+                }
+                else
+                {
+                    $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelink_pp($gamecode, $user->api_token);
+                    $url = $data['data']['url'];
+                }
             }
             if ($lobby == 'mini')
             {

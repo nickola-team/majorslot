@@ -55,7 +55,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Security-Hash' => $securityhash
                 ]);
             }
-
+            \DB::beginTransaction();
             $response = [];
             switch ($name)
             {
@@ -88,6 +88,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response['c_at'] = $c_at;
             $response['sent_at'] = $sent_at;
             $securityhash = BNGController::calcSecurityHash(json_encode($response));
+            \DB::commit();
             return response()->json($response, 200)->header('Security-Hash', $securityhash);
         }
 

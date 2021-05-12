@@ -791,7 +791,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.only_for_distributors')]);
             }
-            if( !$request->summ ) 
+            if( !$request->summ || $request->summ==0 ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
             }
@@ -820,12 +820,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
             }
             $sum = ($request->type == 'out' ? -1 * $summ  : $summ );
-            \VanguardLTE\ShopStat::create([
-                'user_id' => \Auth::id(), 
-                'shop_id' => $shop->id, 
-                'type' => $request->type, 
-                'sum' => abs($sum)
-            ]);
+
             if( $request->type == 'out' ) 
             {
                 $open_shift->increment('balance_out', abs($sum));
@@ -852,13 +847,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $user_shift->increment('money_in', abs($sum));
                 }
             }
+            if (!$user->hasRole('admin')) {
+                $user->update([
+                    'balance' => $user->balance - $sum, 
+                    'count_balance' => $user->count_balance - $sum
+                ]);
+                $user = $user->fresh();
+            }
 
-            $user->update([
-                'balance' => $user->balance - $sum, 
-                'count_balance' => $user->count_balance - $sum
-            ]);
+            $old = $shop->balance;
             $shop->update(['balance' => $shop->balance + $sum]);
-            $user = $user->fresh();
+            $shop = $shop->fresh();
+            \VanguardLTE\ShopStat::create([
+                'user_id' => \Auth::id(), 
+                'shop_id' => $shop->id, 
+                'type' => $request->type, 
+                'sum' => abs($sum),
+                'old' => $old,
+                'new' => $shop->balance,
+                'balance' => $user->balance,
+            ]);
             if( $user->balance == 0 ) 
             {
                 $user->update([

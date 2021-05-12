@@ -96,6 +96,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
         public $credits = null;
         public $freespinCount = [];
         public $doubleWildChance = null;
+        public $happyhouruser = null;
         public function __construct($sid, $playerId, $credits = null)
         {
             $this->slotId = $sid;
@@ -109,6 +110,11 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
             ])->lockForUpdate()->first();
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                'time' => date('G')
+            ])->first();
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
@@ -448,6 +454,11 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
         }
         public function GetBank($slotState = '')
         {
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
@@ -477,6 +488,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
         {
             $_obf_strlog = '';
             $_obf_strlog .= "\n";
+            $_obf_strlog .= date("Y-m-d H:i:s") . ' ';
             $_obf_strlog .= ('{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}');
             $_obf_strlog .= "\n";
             $_obf_strlog .= ' ############################################### ';
@@ -487,7 +499,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $_obf_strinternallog = file_get_contents(storage_path('logs/') . $this->slotId . 'Internal.log');
             }
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
-            exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
+            //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isBuyFreespin = -1)
         {
@@ -510,10 +522,23 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             {
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
-                    $game->set_gamebank($diffMoney, 'inc', '');
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else{
+                        $normalbank = $game->get_gamebank('');
+                        if ($normalbank + $diffMoney < 0)
+                        {
+                            $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                        }
+                        $game->set_gamebank($diffMoney, 'inc', '');
+                    }
                     $sum = $sum - $diffMoney;
+
                 }else{
-                    $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    if ($sum < 0) {
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
                 }
             }
             $_obf_bonus_systemmoney = 0;
@@ -557,13 +582,20 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             {
                 $this->toGameBanks = $sum;
             }
-            if( $_obf_bonus_systemmoney > 0 ) 
+            if ($this->happyhouruser)
             {
-                $sum -= $_obf_bonus_systemmoney;
-                $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
             }
-            $game->set_gamebank($sum, 'inc', $slotState);
-            $game->save();
+            else {
+                if( $_obf_bonus_systemmoney > 0 ) 
+                {
+                    $sum -= $_obf_bonus_systemmoney;
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                }
+                $game->set_gamebank($sum, 'inc', $slotState);
+                $game->save();
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -571,6 +603,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             if( $this->GetBalance() + $sum < 0 ) 
             {
                 $this->InternalError('Balance_   ' . $sum);
+                exit( '{"responseEvent":"error","responseType":"balane is low to add ' . $sum . '","serverResponse":"InternalError"}' );
             }
             $sum = $sum * $this->CurrentDenom;
             $user = $this->user;
@@ -745,6 +778,12 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
+            if ($this->happyhouruser)
+            {
+                $bonus_spin = rand(1, 10);
+                $spin_percent = 5;
+                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;

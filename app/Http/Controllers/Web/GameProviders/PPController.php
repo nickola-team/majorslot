@@ -130,8 +130,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -152,6 +155,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($user->balance < $amount)
             {
+                \DB::commit();
                 return response()->json([
                     'error' => 1,
                     'description' => 'insufficient balance']);
@@ -183,6 +187,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => json_encode($req)
             ]);
 
+            \DB::commit();
+
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
@@ -212,8 +218,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -263,11 +272,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $user->save();
 
+
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
+
+            \DB::commit();
             
 
             return response()->json([
@@ -292,8 +304,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -319,6 +334,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
+            \DB::commit();
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
@@ -346,8 +362,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -385,6 +404,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+
+            \DB::commit();
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
@@ -427,8 +448,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -437,6 +461,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction = $this->checkreference($reference);
             if (!$transaction)
             {
+                \DB::commit();
                 return response()->json([
                     'transactionId' => strval($this->generateCode(24)),
                     'error' => 0,
@@ -444,6 +469,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             } 
             if ($transaction->refund > 0)
             {
+                \DB::commit();
                 return response()->json([
                     'transactionId' => strval('refund-' . $transaction->timestamp),
                     'error' => 0,
@@ -453,6 +479,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = json_decode($transaction->data, true);
             if (!isset($data['amount']))
             {
+                \DB::commit();
                 return response()->json([
                     'error' => 7,
                     'description' => 'bad reference to refund']);
@@ -477,6 +504,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+            \DB::commit();
 
 
 
@@ -502,9 +530,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error' => 7,
                     'description' => 'paramenter incorrect']);
             }
+            \DB::beginTransaction();
 
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -542,6 +572,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+            \DB::commit();
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
@@ -577,6 +608,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [];
             }
             $data = $response->json();
+            $newgames = \VanguardLTE\NewGame::where('provider', 'pp')->get()->pluck('gameid')->toArray();
             if ($data['error'] == "0"){
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
@@ -584,7 +616,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                     if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
                     {
-                        if ($game['gameID'] == 'vswayshammthor')
+                        if (in_array($game['gameID'] , $newgames))
                         {
                             array_unshift($gameList, [
                                 'provider' => 'pp',
@@ -598,7 +630,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         else
                         {
-                            $gameList[] = [
+                            array_push($gameList, [
                                 'provider' => 'pp',
                                 'gamecode' => $game['gameID'],
                                 'enname' => $game['gameName'],
@@ -606,7 +638,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'title' => __('gameprovider.'.$game['gameName']),
                                 'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
                                 'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
-                            ];
+                            ]);
                         }
                     }
                 }
@@ -616,16 +648,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [];
         }
 
-        public static function getgamelink_pp($gamecode)
+        public static function getgamelink_pp($gamecode, $token)
         {
             $detect = new \Detection\MobileDetect();
-            $user = auth()->user();
-            if ($user == null)
-            {
-                return ['error' => true, 'msg' => '로그인하세요'];
-            }
             $key = [
-                'token' => auth()->user()->api_token,
+                'token' => $token,
                 'symbol' => $gamecode,
                 'language' => 'ko',
                 'technology' => 'H5',
@@ -971,6 +998,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $promo = \VanguardLTE\PPPromo::take(1)->first();
             if ($promo){
                 $data = $promo->active;
+                $json_data = json_decode($data, true);
+                $json_data['serverTime'] = time();
+                $tour_count = count($json_data['tournaments']);
+                for ($i = 0; $i < $tour_count; $i++ )
+                {
+                    $json_data['tournaments'][$i]['optin'] = true;
+                }
+                $race_count = count($json_data['races']);
+                for ($i = 0; $i < $race_count; $i++ )
+                {
+                    $json_data['races'][$i]['optin'] = true;
+                }
+                $data = json_encode($json_data);
             }
             else{
                 $data = '';
@@ -1032,6 +1072,91 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = '';
             }
             return response($data, 200)->header('Content-Type', 'application/json');
+        }
+        public function promochoice(\Illuminate\Http\Request $request)
+        {
+            $data = '{"error":0,"description":"OK"}';
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
+
+        public static function syncpromo()
+        {
+            $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNotNull('api_token')->first();
+            if (!$anyuser)
+            {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+            $url = PPController::getgamelink_pp('vs5aztecgems', $anyuser->api_token);
+            $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                        break;
+                    }
+                }
+                if (!$mgckey){
+                    return ['error' => true, 'msg' => 'could not find mgckey value'];
+                }
+                $promo = \VanguardLTE\PPPromo::take(1)->first();
+                if (!$promo)
+                {
+                    $promo = \VanguardLTE\PPPromo::create();
+                }
+                $raceIds = [];
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/active/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->active = $response->body();
+                    $json_data = $response->json();
+                    if (isset($json_data['races']))
+                    {
+                        foreach ($json_data['races'] as $race)
+                        {
+                            $raceIds[$race['id']] = null;
+                        }
+                    }
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentdetails = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->racedetails = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v2/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentleaderboard = $response->body();
+                }
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol=vs5aztecgems&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->raceprizes = $response->body();
+                }
+
+                $response =  Http::post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol=vs5aztecgems&' . $mgckey , ['latestIdentity' => $raceIds]);
+                if ($response->ok())
+                {
+                    $promo->racewinners = $response->body();
+                }
+
+                $promo->save();
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
+            }
+            else
+            {
+                return ['error' => true, 'msg' => 'server response is not 302.'];
+            }
+            
         }
 
     }

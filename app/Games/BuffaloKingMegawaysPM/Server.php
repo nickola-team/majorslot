@@ -30,7 +30,8 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$userId = 7;
+            	$response = '{"responseEvent":"error","responseType":"","serverResponse":"invalid login"}';
+                exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;

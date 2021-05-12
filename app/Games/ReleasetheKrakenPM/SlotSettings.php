@@ -473,6 +473,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
         {
             $_obf_strlog = '';
             $_obf_strlog .= "\n";
+            $_obf_strlog .= date("Y-m-d H:i:s") . ' ';
             $_obf_strlog .= ('{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}');
             $_obf_strlog .= "\n";
             $_obf_strlog .= ' ############################################### ';
@@ -483,7 +484,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 $_obf_strinternallog = file_get_contents(storage_path('logs/') . $this->slotId . 'Internal.log');
             }
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
-            exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
+            //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isBuyFreeSpin = false)
         {
@@ -495,16 +496,34 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             {
                 $slotState = '';
             }
-            if( $this->GetBank($slotState) + $sum < 0 ) 
-            {
-                 $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
-            }
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isBuyFreeSpin == true){
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
+            }
+            if( $this->GetBank($slotState) + $sum < 0 ) 
+            {
+                if($slotState == 'bonus'){
+                    $diffMoney = $this->GetBank($slotState) + $sum;
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {
+                        $normalbank = $game->get_gamebank('');
+                        if ($normalbank + $diffMoney < 0)
+                        {
+                            $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                        }
+                        $game->set_gamebank($diffMoney, 'inc', '');
+                    }
+                    $sum = $sum - $diffMoney;
+                }else{
+                    if ($sum < 0) {
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
+                }
             }
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet' ) 
@@ -569,6 +588,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             if( $this->GetBalance() + $sum < 0 ) 
             {
                 $this->InternalError('Balance_   ' . $sum);
+                exit( '{"responseEvent":"error","responseType":"balane is low to add ' . $sum . '","serverResponse":"InternalError"}' );
             }
             $sum = $sum * $this->CurrentDenom;
             $user = $this->user;

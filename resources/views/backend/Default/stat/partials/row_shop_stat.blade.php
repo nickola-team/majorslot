@@ -20,6 +20,17 @@
 		unknown
 	@endif
 	</td>
+	@if (auth()->user()->hasRole(['admin', 'master']))
+	<td>
+		{{number_format($stat->balance,2)}}
+	</td>
+	@endif
+	<td>
+		{{ number_format($stat->old,2) }}
+	</td>
+	<td>
+		{{ number_format($stat->new,2) }}
+	</td>
 	<td>
 		@if ($stat->type == 'add')
 			<span class="text-green">{{ number_format(abs($stat->sum),2) }}	</span>
