@@ -1111,7 +1111,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $promo->raceprizes = $response->body();
                 }
 
-                $response =  Http::post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol=vs5aztecgems&' . $mgckey , $raceIds);
+                $response =  Http::post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol=vs5aztecgems&' . $mgckey , ['latestIdentity' => $raceIds]);
                 if ($response->ok())
                 {
                     $promo->racewinners = $response->body();
