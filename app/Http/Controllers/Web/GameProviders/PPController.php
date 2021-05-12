@@ -577,6 +577,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [];
             }
             $data = $response->json();
+            $newgames = \VanguardLTE\NewGame::where('provider', 'pp')->get()->pluck('gameid')->toArray();
             if ($data['error'] == "0"){
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
@@ -584,7 +585,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                     if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
                     {
-                        if (in_array($game['gameID'] , ['vswayshammthor','vswaysbufking']))
+                        if (in_array($game['gameID'] , $newgames))
                         {
                             array_unshift($gameList, [
                                 'provider' => 'pp',
@@ -598,7 +599,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         else
                         {
-                            $gameList[] = [
+                            array_push($gameList, [
                                 'provider' => 'pp',
                                 'gamecode' => $game['gameID'],
                                 'enname' => $game['gameName'],
@@ -606,7 +607,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'title' => __('gameprovider.'.$game['gameName']),
                                 'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
                                 'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
-                            ];
+                            ]);
                         }
                     }
                 }
