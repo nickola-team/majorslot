@@ -85,7 +85,7 @@
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-2" style="line-height:2">
-						<b>수익금:</b> ({{number_format(auth()->user()->deal_percent,2)}}%) <a class="pull-right">{{ 
+						<b>수익금:</b> ({{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->deal_percent:auth()->user()->deal_percent,2)}}%) <a class="pull-right">{{ 
 							number_format($dealvalue,2) 
 							}}원 </a>
 							
