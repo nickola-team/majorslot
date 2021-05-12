@@ -130,8 +130,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -152,6 +155,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($user->balance < $amount)
             {
+                \DB::commit();
                 return response()->json([
                     'error' => 1,
                     'description' => 'insufficient balance']);
@@ -183,6 +187,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => json_encode($req)
             ]);
 
+            \DB::commit();
+
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
                 'currency' => 'KRW',
@@ -212,8 +218,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -263,11 +272,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $user->save();
 
+
             $transaction = \VanguardLTE\PPTransaction::create([
                 'reference' => $reference, 
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
+
+            \DB::commit();
             
 
             return response()->json([
@@ -292,8 +304,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -319,6 +334,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
+            \DB::commit();
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
@@ -346,8 +362,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -385,6 +404,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+
+            \DB::commit();
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
@@ -427,8 +448,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
+            \DB::beginTransaction();
+
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -437,6 +461,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction = $this->checkreference($reference);
             if (!$transaction)
             {
+                \DB::commit();
                 return response()->json([
                     'transactionId' => strval($this->generateCode(24)),
                     'error' => 0,
@@ -444,6 +469,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             } 
             if ($transaction->refund > 0)
             {
+                \DB::commit();
                 return response()->json([
                     'transactionId' => strval('refund-' . $transaction->timestamp),
                     'error' => 0,
@@ -453,6 +479,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = json_decode($transaction->data, true);
             if (!isset($data['amount']))
             {
+                \DB::commit();
                 return response()->json([
                     'error' => 7,
                     'description' => 'bad reference to refund']);
@@ -477,6 +504,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+            \DB::commit();
 
 
 
@@ -502,9 +530,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error' => 7,
                     'description' => 'paramenter incorrect']);
             }
+            \DB::beginTransaction();
 
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
+                \DB::commit();
                 return response()->json([
                     'error' => 2,
                     'description' => 'player not found']);
@@ -542,6 +572,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id
             ]);
+            \DB::commit();
 
             return response()->json([
                 'transactionId' => strval($transaction->timestamp),
