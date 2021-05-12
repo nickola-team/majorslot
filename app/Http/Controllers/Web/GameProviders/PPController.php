@@ -966,6 +966,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $promo = \VanguardLTE\PPPromo::take(1)->first();
             if ($promo){
                 $data = $promo->active;
+                $json_data = json_decode($data, true);
+                $json_data['serverTime'] = time();
+                $tour_count = count($json_data['tournaments']);
+                for ($i = 0; $i < $tour_count; $i++ )
+                {
+                    $json_data['tournaments'][$i]['optin'] = true;
+                }
+                $race_count = count($json_data['races']);
+                for ($i = 0; $i < $race_count; $i++ )
+                {
+                    $json_data['races'][$i]['optin'] = true;
+                }
+                $data = json_encode($json_data);
             }
             else{
                 $data = '';
@@ -1068,26 +1081,31 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $promo->active = $response->body();
                 }
+                sleep(1);
                 $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol=vs5aztecgems&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->tournamentdetails = $response->body();
                 }
+                sleep(1);
                 $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol=vs5aztecgems&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->racedetails = $response->body();
                 }
+                sleep(1);
                 $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v2/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->tournamentleaderboard = $response->body();
                 }
+                sleep(1);
                 $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol=vs5aztecgems&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->raceprizes = $response->body();
                 }
+                sleep(1);
                 $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol=vs5aztecgems&' . $mgckey );
                 if ($response->ok())
                 {
