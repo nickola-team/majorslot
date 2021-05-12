@@ -495,6 +495,7 @@ namespace VanguardLTE
         }
         public function addBalance($type, $summ, $payeer = false, $return = 0, $request_id = null)
         {
+            \DB::beginTransaction();
             if( !in_array($type, [
                 'add', 
                 'out'
@@ -523,6 +524,7 @@ namespace VanguardLTE
             } */
             if( $payeer->hasRole('agent') && (!$this->hasRole('distributor') && !$this->hasRole('user')) ) 
             {
+                \DB::commit();
                 return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
@@ -530,6 +532,7 @@ namespace VanguardLTE
             }
             if( $payeer->hasRole('distributor') && !$this->hasRole('manager') ) 
             {
+                \DB::commit();
                 return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
@@ -537,6 +540,7 @@ namespace VanguardLTE
             }
             if( ($payeer->hasRole('cashier') || $payeer->hasRole('manager')) && !$this->hasRole('user')) 
             {
+                \DB::commit();
                 return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
@@ -544,6 +548,7 @@ namespace VanguardLTE
             }
             if( !$summ ) 
             {
+                \DB::commit();
                 return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.wrong_sum')
@@ -554,6 +559,7 @@ namespace VanguardLTE
             {
                 if( !$shop ) 
                 {
+                    \DB::commit();
                     return json_encode([
                         'status' => 'error', 
                         'message' => trans('app.wrong_shop')
@@ -561,6 +567,7 @@ namespace VanguardLTE
                 }
                 if( $type == 'add' && $shop->balance < $summ ) 
                 {
+                    \DB::commit();
                     return json_encode([
                         'status' => 'error', 
                         'message' => trans('app.not_enough_money_in_the_shop', [
@@ -572,6 +579,7 @@ namespace VanguardLTE
             }
             if(/* ($payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager')) && */$payeer->hasRole(['master','agent','distributor']) && $type == 'add' && $payeer->balance < $summ ) 
             {
+                \DB::commit();
                 return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.not_enough_money_in_the_user_balance', [
@@ -582,6 +590,7 @@ namespace VanguardLTE
             }
             if( $type == 'out' && $this->balance < $summ ) 
             {
+                \DB::commit();
                 return json_encode([
                     'status' => 'error', 
                     'message' => trans('app.not_enough_money_in_the_user_balance', [
@@ -600,6 +609,7 @@ namespace VanguardLTE
                 ])->first();
                 if( !$open_shift ) 
                 {
+                    \DB::commit();
                     return json_encode([
                         'status' => 'error', 
                         'message' => trans('app.shift_not_opened')
@@ -751,6 +761,7 @@ namespace VanguardLTE
             {
                 $this->update(['count_balance' => 0]);
             }
+            \DB::commit();
             return json_encode([
                 'status' => 'success', 
                 'message' => trans('app.balance_updated')
