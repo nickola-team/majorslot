@@ -72,17 +72,18 @@
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
+						@if(auth()->user()->hasRole(['admin', 'master']))
+						<th>본사수익</th>
+						@endif
+						<th>딜비수익</th>
 						<th>수익금전환</th>
-						<th>하위충전</th>
-						<th>하위환전</th>
+						<th>매장충전</th>
+						<th>매장환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
-						<th>딜비수익</th>
-						<th>하위수익</th>
+						<th>매장수익</th>
+						@if(auth()->user()->hasRole(['admin', 'master']))
 						<th>최종수익</th>
-						<th>현재보유금</th>
-						@if(auth()->user()->hasRole('admin'))
-						<th>관리자수익</th>
 						@endif
 					</tr>
 					</thead>
@@ -96,17 +97,18 @@
 						<td><span class='text-red'>합계</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalin'),2)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalout'),2)}}</span></td>
+						@if(auth()->user()->hasRole(['admin', 'master']))
+						<td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),2)}}</span></td>
+						@endif
+						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),2) }}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('dealout'),2)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('moneyin'),2)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),2)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),2)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),2)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('total_deal'),2)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('total_mileage'),2)}}</span></td>
-						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),2) }}</span></td>
-						<td><span class='text-red'>{{ number_format($summary->sum('balance'),2) }}</span></td>
-						@if(auth()->user()->hasRole('admin'))
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),2) }}</span></td>
+						@if(auth()->user()->hasRole(['admin', 'master']))
+						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin') - abs($summary->sum('total_deal')- $summary->sum('total_mileage')),2) }}</span></td>
 						@endif
 
 						</tr>
@@ -120,18 +122,19 @@
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
+						@if(auth()->user()->hasRole(['admin', 'master']))
+						<th>본사수익</th>
+						@endif
+						<th>딜비수익</th>
 						<th>수익금전환</th>
-						<th>하위충전</th>
-						<th>하위환전</th>
+						<th>매장충전</th>
+						<th>매장환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
-						<th>딜비수익</th>
-						<th>하위수익</th>
+						<th>매장수익</th>
+						@if(auth()->user()->hasRole(['admin', 'master']))
 						<th>최종수익</th>
-						<th>현재보유금</th>
-						@if(auth()->user()->hasRole('admin'))
-						<th>관리자수익</th>
-						@endif						
+						@endif				
 					</tr>
 					</thead>
                     </table>
