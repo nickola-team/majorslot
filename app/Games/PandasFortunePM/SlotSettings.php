@@ -1143,7 +1143,7 @@ namespace VanguardLTE\Games\PandasFortunePM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetReelStrips($winType, $slotEvent)
+        public function GetReelStrips($winType, $slotEvent, $betline)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
@@ -1175,6 +1175,12 @@ namespace VanguardLTE\Games\PandasFortunePM
                 }
                 else
                 {
+                    if ($this->GetBank($winType) >= 200 * $betline && rand(0,100) < 30)
+                    {
+                        $reel = $this->GenerateJackpotReel();
+                        $this->jackpotSymbolChance = 0;
+                        return $reel;
+                    }
                     $_obf_reelStripNumber = [
                         1, 
                         2, 

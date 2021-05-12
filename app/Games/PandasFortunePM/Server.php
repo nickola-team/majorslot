@@ -184,7 +184,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                     $bonusSymbol = rand(2, 13);
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $initReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    $initReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline);
                     $lastReels = [];
                     $_obf_scatterposes = [];
                     $scattersCount = 0;
