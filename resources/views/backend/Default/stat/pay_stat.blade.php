@@ -62,6 +62,12 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
+								<label>지불자이름</label>
+								<input type="text" class="form-control" name="payeername" value="{{ Request::get('payeername') }}">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
 								<label>기간</label>
 								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 							</div>
