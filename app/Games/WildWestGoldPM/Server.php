@@ -100,7 +100,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 $wildPos = $slotSettings->GetGameData($slotSettings->slotId . 'WildPos');
                 $wildReelValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues');
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') < $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 )
                 {
                     $strSty = '';
                     for($r = 0; $r < count($wildPos); $r++){
@@ -612,7 +612,13 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     ',"Balance":' . $Balance . ',"wildValues":'.json_encode($_wildValue) . ',"wildPos":'.json_encode($_wildPos).',"wildReelValues":'.json_encode($_wildReelValue).
                     ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines / 2, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                if ($buyFreeSpin){
+                    $slotSettings->SaveLogReport($_GameLog, $betline * 2000, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                }
+                else
+                {
+                    $slotSettings->SaveLogReport($_GameLog, $betline * $lines / 2, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                }
                 
                 if( $scattersCount >= 3) 
                 {

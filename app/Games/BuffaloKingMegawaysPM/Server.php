@@ -39,6 +39,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             $paramData = trim(file_get_contents('php://input'));
             $_obf_params = explode('&', $paramData);
             $slotEvent = [];
+            $isBuyFreespin = -1;// 프리스핀 사면 0 or -1
             foreach( $_obf_params as $_obf_param ) 
             {
                 $_obf_arr = explode('=', $_obf_param);
@@ -169,7 +170,6 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $slotEvent['slotLines'] = 20;
                 $lines = $slotEvent['slotLines'];
                 $betline = $slotEvent['slotBet'];
-                $isBuyFreespin = -1;// 프리스핀 사면 0 or -1
                 if(isset($slotEvent['pur'])){
                     $isBuyFreespin = $slotEvent['pur'];
                 }
@@ -615,7 +615,8 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 }
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusTumbMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'). ',"TumbState":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .   ',"freeBalance":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance') .  ',"tumbWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . ',"winLines":"'.$strWinLine.'","Jackpots":""' . ',"DoubleChance":'.$slotSettings->GetGameData($slotSettings->slotId . 'DoubleChance') .  ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"strTopTmb":"'.str_replace('"', '|', $strTopTmb) . '","strMainTmb":"'.str_replace('"', '|', $strMainTmb) .  '","strTopRmul":"'.str_replace('"', '|', $strTopRmul) . '","strMainRmul":"'.str_replace('"', '|', $strMainRmul) . '","LastReel":'.json_encode($lastReel) . ',"BonusTumbMpls":"'.implode(',',$slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMpls')). '","BonusTumbMplPos":"'.implode(',',$slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMplPos')). '","BinaryReel":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'BinaryReel')). ',"ReelSymbolCount":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'ReelSymbolCount')).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $totalWin, $slotEvent['slotEvent']);
+                
+                    $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $totalWin, $slotEvent['slotEvent']);
             }
             $slotSettings->SaveGameData();
             \DB::commit();

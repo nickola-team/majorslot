@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $wildPos = $slotSettings->GetGameData($slotSettings->slotId . 'WildPos');
                 $wildReelValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues');
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') < $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 )
                 {
                     $strSty = '';
                     for($r = 0; $r < count($wildPos); $r++){

@@ -660,7 +660,14 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 }
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Bgt":' . $bgt . ',"RespinType":"' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinType') . '","Level":' . $level.',"Wins":' . json_encode($wins) .',"Status":' . json_encode($status) .',"FreeSpinNums":' . json_encode($freeSpinNums) . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                if ($isBuyFreeSpin)
+                {
+                    $slotSettings->SaveLogReport($_GameLog, $betline * 2000, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                }
+                else
+                {
+                    $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                }
                 
                 if( $scattersCount >= 3 && $slotEvent['slotEvent']!='freespin') 
                 {
@@ -1000,7 +1007,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')  . ',"RespinType":"' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinType') . '","Bgt":' . $slotSettings->GetGameData($slotSettings->slotId . 'Bgt') . ',"Level":' . $slotSettings->GetGameData($slotSettings->slotId . 'Level').',"Wins":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'Wins')) .',"Status":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'Status')) .',"FreeSpinNums":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeSpinNums')) . ',"Balance":' . $Balance . ',"Wp":' . $wp . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'LastReel')).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $totalWin, $slotEvent['slotEvent']);
+                //$slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $totalWin, $slotEvent['slotEvent']);
             }
             $slotSettings->SaveGameData();
             \DB::commit();
