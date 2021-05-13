@@ -8,13 +8,13 @@
         {{ $user->shop->name}}
     </td>
 	<td>
-	@if ( isset($user->referral))
-        {{ $user->referral->username}}
+	@if ( isset($user->referral) && isset($user->referral->referral))
+		{{ $user->referral->referral->username}}
 	@endif
     </td>
 	<td>
-	@if ( isset($user->referral) && isset($user->referral->referral))
-		{{ $user->referral->referral->username}}
+	@if ( isset($user->referral) && isset($user->referral->referral) && isset($user->referral->referral->referral))
+		{{ $user->referral->referral->referral->username}}
 	@endif
     </td>
 
