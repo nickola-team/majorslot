@@ -312,7 +312,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     $statistics = $statistics->join('users', 'users.id', '=', 'transactions.payeer_id');
                 }
-                $statistics = $statistics->where('users.username', '=', '%' . $request->payeername . '%');
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->payeername . '%');
             }
             if( $request->dates != '' ) 
             {
