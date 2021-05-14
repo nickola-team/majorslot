@@ -690,7 +690,10 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 $level = $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                 $wins = $slotSettings->GetGameData($slotSettings->slotId . 'Wins');
                 $status = $slotSettings->GetGameData($slotSettings->slotId . 'Status');
-                $ind = $slotEvent['ind'];
+                $ind = 0;
+                if (isset($slotEvent['ind'])){
+                    $ind = $slotEvent['ind'];
+                }
                 $wp = 0;
                 $totalWin = 0;
                 $allBet = $betline * $lines;
