@@ -795,7 +795,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
             }
-            $summ = abs($request->summ);
+            $summ = abs(str_replace(',','',$request->summ));
             if( $data['type'] == 'add' && (!$user->hasRole('admin') && $user->balance < $summ  ) )
             {
                 return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_user_balance', [

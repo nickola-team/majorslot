@@ -101,7 +101,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $request->summ = $jackpot->balance;
             }
-            $add_jsp = $jackpot->add_jps(auth()->user(), $request->summ, $request->type);
+            $request->summ = str_replace(',','', $request->summ);
+            $add_jsp = $jackpot->add_jps(auth()->user(), abs($request->summ), $request->type);
             if( !$add_jsp['success'] ) 
             {
                 return redirect()->back()->withErrors([$add_jsp['text']]);

@@ -446,10 +446,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $data['parent_id'] = \Illuminate\Support\Facades\Auth::user()->id;
             }
+            $sum = 0;
             if( $request->balance && $request->balance > 0 ) 
             {
                 $shop = \VanguardLTE\Shop::find(\Illuminate\Support\Facades\Auth::user()->shop_id);
-                $sum = floatval($request->balance);
+                $sum = abs(str_replace(',','', $request->balance));
                 if( $shop->balance < $sum ) 
                 {
                     return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
@@ -841,12 +842,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
             }
-            $request->summ = floatval($request->summ);
+            $summ = str_replace(',','',$request->summ);
+
             if( $request->all && $request->all == '1' ) 
             {
-                $request->summ = $user->balance;
+                $summ = $user->balance;
             }
-            $result = $user->addBalance($data['type'], $request->summ);
+            $result = $user->addBalance($data['type'], abs($summ));
             $result = json_decode($result, true);
             if( $result['status'] == 'error' ) 
             {
