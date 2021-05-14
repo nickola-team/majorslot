@@ -31,7 +31,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     return redirect()->back()->withErrors('알수 없는 오류');
                 }
                 $shop = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->first();
-                $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
+                if ($shop) {
+                    $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
+                }
             }
             else {
                 $users = $users->whereIn('id', auth()->user()->hierarchyUsersOnly());
