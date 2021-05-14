@@ -1027,7 +1027,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => false, 'data' => $data['data']];
             }
             else{
-                return ['error' => true, 'msg' => '응답이 잘못되었습니다.'];
+                return ['error' => true, 'msg' => '응답이 잘못되었습니다.', 'data' => json_encode($data)];
             }
         }
     }
