@@ -314,6 +314,8 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                         $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Bgt":' . $bgt . ',"RespinType":"' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinType') . '","Level":' . $level.',"Wins":' . json_encode($wins) .',"Status":' . json_encode($status) .',"FreeSpinNums":' . json_encode($freeSpinNums) . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';
                     $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $totalWin, $slotEvent['slotEvent']);
+                    $slotSettings->SaveGameData();
+                    \DB::commit();
                     exit( $response );
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
