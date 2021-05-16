@@ -32,6 +32,9 @@
 <td>{{ number_format($user['profit'],2) }}</td>
 <td>{{ number_format($user['deal_percent'],2) }}</td>
 @endif
+@if ( auth()->user()->hasRole('admin'))
+<td>{{ number_format($user['bonus'],2) }}</td>
+@endif
 <td>
 <a href="{{ route('backend.user.edit', $user['id']) }}">
 <button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
