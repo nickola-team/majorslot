@@ -36,8 +36,8 @@ namespace VanguardLTE
                         'data' => [
                             'type' => 'ShopStat', 
                             'Name' => $model->shop->name, 
-                            'Old' => '', 
-                            'New' => '', 
+                            'Old' => $model->old, 
+                            'New' => $model->new, 
                             'Game' => '', 
                             'User' => $model->user->username, 
                             'System' => '', 

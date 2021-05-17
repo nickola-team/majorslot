@@ -62,6 +62,12 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
+								<label>지불자이름</label>
+								<input type="text" class="form-control" name="payeername" value="{{ Request::get('payeername') }}">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
 								<label>기간</label>
 								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 							</div>
@@ -104,9 +110,7 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>매장관리자</th>
-						@if (auth()->user()->hasRole(['admin', 'master']))
 						<th>보유금</th>
-						@endif
 						<th>변동전금액</th>
 						<th>변동후금액</th>
 						<th>충전</th>
@@ -132,9 +136,7 @@
 						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>매장관리자</th>
-						@if (auth()->user()->hasRole(['admin', 'master']))
 						<th>보유금</th>
-						@endif
 						<th>변동전금액</th>
 						<th>변동후금액</th>						
 						<th>충전</th>

@@ -26,11 +26,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if($request->shopname != '')
             {
+                if (!$users)
+                {
+                    return redirect()->back()->withErrors('알수 없는 오류');
+                }
                 $shop = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->first();
-                $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
+                if ($shop) {
+                    $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
+                }
             }
             else {
                 $users = $users->whereIn('id', auth()->user()->hierarchyUsersOnly());
+            }
+            if (!$users)
+            {
+                return redirect()->back()->withErrors('알수 없는 오류');
             }
             $users = $users->where('id', '!=', \Illuminate\Support\Facades\Auth::user()->id);
             $users = $users->where('role_id', '=', 1);
@@ -328,6 +338,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'balance' => $shop->balance,
                         'profit' => $shop->deal_balance - $shop->mileage,
                         'deal_percent' => $shop->deal_percent,
+                        'bonus' => 0,
                         'role_id' => $partner->role_id,
                         'shop' => $shop->name,
                         'shop_id' => $shop->id,
@@ -335,12 +346,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 else
                 {
+                    $bonus_value = 0;
+                    if ($partner->hasRole('master'))
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $partner->id)->first();
+                        if ($bonus_bank)
+                        {
+                            $bonus_value = $bonus_bank->bank;
+                        }
+
+                    }
                     $partners[] = [
                         'id' => $partner->id,
                         'name' => $partner->username,
                         'balance' => $partner->balance,
                         'profit' => $partner->deal_balance - $partner->mileage,
                         'deal_percent' => $partner->deal_percent,
+                        'bonus' => $bonus_value,
                         'role_id' => $partner->role_id
                     ];
                 }
@@ -436,10 +458,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $data['parent_id'] = \Illuminate\Support\Facades\Auth::user()->id;
             }
+            $sum = 0;
             if( $request->balance && $request->balance > 0 ) 
             {
                 $shop = \VanguardLTE\Shop::find(\Illuminate\Support\Facades\Auth::user()->shop_id);
-                $sum = floatval($request->balance);
+                $sum = abs(str_replace(',','', $request->balance));
                 if( $shop->balance < $sum ) 
                 {
                     return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
@@ -831,12 +854,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
             }
-            $request->summ = floatval($request->summ);
+            $summ = str_replace(',','',$request->summ);
+
             if( $request->all && $request->all == '1' ) 
             {
-                $request->summ = $user->balance;
+                $summ = $user->balance;
             }
-            $result = $user->addBalance($data['type'], $request->summ);
+            $result = $user->addBalance($data['type'], abs($summ));
             $result = json_decode($result, true);
             if( $result['status'] == 'error' ) 
             {

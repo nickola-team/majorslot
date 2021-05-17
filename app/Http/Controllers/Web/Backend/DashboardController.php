@@ -32,36 +32,34 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $availableShops = auth()->user()->availableShops();
 
             
-            $start_date = date("Y-m-d");
-            $start_date = $start_date . " 00:00:00";
-            $end_date = date("Y-m-d H:i:s");
+            $start_date = date("Y-m-01");
+            $end_date = date("Y-m-d");
             $todayprofit = 0;
             if (count($availableShops) > 0){
-                $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$availableShops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                $game_bet = \DB::select($query);
-                $todayprofit = $game_bet[0]->totalbet-$game_bet[0]->totalwin;
-            }
+                $monthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->get();
+                $todayprofit = $monthsummary->sum('totalbet') - $monthsummary->sum('totalwin');
+            } 
 
 
             $usersPerMonth = $this->users->countOfNewUsersPerMonth(\Carbon\Carbon::now()->subYear()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth(), $ids);
             $stats = [
                 'total' => $this->users->count($ids), 
                 'new' => $this->users->newUsersCount($ids), 
-                'banned' => $this->users->countByStatus(\VanguardLTE\Support\Enum\UserStatus::BANNED, $ids), 
+                'banned' => 0,//$this->users->countByStatus(\VanguardLTE\Support\Enum\UserStatus::BANNED, $ids), 
                 'todayprofit' => $todayprofit,
-                'games' => \VanguardLTE\Game::where([
+                'games' => 0,/*\VanguardLTE\Game::where([
                     'shop_id' => \Auth::user()->shop_id, 
                     'view' => 1
-                ])->count()
+                ])->count()*/
             ];
             $latestRegistrations = $this->users->latest(5, $ids);
             $user = \Auth::user();
             $shops = \VanguardLTE\Shop::orderBy('id', 'desc')->whereIn('id', $availableShops)->take(5)->get();
-            $summ = \VanguardLTE\User::where([
+            $summ = 0;/*\VanguardLTE\User::where([
                 'shop_id' => \Auth::user()->shop_id, 
                 'role_id' => 1
-            ])->sum('balance');
-            $open_shift = \VanguardLTE\OpenShift::select('open_shift.*')->whereIn('open_shift.shop_id', $availableShops)->orderBy('open_shift.start_date', 'DESC')->take(5)->get();
+            ])->sum('balance');*/
+            $open_shift = null;//\VanguardLTE\OpenShift::select('open_shift.*')->whereIn('open_shift.shop_id', $availableShops)->orderBy('open_shift.start_date', 'DESC')->take(5)->get();
             $statistics = \VanguardLTE\Transaction::whereIn('user_id', $ids)->orderBy('id', 'desc')->take(5)->get();
             $gamestat = \VanguardLTE\StatGame::whereIn('user_id', $ids)->orderBy('date_time', 'DESC')->take(5)->get();
             $bank_stat = \VanguardLTE\BankStat::whereIn('user_id', $ids)->orderBy('created_at', 'DESC')->take(5)->get();
@@ -215,7 +213,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return $element2['Date'] - $element1['Date'];
             });
             $statistics = array_slice($statistics, 0, 50);
-            return view('backend.Default.stat.live_stat', compact('stat', 'statistics', 'filter'));
+            return view('backend.Default.stat.live_stat', compact( 'statistics', 'filter'));
         }
         public function start_shift(\Illuminate\Http\Request $request)
         {
@@ -303,10 +301,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->join('users', 'users.id', '=', 'transactions.user_id');
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
             }
-            else if( $request->shopname != '' ) 
+            if( $request->shopname != '' ) 
             {
                 $statistics = $statistics->join('shops', 'shops.id', '=', 'transactions.shop_id');
                 $statistics = $statistics->where('shops.name', 'like', '%' . $request->shopname . '%');
+            }
+            if( $request->payeername != '' ) 
+            {
+                if( !$request->user) 
+                {
+                    $statistics = $statistics->join('users', 'users.id', '=', 'transactions.payeer_id');
+                }
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->payeername . '%');
             }
             if( $request->dates != '' ) 
             {

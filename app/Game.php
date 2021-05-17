@@ -687,6 +687,24 @@ namespace VanguardLTE
         {
             return $this->hasOne('VanguardLTE\GameBank', 'shop_id', 'shop_id');
         }
+        public function bonus_bank()
+        {
+            if (!$this->shop)
+            {
+                return null;
+            }
+            $master = $this->shop->getUsersByRole('master')->first();
+            if (!$master)
+            {
+                return null;
+            }
+            $bank = \VanguardLTE\BonusBank::where('master_id', $master->id)->first();
+            if (!$bank)
+            {
+                $bank = \VanguardLTE\BonusBank::create(['master_id' => $master->id]);
+            }
+            return $bank;
+        }
         public function statistics()
         {
             $shop_id = (\Auth::check() ? \Auth::user()->shop_id : 0);
@@ -704,7 +722,13 @@ namespace VanguardLTE
         {
             if( $slotState == 'bonus' ) 
             {
-                return $this->game_bank->bonus;
+                //return $this->game_bank->bonus;
+                $bank =  $this->bonus_bank();
+                if (!$bank)
+                {
+                    return 0;
+                }
+                return $bank->bank;
             }
             if( $this->gamebank != null && $this->game_bank ) 
             {
@@ -716,12 +740,30 @@ namespace VanguardLTE
         {
             if( $this->gamebank != null || $slotState == 'bonus' ) 
             {
-                $bank = $this->game_bank;
-                $gamebank = $this->gamebank;
                 if( $slotState == 'bonus' ) 
                 {
-                    $gamebank = 'bonus';
+                    //$gamebank = 'bonus';
+                    $bank = $this->bonus_bank();
+                    if (!$bank)
+                    {
+                        return;
+                    }
+                    if( $type == 'inc' ) 
+                    {
+                        $bank->increment('bank', $balance);
+                    }
+                    if( $type == 'dec' ) 
+                    {
+                        $bank->decrement('bank', $balance);
+                    }
+                    if( $type == 'update' ) 
+                    {
+                        $bank->update(['bank' => $balance]);
+                    }
+                    return;
                 }
+                $bank = $this->game_bank;
+                $gamebank = $this->gamebank;
                 if( !$bank ) 
                 {
                     $bank = GameBank::create(['shop_id' => $this->shop_id]);

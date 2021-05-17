@@ -79,7 +79,7 @@ namespace VanguardLTE
 
         public static function create(array $attributes = [])
         {
-            $filterGames = [' FG', ' respin', ' RS'];
+            $filterGames = [' FG', ' respin', ' RS', ' doBonus'];
             foreach($filterGames as $ignoreGame) 
             {
                 if (substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)

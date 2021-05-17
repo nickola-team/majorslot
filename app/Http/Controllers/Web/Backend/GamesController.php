@@ -640,7 +640,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function gamebanks_add(\Illuminate\Http\Request $request)
         {
-            $request->summ = floatval($request->summ);
+            $request->summ = str_replace(',','', $request->summ);
             if( $request->summ && $request->summ < 0 ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);

@@ -189,10 +189,6 @@
                                 '<td>' + msg['Win'] + '</td>'+
                                 '<td>' + msg['Old'] + '</td>'+
                                 '<td>' + msg['New'] + '</td>'+
-                                '<td>' + msg['IN_GAME'] + '</td>'+
-                                '<td>' + msg['IN_JPS'] + '</td>'+
-                                '<td>' + msg['IN_JPG'] + '</td>'+
-                                '<td>' + msg['Profit'] + '</td>'+
                                 '<td>' + msg['Date'] + '</td>'+
                                 '</tr>'
                             );

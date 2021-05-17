@@ -19,7 +19,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'name' => $gamename
                 ]
             )->get()->first();
-            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
+            $enhancedgames = env('PP_GAMES', '1');
+            if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
                 $url = url('/game/' . $gamename);
             }
             else {

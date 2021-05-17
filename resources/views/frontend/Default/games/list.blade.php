@@ -804,7 +804,7 @@
         async: false,
         success: function (data) {
             if (data.error) {
-                alert(data.msg);
+                alert(data.msg + data.data);
                 return;
             }
             window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");

@@ -44,8 +44,8 @@ namespace VanguardLTE
                         'data' => [
                             'type' => 'PayStat', 
                             'Name' => '', 
-                            'Old' => '', 
-                            'New' => '', 
+                            'Old' => $model->old, 
+                            'New' => $model->new, 
                             'Game' => '', 
                             'User' => $usdata, 
                             'System' => $sysdata, 

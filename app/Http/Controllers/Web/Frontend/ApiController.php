@@ -379,7 +379,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
 
-            $summ = $request->summ;
+            $summ = str_replace(',','',$request->summ);
            
             if($user->hasRole('manager')){
                 $shop = $user->shop;
@@ -678,6 +678,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'msg' => '충전금액을 입력해주세요'
                 ], 200);
             }
+            $money = abs(str_replace(',','', $request->money));
             if($user->hasRole('manager')){
                 //send it to master.
                 $distr = $user->referral;
@@ -687,7 +688,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'user_id' => $user->id,
                         'payeer_id' => $agent->parent_id,
                         'type' => 'add',
-                        'sum' => $request->money,
+                        'sum' => $money,
                         'status' => 0,
                         'shop_id' => $user->shop_id,
                         'created_at' => \Carbon\Carbon::now(),
@@ -712,7 +713,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'user_id' => $user->id,
                     'payeer_id' => $agent->parent_id,
                     'type' => 'add',
-                    'sum' => $request->money,
+                    'sum' => $money,
                     'status' => 0,
                     'shop_id' => 0,
                     'created_at' => \Carbon\Carbon::now(),
@@ -758,6 +759,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
 
+            $money = abs(str_replace(',','', $request->money));
+
             if($user->hasRole('manager')){
                 if($request->money > $user->shop->balance) {
                     return response()->json([
@@ -788,7 +791,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'user_id' => $user->id,
                         'payeer_id' => $agent->parent_id,
                         'type' => 'out',
-                        'sum' => abs($request->money),
+                        'sum' => $money,
                         'status' => 0,
                         'shop_id' => $user->shop_id,
                         'created_at' => \Carbon\Carbon::now(),
@@ -801,7 +804,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
                     $shop = \VanguardLTE\Shop::where('id', $user->shop_id)->get()->first();
                     $shop->update([
-                        'balance' => $shop->balance - $request->money,
+                        'balance' => $shop->balance - $money,
                     ]);
 
                     $open_shift = \VanguardLTE\OpenShift::where([
@@ -811,13 +814,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('balance_out', $request->money);
+                        $open_shift->increment('balance_out', $money);
                     }
                 }
             }
             else {
                 $user->update(
-                    ['balance' => $user->balance - $request->money]
+                    ['balance' => $user->balance - $money]
                 );
                 if ($user->hasRole('distributor'))
                 {
@@ -831,7 +834,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'user_id' => $user->id,
                     'payeer_id' => $agent->parent_id,
                     'type' => 'out',
-                    'sum' => abs($request->money),
+                    'sum' => $money,
                     'status' => 0,
                     'shop_id' => 0,
                     'created_at' => \Carbon\Carbon::now(),
@@ -849,7 +852,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ])->first();
                 if( $open_shift ) 
                 {
-                    $open_shift->increment('balance_out', $request->money);
+                    $open_shift->increment('balance_out', $money);
                 }
 
             }

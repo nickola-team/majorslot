@@ -60,7 +60,7 @@
                 <div class="small-box bg-red">
                     <div class="inner">
                         <h3>{{ number_format($stats['todayprofit'],2) }}</h3>
-                        <p>오늘 수익금</p>
+                        <p>이달 수익금</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-desktop"></i>

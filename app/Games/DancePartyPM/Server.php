@@ -87,7 +87,7 @@ namespace VanguardLTE\Games\DancePartyPM
                 $currentReelSet = 0;
                 $spinType = 's';
                 
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') < $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 )
                 {
                     $currentReelSet = 1;
 

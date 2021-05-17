@@ -82,6 +82,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            \DB::beginTransaction();
 
             if ($this->checkmtcode($mtcode))
             {
@@ -121,7 +122,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
-            \DB::beginTransaction();
 
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
@@ -221,6 +221,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            \DB::beginTransaction();
+
+
             if (!$this->validRFC3339Date($createTime))
             {
                 return response()->json([
@@ -249,7 +252,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'currency' => 'KRW',
             ];
 
-            \DB::beginTransaction();
 
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
@@ -388,6 +390,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
+            \DB::beginTransaction();
+
+
             if ($this->checkmtcode($mtcode))
             {
                 return response()->json([
@@ -426,7 +431,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
-            \DB::beginTransaction();
 
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
@@ -539,6 +543,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
+            \DB::beginTransaction();
+
             if ($this->checkmtcode($mtcode))
             {
                 return response()->json([
@@ -577,7 +583,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
-            \DB::beginTransaction();
 
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
@@ -653,6 +658,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            \DB::beginTransaction();
+
             $record = $this->checkmtcode($mtcode);
             
             if (!$record)
@@ -680,7 +687,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $data = json_decode($record->data, true);
 
-            \DB::beginTransaction();
             
             $user = \VanguardLTE\User::Where('username',$data['target']['account'])->get()->first();
             if (!$user || !$user->hasRole('user')){
@@ -767,6 +773,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
+            \DB::beginTransaction();
+
+
             if ($this->checkmtcode($mtcode))
             {
                 return response()->json([
@@ -805,7 +814,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ];
 
-            \DB::beginTransaction();
 
             $user = \VanguardLTE\User::Where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
@@ -1027,7 +1035,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => false, 'data' => $data['data']];
             }
             else{
-                return ['error' => true, 'msg' => '응답이 잘못되었습니다.'];
+                return ['error' => true, 'msg' => '응답이 잘못되었습니다.', 'data' => json_encode($data)];
             }
         }
     }

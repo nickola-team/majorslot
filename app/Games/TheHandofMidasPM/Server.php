@@ -39,6 +39,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
             $paramData = trim(file_get_contents('php://input'));
             $_obf_params = explode('&', $paramData);
             $slotEvent = [];
+            $buyFreeMuls = [2000, 4000, 6000];
             foreach( $_obf_params as $_obf_param ) 
             {
                 $_obf_arr = explode('=', $_obf_param);
@@ -225,6 +226,10 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 $_winAvaliableMoney = $_spinSettings[1];
                 $beforeWildCount = 0;
                 if($slotEvent['slotEvent'] == 'freespin'){
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') == 1){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'WildValues', []);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'WildPos', []);
+                    }
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                     $_wildValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildValues');
@@ -236,7 +241,6 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 {
                     $slotEvent['slotEvent'] = 'bet';
                     if($isFreeSpin == true){
-                        $buyFreeMuls = [2000, 4000, 6000];
                         $slotSettings->SetBalance(-1 * ($betline * $buyFreeMuls[$pur_value]), $slotEvent['slotEvent']);
                         $winType = 'bonus';
                         $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
@@ -634,8 +638,14 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 }
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"wildValues":'.json_encode($_wildValue) . ',"wildPos":'.json_encode($_wildPos).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"LimitWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'LimitWin') . ',"IsMiniFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'IsMiniFreeSpin') . ',"OtherResponse":"'.$strOtherResponse . '","InitScatterReels":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'InitScatterReels')).',"winLines":[],"Jackpots":""' . ',"InitReel":'.json_encode($lastTempReel). ',"LastReel":'.json_encode($lastReel).'}}';
-                    
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                if ($isFreeSpin)
+                {
+                    $slotSettings->SaveLogReport($_GameLog, $betline * $buyFreeMuls[$pur_value], $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                }
+                else
+                {
+                    $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                }
                 
                 if( $scattersCount >= 3) 
                 {

@@ -390,6 +390,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $key['wl'] = 'demo';
             }
+            else
+            {
+                $key['wl'] = config('app.bng_wl');
+            }
             $str_params = implode('&', array_map(
                 function ($v, $k) {
                     return $k.'='.$v;

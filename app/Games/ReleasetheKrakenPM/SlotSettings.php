@@ -677,19 +677,21 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
-            \VanguardLTE\StatGame::create([
-                'user_id' => $this->playerId, 
-                'balance' => $this->Balance * $this->CurrentDenom, 
-                'bet' => $bet * $this->CurrentDenom, 
-                'win' => $win * $this->CurrentDenom, 
-                'game' => $_obf_slotstate, 
-                'percent' => $this->toGameBanks, 
-                'percent_jps' => $this->toSysJackBanks, 
-                'percent_jpg' => $this->toSlotJackBanks, 
-                'profit' => $this->betProfit, 
-                'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id
-            ]);
+            if ($slotState != 'doBonus') {
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $this->playerId, 
+                    'balance' => $this->Balance * $this->CurrentDenom, 
+                    'bet' => $bet * $this->CurrentDenom, 
+                    'win' => $win * $this->CurrentDenom, 
+                    'game' => $_obf_slotstate, 
+                    'percent' => $this->toGameBanks, 
+                    'percent_jps' => $this->toSysJackBanks, 
+                    'percent_jpg' => $this->toSlotJackBanks, 
+                    'profit' => $this->betProfit, 
+                    'denomination' => $this->CurrentDenom, 
+                    'shop_id' => $this->shop_id
+                ]);
+            }
         }
         public function IsRespinState(){
             if(rand(0, 100) < $this->respin_chance){

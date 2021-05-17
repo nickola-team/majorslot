@@ -28,11 +28,14 @@
 	]
 
 </td>
-@if (auth()->user()->hasRole(['admin', 'master']))
-	<td>
+<td>
+
+@if (auth()->user()->role_id >= $stat->admin->role_id)
 	{{number_format($stat->balance,2)}}
-	</td>
+@else
+	0
 @endif
+</td>
 <td>
 {{number_format($stat->old,2)}}
 </td>
