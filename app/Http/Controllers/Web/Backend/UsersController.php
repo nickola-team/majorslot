@@ -738,7 +738,106 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]);
             $max_wins = \VanguardLTE\GameActivity::where('user_id', $user->id)->where('created_at', 'LIKE', $date . '%')->where('max_win', '!=', '')->groupBy('game')->orderBy('max_win', 'DESC')->take(5)->get();
             $max_bets = \VanguardLTE\GameActivity::where('user_id', $user->id)->where('created_at', 'LIKE', $date . '%')->where('max_bet', '!=', '')->groupBy('game')->orderBy('max_bet', 'DESC')->take(5)->get();
-            return view('backend.Default.user.edit', compact('edit', 'user', 'roles', 'statuses', 'shops', 'free_shops', 'userActivities', 'hasActivities', 'langs', 'max_wins', 'max_bets', 'numbers'));
+            $master = null;
+            $agent = null;
+            $distributor = null;
+            if ($user->hasRole('manager'))
+            {
+                $distributor = $user->referral;
+                $agent = $distributor->referral;
+                $master = $agent->referral;
+            }
+            else if ($user->hasRole('distributor'))
+            {
+                $agent = $user->referral;
+                $master = $agent->referral;
+            }
+            else if ($user->hasRole('agent'))
+            {
+                $master = $user->referral;
+            }
+            return view('backend.Default.user.edit', compact('edit', 'user', 'roles', 'statuses', 'shops', 'free_shops', 'userActivities', 'hasActivities', 'langs', 'max_wins', 'max_bets', 'numbers', 'master', 'agent', 'distributor'));
+        }
+        public function move(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
+        {
+            $master = null;
+            $agent = null;
+            $distributor = null;
+            if ($request->mastername)
+            {
+                $master = \VanguardLTE\User::where([
+                    'username' => $request->mastername,
+                    'role_id' => 6
+                ])->first();
+            }
+            if (!$master)
+            {
+                return redirect()->back()->withErrors(['이동하려는 본사를 찾을수 없습니다.']);
+            }
+            if ($request->agentname)
+            {
+                $agent = \VanguardLTE\User::where([
+                    'username' => $request->agentname,
+                    'role_id' => 5,
+                    'parent_id' => $master->id,
+                ])->first();
+            }
+            if ($user->hasRole(['distributor', 'manager']) && $agent==null)
+            {
+                return redirect()->back()->withErrors(['이동하려는 부본사를 찾을수 없습니다.']);
+            }
+
+            if ($agent && $request->distributorname)
+            {
+                $distributor = \VanguardLTE\User::where([
+                    'username' => $request->distributorname,
+                    'role_id' => 4,
+                    'parent_id' => $agent->id,
+                ])->first();
+            }
+            if ($user->hasRole('manager') && $distributor==null)
+            {
+                return redirect()->back()->withErrors(['이동하려는 총판을 찾을수 없습니다.']);
+            }
+            //check deal percent
+
+            if ($user->hasRole('manager'))
+            {
+                $deal_percent = $user->shop->deal_percent;
+            }
+            else
+            {
+                $deal_percent = $user->deal_percent;
+            }
+
+            if (   ($user->hasRole('agent') && $master->deal_percent < $deal_percent) 
+                || ($user->hasRole('distributor') && $agent->deal_percent < $deal_percent) 
+                || ($user->hasRole('manager') && $distributor->deal_percent < $deal_percent) )
+            {
+                return redirect()->back()->withErrors(['딜비는 상위파트너보다 클수 없습니다.']);
+            }
+            if ($user->hasRole('manager'))
+            {
+                $shopUser = \VanguardLTE\ShopUser::where(['user_id' => $user->referral->id, 'shop_id' => $user->shop->id])->first();
+                if ($shopUser)
+                {
+                    $shopUser->update(['user_id' => $distributor->id]);
+                }
+                $user->shop->update(['user_id' => $distributor->id]);
+                $user->update(['parent_id' => $distributor->id]);
+            }
+            else if ($user->hasRole('distributor'))
+            {
+                \VanguardLTE\ShopUser::where('user_id' , $user->referral->id)->whereIn('shop_id' ,$user->availableShops())->update(['user_id' => $agent->id]);
+                $user->update(['parent_id' => $agent->id]);
+            }
+            else if ($user->hasRole('agent'))
+            {
+                \VanguardLTE\ShopUser::where('user_id' , $user->referral->id)->whereIn('shop_id' ,$user->availableShops())->update(['user_id' => $master->id]);
+                $user->update(['parent_id' => $master->id]);
+            }
+
+            return redirect()->back()->withSuccess(['파트너를 이동하였습니다.']);
         }
         public function updateDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {

@@ -25,28 +25,19 @@
             </ul>
 
             @if( $user->id != Auth::id() )
-                @if(auth()->user()->hasRole(['admin','master']) || 
-                     (auth()->user()->hasRole('master') && $user->hasRole('agent'))
-                    || (auth()->user()->hasRole('agent') && $user->hasRole('distributor'))
-                    || (auth()->user()->hasRole('distributor') && $user->hasRole('manager'))
-                    || (auth()->user()->hasRole('manager') && $user->hasRole('user'))
-                )
+                @if(auth()->user()->hasRole(['admin','master', 'manager']) && $user->hasRole('user'))
                 @permission('users.delete')
                 <a href="{{ route('backend.user.delete', $user->id) }}"
                    class="btn btn-danger btn-block"
                    data-method="DELETE"
-                @if ($user->hasRole('user'))
                    data-confirm-title="회원 삭제"
-                @else
-                    data-confirm-title="파트너 삭제"
-                @endif
                    data-confirm-text="정말 삭제하시겠습니까?"
                    data-confirm-delete="확인">
                     <b>@lang('app.delete')</b></a>
                 @endpermission
                 @endif
 
-                @if(auth()->user()->hasRole('admin') && $user->hasRole(['master', 'agent', 'distributor']) )
+                @if(auth()->user()->hasRole(['admin','master']) && $user->hasRole(['master', 'agent', 'distributor', 'manager']) )
                     <a href="{{ route('backend.user.hard_delete', $user->id) }}"
                         class="btn btn-danger btn-block"
                         data-method="DELETE"

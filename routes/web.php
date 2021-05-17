@@ -650,6 +650,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.user.update.details',
         'uses' => 'UsersController@updateDetails'
     ]);
+    Route::post('user/{user}/update/move', [
+        'as' => 'backend.user.update.move',
+        'uses' => 'UsersController@move'
+    ]);
     Route::put('user/{user}/update/login-details', [
         'as' => 'backend.user.update.login-details',
         'uses' => 'UsersController@updateLoginDetails'
