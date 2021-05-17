@@ -667,7 +667,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $key,
                 array_keys($key)
             ));
-            $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . '&stylename=mjr_major';
+            $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . '&stylename=' . config('app.ppsecurelogin');
             return ['error' => false, 'data' => ['url' => $url]];
         }
         public static function getgamelink($gamecode)
