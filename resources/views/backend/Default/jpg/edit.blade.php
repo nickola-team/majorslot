@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 
 @section('page-title', '잭팟편집')
 @section('page-heading', $jackpot->title)

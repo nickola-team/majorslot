@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 
 @section('page-title', trans('app.edit_room'))
 @section('page-heading', $room->title)

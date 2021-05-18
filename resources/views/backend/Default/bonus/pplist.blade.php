@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 
 @section('page-title', '프라그메틱 보너스')
 @section('page-heading', '프라그메틱 보너스')

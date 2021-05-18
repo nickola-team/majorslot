@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 
 @section('page-title', trans('app.add_shop'))
 @section('page-heading', trans('app.add_shop'))

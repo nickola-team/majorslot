@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 
 @section('page-title', trans('app.edit_return'))
 @section('page-heading', $return->min_pay . ' ' . $return->max_pay)

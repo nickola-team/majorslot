@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 @if( Auth::user()->hasRole('cashier') || Auth::user()->hasRole('manager'))
 @section('page-title', '회원추가')
 @section('page-heading', '회원추가')

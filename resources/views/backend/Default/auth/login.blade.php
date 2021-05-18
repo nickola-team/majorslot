@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.auth')
+@extends('backend.Default.layouts.'.$layout.'.auth')
 
 @section('page-title', trans('app.login'))
 

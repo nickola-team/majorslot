@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/back/dist/css/AdminLTE.min.css">
 
     <link rel="stylesheet" href="/back/dist/css/skins/_all-skins.min.css">
+    
 
     <link rel="stylesheet" href="/back/bower_components/morris.js/morris.css">
     <link rel="stylesheet" href="/back/bower_components/jvectormap/jquery-jvectormap.css">
@@ -38,22 +39,18 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
-    <style>
-        .toolbar {
-            float: left;
-            width: 75%;
-        }
-    </style>
-
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style>
+        .content-wrapper {
+            background-color: gray;!important
+        }
+    </style>
 </head>
-<body class="hold-transition skin-black sidebar-mini @if(isset($_COOKIE['sidebar-collapse']) && $_COOKIE['sidebar-collapse'] == 'true') sidebar-collapse @endif">
+<body class="hold-transition skin-blue layout-top-nav ">
 <div class="wrapper">
 
-    @include('backend.Default.partials.navbar')
-    @include('backend.Default.partials.sidebar')
+    @include('backend.Default.partials.Top.navbar')
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">

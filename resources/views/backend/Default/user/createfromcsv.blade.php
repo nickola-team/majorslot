@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 
 @section('page-title', 'CSV로 생성')
 @section('page-heading', 'CSV로 생성')

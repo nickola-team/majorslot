@@ -1,4 +1,4 @@
-@extends('backend.Default.layouts.app')
+@extends('backend.Default.layouts.'.$layout.'.app')
 
 @section('page-title', trans('app.permissions'))
 @section('page-heading', $edit ? $permission->name : trans('app.create_new_permission'))
