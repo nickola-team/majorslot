@@ -36,9 +36,15 @@
 <td>{{ number_format($user['bonus'],2) }}</td>
 @endif
 <td>
+@if ( $user['role_id'] == 3)
+<a href="{{ route('backend.shop.edit', $user['shop_id']) }}">
+<button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
+</a>
+@else
 <a href="{{ route('backend.user.edit', $user['id']) }}">
 <button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
 </a>
+@endif
 </td>
 <td>
 @if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','master'])))
