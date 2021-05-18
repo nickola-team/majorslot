@@ -37,12 +37,27 @@
                                 @lang('app.games_activity')
                             </a>
                         </li>
+                        @if(auth()->user()->hasRole('admin') && $user->hasRole(['agent', 'distributor', 'manager']) )
+                        <li>
+                            <a id="partner-move-tab"
+                               data-toggle="tab"
+                               href="#partner-move">
+                                파트너이동
+                            </a>
+                        </li>
+                        @endif
                     </ul>
 
                     <div class="tab-content" id="nav-tabContent">
                         <div class="@if(!Request::get('date')) active @endif tab-pane" id="details">
                             {!! Form::open(['route' => ['backend.user.update.details', $user->id], 'method' => 'PUT', 'id' => 'details-form']) !!}
                             @include('backend.Default.user.partials.edit')
+                            {!! Form::close() !!}
+                        </div>
+
+                        <div class="tab-pane" id="partner-move">
+                            {!! Form::open(['route' => ['backend.user.update.move', $user->id], 'method' => 'POST', 'id' => 'details-form']) !!}
+                            @include('backend.Default.user.partials.move')
                             {!! Form::close() !!}
                         </div>
 
