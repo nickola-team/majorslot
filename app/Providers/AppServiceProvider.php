@@ -45,6 +45,13 @@ class AppServiceProvider extends ServiceProvider
                         ->withPath('');
                 });
         }
+        $layout = 'Default';
+        $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
+        if ($site)
+        {
+            $layout = $site->backend;
+        }
+        \View::share('layout', $layout);
     }
 
     /**
