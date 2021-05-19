@@ -74,7 +74,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $hotgames[] = ['name' => 'DuoFuDuoCai5Treasures', 'title' => '5트레저 다복이'];
                 $hotgames[] = ['name' => 'DuoFuDuoCai88Fortune', 'title' => '88포츈 다복이'];
                 $hotgames[] = ['name' => 'DuoFuDuoCaiDancingDrum', 'title' => '댄싱드럼 다복이'];
-                $hotgames[] = ['name' => 'BlackjackSurrenderPT', 'title' => '블랙 잭 써랜더'];
+                //$hotgames[] = ['name' => 'BlackjackSurrenderPT', 'title' => '블랙 잭 써랜더'];
                 $hotgames[] = ['name' => 'BlackJackAM', 'title' => '블랙 잭'];
                 if (count($hotgames) % 4 > 0)
                 {
