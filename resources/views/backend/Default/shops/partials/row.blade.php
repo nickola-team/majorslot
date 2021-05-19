@@ -1,10 +1,7 @@
 <tr>        
     <td>
-		<a href="{{ route('backend.shop.edit', $shop->shop_id) }}">{{ $shop->name }}</a>
+		<a href="{{ route('backend.user.list', ['shopname'=>$shop->name]) }}">{{ $shop->name }}</a>
 	</td>
-	{{-- <td>
-		<a href="{{ route('backend.profile.setshop', ['shop_id' => $shop->shop_id]) }}">@lang('app.switch')</a>
-	</td> --}}
 	<td>
 	@if($shop->creator)
 		@if( Auth::user()->hasRole(['admin', 'master', 'agent']) )

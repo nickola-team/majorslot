@@ -1032,6 +1032,37 @@ namespace VanguardLTE\Games\WildWestGoldPM
             return $reel;
         }
 
+        public function GetNoneWinReels($winType, $slotEvent)
+        {
+            $reel = $this->GetReelStrips($winType, $slotEvent);
+            $reel['reel1'][0] = 11;
+            $reel['reel1'][1] = 11;
+            $reel['reel1'][2] = 10;
+            $reel['reel1'][3] = 10;
+
+            $reel['reel2'][0] = 9;
+            $reel['reel2'][1] = 9;
+            $reel['reel2'][2] = 5;
+            $reel['reel2'][3] = 6;
+
+            $reel['reel3'][0] = 5;
+            $reel['reel3'][1] = 6;
+            $reel['reel3'][2] = 12;
+            $reel['reel3'][3] = 12;
+
+            $reel['reel4'][0] = 2;
+            $reel['reel4'][1] = 12;
+            $reel['reel4'][2] = 12;
+            $reel['reel4'][3] = 6;
+
+            $reel['reel5'][0] = 7;
+            $reel['reel5'][1] = 3;
+            $reel['reel5'][2] = 3;
+            $reel['reel5'][3] = 3;
+            
+            return $reel;
+        }
+
         public function GetReelStrips($winType, $slotEvent)
         {
             $isScatter = false;

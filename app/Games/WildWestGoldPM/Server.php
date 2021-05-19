@@ -260,6 +260,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 // if($winType == 'win'){
                 //     $test = 1;
                 // }
+                $mustNotWin = false;
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -273,13 +274,20 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     {
                         $reels = $slotSettings->GetBuyFreeSpinReels();
                     }
-                    else
+                    else if ($mustNotWin)
+                    {
+                        $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
+                    }
                     {
                         $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
                     }
                     $tempReels = [];
                     $tempWildReels = [];
                     $_wildReelValue = $slotSettings->CheckMultiWild();
+                    if (count($_wildPos) > 3)
+                    {
+                        $wildReelValue = [2,2,2];
+                    }
                     for($r = 0; $r < 5; $r++){
                         $tempWildReels[$r] = [];
                         $tempReels['reel' . ($r+1)] = [];
@@ -424,12 +432,24 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     {
                         if( $i > 1500 ) 
                         {
-                            // $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
-                            // exit( $response );
-                            break;
+                            if ($mustNotWin)
+                            {
+                                break;
+                            }
+                            if( $totalWin > 0 && $winType == 'none' ) 
+                            {
+                                //generate not win reel 
+                                $mustNotWin = true;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
+                        }
+                        else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 20 && $freeSpinNum > 0){
                         }
                         else if($slotEvent['slotEvent'] == 'freespin' && ($i > 1000 && $freeSpinNum)){
                             if($totalWin * ($leftFreeGames + $freeSpinNum) < $_winAvaliableMoney){
