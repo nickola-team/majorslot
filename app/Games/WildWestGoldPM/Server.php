@@ -278,6 +278,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     {
                         $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
                     }
+                    else
                     {
                         $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
                     }
