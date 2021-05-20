@@ -8,7 +8,8 @@ namespace VanguardLTE\Http
             'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode', 
             'VanguardLTE\Http\Middleware\TrimStrings', 
             'Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull', 
-            'VanguardLTE\Http\Middleware\TrustProxies'
+            'VanguardLTE\Http\Middleware\TrustProxies',
+            '\Mtownsend\RequestXml\Middleware\XmlRequest',
         ];
         protected $middlewareGroups = [
             'web' => [
@@ -18,7 +19,8 @@ namespace VanguardLTE\Http
                 'Illuminate\View\Middleware\ShareErrorsFromSession', 
                 'VanguardLTE\Http\Middleware\VerifyCsrfToken', 
                 'Illuminate\Routing\Middleware\SubstituteBindings', 
-                'VanguardLTE\Http\Middleware\SelectLanguage'
+                'VanguardLTE\Http\Middleware\SelectLanguage',
+                '\Mtownsend\RequestXml\Middleware\XmlRequest',
             ], 
             'api' => [
                 'VanguardLTE\Http\Middleware\UseApiGuard', 
