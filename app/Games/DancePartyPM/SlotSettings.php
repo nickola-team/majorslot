@@ -865,6 +865,31 @@ namespace VanguardLTE\Games\DancePartyPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function GetNoneWinReels($winType, $slotEvent)
+        {
+            $reel = $this->GetReelStrips($winType, $slotEvent);
+            $reel['reel1'][0] = 10;
+            $reel['reel1'][1] = 10;
+            $reel['reel1'][2] = 10;
+
+            $reel['reel2'][0] = 5;
+            $reel['reel2'][1] = 6;
+            $reel['reel2'][2] = 9;
+
+            $reel['reel3'][0] = 6;
+            $reel['reel3'][1] = 7;
+            $reel['reel3'][2] = 8;
+
+            $reel['reel4'][0] = 3;
+            $reel['reel4'][1] = 9;
+            $reel['reel4'][2] = 3;
+
+            $reel['reel5'][0] = 7;
+            $reel['reel5'][1] = 9;
+            $reel['reel5'][2] = 5;
+            
+            return $reel;
+        }
         public function GetReelStrips($winType, $slotEvent)
         {
             $isScatter = false;

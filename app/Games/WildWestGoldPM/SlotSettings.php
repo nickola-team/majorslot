@@ -1050,7 +1050,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
             $reel['reel3'][2] = 12;
             $reel['reel3'][3] = 12;
 
-            $reel['reel4'][0] = 2;
+            $reel['reel4'][0] = 5;
             $reel['reel4'][1] = 12;
             $reel['reel4'][2] = 12;
             $reel['reel4'][3] = 6;

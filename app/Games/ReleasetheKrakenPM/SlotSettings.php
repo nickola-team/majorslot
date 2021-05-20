@@ -962,6 +962,37 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function GetNoneWinReels($winType, $slotEvent)
+        {
+            $reel = $this->GetReelStrips($winType, $slotEvent);
+            $reel['reel1'][0] = 10;
+            $reel['reel1'][1] = 9;
+            $reel['reel1'][2] = 9;
+            $reel['reel1'][3] = 11;
+
+            $reel['reel2'][0] = 7;
+            $reel['reel2'][1] = 5;
+            $reel['reel2'][2] = 5;
+            $reel['reel2'][3] = 8;
+
+            $reel['reel3'][0] = 8;
+            $reel['reel3'][1] = 7;
+            $reel['reel3'][2] = 6;
+            $reel['reel3'][3] = 8;
+
+            $reel['reel4'][0] = 7;
+            $reel['reel4'][1] = 8;
+            $reel['reel4'][2] = 5;
+            $reel['reel4'][3] = 4;
+
+            $reel['reel5'][0] = 7;
+            $reel['reel5'][1] = 6;
+            $reel['reel5'][2] = 5;
+            $reel['reel4'][3] = 6;
+            
+            return $reel;
+        }
+
         public function GetReelStrips($winType, $slotEvent, $isBuyFreeSpin = false)
         {
             $isScatter = false;
