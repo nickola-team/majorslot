@@ -8,6 +8,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
+        public function checktransaction($id)
+        {
+            $record = \VanguardLTE\PNGTransaction::Where('transactionId',$id)->first();
+            return $record;
+        }
+
         public function microtime_string()
         {
             $microstr = sprintf('%.4f', microtime(TRUE));
@@ -40,7 +46,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function endpoint($service, \Illuminate\Http\Request $request)
         {
             if (!$request->isXml()) {
-                return response()->xml(['status' => 4], 200, [], $service);
+                return response()->xml(['statusCode' => 4], 200, [], $service);
 
             }
             // do something
@@ -49,10 +55,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($accessToken != config('app.png_access_token'))
             {
                 //token is not valid
-                return response()->xml(['status' => 4], 200, [], $service);
+                return response()->xml(['statusCode' => 4], 200, [], $service);
             }
 
             \DB::beginTransaction();
+            if (isset($data['transactionId'])){
+                $record = $this->checktransaction($data['transactionId']);
+                if ($record)
+                {
+                    \DB::commit();
+                    return response()->xml(json_decode($record->response, true), 200, [], $service);
+                }
+            }
 
             switch ($service)
             {
@@ -80,7 +94,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 \VanguardLTE\PNGTransaction::create([
                     'transactionId' => $data['transactionId'], 
                     'timestamp' => $this->microtime_string(),
-                    'data' => json_encode($data)
+                    'data' => json_encode($data),
+                    'response' => json_encode($response)
                 ]);
             }
             \DB::commit();
@@ -131,6 +146,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'statusCode' => 0,
                 'statusMessage' => 'OK',
             ];
+
 
             $user = \VanguardLTE\User::find($userId);
             if (!$user || !$user->hasRole('user')){
@@ -247,12 +263,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return $response;
             }
 
-            $transaction = \VanguardLTE\PNGTransaction::where('transactionId',  $transactionId)->first();
+            /*$transaction = \VanguardLTE\PNGTransaction::where('transactionId',  $transactionId)->first();
             if (!$transaction)
             {
                 $response['statusCode'] = 2; //internal server error
                 return $response;
-            }
+            } */
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($bet)));
             $user->save();

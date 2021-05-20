@@ -8,6 +8,7 @@ namespace VanguardLTE
             'transactionId', 
             'timestamp', 
             'data',
+            'response'
         ];
         public $timestamps = false;
         public static function boot()
