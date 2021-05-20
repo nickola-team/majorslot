@@ -1323,3 +1323,10 @@ Route::group(['middleware' => 'bng', 'prefix' => 'bng',], function () {
 Route::group(['middleware' => 'hbn', 'prefix' => 'hbn',], function () {
 	Route::post('/endpoint', 'GameProviders\HBNController@endpoint');
 });
+
+/**
+ * Habanero Game Provider
+ */
+Route::group(['prefix' => 'png',], function () {
+	Route::post('/endpoint/{service}', 'GameProviders\PNGController@endpoint');
+});

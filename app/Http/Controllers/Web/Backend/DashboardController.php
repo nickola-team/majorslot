@@ -778,6 +778,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $dates = $request->dates;
             }
             else {
+                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                {
+                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                }
                 $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
                 $users = $user->childPartners();
                 $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
@@ -819,6 +823,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             else {
+                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                {
+                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                }
                 $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
                 if($user->hasRole('distributor')){
                     $b_distributor = true;
@@ -1263,6 +1271,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             else {
+                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                {
+                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                }
                 $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
                 if($user->hasRole('distributor')){
                     $b_distributor = true;

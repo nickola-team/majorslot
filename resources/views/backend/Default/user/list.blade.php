@@ -181,7 +181,7 @@
 	<div class="modal fade" id="openAddModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.balance.update') }}" method="POST">
+				<form action="{{ route('backend.user.balance.update') }}" method="POST"  id="addForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -213,7 +213,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
-						<button type="submit" class="btn btn-primary">확인</button>
+						<button type="submit" id='btnAddSum' class="btn btn-primary">확인</button>
 					</div>
 				</form>
 			</div>
@@ -251,7 +251,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
 						<button type="button" class="btn btn-danger" id="doOutAll">@lang('app.all') @lang('app.pay_out')</button>
-						<button type="submit" class="btn btn-primary">확인</button>
+						<button type="submit" class="btn btn-primary" id='btnOutSum'>확인</button>
 					</div>
 				</form>
 			</div>
@@ -291,6 +291,15 @@
 			$('#AddId').val(id);
 
 		});
+		$('#btnAddSum').click(function() {
+			$(this).attr('disabled', 'disabled');
+			$('form#addForm').submit();
+		});
+		$('#btnOutSum').click(function() {
+			$(this).attr('disabled', 'disabled');
+			$('form#outForm').submit();
+		});
+
 		$('.changeAddSum').click(function(event){
 			$v = Number($('#AddSum').val());
 			if ($(event.target).data('value') == 0)
@@ -326,6 +335,7 @@
 		});
 
 		$('#doOutAll').click(function () {
+			$(this).attr('disabled', 'disabled');
 			$('#outAll').val('1');
 			$('form#outForm').submit();
 		});

@@ -128,6 +128,11 @@ return [
     'hbn_game_server' => env('HBN_SERVER','https://app-a.insvr.com'),
 
     /*
+    Play'n GO Auth key
+    */
+    'png_access_token' => env('PNG_ACCESSTOKEN', 'testtest'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------

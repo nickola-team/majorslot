@@ -614,7 +614,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 foreach ($data['gameList'] as $game)
                 {
 
-                    if (/*$game['gameTypeID'] == "vs" && */str_contains($game['platform'], 'WEB'))
+                    if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
                     {
                         if (in_array($game['gameID'] , $newgames))
                         {
@@ -667,7 +667,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $key,
                 array_keys($key)
             ));
-            $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . '&stylename=mjr_major';
+            $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . '&stylename=' . config('app.ppsecurelogin');
             return ['error' => false, 'data' => ['url' => $url]];
         }
         public static function getgamelink($gamecode)
