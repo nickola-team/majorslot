@@ -383,6 +383,8 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                     }
                     if( $i > 1500 ) 
                     {
+                        $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
+                        exit( $response );
                         break;
                     }
                     if( $scattersCount >= 4 && ( $winType != 'bonus' || $scattersCount != $defaultScatterCount)) 
