@@ -51,15 +51,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             // do something
             $data = $request->xml();
-            $accessToken = $data['accessToken'];
-            if ($accessToken != config('app.png_access_token'))
+            if (!isset($data['accessToken']) || $data['accessToken'] != config('app.png_access_token'))
             {
                 //token is not valid
                 return response()->xml(['statusCode' => 4], 200, [], $service);
             }
 
             \DB::beginTransaction();
-            if (isset($data['transactionId'])){
+            if (isset($data['transactionId']) && $service != 'cancelReserve'){
                 $record = $this->checktransaction($data['transactionId']);
                 if ($record)
                 {
@@ -129,7 +128,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $response['externalId'] = $user->id;
             $response['nickname'] = $user->username;
-            $response['real'] = $user->balance;
+            $response['real'] = floatval($user->balance);
             return $response;
         }
 
@@ -240,7 +239,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return $response;
             }
 
-            $response['real'] = $user->balance;
+            $response['real'] = floatval($user->balance);
             return $response;
 
         }
@@ -263,12 +262,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return $response;
             }
 
-            /*$transaction = \VanguardLTE\PNGTransaction::where('transactionId',  $transactionId)->first();
+            $transaction = $this->checktransaction($transactionId);
             if (!$transaction)
             {
-                $response['statusCode'] = 2; //internal server error
+                //$response['statusCode'] = 2; //internal server error
                 return $response;
-            } */
+            }
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($bet)));
             $user->save();
