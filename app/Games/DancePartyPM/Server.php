@@ -184,6 +184,7 @@ namespace VanguardLTE\Games\DancePartyPM
                 {
                     $slotSettings->UpdateJackpots($betline * $lines);
                 }
+                $mustNotWin = false;
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -194,7 +195,14 @@ namespace VanguardLTE\Games\DancePartyPM
                     $strWinLine = '';
                     $winLineMuls = [];
                     $winLineMulNums = [];
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    if ($mustNotWin)
+                    {
+                        $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
+                    }
+                    else
+                    {
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    }
                     for($r = 0; $r < 3; $r++){
                         if($reels['reel1'][$r] != $scatter){
                             $this->findZokbos($reels, $bonusMpl, $reels['reel1'][$r], 1, '~'.($r * 5));
@@ -230,7 +238,19 @@ namespace VanguardLTE\Games\DancePartyPM
                     }
                     if( $i > 1500 ) 
                     {
-                        break;
+                        if ($mustNotWin)
+                        {
+                            break;
+                        }
+                        if( $totalWin > 0 && $winType == 'none' ) 
+                        {
+                            //generate not win reel 
+                            $mustNotWin = true;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                     if( $scattersCount >= 5 && ($winType != 'bonus' || $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 60) ) 
                     {

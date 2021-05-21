@@ -982,6 +982,32 @@ namespace VanguardLTE\Games\TheHandofMidasPM
             return $spinWin;
         }
 
+        public function GetNoneWinReels($winType, $slotEvent, $slotReelId, $scatterindex = -1)
+        {
+            $reel = $this->GetReelStrips($winType, $slotEvent, $slotReelId, $scatterindex = -1);
+            $reel['reel1'][0] = mt_rand(11,13);
+            $reel['reel1'][1] = mt_rand(11,13);
+            $reel['reel1'][2] = mt_rand(11,13);
+
+            $reel['reel2'][0] = mt_rand(6,10);
+            $reel['reel2'][1] = mt_rand(6,10);
+            $reel['reel2'][2] = mt_rand(6,10);
+
+            $reel['reel3'][0] = mt_rand(6,10);
+            $reel['reel3'][1] = mt_rand(6,10);
+            $reel['reel3'][2] = mt_rand(6,10);
+
+            $reel['reel4'][0] = mt_rand(6,10);
+            $reel['reel4'][1] = mt_rand(6,10);
+            $reel['reel4'][2] = mt_rand(6,10);
+
+            $reel['reel5'][0] = mt_rand(6,10);
+            $reel['reel5'][1] = mt_rand(6,10);
+            $reel['reel5'][2] = mt_rand(6,10);
+            
+            return $reel;
+        }
+
         public function GetReelStrips($winType, $slotEvent, $slotReelId, $scatterindex = -1)
         {
             $isScatter = false;
