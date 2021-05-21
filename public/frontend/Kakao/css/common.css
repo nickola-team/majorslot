@@ -22,7 +22,9 @@ body {
     min-width: 1480px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
-    background: #000000
+    /* background: #000000 */
+    background-size: cover;
+    background-image: url('/frontend/Kakao/images/body_bg.jpg');
 }
 
 td {
