@@ -394,7 +394,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/Kakao/images/partner.png" /><br /><br />Copyright ⓒ
-            2006~2021 스토리 SLOT All rights reserved.
+            2020~2021 킹덤 SLOT All rights reserved.
           </div>
          </div>
          <div>
