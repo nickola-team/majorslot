@@ -968,6 +968,31 @@ namespace VanguardLTE\Games\TheDogHousePM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function GetNoneWinReels($winType, $slotEvent)
+        {
+            $reel = $this->GetReelStrips($winType, $slotEvent);
+            $reel['reel1'][0] = mt_rand(12,13);
+            $reel['reel1'][1] = 11;
+            $reel['reel1'][2] = mt_rand(12,13);
+
+            $reel['reel2'][0] = 10;
+            $reel['reel2'][1] = mt_rand(9,10);
+            $reel['reel2'][2] = mt_rand(7,8);
+
+            $reel['reel3'][0] = mt_rand(8,10);
+            $reel['reel3'][1] = 7;
+            $reel['reel3'][2] = mt_rand(8,10);
+
+            $reel['reel4'][0] = mt_rand(8,10);
+            $reel['reel4'][1] = 5;
+            $reel['reel4'][2] = mt_rand(8,10);
+
+            $reel['reel5'][0] = 4;
+            $reel['reel5'][1] =  mt_rand(7,8);
+            $reel['reel5'][2] = mt_rand(9,10);
+            
+            return $reel;
+        }
         public function GetReelStrips($winType, $slotEvent)
         {
             $isScatter = false;

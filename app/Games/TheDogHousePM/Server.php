@@ -368,6 +368,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 // if($winType == 'win'){
                 //     $test = 1;
                 // }
+                $mustNotWin = false;
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -377,7 +378,14 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $scatter = '1';
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    if ($mustNotWin)
+                    {
+                        $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
+                    }
+                    else
+                    {
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    }
                     $tempReels = [];
                     $tempWildReels = [];
                     $_wildReelValue = $slotSettings->CheckMultiWild();
@@ -520,7 +528,19 @@ namespace VanguardLTE\Games\TheDogHousePM
                         {
                             // $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
                             // exit( $response );
-                            break;
+                            if ($mustNotWin)
+                            {
+                                break;
+                            }
+                            if( $totalWin > 0 && $winType == 'none' ) 
+                            {
+                                //generate not win reel 
+                                $mustNotWin = true;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {

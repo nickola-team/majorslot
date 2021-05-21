@@ -284,6 +284,9 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                         $reelNum = 8;
                     }
                 }
+
+                $mustNotWin = false;
+
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -293,7 +296,14 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                     $scatter = '1';
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelNum, $pur_value);
+                    if ($mustNotWin)
+                    {
+                        $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent'], $reelNum, $pur_value);
+                    }
+                    else
+                    {
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelNum, $pur_value);
+                    }
                     $tempReels = [];
                     $tempWildReels = [];
                     for($r = 0; $r < 5; $r++){
@@ -426,7 +436,19 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                         {
                             // $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
                             // exit( $response );
-                            break;
+                            if ($mustNotWin)
+                            {
+                                break;
+                            }
+                            if( $totalWin > 0 && $winType == 'none' ) 
+                            {
+                                //generate not win reel 
+                                $mustNotWin = true;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                         if( $scattersCount >= 3 && ($winType != 'bonus' || ($pur_value >= 0 && $scattersCount != $slotSettings-> BuyFreeStatters($pur_value)) || $totalWin > 0)) 
                         {

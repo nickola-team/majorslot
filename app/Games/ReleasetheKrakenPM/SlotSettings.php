@@ -962,6 +962,37 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function GetNoneWinReels($winType, $slotEvent)
+        {
+            $reel = $this->GetReelStrips($winType, $slotEvent);
+            $reel['reel1'][0] = mt_rand(10,11);
+            $reel['reel1'][1] = mt_rand(10,11);
+            $reel['reel1'][2] = mt_rand(10,11);
+            $reel['reel1'][3] = mt_rand(10,11);
+
+            $reel['reel2'][0] = mt_rand(5,9);
+            $reel['reel2'][1] = mt_rand(5,9);
+            $reel['reel2'][2] = mt_rand(5,9);
+            $reel['reel2'][3] = mt_rand(5,9);
+
+            $reel['reel3'][0] = mt_rand(5,9);
+            $reel['reel3'][1] = mt_rand(5,9);
+            $reel['reel3'][2] = mt_rand(5,9);
+            $reel['reel3'][3] = mt_rand(5,9);
+
+            $reel['reel4'][0] = mt_rand(5,9);
+            $reel['reel4'][1] = mt_rand(5,9);
+            $reel['reel4'][2] = mt_rand(5,9);
+            $reel['reel4'][3] = mt_rand(5,9);
+
+            $reel['reel5'][0] = mt_rand(5,9);
+            $reel['reel5'][1] = mt_rand(5,9);
+            $reel['reel5'][2] = mt_rand(5,9);
+            $reel['reel5'][3] = mt_rand(5,9);
+            
+            return $reel;
+        }
+
         public function GetReelStrips($winType, $slotEvent, $isBuyFreeSpin = false)
         {
             $isScatter = false;

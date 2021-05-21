@@ -318,6 +318,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     \DB::commit();
                     exit( $response );
                 }
+                $mustNotWin = false;
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -328,10 +329,17 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     $_obf_winCount = 0;
                     $strWinLine = '';
                     $iwcenterposes = [];
-                    if($isRespin == true){
-                        $tempReels = $slotSettings->GetReelStrips($winType, 'freespin', false);
-                    }else{
-                        $tempReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $isBuyFreeSpin);
+                    if ($mustNotWin)
+                    {
+                        $tempReels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
+                    }
+                    else
+                    {
+                        if($isRespin == true){
+                            $tempReels = $slotSettings->GetReelStrips($winType, 'freespin', false);
+                        }else{
+                            $tempReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $isBuyFreeSpin);
+                        }
                     }
                     $wildPoses = [];
                     $wildPosCount = 0;
@@ -489,10 +497,23 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     }
                     else
                     {
-                        if( $i > 2000 ) 
+                        if( $i > 1500 ) 
                         {
-                            $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
-                            exit( $response );
+                            //$response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
+                            //exit( $response );
+                            if ($mustNotWin)
+                            {
+                                break;
+                            }
+                            if( $totalWin > 0 && $winType == 'none' ) 
+                            {
+                                //generate not win reel 
+                                $mustNotWin = true;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
