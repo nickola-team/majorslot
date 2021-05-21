@@ -985,25 +985,25 @@ namespace VanguardLTE\Games\TheHandofMidasPM
         public function GetNoneWinReels($winType, $slotEvent, $slotReelId, $scatterindex = -1)
         {
             $reel = $this->GetReelStrips($winType, $slotEvent, $slotReelId, $scatterindex = -1);
-            $reel['reel1'][0] = 11;
-            $reel['reel1'][1] = 10;
-            $reel['reel1'][2] = 13;
+            $reel['reel1'][0] = mt_rand(11,13);
+            $reel['reel1'][1] = mt_rand(11,13);
+            $reel['reel1'][2] = mt_rand(11,13);
 
-            $reel['reel2'][0] = 5;
-            $reel['reel2'][1] = 6;
-            $reel['reel2'][2] = 9;
+            $reel['reel2'][0] = mt_rand(6,10);
+            $reel['reel2'][1] = mt_rand(6,10);
+            $reel['reel2'][2] = mt_rand(6,10);
 
-            $reel['reel3'][0] = 6;
-            $reel['reel3'][1] = 9;
-            $reel['reel3'][2] = 8;
+            $reel['reel3'][0] = mt_rand(6,10);
+            $reel['reel3'][1] = mt_rand(6,10);
+            $reel['reel3'][2] = mt_rand(6,10);
 
-            $reel['reel4'][0] = 5;
-            $reel['reel4'][1] = 9;
-            $reel['reel4'][2] = 12;
+            $reel['reel4'][0] = mt_rand(6,10);
+            $reel['reel4'][1] = mt_rand(6,10);
+            $reel['reel4'][2] = mt_rand(6,10);
 
-            $reel['reel5'][0] = 7;
-            $reel['reel5'][1] = 9;
-            $reel['reel5'][2] = 5;
+            $reel['reel5'][0] = mt_rand(6,10);
+            $reel['reel5'][1] = mt_rand(6,10);
+            $reel['reel5'][2] = mt_rand(6,10);
             
             return $reel;
         }

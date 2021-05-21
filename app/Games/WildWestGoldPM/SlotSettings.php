@@ -1035,30 +1035,30 @@ namespace VanguardLTE\Games\WildWestGoldPM
         public function GetNoneWinReels($winType, $slotEvent)
         {
             $reel = $this->GetReelStrips($winType, $slotEvent);
-            $reel['reel1'][0] = 11;
-            $reel['reel1'][1] = 11;
-            $reel['reel1'][2] = 10;
-            $reel['reel1'][3] = 10;
+            $reel['reel1'][0] = mt_rand(11,13);
+            $reel['reel1'][1] = mt_rand(11,13);
+            $reel['reel1'][2] = mt_rand(11,13);
+            $reel['reel1'][3] = mt_rand(11,13);
 
-            $reel['reel2'][0] = 9;
-            $reel['reel2'][1] = 9;
-            $reel['reel2'][2] = 5;
-            $reel['reel2'][3] = 6;
+            $reel['reel2'][0] = mt_rand(5,10);
+            $reel['reel2'][1] = mt_rand(5,10);
+            $reel['reel2'][2] = mt_rand(5,10);
+            $reel['reel2'][3] = mt_rand(5,10);
 
-            $reel['reel3'][0] = 5;
-            $reel['reel3'][1] = 6;
-            $reel['reel3'][2] = 12;
-            $reel['reel3'][3] = 12;
+            $reel['reel3'][0] = mt_rand(5,10);
+            $reel['reel3'][1] = mt_rand(5,10);
+            $reel['reel3'][2] = mt_rand(5,10);
+            $reel['reel3'][3] = mt_rand(5,10);
 
-            $reel['reel4'][0] = 5;
-            $reel['reel4'][1] = 12;
-            $reel['reel4'][2] = 12;
-            $reel['reel4'][3] = 6;
+            $reel['reel4'][0] = mt_rand(5,10);
+            $reel['reel4'][1] = mt_rand(5,10);
+            $reel['reel4'][2] = mt_rand(5,10);
+            $reel['reel4'][3] = mt_rand(5,10);
 
-            $reel['reel5'][0] = 7;
-            $reel['reel5'][1] = 3;
-            $reel['reel5'][2] = 3;
-            $reel['reel5'][3] = 3;
+            $reel['reel5'][0] = mt_rand(3,10);
+            $reel['reel5'][1] = mt_rand(3,10);
+            $reel['reel5'][2] = mt_rand(3,10);
+            $reel['reel5'][3] = mt_rand(3,10);
             
             return $reel;
         }
