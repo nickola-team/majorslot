@@ -176,7 +176,6 @@
 
       body{
         color: #FFC107;
-        background-color: #000;
       }
 
       .body{
@@ -327,7 +326,7 @@
               </div>
               <div class="container demo-2">
                 <div id="slider" class="sl-slider-wrapper">
-                  <div class="sl-slider" style="width: 1170px; height: 392px">
+                  <div class="sl-slider" style="width: 100%; height: 392px">
                     <div class="sl-slides-wrapper">
                       <div
                         class="sl-slide sl-slide-horizontal"
@@ -340,7 +339,7 @@
                       >
                         <div
                           class="sl-content-wrapper"
-                          style="width: 1170px; height: 392px"
+                          style="width: 100%; height: 392px"
                         >
                           <div class="sl-content">
                             <div class="sl-slide-inner">
