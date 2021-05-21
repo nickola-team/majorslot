@@ -383,12 +383,13 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                     }
                     if( $i > 1500 ) 
                     {
-                        $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
-                        exit( $response );
+                        /*$response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
+                        exit( $response ); */
                         break;
                     }
-                    if( $scattersCount >= 4 && ( $winType != 'bonus' || $scattersCount != $defaultScatterCount)) 
+                    if( !$isTumb && $scattersCount >= 4 && ( $winType != 'bonus' || $scattersCount != $defaultScatterCount)) 
                     {
+
                     }
                     else if( $slotEvent['slotEvent'] == 'freespin' && $freeSpinNum > 0 && rand(0, 100) < 90 ){
                         // 프리스핀에서 프리스핀당첨 확률 10%
