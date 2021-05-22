@@ -15,7 +15,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checkuid($uid)
         {
-            $record = \VanguardLTE\BNGTransaction::Where('uid',$uid)->get()->first();
+            $record = \VanguardLTE\BNGTransaction::where('uid',$uid)->get()->first();
             return $record;
         }
         public function generateCode($limit){
@@ -96,7 +96,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $uid = $data['uid'];
             $token = $data['token'];
-            $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
@@ -128,7 +128,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $args = $data['args'];
             $gamename = $data['game_name'];
             $userId = $args['player']['id'];
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
@@ -190,7 +190,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $args = $data['args'];
             $transaction_uid = $args['transaction_uid'];
             $userId = $args['player']['id'];
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,
@@ -275,7 +275,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $uid = $data['uid'];
             $args = $data['args'];
             $userId = $args['player']['id'];
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'uid' => $uid,

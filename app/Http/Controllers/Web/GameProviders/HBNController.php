@@ -62,7 +62,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $token = $data->playerdetailrequest->token;
-            $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->Where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $externalResponse = $this->externalResponse();
                 $playerResponse = $this->playerResponse();
@@ -115,7 +115,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $fundtransferrequest = $data->fundtransferrequest;
             $accountid = $fundtransferrequest->accountid;
             $token = $fundtransferrequest->token;
-            $user = \VanguardLTE\User::find($accountid);
+            $user = \VanguardLTE\User::lockForUpdate()->find($accountid);
 
             if (!$user || !$user->hasRole('user') || ($fundtransferrequest->isretry==false && $user->api_token != $token)){
                 $externalResponse = $this->externalResponse();

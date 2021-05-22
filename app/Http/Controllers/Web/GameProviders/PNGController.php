@@ -119,7 +119,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'externalGameSessionId' => '',
             ];
 
-            $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->Where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $response['statusCode'] = 1;
                 $response['statusMessage'] = 'NOUSER';
@@ -147,7 +147,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 $response['statusCode'] = 1;
                 $response['statusMessage'] = 'NOUSER';
@@ -197,7 +197,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'statusCode' => 0,
             ];
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 $response['statusCode'] = 1;
                 return $response;
@@ -233,7 +233,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'statusCode' => 0,
             ];
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 $response['statusCode'] = 1;
                 return $response;
@@ -256,7 +256,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'statusCode' => 0,
             ];
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 $response['statusCode'] = 1;
                 return $response;

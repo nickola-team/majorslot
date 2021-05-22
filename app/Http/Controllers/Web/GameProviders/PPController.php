@@ -71,7 +71,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
 
-            $user = \VanguardLTE\User::Where('api_token',$token)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->Where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 return response()->json([
                     'error' => 2,
@@ -98,7 +98,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'paramenter incorrect']);
             }
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 return response()->json([
                     'error' => 2,
@@ -132,7 +132,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             \DB::beginTransaction();
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -220,7 +220,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             \DB::beginTransaction();
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -306,7 +306,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             \DB::beginTransaction();
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -364,7 +364,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             \DB::beginTransaction();
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -450,7 +450,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             \DB::beginTransaction();
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -532,7 +532,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             \DB::beginTransaction();
 
-            $user = \VanguardLTE\User::find($userId);
+            $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
