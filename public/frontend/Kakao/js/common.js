@@ -541,6 +541,7 @@ function changeHeaderWorldList(world) {
         }
     );
 }
+
 function closeNotification(onlyOnce) {
     if (onlyOnce) {
         

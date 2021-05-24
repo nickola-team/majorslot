@@ -54,6 +54,7 @@ return [
         "Poisoned Apple" => "포이즌드 애플",
         "Scarab Temple" => "스캐럽 템플",
         "Sun of Egypt 2" => "썬 오브 이집트2",
+        "Magic Ball" => "매직 볼",
         /**
          * CQ9 Games
          */
@@ -151,6 +152,10 @@ return [
         "Fruity Carnival" => "후루티 카니발",
         "Wheel Money" => "윌 머니",
         "RaveHigh" => "레이브하이",
+        "Da Fa Cai" => "다 파 차이",
+        "Da Hong Zhong" => "다 펑 쩡",
+        "Uproar in Heaven" => "업로 인 헤븐",
+        "Hot Pinatas" => "핫 파이네터스",
 
 
         /**
@@ -332,6 +337,53 @@ return [
         "7 Monkeys JP" => "7 몽키 JP",
         "Amazing Money Machine" => "어메이징 머니 머신",
         "Buffalo King Megaways" => "버팔로킹 메가웨이",
+        "888 Gold" => "888 골드",
+        "Cash Elevator" => "캐시 엘리베이터",
+        "Dragon Hot Hold & Spin" => "드래곤 핫 폴드 & 스핀",
+        "Heart of Rio" => "허트 오브 리오",
+        "Lucky Lightning" => "럭키 라이트닝",
+        "Panda Fortune 2" => "판다 포츈 2",
+        "Phoenix Forge" => "포에닉스 포그",
+        "The Magic Cauldron" => "더 매직 컬드런" ,
+        "Diamonds are Forever 3 Lines" => "다이아몬즈 아 포레버 3 라인스",
+        "Money Roll" => "머니 롤",
+        "Irish Charms" => "이리스 참스",
+        "American Blackjack" => "아메리칸 블랙잭",
+        "Dragon Tiger" => "드래곤 타이거",
+        "Dragon Bonus Baccarat" => "드래곤 보너스 바카라",
+        "Wolf Gold 1,000,000" => "울프 골드 1,000,000",
+        "Hot Safari 75,000" => "핫 사파리 75,000",
+        "Queen of Gold 100,000" => "퀸 오브 골드 100,000",
+        "Panda Gold 50,000" => "판다 골드 50,000",
+        "Gold Rush 500,000" => "골드 러시 500,000",
+        "Diamond Strike 250,000" => "다이아몬드 스트라이크 250,000",
+        "7 Piggies 25,000" => "7 피그스 25,000",
+        "Wolf Gold 1 Million" => "울프 골드 1 밀레온",
+        "Panda Gold 10,000" => "판다 골드 10,000",
+        "Hot Safari 50,000" => "핫 사파리 50,000",
+        "Gold Rush 250,000" => "골드 러시 250,000",
+        "Diamond Strike 100,000" => "다이아몬드 스트라이크 100,000",
+        "7 Piggies 5,000" => "7 피그스 5,000",
+        "Live - Blackjack C" => "라이브 - 블랙잭 C",
+        "Live - Dragon Tiger" => "라이브 - 드래곤 타이거",
+        "Live - GAMESHOWS" => "라이브 - 게임쇼",
+        "Live - Lobby" => "라이브 -로비",
+        "Live - Lobby BJ" => "라이브 - 로비 BJ",
+        "Live - Lobby Baccarat" => "라이브 - 바카라",
+        "Live - Lobby Roulette" => "라이브 - 룰렛",
+        "Live - Mega Sic Bo" => "라이브 - 메가 식보",
+        "Live - Mega Wheel" => "라이브 -  메가 윌",
+        "Live - ONE Blackjack" => "라이브 - 원 블랙잭",
+        "Live - Roulette Auto" => "라이브 - 룰렛 오토",
+        "Live - Sic Bo & Dragon Tiger" => "라이브 - 식보&드래곤 타이거",
+        "Baccarat" => "바카라",
+        "Multihand Blackjack" => "멀티핸드 블랙잭",
+        "Roulette" => "룰렛",
+        "Live - Baccarat A" => "라이브 - 바카라 A",
+        "Live - Mega Roulette" => "라이브 - 메가룰렛",
+        "Live - Roulette A" => "라이브 - 룰렛 A",
+        "Live - Speed Baccarat A" => "라이브 - 스피드 바카라 A",
+        "Live - Speed Roulette" => "라이브 - 스피드 룰렛",
 
         /**
          * Booongo - Playson Play Games
@@ -413,6 +465,7 @@ return [
         "Sky Way" => "스카이 웨이",
         "Lucky Pirates" => "럭키 파이레이츠",
         "Hand of Gold" => "핸드 오브 골드",
+        "Rich Diamonds: Hold and Win" => "리치 다이아몬즈:홀드 앤 윈",
 
         /**
          * Habanero Games

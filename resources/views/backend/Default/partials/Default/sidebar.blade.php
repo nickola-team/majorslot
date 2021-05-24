@@ -154,6 +154,15 @@
                     @endif
                     @endpermission
 
+                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
+                    <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
+                        <a href="{{ route('backend.game.bank') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>환수금관리</span>
+                        </a>
+                    </li>
+                    @endif
+
                 </ul>
             </li>
             @endif

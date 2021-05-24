@@ -16,7 +16,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $shop_id = \Auth::user()->shop_id;
             $pm_games = \VanguardLTE\Game::where([
                 'shop_id' => $shop_id,
-                'name' => $gamename
+                'name' => $gamename,
+                'view' => 1,
                 ]
             )->get()->first();
             $enhancedgames = env('PP_GAMES', '1');

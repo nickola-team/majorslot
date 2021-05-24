@@ -7,7 +7,8 @@ namespace VanguardLTE
         protected $fillable = [
             'mtcode', 
             'data', 
-            'refund'
+            'refund',
+            'timestamp'
         ];
         public $timestamps = false;
         public static function boot()

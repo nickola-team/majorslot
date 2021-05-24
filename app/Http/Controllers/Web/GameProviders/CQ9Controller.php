@@ -17,7 +17,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checkmtcode($mtcode)
         {
-            $record = \VanguardLTE\CQ9Transaction::Where('mtcode',$mtcode)->get()->first();
+            $record = \VanguardLTE\CQ9Transaction::where('mtcode',$mtcode)->get()->first();
             return $record;
         }
 
@@ -43,6 +43,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             return $gamename;
+        }
+        public function microtime_string()
+        {
+            $microstr = sprintf('%.4f', microtime(TRUE));
+            $microstr = str_replace('.', '', $microstr);
+            return $microstr;
         }
 
         /*
@@ -123,13 +129,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::Where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -150,6 +157,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -172,6 +180,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
 
@@ -253,7 +262,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::Where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -326,6 +335,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $record, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
             }
@@ -432,13 +442,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::Where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -459,6 +470,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -481,6 +493,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
             \VanguardLTE\StatGame::create([
@@ -584,13 +597,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::Where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -613,6 +627,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
 
@@ -688,7 +703,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = json_decode($record->data, true);
 
             
-            $user = \VanguardLTE\User::Where('username',$data['target']['account'])->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$data['target']['account'])->get()->first();
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -815,13 +830,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::Where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -845,6 +861,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
             \VanguardLTE\StatGame::create([
@@ -901,7 +918,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function balance($account, \Illuminate\Http\Request $request)
         {
-            $user = \VanguardLTE\User::Where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
             if ($user && $user->hasRole('user'))
             {
                 $resjson = json_encode([
@@ -932,7 +949,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checkplayer($account, \Illuminate\Http\Request $request)
         {
-            $user = \VanguardLTE\User::Where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
             $data = false;
             if ($user && $user->hasRole('user')) {
                 $data = true;
