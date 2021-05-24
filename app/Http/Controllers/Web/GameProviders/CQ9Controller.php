@@ -44,6 +44,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return $gamename;
         }
+        public function microtime_string()
+        {
+            $microstr = sprintf('%.4f', microtime(TRUE));
+            $microstr = str_replace('.', '', $microstr);
+            return $microstr;
+        }
 
         /*
         * FROM CQ9, BACK API
@@ -130,6 +136,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -150,6 +157,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -172,6 +180,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
 
@@ -326,6 +335,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $record, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
             }
@@ -439,6 +449,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -459,6 +470,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -481,6 +493,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
             \VanguardLTE\StatGame::create([
@@ -591,6 +604,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -613,6 +627,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
 
@@ -822,6 +837,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $transaction['status']['message'] = 'failed';
                 \VanguardLTE\CQ9Transaction::create([
                     'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
                     'data' => json_encode($transaction)
                 ]);
                 \DB::commit();
@@ -845,6 +861,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
             \VanguardLTE\CQ9Transaction::create([
                 'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
             \VanguardLTE\StatGame::create([
