@@ -144,54 +144,8 @@ function showGamesPopup(title, category) {
                     if (i != 0 && i % 6 == 0) {
                         strHtml += `</tr><tr>`;
                     }
-                    if (data.games[i].provider)
-                    {
-                        strHtml += `<td style="width: 220px; padding-bottom: 20px" onClick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');">
-                                                <table>
-                                                <tbody>
-                                                    <tr>
-                                                    <td>
-                                                        <div>
-                                                        <a style="cursor: pointer">`;
-                        if (data.games[i].icon)
-                        {
-                            strHtml += `<img
-                                    src="${data.games[i].icon}"
-                                    id="xImag"
-                                    width="170"
-                                    height="130"
-                                    />`;
-                        }
-                        else
-                        {
-                            strHtml += `<img
-                                    src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg"
-                                    id="xImag"
-                                    width="170"
-                                    height="130"
-                                    />`;
-                        }
-                        strHtml += `</a>
-                                        </div>
-                                    </td>
-                                    </tr>
-                                    <tr>
-                                    <td>
-                                        <div style="
-                                            text-align: center;
-                                            position: absolute;
-                                            width: 170px;">
-                                        <span class="slot_txt_style">${data.games[i].title}</span>
-                                        </div>
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                </table>
-                            </td>`;
-                    }
-                    else
-                    {
-                        strHtml += `<td style="width: 220px; padding-bottom: 20px" onClick="startGame('${data.games[i].name}');">
+
+                    strHtml += `<td style="width: 220px; padding-bottom: 20px" onClick="startGame('${data.games[i].name}');">
                                                 <table>
                                                 <tbody>
                                                     <tr>
@@ -202,7 +156,7 @@ function showGamesPopup(title, category) {
                                                             src="/frontend/Default/ico/${data.games[i].name}.jpg"
                                                             id="xImag"
                                                             width="170"
-                                                            height="130"
+                                                            height="170"
                                                         /></a>
                                                         </div>
                                                     </td>
@@ -220,8 +174,6 @@ function showGamesPopup(title, category) {
                                                 </tbody>
                                                 </table>
                                             </td>`;
-                    }
-                    
                 }
             }
 
@@ -776,24 +728,6 @@ function showContactPopup() {
     $("#popup").html(strHtml);
 }
 
-function getBalance() {
-    $.ajax({
-    type: "POST",
-    url: "/api/balance",
-    data: null,
-    processData: false,
-    contentType: false,
-    cache: false,
-    async: false,
-    success: function (data) {
-        if (data.error) {
-            alert(data.msg);
-            return;
-        }
-        $("#myWallet").html(data['balance'] + '원');
-    }
-    });
-}
 
 function startGame(gamename) {
     window.open(
@@ -802,29 +736,7 @@ function startGame(gamename) {
         "width=1280, height=742, left=100, top=50"
     );
 }
-function startGameByProvider(provider, gamecode) {
-    var formData = new FormData();
-    formData.append("provider", provider);
-    formData.append("gamecode", gamecode);
-    formData.append("_token", $("#_token").val());
-    $.ajax({
-    type: "POST",
-    url: "/api/getgamelink",
-    data: formData,
-    processData: false,
-    contentType: false,
-    cache: false,
-    async: false,
-    success: function (data) {
-        if (data.error) {
-            alert(data.msg);
-            return;
-        }
-        window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
-    }
-    });
-    
-}
+
 
 function loginSubmit(frm) {
     event.preventDefault();
@@ -860,7 +772,7 @@ function loginSubmit(frm) {
         async: false,
         success: function (data, status) {
             if (data.error) {
-                alert(data.msg);
+                alert('아이디 또는 비밀번호가 잘못되었습니다.');
             }
 
             location.reload();

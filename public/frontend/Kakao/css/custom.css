@@ -1,8 +1,9 @@
 /* ysk ìŠ¬ë¼ì´ë“œ ì¢Œí‘œ ê´€ë ¨ */
 
 .demo-2 .sl-slider-wrapper {
-    width: 100%;
+    width: 1170px;
     height: 392px;
+    overflow: hidden;
     position: relative;
 }
 
@@ -40,7 +41,8 @@
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
-    width: 100%;
+    position: absolute;
+    width: 1170px;
     height: 392px;
     background-repeat: no-repeat;
     background-position: top center;

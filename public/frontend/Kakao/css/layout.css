@@ -527,8 +527,7 @@
     width: 100%;
     text-align: center;
     padding: 40px 0 60px 0;
-    color: #3a3a3a;
-    background-color: #000;
+    color: #3a3a3a
 }
 
 /*-------------------------------------------------------------------------------------*
@@ -553,12 +552,14 @@
     width: 100%;
     height: 392px;
     float: left;
-    /* background: url(/frontend/Kakao/images/visual_bg.jpg) center top no-repeat */
+    background: url(/frontend/Kakao/images/visual_bg.jpg) center top no-repeat
 }
 
 .visual {
     width: 1920px;
     position: absolute;
+    left: 50%;
+    margin-left: -960px;
 }
 
 .jack_wrap {
