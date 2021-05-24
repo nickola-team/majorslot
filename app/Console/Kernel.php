@@ -108,6 +108,16 @@ namespace VanguardLTE\Console
             })->hourly();
             $schedule->call(function()
             {
+                $path=base_path('.env');
+                $oldValue=env('PP_GAMES');
+                $newValue = $oldValue==1?0:1;
+                if (file_exists($path))
+                {
+                    file_put_contents($path, str_replace('PP_GAMES='.$oldValue, 'PP_GAMES='.$newValue, file_get_contents($path)));
+                }
+            })->everyTwoHours();
+            $schedule->call(function()
+            {
                 \VanguardLTE\Session::where('user_id', 'NULL')->delete();
                 \VanguardLTE\Session::where('user_id', '')->delete();
                 \VanguardLTE\Task::where('finished', 1)->delete();
@@ -415,6 +425,18 @@ namespace VanguardLTE\Console
                             \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$ppcat->id]);
                         }
                     }
+                }
+                $this->info('End');
+            });
+
+            \Artisan::command('daily:ppgames', function () {
+                $this->info("Begin pp game config");
+                $path=base_path('.env');
+                $oldValue=env('PP_GAMES');
+                $newValue = $oldValue==1?0:1;
+                if (file_exists($path))
+                {
+                    file_put_contents($path, str_replace('PP_GAMES='.$oldValue, 'PP_GAMES='.$newValue, file_get_contents($path)));
                 }
                 $this->info('End');
             });
