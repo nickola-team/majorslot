@@ -106,16 +106,9 @@ namespace VanguardLTE\Console
                     }
                 }
             })->hourly();
-            $schedule->call(function()
-            {
-                $path=base_path('.env');
-                $oldValue=env('PP_GAMES');
-                $newValue = $oldValue==1?0:1;
-                if (file_exists($path))
-                {
-                    file_put_contents($path, str_replace('PP_GAMES='.$oldValue, 'PP_GAMES='.$newValue, file_get_contents($path)));
-                }
-            })->everyTwoHours();
+            
+            $schedule->command('daily:ppgames')->cron('15 */2 * * * *');
+
             $schedule->call(function()
             {
                 \VanguardLTE\Session::where('user_id', 'NULL')->delete();
