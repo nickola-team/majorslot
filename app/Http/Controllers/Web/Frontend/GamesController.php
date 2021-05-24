@@ -33,21 +33,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
             {
                 if (count($ppgames) > 0){
-                    for ($i=0;$i<12;$i++)
+                    $newgames = \VanguardLTE\NewGame::where('provider', 'pp')->get()->pluck('gameid')->toArray();
+                    foreach ($ppgames as $game)
                     {
-                        $exist = false;
-                        do {
-                            $idx = mt_rand(0, count($ppgames)-1);
-                            $exist = false;
-                            foreach ($hotgames as $game)
-                            {
-                                if ($game['gamecode'] == $ppgames[$idx]['gamecode'])
-                                {
-                                    $exist = true;
-                                }
-                            }
-                        } while ($exist);
-                        $hotgames[] = $ppgames[$idx];
+                        if (in_array($game['gamecode'] , $newgames))
+                        {
+                            $hotgames[] = $game;
+                        }
                     }
                 }
             }
@@ -76,26 +68,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $hotgames[] = ['name' => 'DuoFuDuoCaiDancingDrum', 'title' => '댄싱드럼 다복이'];
                 //$hotgames[] = ['name' => 'BlackjackSurrenderPT', 'title' => '블랙 잭 써랜더'];
                 $hotgames[] = ['name' => 'BlackJackAM', 'title' => '블랙 잭'];
-                if (count($hotgames) % 4 > 0)
-                {
-                    $len = 4 - count($hotgames) % 4;
-                    if (count($ppgames) > 0){
-                        for ($i=0;$i<$len;$i++)
-                        {
+            }
+            if (count($hotgames) % 4 > 0)
+            {
+                $len = 4 - count($hotgames) % 4;
+                if (count($ppgames) > 0){
+                    for ($i=0;$i<$len;$i++)
+                    {
+                        $exist = false;
+                        do {
+                            $idx = mt_rand(0, count($ppgames)-1);
                             $exist = false;
-                            do {
-                                $idx = mt_rand(0, count($ppgames)-1);
-                                $exist = false;
-                                foreach ($hotgames as $game)
+                            foreach ($hotgames as $game)
+                            {
+                                if (isset($game['gamecode']) && $game['gamecode'] == $ppgames[$idx]['gamecode'])
                                 {
-                                    if (isset($game['gamecode']) && $game['gamecode'] == $ppgames[$idx]['gamecode'])
-                                    {
-                                        $exist = true;
-                                    }
+                                    $exist = true;
                                 }
-                            } while ($exist);
-                            $hotgames[] = $ppgames[$idx];
-                        }
+                            }
+                        } while ($exist);
+                        $hotgames[] = $ppgames[$idx];
                     }
                 }
             }
