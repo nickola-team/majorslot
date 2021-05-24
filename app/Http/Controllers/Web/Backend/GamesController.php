@@ -130,6 +130,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $jpgs = \VanguardLTE\JPG::where('shop_id', auth()->user()->shop_id)->pluck('name', 'id')->toArray();
             return view('backend.Default.games.list', compact('games', 'views', 'jpgs', 'devices', 'categories', 'emptyGame', 'stats', 'savedCategory'));
         }
+        public function bank(\Illuminate\Http\Request $request)
+        {
+            $shops = auth()->user()->availableShops();
+            $gamebank = \VanguardLTE\GameBank::whereIn('shop_id', $shops);
+            $query = 'SELECT a.*, e.name as shopname, e.percent as percent, d.bank as master_bonus, d.master_id as master_id from w_game_bank as a join w_shops_user as b on b.shop_id=a.shop_id join w_users as c on b.user_id=c.id join w_bonus_bank as d on d.master_id=c.id join w_shops as e on e.id=a.shop_id where c.role_id=6';
+            $gamebank = \DB::select($query);
+            return view('backend.Default.games.bank', compact('gamebank'));
+        }
         public function index_json(\Illuminate\Http\Request $request)
         {
             $games = \VanguardLTE\Game::select('games.*')->where('shop_id', auth()->user()->shop_id);
@@ -649,15 +657,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_gamebank_type')]);
             }
-            $open_shift = \VanguardLTE\OpenShift::where([
-                'shop_id' => auth()->user()->shop_id, 
-                'end_date' => null
-            ])->first();
-            if( !$open_shift ) 
-            {
-                return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
-            }
-            $shop = \VanguardLTE\Shop::find(auth()->user()->shop_id);
+            
             if( auth()->user()->hasRole('admin') ) 
             {
                 /*if( $request->summ > 0 && $shop->balance < $request->summ ) 
@@ -667,32 +667,47 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'balance' => $shop->balance
                     ])]);
                 } */
-                $gamebank = \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->first();
-                if( !$gamebank ) 
+                if ($request->type=='bonus')
                 {
-                    $gamebank = \VanguardLTE\GameBank::create(['shop_id' => auth()->user()->shop_id]);
+                    $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->shop)->first();
+                    $master = \VanguardLTE\User::find($request->shop)->first();
+                    if ($master)
+                    {
+                        $name = $master->username;
+                        $shop_id = 0;
+                    }
+                    if( !$bonus_bank ) 
+                    {
+                        return redirect()->back()->withErrors(['본사를 찾을수 없습니다']);
+                    } 
+                    $old = $bonus_bank->bank;
+                    $bonus_bank->increment('bank', abs($request->summ));
+                    $new = $bonus_bank->bank;
                 }
-                $old = $gamebank->{$request->type};
-                //$shop->decrement('balance', $request->summ);
-                $open_shift->increment('balance_in', abs($request->summ));
-                $admin_shift = \VanguardLTE\OpenShift::where([
-                    'user_id' => auth()->user()->id, 
-                    'end_date' => null
-                ])->first();
-                if ($admin_shift)
+                else
                 {
-                    $admin_shift->increment('money_in', abs($request->summ));
+                    $gamebank = \VanguardLTE\GameBank::where('shop_id', $request->shop)->first();
+                    $shop = $gamebank->shop;
+                    $name = $shop->name;
+                    if( !$gamebank ) 
+                    {
+                        return redirect()->back()->withErrors(['매장을 찾을수 없습니다']);
+                    } 
+                    $old = $gamebank->{$request->type};
+                    
+                    $gamebank->increment($request->type, abs($request->summ));
+                    $new = $gamebank->{$request->type};
+                    $shop_id = $request->shop;
                 }
-                $gamebank->increment($request->type, abs($request->summ));
                 $type = ($request->type == 'table_bank' ? 'table' : $request->type);
                 \VanguardLTE\BankStat::create([
-                    'name' => ucfirst($type) . "[$shop->name]", 
+                    'name' => ucfirst($type) . "[$name]", 
                     'user_id' => \Illuminate\Support\Facades\Auth::id(), 
                     'type' => 'add', 
                     'sum' => $request->summ, 
                     'old' => $old, 
-                    'new' => $gamebank->{$request->type}, 
-                    'shop_id' => $shop->id
+                    'new' => $new, 
+                    'shop_id' => $shop_id
                 ]);
                 return redirect()->back()->withSuccess(trans('app.gamebank_added'));
             }
@@ -703,35 +718,49 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function gamebanks_clear(\Illuminate\Http\Request $request)
         {
-            $open_shift = \VanguardLTE\OpenShift::where([
-                'shop_id' => auth()->user()->shop_id, 
-                'end_date' => null
-            ])->first();
-            if( !$open_shift ) 
-            {
-                return redirect()->back()->withErrors([trans('app.shift_not_opened')]);
-            }
-            $shop = \VanguardLTE\Shop::find(auth()->user()->shop_id);
             if( auth()->user()->hasRole('admin') ) 
             {
-                $gamebank = \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->first();
-                $old = $gamebank->{$request->type};
-                if( $old <= 0 ) 
+                if ($request->type=='bonus')
                 {
-                    return redirect()->back()->withErrors([trans('app.gamebank_cleared')]);
+                    $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->shop)->first();
+                    if( !$bonus_bank ) 
+                    {
+                        return redirect()->back()->withErrors(['본사를 찾을수 없습니다']);
+                    } 
+                    $master = \VanguardLTE\User::find($request->shop)->first();
+                    if ($master)
+                    {
+                        $name = $master->username;
+                        $shop_id = 0;
+                    }
+                    $old = $bonus_bank->bank;
+                    $bonus_bank->update(['bank' => 0]);
+                }
+                else
+                {
+                    $gamebank = \VanguardLTE\GameBank::where('shop_id', $request->shop)->first();
+                    $shop = $gamebank->shop;
+                    $old = $gamebank->{$request->type};
+                    if( $old <= 0 ) 
+                    {
+                        return redirect()->back()->withErrors([trans('app.gamebank_cleared')]);
+                    }
+                    $gamebank->update([$request->type => 0]);
+                    $name = $shop->name;
+                    $shop_id = $request->shop;
                 }
                 $type = ($request->type == 'table_bank' ? 'table' : $request->type);
                 //$shop->increment('balance', $old);
                 //$open_shift->decrement('balance_out', $old);
-                $gamebank->update([$request->type => 0]);
+                
                 \VanguardLTE\BankStat::create([
-                    'name' => ucfirst($type) . "[ $shop->name ]", 
+                    'name' => ucfirst($type) . "[$name ]", 
                     'user_id' => \Illuminate\Support\Facades\Auth::id(), 
                     'type' => 'out', 
                     'sum' => $old, 
                     'old' => $old, 
                     'new' => 0, 
-                    'shop_id' => $shop->id
+                    'shop_id' => $shop_id
                 ]);
                 return redirect()->back()->withSuccess(trans('app.gamebank_cleared'));
             }
