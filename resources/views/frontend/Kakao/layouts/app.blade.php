@@ -393,7 +393,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/Kakao/images/partner.png" /><br /><br />Copyright ⓒ
-            2020~2021 킹덤 SLOT All rights reserved.
+            2020~2021 그랜드 SLOT All rights reserved.
           </div>
          </div>
          <div>
