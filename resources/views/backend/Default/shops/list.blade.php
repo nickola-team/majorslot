@@ -247,7 +247,7 @@
 						<th>@lang('app.agent')</th>
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
-						@if(auth()->user()->hasRole('admin'))
+						@if(auth()->user()->hasRole('admin') && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
 						<th>딜비%</th>
 						@endif
@@ -276,7 +276,7 @@
 						<th>@lang('app.agent')</th>
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
-						@if(auth()->user()->hasRole('admin'))
+						@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
 						<th>딜비%</th>
 						@endif
