@@ -1,6 +1,15 @@
 <tr>
 	@if($in_out_log->partner_type == 'partner')
-	<td>{{ $in_out_log->user->username }}</td>
+	<?php  
+    $available_roles = Auth::user()->available_roles( true );
+    $available_roles_trans = [];
+    foreach ($available_roles as $key=>$role)
+    {
+        $role = trans("app." . strtolower($role));
+        $available_roles_trans[$key] = $role;
+    }
+	?>
+	<td>{{ $in_out_log->user->username }} [{{$available_roles_trans[$in_out_log->user->role_id] }}]</td>
 	@else
 	<td>{{ $in_out_log->shop->name }} [매장]</td>
 	@endif
@@ -8,21 +17,15 @@
 	@if($in_out_log->type == 'add' )
 	<td><span class="text-green">{{ number_format($in_out_log->sum,0) }}</span></td>
 	<td></td>
-	@if(auth()->user()->hasRole(['master','manager']))
 	<td></td>
-	@endif
 	@elseif($in_out_log->type == 'out' )
 	<td></td>
 	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
-	@if(auth()->user()->hasRole(['master','manager']))
 	<td></td>
-	@endif
 	@elseif($in_out_log->type == 'deal_out' )
 	<td></td>
 	<td></td>
-	@if(auth()->user()->hasRole(['master','manager']))
 	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
-	@endif
 	@endif
 	<td>{{"[ " . $in_out_log->bank_name . " ] ". $in_out_log->account_no}}</td>
 

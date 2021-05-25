@@ -36,6 +36,9 @@
 <td>{{ number_format($user['bonus'],2) }}</td>
 @endif
 <td>
+@if (Session::get('isCashier'))
+<button type="button" class="btn btn-block btn-primary btn-xs" disabled>편집</button>
+@else
 @if ( $user['role_id'] == 3)
 <a href="{{ route('backend.shop.edit', $user['shop_id']) }}">
 <button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
@@ -45,9 +48,10 @@
 <button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
 </a>
 @endif
+@endif
 </td>
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','master'])))
+@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','master'])) && !Session::get('isCashier'))
 <a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }} disabled" >
 <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 </a>
@@ -57,7 +61,7 @@
 </td>
 
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','master'])))
+@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','master'])) && !Session::get('isCashier'))
 <a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user['id'] }}" >
 <button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 </a>

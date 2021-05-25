@@ -38,6 +38,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
+            $isCashier = false;
             $throttles = settings('throttle_enabled');
             $to = ($request->has('to') ? '?to=' . $request->get('to') : '');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
@@ -54,6 +55,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                 return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
             }
             $user = \Auth::getProvider()->retrieveByCredentials($credentials);
+            if ($user->role_id == 2) //it is co-master
+            {
+                $user = $user->referral;
+                $isCashier = true;
+            }
             //check admin id per site
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
             $adminid = 1; //default admin id
@@ -104,6 +110,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                     }
                 }
             }
+            $request->session()->put('isCashier',  $isCashier);
             return $this->handleUserWasAuthenticated($request, $throttles, $user);
         }
         protected function handleUserWasAuthenticated(\Illuminate\Http\Request $request, $throttles, $user)

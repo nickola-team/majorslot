@@ -39,7 +39,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) )
+		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) && !Session::get('isCashier'))
 		
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $shop->shop_id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs"> 충전</button>
@@ -49,7 +49,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) )
+		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) && !Session::get('isCashier'))
 		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $shop->shop_id }}" >
 	    <button type="button" class="btn btn-block btn-danger btn-xs"> 환전</button>
 		</a>

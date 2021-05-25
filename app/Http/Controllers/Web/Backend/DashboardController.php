@@ -24,7 +24,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('frontend.page.error_license');
             }*/
-            if( !\Auth::user()->hasRole('admin') ) 
+            if( !\Auth::user()->hasRole('admin') ||  \Session::get('isCashier')) 
             {
                 return redirect()->route('backend.user.list');
             }
@@ -1475,14 +1475,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
         public function in_out_manage(\Illuminate\Http\Request $request) 
         {
+            if (\Session::get('isCashier'))
+            {
+                $childs = auth()->user()->childPartners();
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('status', 0)->whereIn('payeer_id', $childs);
+            }
+            else
+            {
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where([
+                    'payeer_id'=> auth()->user()->id,
+                    'status'=> 0,
+                ]);
+            }
+            $in_out_logs = $in_out_logs->orderBy('created_at', 'desc')->get();
 
-            $in_out_logs = \VanguardLTE\WithdrawDeposit::where([
-                'payeer_id'=> auth()->user()->id,
-                'status'=> 0,
-            ]);
-            $in_out_logs = $in_out_logs->get();
-
-            $in_out_logs = $in_out_logs->sortByDesc('created_at')->paginate(20);
+            $in_out_logs = $in_out_logs->paginate(20);
 
             return view('backend.Default.adjustment.in_out_manage', compact('in_out_logs'));
         }
