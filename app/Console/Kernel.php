@@ -107,7 +107,9 @@ namespace VanguardLTE\Console
                 }
             })->hourly();
             
-            $schedule->command('daily:ppgames')->cron('15 */2 * * * *');
+            if (env('SWITCH_PP', false) == true){
+                $schedule->command('daily:ppgames')->cron('15 */2 * * *');
+            }
 
             $schedule->call(function()
             {
