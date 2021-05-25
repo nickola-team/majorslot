@@ -34,7 +34,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             {
                 $title = $site->title;
             }
-            return view('backend.Default.auth.login', compact('directories','title'));
+            return view('backend.Default.auth.login', compact('directories','title', 'site'));
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

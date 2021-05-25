@@ -41,7 +41,7 @@
     </style>
   
 </head>
-<body class="hold-transition login-page" style='background:url("/back/img/bg.jpg")'>
+<body class="hold-transition login-page" style='background-color:white'>
 
 
 	@yield('content')
