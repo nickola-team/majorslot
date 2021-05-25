@@ -316,7 +316,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'enname' => $game->name,
                         'name' => preg_replace('/\s+/', '', $game->name),
                         'title' => $game->title,
-                        'icon' => url('/frontend/Default/ico/png/'). $icon_name . '.jpg',
+                        'icon' => url('/frontend/Default/ico/png/'). '/'. $icon_name . '.jpg',
                     ]);
                 }
                 else

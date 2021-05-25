@@ -133,8 +133,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function bank(\Illuminate\Http\Request $request)
         {
             $shops = auth()->user()->availableShops();
-            $gamebank = \VanguardLTE\GameBank::whereIn('shop_id', $shops);
-            $query = 'SELECT a.*, e.name as shopname, e.percent as percent, d.bank as master_bonus, d.master_id as master_id from w_game_bank as a join w_shops_user as b on b.shop_id=a.shop_id join w_users as c on b.user_id=c.id join w_bonus_bank as d on d.master_id=c.id join w_shops as e on e.id=a.shop_id where c.role_id=6';
+            $query = 'SELECT a.*, e.name as shopname, e.percent as percent, d.bank as master_bonus, d.master_id as master_id from w_game_bank as a join w_shops_user as b on b.shop_id=a.shop_id join w_users as c on b.user_id=c.id join w_bonus_bank as d on d.master_id=c.id join w_shops as e on e.id=a.shop_id where c.role_id=6 and a.shop_id in (' .implode(',', $shops). ')';
             $gamebank = \DB::select($query);
             return view('backend.Default.games.bank', compact('gamebank'));
         }
