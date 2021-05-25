@@ -957,32 +957,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $newGames,
                 $hotGames
             ];
-
-            $data['activePromos'] = [
-                "tournaments" => [
-                    [
-                        "id" => 6488,
-                        "status"=> "O",
-                        "name"=> "Spring Fortune Tournament",
-                        "clientMode"=> "V",
-                        "startDate"=> 1617973200,
-                        "endDate" => 1620565200,
-                        "optin"=> true
-                    ]
-                ],
-                "races" => [
-                    [
-                        "id"=> 4426,
-                        "status" => "O",
-                        "name" => "Spring Fortune Cash Drop",
-                        "clientMode" => "V",
-                        "startDate"=> 1617973200,
-                        "endDate" => 1620565200,
-                        "clientStyle" => "AS",
-                        "optin" => true
-                    ]
-                ]
-            ];
             return response()->json($data);
 
         }
@@ -1000,15 +974,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = $promo->active;
                 $json_data = json_decode($data, true);
                 $json_data['serverTime'] = time();
-                $tour_count = count($json_data['tournaments']);
-                for ($i = 0; $i < $tour_count; $i++ )
-                {
-                    $json_data['tournaments'][$i]['optin'] = true;
+                if (isset($json_data['tournaments'])){
+                    $tour_count = count($json_data['tournaments']);
+                    for ($i = 0; $i < $tour_count; $i++ )
+                    {
+                        $json_data['tournaments'][$i]['optin'] = true;
+                    }
                 }
-                $race_count = count($json_data['races']);
-                for ($i = 0; $i < $race_count; $i++ )
-                {
-                    $json_data['races'][$i]['optin'] = true;
+                if (isset($json_data['races'])){
+                    $race_count = count($json_data['races']);
+                    for ($i = 0; $i < $race_count; $i++ )
+                    {
+                        $json_data['races'][$i]['optin'] = true;
+                    }
                 }
                 $data = json_encode($json_data);
             }
