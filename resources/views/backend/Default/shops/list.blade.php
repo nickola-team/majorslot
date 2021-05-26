@@ -250,6 +250,7 @@
 						@if(auth()->user()->hasRole('admin') && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
 						<th>딜비%</th>
+						<th>라이브딜비%</th>
 						@endif
 						{{-- <th>@lang('app.frontend')</th>
 						<th>@lang('app.currency')</th>
@@ -279,6 +280,7 @@
 						@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
 						<th>딜비%</th>
+						<th>라이브딜비%</th>
 						@endif
 						{{-- <th>@lang('app.frontend')</th>
 						<th>@lang('app.currency')</th>

@@ -27,7 +27,11 @@
         <div class="form-group">
             <label>딜비%</label>
             <input type="text" class="form-control" id="deal_percent" name="deal_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->deal_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
-        </div>    
+        </div>
+        <div class="form-group">
+            <label>라이브딜비%</label>
+            <input type="text" class="form-control" id="table_deal_percent" name="table_deal_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->table_deal_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
+        </div>
     @endif
 
 

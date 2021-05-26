@@ -11,7 +11,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function pragmaticrender($gamecode, \Illuminate\Http\Request $request)
         {
             $lobby = $request->lobby;
-            $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::gamecodetoname($gamecode);
+            $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::gamecodetoname($gamecode)[0];
             $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
             $shop_id = \Auth::user()->shop_id;
             $pm_games = \VanguardLTE\Game::where([
