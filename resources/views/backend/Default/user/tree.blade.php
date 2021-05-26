@@ -29,10 +29,10 @@
                 <div class="pull-right box-tools" style="display:flex;align-item:center;">
 					
                     @permission('users.add')
-					@if (Auth::user()->hasRole('admin'))
+					@if (Auth::user()->hasRole('admin') && !Session::get('isCashier'))
                     <a href="{{ route('backend.user.createpartnerfromcsv') }}" class="btn btn-danger btn-sm" style="margin-right:5px;">csv로 추가</a>
                     @endif
-                    @if (Auth::user()->hasRole(['admin','master', 'agent','distributor']))
+                    @if (Auth::user()->hasRole(['admin','master', 'agent','distributor']) && !Session::get('isCashier'))
                     <a href="{{ route('backend.user.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
                     @endif
                     @endpermission
@@ -62,9 +62,11 @@
                         <tbody>
                         @if (count($partners))
                             @foreach ($partners as $partner)
+								@if ($partner['role_id'] > 2)
                                 <tr>
                                     @include('backend.Default.user.partials.partner', ['user' => $partner])
                                 </tr>
+								@endif
                             @endforeach
                         @else
                             <tr><td colspan="8">@lang('app.no_data')</td></tr>

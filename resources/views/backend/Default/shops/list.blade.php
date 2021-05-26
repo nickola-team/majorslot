@@ -230,11 +230,6 @@
 			<div class="box-header with-border">
 				{{-- <h3 class="box-title">@lang('app.shops')</h3> --}}
 				<h3 class="box-title">매장리스트</h3>
-				@if(auth()->user()->hasRole('admin'))
-					<div class="pull-right box-tools">
-						<a href="{{ route('backend.shop.admin_create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
-					</div>
-				@endif
 				@if(auth()->user()->hasRole('distributor'))
 					<div class="pull-right box-tools">
 						<a href="{{ route('backend.shop.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
@@ -252,7 +247,7 @@
 						<th>@lang('app.agent')</th>
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
-						@if(auth()->user()->hasRole('admin'))
+						@if(auth()->user()->hasRole('admin') && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
 						<th>딜비%</th>
 						@endif
@@ -281,7 +276,7 @@
 						<th>@lang('app.agent')</th>
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
-						@if(auth()->user()->hasRole('admin'))
+						@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
 						<th>딜비%</th>
 						@endif

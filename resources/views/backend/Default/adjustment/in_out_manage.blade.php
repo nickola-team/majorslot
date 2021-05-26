@@ -20,7 +20,7 @@
 						알림음 ON/OFF
 				@endif
 			</div>
-			@if (auth()->user()->hasRole('admin'))
+			@if (auth()->user()->hasRole('admin') &&  !Session::get('isCashier'))
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-3">

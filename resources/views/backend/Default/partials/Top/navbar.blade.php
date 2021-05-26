@@ -2,7 +2,7 @@
     <nav class="navbar navbar-static-top">
       <div class="container" style="width:100%;">
         <div class="navbar-header">
-          <a href="/" class="navbar-brand"><b>관리자페이지</b></a>
+          <a href="/backend" class="navbar-brand"><b>관리자페이지</b></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
@@ -12,7 +12,7 @@
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
           <ul class="nav navbar-nav">
           @permission('dashboard')
-            @if (auth()->user()->hasRole('admin'))
+            @if (auth()->user()->hasRole('admin') && !Session::get('isCashier'))
             <li class="{{ Request::is('backend') ? 'active' : ''  }}">
                 <a href="{{ route('backend.dashboard') }}">
                     <i class="fa fa-home"></i>
@@ -58,7 +58,7 @@
                         </a>
                     </li>
                     @permission('categories.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
+                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                     <li class="{{ Request::is('backend/category') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.category.list') }}">
                             <i class="fa fa-circle-o"></i>
@@ -69,7 +69,7 @@
                     @endpermission      
                     
                     @permission('jpgame.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
+                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                     <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
                         <a href="{{ route('backend.jpgame.list') }}">
                             <i class="fa  fa-circle-o"></i>
@@ -79,7 +79,7 @@
                     @endif
                     @endpermission
                     @permission('games.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
+                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                     <li class="{{ (Request::is('backend/game') || Request::is('backend/game/*')) ? 'active' : ''  }}">
                         <a href="{{ route('backend.game.list') }}">
                             <i class="fa fa-circle-o"></i>
@@ -89,7 +89,7 @@
                     @endif
                     @endpermission
 
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
+                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                     <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
                         <a href="{{ route('backend.game.bank') }}">
                             <i class="fa fa-circle-o"></i>
@@ -103,7 +103,7 @@
             @endif
 
             @permission('happyhours.manage')
-            @if( auth()->user()->hasRole('admin') )
+            @if( auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
             <li class="{{ Request::is('backend/happyhours*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.happyhour.list') }}">
                     <i class="fa fa-server"></i>
@@ -113,7 +113,7 @@
             @endif
             @endpermission
 
-            @if( auth()->user()->hasRole('admin') )
+            @if( auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
             <li class="dropdown {{ Request::is('backend/bonus*') ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-gift"></i>
@@ -139,17 +139,6 @@
             </li>
             @endif
 
-
-            {{-- @permission('jpgame.manage')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
-            <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.jpgame.list') }}">
-                    <i class="fa  fa-money"></i>
-                    <span>잭팟관리</span>
-                </a>
-            </li>
-            @endif
-            @endpermission --}}
 
             <li class="dropdown {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
                 || Request::is('backend/adjustment_shift*') || Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
@@ -285,7 +274,7 @@
                     @endpermission
 
                     @permission('games.manage')
-                    @if (auth()->user()->hasRole('admin'))
+                    @if (auth()->user()->hasRole('admin') && !Session::get('isCashier'))
                     <li class="{{ Request::is('backend/bank_stat') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.bank_stat') }}">
                             <i class="fa fa-circle-o"></i>
@@ -330,7 +319,7 @@
             </li>
 
             @endif
-            @if (auth()->user()->hasRole(['admin', 'master']))
+            @if (auth()->user()->hasRole(['admin', 'master']) && !Session::get('isCashier'))
             <li class="{{ Request::is('backend/settings/notice') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.notice') }}">
                     <i class="fa fa-bell"></i>
@@ -350,7 +339,7 @@
             @endpermission
 
             @permission('settings.general')
-            @if (auth()->user()->hasRole('admin') )
+            @if (auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
             <li class="{{ Request::is('backend/settings') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.general') }}">
                     <i class="fa fa-circle-o"></i>
@@ -413,7 +402,11 @@
                 <span class="hidden-xs">{{auth()->user()->username}}[
                 @foreach(['7' => 'app.admin','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
                     @if($role_id == Auth::user()->role_id)
+                        @if (Session::get('isCashier'))
+                            총본사
+                        @else
                         @lang($role_name)
+                        @endif
                     @endif
                 @endforeach
                 ]</span>
@@ -426,7 +419,11 @@
                 {{ Auth::user()->username }}[
                 @foreach(['7' => 'app.admin','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
                     @if($role_id == Auth::user()->role_id)
+                        @if (Session::get('isCashier'))
+                            총본사
+                        @else
                         @lang($role_name)
+                        @endif
                     @endif
                 @endforeach
                 ]님 
@@ -435,7 +432,9 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
+                    @if (Session::get('isCashier') == false)
                     <a href="{{ route('backend.user.edit', auth()->user()->present()->id) }}" class="btn btn-default btn-flat">@lang('app.my_profile')</a>
+                    @endif
                   </div>
                   <div class="pull-right">
                     <a href="{{ route('backend.auth.logout') }}" class="btn btn-default btn-flat"> @lang('app.logout')</a>
