@@ -225,9 +225,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $res['now'] = \Carbon\Carbon::now();
-            $transactions = \VanguardLTE\WithdrawDeposit::where([
-                'status' => 0,
-                'payeer_id' => $request->id])->get();
+            if (\Session::get('isCashier'))
+            {
+                $payeer_ids = auth()->user()->childPartners();
+                $transactions = \VanguardLTE\WithdrawDeposit::where('status',0)->whereIn('payeer_id',  $payeer_ids)->get();
+            }
+            else
+            {
+                $transactions = \VanguardLTE\WithdrawDeposit::where([
+                    'status' => 0,
+                    'payeer_id' => $request->id])->get();
+            }
             $res['count'] = $transactions->count();
             $res['rating'] = auth()->user()->rating;
             return response()->json($res);
