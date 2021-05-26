@@ -35,6 +35,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist = PPController::getgamelist('pp');
             $gamename = $code;
+            $type = 'table';
             if ($gamelist)
             {
                 foreach($gamelist as $game)
@@ -42,11 +43,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if ($game['gamecode'] == $code)
                     {
                         $gamename = $game['name'];
+                        $type = $game['type'];
                         break;
                     }
                 }
             }
-            return $gamename;
+            return [$gamename,$type];
         }
 
         public function microtime_string()
@@ -164,12 +166,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
             $user->save();
 
+            $game = $this->gamecodetoname($gameId);
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => floatval($amount), 
                 'win' => 0, 
-                'game' => $this->gamecodetoname($gameId) . '_pp', 
+                'game' => $game[0] . '_pp', 
+                'type' => $game[1],
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -240,12 +245,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }*/
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+            $game = $this->gamecodetoname($gameId);
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($amount), 
-                'game' => $this->gamecodetoname($gameId) . '_pp', 
+                'game' => $game[0] . '_pp', 
+                'type' => $game[1],
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -256,12 +263,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($promoWinAmount)
             {
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($promoWinAmount)));
+                $game = $this->gamecodetoname($gameId);
                 \VanguardLTE\StatGame::create([
                     'user_id' => $user->id, 
                     'balance' => floatval($user->balance), 
                     'bet' => 0, 
                     'win' => floatval($promoWinAmount), 
-                    'game' => $this->gamecodetoname($gameId) . '_pp promo', 
+                    'game' => $game[0] . '_pp promo', 
+                    'type' => $game[1],
                     'percent' => 0, 
                     'percent_jps' => 0, 
                     'percent_jpg' => 0, 
@@ -391,12 +400,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($request->all())
             ]);
+            $game = $this->gamecodetoname($gameId);
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($amount), 
-                'game' => $this->gamecodetoname($gameId) . '_pp JP', 
+                'game' => $game[0] . '_pp JP', 
+                'type' => $game[1],
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -490,13 +501,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->save();
             $transaction->refund = 1;
             $transaction->save();
-
+            $game = $this->gamecodetoname($data['gameId']);
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($data['amount']), 
-                'game' => $this->gamecodetoname($data['gameId']) . '_pp refund', 
+                'game' => $game[0] . '_pp refund', 
+                'type' => $game[1],
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -613,8 +625,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
                 {
-
-                    if (/*$game['gameTypeID'] == "vs" && */str_contains($game['platform'], 'WEB'))
+                    if (str_contains($game['platform'], 'WEB'))
                     {
                         if (in_array($game['gameID'] , $newgames))
                         {
@@ -625,6 +636,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'name' => preg_replace('/\s+/', '', $game['gameName']),
                                 'title' => __('gameprovider.'.$game['gameName']),
                                 'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
+                                'type' => $game['gameTypeID']=="vs"?'slot':'table',
                                 'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
                             ]);
                         }
@@ -637,6 +649,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'name' => preg_replace('/\s+/', '', $game['gameName']),
                                 'title' => __('gameprovider.'.$game['gameName']),
                                 'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
+                                'type' => $game['gameTypeID']=="vs"?'slot':'table',
                                 'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
                             ]);
                         }

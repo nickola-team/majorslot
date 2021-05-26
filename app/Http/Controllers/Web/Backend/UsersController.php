@@ -342,6 +342,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'balance' => $shop->balance,
                         'profit' => $shop->deal_balance - $shop->mileage,
                         'deal_percent' => $shop->deal_percent,
+                        'table_deal_percent' => $shop->table_deal_percent,
                         'bonus' => 0,
                         'role_id' => $partner->role_id,
                         'shop' => $shop->name,
@@ -366,6 +367,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'balance' => $partner->balance,
                         'profit' => $partner->deal_balance - $partner->mileage,
                         'deal_percent' => $partner->deal_percent,
+                        'table_deal_percent' => $partner->table_deal_percent,
                         'bonus' => $bonus_value,
                         'role_id' => $partner->role_id
                     ];
@@ -502,6 +504,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
+                if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+                {
+                    return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+                }
             }
             if( $data['role_id'] == 5) //agent?
             {
@@ -509,6 +515,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
+                }
+                if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+                {
+                    return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
                 }
             }
             $user = $this->users->create($data);
@@ -808,10 +818,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if ($user->hasRole('manager'))
             {
                 $deal_percent = $user->shop->deal_percent;
+                $table_deal_percent = $user->shop->table_deal_percent;
             }
             else
             {
                 $deal_percent = $user->deal_percent;
+                $table_deal_percent = $user->table_deal_percent;
             }
 
             if (   ($user->hasRole('agent') && $master->deal_percent < $deal_percent) 
@@ -819,6 +831,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 || ($user->hasRole('manager') && $distributor->deal_percent < $deal_percent) )
             {
                 return redirect()->back()->withErrors(['딜비는 상위파트너보다 클수 없습니다.']);
+            }
+            if (   ($user->hasRole('agent') && $master->table_deal_percent < $table_deal_percent) 
+                || ($user->hasRole('distributor') && $agent->table_deal_percent < $table_deal_percent) 
+                || ($user->hasRole('manager') && $distributor->table_deal_percent < $table_deal_percent) )
+            {
+                return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다.']);
             }
             if ($user->hasRole('manager'))
             {
@@ -885,6 +903,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
+                if ($parent!=null && isset($data['table_deal_percent']) && $parent->table_deal_percent < $data['table_deal_percent'])
+                {
+                    return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+                }
             }
             if( $user->hasRole([
                 'agent',
@@ -894,6 +916,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 if ($parent!=null && isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
+                }
+                if ($parent!=null && isset($data['table_deal_percent']) && $parent->table_deal_percent < $data['table_deal_percent'])
+                {
+                    return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
                 }
             }
             $this->users->update($user->id, $data);

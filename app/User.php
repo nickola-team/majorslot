@@ -41,6 +41,7 @@ namespace VanguardLTE
             'session',
             'deal_balance', 
             'deal_percent',
+            'table_deal_percent',
             'mileage',
             'bank_name',
             'recommender',
@@ -244,7 +245,7 @@ namespace VanguardLTE
         public function childPartners()
         {
             $level = $this->level();
-            $users = User::where('parent_id', $this->id)->get();
+            $users = User::where(['parent_id'=> $this->id,'role_id' => $this->role_id-1])->get();
             return $users->pluck('id')->toArray();
         }
 
@@ -758,7 +759,7 @@ namespace VanguardLTE
         }
 
 
-        public function processBetDealerMoney($betMoney, $game) 
+        public function processBetDealerMoney($betMoney, $game, $type='slot') 
         {
             if(!$this->hasRole('user')) {
                 return;
@@ -768,11 +769,12 @@ namespace VanguardLTE
             $deal_shop = 0;
             $deal_distributor = 0;
             $deal_agent = 0;
-            if($shop->deal_percent > 0) {
-                $deal_shop = $betMoney * $shop->deal_percent  / 100;
+            $deal_percent = ($type==null || $type=='slot')?$shop->deal_percent:$shop->table_deal_percent;
+            if($deal_percent > 0) {
+                $deal_shop = $betMoney * $deal_percent  / 100;
                 $balance_before = $shop->deal_balance;
                 $shop->update(['deal_balance' => $shop->deal_balance + $deal_shop]);
-                $open_shift = OpenShift::where([
+                /*$open_shift = OpenShift::where([
                     'shop_id' => $shop->id, 
                     'type' => 'shop',
                     'end_date' => null
@@ -780,7 +782,7 @@ namespace VanguardLTE
                 if ($open_shift)
                 {
                     $open_shift->increment('deal_profit', $deal_shop);
-                }
+                } */
 
                 $balance_after = $shop->deal_balance;
 
@@ -794,7 +796,7 @@ namespace VanguardLTE
                     'game' => $game,
                     'shop_id' => $shop->id,
                     'type' => 'shop',
-                    'deal_percent' => $shop->deal_percent,
+                    'deal_percent' => $deal_percent,
                     'mileage' => 0
                 ]);
             }
@@ -802,15 +804,17 @@ namespace VanguardLTE
             $manager = $this->referral;
             if($manager != null) {
                 $distributor = $manager->referral;
-                if($distributor != null && $distributor->hasRole('distributor') && $distributor->deal_percent > 0){
-                    $deal_distributor = $this->addDealerMoney($betMoney, $distributor, $deal_shop, $game);
+                $deal_percent = ($type==null || $type=='slot')?$distributor->deal_percent:$distributor->table_deal_percent;
+                if($distributor != null && $distributor->hasRole('distributor') && $deal_percent > 0){
+                    $deal_distributor = $this->addDealerMoney($betMoney, $distributor, $deal_shop, $game, $type);
                 }
 
                 if($distributor != null && $distributor->referral != null){
                     $agent = $distributor->referral;
-                    if($agent !=  null && $agent->deal_percent > 0) {
-                        $agent_distributor = $this->addDealerMoney($betMoney, $agent, $deal_distributor, $game);
-                        $open_shift = OpenShift::where([
+                    $deal_percent = ($type==null || $type=='slot')?$agent->deal_percent:$agent->table_deal_percent;
+                    if($agent !=  null && $deal_percent > 0) {
+                        $agent_distributor = $this->addDealerMoney($betMoney, $agent, $deal_distributor, $game, $type);
+                        /*$open_shift = OpenShift::where([
                             'user_id' => $agent->parent_id,  //will be admin
                             'type' => 'partner',
                             'end_date' => null
@@ -819,15 +823,16 @@ namespace VanguardLTE
                         if ($open_shift)
                         {
                             $open_shift->increment('mileage', $agent_distributor);
-                        }
+                        }*/
                     }
                 }
             }   
         }
 
-        public function addDealerMoney($betMoney, $parentUser, $childDealMoney, $game)
+        public function addDealerMoney($betMoney, $parentUser, $childDealMoney, $game, $type)
         {
-            $total_deal_money = $betMoney * $parentUser->deal_percent  / 100;
+            $deal_percent = ($type==null || $type=='slot')?$parentUser->deal_percent:$parentUser->table_deal_percent;
+            $total_deal_money = $betMoney * $deal_percent  / 100;
             $deal_money = $total_deal_money  - $childDealMoney;
             if($deal_money < 0){
                 return $total_deal_money;
@@ -836,7 +841,7 @@ namespace VanguardLTE
             $parentUser->update(['deal_balance' => $parentUser->deal_balance + $total_deal_money, 'mileage' => $parentUser->mileage + $childDealMoney]);
             $balance_after = $parentUser->deal_balance;
 
-            $open_shift = OpenShift::where([
+            /*$open_shift = OpenShift::where([
                 'user_id' => $parentUser->id, 
                 'type' => 'partner',
                 'end_date' => null
@@ -846,7 +851,7 @@ namespace VanguardLTE
             {
                 $open_shift->increment('deal_profit', $total_deal_money);
                 $open_shift->increment('mileage', $childDealMoney);
-            }
+            }*/
 
             DealLog::create([
                 'user_id' => $this->id, 
@@ -858,7 +863,7 @@ namespace VanguardLTE
                 'game' => $game,
                 'shop_id' => $this->shop->id,
                 'type' => 'partner',
-                'deal_percent' => $parentUser->deal_percent,
+                'deal_percent' => $deal_percent,
                 'mileage' => $childDealMoney
             ]);
             return $total_deal_money;

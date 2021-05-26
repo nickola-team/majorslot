@@ -6,12 +6,18 @@
 
   <div class="login-box">
     <div class="login-logo">
-      <a href="{{ route('backend.dashboard') }}"><span class="logo-lg"><b>{{ $title }} 로그인</span></a>
+    <a href="{{ route('backend.dashboard') }}">
+    @if (isset($site) && $layout == 'Top')
+      <img src="{{ url('/back/img/' . $site->frontend . '_logo.png') }}" style="width:100%;"></img>
+    @else
+      <span class="logo-lg"><b>{{ $title }} 로그인</span>
+    @endif
+    </a>
     </div>
 
               @include('backend.Default.partials.messages')
 
-    <div class="login-box-body">
+    <div class="login-box-body" style={{ $layout == 'Top'?'background-color:lightblue;':''}}>
 
       <form role="form" action="<?= route('backend.auth.login.post') ?>" method="POST" id="login-form" autocomplete="off">
 
@@ -33,8 +39,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-
-            <button type="submit" class="btn btn-primary btn-block btn-flat" id="btn-login">
+            <button type="submit" class="btn {{ $layout == 'Top'?'btn-success':'btn-primary'}} btn-block btn-flat" id="btn-login">
               @lang('app.log_in')
             </button>
 

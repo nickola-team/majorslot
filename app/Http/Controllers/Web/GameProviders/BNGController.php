@@ -354,7 +354,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data1 = $response->json();
             foreach ($data1['items'] as $game)
             {
-                if ($game['type'] == "SLOT")
+                if ($game['type'] == "SLOT" && $game['game_id'] != 116) // 116 = roulettewithtracklowpls
                 {
                     $gameList[] = [
                         'provider' => 'bng',

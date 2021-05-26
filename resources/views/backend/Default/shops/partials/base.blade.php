@@ -11,6 +11,12 @@
         <input type="number"  step="0.01" class="form-control" id="deal_percent" name="deal_percent" value="{{ $edit ? $shop->deal_percent : '0' }}">
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="form-group">
+        <label>라이브딜비%</label>
+        <input type="number"  step="0.01" class="form-control" id="table_deal_percent" name="table_deal_percent" value="{{ $edit ? $shop->table_deal_percent : '0' }}">
+        </div>
+    </div>
 
     @if(auth()->user()->hasRole('admin'))
     <div class="col-md-6">
@@ -73,22 +79,11 @@
             {!! Form::select('currency', $currencies, $edit ? $shop->currency : old('currency')?:'KRW', ['class' => 'form-control']) !!}
         </div>
     </div>
-
-    
-</div>
-<div class="row">
     @if($edit && count($blocks))
     <div class="col-md-6">
         <div class="form-group">
             <label for="device">
-                @lang('app.status'):
-                @if($shop->is_blocked)
-                    {{-- @lang('app.block') --}}
-                    차단
-                @else
-                    {{-- @lang('app.unblock') --}}
-                    활성
-                @endif
+                @lang('app.status')
             </label>
             {!! Form::select('is_blocked', $blocks, $edit ? $shop->is_blocked : old('is_blocked'), ['class' => 'form-control']) !!}
         </div>

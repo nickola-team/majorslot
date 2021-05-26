@@ -106,7 +106,7 @@
 					<h3 class="box-title">회원리스트</h3>
 					<div class="pull-right box-tools">
 						@permission('users.add')
-						@if (Auth::user()->hasRole('admin'))
+						@if (Auth::user()->hasRole('admin') && !Session::get('isCashier'))
 						<a href="{{ route('backend.user.createuserfromcsv') }}" class="btn btn-danger btn-sm" style="margin-right:5px;">csv로 추가</a>
 						@endif
 						@if (Auth::user()->hasRole('cashier') || Auth::user()->hasRole('manager'))

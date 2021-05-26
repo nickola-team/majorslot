@@ -39,6 +39,12 @@
     <input type="number" step="0.01" class="form-control" id="deal_percent" name="deal_percent" value="0">
     </div>
 </div>
+<div class="col-md-6">
+    <div class="form-group">
+    <label>라이브딜비%</label>
+    <input type="number" step="0.01" class="form-control" id="table_deal_percent" name="table_deal_percent" value="0">
+    </div>
+</div>
 @endif
 
 @if(auth()->user()->hasRole(['distributor']))

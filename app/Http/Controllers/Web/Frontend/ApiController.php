@@ -275,9 +275,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $res['now'] = \Carbon\Carbon::now();
-            $transactions = \VanguardLTE\WithdrawDeposit::where([
-                'status' => 0,
-                'payeer_id' => $request->id])->get();
+            if (\Session::get('isCashier'))
+            {
+                $payeer_ids = auth()->user()->childPartners();
+                $transactions = \VanguardLTE\WithdrawDeposit::where('status',0)->whereIn('payeer_id',  $payeer_ids)->get();
+            }
+            else
+            {
+                $transactions = \VanguardLTE\WithdrawDeposit::where([
+                    'status' => 0,
+                    'payeer_id' => $request->id])->get();
+            }
             $res['count'] = $transactions->count();
             $res['rating'] = auth()->user()->rating;
             return response()->json($res);
@@ -869,7 +877,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $amount = $transaction->sum;
             $type = $transaction->type;
             $requestuser = \VanguardLTE\User::where('id', $transaction->user_id)->get()->first();
-            $user = auth()->user();
+            if (\Session::get('isCashier'))
+            {
+                $user = \VanguardLTE\User::where('id', $transaction->payeer_id)->first();
+            }
+            else
+            {
+                $user = auth()->user();
+            }
+            if (!$user)
+            {
+                return redirect()->route('backend.in_out_manage')->withErrors(['본사를 찾을수 없습니다.']);
+            }
             if ($requestuser->hasRole('manager')) // for shops
             {
                 $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
@@ -960,7 +979,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             else // for partners
             {
                 if($type == 'add'){
-                    $result = $requestuser->addBalance('add', $amount, false, 0, $transaction->id);
+                    $result = $requestuser->addBalance('add', $amount, $user, 0, $transaction->id);
                     $result = json_decode($result, true);
                     if ($result['status'] == 'error')
                     {
