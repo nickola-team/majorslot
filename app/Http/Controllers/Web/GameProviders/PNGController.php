@@ -25,11 +25,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist = PNGController::getgamelist('png');
             $gamename = $code;
+            if ($code > 100000)
+            {
+                $code = $code - 100000;
+            }
             if ($gamelist)
             {
                 foreach($gamelist as $game)
                 {
-                    if ($game['gamecode'] == $code)
+                    if ($game['gameid'] == $code)
                     {
                         $gamename = $game['name'];
                         break;
@@ -202,24 +206,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response['statusCode'] = 1;
                 return $response;
             }
+            if ($win >0){
 
-            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($win)));
-            $user->save();
+                $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($win)));
+                $user->save();
+
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => floatval($user->balance), 
+                    'bet' => 0, 
+                    'win' => floatval($win), 
+                    'game' => $this->gamecodetoname($gameId) . '_png' . ($type==0?'':' FG'), 
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id
+                ]);
+            }
             $response['real'] = $user->balance;
-
-            \VanguardLTE\StatGame::create([
-                'user_id' => $user->id, 
-                'balance' => floatval($user->balance), 
-                'bet' => 0, 
-                'win' => floatval($win), 
-                'game' => $this->gamecodetoname($gameId) . '_png' . $type==0?'':' FG', 
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
-                'shop_id' => $user->shop_id
-            ]);
 
             return $response;
 
@@ -312,10 +318,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     array_unshift($gameList, [
                         'provider' => 'png',
+                        'gameid' => $game->gameid,
                         'gamecode' => $game->gamecode,
                         'enname' => $game->name,
                         'name' => preg_replace('/\s+/', '', $game->name),
                         'title' => $game->title,
+                        'type' => $game->type,
                         'icon' => url('/frontend/Default/ico/png/'). '/'. $icon_name . '.jpg',
                     ]);
                 }
@@ -323,10 +331,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     array_push($gameList, [
                         'provider' => 'png',
+                        'gameid' => $game->gameid,
                         'gamecode' => $game->gamecode,
                         'enname' => $game->name,
                         'name' => preg_replace('/\s+/', '', $game->name),
                         'title' => $game->title,
+                        'type' => $game->type,
                         'icon' => url('/frontend/Default/ico/png'). '/'. $icon_name . '.jpg',
                         ]);
                 }
