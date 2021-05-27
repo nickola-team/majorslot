@@ -2,7 +2,7 @@
     <nav class="navbar navbar-static-top">
       <div class="container" style="width:100%;">
         <div class="navbar-header">
-          <a href="/backend" class="navbar-brand"><b>관리자페이지</b></a>
+          <a href="/backend" class="navbar-brand"><b></b></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
