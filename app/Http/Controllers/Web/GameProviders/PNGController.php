@@ -25,6 +25,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist = PNGController::getgamelist('png');
             $gamename = $code;
+            $type = 'table';
             if ($code > 100000)
             {
                 $code = $code - 100000;
@@ -36,11 +37,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if ($game['gameid'] == $code)
                     {
                         $gamename = $game['name'];
+                        $type = $game['type'];
                         break;
                     }
                 }
             }
-            return $gamename;
+            return [$gamename,$type];
         }
 
         /*
@@ -170,12 +172,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $response['real'] = $user->balance;
 
+            $game = $this->gamecodetoname($gameId);
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => floatval($bet), 
                 'win' => 0, 
-                'game' => $this->gamecodetoname($gameId) . '_png', 
+                'game' => $game[0] . '_png', 
+                'type' => $game[1],
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -210,13 +215,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($win)));
                 $user->save();
-
+                $game = $this->gamecodetoname($gameId);
+                
                 \VanguardLTE\StatGame::create([
                     'user_id' => $user->id, 
                     'balance' => floatval($user->balance), 
                     'bet' => 0, 
                     'win' => floatval($win), 
-                    'game' => $this->gamecodetoname($gameId) . '_png' . ($type==0?'':' FG'), 
+                    'game' => $game[0] . '_png' . ($type==0?'':' FG'), 
+                    'type' => $game[1],
                     'percent' => 0, 
                     'percent_jps' => 0, 
                     'percent_jpg' => 0, 
@@ -277,13 +284,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($bet)));
             $user->save();
+            $game = $this->gamecodetoname($gameId);
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($bet), 
-                'game' => $this->gamecodetoname($gameId) . '_png refund', 
+                'game' => $game[0] . '_png refund', 
+                'type' => $game[1],                
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
