@@ -582,7 +582,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 $_obf_bonus_percent = 10;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
-                if( $count_balance < $_allBets && $count_balance > 0 ) 
+                /*if( $count_balance < $_allBets && $count_balance > 0 ) 
                 {
                     $_subCountBalance = $count_balance;
                     $_obf_diff_money = $_allBets - $_subCountBalance;
@@ -591,9 +591,9 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                     $_obf_bonus_systemmoney = $_subCountBalance / 100 * $_obf_bonus_percent;
                 }
                 else if( $count_balance > 0 ) 
-                {
+                {*/
                     $_obf_bonus_systemmoney = $_allBets / 100 * $_obf_bonus_percent;
-                }
+                //}
                 for( $i = 0; $i < count($this->jpgs); $i++ ) 
                 {
                     if( $count_balance < $_allBets && $count_balance > 0 ) 
