@@ -96,10 +96,10 @@ namespace VanguardLTE\Games\PandasFortunePM
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
-            $game = \VanguardLTE\Game::where([
+            $game = \VanguardLTE\Game::lockForUpdate()->where([
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
-            ])->lockForUpdate()->first();
+            ])->first();
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);

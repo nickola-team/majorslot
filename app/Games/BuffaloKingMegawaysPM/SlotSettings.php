@@ -106,10 +106,10 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
-            $game = \VanguardLTE\Game::where([
+            $game = \VanguardLTE\Game::lockForUpdate()->where([
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
-            ])->lockForUpdate()->first();
+            ])->first();
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,
