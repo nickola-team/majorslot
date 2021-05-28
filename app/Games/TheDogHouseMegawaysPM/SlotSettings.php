@@ -1051,7 +1051,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         }
                     }
                     
-                    $symbolCount = $minCount > 2 ? $minCount : 2;
+                    $symbolCount = $this->GetSymbolCount($minCount);
                 }
                 else {
                     $symbolCount = random_int(2, 3);
