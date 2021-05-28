@@ -162,6 +162,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($user->balance < $bet)
             {
+                $response['real'] = $user->balance;
                 $response['statusCode'] = 7;
                 $response['statusMessage'] = 'NOTENOUGHMONEY';
                 return $response;
