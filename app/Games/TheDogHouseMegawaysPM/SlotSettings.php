@@ -564,7 +564,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
             }
             $_obf_bonus_systemmoney = 0;
-            if( $sum > 0 && $slotEvent == 'bet' ) 
+            if( $sum > 0 && ($slotEvent == 'doSpin' || $slotEvent == 'bet')) 
             {
                 $this->toGameBanks = 0;
                 $this->toSlotJackBanks = 0;
