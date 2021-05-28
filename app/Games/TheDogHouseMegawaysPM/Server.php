@@ -199,7 +199,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                     /* 릴배치표 생성 */
                     if ($overtry) {
-                        $reels = $slotSettings->GetLimitedReelStrips($slotEvent, $lastWILDCollection);
+                        $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent'], $lastWILDCollection);
                     }
                     else {
                         $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $defaultScatterCount, $lastWILDCollection);
