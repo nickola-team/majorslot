@@ -109,10 +109,10 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
-            $game = \VanguardLTE\Game::where([
+            $game = \VanguardLTE\Game::lockForUpdate()->where([
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
-            ])->lockForUpdate()->first();
+            ])->first();
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
@@ -574,7 +574,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $_obf_bonus_percent = 10;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
-                if( $count_balance < $_allBets && $count_balance > 0 ) 
+                /*if( $count_balance < $_allBets && $count_balance > 0 ) 
                 {
                     $_subCountBalance = $count_balance;
                     $_obf_diff_money = $_allBets - $_subCountBalance;
@@ -583,9 +583,9 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $_obf_bonus_systemmoney = $_subCountBalance / 100 * $_obf_bonus_percent;
                 }
                 else if( $count_balance > 0 ) 
-                {
+                {*/
                     $_obf_bonus_systemmoney = $_allBets / 100 * $_obf_bonus_percent;
-                }
+                //}
                 for( $i = 0; $i < count($this->jpgs); $i++ ) 
                 {
                     if( $count_balance < $_allBets && $count_balance > 0 ) 
