@@ -230,9 +230,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         $wilds = array_keys($reels["reel{$i}"], $WILD);
 
                         foreach ($wilds as $idx => $pos) {
-                            /* 레이닝 프리스핀 WILD 멀티플라이어는 최소 x2 */
                             if ($slotEvent['slotEvent'] == 'fsRaining') {
+                                /* 레이닝 프리스핀 WILD 멀티플라이어는 최소 x2 */
                                 $multiplier = $slotSettings->GetMultiValue(2);
+                            }
+                            else if ($slotEvent['slotEvent'] == 'fsSticky' && ($i == 2 || $i == 3)) {
+                                /* 스티키 프리스핀 WILD 멀티플라이어 2,3번릴에서는 x2 */
+                                $multiplier = 2;
                             }
                             else {
                                 $multiplier = $slotSettings->GetMultiValue(1);
@@ -464,10 +468,10 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         $objRes['na'] = $objRes['tw'] > 0 ? 'c' : 's';
 
                         $objRes['fs_total'] = $fsmax;
-                        $objRes['fswin_total'] = ($LASTSPIN->tw ?? 0);
+                        $objRes['fswin_total'] = $objRes['tw'];
                         $objRes['fsmul_total'] = 1;
                         $objRes['fsend_total'] = 1;
-                        $objRes['fsres_total'] = $objRes['fswin_total'];
+                        $objRes['fsres_total'] = $objRes['tw'];
 
                         $slotSettings->SetGameData($slotSettings->slotId . 'FSMax', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', 0);
@@ -566,17 +570,19 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         [0, 1, 1, 1],
                         [0, 1, 1, 2],
                         [0, 1, 1, 0, 1],
+                        [0, 1, 1, 0, 2],
                         [0, 1, 1, 1, 1],
                         [0, 1, 2],
                         [0, 1, 2, 1],
                         [0, 2, 1],
+                        [0, 2, 1, 0, 1],
                         [0, 2, 2],
         
                         [0, 1, 2, 2]
                     ];
         
-                    $wildSetId = random_int(0, 8);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', /* $wildCountProbabilityMap[$wildSetId] */array_rand($wildCountProbabilityMap));
+                    $wildSetId = random_int(0, 10);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', $wildCountProbabilityMap[$wildSetId]);
                 }
             }
 
