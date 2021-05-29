@@ -1074,7 +1074,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         $reel['reel' . $reelId][$k] = $startSymbol;
                     }
                     else {
-                        while (in_array(($symbol = random_int(9, 13)), array($startSymbol)));
+                        while (in_array(($symbol = random_int(4, 10)), array($startSymbol)));
                         $reel['reel' . $reelId][$k] = $symbol;
                     }
                 }
