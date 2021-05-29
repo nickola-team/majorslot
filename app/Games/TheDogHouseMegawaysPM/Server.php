@@ -218,8 +218,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         $reels = $this->generateWILDs($reels, $slotEvent['slotEvent']);
                     }
                     else if ($slotEvent['slotEvent'] == 'fsSticky') {
-                        $reels = $this->generateStickyWILDs($reels, $fssticky_wildset, $lastWILDCollection);
-                        // $reels = $this->generateWILDs($reels, $slotEvent['slotEvent'], $lastWILDCollection);
+                        $reels = $this->generateStickyWILDs($reels, $fssticky_wildset, $lastWILDCollection, $fs, $fsmax);
 
                         /* 이전 WILD심볼을 그대로 유지 */
                         $wildsCollection = $lastWILDCollection;
