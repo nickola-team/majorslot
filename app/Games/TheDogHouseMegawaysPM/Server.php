@@ -491,9 +491,17 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
 
                 $slotSettings->SetGameData($slotSettings->slotId . 'ScattersCount', $scattersCount);
-                $slotSettings->SetGameData($slotSettings->slotId . 'WILDCollection', $wildsCollection);
-                $slotSettings->SetGameData($slotSettings->slotId . 'NewWILDCollection', $newWILDCollection);
-                $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', $fssticky_wildset);
+
+                if ($slotEvent['slotEvent'] === 'fsSticky') {
+                    $slotSettings->SetGameData($slotSettings->slotId . 'WILDCollection', $wildsCollection);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'NewWILDCollection', $newWILDCollection);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', $fssticky_wildset);
+                }
+                else {
+                    $slotSettings->SetGameData($slotSettings->slotId . 'WILDCollection', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'NewWILDCollection', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', []);
+                }
 
                 $_GameLog = json_encode($objRes);
                 $slotSettings->SaveLogReport($_GameLog, $bet * $lines, $slotEvent['l'], $totalWin, $slotEvent['slotEvent']);
@@ -636,7 +644,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
             return array_sum($linesMoney);
         }
-        public function generateStickyWILDs($reels, $wildSet, $lastWILDCollection = []) {
+        public function generateStickyWILDs($reels, $wildSet, $lastWILDCollection = [], $fs, $fsmax) {
             $REELCOUNT = 6;
 
             /* 이전 WILD 심볼 복원 */
@@ -651,7 +659,12 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             }
 
             /* 한번에 생성할 WILD 심볼갯수 랜덤선택, 최대 2개 */
-            $newWILDCount = rand(0, 2);
+            if ($fs == 1) {
+                $newWILDCount = random_int(0, 1);
+            }
+            else {
+                $newWILDCount = random_int(1, 2);
+            }
 
             for ($i=0; $i < $newWILDCount; $i++) { 
                 /* WILD심볼을 이미 갯수이상 배치했다면 */
