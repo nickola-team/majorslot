@@ -220,7 +220,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 if($isBuyFreespin == 0 && $slotEvent['slotEvent'] != 'freespin'){
                     $allBet = $betline * 2000;
                     $winType = 'bonus';
-                    $_winAvaliableMoney = $slotSettings->GetBank('bonus');
+                    $_winAvaliableMoney = $slotSettings->GetBank('bonus') + $allBet;
                 }else{
                     $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $allBet, $lines, $isdoublechance);
                     $winType = $_spinSettings[0];
