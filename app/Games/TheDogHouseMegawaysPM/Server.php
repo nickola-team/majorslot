@@ -137,13 +137,14 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $fs = $slotSettings->GetGameData($slotSettings->slotId . 'FSNext');
                 $fsopt_i = $slotSettings->GetGameData($slotSettings->slotId . 'FSOpt');
 
+                $fssticky_wildset = $slotSettings->GetGameData($slotSettings->slotId . 'FSStickyWILDSet');
+                $fssticky_wildset = is_array($fssticky_wildset) ? $fssticky_wildset : [0, 1, 1, 1];
 
                 $lines = $slotEvent['l'];       // 라인
                 $bet = $slotEvent['c'];         // 베팅액
 
                 /* 프리스핀 구매 */
                 if (isset($slotEvent['pur'])) {
-                    // $BALANCE = $BALANCE - $bet * 100;
                     $slotEvent['slotEvent'] = 'fsStart';
 
                     $winType = 'bonus';                   // 보상방식
@@ -162,10 +163,10 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $_winAvaliableMoney = $_spinSettings[1];        // 당첨금 한도
                 }
 
-                /* 스캐터 생성개수  */
+                /* 스캐터 생성갯수  */
                 $defaultScatterCount = 0;
                 if($winType == 'bonus'){                    
-                    $defaultScatterCount = $slotSettings->GenerateScatterCount();  // 생성되여야할 Scatter개수 결정
+                    $defaultScatterCount = $slotSettings->GenerateScatterCount();  // 생성되어야할 Scatter갯수 결정
                 }
 
                 /* Balance 업데이트 */
@@ -200,23 +201,25 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                     /* 릴배치표 생성 */
                     if ($overtry) {
+                        /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
                         $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent'], $lastWILDCollection);
                     }
                     else {
                         $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $defaultScatterCount, $lastWILDCollection);
                     }
 
-                    $originReels = array_merge(array(), $reels);        // 변경되지 않은 릴배치표 보관, 프리스핀에 리용
+                    $originReels = array_merge(array(), $reels);        // 변경되지 않은 릴배치표 보관, 프리스핀에 이용
 
                     $wildsCollection = [];
-                    $newWILDCollection = [];        // 스티키 프리스핀에서 리용
+                    $newWILDCollection = [];        // 스티키 프리스핀에서 이용
 
                     /* 프리스핀일때 와일드심볼 생성 */
                     if ($slotEvent['slotEvent'] == 'fsRaining') {
                         $reels = $this->generateWILDs($reels, $slotEvent['slotEvent']);
                     }
                     else if ($slotEvent['slotEvent'] == 'fsSticky') {
-                        $reels = $this->generateWILDs($reels, $slotEvent['slotEvent'], $lastWILDCollection);
+                        $reels = $this->generateStickyWILDs($reels, $fssticky_wildset, $lastWILDCollection);
+                        // $reels = $this->generateWILDs($reels, $slotEvent['slotEvent'], $lastWILDCollection);
 
                         /* 이전 WILD심볼을 그대로 유지 */
                         $wildsCollection = $lastWILDCollection;
@@ -259,7 +262,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     foreach ($uniqueFirstSymbols as $idx => $symbol) {
                         $dupLines = array_filter($this->winLines, function($line) use ($symbol) {return $line['FirstSymbol'] === $symbol;});
 
-                        // 윈라인 심볼위치배렬
+                        // 윈라인 심볼위치배열
                         $symbols = array_unique(array_flatten(array_map(function($line) {return $line['Positions'];}, $dupLines)));
                         $strSymbols = implode(',', $symbols);
 
@@ -486,6 +489,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ScattersCount', $scattersCount);
                 $slotSettings->SetGameData($slotSettings->slotId . 'WILDCollection', $wildsCollection);
                 $slotSettings->SetGameData($slotSettings->slotId . 'NewWILDCollection', $newWILDCollection);
+                $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', $fssticky_wildset);
 
                 $_GameLog = json_encode($objRes);
                 $slotSettings->SaveLogReport($_GameLog, $bet * $lines, $slotEvent['l'], $totalWin, $slotEvent['slotEvent']);
@@ -542,7 +546,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     'fswin' => '0',
                     'stime' => floor(microtime(true) * 1000),
                     'fs' => $fs,
-                    // 'fs_opt' => '15,1,0~7,1,0',     // 스핀개수 설정
+                    // 'fs_opt' => '15,1,0~7,1,0',     // 스핀갯수 설정
                     'fs_opt' => $fs_opt,
                     'fsres' => '0',
                     'sver' => '5',
@@ -555,6 +559,25 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', $fs);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSOpt', $fsType);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $BALANCE);
+
+                /* 스티키 프리스핀 와일드셋 id 랜덤지정, 8셋 */
+                if ($fsType == 1) {
+                    $wildCountProbabilityMap =[
+                        [0, 1, 1, 1],
+                        [0, 1, 1, 2],
+                        [0, 1, 1, 0, 1],
+                        [0, 1, 1, 1, 1],
+                        [0, 1, 2],
+                        [0, 1, 2, 1],
+                        [0, 2, 1],
+                        [0, 2, 2],
+        
+                        [0, 1, 2, 2]
+                    ];
+        
+                    $wildSetId = random_int(0, 8);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', /* $wildCountProbabilityMap[$wildSetId] */array_rand($wildCountProbabilityMap));
+                }
             }
 
             $slotSettings->SaveGameData();
@@ -585,13 +608,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         }
 
         public function calculateLineMoney($slotSettings, $lines, $wildsCollection) {
-            /* 윈라인 보상금 계산, WILD배당률 계산포함 */
+            /* 윈라인 보상금 계산, WILD배당율 계산포함 */
             $linesMoney = array_map(function($line) use ($slotSettings, $wildsCollection) {
                 $symbol = $line['FirstSymbol'];
                 $repeatCount = $line['RepeatCount'];
 
                 if (count($wildsCollection) > 0) {
-                    /* 윈라인에 포함된 WILD 배당률 */
+                    /* 윈라인에 포함된 WILD 배당율 */
                     $multiplier = array_reduce($line['Positions'], function ($carry, $pos) use ($wildsCollection) {
                         $carry = isset($wildsCollection[$pos]) ? $carry * $wildsCollection[$pos] : $carry;
                         return $carry;
@@ -607,10 +630,62 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
             return array_sum($linesMoney);
         }
+        public function generateStickyWILDs($reels, $wildSet, $lastWILDCollection = []) {
+            $REELCOUNT = 6;
+
+            /* 이전 WILD 심볼 복원 */
+            foreach ($lastWILDCollection as $pos => $multiplier) {
+                // 릴에 배치가능한 심볼갯수가 변하는 경우 WILD 심볼 위치 조정
+                $reelPos = intdiv($pos, $REELCOUNT);
+                $reelId = $pos % $REELCOUNT + 1;
+                $reels["reel{$reelId}"][$reelPos] = 2;
+
+                // 이미 배치된 WILD는 제외
+                $wildSet[$reelId - 1] -= 1;
+            }
+
+            /* 한번에 생성할 WILD 심볼갯수 랜덤선택, 최대 2개 */
+            $newWILDCount = rand(0, 2);
+
+            for ($i=0; $i < $newWILDCount; $i++) { 
+                /* WILD심볼을 이미 갯수이상 배치했다면 */
+                if (array_sum($wildSet) <= 0) {
+                    break;
+                }   
+
+                /* WILD를 배치할 릴선택 */
+                $availableReels = array_where($wildSet, function ($count, $key) {
+                    return $count > 0;
+                });
+
+                if (count($availableReels) === 0) {
+                    continue;
+                }
+
+                $reelId = array_rand($availableReels) + 1;
+
+                /* WILD를 배치할 위치선택 */ 
+                $availablePoses = array_where($reels["reel{$reelId}"], function ($symbol, $key) {
+                    return $symbol != 14 && $symbol != 2 && $key != -1 && $key != 7;
+                });
+
+                if (count($availablePoses) === 0 ) {
+                    continue;
+                }
+
+                $randomPos = array_rand($availablePoses);            
+
+                $reels["reel{$reelId}"][$randomPos] = 2;
+
+                $wildSet[$reelId - 1] -= 1;
+            }
+            
+            return $reels;
+        }
 
         public function generateWILDs($reels, $fsType, $lastWILDCollection = []) {
             if ($fsType == 'fsSticky') {
-                /* Sticky 프리스핀일때 WILD 심볼개수당 확률 */
+                /* Sticky 프리스핀일때 WILD 심볼갯수당 확률 */
                 $wildsCountProbabilityMap = [
                     0 => 5,
                     1 => 5,
@@ -621,7 +696,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     6 => 1
                 ];
 
-                /* 확룔에 기초한 WILD 심볼개수 결정 */
+                /* 확룔에 기초한 WILD 심볼갯수 결정 */
                 $wildCount = $this->getRandomValue($wildsCountProbabilityMap);
 
                 /* 스티키 프리스핀 경우 이전 스핀결과의 WILD 심볼 복귀 */
@@ -631,25 +706,25 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                 /* 이전 WILD 심볼 복원 */
                 foreach ($lastWILDCollection as $pos => $multiplier) {
-                    // 릴에 배치가능한 심볼개수가 변하는 경우 WILD 심볼 위치 조정
+                    // 릴에 배치가능한 심볼갯수가 변하는 경우 WILD 심볼 위치 조정
                     $reelPos = intdiv($pos, $REELCOUNT);
                     $reelId = $pos % $REELCOUNT + 1;
                     $reels["reel{$reelId}"][$reelPos] = 2;
                 }
 
-                /* 이미 생성된 WILD 개수가 더 많다면 더 생성하지 않는다 */
+                /* 이미 생성된 WILD 갯수가 더 많다면 더 생성하지 않는다 */
                 if ($wildCount <= $lastWILDCount) {
                     return $reels;
                 }
 
-                /* 새로 생성해야 될 WILD 개수 */
+                /* 새로 생성해야 될 WILD 갯수 */
                 $wildCount = $wildCount - $lastWILDCount;
 
-                /* 한번에 생성되는 WILD 최대개수 제한 */
+                /* 한번에 생성되는 WILD 최대갯수 제한 */
                 $wildCount = random_int(1, $wildCount) % 3;
             }
             else {
-                /* 일반스핀, Raining 프리스핀일때 WILD 심볼개수당 확률 */
+                /* 일반스핀, Raining 프리스핀일때 WILD 심볼갯수당 확률 */
                 $wildsCountProbabilityMap = [
                     0 => 30,
                     1 => 30,
@@ -660,7 +735,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     6 => 1
                 ];
 
-                /* 확룔에 기초한 WILD 심볼개수 결정 */
+                /* 확룔에 기초한 WILD 심볼갯수 결정 */
                 $wildCount = $this->getRandomValue($wildsCountProbabilityMap);
             }
             

@@ -938,7 +938,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         }
         public function GetFreeSpin($index){
             $freespins = [0, 0, 0, 0, 12, 17, 22];
-            return $freespins[$index]; // 프리스핀개수 
+            return $freespins[$index]; // 프리스핀갯수 
         }
         public function GenerateScatterCount(){ // Scatter수 생성 함수
             $freeSpins = [
@@ -956,7 +956,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             return $freeSpins[1][0];  
         }
         
-        public function GetSymbolCount($default = 2){   // 한개 릴의 심볼 개수를 결정하는 함수
+        public function GetSymbolCount($default = 2){   // 한개 릴의 심볼 갯수를 결정하는 함수
             $sum = random_int(0, 100);
             if($sum <= 40){
                 $ret = 2;
@@ -1047,7 +1047,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
             for ($reelId=1; $reelId <= $REELCOUNT; $reelId++) { 
 
-                /* 스티키 프리스핀일때 릴의 최소 심볼개수 계산 */
+                /* 스티키 프리스핀일때 릴의 최소 심볼갯수 계산 */
                 if ($reelId == 1) {
                     $symbolCount = 2;
                 }
@@ -1153,7 +1153,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 // Main릴배치도 생성
                 $reel['reel' . $reelId][-1] = random_int(7, 13);
 
-                /* 스티키 프리스핀일때 릴의 최소 심볼개수 계산 */
+                /* 스티키 프리스핀일때 릴의 최소 심볼갯수 계산 */
                 if ($slotEvent === 'fsSticky' && count($lastWILDCollection) > 0) {
                     $minCount = 2;
                     foreach ($lastWILDCollection as $pos => $multiplier) {
