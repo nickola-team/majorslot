@@ -170,6 +170,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
 
                 /* Balance 업데이트 */
+                $allBet = 0;
                 if ($slotEvent['slotEvent'] === 'fsStart') {
                     $allBet = $bet * $lines * 100;
                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
@@ -503,7 +504,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
 
                 $_GameLog = json_encode($objRes);
-                $slotSettings->SaveLogReport($_GameLog, $bet * $lines, $slotEvent['l'], $totalWin, $slotEvent['slotEvent']);
+                $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $totalWin, $slotEvent['slotEvent']);
             }
             else if( $slotEvent['slotEvent'] == 'doCollect') 
             {
