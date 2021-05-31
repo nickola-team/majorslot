@@ -24,6 +24,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $excat[] = 'virtualtech';
                 $excat[] = 'skywind';
             }
+            else
+            {
+                return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
+            }
 
             $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position')->get();
             $hotgames = [];

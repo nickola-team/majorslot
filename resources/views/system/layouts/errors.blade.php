@@ -23,7 +23,6 @@
 		</div>
 		<div class="footer">
 			<p class="copyright">
-				<a href="http://major777.net/" target="_blank" rel="nofollow"><b>MAJOR</b> - Multi Shop System</a>
 			</p>
 		</div>
 	</div>
