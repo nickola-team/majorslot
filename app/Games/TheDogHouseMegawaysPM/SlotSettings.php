@@ -1047,7 +1047,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $REELCOUNT = 6;
 
             /* 당첨금이 제일 작은 심볼중 하나 선택 */
-            $startSymbol = random_int(10, 13);     
+            $startSymbols = [random_int(7, 13), random_int(7, 13)];
 
             for ($reelId=1; $reelId <= $REELCOUNT; $reelId++) { 
 
@@ -1075,10 +1075,10 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                 for($k = 0; $k < $symbolCount; $k++){
                     if ($reelId == 1) {
-                        $reel['reel' . $reelId][$k] = $startSymbol;
+                        $reel['reel' . $reelId][$k] = $startSymbols[$k];
                     }
                     else {
-                        while (in_array(($symbol = random_int(4, 10)), array($startSymbol)));
+                        while (in_array(($symbol = random_int(4, 10)), $startSymbols));
                         $reel['reel' . $reelId][$k] = $symbol;
                     }
                 }
@@ -1086,7 +1086,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $reel['reel' . $reelId][$k] = 14;
                 }
 
-                while (in_array(($symbol = random_int(9, 13)), array($startSymbol)));
+                while (in_array(($symbol = random_int(9, 13)), $startSymbols));
                 $reel['reel' . $reelId][7] = $symbol;
             }
             $reel['id'] = 8;        // 랜덤
