@@ -359,43 +359,6 @@
             </div>
           </div>
           <div class="visual_ling_2"></div>
-          <div class="visual_wrap">
-            <div class="visual">
-              <div class="container demo-2">
-                <div id="slider" class="sl-slider-wrapper">
-                  <div class="sl-slider" style="width: 100%; height: 392px">
-                    <div class="sl-slides-wrapper">
-                      <div
-                        class="sl-slide sl-slide-horizontal"
-                        data-orientation="horizontal"
-                        data-slice1-rotation="-25"
-                        data-slice2-rotation="-25"
-                        data-slice1-scale="2"
-                        data-slice2-scale="2"
-                        style="display: block"
-                      >
-                        <div
-                          class="sl-content-wrapper"
-                          style="width: 100%; height: 392px"
-                        >
-                          <div class="sl-content">
-                            <div class="sl-slide-inner">
-                              <div class="bg-img bg-img-1"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <nav id="nav-dots" class="nav-dots">
-                    <span class="nav-dot-current"></span><span></span
-                    ><span></span>
-                  </nav>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="visual_ling_2"></div>
           <div></div>
           <div id="contents_wrap">
             <div class="sc-inner">
