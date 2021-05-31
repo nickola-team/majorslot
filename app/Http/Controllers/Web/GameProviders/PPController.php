@@ -629,7 +629,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
 
                     }
-                    else */if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
+                    else */if (/*$game['gameTypeID'] == "vs" && */str_contains($game['platform'], 'WEB'))
                     {
                         if (in_array($game['gameID'] , $newgames))
                         {
