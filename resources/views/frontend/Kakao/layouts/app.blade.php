@@ -93,7 +93,7 @@
           -1 != browser.indexOf("msie") ||
           -1 != browser.indexOf("edge")) &&
           (alert(
-            "크롬에 최적화되어습니다. 크롬으브라우저를  이용해주시길 바람니다."
+            "크롬에 최적화되어습니다. 크롬브라우저를  이용해주시길 바랍니다."
           ),
           (window.location.href = "https://www.google.com/intl/ko/chrome/"));
       }
@@ -108,9 +108,12 @@
     <script type="text/javascript" src="/frontend/Kakao/js/common.js" ></script>
     <script type="text/javascript" src="/frontend/Kakao/js/jquery.newsTicker.js" ></script>
     <script type="text/javascript" src="/frontend/Kakao/js/showid.js" ></script>
-    <!-- <script type="text/javascript" src="./룰루 SLOT_files/canvas-video-player" ></script> -->
     <link rel="stylesheet" href="/frontend/Kakao/css/logo.css" />
-    <!-- <link href="./룰루 SLOT_files/2.627926fe.chunk.css" rel="stylesheet" /> -->
+    
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+
     <style data-jss="" data-meta="makeStyles">
       .jss10 {
         display: flex;
@@ -206,27 +209,7 @@
     <style data-styled="active" data-styled-version="5.1.0"></style>
   </head>
 
-<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
-
-<script type='text/javascript'>
-
-	@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-		var loginYN='Y';
-		var currentBalance = {{ Auth::user()->balance }};
-		var userName = "{{ Auth::user()->username }}";
-	@else
-		var loginYN='N';
-		var currentBalance = 0;
-		var userName = "";
-	@endif
-  $(document).ready(function() {
-    var prevTime = localStorage.getItem("hide_notification");
-    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-      $("#notification").hide();
-    }
-  })
-</script>
-
+<body>
 
 <div id="root">
   <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
@@ -359,7 +342,42 @@
             </div>
           </div>
           <div class="visual_ling_2"></div>
-          <div></div>
+          @if ($livegames && count($livegames))
+          <div class="popular-title">
+            <p>라이브 게임</p>  
+          </div>
+
+          <div style="width: 100%; display:flex;justify-content:center;float:left;">
+            <div class="visual_ling_2" style="max-width: 1440px;"></div>
+          </div>
+          <div style="float:left;width: 100%; text-align: -webkit-center;">
+            <div class="slider-wrapper">
+              <ul class="lightSlider">
+                @foreach($livegames AS $index=>$game)
+                  <li onClick="startGameByProvider('{{$game['provider']}}', '{{$game['gamecode']}}');">
+                    <a style="cursor: pointer">
+                      <img 
+                        src="{{$game['icon']}}"
+                        id="xImag"
+                        width="390"
+                        height="225"
+                        />
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+          <div style="width: 100%; display:flex;justify-content:center;float:left;">
+            <div class="visual_ling_2" style="max-width: 1440px;"></div>
+          </div>
+          @endif
+          <div class="popular-title">
+            <p>슬롯 게임</p>  
+          </div>
+          <div style="width: 100%; display:flex;justify-content:center;float:left;">
+            <div class="visual_ling_2" style="max-width: 1440px;"></div>
+          </div>
           <div id="contents_wrap">
             <div class="sc-inner">
 
@@ -426,6 +444,39 @@
 @yield('content')
 
 @yield('popup')
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<script type='text/javascript'>
+
+	@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+		var loginYN='Y';
+		var currentBalance = {{ Auth::user()->balance }};
+		var userName = "{{ Auth::user()->username }}";
+	@else
+		var loginYN='N';
+		var currentBalance = 0;
+		var userName = "";
+	@endif
+
+  $(document).ready(function() {
+    var prevTime = localStorage.getItem("hide_notification");
+    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+      $("#notification").hide();
+    }
+
+    $(".lightSlider").slick({
+      // normal options...
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+      // variableWidth: true,
+      autoplay: true,
+      autoplaySpeed: 2000,
+      });
+  })
+</script>
 
 </body>
 </html>

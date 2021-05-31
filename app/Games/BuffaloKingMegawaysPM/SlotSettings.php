@@ -110,6 +110,10 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
             ])->first();
+            if (!$game)
+            {
+                exit('unlogged');
+            }
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,

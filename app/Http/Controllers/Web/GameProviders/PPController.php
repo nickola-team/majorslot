@@ -625,10 +625,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
                 {
-                    if ($game['gameID'] == 'vs20rhinoluxe')
+                    /*if ($game['gameID'] == 'vs20rhinoluxe')
                     {
+
                     }
-                    else if (str_contains($game['platform'], 'WEB'))
+                    else */if ($game['gameTypeID'] == "vs" && str_contains($game['platform'], 'WEB'))
                     {
                         if (in_array($game['gameID'] , $newgames))
                         {

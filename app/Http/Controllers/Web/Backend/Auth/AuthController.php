@@ -71,6 +71,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             $admin = $user;
             while ($admin !=null && !$admin ->hasRole('admin'))
             {
+                if (!$admin->isActive())
+                {
+                    return redirect()->to('backend/login' . $to)->withErrors('계정이 임시 차단되었습니다.');
+                }
                 $admin = $admin->referral;
             }
 

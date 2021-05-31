@@ -21,12 +21,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $frontend = $site->frontend;
                 $title = $site->title;
                 $adminid = $site->adminid;
-                $excat[] = 'virtualtech';
-                $excat[] = 'skywind';
+                if ($frontend != 'Default') {
+                    $excat[] = 'virtualtech';
+                    $excat[] = 'skywind';
+                }
+            }
+            else
+            {
+                return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
             }
 
             $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position')->get();
             $hotgames = [];
+            $livegames = [];
 
             $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');
 
@@ -39,6 +46,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         if (in_array($game['gamecode'] , $newgames))
                         {
                             $hotgames[] = $game;
+                        }
+
+                        if (str_contains($game['enname'], 'Live -'))
+                        {
+                            $livegames[] = $game;
                         }
                     }
                 }
@@ -107,7 +119,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
 
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'title', 'notice'));
+
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {

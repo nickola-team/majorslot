@@ -738,9 +738,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 else
                 {
                     $gamebank = \VanguardLTE\GameBank::where('shop_id', $request->shop)->first();
+                    if (!$gamebank)
+                    {
+                        return redirect()->back()->withErrors(['매장환수금을 찾을수 없습니다.']);
+                    }
                     $shop = $gamebank->shop;
                     $old = $gamebank->{$request->type};
-                    if( $old <= 0 ) 
+                    if( $old == 0 ) 
                     {
                         return redirect()->back()->withErrors([trans('app.gamebank_cleared')]);
                     }
@@ -755,8 +759,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 \VanguardLTE\BankStat::create([
                     'name' => ucfirst($type) . "[$name ]", 
                     'user_id' => \Illuminate\Support\Facades\Auth::id(), 
-                    'type' => 'out', 
-                    'sum' => $old, 
+                    'type' => ($old<0)?'add':'out', 
+                    'sum' => abs($old), 
                     'old' => $old, 
                     'new' => 0, 
                     'shop_id' => $shop_id

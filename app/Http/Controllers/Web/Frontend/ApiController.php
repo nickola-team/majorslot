@@ -44,9 +44,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $adminid = $site->adminid;
             }
 
-            $admin = $user->referral;
+            $admin = $user;
             while ($admin !=null && !$admin ->hasRole('admin'))
             {
+                if (!$admin->isActive())
+                {
+                    return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+                }
                 $admin = $admin->referral;
             }
 
