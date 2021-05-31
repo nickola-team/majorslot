@@ -100,6 +100,10 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
             ])->first();
+            if (!$game)
+            {
+                exit('unlogged');
+            }
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
