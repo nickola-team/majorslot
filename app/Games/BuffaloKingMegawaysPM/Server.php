@@ -637,7 +637,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 }
             }
             if($bPathEnded == true){
-                if($repeatCount >= 3){
+                if($repeatCount >= 3 || ($firstSymbol == 3 && $repeatCount == 2)){
                     $winLine = [];
                     $winLine['FirstSymbol'] = $firstSymbol;
                     $winLine['RepeatCount'] = $repeatCount;
