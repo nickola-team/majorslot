@@ -73,6 +73,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         {
                             $hotgames[] = $pg;
                         }
+                        if (str_contains($game['enname'], 'Live -'))
+                        {
+                            $livegames[] = $game;
+                        }
                     }
                 }
                 $hotgames[] = ['name' => 'DuoFuDuoCai5Treasures', 'title' => '5트레저 다복이'];
