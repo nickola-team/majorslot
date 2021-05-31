@@ -11,6 +11,7 @@ namespace VanguardLTE
             'bet', 
             'win', 
             'game', 
+            'type', 
             'denomination', 
             'percent', 
             'percent_jps', 
@@ -41,13 +42,13 @@ namespace VanguardLTE
                             'Sum' => '', 
                             'In' => '', 
                             'Out' => '', 
-                            'Balance' => number_format($model->balance, 4, '.', ''), 
-                            'Bet' => number_format($model->bet, 4, '.', ''), 
-                            'Win' => number_format($model->win, 4, '.', ''), 
-                            'IN_GAME' => number_format($model->percent, 4, '.', ''), 
-                            'IN_JPS' => number_format($model->percent_jps, 4, '.', ''), 
-                            'IN_JPG' => number_format($model->percent_jpg, 4, '.', ''), 
-                            'Profit' => number_format($model->profit, 4, '.', ''), 
+                            'Balance' => number_format($model->balance, 2, '.', ''), 
+                            'Bet' => number_format($model->bet, 2, '.', ''), 
+                            'Win' => number_format($model->win, 2, '.', ''), 
+                            'IN_GAME' => number_format($model->percent, 2, '.', ''), 
+                            'IN_JPS' => number_format($model->percent_jps, 2, '.', ''), 
+                            'IN_JPG' => number_format($model->percent_jpg, 2, '.', ''), 
+                            'Profit' => number_format($model->profit, 2, '.', ''), 
                             'user_id' => $model->user->id, 
                             'shop_id' => $model->user->shop_id, 
                             'Date' => date(config('app.date_time_format')), 
@@ -79,7 +80,7 @@ namespace VanguardLTE
 
         public static function create(array $attributes = [])
         {
-            $filterGames = [' FG', ' respin', ' RS', ' doBonus'];
+            $filterGames = [' FG', ' FG1', ' respin', ' RS', ' doBonus'];
             foreach($filterGames as $ignoreGame) 
             {
                 if (substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
@@ -89,7 +90,7 @@ namespace VanguardLTE
             }
 
             $model = static::query()->create($attributes);
-            $filterGames = [' FG', ' respin', ' RS', ' JP', ' debit', ' credit', ' refund', ' payoff', ' RB', ' recredit'];
+            $filterGames = [' FG', ' FG1', ' respin', ' RS', ' JP', ' debit', ' credit', ' refund', ' payoff', ' RB', ' recredit'];
             foreach($filterGames as $ignoreGame) 
             {
                 if (substr_compare($model->game, $ignoreGame, -strlen($ignoreGame)) === 0)
@@ -98,7 +99,7 @@ namespace VanguardLTE
                 }
             }
             if ($model->bet > 0) {
-                $model->user->processBetDealerMoney($model->bet, $model->game);
+                $model->user->processBetDealerMoney($model->bet, $model->game, $model->type);
             }
             return $model;
         }

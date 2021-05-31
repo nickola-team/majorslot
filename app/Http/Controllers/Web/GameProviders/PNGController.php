@@ -25,18 +25,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist = PNGController::getgamelist('png');
             $gamename = $code;
+            $type = 'table';
+            if ($code > 100000)
+            {
+                $code = $code - 100000;
+            }
             if ($gamelist)
             {
                 foreach($gamelist as $game)
                 {
-                    if ($game['gamecode'] == $code)
+                    if ($game['gameid'] == $code)
                     {
                         $gamename = $game['name'];
+                        $type = $game['type'];
                         break;
                     }
                 }
             }
-            return $gamename;
+            return [$gamename,$type];
         }
 
         /*
@@ -156,6 +162,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($user->balance < $bet)
             {
+                $response['real'] = $user->balance;
                 $response['statusCode'] = 7;
                 $response['statusMessage'] = 'NOTENOUGHMONEY';
                 return $response;
@@ -166,12 +173,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $response['real'] = $user->balance;
 
+            $game = $this->gamecodetoname($gameId);
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => floatval($bet), 
                 'win' => 0, 
-                'game' => $this->gamecodetoname($gameId) . '_png', 
+                'game' => $game[0] . '_png', 
+                'type' => $game[1],
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -202,24 +212,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response['statusCode'] = 1;
                 return $response;
             }
+            if ($win >0){
 
-            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($win)));
-            $user->save();
+                $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($win)));
+                $user->save();
+                $game = $this->gamecodetoname($gameId);
+                
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => floatval($user->balance), 
+                    'bet' => 0, 
+                    'win' => floatval($win), 
+                    'game' => $game[0] . '_png' . ($type==0?'':' FG'), 
+                    'type' => $game[1],
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id
+                ]);
+            }
             $response['real'] = $user->balance;
-
-            \VanguardLTE\StatGame::create([
-                'user_id' => $user->id, 
-                'balance' => floatval($user->balance), 
-                'bet' => 0, 
-                'win' => floatval($win), 
-                'game' => $this->gamecodetoname($gameId) . '_png' . $type==0?'':' FG', 
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
-                'shop_id' => $user->shop_id
-            ]);
 
             return $response;
 
@@ -271,13 +285,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($bet)));
             $user->save();
+            $game = $this->gamecodetoname($gameId);
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($bet), 
-                'game' => $this->gamecodetoname($gameId) . '_png refund', 
+                'game' => $game[0] . '_png refund', 
+                'type' => $game[1],                
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -300,60 +316,39 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $games = json_decode($gameList, true);
                 return $games;
             }
-            return null;
-
-            $data = [
-                'api_token' => config('app.bng_api_token'),
-            ];
-            $reqbody = json_encode($data);
-            $response = Http::withHeaders([
-                'Security-Hash' => PNGController::calcSecurityHash($reqbody)
-                ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/provider/list/');
-            if (!$response->ok())
-            {
-                return [];
-            }
-            $providerId = 1;
-            $data = $response->json();
             $gameList = [];
-
-            if (isset($data['items'])){
-                foreach ($data['items'] as $item)
+            $newgames = \VanguardLTE\NewGame::where('provider', 'png')->get()->pluck('gameid')->toArray();
+            $query = 'SELECT * FROM w_png_games WHERE view=1';
+            $png_games = \DB::select($query);
+            foreach ($png_games as $game)
+            {
+                $icon_name = str_replace(' ', '_', $game->name);
+                $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                if (in_array($game->gamecode , $newgames))
                 {
-                    if ($item['provider_name'] == $href)
-                    {
-                        $providerId = $item['provider_id'];
-                        break;
-                    }
+                    array_unshift($gameList, [
+                        'provider' => 'png',
+                        'gameid' => $game->gameid,
+                        'gamecode' => $game->gamecode,
+                        'enname' => $game->name,
+                        'name' => preg_replace('/\s+/', '', $game->name),
+                        'title' => $game->title,
+                        'type' => $game->type,
+                        'icon' => url('/frontend/Default/ico/png/'). '/'. $icon_name . '.jpg',
+                    ]);
                 }
-            }
-
-            $data1 = [
-                'api_token' => config('app.bng_api_token'),
-                'provider_id' => $providerId
-            ];
-            $reqbody = json_encode($data1);
-            $response = Http::withHeaders([
-                'Security-Hash' => PNGController::calcSecurityHash($reqbody)
-                ])->withBody($reqbody, 'text/plain')->post(config('app.bng_game_server') . config('app.bng_project_name') . '/api/v1/game/list/');
-            
-            if (!$response->ok())
-            {
-                return [];
-            }
-            $data1 = $response->json();
-            foreach ($data1['items'] as $game)
-            {
-                if ($game['type'] == "SLOT")
+                else
                 {
-                    $gameList[] = [
-                        'provider' => 'bng',
-                        'gamecode' => $game['game_id'],
-                        'name' => preg_replace('/[_\s]+/', '', $game['game_name']),
-                        'title' => __('gameprovider.'.$game['i18n']['en']['title']),
-                        'icon' => $game['i18n']['en']['banner_path'],
-                        'demo' => PNGController::makegamelink($game['game_id'], "fun")
-                    ];
+                    array_push($gameList, [
+                        'provider' => 'png',
+                        'gameid' => $game->gameid,
+                        'gamecode' => $game->gamecode,
+                        'enname' => $game->name,
+                        'name' => preg_replace('/\s+/', '', $game->name),
+                        'title' => $game->title,
+                        'type' => $game->type,
+                        'icon' => url('/frontend/Default/ico/png'). '/'. $icon_name . '.jpg',
+                        ]);
                 }
             }
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -361,7 +356,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode, $mode)
+        public static function makegamelink($gamecode)
         {
             $detect = new \Detection\MobileDetect();
             $user = auth()->user();
@@ -369,34 +364,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $key = [
-                'token' => $user->api_token,
-                'game' => $gamecode,
-                'ts' => time(),
-                'lang' => 'ko',
-                'platform' => ($detect->isMobile() || $detect->isTablet())?'mobile':'desktop',
-            ];
-            if ($mode == "fun")
-            {
-                $key['wl'] = 'demo';
-            }
-            else
-            {
-                $key['wl'] = config('app.bng_wl');
-            }
-            $str_params = implode('&', array_map(
-                function ($v, $k) {
-                    return $k.'='.$v;
-                }, 
-                $key,
-                array_keys($key)
-            ));
-            return $url = config('app.bng_game_server') . config('app.bng_project_name') . '/game.html?'.$str_params;
+            $channel = ($detect->isMobile() || $detect->isTablet())?'mobile':'desktop';
+             $url = config('app.png_root_url') . '/casino/ContainerLauncher?pid='.config('app.png_pid').'&gid='.$gamecode.'&channel='.$channel.'&lang=ko_KR&practice=0&ticket='.$user->api_token.'&origin=' . url('/');
+            return $url;
         }
 
         public static function getgamelink($gamecode)
         {
-            $url = PNGController::makegamelink($gamecode, "real");
+            $url = PNGController::makegamelink($gamecode);
             if ($url)
             {
                 return ['error' => false, 'data' => ['url' => $url]];

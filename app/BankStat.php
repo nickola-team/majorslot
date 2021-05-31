@@ -38,7 +38,7 @@ namespace VanguardLTE
                             'Game' => '', 
                             'User' => $model->user->username, 
                             'System' => '', 
-                            'Sum' => number_format($model->sum, 4, '.', ''), 
+                            'Sum' => number_format($model->sum, 2, '.', ''), 
                             'In' => ($model->type == 'add' ? $model->sum : ''), 
                             'Out' => ($model->type != 'add' ? $model->sum : ''), 
                             'Balance' => '', 

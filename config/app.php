@@ -130,7 +130,9 @@ return [
     /*
     Play'n GO Auth key
     */
-    'png_access_token' => env('PNG_ACCESSTOKEN', 'testtest'),
+    'png_access_token' => env('PNG_ACCESSTOKEN', 'stagestagestagestage'),
+    'png_root_url' => env('PNG_ROOT_URL', 'https://agastage.playngonetwork.com'),
+    'png_pid' => env('PNG_PRODUCT_ID', '8951'),
 
     /*
     |--------------------------------------------------------------------------

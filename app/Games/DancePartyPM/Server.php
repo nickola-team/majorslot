@@ -31,7 +31,7 @@ namespace VanguardLTE\Games\DancePartyPM
             // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$response = '{"responseEvent":"error","responseType":"","serverResponse":"invalid login"}';
+            	$response = 'unlogged';
                 exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);

@@ -51,6 +51,7 @@
                             <th>보유금</th>
                             <th>수익금</th>
                             <th>딜비</th>
+							<th>라이브딜비</th>
 							@if ( auth()->user()->hasRole('admin'))
                             <th>보너스환수금</th>
                             @endif
@@ -82,6 +83,7 @@
                                 <th>보유금</th>
                                 <th>수익금</th>
                                 <th>딜비</th>
+								<th>라이브딜비</th>
 								@if ( auth()->user()->hasRole('admin'))
 								<th>보너스환수금</th>
 								@endif

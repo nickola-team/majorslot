@@ -30,7 +30,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
             // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$response = '{"responseEvent":"error","responseType":"","serverResponse":"invalid login"}';
+            	$response = 'unlogged';
                 exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
@@ -243,9 +243,9 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                     if($isFreeSpin == true){
                         $slotSettings->SetBalance(-1 * ($betline * $buyFreeMuls[$pur_value]), $slotEvent['slotEvent']);
                         $winType = 'bonus';
-                        $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
                         $_sum = ($betline * $buyFreeMuls[$pur_value]) / 100 * $slotSettings->GetPercent();
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], true);
+                        $_winAvaliableMoney = $slotSettings->GetBank('bonus');
                     }else{
                         $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                         $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();

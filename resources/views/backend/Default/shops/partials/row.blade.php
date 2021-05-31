@@ -25,6 +25,7 @@
 	@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 	<td>{{ $shop->percent }}</td>
 	<td>{{ $shop->deal_percent }}</td>
+	<td>{{ $shop->table_deal_percent }}</td>
 	@endif
 	{{-- <td>{{ $shop->frontend }}</td>
 	<td>{{ $shop->currency }}</td>

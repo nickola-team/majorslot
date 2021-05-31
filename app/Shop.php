@@ -11,6 +11,7 @@ namespace VanguardLTE
             'percent', 
             'deal_balance',
             'deal_percent',
+            'table_deal_percent',
             'frontend', 
             'currency', 
             'is_blocked', 
