@@ -398,21 +398,21 @@ namespace VanguardLTE\Console
                 $this->info($res['msg']);
             });
 
-            \Artisan::command('daily:buffaloking', function () {
+            \Artisan::command('daily:newgame {originalid}', function ($originalid) {
                 set_time_limit(0);
-                $this->info("Begin adding buffaloking megaway game to all shop");
+                $this->info("Begin adding new game to all shop");
                 
-                $buffgame = \VanguardLTE\Game::where('id', 974)->first();
+                $buffgame = \VanguardLTE\Game::where('id', $originalid)->first();
                 if (!$buffgame)
                 {
-                    $this->error('Can not find original game of buffaloking megaway');
+                    $this->error('Can not find original game of new game');
                     return;
                 }
                 $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
                 $data = $buffgame->toArray();
                 foreach ($shop_ids as $id)
                 {
-                    if (\VanguardLTE\Game::where(['shop_id'=> $id, 'original_id' => 974])->first())
+                    if (\VanguardLTE\Game::where(['shop_id'=> $id, 'original_id' => $originalid])->first())
                     {
                         $this->info("Game already exist in " . $id . " shop");
                     }
