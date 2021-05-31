@@ -73,9 +73,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         {
                             $hotgames[] = $pg;
                         }
-                        if (str_contains($game['enname'], 'Live -'))
+                        if (str_contains($pg['enname'], 'Live -'))
                         {
-                            $livegames[] = $game;
+                            $livegames[] = $pg;
                         }
                     }
                 }
