@@ -93,7 +93,7 @@
           -1 != browser.indexOf("msie") ||
           -1 != browser.indexOf("edge")) &&
           (alert(
-            "크롬에 최적화되어습니다. 크롬으브라우저를  이용해주시길 바람니다."
+            "크롬에 최적화되어습니다. 크롬브라우저를  이용해주시길 바랍니다."
           ),
           (window.location.href = "https://www.google.com/intl/ko/chrome/"));
       }

@@ -93,7 +93,7 @@
           -1 != browser.indexOf("msie") ||
           -1 != browser.indexOf("edge")) &&
           (alert(
-            "크롬에 최적화되어습니다. 크롬으브라우저를  이용해주시길 바람니다."
+            "크롬에 최적화되어습니다. 크롬브라우저를  이용해주시길 바랍니다."
           ),
           (window.location.href = "https://www.google.com/intl/ko/chrome/"));
       }
@@ -324,6 +324,43 @@
                   ></table>
                 </div>
               </div>
+              <div class="container demo-2">
+                <div id="slider" class="sl-slider-wrapper">
+                  <div class="sl-slider" style="width: 100%; height: 392px">
+                    <div class="sl-slides-wrapper">
+                      <div
+                        class="sl-slide sl-slide-horizontal"
+                        data-orientation="horizontal"
+                        data-slice1-rotation="-25"
+                        data-slice2-rotation="-25"
+                        data-slice1-scale="2"
+                        data-slice2-scale="2"
+                        style="display: block"
+                      >
+                        <div
+                          class="sl-content-wrapper"
+                          style="width: 100%; height: 392px"
+                        >
+                          <div class="sl-content">
+                            <div class="sl-slide-inner">
+                              <div class="bg-img bg-img-1"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <nav id="nav-dots" class="nav-dots">
+                    <span class="nav-dot-current"></span><span></span
+                    ><span></span>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="visual_ling_2"></div>
+          <div class="visual_wrap">
+            <div class="visual">
               <div class="container demo-2">
                 <div id="slider" class="sl-slider-wrapper">
                   <div class="sl-slider" style="width: 100%; height: 392px">
