@@ -212,7 +212,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response['statusCode'] = 1;
                 return $response;
             }
-            if ($win >0){
+            if ($win >0 || $type==0){
 
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($win)));
                 $user->save();
