@@ -1122,19 +1122,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                                 'item_id' => $shop->shop_id, 
                                 'user_id' => auth()->user()->id
                             ]);
-                            $usersToDelete = \VanguardLTE\User::whereIn('role_id', [
+                            \VanguardLTE\User::whereIn('role_id', [
                                 1, 
                                 2, 
                                 3
-                            ])->where('shop_id', $shop->shop_id)->get();
-                            if( $usersToDelete ) 
+                            ])->where('shop_id', $shop->shop_id)->delete();
+                            /*if( $usersToDelete ) 
                             {
                                 foreach( $usersToDelete as $userDelete ) 
                                 {
                                     event(new \VanguardLTE\Events\User\Deleted($userDelete));
                                     $userDelete->delete();
                                 }
-                            }
+                            } */
                         }
                     }
                     event(new \VanguardLTE\Events\User\Deleted($distributor));
