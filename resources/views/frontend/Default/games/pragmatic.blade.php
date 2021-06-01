@@ -32,7 +32,7 @@
     <body>
     <div style="position:relative; width:100%; height:100%;">
         <iframe id="embedgameIframe" style="margin:0; padding:0; white-space: nowrap; border: 0; width:100%;height:100%;" frameborder="0" border="0" cellspacing="0"
-        src=" {{ $url }}"></iframe>
+        src=" {{ $url }}" allowfullscreen></iframe>
     </div>
     </body>
 </html>
