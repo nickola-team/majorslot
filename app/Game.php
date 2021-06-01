@@ -698,7 +698,7 @@ namespace VanguardLTE
             {
                 return null;
             }
-            $bank = \VanguardLTE\BonusBank::where('master_id', $master->id)->first();
+            $bank = \VanguardLTE\BonusBank::lockforUpdate()->where('master_id', $master->id)->first();
             if (!$bank)
             {
                 $bank = \VanguardLTE\BonusBank::create(['master_id' => $master->id]);

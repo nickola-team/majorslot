@@ -765,7 +765,8 @@ namespace VanguardLTE
                 return;
             }
 
-            $shop = $this->shop;
+            //$shop = $this->shop;
+            $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$this->shop_id)->first();
             $deal_shop = 0;
             $deal_distributor = 0;
             $deal_agent = 0;
@@ -803,14 +804,16 @@ namespace VanguardLTE
 
             $manager = $this->referral;
             if($manager != null) {
-                $distributor = $manager->referral;
+                //$distributor = $manager->referral;
+                $distributor = \VanguardLTE\User::lockForUpdate()->where('id',$manager->parent_id)->first();
                 $deal_percent = ($type==null || $type=='slot')?$distributor->deal_percent:$distributor->table_deal_percent;
                 if($distributor != null && $distributor->hasRole('distributor') && $deal_percent > 0){
                     $deal_distributor = $this->addDealerMoney($betMoney, $distributor, $deal_shop, $game, $type);
                 }
 
                 if($distributor != null && $distributor->referral != null){
-                    $agent = $distributor->referral;
+                    //$agent = $distributor->referral;
+                    $agent = \VanguardLTE\User::lockForUpdate()->where('id',$distributor->parent_id)->first();
                     $deal_percent = ($type==null || $type=='slot')?$agent->deal_percent:$agent->table_deal_percent;
                     if($agent !=  null && $deal_percent > 0) {
                         $agent_distributor = $this->addDealerMoney($betMoney, $agent, $deal_distributor, $game, $type);

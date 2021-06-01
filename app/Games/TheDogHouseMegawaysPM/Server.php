@@ -176,7 +176,8 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
 
                     /* 프리스핀 구매금액은 bonus에 충전 */
-                    $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $allBet, 0);
+                    $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
+                    $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney, 0);
                 }
                 else if ($slotEvent['slotEvent'] === 'fsRaining' || $slotEvent['slotEvent'] === 'fsSticky') {
 

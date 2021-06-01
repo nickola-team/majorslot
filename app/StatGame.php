@@ -99,7 +99,8 @@ namespace VanguardLTE
                 }
             }
             if ($model->bet > 0) {
-                $model->user->processBetDealerMoney($model->bet, $model->game, $model->type);
+                $user = \VanguardLTE\User::lockForUpdate()->where('id',$model->user_id)->first();
+                $user->processBetDealerMoney($model->bet, $model->game, $model->type);
             }
             return $model;
         }
