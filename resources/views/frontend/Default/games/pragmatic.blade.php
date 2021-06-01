@@ -7,6 +7,7 @@
         margin: 0;
         }
     </style>
+    <script src="https://client.pragmaticplaylive.net/desktop/assets/api/fullscreenApi.js" ></script>
     <script>
         window.onload = function () {
             document.documentElement.style.width = "100%";
