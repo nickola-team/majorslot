@@ -10,6 +10,30 @@
     </section>
 
     <section class="content">
+	<div class="box box-danger collapsed-box users_show">
+			<div class="box-header with-border">
+				<h3 class="box-title">@lang('app.filter')</h3>
+				<div class="box-tools pull-right">
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+				</div>
+			</div>
+			<div class="box-body">
+				<form action="" method="GET" id="users-form" >
+					<div class="col-md-6">
+						<div class="form-group">
+						<label>파트너이름</label>
+						<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="이름">
+						</div>
+					</div>
+			</div>
+			<div class="box-footer">
+				<button type="submit" class="btn btn-primary">
+					@lang('app.filter')
+				</button>
+			</div>
+			</form>
+
+			</div>
         <div class="box box-primary">
             <div class="box-header with-border">
                 {{-- <h3 class="box-title">{{ $role->name }} @lang('app.tree')</h3> --}}

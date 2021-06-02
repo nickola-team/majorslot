@@ -17,7 +17,7 @@
     }
 ?>
 <td>{{ $available_roles_trans[$user['role_id']] }}</td>
-@if ( isset($user['shop']) )
+@if ( isset($user['shop']) && empty(Request::get('search')) )
 <td>
 <a href="{{ route('backend.shop.edit', $user['shop_id']) }}">
 {{ $user['shop'] }}

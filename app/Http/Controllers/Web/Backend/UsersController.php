@@ -305,28 +305,38 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $user_id = $request->input('parent');
             $users = [];
             $user = null;
-            if($user_id == null || $user_id == 0)
+            if ($request->search != '')
             {
-                $user_id = auth()->user()->id;
-                $users = [$user_id];
-                if (auth()->user()->hasRole('admin'))
-                {
-                    $users = auth()->user()->childPartners();
-                }
+                $users = \VanguardLTE\User::orderBy('username', 'ASC');
+                $users = $users->whereIn('id', auth()->user()->hierarchyPartners());
+                $users = $users->where('username', 'like', '%' . $request->search . '%');
+                $users = $users->get()->pluck('id')->toArray();
             }
-            else 
+            else
             {
-                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                if($user_id == null || $user_id == 0)
                 {
-                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
-                }
-                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-                if ($user) {
-                    $users = $user->childPartners();
-                }
-                else
-                {
+                    $user_id = auth()->user()->id;
                     $users = [$user_id];
+                    if (auth()->user()->hasRole('admin'))
+                    {
+                        $users = auth()->user()->childPartners();
+                    }
+                }
+                else 
+                {
+                    if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                    {
+                        return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                    }
+                    $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                    if ($user) {
+                        $users = $user->childPartners();
+                    }
+                    else
+                    {
+                        $users = [$user_id];
+                    }
                 }
             }
             $partners = [];
