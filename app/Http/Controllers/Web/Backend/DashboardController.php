@@ -638,6 +638,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $statistics = $statistics->where('shops_stat.type', $request->type);
             }
+            if( $request->in_out != '' ) 
+            {
+                if ($request->in_out == 1)
+                {
+                    $statistics = $statistics->whereNotNull('shops_stat.request_id');
+                }
+                else
+                {
+                    $statistics = $statistics->whereNull('shops_stat.request_id');
+                }
+            }
             if( $request->user != '' ) 
             {
                 $statistics = $statistics->join('users', 'users.id', '=', 'shops_stat.user_id');

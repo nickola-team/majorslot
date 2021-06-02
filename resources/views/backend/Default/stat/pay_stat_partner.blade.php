@@ -128,7 +128,7 @@
 								if ($stat->type == 'deal_out'){ $totaldealout = $totaldealout + abs($stat->summ);}
 							?>
 						@endforeach
-						<td></th>
+						<td></td>
 						<td><span class="text-red">합계</span></td>
 						@if (auth()->user()->hasRole(['admin', 'master']))
 						<td></td>
