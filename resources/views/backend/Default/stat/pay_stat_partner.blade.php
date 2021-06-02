@@ -26,19 +26,30 @@
 								<input type="text" class="form-control" name="system_str" value="{{ Request::get('system_str') }}">
 							</div>
 						</div> --}}
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<div class="form-group">
-								<label>충/환전</label>
+								<label>충전/환전/수익금전환</label>
 								<select name="type" class="form-control">
 									<option value="" @if (Request::get('type') == '') selected @endif>@lang('app.all')</option>
 									<option value="add" @if (Request::get('type') == 'add') selected @endif>충전</option>
 									<option value="out" @if (Request::get('type') == 'out') selected @endif>환전</option>
+									<option value="deal_out" @if (Request::get('type') == 'deal_out') selected @endif>수익금전환</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>계좌정보</label>
+								<select name="in_out" class="form-control">
+									<option value="" @if (Request::get('in_out') == '') selected @endif>@lang('app.all')</option>
+									<option value="1" @if (Request::get('in_out') == '1') selected @endif>있음</option>
+									<option value="0" @if (Request::get('in_out') == '0') selected @endif>없음</option>
 								</select>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>파트너</label>
+								<label>파트너이름</label>
 								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
 							</div>
 						</div>
@@ -66,21 +77,6 @@
 								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 							</div>
 						</div>
-						{{-- <div class="col-md-12">
-							<div class="form-group">
-								@php
-									 $filter = ['' => '---'];
-                                    $shifts = \VanguardLTE\OpenShift::where('shop_id', Auth::user()->shop_id)->orderBy('start_date', 'DESC')->get();
-                                    if( count($shifts) ){
-                                        foreach($shifts AS $shift){
-                                            $filter[$shift->id] = $shift->id . ' - ' . $shift->start_date;
-                                        }
-                                    }
-								@endphp
-								<label>@lang('app.shifts')</label>
-								{!! Form::select('shifts', $filter, Request::get('shifts'), ['id' => 'shifts', 'class' => 'form-control']) !!}
-							</div>
-						</div> --}}
 					</div>
 				</div>
 				<div class="box-footer">
@@ -118,21 +114,39 @@
 					</tr>
 					</thead>
 					<tbody>
+					<?php
+						$totalin=0;
+						$totalout=0;
+						$totaldealout=0;
+					?>
 					@if (count($statistics))
 						@foreach ($statistics as $stat)
-							@if($stat instanceof \VanguardLTE\ShopStat)
-								@include('backend.Default.stat.partials.row_shop_stat')
-							@else
-								@include('backend.Default.stat.partials.row_stat')
-							@endif
+							@include('backend.Default.stat.partials.row_stat')
+							<?php
+								if ($stat->type == 'add'){ $totalin = $totalin + abs($stat->summ);}
+								if ($stat->type == 'out'){ $totalout = $totalout + abs($stat->summ);}
+								if ($stat->type == 'deal_out'){ $totaldealout = $totaldealout + abs($stat->summ);}
+							?>
 						@endforeach
+						<td></th>
+						<td><span class="text-red">합계</span></td>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<td></td>
+						@endif						
+						<td></td>
+						<td></td>
+						<td><span class="text-green">{{number_format($totalin,0)}}</span></td>
+						<td><span class="text-red">{{number_format($totalout,0)}}</span></td>
+						<td><span class="text-red">{{number_format($totaldealout,0)}}</span></td>
+						<td></td>
+						<td></td>
+						<td></td>
 					@else
 						<tr><td colspan="8">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>
 					<tr>
-						{{-- <th>@lang('app.system')</th> --}}
 						<th>이름(아이디)</th>
 						<th>상위파트너</th>
 						@if (auth()->user()->hasRole(['admin', 'master']))

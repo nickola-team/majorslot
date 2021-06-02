@@ -358,6 +358,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $statistics = $statistics->where('transactions.type', $request->type);
             }
+            if( $request->in_out != '' ) 
+            {
+                if ($request->in_out == 1)
+                {
+                    $statistics = $statistics->whereNotNull('transactions.request_id');
+                }
+                else
+                {
+                    $statistics = $statistics->whereNull('transactions.request_id');
+                }
+            }
             if( $request->sum_from != '' ) 
             {
                 $statistics = $statistics->where('transactions.summ', '>=', $request->sum_from);
