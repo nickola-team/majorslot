@@ -6,6 +6,16 @@
 	{{ $adjustment['name'] }}
 	@endif
 	</td>
+	<?php  
+    $available_roles = Auth::user()->available_roles( true );
+    $available_roles_trans = [];
+    foreach ($available_roles as $key=>$role)
+    {
+        $role = trans("app." . strtolower($role));
+        $available_roles_trans[$key] = $role;
+    }
+	?>
+	<td>{{ $available_roles_trans[$adjustment['role_id']] }}</td>
 	<td>{{ number_format($adjustment['totalin'],2) }}</td>
 	<td>{{ number_format($adjustment['totalout'],2) }}</td>
 	@if(auth()->user()->hasRole(['admin', 'master']))
