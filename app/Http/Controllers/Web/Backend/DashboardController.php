@@ -799,7 +799,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->get();
-            $summary =  $summary->paginate(10);
+            $summary =  $summary->paginate(31);
         
             return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
         }
