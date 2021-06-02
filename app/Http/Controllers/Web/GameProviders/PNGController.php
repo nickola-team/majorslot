@@ -134,6 +134,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $response['externalId'] = $user->id;
             $response['nickname'] = $user->username;
+            $response['registration'] = $user->created_at;
             $response['real'] = floatval($user->balance);
             return $response;
         }

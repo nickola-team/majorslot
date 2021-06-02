@@ -351,6 +351,35 @@
           </ul>
         </div>
         <!-- /.navbar-collapse -->
+        @if (auth()->user()->hasRole('admin'))
+        @else
+        <form action="{{ route('backend.user.update.address', auth()->user()->id) }}" method="post" class="navbar-form navbar-left">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button type="button"class="btn btn-flat" disabled style="cursor:default;">
+                    <i class="fa fa-paper-plane"></i>
+                    </button>
+                </span>
+                @if (auth()->user()->hasRole('master'))
+                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="Search" value="{{auth()->user()->address}}" >
+                <span class="input-group-btn">
+                    <button type="submit" name="search"  class="btn btn-flat" style="background:rgba(255,255,255,0.2);">
+                    <i class="fa fa-edit"></i>
+                    </button>
+                </span>
+                @else
+                <?php
+                    $master = auth()->user()->referral;
+                    while ($master!=null && !$master->hasRole('master'))
+                    {
+                        $master = $master->referral;
+                    }
+                ?>
+                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="Search" value="{{$master->address}}" style="color:#b8c7ce;cursor:default;" disabled>
+                @endif
+            </div>
+        </form>
+        @endif
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">

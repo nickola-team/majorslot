@@ -19,6 +19,7 @@ namespace VanguardLTE
             'email', 
             'username', 
             'avatar', 
+            'address',
             'balance', 
             'last_login', 
             'confirmation_token', 
