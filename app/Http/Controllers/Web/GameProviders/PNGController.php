@@ -127,7 +127,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user = \VanguardLTE\User::lockForUpdate()->Where('api_token',$token)->get()->first();
             if (!$user || !$user->hasRole('user')){
-                return ['statusCode' => 1,'statusMessage' => 'NOUSER'];
+                return ['statusCode' => 4,'statusMessage' => 'Wrong username or password'];
             }
 
             $response['externalId'] = $user->id;
