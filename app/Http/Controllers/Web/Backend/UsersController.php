@@ -1023,6 +1023,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             return redirect()->route('backend.user.edit', $user->id)->withErrors(trans('app.avatar_not_changed'));
         }
+        public function updateAddress(\VanguardLTE\User $user, \VanguardLTE\Services\Upload\UserAvatarManager $avatarManager, \Illuminate\Http\Request $request)
+        {
+            $user->update(['address' => $request->address]);
+            return redirect()->back()->withSuccess('연락처가 변경되었습니다');
+        }
         public function updateAvatarExternal(\VanguardLTE\User $user, \Illuminate\Http\Request $request, \VanguardLTE\Services\Upload\UserAvatarManager $avatarManager)
         {
             $avatarManager->deleteAvatarIfUploaded($user);

@@ -50,19 +50,37 @@
             @endif
         </div>
         <!-- search form -->
-        {{--
-        @permission('full.search')
-        <form action="{{ route('backend.search') }}" method="get" class="sidebar-form">
+        @if (auth()->user()->hasRole('admin'))
+        @else
+        <form action="{{ route('backend.user.update.address', auth()->user()->id) }}" method="post" class="sidebar-form">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="@lang('app.search')">
                 <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                  <i class="fa fa-search"></i>
-                </button>
-              </span>
+                    <button type="button"class="btn btn-flat" disabled style="cursor:default;">
+                    <i class="fa fa-paper-plane"></i>
+                    </button>
+                </span>
+                @if (auth()->user()->hasRole('master'))
+                <input type="text" name="address" class="form-control" value="{{auth()->user()->address}}" style="color:#b8c7ce;">
+                <span class="input-group-btn">
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                    <i class="fa fa-edit"></i>
+                    </button>
+                </span>
+                @else
+                <?php
+                    $master = auth()->user()->referral;
+                    while ($master!=null && !$master->hasRole('master'))
+                    {
+                        $master = $master->referral;
+                    }
+                ?>
+                <input type="text" name="q" class="form-control" value="{{$master->address}}" style="color:#b8c7ce;cursor:default;" disabled>
+                @endif
+                
+
             </div>
         </form>
-        @endpermission --}}
+        @endif
 
         <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->

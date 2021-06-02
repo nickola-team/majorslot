@@ -672,6 +672,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.user.update.avatar',
         'uses' => 'UsersController@updateAvatar'
     ]);
+    Route::post('user/{user}/update/address', [
+        'as' => 'backend.user.update.address',
+        'uses' => 'UsersController@updateAddress'
+    ]);
     Route::post('user/{user}/update/avatar/external', [
         'as' => 'backend.user.update.avatar.external',
         'uses' => 'UsersController@updateAvatarExternal'
