@@ -37,7 +37,7 @@
                 @endpermission
                 @endif
 
-                @if(auth()->user()->hasRole(['admin','master']) && $user->hasRole(['master', 'agent', 'distributor', 'manager']) )
+                @if(auth()->user()->role_id > $user->role_id  && $user->hasRole(['master', 'agent', 'distributor', 'manager']) )
                     <a href="{{ route('backend.user.hard_delete', $user->id) }}"
                         class="btn btn-danger btn-block"
                         data-method="DELETE"

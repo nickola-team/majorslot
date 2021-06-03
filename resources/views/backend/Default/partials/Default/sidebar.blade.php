@@ -19,7 +19,7 @@
                         @endphp
                         원
                     @else
-                        {{ number_format(auth()->user()->present()->balance,2) }}원
+                        {{ number_format(auth()->user()->present()->balance,0) }}원
                     @endif
 
 			</p>
@@ -34,7 +34,7 @@
                     @endphp
                     원
                 @else
-                    {{ number_format(auth()->user()->present()->deal_balance - auth()->user()->present()->mileage,2) }}
+                    {{ number_format(auth()->user()->present()->deal_balance - auth()->user()->present()->mileage,0) }}
                     원
                 @endif
 
@@ -125,7 +125,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
-            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>파트너관리</span>
@@ -140,46 +140,76 @@
                             <span>매장관리</span>
                         </a>
                     </li>
+
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent']) )
+                    <li class="{{ Request::is('backend/partner/4') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 4) }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>총판관리</span>
+                        </a>
+                    </li>
+                    @endif
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master']) )
+                    <li class="{{ Request::is('backend/partner/5') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 5) }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>부본사관리</span>
+                        </a>
+                    </li>
+                    @endif
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+                    <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 6) }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>본사관리</span>
+                        </a>
+                    </li>
+                    @endif
+                </ul>
+            </li>
+            @endif
+            @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+            <li class="treeview {{  Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-users"></i>
+                    <span>게임관리</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class=" treeview-menu" id="stats-dropdown">
                     @permission('categories.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
                     <li class="{{ Request::is('backend/category') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.category.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>게임카테고리관리</span>
                         </a>
                     </li>              
-                    @endif
                     @endpermission      
                     
                     @permission('jpgame.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
                     <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
                         <a href="{{ route('backend.jpgame.list') }}">
                             <i class="fa  fa-circle-o"></i>
                             <span>잭팟관리</span>
                         </a>
                     </li>
-                    @endif
                     @endpermission
                     @permission('games.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
                     <li class="{{ (Request::is('backend/game') || Request::is('backend/game/*')) ? 'active' : ''  }}">
                         <a href="{{ route('backend.game.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>게임관리</span>
                         </a>
                     </li>
-                    @endif
                     @endpermission
 
-                    @if ( auth()->check() && auth()->user()->hasRole('admin') )
                     <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
                         <a href="{{ route('backend.game.bank') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>환수금관리</span>
                         </a>
                     </li>
-                    @endif
 
                 </ul>
             </li>

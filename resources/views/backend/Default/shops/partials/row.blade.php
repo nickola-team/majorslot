@@ -1,30 +1,36 @@
 <tr>        
     <td>
-		<a href="{{ route('backend.user.list', ['shopname'=>$shop->name]) }}">{{ $shop->name }}</a>
+	<a href="{{ route('backend.shop.edit', $shop->id) }}">{{ $shop->name }}</a>
 	</td>
-	<td>
 	@if($shop->creator)
-		@if( Auth::user()->hasRole(['admin', 'master', 'agent']) )
+		@if (auth()->user()->hasRole(['admin','master','agent']))
+		<td>
 			<a href="{{ route('backend.user.edit', $shop->creator->id) }}" >{{ $shop->creator->username }}</a>
-		@else	
-		{{ $shop->creator->username }}
+		</td>
 		@endif
 	@endif
-	</td>
-	<td>
 	@if($shop->creator && $shop->creator->referral)
-		@if( Auth::user()->hasRole(['admin', 'master', 'agent']) )
+		@if (auth()->user()->hasRole(['admin','master']))
+		<td>
 			<a href="{{ route('backend.user.edit', $shop->creator->referral->id) }}" >{{ $shop->creator->referral->username }}</a>
-		@else	
-		{{ $shop->creator->referral->username }}
+		</td>
 		@endif
 	@endif
-	</td>
+
+	@if($shop->creator && $shop->creator->referral && $shop->creator->referral->referral)
+		@if (auth()->user()->hasRole(['admin']))
+		<td>
+			<a href="{{ route('backend.user.edit',  $shop->creator->referral->referral->id) }}" >{{  $shop->creator->referral->referral->username }}</a>
+		</td>
+		@endif
+	@endif
+	
 	{{-- <td><a href="{{ route('frontend.jpstv', $shop->shop_id) }}" target="_blank">{{ $shop->shop_id }}</a></td> --}}
     <td>{{ number_format($shop->balance,0) }}</td>
 	@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 	<td>{{ $shop->percent }}</td>
 	@endif
+	<td>{{ number_format($shop->deal_balance,0) }}</td>
 	<td>{{ $shop->deal_percent }}</td>
 	<td>{{ $shop->table_deal_percent }}</td>
 	{{-- <td>{{ $shop->frontend }}</td>
