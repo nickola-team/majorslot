@@ -7,19 +7,19 @@
 	@if($adjustment->open_shift)
 	<td>{{ $adjustment->open_shift->start_date }}</td>
 	<td>{{ $adjustment->open_shift->end_date }}</td>
-	<td>{{ number_format($adjustment->open_shift->old_total,2) }}</td>
-	<td>{{ number_format($adjustment->open_shift->balance_in,2) }}</td>
-	<td>{{ number_format($adjustment->open_shift->balance_out,2) }}</td>
-	<td>{{ number_format($adjustment->open_shift->money_in,2) }}</td>
-	<td>{{ number_format($adjustment->open_shift->money_out,2) }}</td>
+	<td>{{ number_format($adjustment->open_shift->old_total,0) }}</td>
+	<td>{{ number_format($adjustment->open_shift->balance_in,0) }}</td>
+	<td>{{ number_format($adjustment->open_shift->balance_out,0) }}</td>
+	<td>{{ number_format($adjustment->open_shift->money_in,0) }}</td>
+	<td>{{ number_format($adjustment->open_shift->money_out,0) }}</td>
 	@if($adjustment->partner instanceof \VanguardLTE\Shop)
-	<td>{{ number_format($adjustment->total_in,2) }}</td>
+	<td>{{ number_format($adjustment->total_in,0) }}</td>
 	@endif
-	<td>{{ number_format($adjustment->open_shift->deal_profit,2)}}</td>
-	<td>{{ number_format($adjustment->open_shift->mileage,2)}}</td>
-	<td>{{ number_format($adjustment->open_shift->convert_deal,2) }}</td>
-	<td>{{ number_format($adjustment->open_shift->deal_profit - $adjustment->open_shift->mileage - $adjustment->open_shift->convert_deal,2) }}</td>
-	<td>{{ number_format($adjustment->partner->balance+$adjustment->total_in,2) }}</td>
+	<td>{{ number_format($adjustment->open_shift->deal_profit,0)}}</td>
+	<td>{{ number_format($adjustment->open_shift->mileage,0)}}</td>
+	<td>{{ number_format($adjustment->open_shift->convert_deal,0) }}</td>
+	<td>{{ number_format($adjustment->open_shift->deal_profit - $adjustment->open_shift->mileage - $adjustment->open_shift->convert_deal,0) }}</td>
+	<td>{{ number_format($adjustment->partner->balance+$adjustment->total_in,0) }}</td>
 	@else
 		<td colspan =12>정산을 시작하지 않았습니다.</td>
 	@endif

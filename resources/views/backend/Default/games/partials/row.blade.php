@@ -11,15 +11,15 @@
 		@endpermission
 	</td>
 	@permission('games.in_out')
-	<td>{{ number_format($game->stat_in,2) }}</td>
-	<td>{{ number_format($game->stat_out,2) }}</td>
+	<td>{{ number_format($game->stat_in,0) }}</td>
+	<td>{{ number_format($game->stat_out,0) }}</td>
 	<td>
 		@if(($game->stat_in - $game->stat_out) >= 0)
 			<span class="text-green">
 		@else
 			<span class="text-red">
 		@endif	
-		{{ number_format($game->stat_in-$game->stat_out, 2) }}
+		{{ number_format($game->stat_in-$game->stat_out, 0) }}
 		</span>
 	</td>
 	@endpermission

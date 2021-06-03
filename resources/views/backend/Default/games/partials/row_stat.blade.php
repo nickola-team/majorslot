@@ -1,9 +1,9 @@
 <tr>
     <td>{{ $stat->game }}</td>
 	<td>{{ $stat->user->username }}</td>
-	<td><span class="text-green">{{ number_format($stat->balance,2) }}</span></td>
-	<td>{{ number_format($stat->bet,2) }}</td>
-	<td>{{ number_format($stat->win,2) }}</td>
+	<td><span class="text-green">{{ number_format($stat->balance,0) }}</span></td>
+	<td>{{ number_format($stat->bet,0) }}</td>
+	<td>{{ number_format($stat->win,0) }}</td>
 	{{-- <td>{{ $stat->percent }}</td>
 	<td>{{ $stat->percent_jps }}</td>
 	<td>{{ $stat->percent_jpg }}</td>

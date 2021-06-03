@@ -24,18 +24,18 @@
 </a>
 </td>
 @endif
-<td>{{ number_format($user['balance'],2) }}</td>
+<td>{{ number_format($user['balance'],0) }}</td>
 @if (!auth()->user()->hasRole('admin') && $user['role_id']==6)
 <td>없음</td>
 <td>없음</td>
 <td>없음</td>
 @else
-<td>{{ number_format($user['profit'],2) }}</td>
-<td>{{ number_format($user['deal_percent'],2) }}</td>
-<td>{{ number_format($user['table_deal_percent'],2) }}</td>
+<td>{{ number_format($user['profit'],0) }}</td>
+<td>{{ number_format($user['deal_percent'],0) }}</td>
+<td>{{ number_format($user['table_deal_percent'],0) }}</td>
 @endif
 @if ( auth()->user()->hasRole('admin'))
-<td>{{ number_format($user['bonus'],2) }}</td>
+<td>{{ number_format($user['bonus'],0) }}</td>
 @endif
 <td>
 @if (Session::get('isCashier'))

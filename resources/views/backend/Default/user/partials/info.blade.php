@@ -7,18 +7,18 @@
             <h4 class="profile-username text-center"><small><i class="fa fa-circle text-{{ $user->present()->labelClass }}"></i></small> {{ $user->present()->username }}</h4>
             <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                    <b>@lang('app.balance')</b> <a class="pull-right">{{ number_format($user->present()->balance,2) }}</a>
+                    <b>@lang('app.balance')</b> <a class="pull-right">{{ number_format($user->present()->balance,0) }}</a>
                 </li>
 
                 @if( $user->hasRole('user') )
                 <li class="list-group-item">
-                    <b>@lang('app.in')</b> <a class="pull-right">{{ number_format($user->present()->total_in,2) }}</a>
+                    <b>@lang('app.in')</b> <a class="pull-right">{{ number_format($user->present()->total_in,0) }}</a>
                 </li>
                 <li class="list-group-item">
-                    <b>@lang('app.out')</b> <a class="pull-right">{{ number_format($user->present()->total_out,2) }}</a>
+                    <b>@lang('app.out')</b> <a class="pull-right">{{ number_format($user->present()->total_out,0) }}</a>
                 </li>
                 <li class="list-group-item">
-                    <b>@lang('app.total')</b> <a class="pull-right">{{ number_format($user->present()->total_in - $user->present()->total_out,2) }}</a>
+                    <b>@lang('app.total')</b> <a class="pull-right">{{ number_format($user->present()->total_in - $user->present()->total_out,0) }}</a>
                 </li>
                 @endif
 

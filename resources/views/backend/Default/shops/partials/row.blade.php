@@ -21,7 +21,7 @@
 	@endif
 	</td>
 	{{-- <td><a href="{{ route('frontend.jpstv', $shop->shop_id) }}" target="_blank">{{ $shop->shop_id }}</a></td> --}}
-    <td>{{ number_format($shop->balance,2) }}</td>
+    <td>{{ number_format($shop->balance,0) }}</td>
 	@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 	<td>{{ $shop->percent }}</td>
 	@endif

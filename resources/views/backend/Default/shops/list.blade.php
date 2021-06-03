@@ -105,7 +105,7 @@
 				<!-- small box -->
 				<div class="small-box bg-red">
 					<div class="inner">
-						<h3>{{ number_format( $stats['credit'], 2 ) }}</h3>
+						<h3>{{ number_format( $stats['credit'], 0 ) }}</h3>
 						<p>@lang('app.total_credit')</p>
 					</div>
 					<div class="icon">
