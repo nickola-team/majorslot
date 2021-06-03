@@ -253,22 +253,44 @@
             @endif
 
 
-            {{-- @permission('jpgame.manage')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
-            <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.jpgame.list') }}">
-                    <i class="fa  fa-money"></i>
-                    <span>잭팟관리</span>
-                </a>
-            </li>
-            @endif
-            @endpermission --}}
-
-            <li class="treeview {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
+            <li class="treeview {{ Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
-                    <span>정산관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
+                    <span>충환전관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class=" treeview-menu" id="stats-dropdown">
+                    @if(!auth()->user()->hasRole('admin'))
+                    @permission('stats.pay')
+                    <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_request') }}">
+                            <i class="fa fa-circle-o"></i>
+                            충환전신청
+                        </a>
+                    </li>
+                    @endpermission
+                    @endif
+                    @if(auth()->user()->hasRole(['admin','master']))
+                    @permission('stats.pay')
+                    <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_manage') }}">
+                            <i class="fa fa-circle-o"></i>
+                            충환전관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                        </a>
+                    </li>
+                    @endpermission
+                    @endif
+                    
+                </ul>
+            </li>
+
+            <li class="treeview {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
+                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-database"></i>
+                    <span>정산관리</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -304,28 +326,6 @@
                         </a>
                     </li>
                     @endpermission
-
-                    @if(!auth()->user()->hasRole('admin'))
-                    @permission('stats.pay')
-                    <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_request') }}">
-                            <i class="fa fa-circle-o"></i>
-                            충환전신청
-                        </a>
-                    </li>
-                    @endpermission
-                    @endif
-                    @if(auth()->user()->hasRole(['admin','master']))
-                    @permission('stats.pay')
-                    <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_manage') }}">
-                            <i class="fa fa-circle-o"></i>
-                            충환전관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
-                        </a>
-                    </li>
-                    @endpermission
-                    @endif
-
                 </ul>
             </li>
 
