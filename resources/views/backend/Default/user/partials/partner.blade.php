@@ -31,8 +31,8 @@
 <td>없음</td>
 @else
 <td>{{ number_format($user['profit'],0) }}</td>
-<td>{{ number_format($user['deal_percent'],0) }}</td>
-<td>{{ number_format($user['table_deal_percent'],0) }}</td>
+<td>{{ number_format($user['deal_percent'],2) }}</td>
+<td>{{ number_format($user['table_deal_percent'],2) }}</td>
 @endif
 @if ( auth()->user()->hasRole('admin'))
 <td>{{ number_format($user['bonus'],0) }}</td>
