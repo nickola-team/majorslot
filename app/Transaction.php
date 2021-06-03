@@ -30,11 +30,11 @@ namespace VanguardLTE
                 }
                 if( $model->type == 'add' || $model->type == '' ) 
                 {
-                    $sum = '<span class="text-green">' . number_format(abs($model->summ), 4, '.', '') . '</span>';
+                    $sum = '<span class="text-green">' . number_format(abs($model->summ), 0, '.', '') . '</span>';
                 }
                 else
                 {
-                    $sum = '<span class="text-red">' . number_format(abs($model->summ), 4, '.', '') . '</span>';
+                    $sum = '<span class="text-red">' . number_format(abs($model->summ), 0, '.', '') . '</span>';
                 }
                 $usdata = '<a href="' . route('backend.statistics', ['user' => $model->user->username]) . '">' . $model->user->username . '</a>';
                 try
@@ -44,14 +44,14 @@ namespace VanguardLTE
                         'data' => [
                             'type' => 'PayStat', 
                             'Name' => '', 
-                            'Old' => number_format($model->old,2), 
-                            'New' => number_format($model->new,2), 
+                            'Old' => number_format($model->old,0), 
+                            'New' => number_format($model->new,0), 
                             'Game' => '', 
                             'User' => $usdata, 
                             'System' => $sysdata, 
                             'Sum' => $sum, 
-                            'In' => ($model->type == 'add' ? number_format($model->summ,2) : ''), 
-                            'Out' => ($model->type != 'add' ? number_format($model->summ,2) : ''), 
+                            'In' => ($model->type == 'add' ? number_format($model->summ,0) : ''), 
+                            'Out' => ($model->type != 'add' ? number_format($model->summ,0) : ''), 
                             'Balance' => '', 
                             'Bet' => '', 
                             'Win' => '', 
