@@ -341,6 +341,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function statistics_partner(\Illuminate\Http\Request $request)
         {
             $users = auth()->user()->hierarchyPartners();
+            array_push($users,auth()->user()->id);
             $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC');
             $statistics = $statistics->whereIn('transactions.user_id', $users);
             if( $request->system_str != '' ) 
@@ -770,7 +771,44 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function adjustment_daily(\Illuminate\Http\Request $request)
         {
+            $user_id = $request->input('parent');
+            $users = [];
+            $shops = [];
+            $user = null;
+            if($user_id == null || $user_id == 0)
+            {
+                $user_id = auth()->user()->id;
+                $users = [$user_id];
+                $request->session()->put('dates', null);
+                $dates = $request->dates;
+            }
+            else {
+                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                {
+                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                }
+                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                $users = $user->childPartners();
+                $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
+            }
+            
+            $start_date = date("Y-m-d",strtotime("-1 days"));
+            $end_date = date("Y-m-d");
+            if($dates != null && $dates != ''){
+                $dates_tmp = explode(' - ', $dates);
+                $start_date = $dates_tmp[0];
+                $end_date = $dates_tmp[1];
+                $request->session()->put('dates', $dates);
+            }
 
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
+            $summary = $summary->paginate(31);
+        
+            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
+        }
+        public function adjustment_monthly(\Illuminate\Http\Request $request)
+        {
             $user_id = $request->input('parent');
             $users = [];
             $shops = [];
