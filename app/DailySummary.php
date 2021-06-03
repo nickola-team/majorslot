@@ -88,7 +88,7 @@ namespace VanguardLTE
             {
                 //repeat child partners
                 $partner = $user;
-                $shops = $partner->availableShops();
+                // $shops = $partner->availableShops();
                 if( $partner->hasRole('admin') ) 
                 {
                     $partners = $partner->childPartners();
@@ -104,15 +104,17 @@ namespace VanguardLTE
                 if (count($shops) > 0 ){
                     $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
                     $user_in_out = \DB::select($query);
-                    $adj['totalin'] = $user_in_out[0]->totalin;
+                    $adj['totalin'] = $user_in_out[0]->totalin??0;
 
                     $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
                     $user_in_out = \DB::select($query);
-                    $adj['totalout'] = $user_in_out[0]->totalout;
+                    $adj['totalout'] = $user_in_out[0]->totalout??0;
+                    
 
                     $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                     $in_out = \DB::select($query);
-                    $adj['dealout'] = $in_out[0]->dealout;
+                    $adj['dealout'] = $in_out[0]->dealout??0;
+                    $adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
                     
                     //agent, distributor's deal out
                     $partner_users = $partner->availableUsers();
@@ -125,7 +127,7 @@ namespace VanguardLTE
                             $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
                             $in_out = \DB::select($query);
                             $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
-                            $adj['totalout'] = $adj['totalout'] + $adj['dealout'];
+                            $adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
 
                             $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
                             $in_out = \DB::select($query);
@@ -141,11 +143,11 @@ namespace VanguardLTE
                 if (count($shops) > 0){
                     $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add"';
                     $user_in_out = \DB::select($query);
-                    $adj['moneyin'] = $user_in_out[0]->moneyin;
+                    $adj['moneyin'] = $user_in_out[0]->moneyin??0;
 
                     $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out"';
                     $user_in_out = \DB::select($query);
-                    $adj['moneyout'] = $user_in_out[0]->moneyout;
+                    $adj['moneyout'] = $user_in_out[0]->moneyout??0;
                 }
                 if (count($shops) > 0 )
                 {
@@ -156,8 +158,8 @@ namespace VanguardLTE
                     $query = 'SELECT 0 as totalbet, 0 as totalwin';
                 }
                 $game_bet = \DB::select($query);
-                $adj['totalbet'] = $game_bet[0]->totalbet;
-                $adj['totalwin'] = $game_bet[0]->totalwin;
+                $adj['totalbet'] = $game_bet[0]->totalbet??0;
+                $adj['totalwin'] = $game_bet[0]->totalwin??0;
                 if ($partner->hasRole('admin'))
                 {
                     $query = 'SELECT 0 as total_deal, 0 as total_mileage';
@@ -178,17 +180,16 @@ namespace VanguardLTE
                     $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
                 }
                 $deal_logs = \DB::select($query);
-                $adj['total_deal'] = $deal_logs[0]->total_deal;
-                $adj['total_mileage'] = $deal_logs[0]->total_mileage;
+                $adj['total_deal'] = $deal_logs[0]->total_deal??0;
+                $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
                 $adj['balance'] = $partner->balance;
                 $adj['name'] = $partner->username;
-                $adj['id'] = $partner->id;
+                $adj['user_id'] = $partner->id;
                 $adj['role_id'] = $partner->role_id;
                 $adj['profit'] = 0;
                 return $adj;
             }
         }
-
 
         public static function summary($user_id, $day=null)
         {
@@ -231,56 +232,8 @@ namespace VanguardLTE
                 {
                     DailySummary::summary($c, $day);
                 }
-
-                $adj['totalin'] = 0;
-                $adj['totalout'] = 0;
-                $adj['dealout'] = 0;
-                $adj['moneyin'] = 0;
-                $adj['moneyout'] = 0;
-                $adj['totalbet'] = 0;
-                $adj['totalwin'] = 0;
-                $adj['total_deal'] = 0;
-                $adj['total_mileage'] = 0;
-                $adj['balance'] = $user->balance;
-                $adj['date'] = $day;
-                $adj['shop_id'] = 0; //shop is 0
-                //partner's id
-                $adj['user_id'] = $user->id;
-
-                if (count($childusers) > 0 ){
-                    $childSummary = DailySummary::where('date', $day)->whereIn('user_id', $childusers)->get();
-                    $adj['totalin'] = $childSummary->sum('totalin');
-                    $adj['totalout'] = $childSummary->sum('totalout');
-                    $adj['dealout'] = $childSummary->sum('dealout');
-                    $adj['moneyin'] = $childSummary->sum('moneyin');
-                    $adj['moneyout'] = $childSummary->sum('moneyout');
-                    $adj['totalbet'] = $childSummary->sum('totalbet');
-                    $adj['totalwin'] = $childSummary->sum('totalwin');
-                    //agent, distributor's deal out
-                    if( $user->hasRole(['agent','distributor'])) 
-                    {
-                        $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id= '.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
-                        $in_out = \DB::select($query);
-                        $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
-                    }
-                }
-                $query = null;
-                if ($user->hasRole('master'))
-                {
-                    $agents = $user->childPartners();
-                    if (count($agents) > 0){
-                        $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                    }
-                }
-                else
-                {
-                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                }
-                if ($query){
-                    $deal_logs = \DB::select($query);
-                    $adj['total_deal'] = $deal_logs[0]->total_deal ?? 0;
-                    $adj['total_mileage'] = $deal_logs[0]->total_mileage ?? 0;
-                }
+                $adj = DailySummary::adjustment($user_id, $from, $to);
+                $adj['date'] = $day;             
 
                 $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day])->first();
                 if ($dailysumm)
