@@ -53,9 +53,10 @@ namespace VanguardLTE
                 $in_out = \DB::select($query);
                 $adj['totalout'] = $in_out[0]->totalout??0;
 
-                $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out" AND request_id IS NOT NULL';
+                $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                 $in_out = \DB::select($query);
                 $adj['dealout'] = $in_out[0]->dealout??0;
+                $adj['totalout'] = $adj['totalout'] + $adj['dealout'];
 
                 $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add"';
                 $user_in_out = \DB::select($query);
@@ -109,7 +110,7 @@ namespace VanguardLTE
                     $user_in_out = \DB::select($query);
                     $adj['totalout'] = $user_in_out[0]->totalout;
 
-                    $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out" AND request_id IS NOT NULL';
+                    $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                     $in_out = \DB::select($query);
                     $adj['dealout'] = $in_out[0]->dealout;
                     
@@ -124,6 +125,11 @@ namespace VanguardLTE
                             $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
                             $in_out = \DB::select($query);
                             $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
+                            $adj['totalout'] = $adj['totalout'] + $adj['dealout'];
+
+                            $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
+                            $in_out = \DB::select($query);
+                            $adj['totalout'] = $adj['totalout'] + $in_out[0]->totalout;
                         }
                     }
                     
