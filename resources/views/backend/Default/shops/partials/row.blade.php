@@ -24,9 +24,9 @@
     <td>{{ number_format($shop->balance,2) }}</td>
 	@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 	<td>{{ $shop->percent }}</td>
+	@endif
 	<td>{{ $shop->deal_percent }}</td>
 	<td>{{ $shop->table_deal_percent }}</td>
-	@endif
 	{{-- <td>{{ $shop->frontend }}</td>
 	<td>{{ $shop->currency }}</td>
 	<td>{{ $shop->orderby }}</td> --}}

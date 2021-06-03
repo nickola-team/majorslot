@@ -249,9 +249,9 @@
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin') && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
-						<th>딜비%</th>
-						<th>라이브딜비%</th>
 						@endif
+						<th>딜비</th>
+						<th>라이브딜비</th>
 						{{-- <th>@lang('app.frontend')</th>
 						<th>@lang('app.currency')</th>
 						<th>@lang('app.order')</th> --}}
@@ -279,9 +279,9 @@
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
-						<th>딜비%</th>
-						<th>라이브딜비%</th>
 						@endif
+						<th>딜비</th>
+						<th>라이브딜비</th>
 						{{-- <th>@lang('app.frontend')</th>
 						<th>@lang('app.currency')</th>
 						<th>@lang('app.order')</th> --}}
