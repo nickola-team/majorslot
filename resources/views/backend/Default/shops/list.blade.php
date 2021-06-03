@@ -12,7 +12,7 @@
 	<section class="content">
 
 		<div class="row">
-			<div class="col-lg-3 col-xs-6">
+			<div class="col-lg-6 col-xs-6">
 				<!-- small box -->
 				<div class="small-box bg-light-blue">
 					<div class="inner">
@@ -24,88 +24,12 @@
 					</div>
 				</div>
 			</div>
-			<!-- ./col -->
-			@if(auth()->user()->hasRole(['admin','master']))
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-green">
-					<div class="inner">
-						<h3>{{ ($stats['agents']) }}</h3>
-						<p>@lang('app.total_agents')</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-level-up"></i>
-					</div>
-				</div>
-			</div>
-			<!-- ./col -->
-			@endif
-			@if(auth()->user()->hasRole(['admin','master','agent']))
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-yellow">
-					<div class="inner">
-						<h3>{{ ($stats['distributors']) }}</h3>
-						<p>@lang('app.total_distributors')</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-level-down"></i>
-					</div>
-				</div>
-			</div>
-			<!-- ./col -->
-			@endif
-			@if(auth()->user()->hasRole(['agent','distributor']))
-				<div class="col-lg-3 col-xs-6">
-					<!-- small box -->
-					<div class="small-box bg-yellow">
-						<div class="inner">
-							<h3>{{ ($stats['managers']) }}</h3>
-							<p>@lang('app.total_managers')</p>
-						</div>
-						<div class="icon">
-							<i class="fa fa-level-down"></i>
-						</div>
-					</div>
-				</div>
-				<!-- ./col -->
-			@endif
-{{--			@if(auth()->user()->hasRole(['distributor','manager']))
-				<div class="col-lg-3 col-xs-6">
-					<!-- small box -->
-					<div class="small-box bg-yellow">
-						<div class="inner">
-							<h3>{{ ($stats['cashiers']) }}</h3>
-							<p>@lang('app.total_cashiers')</p>
-						</div>
-						<div class="icon">
-							<i class="fa fa-level-down"></i>
-						</div>
-					</div>
-				</div>
-				<!-- ./col -->
-			@endif
---}}
-			@if(auth()->user()->hasRole(['distributor', 'manager','cashier']))
-				<div class="col-lg-3 col-xs-6">
-					<!-- small box -->
-					<div class="small-box bg-yellow">
-						<div class="inner">
-							<h3>{{ ($stats['users']) }}</h3>
-							<p>@lang('app.total_users')</p>
-						</div>
-						<div class="icon">
-							<i class="fa fa-level-down"></i>
-						</div>
-					</div>
-				</div>
-				<!-- ./col -->
-			@endif
-			<div class="col-lg-3 col-xs-6">
+			
+			<div class="col-lg-6 col-xs-6">
 				<!-- small box -->
 				<div class="small-box bg-red">
 					<div class="inner">
-						<h3>{{ number_format( $stats['credit'], 2 ) }}</h3>
+						<h3>{{ number_format( $stats['credit'], 0 ) }}</h3>
 						<p>@lang('app.total_credit')</p>
 					</div>
 					<div class="icon">
@@ -128,68 +52,12 @@
 					</div>
 				</div>
 				<div class="box-body">
-					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>매장이름</label>
+								<label>이름</label>
 								<input type="text" class="form-control" name="name" value="{{ Request::get('name') }}">
 							</div>
 						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>최소보유금액</label>
-								<input type="text" class="form-control" name="credit_from" value="{{ Request::get('credit_from') }}">
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>최대보유금액</label>
-								<input type="text" class="form-control" name="credit_to" value="{{ Request::get('credit_to') }}">
-							</div>
-						</div>
-						{{-- <div class="col-md-6">
-							<div class="form-group">
-								<label>@lang('app.frontend')</label>
-								<input type="text" class="form-control" name="frontend" value="{{ Request::get('frontend') }}">
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>@lang('app.percent_from')</label>
-								<input type="text" class="form-control" name="percent_from" value="{{ Request::get('percent_from') }}">
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>@lang('app.percent_to')</label>
-								<input type="text" class="form-control" name="percent_to" value="{{ Request::get('percent_to') }}">
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>@lang('app.order')</label>
-								@php
-									$orders = array_combine(array_merge([''], \VanguardLTE\Shop::$values['orderby']), array_merge([''], \VanguardLTE\Shop::$values['orderby']));
-								@endphp
-								{!! Form::select('order', $orders, Request::get('status'), ['id' => 'order', 'class' => 'form-control']) !!}
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>@lang('app.currency')</label>
-								@php
-									$currencies = array_combine(\VanguardLTE\Shop::$values['currency'], \VanguardLTE\Shop::$values['currency']);
-								@endphp
-								{!! Form::select('currency', $currencies, Request::get('currency'), ['id' => 'currency', 'class' => 'form-control']) !!}
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>@lang('app.categories')</label>
-								{!! Form::select('categories[]', $categories->pluck('title','id'), Request::get('categories'), ['id' => 'type', 'class' => 'form-control select2', 'multiple' => true, 'style' => 'width: 100%;']) !!}
-
-							</div>
-						</div> --}}
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>@lang('app.status')</label>
@@ -197,25 +65,20 @@
 							</div>
 						</div>
 
-						@if(auth()->user()->hasRole('admin'))
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>파트너</label>
-									{!! Form::select('users', ['' => '---'] + $agents + $distributors, Request::get('users'), ['id' => 'users', 'class' => 'form-control']) !!}
-								</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>최소보유금액</label>
+								<input type="text" class="form-control" name="credit_from" value="{{ Request::get('credit_from') }}">
 							</div>
-						@endif
-
-						@if(auth()->user()->hasRole(['agent']))
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>@lang('app.distributors')</label>
-									{!! Form::select('users', ['' => '---'] + $distributors, Request::get('users'), ['id' => 'users', 'class' => 'form-control']) !!}
-								</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>최대보유금액</label>
+								<input type="text" class="form-control" name="credit_to" value="{{ Request::get('credit_to') }}">
 							</div>
-						@endif
-
-					</div>
+						</div>
+						
 				</div>
 				<div class="box-footer">
 					<button type="submit" class="btn btn-primary">
@@ -229,7 +92,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				{{-- <h3 class="box-title">@lang('app.shops')</h3> --}}
-				<h3 class="box-title">매장리스트</h3>
+				<h3 class="box-title">매장목록</h3>
 				@if(auth()->user()->hasRole('distributor'))
 					<div class="pull-right box-tools">
 						<a href="{{ route('backend.shop.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
@@ -242,16 +105,22 @@
 					<thead>
 					<tr>
 						<th>@lang('app.name')</th>
-						{{-- <th>@lang('app.go_to_shop')</th> --}}
+						@if (auth()->user()->hasRole(['admin','master','agent']))
 						<th>@lang('app.distributor')</th>
+						@endif
+						@if (auth()->user()->hasRole(['admin','master']))
 						<th>@lang('app.agent')</th>
-						{{-- <th>@lang('app.id')</th> --}}
+						@endif
+						@if (auth()->user()->hasRole(['admin']))
+						<th>@lang('app.master')</th>
+						@endif
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin') && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
-						<th>딜비%</th>
-						<th>라이브딜비%</th>
 						@endif
+						<th>수익금</th>
+						<th>딜비</th>
+						<th>라이브딜비</th>
 						{{-- <th>@lang('app.frontend')</th>
 						<th>@lang('app.currency')</th>
 						<th>@lang('app.order')</th> --}}
@@ -272,16 +141,23 @@
 					<thead>
 					<tr>
 						<th>@lang('app.name')</th>
-						{{-- <th>@lang('app.go_to_shop')</th> --}}
+						@if (auth()->user()->hasRole(['admin','master','agent']))
 						<th>@lang('app.distributor')</th>
+						@endif
+						@if (auth()->user()->hasRole(['admin','master']))
 						<th>@lang('app.agent')</th>
+						@endif
+						@if (auth()->user()->hasRole(['admin']))
+						<th>@lang('app.master')</th>
+						@endif
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
 						<th>@lang('app.percent')%</th>
-						<th>딜비%</th>
-						<th>라이브딜비%</th>
 						@endif
+						<th>수익금</th>
+						<th>딜비</th>
+						<th>라이브딜비</th>
 						{{-- <th>@lang('app.frontend')</th>
 						<th>@lang('app.currency')</th>
 						<th>@lang('app.order')</th> --}}

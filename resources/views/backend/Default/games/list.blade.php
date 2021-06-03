@@ -34,7 +34,7 @@
 				<!-- small box -->
 				<div class="small-box bg-green">
 					<div class="inner">
-						<h3>{{ number_format($stats['in'],2) }}</h3>
+						<h3>{{ number_format($stats['in'],0) }}</h3>
 						<p>총베팅금</p>
 					</div>
 					<div class="icon">
@@ -47,7 +47,7 @@
 				<!-- small box -->
 				<div class="small-box bg-yellow">
 					<div class="inner">
-						<h3>{{ number_format($stats['out'],2) }}</h3>
+						<h3>{{ number_format($stats['out'],0) }}</h3>
 						<p>총당첨금</p>
 					</div>
 					<div class="icon">
@@ -61,7 +61,7 @@
 				<div class="small-box bg-red">
 					<div class="inner">
 
-						<h3>{{ number_format($stats['deal_profit'],2) }}</h3>
+						<h3>{{ number_format($stats['deal_profit'],0) }}</h3>
 
 						<p>딜비수익금</p>
 					</div>
@@ -121,7 +121,7 @@
 				<!-- small box -->
 				<div class="small-box bg-red">
 					<div class="inner">
-						<h3>{{ number_format( $stats['bonus'], 2 ) }}</h3>
+						<h3>{{ number_format( $stats['bonus'], 0 ) }}</h3>
 						<p>보너스환수금</p>
 					</div>
 					<div class="icon">
@@ -137,7 +137,7 @@
 				<!-- small box -->
 				<div class="small-box bg-light-blue">
 					<div class="inner">
-						<h3>{{ number_format($stats['slots'], 2) }}</h3>
+						<h3>{{ number_format($stats['slots'], 0) }}</h3>
 						<p>슬롯 환수금</p>
 					</div>
 					<div class="icon"> 
@@ -152,7 +152,7 @@
 				<!-- small box -->
 				<div class="small-box  bg-green">
 					<div class="inner">
-						<h3>{{ number_format($stats['table_bank'],2) }}</h3>
+						<h3>{{ number_format($stats['table_bank'],0) }}</h3>
 						<p>테이블환수금</p>
 					</div>
 					<div class="icon">
@@ -168,7 +168,7 @@
 				<!-- small box -->
 				<div class="small-box bg-green" >
 					<div class="inner">
-						<h3>{{ number_format($stats['little'], 2) }}</h3>
+						<h3>{{ number_format($stats['little'], 0) }}</h3>
 						<p>@lang('app.little')</p>
 					</div>
 					<div class="icon">
@@ -186,7 +186,7 @@
 				<!-- small box -->
 				<div class="small-box bg-yellow">
 					<div class="inner">
-						<h3>{{ number_format($stats['table_bank'], 2) }}</h3>
+						<h3>{{ number_format($stats['table_bank'], 0) }}</h3>
 						<p>@lang('app.table_bank')</p>
 					</div>
 					<div class="icon">
@@ -202,7 +202,7 @@
 				<!-- small box -->
 				<div class="small-box bg-red">
 					<div class="inner">
-						<h3>{{ number_format( $stats['fish'], 2 ) }}</h3>
+						<h3>{{ number_format( $stats['fish'], 0 ) }}</h3>
 						<p>@lang('app.fish')</p>
 					</div>
 					<div class="icon">
@@ -218,7 +218,7 @@
 				<!-- small box -->
 				<div class="small-box bg-red">
 					<div class="inner">
-						<h3>{{ number_format( $stats['bonus'], 2 ) }}</h3>
+						<h3>{{ number_format( $stats['bonus'], 0 ) }}</h3>
 						<p>@lang('app.bonus')</p>
 					</div>
 					<div class="icon">

@@ -1,8 +1,16 @@
 @extends('backend.Default.layouts.'.$layout.'.app')
 
-@section('page-title', '파트너생성')
-@section('page-heading', '파트너생성')
-
+@section('page-title', '파트너관리')
+@section('page-heading', '파트너관리')
+<?php  
+			$available_roles = Auth::user()->available_roles( true );
+			$available_roles_trans = [];
+			foreach ($available_roles as $key=>$role)
+			{
+				$role = trans("app." . strtolower($role));
+				$available_roles_trans[$key] = $role;
+			}
+?>
 @section('content')
 
     <section class="content-header">
@@ -10,7 +18,39 @@
     </section>
 
     <section class="content">
+	<div class="row">
+			<div class="col-lg-6 col-xs-6">
+				<!-- small box -->
+				<div class="small-box bg-light-blue">
+					<div class="inner">
+						<h3>{{ $stat['count'] }}</h3>
+						<p>전체 {{$available_roles_trans[$role_id]}}수</p>
+					</div>
+					<div class="icon">
+						<i class="fa fa-refresh"></i>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-6 col-xs-6">
+				<!-- small box -->
+				<div class="small-box bg-red">
+					<div class="inner">
+						<h3>{{ number_format($stat['sum']) }}</h3>
+						<p>@lang('app.total_credit')</p>
+					</div>
+					<div class="icon">
+						<i class="fa fa-line-chart"></i>
+					</div>
+				</div>
+			</div>
+			<!-- ./col -->
+
+		</div>
+	<form action="" method="GET" id="users-form" >
+
 	<div class="box box-danger collapsed-box users_show">
+
 			<div class="box-header with-border">
 				<h3 class="box-title">@lang('app.filter')</h3>
 				<div class="box-tools pull-right">
@@ -18,11 +58,22 @@
 				</div>
 			</div>
 			<div class="box-body">
-				<form action="" method="GET" id="users-form" >
 					<div class="col-md-6">
 						<div class="form-group">
 						<label>파트너이름</label>
 						<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="이름">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>최소보유금액</label>
+							<input type="text" class="form-control" name="credit_from" value="{{ Request::get('credit_from') }}">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>최대보유금액</label>
+							<input type="text" class="form-control" name="credit_to" value="{{ Request::get('credit_to') }}">
 						</div>
 					</div>
 			</div>
@@ -31,35 +82,15 @@
 					@lang('app.filter')
 				</button>
 			</div>
-			</form>
 
 			</div>
+		</form>
+
         <div class="box box-primary">
             <div class="box-header with-border">
                 {{-- <h3 class="box-title">{{ $role->name }} @lang('app.tree')</h3> --}}
-                <h3 class="box-title">파트너목록</h3>
-                @if($user != null && !$user->hasRole('admin'))
-					<a href="{{ route('backend.user.tree', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
-						{{$user->username}}
-						[
-						@foreach(['7'=>'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
-						@if($role_id == $user->role_id)
-							@lang($role_name)
-						@endif
-						@endforeach
-						]
-					</a>
-				@endif
+                <h3 class="box-title">{{$available_roles_trans[$role_id]}}목록</h3>
                 <div class="pull-right box-tools" style="display:flex;align-item:center;">
-					
-                    @permission('users.add')
-					@if (Auth::user()->hasRole('admin') && !Session::get('isCashier'))
-                    <a href="{{ route('backend.user.createpartnerfromcsv') }}" class="btn btn-danger btn-sm" style="margin-right:5px;">csv로 추가</a>
-                    @endif
-                    @if (Auth::user()->hasRole(['admin','master', 'agent','distributor']) && !Session::get('isCashier'))
-                    <a href="{{ route('backend.user.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
-                    @endif
-                    @endpermission
                 </div>
             </div>
             <div class="box-body">
@@ -68,18 +99,16 @@
                         <thead>
                         <tr>
                             <th>이름</th>
-                            <th>등급</th>
-                            @if ( ($user!=null && $user->hasRole('distributor')) )
-                            <th>매장이름</th>
-                            @endif
+							<?php
+                            	for ($r=$role_id+1;$r<auth()->user()->role_id;$r++)
+								{
+									echo '<th>'.$available_roles_trans[$r].'</th>';
+								}
+							?>
                             <th>보유금</th>
                             <th>수익금</th>
                             <th>딜비</th>
 							<th>라이브딜비</th>
-							@if ( auth()->user()->hasRole('admin'))
-                            <th>보너스환수금</th>
-                            @endif
-                            <th>편집</th>
                             <th>충전</th>
                             <th>환전</th>
                         </tr>
@@ -89,7 +118,7 @@
                             @foreach ($partners as $partner)
 								@if ($partner['role_id'] > 2)
                                 <tr>
-                                    @include('backend.Default.user.partials.row_tree', ['user' => $partner])
+                                    @include('backend.Default.user.partials.row_partner', ['user' => $partner])
                                 </tr>
 								@endif
                             @endforeach
@@ -100,18 +129,16 @@
                         <thead>
                             <tr>
                                 <th>이름</th>
-                                <th>등급</th>
-                                @if ( ($user!=null && $user->hasRole('distributor')) )
-                                <th>매장이름</th>
-                                @endif
+                                <?php
+                            	for ($r=$role_id+1;$r<auth()->user()->role_id;$r++)
+								{
+									echo '<th>'.$available_roles_trans[$r].'</th>';
+								}
+								?>
                                 <th>보유금</th>
                                 <th>수익금</th>
                                 <th>딜비</th>
 								<th>라이브딜비</th>
-								@if ( auth()->user()->hasRole('admin'))
-								<th>보너스환수금</th>
-								@endif
-                                <th>편집</th>
                                 <th>충전</th>
                                 <th>환전</th>
                             </tr>

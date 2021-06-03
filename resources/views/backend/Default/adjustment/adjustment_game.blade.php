@@ -95,19 +95,19 @@
 						@if ($adjustment['category'])
 						<tr>
 							<td style="color:green;">합계</td>
-							<td style="color:green;">{{ number_format($adjustment['total_bet'],2) }}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_win'],2)}}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_bet'] - $adjustment['total_win'],2)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_bet'],0) }}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_win'],0)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_bet'] - $adjustment['total_win'],0)}}</td>
 							<td style="color:green;">{{ number_format($adjustment['total_bet_count'])}}</td>
 							@if(auth()->user()->hasRole('admin'))
 							<td style="color:green;">0</td>
-							<td style="color:green;">{{ number_format($adjustment['total_deal'],2)}}</td>
-							<td style="color:green;">{{ number_format(-$adjustment['total_deal'],2)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_deal'],0)}}</td>
+							<td style="color:green;">{{ number_format(-$adjustment['total_deal'],0)}}</td>
 
 							@else
-							<td style="color:green;">{{ number_format($adjustment['total_deal'],2)}}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_mileage'],2)}}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_deal'] - $adjustment['total_mileage'],2)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_deal'],0)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_mileage'],0)}}</td>
+							<td style="color:green;">{{ number_format($adjustment['total_deal'] - $adjustment['total_mileage'],0)}}</td>
 
 							@endif
 						</tr>
@@ -122,15 +122,15 @@
 					<tr>
 						<td><span class="text-red">합계</span></td>
 						<td></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_bet,2)}}</span></th>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_win,2)}}</span></td>
+						<td><span class="text-red">{{number_format($sum_adjustment->total_bet,0)}}</span></th>
+						<td><span class="text-red">{{number_format($sum_adjustment->total_win,0)}}</span></td>
 						<td><span class="text-red">{{number_format($sum_adjustment->total_bet_count)}}</span></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_deal,2)}}</span></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_mileage,2)}}</span></td>
+						<td><span class="text-red">{{number_format($sum_adjustment->total_deal,0)}}</span></td>
+						<td><span class="text-red">{{number_format($sum_adjustment->total_mileage,0)}}</span></td>
 						@if(auth()->user()->hasRole('admin'))
-						<td><span class="text-red">{{number_format($sum_adjustment->total_real_profit,2)}}</span></td>
+						<td><span class="text-red">{{number_format($sum_adjustment->total_real_profit,0)}}</span></td>
 						@else
-						<td><span class="text-red">{{number_format($sum_adjustment->total_deal - $sum_adjustment->total_mileage,2)}}</span></td>
+						<td><span class="text-red">{{number_format($sum_adjustment->total_deal - $sum_adjustment->total_mileage,0)}}</span></td>
 						@endif
 					</tr>
 					</thead>--}}

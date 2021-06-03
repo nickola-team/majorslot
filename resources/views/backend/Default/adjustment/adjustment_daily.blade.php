@@ -95,20 +95,20 @@
 						<tr>
 						<td><span class='text-red'></span></td>
 						<td><span class='text-red'>합계</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('totalin'),2)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('totalout'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalin'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalout'),0)}}</span></td>
 						@if(auth()->user()->hasRole(['admin', 'master']))
-						<td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),2)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
 						@endif
-						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),2) }}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('dealout'),2)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('moneyin'),2)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),2)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),2)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),2)}}</span></td>
-						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),2) }}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
 						@if(auth()->user()->hasRole(['admin', 'master']))
-						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin') - abs($summary->sum('total_deal')- $summary->sum('total_mileage')),2) }}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin') - abs($summary->sum('total_deal')- $summary->sum('total_mileage')),0) }}</span></td>
 						@endif
 
 						</tr>

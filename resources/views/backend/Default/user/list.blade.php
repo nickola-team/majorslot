@@ -43,7 +43,7 @@
 					<!-- small box -->
 					<div class="small-box bg-yellow">
 						<div class="inner">
-							<h3>{{ number_format ($stat['totalbalance'], 2) }}</h3>
+							<h3>{{ number_format ($stat['totalbalance'], 0) }}</h3>
 							<p>회원 보유금</p>
 						</div>
 						<div class="icon">

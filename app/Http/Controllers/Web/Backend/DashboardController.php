@@ -358,6 +358,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $statistics = $statistics->where('transactions.type', $request->type);
             }
+            if( $request->in_out != '' ) 
+            {
+                if ($request->in_out == 1)
+                {
+                    $statistics = $statistics->whereNotNull('transactions.request_id');
+                }
+                else
+                {
+                    $statistics = $statistics->whereNull('transactions.request_id');
+                }
+            }
             if( $request->sum_from != '' ) 
             {
                 $statistics = $statistics->where('transactions.summ', '>=', $request->sum_from);
@@ -627,6 +638,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $statistics = $statistics->where('shops_stat.type', $request->type);
             }
+            if( $request->in_out != '' ) 
+            {
+                if ($request->in_out == 1)
+                {
+                    $statistics = $statistics->whereNotNull('shops_stat.request_id');
+                }
+                else
+                {
+                    $statistics = $statistics->whereNull('shops_stat.request_id');
+                }
+            }
             if( $request->user != '' ) 
             {
                 $statistics = $statistics->join('users', 'users.id', '=', 'shops_stat.user_id');
@@ -748,23 +770,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function adjustment_daily(\Illuminate\Http\Request $request)
         {
-            /*set_time_limit(0);
-            $records = \VanguardLTE\PPTransaction::orderBy('timestamp','DESC')->take(100000)->get();
-            foreach ($records as $record)
-            {
-                $timestamp = $record->timestamp;
-                $data = json_decode($record->data);
-                if (isset($data) && isset($data->timestamp) && $timestamp / 10 - $data->timestamp >= 5*1000)
-                {
-                    echo "<p>" . $record->reference . "," . $timestamp/ 10 . ",". $data->timestamp . ",". ($timestamp / 10 - $data->timestamp) ."</p>";
-                }
-                
-            }
-            $admins = \VanguardLTE\User::where('role_id',7)->get();
-            foreach ($admins as $admin)
-            {
-                \VanguardLTE\DailySummary::summary($admin->id, date("Y-m-d", strtotime("-4 days")));
-            }*/
 
             $user_id = $request->input('parent');
             $users = [];
@@ -798,8 +803,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
-            $summary = $summary->get();
-            $summary =  $summary->paginate(10);
+            $summary = $summary->paginate(31);
         
             return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
         }
@@ -808,33 +812,33 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             set_time_limit(0);
             $user_id = $request->input('parent');
             $users = [];
-            $shops = [];
-            $b_distributor = false;
             $user = null;
-            if($user_id == null || $user_id == 0)
+            if ($request->search != '')
             {
-                $user_id = auth()->user()->id;
-                $users = [$user_id];
-                $request->session()->put('dates', null);
+                $users = \VanguardLTE\User::orderBy('username', 'ASC');
+                $users = $users->whereIn('id', auth()->user()->hierarchyPartners());
+                $users = $users->where('username', 'like', '%' . $request->search . '%');
                 $dates = $request->dates;
-                if (auth()->user()->hasRole('manager'))
+            }
+            else
+            {
+                if($user_id == null || $user_id == 0)
                 {
-                    $b_distributor = true;
+                    $user_id = auth()->user()->id;
+                    $users = \VanguardLTE\User::where('id', auth()->user()->id);
+                    $request->session()->put('dates', null);
+                    $dates = $request->dates;
+                }
+                else {
+                    if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                    {
+                        return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                    }
+                    $users = \VanguardLTE\User::where('parent_id', $user_id);
+                    $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
                 }
             }
-            else {
-                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
-                {
-                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
-                }
-                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-                if($user->hasRole('distributor')){
-                    $b_distributor = true;
-                }
-                $users = $user->childPartners();
-                $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
-            }
-            
+            $childs = $users->paginate(20);
             $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
             $end_date = date("Y-m-d H:i:s");
             if($dates != null && $dates != ''){
@@ -845,145 +849,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $adjustments = [];
-
-            if($b_distributor){
-                $shop_users = \VanguardLTE\ShopUser::whereIn('user_id', $users)->get()->pluck('shop_id')->toArray();
-                $childs = \VanguardLTE\Shop::whereIn('id', $shop_users)->get();
-                $childs = $childs->paginate(10);
-                foreach($childs as $shop){
-                    $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add" AND request_id IS NOT NULL';
-                    $in_out = \DB::select($query);
-                    $adj['totalin'] = $in_out[0]->totalin;
-
-                    $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out" AND request_id IS NOT NULL';
-                    $in_out = \DB::select($query);
-                    $adj['totalout'] = $in_out[0]->totalout;
-
-                    $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="deal_out" AND request_id IS NOT NULL';
-                    $in_out = \DB::select($query);
-                    $adj['dealout'] = $in_out[0]->dealout;
-
-                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
-                    $user_in_out = \DB::select($query);
-                    $adj['moneyin'] = $user_in_out[0]->moneyin;
-
-                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
-                    $user_in_out = \DB::select($query);
-                    $adj['moneyout'] = $user_in_out[0]->moneyout;
-
-
-                    $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id='.$shop->id.' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                    $game_bet = \DB::select($query);
-                    $adj['totalbet'] = $game_bet[0]->totalbet;
-                    $adj['totalwin'] = $game_bet[0]->totalwin;
-
-                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $shop->id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                    $deal_logs = \DB::select($query);
-                    $adj['total_deal'] = $deal_logs[0]->total_deal;
-                    $adj['total_mileage'] = $deal_logs[0]->total_mileage;
-                    $adj['balance'] = $shop->balance;
-                    $adj['name'] = $shop->name;
-                    $adjustments[] = $adj;
-                }
-            }
-            else
+            foreach ($childs as $adj_user)
             {
-                $childs = \VanguardLTE\User::whereIn('id', $users)->get();
-                $childs = $childs->paginate(10);
-                foreach($childs as $partner){
-                    $shops = $partner->availableShops();
-                    if( $partner->hasRole('admin') ) 
-                    {
-                        $partners = $partner->childPartners();
-                        $shops = \VanguardLTE\ShopUser::whereIn('user_id', $partners)->pluck('shop_id')->toArray();
-                    }
-                    else
-                    {
-                        $shops = \VanguardLTE\ShopUser::where('user_id', $partner->id)->pluck('shop_id')->toArray();
-                    }
-                    $adj['totalin'] = 0;
-                    $adj['totalout'] = 0;
-                    $adj['dealout'] = 0;
-                    if (count($shops) > 0 ){
-                        $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="add" AND request_id IS NOT NULL';
-                        $user_in_out = \DB::select($query);
-                        $adj['totalin'] = $user_in_out[0]->totalin;
-
-                        $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="out" AND request_id IS NOT NULL';
-                        $user_in_out = \DB::select($query);
-                        $adj['totalout'] = $user_in_out[0]->totalout;
-
-                        $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" AND type="deal_out" AND request_id IS NOT NULL';
-                        $in_out = \DB::select($query);
-                        $adj['dealout'] = $in_out[0]->dealout;
-                        
-                        //agent, distributor's deal out
-                        $partner_users = $partner->availableUsers();
-                        if( count($partner_users) > 0) 
-                        {
-                            $level = $partner->level();
-                            $childpartners = \VanguardLTE\User::whereIn('role_id', range(4,$level))->whereIn('id', $partner_users)->pluck('id')->toArray();
-
-                            if (count($childpartners) > 0){
-                                $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="deal_out"';
-                                $in_out = \DB::select($query);
-                                $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
-                            }
-                        }
-                        
-                    }
-
-                    $adj['moneyin'] = 0;
-                    $adj['moneyout'] = 0;
-
-                    if (count($shops) > 0){
-                        $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="add"';
-                        $user_in_out = \DB::select($query);
-                        $adj['moneyin'] = $user_in_out[0]->moneyin;
-
-                        $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$end_date .'" AND created_at>="'. $start_date. '" AND type="out"';
-                        $user_in_out = \DB::select($query);
-                        $adj['moneyout'] = $user_in_out[0]->moneyout;
-                    }
-                    if (count($shops) > 0 )
-                    {
-                        $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shops) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                    }
-                    else
-                    {
-                        $query = 'SELECT 0 as totalbet, 0 as totalwin';
-                    }
-                    $game_bet = \DB::select($query);
-                    $adj['totalbet'] = $game_bet[0]->totalbet;
-                    $adj['totalwin'] = $game_bet[0]->totalwin;
-                    if ($partner->hasRole('admin'))
-                    {
-                        $query = 'SELECT 0 as total_deal, 0 as total_mileage';
-                    }
-                    else if ($partner->hasRole('master'))
-                    {
-                        $agents = $partner->childPartners();
-                        if (count($agents) > 0){
-                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                        }
-                        else
-                        {
-                            $query = 'SELECT 0 as total_deal, 0 as total_mileage';
-                        }
-                    }
-                    else
-                    {
-                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '"';
-                    }
-                    $deal_logs = \DB::select($query);
-                    $adj['total_deal'] = $deal_logs[0]->total_deal;
-                    $adj['total_mileage'] = $deal_logs[0]->total_mileage;
-                    $adj['balance'] = $partner->balance;
-                    $adj['name'] = $partner->username;
-                    $adj['id'] = $partner->id;
-                    $adj['profit'] = 0;
-                    $adjustments[] = $adj;
-                }
+                $adj = \VanguardLTE\DailySummary::adjustment($adj_user->id, $start_date, $end_date);
+                $adjustments[] = $adj;
             }
             return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
         }

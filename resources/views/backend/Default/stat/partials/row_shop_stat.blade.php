@@ -22,28 +22,28 @@
 	</td>
 	@if (auth()->user()->hasRole(['admin', 'master']))
 	<td>
-		{{number_format($stat->balance,2)}}
+		{{number_format($stat->balance,0)}}
 	</td>
 	@endif
 	<td>
-		{{ number_format($stat->old,2) }}
+		{{ number_format($stat->old,0) }}
 	</td>
 	<td>
-		{{ number_format($stat->new,2) }}
+		{{ number_format($stat->new,0) }}
 	</td>
 	<td>
 		@if ($stat->type == 'add')
-			<span class="text-green">{{ number_format(abs($stat->sum),2) }}	</span>
+			<span class="text-green">{{ number_format(abs($stat->sum),0) }}	</span>
 		@endif
 	</td>
 	<td>
 		@if ($stat->type == 'out')
-			<span class="text-red">{{ number_format(abs($stat->sum),2) }}</span>
+			<span class="text-red">{{ number_format(abs($stat->sum),0) }}</span>
 		@endif
 	</td>
 	<td>
 		@if ($stat->type == 'deal_out')
-			<span class="text-red">{{ number_format(abs($stat->sum),2) }}</span>
+			<span class="text-red">{{ number_format(abs($stat->sum),0) }}</span>
 		@endif
 	</td>
 	@if($stat->requestInfo)

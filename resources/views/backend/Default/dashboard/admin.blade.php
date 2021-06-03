@@ -59,7 +59,7 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>{{ number_format($stats['todayprofit'],2) }}</h3>
+                        <h3>{{ number_format($stats['todayprofit'],0) }}</h3>
                         <p>이달 수익금</p>
                     </div>
                     <div class="icon">
@@ -110,9 +110,9 @@
                                             </td>
                                             <td>
                                                 @if ($stat->type == 'add')
-                                                    <span class="text-green">{{ number_format(abs($stat->summ),2) }}</span>
+                                                    <span class="text-green">{{ number_format(abs($stat->summ),0) }}</span>
                                                 @else
-                                                    <span class="text-red">{{ number_format(abs($stat->summ),2) }}</span>
+                                                    <span class="text-red">{{ number_format(abs($stat->summ),0) }}</span>
                                                 @endif
                                             </td>
                                             </td>
@@ -174,7 +174,7 @@
                                                     {{ $stat->user ? $stat->user->username : '' }}
                                                 </a>
                                             </td>
-                                            <td>{{ number_format($stat->balance,2) }}</td>
+                                            <td>{{ number_format($stat->balance,0) }}</td>
                                             <td>{{ number_format($stat->bet) }}</td>
                                             <td>{{ number_format($stat->win) }}</td>
                                             <td>{{ date(config('app.date_time_format'), strtotime($stat->date_time)) }}</td>
@@ -236,7 +236,7 @@
                                                 </a>
                                             </td>
                                             <td>{{ $shop->id }}</td>
-                                            <td>{{ number_format($shop->balance,2) }}</td>
+                                            <td>{{ number_format($shop->balance,0) }}</td>
                                             {{--
                                             <td>{{ $shop->frontend }}</td>
 
@@ -298,7 +298,7 @@
                                                 </a>
                                             </td>
                                             @permission('users.balance.manage')
-                                            <td>{{ number_format($user->balance,2) }}</td>
+                                            <td>{{ number_format($user->balance,0) }}</td>
                                             @endpermission
                                             <td>{{ date(config('app.date_time_format'), strtotime($user->created_at)) }}</td>
                                         </tr>
@@ -354,13 +354,13 @@
                                         <tr>
                                             <td>{{ $stat->name }}</td>
                                             {{--<td>{{ $stat->user ? $stat->user->username : '' }}</td> --}}
-                                            <td>{{ number_format($stat->old,2) }}</td>
-                                            <td>{{ number_format($stat->new,2) }}</td>
+                                            <td>{{ number_format($stat->old,0) }}</td>
+                                            <td>{{ number_format($stat->new,0) }}</td>
                                             <td>
                                                 @if ($stat->type == 'add')
-                                                    <span class="text-green">{{ number_format(abs($stat->sum),2) }}</span>
+                                                    <span class="text-green">{{ number_format(abs($stat->sum),0) }}</span>
                                                 @else
-                                                    <span class="text-red">{{ number_format(abs($stat->sum),2) }}</span>
+                                                    <span class="text-red">{{ number_format(abs($stat->sum),0) }}</span>
                                                 @endif
                                             </td>
                                             <td>{{ $stat->created_at->format(config('app.date_time_format')) }}</td>
@@ -408,9 +408,9 @@
                                             <td>{{ $stat->user ? $stat->user->username : '' }}</td>
                                             <td>
                                                 @if ($stat->type == 'add')
-                                                    <span class="text-green">{{ number_format(abs($stat->sum),2) }}	</span>
+                                                    <span class="text-green">{{ number_format(abs($stat->sum),0) }}	</span>
                                                 @else
-                                                    <span class="text-red">{{ number_format(abs($stat->sum),2) }}</span>
+                                                    <span class="text-red">{{ number_format(abs($stat->sum),0) }}</span>
                                                 @endif
 
                                             </td>

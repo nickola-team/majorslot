@@ -42,7 +42,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
-            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
+            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*')  ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
                     <span>파트너리스트</span>
@@ -57,47 +57,83 @@
                             <span>매장리스트</span>
                         </a>
                     </li>
-                    @permission('categories.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
-                    <li class="{{ Request::is('backend/category') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.category.list') }}">
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent']) )
+                    <li class="{{ Request::is('backend/partner/4') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 4) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>게임카테고리관리</span>
-                        </a>
-                    </li>              
-                    @endif
-                    @endpermission      
-                    
-                    @permission('jpgame.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
-                    <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
-                        <a href="{{ route('backend.jpgame.list') }}">
-                            <i class="fa  fa-circle-o"></i>
-                            <span>잭팟관리</span>
+                            <span>총판리스트</span>
                         </a>
                     </li>
                     @endif
-                    @endpermission
-                    @permission('games.manage')
-                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
-                    <li class="{{ (Request::is('backend/game') || Request::is('backend/game/*')) ? 'active' : ''  }}">
-                        <a href="{{ route('backend.game.list') }}">
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master']) )
+                    <li class="{{ Request::is('backend/partner/5') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 5) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>게임관리</span>
+                            <span>부본사리스트</span>
                         </a>
                     </li>
                     @endif
-                    @endpermission
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+                    <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 6) }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>본사리스트</span>
+                        </a>
+                    </li>
+                    @endif
+                </ul>
+            </li>
+            @endif
+            @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+            <li class="dropdown {{Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-users"></i>
+                    <span>게임리스트</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                @permission('categories.manage')
+                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
+                <li class="{{ Request::is('backend/category') ? 'active' : ''  }}">
+                    <a  href="{{ route('backend.category.list') }}">
+                        <i class="fa fa-circle-o"></i>
+                        <span>게임카테고리관리</span>
+                    </a>
+                </li>              
+                @endif
+                @endpermission      
+                
+                @permission('jpgame.manage')
+                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
+                <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
+                    <a href="{{ route('backend.jpgame.list') }}">
+                        <i class="fa  fa-circle-o"></i>
+                        <span>잭팟관리</span>
+                    </a>
+                </li>
+                @endif
+                @endpermission
+                @permission('games.manage')
+                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
+                <li class="{{ (Request::is('backend/game') || Request::is('backend/game/*')) ? 'active' : ''  }}">
+                    <a href="{{ route('backend.game.list') }}">
+                        <i class="fa fa-circle-o"></i>
+                        <span>게임관리</span>
+                    </a>
+                </li>
+                @endif
+                @endpermission
 
-                    @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
-                    <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
-                        <a href="{{ route('backend.game.bank') }}">
-                            <i class="fa fa-circle-o"></i>
-                            <span>환수금관리</span>
-                        </a>
-                    </li>
-                    @endif
-
+                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
+                <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
+                    <a href="{{ route('backend.game.bank') }}">
+                        <i class="fa fa-circle-o"></i>
+                        <span>환수금관리</span>
+                    </a>
+                </li>
+                @endif
                 </ul>
             </li>
             @endif
@@ -138,10 +174,40 @@
                 </ul>
             </li>
             @endif
-
+            <li class="dropdown {{  Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*')? 'active' : '' }}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-database"></i>
+                    <span>충환전관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    @if(!auth()->user()->hasRole('admin'))
+                    @permission('stats.pay')
+                    <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_request') }}">
+                            <i class="fa fa-circle-o"></i>
+                            충환전신청
+                        </a>
+                    </li>
+                    @endpermission
+                    @endif
+                    @if(auth()->user()->hasRole(['admin','master']))
+                    @permission('stats.pay')
+                    <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_manage') }}">
+                            <i class="fa fa-circle-o"></i>
+                            충환전관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                        </a>
+                    </li>
+                    @endpermission
+                    @endif
+                </ul>
+            </li>
 
             <li class="dropdown {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-database"></i>
                     <span>정산리스트<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -179,27 +245,6 @@
                         </a>
                     </li>
                     @endpermission
-
-                    @if(!auth()->user()->hasRole('admin'))
-                    @permission('stats.pay')
-                    <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_request') }}">
-                            <i class="fa fa-circle-o"></i>
-                            충환전신청
-                        </a>
-                    </li>
-                    @endpermission
-                    @endif
-                    @if(auth()->user()->hasRole(['admin','master']))
-                    @permission('stats.pay')
-                    <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_manage') }}">
-                            <i class="fa fa-circle-o"></i>
-                            충환전관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
-                        </a>
-                    </li>
-                    @endpermission
-                    @endif
 
                 </ul>
             </li>

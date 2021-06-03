@@ -83,7 +83,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $hotgames[] = ['name' => 'DuoFuDuoCai88Fortune', 'title' => '88포츈 다복이'];
                 $hotgames[] = ['name' => 'DuoFuDuoCaiDancingDrum', 'title' => '댄싱드럼 다복이'];
                 //$hotgames[] = ['name' => 'BlackjackSurrenderPT', 'title' => '블랙 잭 써랜더'];
-                $hotgames[] = ['name' => 'BlackJackAM', 'title' => '블랙 잭'];
+                //$hotgames[] = ['name' => 'BlackJackAM', 'title' => '블랙 잭'];
+            }
+
+            //add bng hot games
+            $bnggames = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::getgamelist('booongo');
+            if (count($bnggames) > 0){
+                $newgames = \VanguardLTE\NewGame::where('provider', 'bng')->get()->pluck('gameid')->toArray();
+                foreach ($bnggames as $game)
+                {
+                    if (in_array($game['gamecode'] , $newgames))
+                    {
+                        $hotgames[] = $game;
+                    }
+                }
             }
             if (count($hotgames) % 4 > 0)
             {

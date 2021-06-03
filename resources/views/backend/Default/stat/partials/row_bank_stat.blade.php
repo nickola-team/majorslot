@@ -1,12 +1,12 @@
 <tr>
     <td>{{ $stat->name }}</td>
 	{{-- <td>{{ $stat->user->username }}</td> --}}
-	<td>{{ number_format($stat->old,2) }}</td>
-	<td>{{ number_format($stat->new,2) }}</td>
+	<td>{{ number_format($stat->old,0) }}</td>
+	<td>{{ number_format($stat->new,0) }}</td>
 	<td>
 		@if ($stat->type == 'add')
 		<span class="text-green">
-			{{ number_format(abs($stat->sum),2) }}
+			{{ number_format(abs($stat->sum),0) }}
 		</span>
 		@else
 		<span></span>
@@ -15,7 +15,7 @@
 	<td>
 		@if ($stat->type != 'add')
 		<span class="text-red">
-			{{ number_format(abs($stat->sum),2) }}
+			{{ number_format(abs($stat->sum),0) }}
 		</span>
 		@else
 		<span></span>

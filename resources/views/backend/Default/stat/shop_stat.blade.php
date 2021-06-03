@@ -35,18 +35,28 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>충/환전</label>
-								{!! Form::select('type', ['' => '전체', 'add' => '충전', 'out' => '환전'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
+								{!! Form::select('type', ['' => '모두', 'add' => '충전', 'out' => '환전', 'deal_out' => '수익금환전'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
-								<label>최소충환전금</label>
+								<label>계좌정보</label>
+								<select name="in_out" class="form-control">
+									<option value="" @if (Request::get('in_out') == '') selected @endif>@lang('app.all')</option>
+									<option value="1" @if (Request::get('in_out') == '1') selected @endif>있음</option>
+									<option value="0" @if (Request::get('in_out') == '0') selected @endif>없음</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>최소금액</label>
 								<input type="text" class="form-control" name="sum_from" value="{{ Request::get('sum_from') }}">
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
-								<label>최대충환전금</label>
+								<label>최대금액</label>
 								<input type="text" class="form-control" name="sum_to" value="{{ Request::get('sum_to') }}">
 							</div>
 						</div>
@@ -56,21 +66,6 @@
 								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 							</div>
 						</div>
-						{{-- <div class="col-md-12">
-							<div class="form-group">
-								@php
-									$filter = ['' => '---'];
-                                    $shifts = \VanguardLTE\OpenShift::where('shop_id', Auth::user()->shop_id)->orderBy('start_date', 'DESC')->get();
-                                    if( count($shifts) ){
-                                        foreach($shifts AS $shift){
-                                            $filter[$shift->id] = $shift->id . ' - ' . $shift->start_date;
-                                        }
-                                    }
-								@endphp
-								<label>@lang('app.shifts')</label>
-								{!! Form::select('shifts', $filter, Request::get('shifts'), ['id' => 'shifts', 'class' => 'form-control']) !!}
-							</div>
-						</div> --}}
 					</div>
 				</div>
 				<div class="box-footer">
@@ -107,10 +102,33 @@
 					</tr>
 					</thead>
 					<tbody>
+					<?php
+						$totalin=0;
+						$totalout=0;
+						$totaldealout=0;
+					?>
 					@if (count($shops_stat))
 						@foreach ($shops_stat as $stat)
 							@include('backend.Default.stat.partials.row_shop_stat')
+							<?php
+								if ($stat->type == 'add'){ $totalin = $totalin + abs($stat->sum);}
+								if ($stat->type == 'out'){ $totalout = $totalout + abs($stat->sum);}
+								if ($stat->type == 'deal_out'){ $totaldealout = $totaldealout + abs($stat->sum);}
+							?>
 						@endforeach
+						<td></td>
+						<td><span class="text-red">합계</span></td>
+						@if (auth()->user()->hasRole(['admin', 'master']))
+						<td></td>
+						@endif						
+						<td></td>
+						<td></td>
+						<td><span class="text-green">{{number_format($totalin,0)}}</span></td>
+						<td><span class="text-red">{{number_format($totalout,0)}}</span></td>
+						<td><span class="text-red">{{number_format($totaldealout,0)}}</span></td>
+						<td></td>
+						<td></td>
+						<td></td>
 					@else
 						<tr><td colspan="7">@lang('app.no_data')</td></tr>
 					@endif

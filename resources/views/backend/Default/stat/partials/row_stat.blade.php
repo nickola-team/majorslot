@@ -31,31 +31,31 @@
 <td>
 
 @if (auth()->user()->role_id >= $stat->admin->role_id)
-	{{number_format($stat->balance,2)}}
+	{{number_format($stat->balance,0)}}
 @else
 	0
 @endif
 </td>
 <td>
-{{number_format($stat->old,2)}}
+{{number_format($stat->old,0)}}
 </td>
 <td>
-{{number_format($stat->new,2)}}
+{{number_format($stat->new,0)}}
 </td>
 <td>
 @if ($stat->type == 'add')
-	<span class="text-green">{{ number_format(abs($stat->summ),2) }}</span>
+	<span class="text-green">{{ number_format(abs($stat->summ),0) }}</span>
 @endif
 </td>
 <td>
 	@if ($stat->type == 'out')
-		<span class="text-red">{{ number_format(abs($stat->summ),2) }}</span>
+		<span class="text-red">{{ number_format(abs($stat->summ),0) }}</span>
 	@endif
 </td>
 @if ($partner==1)
 <td>
 	@if ($stat->type == 'deal_out')
-		<span class="text-green">{{ number_format(abs($stat->summ),2) }}</span>
+		<span class="text-red">{{ number_format(abs($stat->summ),0) }}</span>
 	@endif
 </td>
 @if($stat->requestInfo)

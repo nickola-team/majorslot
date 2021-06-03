@@ -19,11 +19,11 @@
     </td>
 
 	@permission('users.balance.manage')
-	<td>{{ number_format($user->balance,2) }}</td>
+	<td>{{ number_format($user->balance,0) }}</td>
 	{{-- <td>{{ $user->bonus }}</td> --}}
-	<td>{{ number_format($user->total_in,2) }}</td>
-	<td>{{ number_format($user->total_out,2) }}</td>
-	<td>{{ number_format($user->wager,2) }}</td>
+	<td>{{ number_format($user->total_in,0) }}</td>
+	<td>{{ number_format($user->total_out,0) }}</td>
+	<td>{{ number_format($user->wager,0) }}</td>
 	@if($user->status == 'Active')
 	<td>활성</td>
 	@elseif($user->status == 'Banned')

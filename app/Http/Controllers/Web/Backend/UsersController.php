@@ -300,33 +300,77 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $msg = $succeed . '명의 회원을 생성하였습니다. 실패 ' . $failed . '명';
             return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
+        public function partner($role_id, \Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $users = $user->availableUsers();
+            $level = $user->level();
+            if ($level <= $role_id)
+            {
+                return redirect()->back()->withErrors('비정상적인 접근입니다.');
+            }
+
+            $partners = \VanguardLTE\User::where('role_id', $role_id)->whereIn('id', $users);
+
+            if( $request->credit_from != '' ) 
+            {
+                $partners = $partners->where('balance', '>=', $request->credit_from);
+            }
+            if( $request->credit_to != '' ) 
+            {
+                $partners = $partners->where('balance', '<=', $request->credit_to);
+            }
+            if( $request->search != '' ) 
+            {
+                $partners = $partners->where('username', 'like', '%'.$request->search.'%');
+            }
+
+            $stat = [
+                'count' => $partners->count(),
+                'sum' => $partners->sum('balance')
+            ];
+
+            $partners = $partners->paginate(20);
+            return view('backend.Default.user.partners',  compact('partners', 'stat', 'role_id'));
+
+        }
         public function tree(\Illuminate\Http\Request $request)
         {
             $user_id = $request->input('parent');
             $users = [];
             $user = null;
-            if($user_id == null || $user_id == 0)
+            if ($request->search != '')
             {
-                $user_id = auth()->user()->id;
-                $users = [$user_id];
-                if (auth()->user()->hasRole('admin'))
-                {
-                    $users = auth()->user()->childPartners();
-                }
+                $users = \VanguardLTE\User::orderBy('username', 'ASC');
+                $users = $users->whereIn('id', auth()->user()->hierarchyPartners());
+                $users = $users->where('username', 'like', '%' . $request->search . '%');
+                $users = $users->get()->pluck('id')->toArray();
             }
-            else 
+            else
             {
-                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                if($user_id == null || $user_id == 0)
                 {
-                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
-                }
-                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-                if ($user) {
-                    $users = $user->childPartners();
-                }
-                else
-                {
+                    $user_id = auth()->user()->id;
                     $users = [$user_id];
+                    if (auth()->user()->hasRole('admin'))
+                    {
+                        $users = auth()->user()->childPartners();
+                    }
+                }
+                else 
+                {
+                    if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                    {
+                        return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                    }
+                    $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                    if ($user) {
+                        $users = $user->childPartners();
+                    }
+                    else
+                    {
+                        $users = [$user_id];
+                    }
                 }
             }
             $partners = [];
@@ -1083,11 +1127,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.user.list')->withErrors(trans('app.you_cannot_delete_yourself'));
             }
-            if( !(auth()->user()->hasRole('admin') && $user->hasRole([
-                'master',
-                'agent', 
-                'distributor'
-            ])) ) 
+            if( auth()->user()->role_id <= $user->role_id ) 
             {
                 return redirect()->route('backend.user.list')->withErrors([trans('app.no_permission')]);
             }
