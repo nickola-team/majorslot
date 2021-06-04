@@ -22,14 +22,6 @@
             @endif
             @endpermission
 
-            @permission('users.manage')
-            <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.user.list') }}">
-                    <i class="fa fa-users"></i>
-                    <span>회원리스트</span>
-                </a>
-            </li>
-            @endpermission
 
             @permission('users.tree')
             @if (auth()->user()->hasRole(['admin','master','agent']))
@@ -42,7 +34,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
-            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*')  ? 'active' : '' }}">
+            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*')  ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
                     <span>파트너리스트</span>
@@ -55,6 +47,12 @@
                         <a  href="{{ route('backend.shop.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>매장리스트</span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
+                        <a href="{{ route('backend.user.list') }}">
+                            <i class="fa fa-users"></i>
+                            <span>회원리스트</span>
                         </a>
                     </li>
                     @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent']) )

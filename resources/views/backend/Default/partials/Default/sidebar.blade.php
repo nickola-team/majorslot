@@ -105,15 +105,6 @@
             @endif
             @endpermission
 
-            @permission('users.manage')
-            <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.user.list') }}">
-                    <i class="fa fa-users"></i>
-                    <span>@lang('app.users')</span>
-                </a>
-            </li>
-            @endpermission
-
             @permission('users.tree')
             @if (auth()->user()->hasRole(['admin','master','agent']))
             <li class="{{ Request::is('backend/tree*') ? 'active' : ''  }}">
@@ -125,7 +116,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
-            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>파트너관리</span>
@@ -138,6 +129,12 @@
                         <a  href="{{ route('backend.shop.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>매장관리</span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>회원관리</span>
                         </a>
                     </li>
 
