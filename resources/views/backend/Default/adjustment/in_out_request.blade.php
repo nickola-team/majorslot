@@ -76,7 +76,7 @@
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-2">
-						<b>보유금:</b> <a class="pull-right">{{ number_format($balance,2) }}원</a>
+						<b>보유금:</b> <a class="pull-right">{{ number_format($balance,0) }}원</a>
 					</div>
 				</div>
 			</li>
@@ -86,7 +86,7 @@
 				<div class="row">
 					<div class="col-md-2" style="line-height:2">
 						<b>수익금:</b> ({{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->deal_percent:auth()->user()->deal_percent,2)}}%,{{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->table_deal_percent:auth()->user()->table_deal_percent,2)}}%) <a class="pull-right">{{ 
-							number_format($dealvalue,2) 
+							number_format($dealvalue,0) 
 							}}원 </a>
 							
 					</div>
