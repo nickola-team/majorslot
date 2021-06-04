@@ -406,7 +406,7 @@
                     </button>
                 </span>
                 @if (auth()->user()->hasRole('master'))
-                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="Search" value="{{auth()->user()->address}}" >
+                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="연락처" value="{{auth()->user()->address}}" >
                 <span class="input-group-btn">
                     <button type="submit" name="search"  class="btn btn-flat" style="background:rgba(255,255,255,0.2);">
                     <i class="fa fa-edit"></i>
