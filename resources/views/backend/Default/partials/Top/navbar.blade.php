@@ -22,14 +22,6 @@
             @endif
             @endpermission
 
-            @permission('users.manage')
-            <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.user.list') }}">
-                    <i class="fa fa-users"></i>
-                    <span>회원리스트</span>
-                </a>
-            </li>
-            @endpermission
 
             @permission('users.tree')
             @if (auth()->user()->hasRole(['admin','master','agent']))
@@ -42,7 +34,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
-            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*')  ? 'active' : '' }}">
+            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*')  ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
                     <span>파트너리스트</span>
@@ -55,6 +47,12 @@
                         <a  href="{{ route('backend.shop.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>매장리스트</span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
+                        <a href="{{ route('backend.user.list') }}">
+                            <i class="fa fa-users"></i>
+                            <span>회원리스트</span>
                         </a>
                     </li>
                     @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent']) )
@@ -174,7 +172,7 @@
                 </ul>
             </li>
             @endif
-            <li class="dropdown {{  Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*')? 'active' : '' }}">
+            <li class="dropdown {{  Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*')|| Request::is('backend/in_out_history*')? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-database"></i>
                     <span>충환전관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -195,10 +193,22 @@
                     @endif
                     @if(auth()->user()->hasRole(['admin','master']))
                     @permission('stats.pay')
-                    <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_manage') }}">
+                    <li class="{{ Request::is('backend/in_out_manage/add') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_manage','add') }}">
                             <i class="fa fa-circle-o"></i>
-                            충환전관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                            충전관리<sup id="in_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/in_out_manage/out') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_manage','out') }}">
+                            <i class="fa fa-circle-o"></i>
+                            환전관리<sup id="out_newmark" style="background:red;font-size:12px;color:white;display: none;">&nbsp;N&nbsp;</sup>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/in_out_history') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_history') }}">
+                            <i class="fa fa-circle-o"></i>
+                            충환전내역
                         </a>
                     </li>
                     @endpermission
@@ -207,7 +217,7 @@
             </li>
 
             <li class="dropdown {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment*')? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-database"></i>
                     <span>정산리스트<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -242,6 +252,12 @@
                         <a  href="{{ route('backend.adjustment_daily') }}"> 
                             <i class="fa fa-circle-o"></i>
                             일별정산
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/adjustment_monthly') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.adjustment_monthly') }}"> 
+                            <i class="fa fa-circle-o"></i>
+                            월별정산
                         </a>
                     </li>
                     @endpermission

@@ -5,7 +5,7 @@
         @else
         <label>파트너이름</label>
         @endif
-        <input type="text" class="form-control" id="username" name="username" placeholder="(@lang('app.optional'))" value="">
+        <input type="text" class="form-control" id="username" name="username" value="">
     </div>
 </div>
 <div class="col-md-6">

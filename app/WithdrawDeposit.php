@@ -85,6 +85,14 @@ namespace VanguardLTE
         {
             return $this->belongsTo('VanguardLTE\Shop');
         }
+        public function shopStat()
+        {
+            return $this->hasOne('VanguardLTE\ShopStat', 'request_id');
+        }
+        public function transaction()
+        {
+            return $this->hasOne('VanguardLTE\Transaction', 'request_id');
+        }
     }
 
 }

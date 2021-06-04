@@ -13,11 +13,12 @@
 
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">충환전관리</h3>
+				<h3 class="box-title">{{$type=='add'?'충전':'환전'}}관리( {{count($in_out_request)}}건)</h3>
 				@if (auth()->user()->hasRole('master'))
 				<div class="pull-right box-tools">
 					<input type="checkbox" id="ratingOn" checked={{auth()->user()->rating>0?'true':'false'}}>
 						알림음 ON/OFF
+				</div>
 				@endif
 			</div>
 			@if (auth()->user()->hasRole('admin') &&  !Session::get('isCashier'))
@@ -59,9 +60,7 @@
 						@else
 						<th>파트너이름</th>
 						@endif
-						<th>충전</th>
-						<th>환전</th>
-						<th>수익금전환</th>
+						<th>신청금액</th>
 						<th>계좌번호</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -71,8 +70,8 @@
 					</tr>
 					</thead>
 					<tbody>
-					@if (count($in_out_logs))
-						@foreach ($in_out_logs as $in_out_log)
+					@if (count($in_out_request))
+						@foreach ($in_out_request as $in_out_log)
 							@include('backend.Default.adjustment.partials.row_in_out')
 						@endforeach
 					@else
@@ -86,9 +85,7 @@
 						@else
 						<th>파트너이름</th>
 						@endif
-						<th>충전</th>
-						<th>환전</th>
-						<th>수익금전환</th>
+						<th>신청금액</th>
 						<th>계좌번호</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -99,9 +96,69 @@
 					</thead>
                     </table>
                     </div>
-						{{-- {{ $games->appends(Request::except('page'))->links() }} --}}
-                    </div>			
+						{{ $in_out_request->appends(Request::except('page'))->links() }}
+			</div>
 		</div>
+
+	</section>
+
+	<section class="content">
+
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">최근 {{$type=='add'?'충전':'환전'}}내역</h3>
+			</div>
+			
+			<div class="box-body">
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped">
+					<thead>
+					<tr>
+						@if(auth()->user()->hasRole('distributor'))
+						<th>매장이름</th>
+						@else
+						<th>파트너이름</th>
+						@endif
+						<th>신청금액</th>
+						<th>변동전금액</th>
+						<th>변동후금액</th>
+						<th>계좌번호</th>
+						<th>예금주</th>
+						<th>신청시간</th>
+						<th>처리시간</th>
+					</tr>
+					</thead>
+					<tbody>
+					@if (count($in_out_logs))
+						@foreach ($in_out_logs as $in_out_log)
+							@include('backend.Default.adjustment.partials.row_in_out_log')
+						@endforeach
+					@else
+						<tr><td colspan="9">@lang('app.no_data')</td></tr>
+					@endif
+					</tbody>
+					<thead>
+					<tr>
+						@if(auth()->user()->hasRole('distributor'))
+						<th>매장이름</th>
+						@else
+						<th>파트너이름</th>
+						@endif
+						<th>신청금액</th>
+						<th>변동전금액</th>
+						<th>변동후금액</th>
+						<th>계좌번호</th>
+						<th>예금주</th>
+						<th>신청시간</th>
+						<th>처리시간</th>
+					</tr>
+					</thead>
+                    </table>
+                    </div>
+						{{ $in_out_request->appends(Request::except('page'))->links() }}
+			</div>
+		</div>
+
 	</section>
 
 	<div class="modal fade" id="openAllowModal" tabindex="-1" aria-hidden="true">
@@ -154,6 +211,35 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">파트너정보</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="form-group">
+								파트너구조
+							</div>		
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group">
+								<span id='hierarchytxt'></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 @stop
 
 @section('scripts')
@@ -176,6 +262,13 @@
 			}
 			$('#out_id').val(id);
 		});
+
+
+		$('.partnerInfo').click(function(event){
+			var info = $(event.target).attr('data-id');
+			$('#hierarchytxt').text(info);
+		});
+		
 
 		$('#btnAddSum').click(function() {
 			$(this).attr('disabled', 'disabled');

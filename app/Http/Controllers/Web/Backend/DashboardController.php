@@ -801,11 +801,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $request->session()->put('dates', $dates);
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->paginate(31);
+            $type = 'daily';
         
-            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
+            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary', 'type'));
         }
         public function adjustment_monthly(\Illuminate\Http\Request $request)
         {
@@ -830,20 +831,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
             }
             
-            $start_date = date("Y-m-d",strtotime("-1 days"));
-            $end_date = date("Y-m-d");
+            $start_date = date("Y-m-01",strtotime("-1 days"));
+            $end_date = date("Y-m-01");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
-                $start_date = $dates_tmp[0];
-                $end_date = $dates_tmp[1];
+                $start_date = $dates_tmp[0] . '-01';
+                $end_date = $dates_tmp[1] . '-01';
                 $request->session()->put('dates', $dates);
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','monthly')->whereIn('user_id', $users);
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->paginate(31);
+            $type = 'monthly';
         
-            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
+            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary','type'));
         }
         public function adjustment_partner(\Illuminate\Http\Request $request)
         {
@@ -1379,26 +1381,90 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $in_out_logs = $in_out_logs->get()->sortByDesc('created_at')->paginate(10);
             return view('backend.Default.adjustment.in_out_request', compact('in_out_logs', 'bankinfo'));
         }
-
-        public function in_out_manage(\Illuminate\Http\Request $request) 
+        public function in_out_history(\Illuminate\Http\Request $request) 
         {
             if (\Session::get('isCashier'))
             {
                 $childs = auth()->user()->childPartners();
-                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('status', 0)->whereIn('payeer_id', $childs);
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('status', '<>', 0)->whereIn('payeer_id', $childs)->orderBy('created_at','desc');
             }
             else
             {
-                $in_out_logs = \VanguardLTE\WithdrawDeposit::where([
-                    'payeer_id'=> auth()->user()->id,
-                    'status'=> 0,
-                ]);
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('payeer_id', auth()->user()->id)->where('status', '<>', 0)->orderBy('created_at','desc');
             }
-            $in_out_logs = $in_out_logs->orderBy('created_at', 'desc')->get();
+
+            if( $request->type != '' ) 
+            {
+                $in_out_logs = $in_out_logs->where('type', $request->type);
+            }
+            if( $request->sum_from != '' ) 
+            {
+                $in_out_logs = $in_out_logs->where('sum', '>=', $request->sum_from);
+            }
+            if( $request->sum_to != '' ) 
+            {
+                $in_out_logs = $in_out_logs->where('sum', '<=', $request->sum_from);
+            }
+            if( $request->dates != '' ) 
+            {
+                $dates = explode(' - ', $request->dates);
+                $in_out_logs = $in_out_logs->where('created_at', '>=', $dates[0]);
+                $in_out_logs = $in_out_logs->where('created_at', '<=', $dates[1]);
+            }
+            if( $request->recommender != '' ) 
+            {
+                $in_out_logs = $in_out_logs->where('recommender', 'like', '%'.$request->recommender.'%');
+            }
+            if( $request->search != '' ) 
+            {
+                if ($request->partner_type == 'shop')
+                {
+                    $in_out_logs = $in_out_logs->join('shops', 'shops.id', '=', 'withdraw_deposit.shop_id');
+                    $in_out_logs = $in_out_logs->where('shops.name', 'like', '%' . $request->search . '%');
+                }
+                else if ($request->partner_type == 'partner')
+                {
+                    $user_ids = \VanguardLTE\User::where('username','like', '%' . $request->search . '%')->pluck('id')->toArray();
+                    $in_out_logs = $in_out_logs->whereIn('user_id', $user_ids);
+                }
+                $in_out_logs = $in_out_logs->where('withdraw_deposit.partner_type',$request->partner_type);
+            }
+
+
+            $stat = [
+                'add' => (clone $in_out_logs)->where('type','add')->sum('sum'),
+                'out' => (clone $in_out_logs)->where('type','out')->sum('sum'),
+            ];
 
             $in_out_logs = $in_out_logs->paginate(20);
 
-            return view('backend.Default.adjustment.in_out_manage', compact('in_out_logs'));
+            return view('backend.Default.adjustment.in_out_history', compact('in_out_logs','stat'));
+        }
+
+        public function in_out_manage($type, \Illuminate\Http\Request $request) 
+        {
+            if (\Session::get('isCashier'))
+            {
+                $childs = auth()->user()->childPartners();
+                $in_out_request = \VanguardLTE\WithdrawDeposit::where('status', 0)->whereIn('payeer_id', $childs)->where('type', $type);
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('status' , 1)->whereIn('payeer_id', $childs)->where('type', $type)->orderBy('created_at','desc')->take(20);
+            }
+            else
+            {
+                $in_out_request = \VanguardLTE\WithdrawDeposit::where([
+                    'payeer_id'=> auth()->user()->id,
+                    'status'=> 0,
+                ])->where('type', $type);
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where([
+                    'payeer_id'=> auth()->user()->id,
+                    'status'=> 1,
+                ])->where('type', $type)->orderBy('created_at','desc')->take(20);
+            }
+            $in_out_request = $in_out_request->orderBy('created_at', 'desc')->get();
+            $in_out_request = $in_out_request->paginate(20);
+            $in_out_logs = $in_out_logs->get();
+
+            return view('backend.Default.adjustment.in_out_manage', compact('in_out_request','in_out_logs','type'));
         }
 
 
