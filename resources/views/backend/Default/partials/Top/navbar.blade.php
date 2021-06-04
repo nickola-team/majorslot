@@ -437,11 +437,11 @@
                     @if( Auth::user()->hasRole(['cashier', 'manager']) )
                         @php
                             $shop = \VanguardLTE\Shop::find( auth()->user()->present()->shop_id );
-                            echo $shop?number_format($shop->balance,2):0;
+                            echo $shop?number_format($shop->balance,0):0;
                         @endphp
                         원
                     @else
-                        {{ number_format(auth()->user()->present()->balance,2) }}원
+                        {{ number_format(auth()->user()->present()->balance,0) }}원
                     @endif</span>
               </a>
             </li>
