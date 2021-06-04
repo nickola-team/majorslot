@@ -172,7 +172,7 @@
                 </ul>
             </li>
             @endif
-            <li class="dropdown {{  Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*')? 'active' : '' }}">
+            <li class="dropdown {{  Request::is('backend/in_out_request*')  || Request::is('backend/in_out_manage*')|| Request::is('backend/in_out_history*')? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-database"></i>
                     <span>충환전관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -193,10 +193,22 @@
                     @endif
                     @if(auth()->user()->hasRole(['admin','master']))
                     @permission('stats.pay')
-                    <li class="{{ Request::is('backend/in_out_manage') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_manage') }}">
+                    <li class="{{ Request::is('backend/in_out_manage/add') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_manage','add') }}">
                             <i class="fa fa-circle-o"></i>
-                            충환전관리<sup id="inout_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                            충전관리<sup id="in_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/in_out_manage/out') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_manage','out') }}">
+                            <i class="fa fa-circle-o"></i>
+                            환전관리<sup id="out_newmark" style="background:red;font-size:12px;color:white;display: none;">&nbsp;N&nbsp;</sup>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/in_out_history') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.in_out_history') }}">
+                            <i class="fa fa-circle-o"></i>
+                            충환전내역
                         </a>
                     </li>
                     @endpermission

@@ -219,7 +219,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function inoutList_json(\Illuminate\Http\Request $request)
         {
             if( !\Illuminate\Support\Facades\Auth::check() ) {
-                return response()->json(['error' => true, 'count' => 0, 'now' => \Carbon\Carbon::now()]);
+                return response()->json(['error' => true, 'add' => 0, 'out'=>0,'now' => \Carbon\Carbon::now()]);
             }
 
             if (isset($request->rating))
@@ -232,15 +232,22 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if (\Session::get('isCashier'))
             {
                 $payeer_ids = auth()->user()->childPartners();
-                $transactions = \VanguardLTE\WithdrawDeposit::where('status',0)->whereIn('payeer_id',  $payeer_ids)->get();
+                $transactions1 = \VanguardLTE\WithdrawDeposit::where(['status'=>0,'type'=>'add'])->whereIn('payeer_id',  $payeer_ids);
+                $transactions2 = \VanguardLTE\WithdrawDeposit::where(['status'=>0,'type'=>'out'])->whereIn('payeer_id',  $payeer_ids);
             }
             else
             {
-                $transactions = \VanguardLTE\WithdrawDeposit::where([
+                $transactions1 = \VanguardLTE\WithdrawDeposit::where([
+                    'type' => 'add',
                     'status' => 0,
-                    'payeer_id' => $request->id])->get();
+                    'payeer_id' => $request->id]);
+                $transactions2 = \VanguardLTE\WithdrawDeposit::where([
+                    'type' => 'out',
+                    'status' => 0,
+                    'payeer_id' => $request->id]);
             }
-            $res['count'] = $transactions->count();
+            $res['add'] = $transactions1->count();
+            $res['out'] = $transactions2->count();
             $res['rating'] = auth()->user()->rating;
             return response()->json($res);
         }
@@ -824,7 +831,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         public function allowInOut(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
-                return redirect()->route('backend.in_out_manage')->withErrors(['로그인하세요']);
+                return redirect()->route('backend.in_out_manage', 'add')->withErrors(['로그인하세요']);
             }
             $in_out_id = $request->in_out_id;
             $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->get()->first();
@@ -841,14 +848,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if (!$user)
             {
-                return redirect()->route('backend.in_out_manage')->withErrors(['본사를 찾을수 없습니다.']);
+                return redirect()->route('backend.in_out_manage',$type)->withErrors(['본사를 찾을수 없습니다.']);
             }
             if ($requestuser->hasRole('manager')) // for shops
             {
                 $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
                 if($type == 'add'){
                     if($user->balance < $amount) {
-                        return redirect()->route('backend.in_out_manage')->withErrors(['보유금액이 충분하지 않습니다.']);
+                        return redirect()->route('backend.in_out_manage',$type)->withErrors(['보유금액이 충분하지 않습니다.']);
                     }
 
                     $user->update(
@@ -937,7 +944,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $result = json_decode($result, true);
                     if ($result['status'] == 'error')
                     {
-                        return redirect()->route('backend.in_out_manage')->withErrors($result['message']);
+                        return redirect()->route('backend.in_out_manage', $type)->withErrors($result['message']);
                     }
                 }
                 else if($type == 'out'){
@@ -975,7 +982,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'status' => 1
                 ]);
             }
-            return redirect()->route('backend.in_out_manage')->withSuccess(['조작이 성공적으로 진행되었습니다.']);
+            return redirect()->route('backend.in_out_manage', $type)->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }
 
         public function rejectInOut(\Illuminate\Http\Request $request){
@@ -1025,7 +1032,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
            else {
                $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->get()->first();
                if($transaction == null){
-                return redirect()->route('backend.in_out_manage')->withErrors(['유효하지 않은 조작입니다.']);
+                return redirect()->back()->withErrors(['유효하지 않은 조작입니다.']);
                }
                $amount = $transaction->sum;
                $type = $transaction->type;
@@ -1089,7 +1096,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ]);
                 }
            }
-           return redirect()->route('backend.in_out_manage')->withSuccess(['조작이 성공적으로 진행되었습니다.']);
+           return redirect()->back()->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }
     }
 }

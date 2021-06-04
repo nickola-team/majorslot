@@ -215,11 +215,7 @@
 							@else
 							<th>파트너이름</th>
 							@endif
-							<th>충전</th>
-							<th>환전</th>
-							@if(auth()->user()->hasRole(['master','manager']))
-							<th>수익금전환</th>
-							@endif
+							<th>신청금액</th>
 							<th>계좌번호</th>
 							<th>예금주</th>
 							<th>신청시간</th>

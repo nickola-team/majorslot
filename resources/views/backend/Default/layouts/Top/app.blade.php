@@ -122,9 +122,11 @@
             var apiUrl="/api/inoutlist.json";
             var timeout;
             var lastRequest = 0;
-            var audio = new Audio("{{ url('/frontend/Major/major/audio/door-bell.mp3')}}");
+            var audio_in = new Audio("{{ url('/frontend/Major/major/audio/door-bell.mp3')}}");
+            var audio_out = new Audio("{{ url('/frontend/Major/major/audio/camera-beep.mp3')}}");
             $("#adj_newmark").hide();
-            $("#inout_newmark").hide();
+            $("#in_newmark").hide();
+            $("#out_newmark").hide();
             var updateInOutRequest = function (callback) {
                 if (true) {
                     $.ajax({
@@ -140,19 +142,29 @@
                         success: function (data) {
                             var inouts=data;
                             lastRequest = inouts['now'];
-                            if (inouts['count'] > 0)
+                            if (inouts['add'] > 0)
                             {
                                 if (inouts['rating'] > 0)
                                 {
-                                    audio.play();
+                                    audio_in.play();
                                 }
                                 $("#adj_newmark").show();
-                                $("#inout_newmark").show();
+                                $("#in_newmark").show();
                             }
-                            else
+                            if (inouts['out'] > 0)
+                            {
+                                if (inouts['rating'] > 0)
+                                {
+                                    audio_out.play();
+                                }
+                                $("#adj_newmark").show();
+                                $("#out_newmark").show();
+                            }
+                            if (inouts['add'] == 0 && inouts['out'] == 0)
                             {
                                 $("#adj_newmark").hide();
-                                $("#inout_newmark").hide();
+                                $("#in_newmark").hide();
+                                $("#out_newmark").hide();
                             }
                             timeout = setTimeout(updateInOutRequest, updateTime);
                             if (callback != null) callback();

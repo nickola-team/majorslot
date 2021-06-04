@@ -1,6 +1,5 @@
 <tr>
-	@if($in_out_log->partner_type == 'partner')
-	<?php  
+<?php  
     $available_roles = Auth::user()->available_roles( true );
     $available_roles_trans = [];
     foreach ($available_roles as $key=>$role)
@@ -9,22 +8,34 @@
         $available_roles_trans[$key] = $role;
     }
 	?>
-	<td>{{ $in_out_log->user->username }} [{{$available_roles_trans[$in_out_log->user->role_id] }}]</td>
+<td>
+	<?php
+		$level = $in_out_log->user->level();
+		$parent = $in_out_log->user->referral;
+		$hierarchy = '';
+		for (;$level<Auth::user()->level();$level++)
+		{
+			$hierarchy = $hierarchy . ' > ' . $parent->username .'[' .$available_roles_trans[$parent->role_id]. ']';
+			$parent = $parent->referral;
+		}
+	?>
+	@if($in_out_log->partner_type == 'partner')
+	<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
+		{{ $in_out_log->user->username }} [{{$available_roles_trans[$in_out_log->user->role_id] }}]
+		</a>
+	
 	@else
-	<td>{{ $in_out_log->shop->name }} [매장]</td>
+	<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
+	{{ $in_out_log->shop->name }} [매장]
+	</a>
 	@endif
 	
+</td>
 	@if($in_out_log->type == 'add' )
 	<td><span class="text-green">{{ number_format($in_out_log->sum,0) }}</span></td>
-	<td></td>
-	<td></td>
 	@elseif($in_out_log->type == 'out' )
-	<td></td>
 	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
-	<td></td>
 	@elseif($in_out_log->type == 'deal_out' )
-	<td></td>
-	<td></td>
 	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
 	@endif
 	<td>{{"[ " . $in_out_log->bank_name . " ] ". $in_out_log->account_no}}</td>

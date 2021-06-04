@@ -465,8 +465,12 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.in_out_request',
         'uses' => 'DashboardController@in_out_request'
     ]);
+    Route::get('/in_out_history', [
+        'as' => 'backend.in_out_history',
+        'uses' => 'DashboardController@in_out_history'
+    ]);    
 
-    Route::get('/in_out_manage', [
+    Route::get('/in_out_manage/{type}', [
         'as' => 'backend.in_out_manage',
         'uses' => 'DashboardController@in_out_manage'
     ]);
