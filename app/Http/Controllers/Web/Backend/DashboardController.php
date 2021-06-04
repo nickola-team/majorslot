@@ -801,11 +801,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $request->session()->put('dates', $dates);
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->paginate(31);
+            $type = 'daily';
         
-            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
+            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary', 'type'));
         }
         public function adjustment_monthly(\Illuminate\Http\Request $request)
         {
@@ -830,20 +831,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
             }
             
-            $start_date = date("Y-m-d",strtotime("-1 days"));
-            $end_date = date("Y-m-d");
+            $start_date = date("Y-m-01",strtotime("-1 days"));
+            $end_date = date("Y-m-01");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
-                $start_date = $dates_tmp[0];
-                $end_date = $dates_tmp[1];
+                $start_date = $dates_tmp[0] . '-01';
+                $end_date = $dates_tmp[1] . '-01';
                 $request->session()->put('dates', $dates);
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','monthly')->whereIn('user_id', $users);
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->paginate(31);
+            $type = 'monthly';
         
-            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary'));
+            return view('backend.Default.adjustment.adjustment_daily', compact('start_date', 'end_date', 'user', 'summary','type'));
         }
         public function adjustment_partner(\Illuminate\Http\Request $request)
         {

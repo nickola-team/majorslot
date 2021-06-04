@@ -4,7 +4,7 @@
 	@else
 	<td><a href="{{ route('backend.adjustment_daily', 'parent='.$adjustment->user_id) }}">{{ $adjustment->user->username }}</a></td>
 	@endif
-	<td>{{ $adjustment->date}}</td>
+	<td>{{ $type=='daily'?date('Y-m-d',strtotime($adjustment->date)):date('Y-m',strtotime($adjustment->date))}}</td>
 	<td>{{ number_format($adjustment->totalin,0) }}</td>
 	<td>{{ number_format($adjustment->totalout,0) }}</td>
 	@if(auth()->user()->hasRole(['admin', 'master']))

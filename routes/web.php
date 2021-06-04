@@ -427,6 +427,11 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'DashboardController@adjustment_daily',
     ]);
 
+    Route::get('/adjustment_monthly', [
+        'as' => 'backend.adjustment_monthly',
+        'uses' => 'DashboardController@adjustment_monthly',
+    ]);
+
     Route::get('/adjustment_game', [
         'as' => 'backend.adjustment_game',
         'uses' => 'DashboardController@adjustment_game',

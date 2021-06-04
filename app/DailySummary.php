@@ -17,7 +17,8 @@ namespace VanguardLTE
             'totalwin',
             'total_deal',
             'total_mileage',
-            'balance'
+            'balance',
+            'type'
         ];
         public $timestamps = false;
         public static function boot()
@@ -190,6 +191,55 @@ namespace VanguardLTE
                 return $adj;
             }
         }
+        public static function summary_month($user_id, $month=null)
+        {
+            set_time_limit(0);
+            $user = \VanguardLTE\User::where('id', $user_id)->first();
+            if (!$user)
+            {
+                return;
+            }
+            if (!$month)
+            {
+                $month = date("Y-m", strtotime("-1 days"));
+            }
+            
+            $from =  $month . "-01";
+            $to = $month . "-31";
+
+            $childusers = $user->childPartners(); //하위 파트너들 먼저 정산하고, 그다음 해당 파트너들의 정산을 이용해서 계산
+            foreach ($childusers as $c)
+            {
+                DailySummary::summary_month($c, $month);
+            }
+
+            $d_summary = \VanguardLTE\DailySummary::where('date', '>=', $from)->where('date', '<=', $to)->where(['type' => 'daily', 'user_id' => $user_id]);
+            
+            $adj['user_id']=$user_id;
+            $adj['shop_id']=$user->shop_id;
+            $adj['date']=$from;
+            $adj['totalin']=$d_summary->sum('totalin');
+            $adj['totalout']=$d_summary->sum('totalout');
+            $adj['moneyin']=$d_summary->sum('moneyin');
+            $adj['moneyout']=$d_summary->sum('moneyout');
+            $adj['dealout']=$d_summary->sum('dealout');
+            $adj['totalbet']=$d_summary->sum('totalbet');
+            $adj['totalwin']=$d_summary->sum('totalwin');
+            $adj['total_deal']=$d_summary->sum('total_deal');
+            $adj['total_mileage']=$d_summary->sum('total_mileage');
+            $adj['balance']=0;
+            $adj['type']='monthly';
+            $monthlysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user_id, 'date' => $from, 'type'=>'monthly'])->first();
+            if ($monthlysumm)
+            {
+                $monthlysumm->update($adj);
+            }
+            else
+            {
+                \VanguardLTE\DailySummary::create($adj);
+            }
+
+        }
 
         public static function summary($user_id, $day=null)
         {
@@ -214,7 +264,7 @@ namespace VanguardLTE
             if($b_shop){
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
-                $dailysumm = \VanguardLTE\DailySummary::where(['shop_id'=> $user->shop_id, 'date' => $day])->first();
+                $dailysumm = \VanguardLTE\DailySummary::where(['shop_id'=> $user->shop_id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
                 {
                     $dailysumm->update($adj);
@@ -235,7 +285,7 @@ namespace VanguardLTE
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;             
 
-                $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day])->first();
+                $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
                 {
                     $dailysumm->update($adj);

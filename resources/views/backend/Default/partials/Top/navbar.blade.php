@@ -207,7 +207,7 @@
             </li>
 
             <li class="dropdown {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment*')? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-database"></i>
                     <span>정산리스트<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -242,6 +242,12 @@
                         <a  href="{{ route('backend.adjustment_daily') }}"> 
                             <i class="fa fa-circle-o"></i>
                             일별정산
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/adjustment_monthly') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.adjustment_monthly') }}"> 
+                            <i class="fa fa-circle-o"></i>
+                            월별정산
                         </a>
                     </li>
                     @endpermission

@@ -60,7 +60,7 @@
                     </button>
                 </span>
                 @if (auth()->user()->hasRole('master'))
-                <input type="text" name="address" class="form-control" value="{{auth()->user()->address}}" style="color:#b8c7ce;">
+                <input type="text" name="address" class="form-control" value="{{auth()->user()->address}}" style="color:#b8c7ce;" placeholder="연락처">
                 <span class="input-group-btn">
                     <button type="submit" name="search" id="search-btn" class="btn btn-flat">
                     <i class="fa fa-edit"></i>
@@ -287,7 +287,7 @@
             </li>
 
             <li class="treeview {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment_daily*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
                     <span>정산관리</span>
@@ -323,6 +323,12 @@
                         <a  href="{{ route('backend.adjustment_daily') }}"> 
                             <i class="fa fa-circle-o"></i>
                             일별정산
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/adjustment_monthly') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.adjustment_monthly') }}"> 
+                            <i class="fa fa-circle-o"></i>
+                            월별정산
                         </a>
                     </li>
                     @endpermission

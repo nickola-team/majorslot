@@ -1,7 +1,7 @@
 @extends('backend.Default.layouts.'.$layout.'.app')
 
-@section('page-title', '일별정산')
-@section('page-heading', '일별정산')
+@section('page-title', '정산')
+@section('page-heading', '정산')
 
 @section('content')
 
@@ -47,7 +47,7 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">
-				일별정산
+				{{$type=='daily'?'일별':'월별'}}정산
 				</h3>
 					@if($user != null)
 					<a href="{{ route('backend.adjustment_daily', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
@@ -157,7 +157,7 @@
 				endDate: moment().add(0, 'day'),
 
 				locale: {
-					format: 'YYYY-MM-DD'
+					format: 'YYYY-MM{{$type=="daily"?"-DD":""}}'
 				}
 			});
 			$('input[name="dates"]').data('daterangepicker').setStartDate("{{$start_date}}");
