@@ -42,20 +42,21 @@
 
 	<td>{{ $in_out_log->recommender}}</td>
 	<td>{{ $in_out_log->created_at}}</td>
+	<td>{{ \VanguardLTE\WithdrawDeposit::statMsg()[$in_out_log->status]}}</td>
 
-	@if($in_out_log->status == 1)
-	<td>완료</td>
-	@if($in_out_log->user_id != auth()->user()->id)
-	<td></td>
-	@endif
-	@elseif($in_out_log->status == 0)
-	<td>대기</td>
 	@if($in_out_log->user_id != auth()->user()->id)
 	<td>
 		<a class="newPayment allowPayment" href="#" data-toggle="modal" data-target="#openAllowModal" data-id="{{ $in_out_log->id }}" >
 			<button type="button" class="btn btn-block btn-primary btn-xs">승인</button>
 		</a>
 	</td>
+	@if($in_out_log->status == \VanguardLTE\WithdrawDeposit::REQUEST)
+	<td>
+		<a href="{{ route('frontend.api.wait_in_out', $in_out_log->id) }}" >
+			<button type="button" class="btn btn-block btn-success btn-xs">대기</button>
+		</a>
+	</td>
+	@endif
 	<td>
 		<a class="newPayment rejectPayment" href="#" data-toggle="modal" data-target="#openRejectModal" data-id="{{ $in_out_log->id }}" >
 			<button type="button" class="btn btn-block btn-danger btn-xs">취소</button>
@@ -63,11 +64,4 @@
 
 	</td>
 	@endif
-	@elseif($in_out_log->status == 2)
-	<td>취소됨</td>	
-	@if($in_out_log->user_id != auth()->user()->id)
-	<td></td>
-	@endif
-	@endif
-
 </tr>

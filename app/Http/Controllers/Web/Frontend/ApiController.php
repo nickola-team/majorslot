@@ -282,18 +282,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if (\Session::get('isCashier'))
             {
                 $payeer_ids = auth()->user()->childPartners();
-                $transactions1 = \VanguardLTE\WithdrawDeposit::where(['status'=>0,'type'=>'add'])->whereIn('payeer_id',  $payeer_ids);
-                $transactions2 = \VanguardLTE\WithdrawDeposit::where(['status'=>0,'type'=>'out'])->whereIn('payeer_id',  $payeer_ids);
+                $transactions1 = \VanguardLTE\WithdrawDeposit::where(['status'=>\VanguardLTE\WithdrawDeposit::REQUEST,'type'=>'add'])->whereIn('payeer_id',  $payeer_ids);
+                $transactions2 = \VanguardLTE\WithdrawDeposit::where(['status'=>\VanguardLTE\WithdrawDeposit::REQUEST,'type'=>'out'])->whereIn('payeer_id',  $payeer_ids);
             }
             else
             {
                 $transactions1 = \VanguardLTE\WithdrawDeposit::where([
                     'type' => 'add',
-                    'status' => 0,
+                    'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                     'payeer_id' => $request->id]);
                 $transactions2 = \VanguardLTE\WithdrawDeposit::where([
                     'type' => 'out',
-                    'status' => 0,
+                    'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                     'payeer_id' => $request->id]);
             }
             $res['add'] = $transactions1->count();
@@ -642,7 +642,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'payeer_id' => $agent->parent_id,
                     'type' => 'deal_out',
                     'sum' => $summ,
-                    'status' => 0,
+                    'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                     'shop_id' => $user->shop_id,
                     'created_at' => \Carbon\Carbon::now(),
                     'updated_at' => \Carbon\Carbon::now(),
@@ -708,7 +708,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'payeer_id' => $agent->parent_id,
                         'type' => 'add',
                         'sum' => $money,
-                        'status' => 0,
+                        'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                         'shop_id' => $user->shop_id,
                         'created_at' => \Carbon\Carbon::now(),
                         'updated_at' => \Carbon\Carbon::now(),
@@ -733,7 +733,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'payeer_id' => $agent->parent_id,
                     'type' => 'add',
                     'sum' => $money,
-                    'status' => 0,
+                    'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                     'shop_id' => 0,
                     'created_at' => \Carbon\Carbon::now(),
                     'updated_at' => \Carbon\Carbon::now(),
@@ -811,7 +811,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'payeer_id' => $agent->parent_id,
                         'type' => 'out',
                         'sum' => $money,
-                        'status' => 0,
+                        'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                         'shop_id' => $user->shop_id,
                         'created_at' => \Carbon\Carbon::now(),
                         'updated_at' => \Carbon\Carbon::now(),
@@ -854,7 +854,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'payeer_id' => $agent->parent_id,
                     'type' => 'out',
                     'sum' => $money,
-                    'status' => 0,
+                    'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                     'shop_id' => 0,
                     'created_at' => \Carbon\Carbon::now(),
                     'updated_at' => \Carbon\Carbon::now(),
@@ -878,10 +878,25 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return response()->json(['error' => false]);
         }
 
-
+        public function waitInOut($id, \Illuminate\Http\Request $request){
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return redirect()->back()->withErrors(['로그인하세요']);
+            }
+            $transaction = \VanguardLTE\WithdrawDeposit::where('id', $id)->get()->first();
+            if (!$transaction)
+            {
+                return redirect()->back()->withErrors(['유효하지 않은 신청입니다']);
+            }
+            if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST)
+            {
+                return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
+            }
+            $transaction->update(['status' => \VanguardLTE\WithdrawDeposit::WAIT]);
+            return redirect()->back()->withSuccess(['대기처리하였습니다.']);
+        }
         public function allowInOut(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
-                return redirect()->route('backend.in_out_manage', 'add')->withErrors(['로그인하세요']);
+                return redirect()->back()->withErrors(['로그인하세요']);
             }
             $in_out_id = $request->in_out_id;
             $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->get()->first();
@@ -899,6 +914,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if (!$user)
             {
                 return redirect()->route('backend.in_out_manage',$type)->withErrors(['본사를 찾을수 없습니다.']);
+            }
+            if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
+            {
+                return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
             }
             if ($requestuser->hasRole('manager')) // for shops
             {

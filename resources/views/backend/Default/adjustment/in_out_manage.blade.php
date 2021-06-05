@@ -10,7 +10,6 @@
 	</section>
 
 	<section class="content">
-
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">{{$type=='add'?'충전':'환전'}}관리( {{count($in_out_request)}}건)</h3>
@@ -66,12 +65,73 @@
 						<th>시간</th>
 						<th>상태</th>
 						<th>승인</th>
+						<th>대기</th>
 						<th>취소</th>
 					</tr>
 					</thead>
 					<tbody>
 					@if (count($in_out_request))
 						@foreach ($in_out_request as $in_out_log)
+							@include('backend.Default.adjustment.partials.row_in_out')
+						@endforeach
+					@else
+						<tr><td colspan="9">@lang('app.no_data')</td></tr>
+					@endif
+					</tbody>
+					<thead>
+					<tr>
+						@if(auth()->user()->hasRole('distributor'))
+						<th>매장이름</th>
+						@else
+						<th>파트너이름</th>
+						@endif
+						<th>신청금액</th>
+						<th>계좌번호</th>
+						<th>예금주</th>
+						<th>시간</th>
+						<th>상태</th>
+						<th>승인</th>
+						<th>대기</th>
+						<th>최소</th>
+					</tr>
+					</thead>
+                    </table>
+                    </div>
+						{{ $in_out_request->appends(Request::except('page'))->links() }}
+			</div>
+		</div>
+
+	</section>
+
+	<section class="content">
+
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">{{$type=='add'?'충전':'환전'}}대기( {{count($in_out_wait)}}건)</h3>
+			</div>
+			
+			<div class="box-body">
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped">
+					<thead>
+					<tr>
+						@if(auth()->user()->hasRole('distributor'))
+						<th>매장이름</th>
+						@else
+						<th>파트너이름</th>
+						@endif
+						<th>신청금액</th>
+						<th>계좌번호</th>
+						<th>예금주</th>
+						<th>시간</th>
+						<th>상태</th>
+						<th>승인</th>
+						<th>최소</th>
+					</tr>
+					</thead>
+					<tbody>
+					@if (count($in_out_wait))
+						@foreach ($in_out_wait as $in_out_log)
 							@include('backend.Default.adjustment.partials.row_in_out')
 						@endforeach
 					@else
