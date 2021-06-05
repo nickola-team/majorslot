@@ -11,13 +11,13 @@
 
 	<section class="content">
 		<form action="" method="GET">
-			<div class="box box-danger collapsed-box users_show">
-				<div class="box-header with-border">
+			<div class="box box-danger users_show">
+			{{--<div class="box-header with-border">
 					<h3 class="box-title">@lang('app.filter')</h3>
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
 					</div>
-				</div>
+				</div> --}}
 				<div class="box-body">
 					<div class="col-md-6">
 						<div class="form-group">
