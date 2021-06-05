@@ -19,6 +19,20 @@ namespace VanguardLTE
             'recommender',
             'partner_type'
         ];
+
+        const REQUEST = 0;
+        const WAIT = 3;
+        const DONE = 1;
+        const CANCEL = 2;
+        public static function statMsg()
+        {
+            return [
+                self::REQUEST => '신청',
+                self::WAIT => '대기',
+                self::DONE => '승인',
+                self::CANCEL => '취소'
+            ];
+        }
         public static function boot()
         {
             parent::boot();

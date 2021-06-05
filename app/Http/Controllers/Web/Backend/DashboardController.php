@@ -1386,11 +1386,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if (\Session::get('isCashier'))
             {
                 $childs = auth()->user()->childPartners();
-                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('status', '<>', 0)->whereIn('payeer_id', $childs)->orderBy('created_at','desc');
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::whereIn('status',  [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->whereIn('payeer_id', $childs)->orderBy('created_at','desc');
             }
             else
             {
-                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('payeer_id', auth()->user()->id)->where('status', '<>', 0)->orderBy('created_at','desc');
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('payeer_id', auth()->user()->id)->whereIn('status', [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->orderBy('created_at','desc');
             }
 
             if( $request->type != '' ) 
@@ -1453,25 +1453,32 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if (\Session::get('isCashier'))
             {
                 $childs = auth()->user()->childPartners();
-                $in_out_request = \VanguardLTE\WithdrawDeposit::where('status', 0)->whereIn('payeer_id', $childs)->where('type', $type);
-                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('status' , 1)->whereIn('payeer_id', $childs)->where('type', $type)->orderBy('created_at','desc')->take(20);
+                $in_out_request = \VanguardLTE\WithdrawDeposit::where('status', \VanguardLTE\WithdrawDeposit::REQUEST)->whereIn('payeer_id', $childs)->where('type', $type);
+                $in_out_wait = \VanguardLTE\WithdrawDeposit::where('status', \VanguardLTE\WithdrawDeposit::WAIT)->whereIn('payeer_id', $childs)->where('type', $type);
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where('status' , \VanguardLTE\WithdrawDeposit::DONE)->whereIn('payeer_id', $childs)->where('type', $type)->orderBy('created_at','desc')->take(20);
             }
             else
             {
                 $in_out_request = \VanguardLTE\WithdrawDeposit::where([
                     'payeer_id'=> auth()->user()->id,
-                    'status'=> 0,
+                    'status'=> \VanguardLTE\WithdrawDeposit::REQUEST,
+                ])->where('type', $type);
+                $in_out_wait = \VanguardLTE\WithdrawDeposit::where([
+                    'payeer_id'=> auth()->user()->id,
+                    'status'=> \VanguardLTE\WithdrawDeposit::WAIT,
                 ])->where('type', $type);
                 $in_out_logs = \VanguardLTE\WithdrawDeposit::where([
                     'payeer_id'=> auth()->user()->id,
-                    'status'=> 1,
+                    'status'=> \VanguardLTE\WithdrawDeposit::DONE,
                 ])->where('type', $type)->orderBy('created_at','desc')->take(20);
             }
             $in_out_request = $in_out_request->orderBy('created_at', 'desc')->get();
             $in_out_request = $in_out_request->paginate(20);
+            $in_out_wait = $in_out_wait->orderBy('created_at', 'desc')->get();
+            $in_out_wait = $in_out_wait->paginate(20);
             $in_out_logs = $in_out_logs->get();
 
-            return view('backend.Default.adjustment.in_out_manage', compact('in_out_request','in_out_logs','type'));
+            return view('backend.Default.adjustment.in_out_manage', compact('in_out_request','in_out_wait','in_out_logs','type'));
         }
 
 

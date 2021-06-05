@@ -306,6 +306,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@allowInOut',
     ]);
 
+    Route::get('api/wait_in_out/{id}', [
+        'as' => 'frontend.api.wait_in_out',
+        'uses' => 'ApiController@waitInOut',
+    ]);
+
     Route::post('api/reject_in_out', [
         'as' => 'frontend.api.reject_in_out',
         'uses' => 'ApiController@rejectInOut',
