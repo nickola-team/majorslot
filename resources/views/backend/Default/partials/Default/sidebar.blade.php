@@ -164,6 +164,13 @@
                     @endif
                 </ul>
             </li>
+            @else
+            <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
+                <a  href="{{ route('backend.user.list') }}">
+                    <i class="fa fa-circle-o"></i>
+                    <span>회원관리</span>
+                </a>
+            </li>
             @endif
             @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
             <li class="treeview {{  Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
@@ -283,14 +290,14 @@
                             환전관리<sup id="out_newmark" style="background:red;font-size:12px;color:white;display: none;">&nbsp;N&nbsp;</sup>
                         </a>
                     </li>
+                    @endpermission
+                    @endif
                     <li class="{{ Request::is('backend/in_out_history') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_history') }}">
                             <i class="fa fa-circle-o"></i>
                             충환전내역
                         </a>
                     </li>
-                    @endpermission
-                    @endif
                     
                 </ul>
             </li>
