@@ -1408,9 +1408,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);
-                $in_out_logs = $in_out_logs->where('created_at', '>=', $dates[0]);
-                $in_out_logs = $in_out_logs->where('created_at', '<=', $dates[1]);
             }
+            else
+            {
+                $dates = [
+                    date('Y-m-d 00:00:00'),
+                    date('Y-m-d hh:mm:ss')
+                ];
+            }
+            $in_out_logs = $in_out_logs->where('created_at', '>=', $dates[0]);
+            $in_out_logs = $in_out_logs->where('created_at', '<=', $dates[1]);
             if( $request->recommender != '' ) 
             {
                 $in_out_logs = $in_out_logs->where('recommender', 'like', '%'.$request->recommender.'%');
