@@ -1412,8 +1412,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             else
             {
                 $dates = [
-                    date('Y-m-d 00:00:00'),
-                    date('Y-m-d hh:mm:ss')
+                    date('Y-m-d 00:00'),
+                    date('Y-m-d H:i')
                 ];
             }
             $in_out_logs = $in_out_logs->where('created_at', '>=', $dates[0]);

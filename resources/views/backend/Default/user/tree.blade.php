@@ -10,13 +10,13 @@
     </section>
 
     <section class="content">
-	<div class="box box-danger collapsed-box users_show">
+	<div class="box box-danger users_show">
 			<div class="box-header with-border">
-				<h3 class="box-title">@lang('app.filter')</h3>
+			{{--<h3 class="box-title">@lang('app.filter')</h3>
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-				</div>
-			</div>
+				</div>--}}
+			</div> 
 			<div class="box-body">
 				<form action="" method="GET" id="users-form" >
 					<div class="col-md-6">
