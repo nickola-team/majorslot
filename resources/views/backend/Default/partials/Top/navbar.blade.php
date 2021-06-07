@@ -80,8 +80,8 @@
                     </li>
                     @endif
                     @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
-                    <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.user.partner', 6) }}">
+                    <li class="{{ Request::is('backend/partner/7') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>총본사리스트</span>
                         </a>
