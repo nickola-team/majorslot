@@ -7,16 +7,15 @@
 	<td>
         {{ $user->shop->name}}
     </td>
-	<td>
-	@if ( isset($user->referral) && isset($user->referral->referral))
-		{{ $user->referral->referral->username}}
-	@endif
-    </td>
-	<td>
-	@if ( isset($user->referral) && isset($user->referral->referral) && isset($user->referral->referral->referral))
-		{{ $user->referral->referral->referral->username}}
-	@endif
-    </td>
+<?php
+	$parent = $user->referral;
+	$role_id = $parent->role_id;
+	for ($r=$role_id+1;$r<auth()->user()->role_id;$r++)
+	{
+		$parent = $parent->referral;
+		echo '<td><a href="'.route('backend.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+	}
+?>
 
 	@permission('users.balance.manage')
 	<td>{{ number_format($user->balance,0) }}</td>
