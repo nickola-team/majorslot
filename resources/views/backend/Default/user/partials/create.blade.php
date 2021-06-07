@@ -32,7 +32,7 @@
             ['class' => 'form-control', 'id' => 'role_id', '']) !!}
     </div>
 </div>
-@if(auth()->user()->hasRole(['master','agent']))
+@if(auth()->user()->hasRole(['comaster','master','agent']))
 <div class="col-md-6">
     <div class="form-group">
     <label>딜비%</label>

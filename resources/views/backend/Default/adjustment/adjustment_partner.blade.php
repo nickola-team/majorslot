@@ -49,7 +49,7 @@
 					<a href="{{ route('backend.adjustment_partner', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
 						[
-						@foreach(['7'=>'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
+						@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
 						@if($role_id == $user->role_id)
 							@lang($role_name)
 						@endif
@@ -68,7 +68,7 @@
 						<th>등급</th>
 						<th>충전</th>
 						<th>환전</th>
-						@if(auth()->user()->hasRole(['admin', 'master']))
+						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
 						<th>본사수익</th>
 						@endif
 						<th>딜비수익</th>
@@ -78,7 +78,7 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>매장수익</th>
-						@if(auth()->user()->hasRole(['admin', 'master']))
+						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
 						<th>최종수익</th>
 						@endif
 					</tr>
@@ -98,7 +98,7 @@
 						<th>등급</th>
 						<th>충전</th>
 						<th>환전</th>
-						@if(auth()->user()->hasRole(['admin', 'master']))
+						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
 						<th>본사수익</th>
 						@endif
 						<th>딜비수익</th>
@@ -108,7 +108,7 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>매장수익</th>
-						@if(auth()->user()->hasRole(['admin', 'master']))
+						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
 						<th>최종수익</th>
 						@endif				
 					</tr>

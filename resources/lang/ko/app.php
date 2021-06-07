@@ -760,6 +760,7 @@ return [
     'not_enough_money_in_the_shop' => '매장에 돈이 충분하지 않습니다. 만 : 균형',
     'not_enough_money_in_the_user_balance' => '사용자 잔액이 부족합니다. :',
     'admin' => '슈퍼어드민',
+    'comaster' => '총본사',
     'master' => '본사',
     'agent' => '부본사',
     'distributor' => '총판',

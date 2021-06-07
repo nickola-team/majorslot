@@ -12,6 +12,7 @@ namespace VanguardLTE\Http\Controllers\Api
             $user = auth()->user();
             if( $user->hasRole([
                 'admin', 
+                'comaster',
                 'master',
                 'agent',
                 'distributor', 

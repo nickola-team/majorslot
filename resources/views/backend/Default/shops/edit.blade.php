@@ -28,7 +28,7 @@
                     확인
                 </button>
 
-                @if( Auth::user()->hasRole(['admin','agent']) )
+                @if( Auth::user()->hasRole(['admin','comaster','master','agent']) )
                     <a href="{{ route('backend.shop.hard_delete', $shop->id) }}"
                        class="btn btn-danger"
                        data-method="DELETE"

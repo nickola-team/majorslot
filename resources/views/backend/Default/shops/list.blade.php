@@ -105,13 +105,13 @@
 					<thead>
 					<tr>
 						<th>@lang('app.name')</th>
-						@if (auth()->user()->hasRole(['admin','master','agent']))
+						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
 						<th>@lang('app.distributor')</th>
 						@endif
-						@if (auth()->user()->hasRole(['admin','master']))
+						@if (auth()->user()->hasRole(['admin','comaster','master']))
 						<th>@lang('app.agent')</th>
 						@endif
-						@if (auth()->user()->hasRole(['admin']))
+						@if (auth()->user()->hasRole(['admin','comaster']))
 						<th>@lang('app.master')</th>
 						@endif
 						<th>@lang('app.credit')</th>
@@ -141,13 +141,13 @@
 					<thead>
 					<tr>
 						<th>@lang('app.name')</th>
-						@if (auth()->user()->hasRole(['admin','master','agent']))
+						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
 						<th>@lang('app.distributor')</th>
 						@endif
-						@if (auth()->user()->hasRole(['admin','master']))
+						@if (auth()->user()->hasRole(['admin','comaster','master']))
 						<th>@lang('app.agent')</th>
 						@endif
-						@if (auth()->user()->hasRole(['admin']))
+						@if (auth()->user()->hasRole(['admin','comaster']))
 						<th>@lang('app.master')</th>
 						@endif
 						{{-- <th>@lang('app.id')</th> --}}

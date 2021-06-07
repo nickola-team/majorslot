@@ -88,7 +88,7 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
-						@if (auth()->user()->hasRole(['admin', 'master']))
+						@if (auth()->user()->hasRole(['admin', 'comaster','master']))
 						<th>파트너보유금</th>
 						@endif
 						<th>변동전금액</th>
@@ -118,7 +118,7 @@
 						@endforeach
 						<td></td>
 						<td><span class="text-red">합계</span></td>
-						@if (auth()->user()->hasRole(['admin', 'master']))
+						@if (auth()->user()->hasRole(['admin', 'comaster','master']))
 						<td></td>
 						@endif						
 						<td></td>
@@ -137,7 +137,7 @@
 					<tr>
 						<th>매장</th>
 						<th>파트너이름</th>
-						@if (auth()->user()->hasRole(['admin', 'master']))
+						@if (auth()->user()->hasRole(['admin', 'comaster','master']))
 						<th>파트너보유금</th>
 						@endif
 						<th>변동전금액</th>

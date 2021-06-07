@@ -62,26 +62,31 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             }
             //check admin id per site
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
-            $adminid = 1; //default admin id
+            $adminid = 0; //default admin id
             if ($site)
             {
                 $adminid = $site->adminid;
             }
 
             $admin = $user;
-            while ($admin !=null && !$admin ->hasRole('admin'))
+            if (!$admin->hasRole('admin'))
             {
-                if (!$admin->isActive())
+
+                while ($admin !=null && !$admin ->hasRole('comaster'))
                 {
-                    return redirect()->to('backend/login' . $to)->withErrors('계정이 임시 차단되었습니다.');
+                    if (!$admin->isActive())
+                    {
+                        return redirect()->to('backend/login' . $to)->withErrors('계정이 임시 차단되었습니다.');
+                    }
+                    $admin = $admin->referral;
                 }
-                $admin = $admin->referral;
+
+                if (!$admin || $admin->id != $adminid)
+                {
+                    return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
+                }
             }
 
-            if (!$admin || $admin->id != $adminid)
-            {
-                return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
-            }
             if( $request->lang ) 
             {
                 $user->update(['language' => $request->lang]);

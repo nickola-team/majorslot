@@ -3,14 +3,14 @@
 	<a href="{{ route('backend.shop.edit', $shop->id) }}">{{ $shop->name }}</a>
 	</td>
 	@if($shop->creator)
-		@if (auth()->user()->hasRole(['admin','master','agent']))
+		@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
 		<td>
 			<a href="{{ route('backend.user.edit', $shop->creator->id) }}" >{{ $shop->creator->username }}</a>
 		</td>
 		@endif
 	@endif
 	@if($shop->creator && $shop->creator->referral)
-		@if (auth()->user()->hasRole(['admin','master']))
+		@if (auth()->user()->hasRole(['admin','comaster','master']))
 		<td>
 			<a href="{{ route('backend.user.edit', $shop->creator->referral->id) }}" >{{ $shop->creator->referral->username }}</a>
 		</td>
@@ -18,7 +18,7 @@
 	@endif
 
 	@if($shop->creator && $shop->creator->referral && $shop->creator->referral->referral)
-		@if (auth()->user()->hasRole(['admin']))
+		@if (auth()->user()->hasRole(['admin','comaster']))
 		<td>
 			<a href="{{ route('backend.user.edit',  $shop->creator->referral->referral->id) }}" >{{  $shop->creator->referral->referral->username }}</a>
 		</td>
@@ -46,7 +46,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) && !Session::get('isCashier'))
+		@if( Auth::user()->hasRole(['admin', 'comaster', 'master', 'distributor']) && !Session::get('isCashier'))
 		
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $shop->shop_id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs"> 충전</button>
@@ -56,7 +56,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['admin', 'master', 'distributor']) && !Session::get('isCashier'))
+		@if( Auth::user()->hasRole(['admin','comaster', 'master', 'distributor']) && !Session::get('isCashier'))
 		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $shop->shop_id }}" >
 	    <button type="button" class="btn btn-block btn-danger btn-xs"> 환전</button>
 		</a>

@@ -24,7 +24,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('frontend.page.error_license');
             }*/
-            if( !\Auth::user()->hasRole('admin') ||  \Session::get('isCashier')) 
+            if( !\Auth::user()->hasRole('admin')) 
             {
                 return redirect()->route('backend.user.list');
             }
@@ -493,7 +493,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->whereIn('deal_log.user_id', $shop->users()->pluck('user_id')->toArray());
                 $statistics = $statistics->where('type','=', 'shop');
             }
-            else if(auth()->user()->hasRole(['master','agent','distributor'])){
+            else if(auth()->user()->hasRole(['comaster','master','agent','distributor'])){
                 $statistics = $statistics->whereIn('deal_log.partner_id', $users);
             }
 
@@ -992,7 +992,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $stat_games = \DB::select($query);
 
 
-            if(auth()->user()->hasRole(['admin','master'])){
+            if(auth()->user()->hasRole(['admin','comaster','master'])){
                 $partners = auth()->user()->childPartners();
                 if (count($partners) == 0) {
                     return redirect()->back()->withError('정산할 부본사가 없습니다');
@@ -1355,7 +1355,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             
             if ($user->hasRole('master'))
             {
-                $master = $user->referral; // it is admin
+                $master = $user->referral; // it is comaster
             }
             else
             {
@@ -1383,7 +1383,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function in_out_history(\Illuminate\Http\Request $request) 
         {
-            if (\Session::get('isCashier'))
+            if (auth()->user()->hasRole('comaster'))
             {
                 $childs = auth()->user()->childPartners();
                 $in_out_logs = \VanguardLTE\WithdrawDeposit::whereIn('status',  [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->whereIn('payeer_id', $childs)->orderBy('created_at','desc');
@@ -1450,7 +1450,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
         public function in_out_manage($type, \Illuminate\Http\Request $request) 
         {
-            if (\Session::get('isCashier'))
+            if (auth()->user()->hasRole('comaster'))
             {
                 $childs = auth()->user()->childPartners();
                 $in_out_request = \VanguardLTE\WithdrawDeposit::where('status', \VanguardLTE\WithdrawDeposit::REQUEST)->whereIn('payeer_id', $childs)->where('type', $type);

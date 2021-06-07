@@ -293,6 +293,7 @@ namespace VanguardLTE\Console
                         foreach( $rel_users as $user ) 
                         {
                             if( $user->hasRole([
+                                'comaster',
                                 'master',
                                 'agent', 
                                 'distributor'

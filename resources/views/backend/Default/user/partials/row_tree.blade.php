@@ -25,7 +25,7 @@
 </td>
 @endif
 <td>{{ number_format($user['balance'],0) }}</td>
-@if (!auth()->user()->hasRole('admin') && $user['role_id']==6)
+@if (!auth()->user()->hasRole(['admin','comaster']) && $user['role_id']==6)
 <td>없음</td>
 <td>없음</td>
 <td>없음</td>
@@ -53,7 +53,7 @@
 @endif
 </td>
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','master'])) && !Session::get('isCashier'))
+@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])) && !Session::get('isCashier'))
 <a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }} disabled" >
 <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 </a>
@@ -63,7 +63,7 @@
 </td>
 
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','master'])) && !Session::get('isCashier'))
+@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])) && !Session::get('isCashier'))
 <a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user['id'] }}" >
 <button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 </a>

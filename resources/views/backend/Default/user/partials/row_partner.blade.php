@@ -11,14 +11,7 @@
         $parent = $user->referral;
         for ($r=$role_id+1;$r<auth()->user()->role_id;$r++)
         {
-            if (Session::get('isCashier'))
-            {
-                echo '<td>'.$parent->username.'</td>';
-            }
-            else
-            {
-                echo '<td><a href="'.route('backend.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
-            }
+             echo '<td><a href="'.route('backend.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
             $parent = $parent->referral;
         }
 ?>
@@ -29,7 +22,7 @@
 
 
 <td>
-@if ((auth()->user()->role_id == $user->role_id+1||auth()->user()->hasRole(['admin','master'])) && !Session::get('isCashier'))
+@if ((auth()->user()->role_id == $user->role_id+1||auth()->user()->hasRole(['admin','comaster','master'])) && !Session::get('isCashier'))
 <a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }} disabled" >
 <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 </a>
@@ -39,7 +32,7 @@
 </td>
 
 <td>
-@if ((auth()->user()->role_id == $user->role_id+1||auth()->user()->hasRole(['admin','master'])) && !Session::get('isCashier'))
+@if ((auth()->user()->role_id == $user->role_id+1||auth()->user()->hasRole(['admin','comaster','master'])) && !Session::get('isCashier'))
 <a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user['id'] }}" >
 <button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 </a>

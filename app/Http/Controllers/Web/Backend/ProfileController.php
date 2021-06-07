@@ -111,6 +111,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $shops = auth()->user()->shops_array(true);
             if( !auth()->user()->hasRole([
                 'admin', 
+                'comaster', 
                 'master',
                 'agent'
             ]) && count($shops) && !in_array($request->shop_id, $shops) ) 

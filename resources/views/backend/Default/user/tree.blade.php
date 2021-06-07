@@ -42,7 +42,7 @@
 					<a href="{{ route('backend.user.tree', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
 						[
-						@foreach(['7'=>'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
+						@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
 						@if($role_id == $user->role_id)
 							@lang($role_name)
 						@endif
@@ -56,7 +56,7 @@
 					@if (Auth::user()->hasRole('admin') && !Session::get('isCashier'))
                     <a href="{{ route('backend.user.createpartnerfromcsv') }}" class="btn btn-danger btn-sm" style="margin-right:5px;">csv로 추가</a>
                     @endif
-                    @if (Auth::user()->hasRole(['admin','master', 'agent','distributor']) && !Session::get('isCashier'))
+                    @if (Auth::user()->hasRole(['admin','comaster','master', 'agent','distributor']) && !Session::get('isCashier'))
                     <a href="{{ route('backend.user.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
                     @endif
                     @endpermission

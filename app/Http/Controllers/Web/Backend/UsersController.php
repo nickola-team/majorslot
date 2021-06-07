@@ -395,7 +395,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 else
                 {
-                    $bonus_value = 0;
+                    /*$bonus_value = 0;
                     if ($partner->hasRole('master'))
                     {
                         $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $partner->id)->first();
@@ -404,7 +404,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             $bonus_value = $bonus_bank->bank;
                         }
 
-                    }
+                    } */
                     $partners[] = [
                         'id' => $partner->id,
                         'name' => $partner->username,
@@ -412,7 +412,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'profit' => $partner->deal_balance - $partner->mileage,
                         'deal_percent' => $partner->deal_percent,
                         'table_deal_percent' => $partner->table_deal_percent,
-                        'bonus' => $bonus_value,
+                        'bonus' => 0,
                         'role_id' => $partner->role_id
                     ];
                 }
