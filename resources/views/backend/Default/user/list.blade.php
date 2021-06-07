@@ -122,8 +122,18 @@
 							<tr>
 								<th>이름(아이디)</th>
 								<th>매장이름</th>
+								@if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent']) )
 								<th>총판</th>
+								@endif
+								@if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master']) )
 								<th>부본사</th>
+								@endif
+								@if ( auth()->check() && auth()->user()->hasRole(['admin','comaster']) )
+								<th>본사</th>
+								@endif
+								@if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+								<th>총본사</th>
+								@endif
 								@permission('users.balance.manage')
 								<th>@lang('app.balance')</th>
 								{{-- <th>@lang('app.bonus')</th> --}}
@@ -153,8 +163,18 @@
 							<tr>
 								<th>이름(아이디)</th>
 								<th>매장이름</th>
+								@if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent']) )
 								<th>총판</th>
+								@endif
+								@if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master']) )
 								<th>부본사</th>
+								@endif
+								@if ( auth()->check() && auth()->user()->hasRole(['admin','comaster']) )
+								<th>본사</th>
+								@endif
+								@if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+								<th>총본사</th>
+								@endif
 								@permission('users.balance.manage')
 								<th>@lang('app.balance')</th>
 								{{-- <th>@lang('app.bonus')</th> --}}
