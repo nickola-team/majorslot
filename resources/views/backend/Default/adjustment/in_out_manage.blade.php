@@ -13,14 +13,14 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">{{$type=='add'?'충전':'환전'}}관리( {{count($in_out_request)}}건)</h3>
-				@if (auth()->user()->hasRole('master'))
+				@if (auth()->user()->hasRole(['comaster', 'master']))
 				<div class="pull-right box-tools">
 					<input type="checkbox" id="ratingOn" checked={{auth()->user()->rating>0?'true':'false'}}>
 						알림음 ON/OFF
 				</div>
 				@endif
 			</div>
-			@if (auth()->user()->hasRole('admin') &&  !Session::get('isCashier'))
+			@if (auth()->user()->hasRole('admin'))
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-3">

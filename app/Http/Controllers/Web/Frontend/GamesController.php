@@ -238,14 +238,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function server(\Illuminate\Http\Request $request, $game)
         {
-            if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
+            /*if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
             {
                 echo '{"responseEvent":"error","responseType":"start","serverResponse":"Wrong User"}';
                 exit();
             }
             if( !\Illuminate\Support\Facades\Auth::check() ) 
             {
-            }
+            }*/
             $GLOBALS['rgrc'] = config('app.salt');
             $userId = \Illuminate\Support\Facades\Auth::id();
             $object = '\VanguardLTE\Games\\' . $game . '\Server';

@@ -103,12 +103,10 @@
 							<td style="color:green;">0</td>
 							<td style="color:green;">{{ number_format($adjustment['total_deal'],0)}}</td>
 							<td style="color:green;">{{ number_format(-$adjustment['total_deal'],0)}}</td>
-
 							@else
 							<td style="color:green;">{{ number_format($adjustment['total_deal'],0)}}</td>
 							<td style="color:green;">{{ number_format($adjustment['total_mileage'],0)}}</td>
 							<td style="color:green;">{{ number_format($adjustment['total_deal'] - $adjustment['total_mileage'],0)}}</td>
-
 							@endif
 						</tr>
 						@endif

@@ -135,7 +135,7 @@
 					</tbody>
 					<thead>
 					<tr>
-					@if(auth()->user()->hasRole('distributor'))
+						@if(auth()->user()->hasRole('distributor'))
 						<th>매장이름</th>
 						@else
 						<th>파트너이름</th>

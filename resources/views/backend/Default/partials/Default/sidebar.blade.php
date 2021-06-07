@@ -23,7 +23,7 @@
                     @endif
 
 			</p>
-            @if(auth()->user()->hasRole('master'))
+            @if(auth()->user()->hasRole(['comaster', 'master']))
             @else
             <p>수익금:
 
@@ -50,7 +50,7 @@
             @endif
         </div>
         <!-- search form -->
-        @if (auth()->user()->hasRole('admin'))
+        @if (auth()->user()->hasRole(['admin','comaster']))
         @else
         <form action="{{ route('backend.user.update.address', auth()->user()->id) }}" method="post" class="sidebar-form">
             <div class="input-group">
@@ -59,7 +59,7 @@
                     <i class="fa fa-paper-plane"></i>
                     </button>
                 </span>
-                @if (auth()->user()->hasRole('master'))
+                @if (auth()->user()->hasRole(['master']))
                 <input type="text" name="address" class="form-control" value="{{auth()->user()->address}}" style="color:#b8c7ce;" placeholder="연락처">
                 <span class="input-group-btn">
                     <button type="submit" name="search" id="search-btn" class="btn btn-flat">
@@ -87,7 +87,7 @@
         <ul class="sidebar-menu" data-widget="tree">
 
             <li class="header" style="text-align: center; color:#b8c7ce;"><span style="color:red;">{{ Auth::user()->username }}</span>[
-            @foreach(['7' => 'app.admin','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+            @foreach(['8'=>'app.admin','7'=>'app.comaster','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
                 @if($role_id == Auth::user()->role_id)
                     @lang($role_name)
                 @endif
@@ -106,7 +106,7 @@
             @endpermission
 
             @permission('users.tree')
-            @if (auth()->user()->hasRole(['admin','master','agent']))
+            @if (auth()->user()->hasRole(['admin','comaster', 'master','agent']))
             <li class="{{ Request::is('backend/tree*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.user.tree') }}">
                     <i class="fa fa-users"></i>
@@ -115,7 +115,7 @@
             </li>
             @endif
             @endpermission
-            @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
+            @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent', 'distributor']) )
             <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
@@ -138,7 +138,7 @@
                         </a>
                     </li>
 
-                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent']) )
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent']) )
                     <li class="{{ Request::is('backend/partner/4') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 4) }}">
                             <i class="fa fa-circle-o"></i>
@@ -146,7 +146,7 @@
                         </a>
                     </li>
                     @endif
-                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master']) )
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master']) )
                     <li class="{{ Request::is('backend/partner/5') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 5) }}">
                             <i class="fa fa-circle-o"></i>
@@ -154,11 +154,19 @@
                         </a>
                     </li>
                     @endif
-                    @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster']) )
                     <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 6) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>본사관리</span>
+                        </a>
+                    </li>
+                    @endif
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+                    <li class="{{ Request::is('backend/partner/7') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 7) }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>총본사관리</span>
                         </a>
                     </li>
                     @endif
@@ -276,7 +284,7 @@
                     </li>
                     @endpermission
                     @endif
-                    @if(auth()->user()->hasRole(['admin','master']))
+                    @if(auth()->user()->hasRole(['admin','comaster','master']))
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_manage/add') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_manage','add') }}">
@@ -454,7 +462,7 @@
                     @endpermission
 
                     @permission('stats.shop')
-                    @if (auth()->user()->hasRole('master'))
+                    @if (auth()->user()->hasRole(['comaster','master']))
                     @else
                     <li class="{{ Request::is('backend/deal_stat*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.deal_stat') }}">
@@ -561,7 +569,7 @@
 				<div class="modal-body">
 					<div class="form-group">
 						{!! Form::select('shop_id',
-                            (Auth::user()->hasRole(['admin','master','agent']) ? [0 => __('app.no_shop')] : [])
+                            (Auth::user()->hasRole(['admin','comaster','master','agent']) ? [0 => __('app.no_shop')] : [])
                             +
                             Auth::user()->shops_array(), Auth::user()->shop_id, ['class' => 'form-control select2', 'style' => 'width: 100%;']) !!}
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">

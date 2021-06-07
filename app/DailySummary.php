@@ -161,7 +161,7 @@ namespace VanguardLTE
                 $game_bet = \DB::select($query);
                 $adj['totalbet'] = $game_bet[0]->totalbet??0;
                 $adj['totalwin'] = $game_bet[0]->totalwin??0;
-                if ($partner->hasRole('admin'))
+                if ($partner->hasRole(['admin','comaster']))
                 {
                     $query = 'SELECT 0 as total_deal, 0 as total_mileage';
                 }

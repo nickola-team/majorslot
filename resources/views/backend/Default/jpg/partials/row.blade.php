@@ -14,7 +14,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('distributor') )
+		@if( Auth::user()->hasRole('admin') )
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $jackpot->id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs">충전</button>
 		</a>
@@ -23,7 +23,7 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('distributor') )
+		@if( Auth::user()->hasRole('admin'))
 		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $jackpot->id }}" >
 		<button type="button" class="btn btn-block btn-danger btn-xs">환전</button>
 		</a>

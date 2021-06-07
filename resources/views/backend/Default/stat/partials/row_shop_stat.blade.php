@@ -10,7 +10,7 @@
 	<td>
 	@if ($stat->user)
 		{{ $stat->user ? $stat->user->username : 'unknown'  }} [ 
-		@foreach(['7' => 'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+		@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
 			@if($stat->user && $role_id == $stat->user->role_id)
 				@lang($role_name)
 			@endif
@@ -20,7 +20,7 @@
 		unknown
 	@endif
 	</td>
-	@if (auth()->user()->hasRole(['admin', 'master']))
+	@if (auth()->user()->hasRole(['admin', 'comaster','master']))
 	<td>
 		{{number_format($stat->balance,0)}}
 	</td>

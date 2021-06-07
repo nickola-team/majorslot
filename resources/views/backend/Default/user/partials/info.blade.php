@@ -25,7 +25,7 @@
             </ul>
 
             @if( $user->id != Auth::id() )
-                @if(auth()->user()->hasRole(['admin','master', 'manager']) && $user->hasRole('user'))
+                @if(auth()->user()->hasRole(['admin','comaster','master', 'manager']) && $user->hasRole('user'))
                 @permission('users.delete')
                 <a href="{{ route('backend.user.delete', $user->id) }}"
                    class="btn btn-danger btn-block"
@@ -37,7 +37,7 @@
                 @endpermission
                 @endif
 
-                @if(auth()->user()->role_id > $user->role_id  && $user->hasRole(['master', 'agent', 'distributor', 'manager']) )
+                @if(auth()->user()->role_id > $user->role_id  && $user->hasRole(['comaster','master', 'agent', 'distributor', 'manager']) )
                     <a href="{{ route('backend.user.hard_delete', $user->id) }}"
                         class="btn btn-danger btn-block"
                         data-method="DELETE"

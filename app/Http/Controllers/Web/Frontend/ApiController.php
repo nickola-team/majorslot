@@ -45,7 +45,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $admin = $user;
-            while ($admin !=null && !$admin ->hasRole('admin'))
+            while ($admin !=null && !$admin ->hasRole('comaster'))
             {
                 if (!$admin->isActive())
                 {
@@ -279,7 +279,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $res['now'] = \Carbon\Carbon::now();
-            if (\Session::get('isCashier'))
+            if (auth()->user()->hasRole('comaster'))
             {
                 $payeer_ids = auth()->user()->childPartners();
                 $transactions1 = \VanguardLTE\WithdrawDeposit::where(['status'=>\VanguardLTE\WithdrawDeposit::REQUEST,'type'=>'add'])->whereIn('payeer_id',  $payeer_ids);
@@ -903,7 +903,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $amount = $transaction->sum;
             $type = $transaction->type;
             $requestuser = \VanguardLTE\User::where('id', $transaction->user_id)->get()->first();
-            if (\Session::get('isCashier'))
+            if (auth()->user()->hasRole('comaster'))
             {
                 $user = \VanguardLTE\User::where('id', $transaction->payeer_id)->first();
             }
@@ -913,7 +913,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if (!$user)
             {
-                return redirect()->route('backend.in_out_manage',$type)->withErrors(['본사를 찾을수 없습니다.']);
+                return redirect()->back()->withErrors(['본사를 찾을수 없습니다.']);
             }
             if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
             {
@@ -924,7 +924,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
                 if($type == 'add'){
                     if($user->balance < $amount) {
-                        return redirect()->route('backend.in_out_manage',$type)->withErrors(['보유금액이 충분하지 않습니다.']);
+                        if (auth()->user()->hasRole('comaster'))
+                        {
+                            return redirect()->back()->withErrors([$user->username. '본사의 보유금액이 충분하지 않습니다.']);
+                        }
+                        else
+                        {
+                            return redirect()->back()->withErrors(['보유금액이 충분하지 않습니다.']);
+                        }
                     }
 
                     $user->update(

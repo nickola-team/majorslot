@@ -8,7 +8,7 @@
 	<a href="{{ route('backend.statistics_partner', ['user' => $stat->user->username])  }}">
 
 	{{ $stat->user->username }} [ 
-	@foreach(['7' => 'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+	@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
 		@if($role_id == $stat->user->role_id)
 			@lang($role_name)
 		@endif
@@ -20,7 +20,7 @@
 <td>
 
 	{{ $stat->admin ? $stat->admin->username : $stat->system  }} [ 
-	@foreach(['7' => 'app.admin', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+	@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
 		@if($stat->admin && $role_id == $stat->admin->role_id)
 			@lang($role_name)
 		@endif
@@ -29,7 +29,7 @@
 
 </td>
 
-@if (auth()->user()->hasRole(['admin', 'master']))
+@if (auth()->user()->hasRole(['admin', 'comaster','master']))
 <td>
 	{{number_format($stat->balance,0)}}
 	</td>

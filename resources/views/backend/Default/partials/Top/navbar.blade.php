@@ -24,7 +24,7 @@
 
 
             @permission('users.tree')
-            @if (auth()->user()->hasRole(['admin','master','agent']))
+            @if (auth()->user()->hasRole(['admin','comaster','master','agent']))
             <li class="{{ Request::is('backend/tree*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.user.tree') }}">
                     <i class="fa fa-users"></i>
@@ -33,7 +33,7 @@
             </li>
             @endif
             @endpermission
-            @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent', 'distributor']) )
+            @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master','agent', 'distributor']) )
             <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*')  ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
@@ -55,7 +55,7 @@
                             <span>회원리스트</span>
                         </a>
                     </li>
-                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master','agent']) )
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master','agent']) )
                     <li class="{{ Request::is('backend/partner/4') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 4) }}">
                             <i class="fa fa-circle-o"></i>
@@ -63,7 +63,7 @@
                         </a>
                     </li>
                     @endif
-                    @if ( auth()->check() && auth()->user()->hasRole(['admin','master']) )
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master']) )
                     <li class="{{ Request::is('backend/partner/5') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 5) }}">
                             <i class="fa fa-circle-o"></i>
@@ -71,11 +71,19 @@
                         </a>
                     </li>
                     @endif
-                    @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster']) )
                     <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 6) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>본사리스트</span>
+                        </a>
+                    </li>
+                    @endif
+                    @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+                    <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.partner', 6) }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>총본사리스트</span>
                         </a>
                     </li>
                     @endif
@@ -198,7 +206,7 @@
                     </li>
                     @endpermission
                     @endif
-                    @if(auth()->user()->hasRole(['admin','master']))
+                    @if(auth()->user()->hasRole(['admin','comaster','master']))
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_manage/add') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_manage','add') }}">
@@ -364,7 +372,7 @@
                     @endpermission
 
                     @permission('stats.shop')
-                    @if (auth()->user()->hasRole('master'))
+                    @if (auth()->user()->hasRole(['comaster','master']))
                     @else
                     <li class="{{ Request::is('backend/deal_stat*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.deal_stat') }}">
@@ -387,7 +395,7 @@
             </li>
 
             @endif
-            @if (auth()->user()->hasRole(['admin', 'master']) && !Session::get('isCashier'))
+            @if (auth()->user()->hasRole(['admin', 'master']))
             <li class="{{ Request::is('backend/settings/notice') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.notice') }}">
                     <i class="fa fa-bell"></i>
@@ -407,7 +415,7 @@
             @endpermission
 
             @permission('settings.general')
-            @if (auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
+            @if (auth()->user()->hasRole('admin'))
             <li class="{{ Request::is('backend/settings') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.general') }}">
                     <i class="fa fa-circle-o"></i>
@@ -419,7 +427,7 @@
           </ul>
         </div>
         <!-- /.navbar-collapse -->
-        @if (auth()->user()->hasRole('admin'))
+        @if (auth()->user()->hasRole(['admin','comaster']))
         @else
         <form action="{{ route('backend.user.update.address', auth()->user()->id) }}" method="post" class="navbar-form navbar-left">
             <div class="input-group">
@@ -468,7 +476,7 @@
                     @endif</span>
               </a>
             </li>
-            @if(auth()->user()->hasRole('master'))
+            @if(auth()->user()->hasRole(['comaster','master']))
             @else
             <li class="dropdown messages-menu">
               <!-- Menu toggle button -->
@@ -497,13 +505,9 @@
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                 <span class="hidden-xs">{{auth()->user()->username}}[
-                @foreach(['7' => 'app.admin','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+                @foreach(['8'=>'app.admin','7'=>'app.comaster','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
                     @if($role_id == Auth::user()->role_id)
-                        @if (Session::get('isCashier'))
-                            총본사
-                        @else
                         @lang($role_name)
-                        @endif
                     @endif
                 @endforeach
                 ]</span>
@@ -514,13 +518,9 @@
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
                 <p>
                 {{ Auth::user()->username }}[
-                @foreach(['7' => 'app.admin','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
+                @foreach(['8'=>'app.admin','7'=>'app.comaster','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
                     @if($role_id == Auth::user()->role_id)
-                        @if (Session::get('isCashier'))
-                            총본사
-                        @else
                         @lang($role_name)
-                        @endif
                     @endif
                 @endforeach
                 ]님 
@@ -529,9 +529,7 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
-                    @if (Session::get('isCashier') == false)
                     <a href="{{ route('backend.user.edit', auth()->user()->present()->id) }}" class="btn btn-default btn-flat">@lang('app.my_profile')</a>
-                    @endif
                   </div>
                   <div class="pull-right">
                     <a href="{{ route('backend.auth.logout') }}" class="btn btn-default btn-flat"> @lang('app.logout')</a>
