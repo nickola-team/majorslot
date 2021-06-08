@@ -6,7 +6,7 @@
         </label>
         <input type="text" name="login_reset_token_lifetime" class="form-control" value="{{ settings('login_reset_token_lifetime', 30) }}">
     </div>
-
+{{--
 <div class="form-group">
     <label>
         @lang('app.frontend')
@@ -51,7 +51,7 @@
         </label>
 
     </div>
-
+    --}}
 <div class="form-group">
     <input type="hidden" value="0" name="siteisclosed">
     <label class="checkbox-container">
@@ -60,7 +60,7 @@
         <span class="checkmark"></span>
     </label>
 </div>
-
+{{--
 <div class="form-group">
     <input type="hidden" value="0" name="use_all_categories">
     <label class="checkbox-container">
@@ -70,3 +70,21 @@
     </label>
 </div>
 
+--}}
+
+<div class="form-group">
+    <input type="hidden" value="0" name="show_master_balance">
+    <label class="checkbox-container">
+        본사 보유금 보여주기
+        {!! Form::checkbox('show_master_balance', 1, settings('show_master_balance'), ['id' => 'switch-show_master_balance']) !!}
+        <span class="checkmark"></span>
+    </label>
+</div>
+<div class="form-group">
+    <input type="hidden" value="0" name="show_comaster_balance">
+    <label class="checkbox-container">
+        총본사 보유금 보여주기
+        {!! Form::checkbox('show_comaster_balance', 1, settings('show_comaster_balance'), ['id' => 'switch-show_comaster_balance']) !!}
+        <span class="checkmark"></span>
+    </label>
+</div>
