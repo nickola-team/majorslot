@@ -7,11 +7,10 @@
             <div class="pull-left image">
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
             </div>
-            @if(auth()->user()->hasRole('admin'))
+            @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('master') && !settings('show_master_balance'))
             @else
             <div class="pull-left info">
 			<p>보유금:
-
                     @if( Auth::user()->hasRole(['cashier', 'manager']) )
                         @php
                             $shop = \VanguardLTE\Shop::find( auth()->user()->present()->shop_id );
@@ -21,7 +20,6 @@
                     @else
                         {{ number_format(auth()->user()->present()->balance,0) }}원
                     @endif
-
 			</p>
             @if(auth()->user()->hasRole(['comaster', 'master']))
             @else

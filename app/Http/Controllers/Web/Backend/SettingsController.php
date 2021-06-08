@@ -78,7 +78,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $this->updateSettings($request->except('_token'));
             if( $request->siteisclosed ) 
             {
-                $users = \VanguardLTE\User::where('role_id', '!=', 6)->get();
+                $users = \VanguardLTE\User::where('role_id', '!=', 8)->get();
                 foreach( $users as $user ) 
                 {
                     $sessionRepository->invalidateAllSessionsForUser($user->id);
