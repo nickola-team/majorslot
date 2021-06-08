@@ -80,11 +80,3 @@
         <span class="checkmark"></span>
     </label>
 </div>
-<div class="form-group">
-    <input type="hidden" value="0" name="show_comaster_balance">
-    <label class="checkbox-container">
-        총본사 보유금 보여주기
-        {!! Form::checkbox('show_comaster_balance', 1, settings('show_comaster_balance'), ['id' => 'switch-show_comaster_balance']) !!}
-        <span class="checkmark"></span>
-    </label>
-</div>

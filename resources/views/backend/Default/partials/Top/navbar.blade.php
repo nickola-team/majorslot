@@ -459,7 +459,7 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
-          @if(auth()->user()->hasRole('admin'))
+          @if(auth()->user()->hasRole(['admin','comaster']) || auth()->user()->hasRole('master') && !settings('show_master_balance'))
           @else
             <li class="dropdown messages-menu">
               <!-- Menu toggle button -->

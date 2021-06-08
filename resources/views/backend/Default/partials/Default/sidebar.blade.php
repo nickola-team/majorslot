@@ -7,7 +7,7 @@
             <div class="pull-left image">
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
             </div>
-            @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('master') && !settings('show_master_balance'))
+            @if(auth()->user()->hasRole(['admin','comaster']) || auth()->user()->hasRole('master') && !settings('show_master_balance'))
             @else
             <div class="pull-left info">
 			<p>보유금:
