@@ -875,7 +875,7 @@ if (!$game)
             }
             // return true;
         }
-        public function GetGoldenMul($symbol, $winLineNum){
+        public function GetGoldenMul($symbol, $winLineNum, $isjackpot = false){
             if($winLineNum < 5){
                 if($symbol == 2){
                     return 3;
@@ -885,6 +885,13 @@ if (!$game)
                     return 1;
                 }
             }else{
+                if($isjackpot == true){
+                    if(rand(0, 100) < 80){
+                        return $this->FiveGoldenMuls[0][12];
+                    }else{
+                        return $this->FiveGoldenMuls[0][13];
+                    }
+                }else{
                 $percent = rand(0, 90);
                 $sum = 0;
                 for($i = 0; $i < 15; $i++){
@@ -893,7 +900,8 @@ if (!$game)
                         return $this->FiveGoldenMuls[0][$i];
                     }
                 }
-                return $this->FiveGoldenMuls[0][$i];
+                    return $this->FiveGoldenMuls[0][0];
+                }
             }
         }
         public function GenerateFreeSpinCount(){
@@ -1062,18 +1070,9 @@ if (!$game)
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        public function GenerateJackpotReel($grandjp = false)
+        public function GenerateJackpotReel($lineId)
         {
-            if ($grandjp)
-            {
-                $sym = mt_rand(3,7);
-            }
-            else
-            {
-                $sym = mt_rand(8,13);
-            }
-
-            $lineId = mt_rand(0, count($this->winLines)-1);
+            $sym = mt_rand(3,13);
             $line = $this->winLines[$lineId];
             $reel = [
                 'rp' => []
@@ -1083,9 +1082,15 @@ if (!$game)
                 $value = mt_rand(0,10);
                 $reel['reel' . $index][-1] = mt_rand(3,13);
                 $lid = $line[$index-1]-1;
+                if($index > 3 && rand(0, 100) < 30){
+                    $reel['reel' . $index][$lid] = 2;
+                    $a = $this->GetNoDuplicationSymbol(2, -1, 3, 13);
+                    $b = $this->GetNoDuplicationSymbol(2, $a, 3, 13);
+                }else{
                 $reel['reel' . $index][$lid] = $sym;
                 $a = $this->GetNoDuplicationSymbol($sym, -1, 3, 13);
                 $b = $this->GetNoDuplicationSymbol($sym, $a, 3, 13);
+                }
                 if ($lid == 0)
                 {
                     $reel['reel' . $index][1] = $a;
@@ -1163,12 +1168,12 @@ if (!$game)
                 }
                 else
                 {
-                    if ($this->GetBank($winType) >= 200 * $betline && rand(0,100) < 30)
-                    {
-                        $reel = $this->GenerateJackpotReel();
-                        $this->goldenSymbolChance = 0;
-                        return $reel;
-                    }
+                    // if ($this->GetBank($winType) >= 200 * $betline && rand(0,100) < 30)
+                    // {
+                    //     $reel = $this->GenerateJackpotReel();
+                    //     $this->goldenSymbolChance = 0;
+                    //     return $reel;
+                    // }
                     $_obf_reelStripNumber = [
                         1, 
                         2, 

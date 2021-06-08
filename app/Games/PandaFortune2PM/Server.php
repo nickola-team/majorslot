@@ -185,6 +185,29 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     $slotSettings->UpdateJackpots($allbet);
                 }
                 
+                $isJackpot = false;
+                $jackpotPosCount = 0;
+                $jackpotLine = -1;
+                if($_winAvaliableMoney > $allbet * 3000 && $winType == 'win' && rand(0, 100) < 10){                    
+                    $isJackpot = true;
+                    $goldenPoses = $slotSettings->GetGameData($slotSettings->slotId . 'GoldenPoses');
+                    for( $k = 0; $k < $lines; $k++ ) 
+                    {
+                        $lineId = $linesId[$k];
+                        $goldenCount = 0;
+                        for($j = 0; $j < 5; $j++){
+                            $pos = ($lineId[$j] - 1) * 5 + $j;
+                            if($goldenPoses[$pos] == 1){
+                                $goldenCount++;
+                            }
+                        }
+                        if($jackpotPosCount == 0 || ($goldenCount > 0 && $goldenCount < $jackpotPosCount)){
+                            $jackpotPosCount = $goldenCount;
+                            $jackpotLine = $k;
+                        }
+                    }
+                }
+
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -194,7 +217,6 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     $scatter = 1;
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline);
                     $_obf_scatterposes = [];
                     $goldenWins = [];
                     $scattersCount = 0;
@@ -202,9 +224,21 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     $goldenWin = 0;
                     $_lineWinNumber = 1;
                     $goldenPoses = $slotSettings->GetGameData($slotSettings->slotId . 'GoldenPoses');
-                    for($k = 0; $k < 15; $k++){
-                        if($goldenPoses[$k] == 0 && $slotSettings->CheckGoldenSymbol() && $reels['reel' . ($k % 5 + 1)][floor($k / 5)] != $scatter){
-                            $goldenPoses[$k] = 1;
+                    if($isJackpot == true){
+                        if($jackpotLine == -1){
+                            $jackpotLine = mt_rand(0, count($lines)-1);
+                        }
+                        $reels = $slotSettings->GenerateJackpotReel($jackpotLine);
+                        if($jackpotPosCount == 0){
+                            $goldenReelPos = mt_rand(0, 4);
+                            $goldenPoses[($linesId[$jackpotLine][$goldenReelPos] - 1) * 5 + $goldenReelPos] = 1;
+                        }
+                    }else{
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline);
+                        for($k = 0; $k < 15; $k++){
+                            if($goldenPoses[$k] == 0 && $slotSettings->CheckGoldenSymbol() && $reels['reel' . ($k % 5 + 1)][floor($k / 5)] != $scatter){
+                                $goldenPoses[$k] = 1;
+                            }
                         }
                     }
                     for( $k = 0; $k < $lines; $k++ ) 
@@ -214,6 +248,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                         $lineWinNum[$k] = 1;
                         $lineWins[$k] = 0;
                         $isWild = false;
+                        $isJackpotPay = false;
                         for($j = 1; $j < 5; $j++){
                             $ele = $reels['reel'. ($j + 1)][$linesId[$k][$j] - 1];
                             if($firstEle == $wild){
@@ -237,9 +272,14 @@ namespace VanguardLTE\Games\PandaFortune2PM
                                                 $strWinLine = $strWinLine . '~' . ($pos);
                                                 $symbol = $reels['reel'. ($kk + 1)][$linesId[$k][$kk] - 1];
                                                 if($goldenPoses[$pos] == 1){
+                                                    if($isJackpot == true && $isJackpotPay == false){
+                                                        array_push($goldenWins, [$symbol, $slotSettings->GetGoldenMul($symbol, $lineWinNum[$k], $isJackpot)]);
+                                                        $isJackpotPay = true;
+                                                    }else{
                                                     array_push($goldenWins, [$symbol, $slotSettings->GetGoldenMul($symbol, $lineWinNum[$k])]);
                                                 }
                                             }
+                                        }
                                         }
                                     }else{
                                         $lineWinNum[$k] = 0;
