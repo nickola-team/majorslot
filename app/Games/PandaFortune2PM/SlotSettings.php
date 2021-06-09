@@ -105,7 +105,7 @@ if (!$game)
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
 
-            $this->goldenSymbolChance = 3;
+            $this->goldenSymbolChance = 5;
 
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
