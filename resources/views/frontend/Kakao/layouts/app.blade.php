@@ -405,6 +405,26 @@
 
 					@endif
 				@endforeach
+        <?php
+            $comingSoon = (intval(count($categories)/6) + 1 ) * 6 - count($categories);
+        ?>
+        @for ($i=0;$i<$comingSoon;$i++)
+        <a class="slot-btn gl-title-click" onclick="alert('준비중입니다.');">
+						<div class="inner">
+						<img
+							class="slot-bg"
+							src="/frontend/Kakao/images/slot-bg.png"
+							style="opacity: 100"
+						/>
+						 <div class="hover-bg">
+							<span></span><span></span><span></span><span></span>
+						</div> 
+						 <div class="slot-cont">
+							<img class="slot-img" src="/frontend/Kakao/images/slots/coming_soon.png" />
+						</div> 
+						</div>
+					</a>
+        @endfor
 			@endif
 			
             </div>
