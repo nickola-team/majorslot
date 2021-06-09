@@ -196,7 +196,6 @@ function stopDrag() {
 		@if ($categories && count($categories))
 			@foreach($categories AS $index=>$category)
 				@if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false))
-					
 					<a href="javascript:void(0);" class="slot-btn" onclick="goSlot('{{ $category->title }}', '{{ $category->href }}', 0)">
 						<div class="inner-cont">
 							<div class="main-cont">
@@ -222,6 +221,29 @@ function stopDrag() {
 					</a>
 				@endif
 			@endforeach
+			<?php
+            $comingSoon = (intval(count($categories)/6) + 1 ) * 6 - count($categories);
+			?>
+			@for ($i=0;$i<$comingSoon;$i++)
+				<a href="javascript:void(0);" class="slot-btn" onclick="alert('준비중입니다.');">
+						<div class="inner-cont">
+							<div class="main-cont">
+								<img class="main-img" src="/frontend/onyx/img/slot/coming_soon.jpg">
+								<div class="hover">
+									<div class="center">
+										<img src="/frontend/onyx/img/slot-icon/coming_soon.png">
+									</div>
+								</div>
+								<div class="logo-cont">
+									<img src="/frontend/onyx/img/slot-icon/coming_soon.png">
+								</div>
+							</div>
+						</div>
+						<p class="name">
+						준비중
+						</p>
+					</a>
+			@endfor
 		@endif
 
 		</div>

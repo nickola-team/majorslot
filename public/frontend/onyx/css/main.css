@@ -590,7 +590,7 @@ header div.loggedbox {
 }
 
 .main_game .gamebtn_wrap.slot {
-    height: 860px;
+    height: 80%;
     transition: all .3s ease
 }
 
