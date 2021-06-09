@@ -796,6 +796,10 @@ function getBalance() {
 }
 
 function startGame(gamename) {
+    if (loginYN !== 'Y') {
+        showLoginAlert()
+        return;
+    }
     window.open(
         "/game/" + gamename,
         gamename,
