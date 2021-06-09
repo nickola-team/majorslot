@@ -38,19 +38,9 @@
 <td>{{ number_format($user['bonus'],0) }}</td>
 @endif
 <td>
-@if (Session::get('isCashier'))
-<button type="button" class="btn btn-block btn-primary btn-xs" disabled>편집</button>
-@else
-@if ( $user['role_id'] == 3)
-<a href="{{ route('backend.shop.edit', $user['shop_id']) }}">
-<button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
-</a>
-@else
 <a href="{{ route('backend.user.edit', $user['id']) }}">
 <button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
 </a>
-@endif
-@endif
 </td>
 <td>
 @if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])) && !Session::get('isCashier'))

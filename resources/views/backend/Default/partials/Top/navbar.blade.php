@@ -196,7 +196,8 @@
                     </span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    @if(!auth()->user()->hasRole('admin'))
+                    @if(auth()->user()->hasRole(['admin','comaster']) || auth()->user()->hasRole('master') && !settings('show_master_balance'))
+                    @else
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_request') }}">
