@@ -145,6 +145,7 @@
                         </thead>
                     </table>
                 </div>
+				{{ $partners->appends(Request::except('page'))->links() }}
             </div>
         </div>
     </section>
