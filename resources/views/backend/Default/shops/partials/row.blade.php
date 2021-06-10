@@ -46,20 +46,27 @@
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['admin', 'comaster', 'master', 'distributor']) && !Session::get('isCashier'))
-		
+		@if( Auth::user()->hasRole(['admin', 'comaster', 'master', 'distributor']))
+		@if (auth()->user()->hasRole('master') && !settings('show_master_balance'))
+		<button type="button" class="btn btn-block btn-success disabled btn-xs">충전</button>
+		@else
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $shop->shop_id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs"> 충전</button>
 	    </a>
+		@endif
 		@else
 			<button type="button" class="btn btn-block btn-success disabled btn-xs"> 충전</button>
 		@endif
 	</td>
 	<td>
-		@if( Auth::user()->hasRole(['admin','comaster', 'master', 'distributor']) && !Session::get('isCashier'))
+		@if( Auth::user()->hasRole(['admin','comaster', 'master', 'distributor']))
+		@if (auth()->user()->hasRole('master') && !settings('show_master_balance'))
+		<button type="button" class="btn btn-block btn-danger disabled btn-xs"> 환전</button>
+		@else
 		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $shop->shop_id }}" >
 	    <button type="button" class="btn btn-block btn-danger btn-xs"> 환전</button>
 		</a>
+		@endif
 		@else
 			<button type="button" class="btn btn-block btn-danger disabled btn-xs"> 환전</button>
 		@endif

@@ -24,7 +24,13 @@
 </a>
 </td>
 @endif
-<td>{{ number_format($user['balance'],0) }}</td>
+<td>
+@if (auth()->user()->hasRole(['master']) && ($user['role_id']==6 && !settings('show_master_balance')))
+0
+@else
+{{ number_format($user['balance'],0) }}
+@endif
+</td>
 @if (!auth()->user()->hasRole(['admin','comaster']) && $user['role_id']==6)
 <td>없음</td>
 <td>없음</td>
@@ -43,20 +49,28 @@
 </a>
 </td>
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])) && !Session::get('isCashier'))
+@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])))
+@if (auth()->user()->hasRole('master') && !settings('show_master_balance'))
+<button type="button" class="btn btn-block btn-success btn-xs" disabled>@lang('app.in')</button>
+@else
 <a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }} disabled" >
 <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 </a>
+@endif
 @else
 <button type="button" class="btn btn-block btn-success btn-xs" disabled>@lang('app.in')</button>
 @endif
 </td>
 
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])) && !Session::get('isCashier'))
+@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])))
+@if (auth()->user()->hasRole('master') && !settings('show_master_balance'))
+<button type="button" class="btn btn-block btn-danger btn-xs" disabled>@lang('app.out')</button>
+@else
 <a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user['id'] }}" >
 <button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 </a>
+@endif
 @else
 <button type="button" class="btn btn-block btn-danger btn-xs" disabled>@lang('app.out')</button>
 @endif

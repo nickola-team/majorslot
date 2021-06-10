@@ -1225,10 +1225,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $wildPos = -1;
                 for($r = 0; $r < 7; $r++){
                     if($reel['reel' . $reelId][$r] == 1){
-                        // if($isTumb == true){
-                        //     $reel['reel' . $reelId][$r + 1] = random_int(7, 12);
-                        // }else 
-
                         /* 이미 스캐터심볼이 잇다면 지우기 */
                         if($scatterPos >= 0){
                             $reel['reel' . $reelId][$r] = random_int(7, 13);
@@ -1259,8 +1255,70 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                 $reel['rp'][] = $basePos;
             }
+            
+            /* 릴배치표 조정, 본사게임과 비슷하게 */
+            $reel = $this->AdjustReels($reel);
             $reel['id'] = $reelsetId;
             return $reel;
+        }
+
+        public function AdjustReels($reels) {
+            foreach (array_keys($reels) as $reelId) {
+                if ($reelId == 'rp') {
+                    continue;
+                }
+
+                /* 릴 앞뒤부분 자르기 */
+                $lastPos = array_search(14, $reels[$reelId]);
+                $lastPos = $lastPos === false ? 6 : $lastPos - 1;
+                $reelSymbols = array_slice($reels[$reelId], 1, $lastPos + 1);
+                $uniqueSymbols = array_unique($reelSymbols);
+
+                $isNeedSort = false;
+                foreach ($uniqueSymbols as $idx => $symbol) {
+                    $sameSymbolPositions = array_keys($reelSymbols, $symbol);
+                    $symbolsCount = count($sameSymbolPositions);
+
+                    /* 같은 심볼이 4개이상이면 */
+                    if ($symbolsCount >= 4) {
+                        for ($i=0; $i < $symbolsCount - 3; $i++) { 
+                            /* 릴에 없는 새심볼 생성 */
+                            while( in_array( ($newSymbol = random_int(3, 13)), $uniqueSymbols));
+                            
+                            $reelSymbols[$sameSymbolPositions[$i]] = $newSymbol;
+                        }
+                    }
+
+                    /* 널려있는 동의심볼 조사 */
+                    if ($symbolsCount >= 2) {
+                        /* 이미 널려져 있다면 스킵 */
+                        if ($isNeedSort) {
+                            continue;
+                        }
+
+                        /* 릴심볼 업데이트 */
+                        $sameSymbolPositions = array_keys($reelSymbols, $symbol);
+                        $curPosSum = array_sum($sameSymbolPositions);
+                        
+                        $sortedPositions = range($sameSymbolPositions[0], $sameSymbolPositions[0] + count($sameSymbolPositions) - 1);
+                        $sortedPosSum = array_sum($sortedPositions);
+                        
+                        /* 심볼 위치합이 sort된 위치합보다 크면 sort 필요 */
+                        if ($curPosSum > $sortedPosSum) {
+                            $isNeedSort = true;    
+                        }
+                    }
+                }
+
+                /* 같은 심볼이 연결되어 있지 않는 경우를 위해 sort */
+                if ($isNeedSort) {
+                    (random_int(1, 10) % 2 == 1) ? asort($reelSymbols) : arsort($reelSymbols);
+                }
+
+                $reels[$reelId] = array_replace($reels[$reelId], array_values($reelSymbols));
+            }
+
+            return $reels;
         }
 
         public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=3){
