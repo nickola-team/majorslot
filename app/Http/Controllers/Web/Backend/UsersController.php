@@ -1132,6 +1132,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.user.list')->withErrors([trans('app.no_permission')]);
             }
             $agents = null;
+            if( $user->hasRole('comaster') ) 
+            {
+                $masters = $user->childPartners();
+                $agents = \VanguardLTE\User::where('role_id' , 5)->whereIn('parent_id' , $masters )->get();
+                $distributors = \VanguardLTE\User::where('role_id' , 4)->whereIn('parent_id', $agents->pluck('id')->toArray())->get();
+            }
             if( $user->hasRole('master') ) 
             {
                 $agents = \VanguardLTE\User::where([
@@ -1199,7 +1205,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $agent->delete();
                 }
             }
-            if($user->hasRole(['master','agent'])) 
+            if($user->hasRole(['comaster','master','agent'])) 
             {
                 event(new \VanguardLTE\Events\User\Deleted($user));
                 \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
@@ -1207,9 +1213,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             if($bUser){
-                return redirect()->route('backend.user.tree')->withSuccess(trans('app.user_deleted'));
+                return redirect()->back()->withSuccess(trans('app.user_deleted'));
             }
-            return redirect()->route('backend.user.list')->withSuccess('파트너가 성공적으로 삭제되었습니다.');
+            return redirect()->back()->withSuccess('파트너가 성공적으로 삭제되었습니다.');
             
         }
         public function hasActivities($user)
