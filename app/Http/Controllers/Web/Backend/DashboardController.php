@@ -1439,7 +1439,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
 
             $stat = [
-                'add' => (clone $in_out_logs)->where(['type'=>'add', 'status'=>\VanguardLTE\WithdrawDeposit::DONE)->sum('sum'),
+                'add' => (clone $in_out_logs)->where(['type'=>'add', 'status'=>\VanguardLTE\WithdrawDeposit::DONE])->sum('sum'),
                 'out' => (clone $in_out_logs)->where(['type'=>'out', 'status'=>\VanguardLTE\WithdrawDeposit::DONE])->sum('sum'),
             ];
 
