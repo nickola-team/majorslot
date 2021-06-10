@@ -1213,9 +1213,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             if($bUser){
-                return redirect()->back()->withSuccess(trans('app.user_deleted'));
+                return redirect()->route('backend.user.tree')->withSuccess(trans('app.user_deleted'));
             }
-            return redirect()->back()->withSuccess('파트너가 성공적으로 삭제되었습니다.');
+            return redirect()->route('backend.user.list')->withSuccess('파트너가 성공적으로 삭제되었습니다.');
             
         }
         public function hasActivities($user)
