@@ -55,6 +55,8 @@ return [
         "Scarab Temple" => "스캐럽 템플",
         "Sun of Egypt 2" => "썬 오브 이집트2",
         "Magic Ball" => "매직 볼",
+        "Hit the Gold!" => "히트 더 골드!",
+
         /**
          * CQ9 Games
          */
@@ -156,6 +158,8 @@ return [
         "Da Hong Zhong" => "다 펑 쩡",
         "Uproar in Heaven" => "업로 인 헤븐",
         "Hot Pinatas" => "핫 파이네터스",
+        "King of Atlantis" => "킹 오브 애틀란티스",
+        "Monster Hunter" => "몬스터 헌터",
 
 
         /**
@@ -415,6 +419,12 @@ return [
         "Live - M88 Lobby" => "라이브 - M8 로비",
         "Live - Roulette Macao" => "라이브 - 룰렛 마카오",
         "Live - Sic Bo" => "라이브 - 식보",
+        "5 Lions Megaways" => "5 라이온스 메가웨이",
+        "Empty the Bank" => "엠프티 더 뱅크",
+        "Rise of Samurai Megaways" => "라이즈 오브 사무라이 메가웨이",
+        "Live - D&W" => "라이브 - D&W",
+        "Live - Other Promos" => "라이브 - 아더 프로모즈",
+
 
 
         /**
@@ -498,6 +508,7 @@ return [
         "Lucky Pirates" => "럭키 파이레이츠",
         "Hand of Gold" => "핸드 오브 골드",
         "Rich Diamonds: Hold and Win" => "리치 다이아몬즈:홀드 앤 윈",
+        "Book of Gold 2: Double Hit™" => "북오브 골드 2: 더블히트™",
 
         /**
          * Habanero Games
@@ -623,5 +634,6 @@ return [
         "Disco Funk" => "디스코 펑크",
         "Cashosaurus" => "캐쇼사우러스",
         "Return To The Feature" => "리턴 투 더 피쳐",
+        "Candy Tower" => "캔디 타워",
 
 ];
