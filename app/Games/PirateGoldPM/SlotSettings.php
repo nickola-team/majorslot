@@ -167,15 +167,12 @@ namespace VanguardLTE\Games\PirateGoldPM
             ];
 
             $this->MoneyTable = [
-                "standard" => [40, 80, 120, 160/* , 200, 240, 280, 320, 400, 560, 640, 720, 800, 960, 2000, 8000 */],
+                "standard" => [40, 80, 120, 160, /* 200, 240, 280, 320, 400, 560, 640, 720, 800, 960, 2000, 8000 */],
+                "multiplier" => [2, 3, 5],
+                "retrigger" => [1],
                 "jackpot" => [2000, 8000, 40000],
                 "jackpot_mask" => ["jp3", "jp2", "jp1"]
             ];
-
-            // $this->freeSpinTable = [
-            //     [0, 0, 0, 15, 18, 25, 30],    // Raining WILD
-            //     [0, 0, 0, 7, 12, 15, 20],    // Sticky WILD 
-            // ];
 
             $this->reelsetMap = [
                 'freespin' => [1],
@@ -1049,57 +1046,32 @@ namespace VanguardLTE\Games\PirateGoldPM
             }
             return [$reels, $newTumbPoses, $newTumbMuls];   // 당첨되지않은 심볼배렬, 와일드 위치, 와일드 배당값
         }
-        public function GetLimitedReelStrips($slotEvent, $lastWILDCollection) {
-            $REELCOUNT = 5;
 
-            /* 당첨금이 제일 작은 심볼중 하나 선택 */
-            $startSymbols = [random_int(7, 12), random_int(7, 12)];     
+        public function GetLimitedReelStrips($slotEvent) {
+            /* 일반릴생성 */
+            $reels = $this->GetReelStrips('spin', $slotEvent);
 
-            for ($reelId=1; $reelId <= $REELCOUNT; $reelId++) { 
+            /* 윈라인이 없도록 2번릴 심볼 조정 */
+            $SYMBOLCOUNT = 4;
 
-                /* 스티키 프리스핀일때 릴의 최소 심볼갯수 계산 */
-                if ($reelId == 1) {
-                    $symbolCount = 2;
+            $baseReel = $reels['symbols'][0];
+            $targetReel = $reels['symbols'][1];
+            for ($i=0; $i < $SYMBOLCOUNT; $i++) { 
+                $symbol = $targetReel[$i];
+
+                /* 1번릴에 같은 심볼이 있다면, 랜덤심볼로 바꾸기, WILD심볼 포함 */
+                if ($symbol == 2 || $symbol >= 15 || array_search($symbol, $baseReel) !== false) {
+                    while (in_array(($newSymbol = random_int(4, 12)), $baseReel));
+                    $targetReel[$i] = $newSymbol;
                 }
-                else if ($slotEvent === 'fsSticky' && count($lastWILDCollection) > 0) {
-                    $minCount = 2;
-                    foreach ($lastWILDCollection as $pos => $multiplier) {
-                        $wildReelId = $pos % $REELCOUNT + 1;
-                        if ($reelId == $wildReelId) {
-                            $symbolsCount = intdiv($pos, $REELCOUNT) + 1;
-                            $minCount = $minCount > $symbolsCount ? $minCount : $symbolsCount;
-                        }
-                    }
-                    
-                    $symbolCount = $this->GetSymbolCount($minCount);
-                }
-                else {
-                    $symbolCount = random_int(2, 3);
-                }
-
-                $reel['reel' . $reelId][-1] = random_int(7, 12);
-
-                for($k = 0; $k < $symbolCount; $k++){
-                    if ($reelId == 1) {
-                        $reel['reel' . $reelId][$k] = $startSymbols[$k];
-                    }
-                    else {
-                        while (in_array(($symbol = random_int(4, 10)), $startSymbols));
-                        $reel['reel' . $reelId][$k] = $symbol;
-                    }
-                }
-                for($k = $symbolCount; $k < 7; $k++){
-                    $reel['reel' . $reelId][$k] = 14;
-                }
-
-                while (in_array(($symbol = random_int(9, 12)), $startSymbols));
-                $reel['reel' . $reelId][7] = $symbol;
             }
-            $reel['id'] = 8;        // 랜덤
-            return $reel;
+
+            /* 릴셋 업데이트 */
+            $reels['symbols'][1] = $targetReel;
+            return $reels;
         }
 
-        public function GetReelStrips($winType, $slotEvent/* ,  $scatterCount, $lastWILDCollection */)
+        public function GetReelStrips($winType, $slotEvent)
         {
             /* 5x4 릴셋 */
             $REELCOUNT = 5;
@@ -1210,8 +1182,12 @@ namespace VanguardLTE\Games\PirateGoldPM
             return $reel;
         }
 
-        public function GetLuckySpinSetting($flattenSymbols, $moneySymbolValues, $moneySymbolTypes, $maxMoneySymbolsCount, $respinCount) {
+        public function GetLuckySpinSetting($lastReelSet, $maxMoneySymbolsCount, $respinCount) {
             $MONEY = 13;
+            $flattenSymbols = $lastReelSet['symbols'];
+            $moneySymbolValues = $lastReelSet['values'];
+            $moneySymbolTypes = $lastReelSet['types'];
+
             $moneySymbols = array_filter($flattenSymbols, function ($symbol) use ($MONEY) { return $symbol == $MONEY; });
 
             /* 머니심볼갯수가 최대갯수이상이면  */
@@ -1225,12 +1201,140 @@ namespace VanguardLTE\Games\PirateGoldPM
             }
             else {
                 /* 리스핀 2회아래이면 랜덤결과 */
-                return (random_int(1, 10) % 4 === 1) ? true : false;
+                return (random_int(1, 10) % 2 === 1) ? true : false;
             }
         }
 
-        public function GenerateMoneySymbols($flattenSymbols, $moneySymbolValues, $moneySymbolTypes) {
+        public function GetRandomMoneyType() {
+            $MoneyTypeProbabilityMap = [
+                "standard" => 900, 
+                "retrigger" => 60,
+                "multiplier" => 30, 
+                "jackpot" => 10, 
+            ];
+
+            $randVal = random_int(1, 1000);
+
+            $probSum = 0;
+            foreach ($MoneyTypeProbabilityMap as $type => $prob) {
+                $probSum += $prob;
+
+                if ($randVal <= $probSum) {
+                    return $type;
+                }
+            }
+
+            return "standard";
+        }
+
+        public function GetRandomMoneyValue($type) {
+            $probabilityMap = [];
+
+            switch ($type) {
+                case 'standard':
+                    $probabilityMap = [
+                        40 => 30, 
+                        80 => 30, 
+                        120 => 20, 
+                        160 => 15, 
+                        200 => 5, 
+                        // 240, 280, 320, 400, 560, 640, 720, 800, 960, 2000, 8000
+                    ];
+                    break;
+
+                case 'retrigger':
+                    $probabilityMap = [
+                        1 => 100
+                    ];
+                    break;
+
+                case 'multiplier':
+                    $probabilityMap = [
+                        2 => 65, 
+                        3 => 30,
+                        5 => 5
+                    ];
+                    break;
+
+                case 'jackpot':
+                    $probabilityMap = [
+                        2000 => 90,
+                        8000 => 7,
+                        40000 => 3
+                    ];
+                    break;
+
+                default:
+                    break;
+            }
+
+            $randVal = random_int(1, 100);
+
+            $probSum = 0;
+            foreach ($probabilityMap as $value => $prob) {
+                $probSum += $prob;
+
+                if ($randVal <= $probSum) {
+                    return $value;
+                }
+            }
+
+            return 0;
+        }
+
+        public function GetMoneyTypeMask($type, $value) {
+            $MoneyTypeMaskMap = [
+                "none" => 'r',
+                "standard" => 'v',
+                "retrigger" => 'rt',
+                "multiplier" => 'm',
+                "jackpot" => [
+                    2000 => 'jp3',
+                    8000 => 'jp2',
+                    40000 => 'jp1'
+                ]
+            ];
+
+            if (!array_key_exists($type, $MoneyTypeMaskMap)) {
+                return null;
+            }
+            
+            if ($type == 'jackpot') {
+                return $MoneyTypeMaskMap[$type][$value];
+            }
+            else {
+                return $MoneyTypeMaskMap[$type];
+            }
+        }
+
+        public function ClearReelSet($symbols, $values, $types) {
+            for ($i=0; $i < count($symbols); $i++) { 
+                $type = $types[$i];
+                $value = $values[$i];
+                
+                if ($type == 'm' || $type == 'rt') {
+                    $symbols[$i] = random_int(5, 12);
+                    $values[$i] = '0';
+                    $types[$i] = 'r';
+                }
+            }
+
+            return [
+                'symbols' => $symbols,
+                'values' => $values,
+                'types' => $types
+            ];
+        }
+
+        public function GenerateMoneySymbols($lastReelSet) {
             $MONEY = 13;
+            $flattenSymbols = $lastReelSet['symbols'];
+            $moneySymbolValues = $lastReelSet['values'];
+            $moneySymbolTypes = $lastReelSet['types'];
+
+            /* 랜덤 머니심볼 생성 */
+            $randMoneyType = $this->GetRandomMoneyType();
+            $randMoneyValue = $this->GetRandomMoneyValue($randMoneyType);
             
             /* 머니심볼이 아닌 심볼들 검사 */
             $nonMoneySymbols = array_filter($flattenSymbols, function ($symbol) use ($MONEY) { return $symbol != $MONEY; });
@@ -1238,24 +1342,38 @@ namespace VanguardLTE\Games\PirateGoldPM
             
             /* 랜덤 머니심볼로 교체 */
             $flattenSymbols[$randSymbolPos] = $MONEY;
-
-            $moneySymbolValueId = array_rand($this->MoneyTable["standard"]);
-            $moneySymbolValues[$randSymbolPos] = $this->MoneyTable["standard"][$moneySymbolValueId];
-
-            $moneySymbolTypes[$randSymbolPos] = "v";
+            $moneySymbolValues[$randSymbolPos] = $randMoneyValue;
+            $moneySymbolTypes[$randSymbolPos] = $this->GetMoneyTypeMask($randMoneyType, $randMoneyValue);
 
             return [
                 'symbols' => $flattenSymbols,
                 'values' => $moneySymbolValues,
-                'types' => $moneySymbolTypes
+                'types' => $moneySymbolTypes,
+                'pos' => $randSymbolPos
             ];
         }
 
-        public function SumMoneySymbols($moneySymbolValues, $moneySymbolTypes) {
-            /* 배율심볼 계산 추가 */
-            
-            $total = array_sum($moneySymbolValues);
-            return $total;
+        public function SumMoneySymbols($moneySymbolValues, $moneySymbolTypes, $lastMultiplier, $isNew) {
+            /* 일반머니, 잭팟머니 */
+            $sum = 0;
+            /* 배율심볼 */
+            $multiplier = $lastMultiplier;
+
+            for ($i=0; $i < count($moneySymbolTypes); $i++) { 
+                $type = $moneySymbolTypes[$i];
+                $value = $moneySymbolValues[$i];
+                if ($type == 'v' || $type == 'jp1' || $type == 'jp2' || $type == 'jp3') {
+                    $sum += $value;
+                }
+                else if ($type == 'm') {
+                    if ($isNew) {
+                        $multiplier += $value;
+                    }
+                }
+            }
+
+            /* 배율심볼 곱하기 */
+            return $multiplier == 0 ? $sum : $sum * $multiplier;
         }
 
         public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=3){
@@ -1284,5 +1402,4 @@ namespace VanguardLTE\Games\PirateGoldPM
             return $random;
         }
     }
-
 }
