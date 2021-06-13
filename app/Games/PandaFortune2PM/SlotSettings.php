@@ -1136,7 +1136,7 @@ if (!$game)
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetReelStrips($winType, $slotEvent, $betline)
+        public function GetReelStrips($winType, $slotEvent, $betline, $scattercount)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
@@ -1181,7 +1181,7 @@ if (!$game)
                         4, 
                         5
                     ];
-                    $scattercount = $this->GenerateFreeSpinCount($slotEvent);
+                    // $scattercount = $this->GenerateFreeSpinCount($slotEvent);
                     $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
@@ -1229,7 +1229,7 @@ if (!$game)
                         4, 
                         5
                     ];
-                    $scattercount = $this->GenerateFreeSpinCount($slotEvent);
+                    // $scattercount = $this->GenerateFreeSpinCount($slotEvent);
                     $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
