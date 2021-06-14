@@ -188,7 +188,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 $isJackpot = false;
                 $jackpotPosCount = 0;
                 $jackpotLine = -1;
-                if($_winAvaliableMoney > $allbet * 3000 && $winType == 'win' && rand(0, 100) < 10){                    
+                if($winType == 'win' && $slotSettings->IsCheckJackpot()){                    
                     $isJackpot = true;
                     $goldenPoses = $slotSettings->GetGameData($slotSettings->slotId . 'GoldenPoses');
                     for( $k = 0; $k < $lines; $k++ ) 
@@ -339,6 +339,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     if( $i >= 1000 ) 
                     {
                         $winType = 'none';
+                        $isJackpot = false;
                     }
                     // if( $slotSettings->increaseRTP && $winType == 'win' && $totalWin < ($lines * $betline * rand(2, 5)) ) 
                     // {

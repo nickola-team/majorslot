@@ -916,11 +916,24 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 }
             }else{
                 if($isjackpot == true){
-                    if(rand(0, 100) < 80){
-                        return $this->FiveGoldenMuls[0][12];
-                    }else{
-                        return $this->FiveGoldenMuls[0][13];
+                    if ($this->happyhouruser)
+                    {
+                        if ($this->happyhouruser->jackpot == 1)
+                        {
+                            return $this->FiveGoldenMuls[0][12];
+                        }
+                        else
+                        {
+                            return $this->FiveGoldenMuls[0][13];
+                        }
                     }
+                    return 1;
+                    // if(rand(0, 100) < 80){
+
+                    //     return $this->FiveGoldenMuls[0][12];
+                    // }else{
+                    //     return $this->FiveGoldenMuls[0][13];
+                    // }
                 }else{
                 $percent = rand(0, 90);
                 $sum = 0;
@@ -1180,18 +1193,20 @@ namespace VanguardLTE\Games\PandaFortune2PM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function IsCheckJackpot(){
+            if ($this->happyhouruser && $this->happyhouruser->jackpot>0 && $this->happyhouruser->progressive <= 0)
+            {
+                $this->happyhouruser->progressive = mt_rand(2,5);
+                $this->happyhouruser->save();
+                return true;
+            }else{
+                return false;
+            }
+        }
         public function GetReelStrips($winType, $slotEvent, $betline)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
-                /*if ($this->happyhouruser && $this->happyhouruser->jackpot>0 && $this->happyhouruser->progressive <= 0)
-                {
-                    $reel = $this->GenerateJackpotReel($this->happyhouruser->jackpot==2);
-                    $this->goldenSymbolChance = 0;
-                    $this->happyhouruser->progressive = mt_rand(2,5);
-                    $this->happyhouruser->save();
-                    return $reel;
-                } */
                 if( $winType != 'bonus' ) 
                 {
                     $_obf_reelStripCounts = [];
@@ -1245,6 +1260,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     }
                 }
             }else{
+                
                 if( $winType != 'bonus' ) 
                 {
                     $_obf_reelStripCounts = [];
