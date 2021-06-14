@@ -13,6 +13,7 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('booongolist');
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
                 \Illuminate\Support\Facades\Redis::del('cq9list');
+                \Illuminate\Support\Facades\Redis::del('pnglist');
 
                 set_time_limit(0);
                 /*$admins = \VanguardLTE\User::where('role_id',7)->get();
