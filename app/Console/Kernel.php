@@ -13,6 +13,7 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('booongolist');
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
                 \Illuminate\Support\Facades\Redis::del('cq9list');
+                \Illuminate\Support\Facades\Redis::del('pnglist');
 
                 set_time_limit(0);
                 /*$admins = \VanguardLTE\User::where('role_id',7)->get();
@@ -445,6 +446,31 @@ namespace VanguardLTE\Console
                         if ($ppcat){
                             \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$ppcat->id]);
                         }
+                    }
+                }
+                $this->info('End');
+            });
+            \Artisan::command('daily:newcategory {originalid}', function ($originalid) {
+                set_time_limit(0);
+                $this->info("Begin adding new category to all shop");
+                
+                $cat = \VanguardLTE\Category::where('id', $originalid)->first();
+                if (!$cat)
+                {
+                    $this->error('Can not find original id of new category');
+                    return;
+                }
+                $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
+                $data = $cat->toArray();
+                foreach ($shop_ids as $id)
+                {
+                    if (\VanguardLTE\Category::where(['shop_id'=> $id, 'href' => $cat->href])->first())
+                    {
+                        $this->info("Category already exist in " . $id . " shop");
+                    }
+                    else{
+                        $data['shop_id'] = $id;
+                        $shop_cat = \VanguardLTE\Category::create($data);
                     }
                 }
                 $this->info('End');

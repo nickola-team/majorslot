@@ -188,7 +188,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 $isJackpot = false;
                 $jackpotPosCount = 0;
                 $jackpotLine = -1;
-                if($_winAvaliableMoney > $allbet * 3000 && $winType == 'win' && rand(0, 100) < 10){                    
+                if($winType == 'win' && $slotSettings->IsCheckJackpot()){                    
                     $isJackpot = true;
                     $goldenPoses = $slotSettings->GetGameData($slotSettings->slotId . 'GoldenPoses');
                     for( $k = 0; $k < $lines; $k++ ) 
@@ -207,7 +207,10 @@ namespace VanguardLTE\Games\PandaFortune2PM
                         }
                     }
                 }
-
+                $defaultScatters = 0;
+                if($winType == 'bonus'){
+                    $defaultScatters = $slotSettings->GenerateFreeSpinCount();
+                }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -234,7 +237,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                             $goldenPoses[($linesId[$jackpotLine][$goldenReelPos] - 1) * 5 + $goldenReelPos] = 1;
                         }
                     }else{
-                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline);
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline, $defaultScatters);
                         for($k = 0; $k < 15; $k++){
                             if($goldenPoses[$k] == 0 && $slotSettings->CheckGoldenSymbol() && $reels['reel' . ($k % 5 + 1)][floor($k / 5)] != $scatter){
                                 $goldenPoses[$k] = 1;
@@ -339,6 +342,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     if( $i >= 1000 ) 
                     {
                         $winType = 'none';
+                        $isJackpot = false;
                     }
                     // if( $slotSettings->increaseRTP && $winType == 'win' && $totalWin < ($lines * $betline * rand(2, 5)) ) 
                     // {
@@ -355,7 +359,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                             break;
                         }
                         
-                        if( $scattersCount >= 3 && $winType != 'bonus' ) 
+                        if( $scattersCount >= 3 && ($winType != 'bonus' || $scattersCount != $defaultScatters) ) 
                         {
                         }
                         else if ($scattersCount == 5)

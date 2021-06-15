@@ -1123,6 +1123,9 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 while (in_array(($symbol = random_int(9, 13)), $startSymbols));
                 $reel['reel' . $reelId][7] = $symbol;
             }
+            /* 릴배치표 조정, 본사게임과 비슷하게 */
+            $reel = $this->AdjustReels($reel);
+
             $reel['id'] = 8;        // 랜덤
             return $reel;
         }
@@ -1272,50 +1275,73 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $lastPos = array_search(14, $reels[$reelId]);
                 $lastPos = $lastPos === false ? 6 : $lastPos - 1;
                 $reelSymbols = array_slice($reels[$reelId], 1, $lastPos + 1);
-                $uniqueSymbols = array_unique($reelSymbols);
 
-                $isNeedSort = false;
+                /* 한릴에 개, 숫자심볼 3개로 제한 */
+                $uniqueSymbols = array_unique($reelSymbols);
+                $dogsCount = 0;
+                $numbersCount = 0;
+                foreach ($reelSymbols as $idx => $symbol) {
+                    $dogsCount = $this->IsKindOfDog($symbol) ? $dogsCount + 1 : $dogsCount;
+                    $numbersCount = $this->IsKindOfNumber($symbol) ? $numbersCount + 1 : $numbersCount;
+
+                    if ($dogsCount >= 4) {
+                        $reelSymbols[$idx] = random_int(7,8);
+                        $dogsCount -= 1;
+                    }
+
+                    if ($numbersCount >= 4) {
+                        $reelSymbols[$idx] = random_int(7,8);
+                        $numbersCount -= 1;
+                    }
+                }
+
+                /* 동의심볼 연결 */
+                $uniqueSymbols = array_unique($reelSymbols);
+                $curPos = 0;
+                $newReelSymbols = $reelSymbols;
                 foreach ($uniqueSymbols as $idx => $symbol) {
                     $sameSymbolPositions = array_keys($reelSymbols, $symbol);
                     $symbolsCount = count($sameSymbolPositions);
 
-                    /* 같은 심볼이 4개이상이면 */
+                    $symbolGroup = array_fill($curPos, $symbolsCount, $symbol);
+                    $newReelSymbols = array_replace($newReelSymbols, $symbolGroup);
+
+                    $curPos += $symbolsCount;
+                }
+                $reelSymbols = $newReelSymbols;
+                
+                /* 다른종의 개는 나란히 놓일수 없음 */
+                foreach ($reelSymbols as $idx => $symbol) {
+                    if ($idx > 0) {
+                        $prevS = $reelSymbols[$idx - 1];
+                        $curS = $symbol;
+
+                        if ($prevS != $curS) {
+                            if ($this->IsKindOfDog($prevS) && $this->IsKindOfDog($curS)) {
+                                while( in_array( ($newSymbol = random_int(7, 13)), $uniqueSymbols));
+                                $reelSymbols[$idx] = $newSymbol;
+                            }
+                        }
+                    }
+                }
+
+                /* 동의심볼 3개로 제한 */
+                $uniqueSymbols = array_unique($reelSymbols);
+                foreach ($uniqueSymbols as $idx => $symbol) {
+                    $sameSymbolPositions = array_keys($reelSymbols, $symbol);
+                    $symbolsCount = count($sameSymbolPositions);
+
                     if ($symbolsCount >= 4) {
                         for ($i=0; $i < $symbolsCount - 3; $i++) { 
                             /* 릴에 없는 새심볼 생성 */
-                            while( in_array( ($newSymbol = random_int(3, 13)), $uniqueSymbols));
+                            while( in_array( ($newSymbol = random_int(7, 13)), $uniqueSymbols));
                             
                             $reelSymbols[$sameSymbolPositions[$i]] = $newSymbol;
                         }
                     }
-
-                    /* 널려있는 동의심볼 조사 */
-                    if ($symbolsCount >= 2) {
-                        /* 이미 널려져 있다면 스킵 */
-                        if ($isNeedSort) {
-                            continue;
-                        }
-
-                        /* 릴심볼 업데이트 */
-                        $sameSymbolPositions = array_keys($reelSymbols, $symbol);
-                        $curPosSum = array_sum($sameSymbolPositions);
-                        
-                        $sortedPositions = range($sameSymbolPositions[0], $sameSymbolPositions[0] + count($sameSymbolPositions) - 1);
-                        $sortedPosSum = array_sum($sortedPositions);
-                        
-                        /* 심볼 위치합이 sort된 위치합보다 크면 sort 필요 */
-                        if ($curPosSum > $sortedPosSum) {
-                            $isNeedSort = true;    
-                        }
-                    }
                 }
-
-                /* 같은 심볼이 연결되어 있지 않는 경우를 위해 sort */
-                if ($isNeedSort) {
-                    (random_int(1, 10) % 2 == 1) ? asort($reelSymbols) : arsort($reelSymbols);
-                }
-
-                $reels[$reelId] = array_replace($reels[$reelId], array_values($reelSymbols));
+                                
+                $reels[$reelId] = array_replace($reels[$reelId], $reelSymbols);
             }
 
             return $reels;
@@ -1345,6 +1371,21 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $tmp_last = $tmp_cnt - 1;
             }
             return $random;
+        }
+        public function IsKindOfDog($symbol) {
+            if ($symbol >= 3 && $symbol <= 6) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public function IsKindOfNumber($symbol) {
+            if ($symbol >= 9 && $symbol <= 13) {
+                return true;
+            }
+
+            return false;
         }
     }
 

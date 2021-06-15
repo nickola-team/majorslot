@@ -90,6 +90,11 @@ namespace VanguardLTE\Games\PandaFortune2PM
             $this->playerId = $playerId;
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                'time' => date('G')
+            ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
@@ -97,7 +102,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
             ])->lockForUpdate()->first();
-if (!$game)
+            if (!$game)
             {
                 exit('unlogged');
             }
@@ -645,6 +650,11 @@ if (!$game)
         }
         public function GetBank($slotState = '')
         {
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
@@ -703,10 +713,22 @@ if (!$game)
             {
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
-                    $game->set_gamebank($diffMoney, 'inc', '');
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {
+                        $normalbank = $game->get_gamebank('');
+                        if ($normalbank + $diffMoney < 0)
+                        {
+                            $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                        }
+                        $game->set_gamebank($diffMoney, 'inc', '');
+                    }
                     $sum = $sum - $diffMoney;
                 }else{
-                    $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    if ($sum < 0) {
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
                 }
             }
             $_obf_bonus_systemmoney = 0;
@@ -750,13 +772,21 @@ if (!$game)
             {
                 $this->toGameBanks = $sum;
             }
-            if( $_obf_bonus_systemmoney > 0 ) 
+            if ($this->happyhouruser)
             {
-                $sum -= $_obf_bonus_systemmoney;
-                $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
             }
-            $game->set_gamebank($sum, 'inc', $slotState);
-            $game->save();
+            else
+            {
+                if( $_obf_bonus_systemmoney > 0 ) 
+                {
+                    $sum -= $_obf_bonus_systemmoney;
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                }
+                $game->set_gamebank($sum, 'inc', $slotState);
+                $game->save();
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -886,11 +916,24 @@ if (!$game)
                 }
             }else{
                 if($isjackpot == true){
-                    if(rand(0, 100) < 80){
-                        return $this->FiveGoldenMuls[0][12];
-                    }else{
-                        return $this->FiveGoldenMuls[0][13];
+                    if ($this->happyhouruser)
+                    {
+                        if ($this->happyhouruser->jackpot == 1)
+                        {
+                            return $this->FiveGoldenMuls[0][12];
+                        }
+                        else
+                        {
+                            return $this->FiveGoldenMuls[0][13];
+                        }
                     }
+                    return 1;
+                    // if(rand(0, 100) < 80){
+
+                    //     return $this->FiveGoldenMuls[0][12];
+                    // }else{
+                    //     return $this->FiveGoldenMuls[0][13];
+                    // }
                 }else{
                 $percent = rand(0, 90);
                 $sum = 0;
@@ -981,6 +1024,20 @@ if (!$game)
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
+            if ($this->happyhouruser)
+            {
+                $bonus_spin = rand(1, 10);
+                $spin_percent = 5;
+                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+                if ($this->happyhouruser->jackpot > 0 && $_obf_granttype=='_bonus' && $spinWin == 1)
+                {
+                    $multi = ($this->happyhouruser->jackpot==1)?1000:2500;
+                    if ($this->happyhouruser->current_bank > $bet * $multi){
+                        $this->happyhouruser->progressive--;
+                        $this->happyhouruser->save();
+                    }
+                }
+            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
@@ -1136,18 +1193,20 @@ if (!$game)
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function IsCheckJackpot(){
+            if ($this->happyhouruser && $this->happyhouruser->jackpot>0 && $this->happyhouruser->progressive <= 0)
+            {
+                $this->happyhouruser->progressive = mt_rand(2,5);
+                $this->happyhouruser->save();
+                return true;
+            }else{
+                return false;
+            }
+        }
         public function GetReelStrips($winType, $slotEvent, $betline)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
-                /*if ($this->happyhouruser && $this->happyhouruser->jackpot>0 && $this->happyhouruser->progressive <= 0)
-                {
-                    $reel = $this->GenerateJackpotReel($this->happyhouruser->jackpot==2);
-                    $this->goldenSymbolChance = 0;
-                    $this->happyhouruser->progressive = mt_rand(2,5);
-                    $this->happyhouruser->save();
-                    return $reel;
-                }*/
                 if( $winType != 'bonus' ) 
                 {
                     $_obf_reelStripCounts = [];
@@ -1181,7 +1240,7 @@ if (!$game)
                         4, 
                         5
                     ];
-                    $scattercount = $this->GenerateFreeSpinCount($slotEvent);
+                    // $scattercount = $this->GenerateFreeSpinCount($slotEvent);
                     $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
@@ -1201,6 +1260,7 @@ if (!$game)
                     }
                 }
             }else{
+                
                 if( $winType != 'bonus' ) 
                 {
                     $_obf_reelStripCounts = [];
@@ -1229,7 +1289,7 @@ if (!$game)
                         4, 
                         5
                     ];
-                    $scattercount = $this->GenerateFreeSpinCount($slotEvent);
+                    // $scattercount = $this->GenerateFreeSpinCount($slotEvent);
                     $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {

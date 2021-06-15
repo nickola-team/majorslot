@@ -12,8 +12,17 @@
 	$role_id = $parent->role_id;
 	for ($r=$role_id+1;$r<auth()->user()->role_id;$r++)
 	{
-		$parent = $parent->referral;
-		echo '<td><a href="'.route('backend.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+		if ($parent){
+			$parent = $parent->referral;
+		}
+		if ($parent)
+		{
+			echo '<td><a href="'.route('backend.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+		}
+		else
+		{
+			echo '<td><a href="#">unknown</a></td>';
+		}
 	}
 ?>
 
