@@ -13,7 +13,7 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('booongolist');
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
                 \Illuminate\Support\Facades\Redis::del('cq9list');
-                \Illuminate\Support\Facades\Redis::del('pnglist');
+                \Illuminate\Support\Facades\Redis::del('playngolist');
 
                 set_time_limit(0);
                 /*$admins = \VanguardLTE\User::where('role_id',7)->get();
@@ -28,6 +28,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\HBNTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\BNGTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\CQ9Transaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\PNGTransaction::where('timestamp', '<', $_daytime)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
