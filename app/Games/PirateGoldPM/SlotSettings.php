@@ -1210,9 +1210,9 @@ namespace VanguardLTE\Games\PirateGoldPM
         public function GetRandomMoneyType() {
             $MoneyTypeProbabilityMap = [
                 "standard" => 60, 
-                "retrigger" => 20,
-                "multiplier" => 10, 
-                "jackpot" => 10, 
+                "retrigger" => 25,
+                "multiplier" => 15, 
+                "jackpot" => 0, 
             ];
 
             $randVal = random_int(1, 100);
