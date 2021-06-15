@@ -437,7 +437,7 @@ namespace VanguardLTE\Games\PirateGoldPM
                     /* 리트리거 리셋 */
                     $retriggerCount = 0;
                     /* 리스핀 리셋 */
-                    $respinCount = -1;
+                    $respinCount = 0;
                     /*  */
                     $lastMultiplier = 0;
                     /*  */
@@ -479,118 +479,79 @@ namespace VanguardLTE\Games\PirateGoldPM
                     'e_aw' => $LASTSPIN->e_aw ?? null,
                 ];
 
-                /* 럭키스핀 최대심볼갯수 */
-                $maxMoneySymbolsCount = $slotSettings->GetGameData($slotSettings->slotId . 'LSMaxSymbols');
-
-                /* 스핀결과 결정 */
-                $spinSetting = $slotSettings->GetLuckySpinSetting($lastReelSet, $maxMoneySymbolsCount, $respinCount);
-
-                /* 새 머니심볼 추가 */
-                $newMoneyType = '';
-                if ($spinSetting === true) {
-                    $flattenReelSet = $slotSettings->GenerateMoneySymbols($lastReelSet);
-                    $newMoneyType = $flattenReelSet['types'][$flattenReelSet['pos']];
-
-                    /* 뱅크머니 체크 */
-                    $_obf_currentbank = $slotSettings->GetBank('bonus');
-
-                    /* 당첨금, 현재 당첨금 - 이전 당첨금 = winMoney  */
-                    if ($isRetriggered) {
-                        /* 리트리거에 의한 럭키스핀이면 이전스핀 당첨금 리셋 */
-                        $lastTotalWin = 0;
-                    }
-                    else {
-                        $lastTotalWin = $slotSettings->SumMoneySymbols($lastReelSet['values'], $lastReelSet['types'], $lastMultiplier, false);
-                    }
-
-                    $curTotalWin = $slotSettings->SumMoneySymbols($flattenReelSet['values'], $flattenReelSet['types'], $lastMultiplier, true);
-
-                    $winMoney = ($curTotalWin - $lastTotalWin) * $bet;
-
-                    /* 생성된 심볼이 리트리거인 경우 */
-                    if ($newMoneyType == 'rt') {
-                        /* 이미 리트리거심볼이 생성되어 있는경우, 마지막 리스핀인 경우 스킵 */
-                        if ($retriggerCount == 1 || $respinCount == 2) {
-                        }
-                        /* 현재 럭키스핀 당첨금보다 뱅크머니가 작으면 리트리거 스킵 */
-                        else if ($lastTotalWin * $bet > $_obf_currentbank) {
-                        }
-                        else {
-                            /* 생성된 리트리거 설정 */
-                            $objRes['rsb_rt'] = 1;
-                            
-                            /* 머니심볼 추가 */
-                            $objRes['mo'] = implode(",", $flattenReelSet['values']);
-                            $objRes['mo_t'] = implode(",", $flattenReelSet['types']);
-                            $objRes['s'] = implode(",", $flattenReelSet['symbols']);
-                        }
-
-                        /* 리트리거 심볼인 경우 리스핀 리셋하지 않고 1 증가 */
-                        $respinCount += 1;
-                    }
-                    /* 생성된 심볼이 멀티플라이어인 경우 */
-                    else if ($newMoneyType == 'm') {
-                        /* 마지막 리스핀인 경우 스킵 */
-                        if ($respinCount == 2) {
-                            /* 당첨금 리셋 */
-                            $winMoney = 0;
-                        }
-                        /* 머니부족, 스킵 */
-                        else if ($winMoney > $_obf_currentbank) {
-                            /* 당첨금 리셋 */
-                            $winMoney = 0;
-                        }
-                        else {
-                            /* 생성된 멀티플라이어 설정 */
-                            $objRes['rsb_mu'] = $LASTSPIN->rsb_mu + $flattenReelSet['values'][$flattenReelSet['pos']];
-
-                            /* 머니심볼 추가 */
-                            $objRes['mo'] = implode(",", $flattenReelSet['values']);
-                            $objRes['mo_t'] = implode(",", $flattenReelSet['types']);
-                            $objRes['s'] = implode(",", $flattenReelSet['symbols']);
-                        }
-
-                        /* 멀티플라이어 심볼인 경우 리스핀 리셋하지 않고 1 증가 */
-                        $respinCount += 1;
-                    }
-                    else {
-                        /* 머니부족, 스킵 */
-                        if ($winMoney > $_obf_currentbank) {
-                            /* 새 머니심볼 없음, 리스핀 증가 */
-                            $respinCount += 1;
-
-                            /* 당첨금 리셋 */
-                            $winMoney = 0;
-                        }
-                        else {
-                            /* 머니심볼 추가 */
-                            $objRes['mo'] = implode(",", $flattenReelSet['values']);
-                            $objRes['mo_t'] = implode(",", $flattenReelSet['types']);
-                            $objRes['s'] = implode(",", $flattenReelSet['symbols']);
-                                    
-                            /* 리스핀 리셋 */
-                            $respinCount = 0;
-                        }
-                    }
+                /* 리트리거에 의한 새 럭키스핀 */
+                if ($isRetriggered) {
+                    $winMoney = $slotSettings->SumMoneySymbols($lastReelSet['values'], $lastReelSet['types'], $lastMultiplier, false) * $bet;
                 }
                 else {
-                    /* 새 머니심볼 없음, 리스핀 증가 */
-                    $respinCount += 1;
-                }
+                    /* 럭키스핀 최대심볼갯수 */
+                    $maxMoneySymbolsCount = $slotSettings->GetGameData($slotSettings->slotId . 'LSMaxSymbols');
 
-                $objRes['rsb_c'] = $respinCount;
+                    /* 스핀결과 결정 */
+                    $spinSetting = $slotSettings->GetLuckySpinSetting($lastReelSet, $maxMoneySymbolsCount, $respinCount);
 
-                /* 더이상 리스핀 없음, 럭키스핀 완료 */
-                if ($respinCount >= 3) {
-                    $tw = $slotSettings->SumMoneySymbols($lastReelSet['values'], $lastReelSet['types'], $lastMultiplier, true) * $bet;
+                    /* 새 머니심볼 추가 */
+                    $resetRespin = false;
+                    $isGenerated = false;
+                    if ($spinSetting === true) {
+                        $flattenReelSet = $slotSettings->GenerateMoneySymbols($lastReelSet, $respinCount, $retriggerCount);
 
-                    $objRes['tw'] = $tw;
-                    $objRes['rw'] = $objRes['tw'];
-                    $objRes['na'] = 'cb';
-                    $objRes['is'] = $LASTSPIN->start_with->s ?? null;
+                        /* 뱅크머니 체크 */
+                        $_obf_currentbank = $slotSettings->GetBank('bonus');
 
-                    if ($retriggerCount == 1) {
-                        $objRes['na'] = 'b';
+                        /* 당첨금, 현재 당첨금 - 이전 당첨금 = winMoney  */
+                        $lastTotalWin = $slotSettings->SumMoneySymbols($lastReelSet['values'], $lastReelSet['types'], $lastMultiplier, false);
+                        $curTotalWin = $slotSettings->SumMoneySymbols($flattenReelSet['values'], $flattenReelSet['types'], $lastMultiplier, true);
+                    
+                        $winMoney = ($curTotalWin - $lastTotalWin) * $bet;
+
+                        if ($winMoney > $_obf_currentbank) {
+                        }
+                        else {
+                            for ($i=0; $i < $flattenReelSet['count']; $i++) { 
+                                $newMoneyType = $flattenReelSet['types'][$flattenReelSet['pos'][$i]];
+                            
+                                /* 생성된 심볼이 리트리거인 경우 */
+                                if ($newMoneyType == 'rt') {
+                                    $objRes['rsb_rt'] = 1;
+                                }
+                                /* 생성된 심볼이 멀티플라이어인 경우 */
+                                else if ($newMoneyType == 'm') {
+                                    $objRes['rsb_mu'] = $LASTSPIN->rsb_mu + $flattenReelSet['values'][$flattenReelSet['pos'][$i]];
+                                }
+                                else {
+                                    /* 잭팟, 일반심볼이 있을때에만 당첨 */
+                                    $resetRespin = true;
+                                }
+                            }
+
+                            $isGenerated = true;
+                        }
+                    }
+                    else {
+                    }
+
+                    $respinCount = $resetRespin ? 0 : $respinCount + 1;
+                    $objRes['rsb_c'] = $respinCount;
+
+                    if ($isGenerated) {
+                        $objRes['mo'] = implode(",", $flattenReelSet['values']);
+                        $objRes['mo_t'] = implode(",", $flattenReelSet['types']);
+                        $objRes['s'] = implode(",", $flattenReelSet['symbols']);
+                    }
+
+                    /* 더이상 리스핀 없음, 럭키스핀 완료 */
+                    if ($respinCount >= 3) {
+                        $tw = $slotSettings->SumMoneySymbols($lastReelSet['values'], $lastReelSet['types'], $lastMultiplier, true) * $bet;
+
+                        $objRes['tw'] = $tw;
+                        $objRes['rw'] = $objRes['tw'];
+                        $objRes['na'] = 'cb';
+                        $objRes['is'] = $LASTSPIN->start_with->s ?? null;
+
+                        if ($retriggerCount == 1) {
+                            $objRes['na'] = 'b';
+                        }
                     }
                 }
 

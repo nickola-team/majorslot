@@ -545,7 +545,7 @@ namespace VanguardLTE\Games\PirateGoldPM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = 10;
+                $_obf_bonus_percent = 20;       // 보너스금 상향조절
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -759,6 +759,8 @@ namespace VanguardLTE\Games\PirateGoldPM
             $_obf_winline_count = $game->{'winline' . $_obf_granttype . $_obf_linecount};
             $_obf_grantwin_count++;
             $_obf_grantbonus_count++;
+            
+
             $return = [
                 'none', 
                 0
@@ -796,7 +798,7 @@ namespace VanguardLTE\Games\PirateGoldPM
                 }
                 else {
                     /* 보너스당첨인 경우 프리스핀, 럭키스핀 둘중에 랜덤선택 */
-                    $bonusType = (random_int(1, 9) % 2) == 0 ? 'bonus' : 'lucky';
+                    $bonusType = (random_int(2, 10) % 2) == 0 ? 'bonus' : 'lucky';
                 }
                 
                 $this->isBonusStart = true;
@@ -1207,13 +1209,13 @@ namespace VanguardLTE\Games\PirateGoldPM
 
         public function GetRandomMoneyType() {
             $MoneyTypeProbabilityMap = [
-                "standard" => 900, 
-                "retrigger" => 60,
-                "multiplier" => 30, 
+                "standard" => 60, 
+                "retrigger" => 20,
+                "multiplier" => 10, 
                 "jackpot" => 10, 
             ];
 
-            $randVal = random_int(1, 1000);
+            $randVal = random_int(1, 100);
 
             $probSum = 0;
             foreach ($MoneyTypeProbabilityMap as $type => $prob) {
@@ -1259,8 +1261,8 @@ namespace VanguardLTE\Games\PirateGoldPM
                 case 'jackpot':
                     $probabilityMap = [
                         2000 => 90,
-                        8000 => 7,
-                        40000 => 3
+                        8000 => 10,
+                        // 40000 => 3
                     ];
                     break;
 
@@ -1307,6 +1309,27 @@ namespace VanguardLTE\Games\PirateGoldPM
             }
         }
 
+        public function GetNewSymbolsCount() {
+            $newSymbolsCountMap = [
+                1 => 80,
+                2 => 18,
+                3 => 2,
+            ];
+
+            $randVal = random_int(1, 100);
+
+            $probSum = 0;
+            foreach ($newSymbolsCountMap as $value => $prob) {
+                $probSum += $prob;
+
+                if ($randVal <= $probSum) {
+                    return $value;
+                }
+            }
+
+            return 1;
+        }
+
         public function ClearReelSet($symbols, $values, $types) {
             for ($i=0; $i < count($symbols); $i++) { 
                 $type = $types[$i];
@@ -1326,30 +1349,49 @@ namespace VanguardLTE\Games\PirateGoldPM
             ];
         }
 
-        public function GenerateMoneySymbols($lastReelSet) {
+        public function GenerateMoneySymbols($lastReelSet, $lastRespinCount, $lastRetriggerCount) {
             $MONEY = 13;
             $flattenSymbols = $lastReelSet['symbols'];
             $moneySymbolValues = $lastReelSet['values'];
             $moneySymbolTypes = $lastReelSet['types'];
+            $monySymbolPositions = [];
 
-            /* 랜덤 머니심볼 생성 */
-            $randMoneyType = $this->GetRandomMoneyType();
-            $randMoneyValue = $this->GetRandomMoneyValue($randMoneyType);
-            
-            /* 머니심볼이 아닌 심볼들 검사 */
-            $nonMoneySymbols = array_filter($flattenSymbols, function ($symbol) use ($MONEY) { return $symbol != $MONEY; });
-            $randSymbolPos = array_rand($nonMoneySymbols);
-            
-            /* 랜덤 머니심볼로 교체 */
-            $flattenSymbols[$randSymbolPos] = $MONEY;
-            $moneySymbolValues[$randSymbolPos] = $randMoneyValue;
-            $moneySymbolTypes[$randSymbolPos] = $this->GetMoneyTypeMask($randMoneyType, $randMoneyValue);
+            /* 생성할 심볼갯수 */
+            $newSymbolsCount = $this->GetNewSymbolsCount();
 
+            for ($i=0; $i < $newSymbolsCount; $i++) { 
+                $randMoneyType = $this->GetRandomMoneyType();
+
+                /*  이미 리트리거심볼이 생성되었다면 */
+                if ($randMoneyType == 'retrigger') {
+                    if ($lastRetriggerCount >= 1 || array_search('rt', $moneySymbolTypes) || $lastRespinCount >= 2) {
+                        continue;
+                    }
+                }
+                else if ($randMoneyType == 'multiplier' && array_search('m', $moneySymbolTypes)) {
+                    continue;
+                }
+
+                /* 랜덤 머니심볼 생성 */
+                $randMoneyValue = $this->GetRandomMoneyValue($randMoneyType);
+                
+                /* 머니심볼이 아닌 심볼들 검사 */
+                $nonMoneySymbols = array_filter($flattenSymbols, function ($symbol) use ($MONEY) { return $symbol != $MONEY; });
+                $randSymbolPos = array_rand($nonMoneySymbols);
+                
+                /* 랜덤 머니심볼로 교체 */
+                $flattenSymbols[$randSymbolPos] = $MONEY;
+                $moneySymbolValues[$randSymbolPos] = $randMoneyValue;
+                $moneySymbolTypes[$randSymbolPos] = $this->GetMoneyTypeMask($randMoneyType, $randMoneyValue);
+                array_push($monySymbolPositions, $randSymbolPos);
+            }
+            
             return [
                 'symbols' => $flattenSymbols,
                 'values' => $moneySymbolValues,
                 'types' => $moneySymbolTypes,
-                'pos' => $randSymbolPos
+                'pos' => $monySymbolPositions,
+                'count' => count($monySymbolPositions)
             ];
         }
 
