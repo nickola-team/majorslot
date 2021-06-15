@@ -784,7 +784,7 @@ namespace VanguardLTE\Games\PirateGoldPM
             {
                 $bonus_spin = rand(1, 10);
                 $spin_percent = 5;
-                if ($garantType == 'freespin')
+                if ($grantType == 'freespin')
                 {
                     $spin_percent = 3;
                 }
