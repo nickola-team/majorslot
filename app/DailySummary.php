@@ -89,8 +89,8 @@ namespace VanguardLTE
             {
                 //repeat child partners
                 $partner = $user;
-                // $shops = $partner->availableShops();
-                if( $partner->hasRole('admin') ) 
+                $shops = $partner->availableShops();
+                /*if( $partner->hasRole('admin') ) 
                 {
                     $partners = $partner->childPartners();
                     $shops = \VanguardLTE\ShopUser::whereIn('user_id', $partners)->pluck('shop_id')->toArray();
@@ -98,7 +98,7 @@ namespace VanguardLTE
                 else
                 {
                     $shops = \VanguardLTE\ShopUser::where('user_id', $partner->id)->pluck('shop_id')->toArray();
-                }
+                }*/
                 $adj['totalin'] = 0;
                 $adj['totalout'] = 0;
                 $adj['dealout'] = 0;
