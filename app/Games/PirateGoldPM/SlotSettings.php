@@ -75,11 +75,11 @@ namespace VanguardLTE\Games\PirateGoldPM
             $this->playerId = $playerId;
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
-            // $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
-            //     'user_id' => $user->id, 
-            //     'status' => 1,
-            //     'time' => date('G')
-            // ])->first();
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                'time' => date('G')
+            ])->first();
 
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
@@ -450,11 +450,11 @@ namespace VanguardLTE\Games\PirateGoldPM
         }
         public function GetBank($slotState = '')
         {
-            // if ($this->happyhouruser)
-            // {
-            //     $this->Bank = $this->happyhouruser->current_bank;
-            //     return $this->Bank / $this->CurrentDenom;
-            // }
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
 
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'fsSticky' || $slotState == 'fsRaining' ) 
             {
@@ -519,17 +519,17 @@ namespace VanguardLTE\Games\PirateGoldPM
             {
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
-                    // if ($this->happyhouruser){
-                    //     $this->happyhouruser->increment('over_bank', abs($diffMoney));
-                    // }
-                    // else {
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {
                         $normalbank = $game->get_gamebank('');
                         if ($normalbank + $diffMoney < 0)
                         {
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
-                    // }
+                    }
                     $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
@@ -578,13 +578,13 @@ namespace VanguardLTE\Games\PirateGoldPM
             {
                 $this->toGameBanks = $sum;
             }
-            // if ($this->happyhouruser)
-            // {
-            //     $this->happyhouruser->increment('current_bank', $sum);
-            //     $this->happyhouruser->save();
-            // }
-            // else
-            // {
+            if ($this->happyhouruser)
+            {
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
+            }
+            else
+            {
                 if( $_obf_bonus_systemmoney > 0 ) 
                 {
                     $sum -= $_obf_bonus_systemmoney;
@@ -592,7 +592,7 @@ namespace VanguardLTE\Games\PirateGoldPM
                 }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
-            // }
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -780,16 +780,16 @@ namespace VanguardLTE\Games\PirateGoldPM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
-            // if ($this->happyhouruser)
-            // {
-            //     $bonus_spin = rand(1, 10);
-            //     $spin_percent = 5;
-            //     if ($garantType == 'freespin')
-            //     {
-            //         $spin_percent = 3;
-            //     }
-            //     $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-            // }
+            if ($this->happyhouruser)
+            {
+                $bonus_spin = rand(1, 10);
+                $spin_percent = 5;
+                if ($grantType == 'freespin')
+                {
+                    $spin_percent = 3;
+                }
+                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 if ($grantType == 'freespin') {
@@ -1210,9 +1210,9 @@ namespace VanguardLTE\Games\PirateGoldPM
         public function GetRandomMoneyType() {
             $MoneyTypeProbabilityMap = [
                 "standard" => 60, 
-                "retrigger" => 20,
-                "multiplier" => 10, 
-                "jackpot" => 10, 
+                "retrigger" => 25,
+                "multiplier" => 15, 
+                "jackpot" => 0, 
             ];
 
             $randVal = random_int(1, 100);
