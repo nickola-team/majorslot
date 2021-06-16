@@ -1203,7 +1203,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 return false;
             }
         }
-        public function GetReelStrips($winType, $slotEvent, $betline)
+        public function GetReelStrips($winType, $slotEvent, $betline, $scattercount)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){

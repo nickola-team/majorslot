@@ -73,10 +73,10 @@
 --}}
 
 <div class="form-group">
-    <input type="hidden" value="0" name="show_master_balance">
+    <input type="hidden" value="0" name="enable_master_deal">
     <label class="checkbox-container">
-        본사 보유금 보여주기
-        {!! Form::checkbox('show_master_balance', 1, settings('show_master_balance'), ['id' => 'switch-show_master_balance']) !!}
+        본사 딜비 허용
+        {!! Form::checkbox('enable_master_deal', 1, settings('enable_master_deal'), ['id' => 'switch-enable_master_deal']) !!}
         <span class="checkmark"></span>
     </label>
 </div>

@@ -384,7 +384,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin summary daily adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',7)->get();
+                $admins = \VanguardLTE\User::where('role_id',8)->get();
                 foreach ($admins as $admin)
                 {
                     if ($date == 'today') {
@@ -401,7 +401,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin summary monthly adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',7)->get();
+                $admins = \VanguardLTE\User::where('role_id',8)->get();
                 foreach ($admins as $admin)
                 {
                     if ($month == 'today') {

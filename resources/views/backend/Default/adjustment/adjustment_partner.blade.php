@@ -68,7 +68,7 @@
 						<th>등급</th>
 						<th>충전</th>
 						<th>환전</th>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>본사수익</th>
 						@endif
 						<th>딜비수익</th>
@@ -78,7 +78,7 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>매장수익</th>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>최종수익</th>
 						@endif
 					</tr>
@@ -98,7 +98,7 @@
 						<th>등급</th>
 						<th>충전</th>
 						<th>환전</th>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>본사수익</th>
 						@endif
 						<th>딜비수익</th>
@@ -108,7 +108,7 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>매장수익</th>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>최종수익</th>
 						@endif				
 					</tr>

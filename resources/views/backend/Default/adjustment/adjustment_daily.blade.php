@@ -72,7 +72,7 @@
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>본사수익</th>
 						@endif
 						<th>딜비수익</th>
@@ -82,7 +82,7 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>매장수익</th>
-						@if(auth()->user()->hasRole(['admin','comaster',  'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>최종수익</th>
 						@endif
 					</tr>
@@ -97,7 +97,7 @@
 						<td><span class='text-red'>합계</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalin'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalout'),0)}}</span></td>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
 						@endif
 						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
@@ -107,7 +107,7 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
-						@if(auth()->user()->hasRole(['admin','comaster',  'master']))
+						@if(auth()->user()->isInoutPartner())
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin') - abs($summary->sum('total_deal')- $summary->sum('total_mileage')),0) }}</span></td>
 						@endif
 
@@ -122,7 +122,7 @@
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>본사수익</th>
 						@endif
 						<th>딜비수익</th>
@@ -132,7 +132,7 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>매장수익</th>
-						@if(auth()->user()->hasRole(['admin', 'comaster', 'master']))
+						@if(auth()->user()->isInoutPartner())
 						<th>최종수익</th>
 						@endif				
 					</tr>

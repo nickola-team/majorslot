@@ -790,7 +790,66 @@ namespace VanguardLTE
             ]);
         }
 
+        public function processBetDealerMoney1($betMoney, $game, $type='slot') 
+        {
+            if(!$this->hasRole('user')) {
+                return;
+            }
+            $shop = $this->shop;
+            $deal_balance = 0;
+            $deal_mileage = 0;
+            $deal_percent = 0;
+            $deal_data = [];
+            $deal_percent = ($type==null || $type=='slot')?$shop->deal_percent:$shop->table_deal_percent;
+            $manager = $this->referral;
+            if ($manager != null){
 
+                if($deal_percent > 0) {
+                    $deal_balance = $betMoney * $deal_percent  / 100;
+                    $deal_data[] = [
+                        'user_id' => $this->id, 
+                        'partner_id' => $manager->id, //manager's id
+                        'balance_before' => 0, 
+                        'balance_after' => 0, 
+                        'bet' => abs($betMoney), 
+                        'deal_profit' => $deal_balance,
+                        'game' => $game,
+                        'shop_id' => $shop->id,
+                        'type' => 'shop',
+                        'deal_percent' => $deal_percent,
+                        'mileage' => $deal_mileage
+                    ];
+                }
+                $partner = $manager->referral;
+                while ($partner != null && !$partner->isInoutPartner())
+                {
+                    $deal_mileage = $deal_balance;
+                    $deal_percent = ($type==null || $type=='slot')?$partner->deal_percent:$partner->table_deal_percent;
+                    if($deal_percent > 0) {
+                        $deal_balance = $betMoney * $deal_percent  / 100;
+                        $deal_data[] = [
+                            'user_id' => $this->id, 
+                            'partner_id' => $partner->id,
+                            'balance_before' => 0, 
+                            'balance_after' => 0, 
+                            'bet' => abs($betMoney), 
+                            'deal_profit' => $deal_balance,
+                            'game' => $game,
+                            'shop_id' => $this->shop_id,
+                            'type' => 'partner',
+                            'deal_percent' => $deal_percent,
+                            'mileage' => $deal_mileage
+                        ];
+                    }
+                    $partner = $partner->referral;
+                }
+            }
+
+            if (count($deal_data) > 0)
+            {
+                DealLog::insert($deal_data);
+            }
+        }
         public function processBetDealerMoney($betMoney, $game, $type='slot') 
         {
             if(!$this->hasRole('user')) {
@@ -836,7 +895,6 @@ namespace VanguardLTE
 
             $manager = $this->referral;
             if($manager != null) {
-                //$distributor = $manager->referral;
                 $distributor = \VanguardLTE\User::lockForUpdate()->where('id',$manager->parent_id)->first();
                 $deal_percent = ($type==null || $type=='slot')?$distributor->deal_percent:$distributor->table_deal_percent;
                 if($distributor != null && $distributor->hasRole('distributor') && $deal_percent > 0){
@@ -844,21 +902,19 @@ namespace VanguardLTE
                 }
 
                 if($distributor != null && $distributor->referral != null){
-                    //$agent = $distributor->referral;
                     $agent = \VanguardLTE\User::lockForUpdate()->where('id',$distributor->parent_id)->first();
                     $deal_percent = ($type==null || $type=='slot')?$agent->deal_percent:$agent->table_deal_percent;
                     if($agent !=  null && $deal_percent > 0) {
                         $agent_distributor = $this->addDealerMoney($betMoney, $agent, $deal_distributor, $game, $type);
-                        /*$open_shift = OpenShift::where([
-                            'user_id' => $agent->parent_id,  //will be admin
-                            'type' => 'partner',
-                            'end_date' => null
-                        ])->first();
-            
-                        if ($open_shift)
+                        
+                        if (settings('enable_master_deal'))
                         {
-                            $open_shift->increment('mileage', $agent_distributor);
-                        }*/
+                            $master = \VanguardLTE\User::lockForUpdate()->where('id',$agent->parent_id)->first();
+                            $deal_percent = ($type==null || $type=='slot')?$master->deal_percent:$master->table_deal_percent;
+                            if($master !=  null && $deal_percent > 0) {
+                                $this->addDealerMoney($betMoney, $master, $agent_distributor, $game, $type);
+                            }
+                        }
                     }
                 }
             }   
@@ -876,18 +932,6 @@ namespace VanguardLTE
             $parentUser->update(['deal_balance' => $parentUser->deal_balance + $total_deal_money, 'mileage' => $parentUser->mileage + $childDealMoney]);
             $balance_after = $parentUser->deal_balance;
 
-            /*$open_shift = OpenShift::where([
-                'user_id' => $parentUser->id, 
-                'type' => 'partner',
-                'end_date' => null
-            ])->first();
-
-            if ($open_shift)
-            {
-                $open_shift->increment('deal_profit', $total_deal_money);
-                $open_shift->increment('mileage', $childDealMoney);
-            }*/
-
             DealLog::create([
                 'user_id' => $this->id, 
                 'partner_id' => $parentUser->id,
@@ -902,6 +946,19 @@ namespace VanguardLTE
                 'mileage' => $childDealMoney
             ]);
             return $total_deal_money;
+        }
+
+        public function isInoutPartner()
+        {
+            if ($this->hasRole(['admin', 'comaster']))
+            {
+                return true;
+            }
+            if ($this->hasRole('master') && !settings('enable_master_deal'))
+            {
+                return true;
+            }
+            return false;
         }
 
 

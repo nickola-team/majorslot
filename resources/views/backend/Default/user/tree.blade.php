@@ -53,10 +53,10 @@
                 <div class="pull-right box-tools" style="display:flex;align-item:center;">
 					
                     @permission('users.add')
-					@if (Auth::user()->hasRole('admin') && !Session::get('isCashier'))
+					@if (Auth::user()->hasRole('admin'))
                     <a href="{{ route('backend.user.createpartnerfromcsv') }}" class="btn btn-danger btn-sm" style="margin-right:5px;">csv로 추가</a>
                     @endif
-                    @if (Auth::user()->hasRole(['admin','comaster','master', 'agent','distributor']) && !Session::get('isCashier'))
+                    @if (Auth::user()->hasRole(['admin','comaster','master', 'agent','distributor']))
                     <a href="{{ route('backend.user.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
                     @endif
                     @endpermission
@@ -76,9 +76,6 @@
                             <th>수익금</th>
                             <th>딜비</th>
 							<th>라이브딜비</th>
-							@if ( auth()->user()->hasRole('admin'))
-                            <th>보너스환수금</th>
-                            @endif
                             <th>편집</th>
                             <th>충전</th>
                             <th>환전</th>
@@ -108,9 +105,6 @@
                                 <th>수익금</th>
                                 <th>딜비</th>
 								<th>라이브딜비</th>
-								@if ( auth()->user()->hasRole('admin'))
-								<th>보너스환수금</th>
-								@endif
                                 <th>편집</th>
                                 <th>충전</th>
                                 <th>환전</th>

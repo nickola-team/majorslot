@@ -48,6 +48,7 @@
 					</div>
 				</div>
 				<div class="box-body">
+				@if (auth()->user()->isInoutPartner())
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>파트너이름</label>
@@ -66,6 +67,7 @@
 							<input type="text" class="form-control" name="recommender" value="{{ Request::get('recommender') }}">
 						</div>
 					</div>
+				@endif
 					<div class="col-md-6">
 							<div class="form-group">
 								<label>충/환전</label>

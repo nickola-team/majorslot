@@ -80,7 +80,7 @@
 					</div>
 				</div>
 			</li>
-			@if(auth()->user()->hasRole(['agent','distributor','manager']))
+			@if(auth()->user()->hasRole(['agent','distributor','manager']) || auth()->user()->hasRole('master') && settings('enable_master_deal'))
 			
 			<li class="list-group-item">
 				<div class="row">
@@ -155,7 +155,7 @@
 					환전신청
 				</button>
 				
-				<button class="btn btn-success" id="deposit-balance-btn" onclick="deposit_balance();" {{auth()->user()->hasRole(['agent','distributor'])?'disabled':''}}>
+				<button class="btn btn-success" id="deposit-balance-btn" onclick="deposit_balance();" {{(auth()->user()->hasRole(['agent','distributor']) || (auth()->user()->hasRole('master') && settings('enable_master_deal')))?'disabled':''}}>
 					충전신청
 				</button>
 			</div>
@@ -210,7 +210,7 @@
 					<table class="table table-bordered table-striped">
 						<thead>
 						<tr>
-							@if(auth()->user()->hasRole(['master','manager']))
+							@if(auth()->user()->hasRole('manager'))
 							<th>매장이름</th>
 							@else
 							<th>파트너이름</th>

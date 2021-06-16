@@ -89,8 +89,8 @@ namespace VanguardLTE
             {
                 //repeat child partners
                 $partner = $user;
-                // $shops = $partner->availableShops();
-                if( $partner->hasRole('admin') ) 
+                $shops = $partner->availableShops();
+                /*if( $partner->hasRole('admin') ) 
                 {
                     $partners = $partner->childPartners();
                     $shops = \VanguardLTE\ShopUser::whereIn('user_id', $partners)->pluck('shop_id')->toArray();
@@ -98,7 +98,7 @@ namespace VanguardLTE
                 else
                 {
                     $shops = \VanguardLTE\ShopUser::where('user_id', $partner->id)->pluck('shop_id')->toArray();
-                }
+                }*/
                 $adj['totalin'] = 0;
                 $adj['totalout'] = 0;
                 $adj['dealout'] = 0;
@@ -161,19 +161,45 @@ namespace VanguardLTE
                 $game_bet = \DB::select($query);
                 $adj['totalbet'] = $game_bet[0]->totalbet??0;
                 $adj['totalwin'] = $game_bet[0]->totalwin??0;
-                if ($partner->hasRole(['admin','comaster']))
+                
+                if ($partner->hasRole('admin'))
                 {
                     $query = 'SELECT 0 as total_deal, 0 as total_mileage';
                 }
-                else if ($partner->hasRole('master'))
+                else if ($partner->hasRole('comaster'))
                 {
-                    $agents = $partner->childPartners();
-                    if (count($agents) > 0){
-                        $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    if (settings('enable_master_deal'))
+                    {
+                        $masters = $partner->childPartners();
+                        if (count($masters) > 0){
+                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$masters) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                        }
+                        else
+                        {
+                            $query = 'SELECT 0 as total_deal, 0 as total_mileage';
+                        }
                     }
                     else
                     {
                         $query = 'SELECT 0 as total_deal, 0 as total_mileage';
+                    }
+                }
+                else if ($partner->hasRole('master'))
+                {
+                    if (settings('enable_master_deal'))
+                    {
+                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    }
+                    else
+                    {
+                        $agents = $partner->childPartners();
+                        if (count($agents) > 0){
+                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                        }
+                        else
+                        {
+                            $query = 'SELECT 0 as total_deal, 0 as total_mileage';
+                        }
                     }
                 }
                 else
