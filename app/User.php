@@ -836,7 +836,6 @@ namespace VanguardLTE
 
             $manager = $this->referral;
             if($manager != null) {
-                //$distributor = $manager->referral;
                 $distributor = \VanguardLTE\User::lockForUpdate()->where('id',$manager->parent_id)->first();
                 $deal_percent = ($type==null || $type=='slot')?$distributor->deal_percent:$distributor->table_deal_percent;
                 if($distributor != null && $distributor->hasRole('distributor') && $deal_percent > 0){
@@ -844,21 +843,19 @@ namespace VanguardLTE
                 }
 
                 if($distributor != null && $distributor->referral != null){
-                    //$agent = $distributor->referral;
                     $agent = \VanguardLTE\User::lockForUpdate()->where('id',$distributor->parent_id)->first();
                     $deal_percent = ($type==null || $type=='slot')?$agent->deal_percent:$agent->table_deal_percent;
                     if($agent !=  null && $deal_percent > 0) {
                         $agent_distributor = $this->addDealerMoney($betMoney, $agent, $deal_distributor, $game, $type);
-                        /*$open_shift = OpenShift::where([
-                            'user_id' => $agent->parent_id,  //will be admin
-                            'type' => 'partner',
-                            'end_date' => null
-                        ])->first();
-            
-                        if ($open_shift)
+                        
+                        if (settings('enable_master_deal'))
                         {
-                            $open_shift->increment('mileage', $agent_distributor);
-                        }*/
+                            $master = \VanguardLTE\User::lockForUpdate()->where('id',$agent->parent_id)->first();
+                            $deal_percent = ($type==null || $type=='slot')?$master->deal_percent:$master->table_deal_percent;
+                            if($master !=  null && $deal_percent > 0) {
+                                $this->addDealerMoney($betMoney, $master, $agent_distributor, $game, $type);
+                            }
+                        }
                     }
                 }
             }   
@@ -876,18 +873,6 @@ namespace VanguardLTE
             $parentUser->update(['deal_balance' => $parentUser->deal_balance + $total_deal_money, 'mileage' => $parentUser->mileage + $childDealMoney]);
             $balance_after = $parentUser->deal_balance;
 
-            /*$open_shift = OpenShift::where([
-                'user_id' => $parentUser->id, 
-                'type' => 'partner',
-                'end_date' => null
-            ])->first();
-
-            if ($open_shift)
-            {
-                $open_shift->increment('deal_profit', $total_deal_money);
-                $open_shift->increment('mileage', $childDealMoney);
-            }*/
-
             DealLog::create([
                 'user_id' => $this->id, 
                 'partner_id' => $parentUser->id,
@@ -902,6 +887,19 @@ namespace VanguardLTE
                 'mileage' => $childDealMoney
             ]);
             return $total_deal_money;
+        }
+
+        public function isInoutPartner()
+        {
+            if ($this->hasRole(['admin', 'comaster']))
+            {
+                return true;
+            }
+            if ($this->hasRole('master') && !settings('enable_master_deal'))
+            {
+                return true;
+            }
+            return false;
         }
 
 
