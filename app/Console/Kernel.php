@@ -6,7 +6,7 @@ namespace VanguardLTE\Console
         protected $commands = [];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
-            $schedule->command('queue:work --daemon')->everyMinute()->withoutOverlapping();
+            //$schedule->command('queue:work --daemon')->everyMinute()->withoutOverlapping();
             $schedule->call(function () {
                 \Illuminate\Support\Facades\Redis::del('pplist');
                 \Illuminate\Support\Facades\Redis::del('hbnlist');
