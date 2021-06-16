@@ -7,28 +7,28 @@
             <div class="pull-left image">
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
             </div>
-            @if(auth()->user()->hasRole(['admin','comaster']) || auth()->user()->hasRole('master') && !settings('show_master_balance'))
+            @if(auth()->user()->hasRole('admin'))
             @else
             <div class="pull-left info">
 			<p>보유금:
                     @if( Auth::user()->hasRole(['cashier', 'manager']) )
                         @php
                             $shop = \VanguardLTE\Shop::find( auth()->user()->present()->shop_id );
-                            echo $shop?number_format($shop->balance,2):0;
+                            echo $shop?number_format($shop->balance,0):0;
                         @endphp
                         원
                     @else
                         {{ number_format(auth()->user()->present()->balance,0) }}원
                     @endif
 			</p>
-            @if(auth()->user()->hasRole(['comaster', 'master']))
+            @if(auth()->user()->isInoutPartner())
             @else
             <p>수익금:
 
                 @if( Auth::user()->hasRole(['cashier', 'manager']) )
                     @php
                         $shop = \VanguardLTE\Shop::find( auth()->user()->present()->shop_id );
-                        echo $shop?number_format($shop->deal_balance,2):0;
+                        echo $shop?number_format($shop->deal_balance,0):0;
                     @endphp
                     원
                 @else
@@ -48,7 +48,7 @@
             @endif
         </div>
         <!-- search form -->
-        @if (auth()->user()->hasRole(['admin','comaster']))
+        @if (auth()->user()->hasRole(['admin']))
         @else
         <form action="{{ route('backend.user.update.address', auth()->user()->id) }}" method="post" class="sidebar-form">
             <div class="input-group">
@@ -57,7 +57,7 @@
                     <i class="fa fa-paper-plane"></i>
                     </button>
                 </span>
-                @if (auth()->user()->hasRole(['master']))
+                @if (auth()->user()->isInoutPartner())
                 <input type="text" name="address" class="form-control" value="{{auth()->user()->address}}" style="color:#b8c7ce;" placeholder="연락처">
                 <span class="input-group-btn">
                     <button type="submit" name="search" id="search-btn" class="btn btn-flat">
@@ -67,15 +67,13 @@
                 @else
                 <?php
                     $master = auth()->user()->referral;
-                    while ($master!=null && !$master->hasRole('master'))
+                    while ($master!=null && !$master->isInoutPartner())
                     {
                         $master = $master->referral;
                     }
                 ?>
                 <input type="text" name="q" class="form-control" value="{{$master->address}}" style="color:#b8c7ce;cursor:default;" disabled>
                 @endif
-                
-
             </div>
         </form>
         @endif
@@ -272,7 +270,7 @@
                     </span>
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
-                    @if(auth()->user()->hasRole(['admin','comaster']) || auth()->user()->hasRole('master') && !settings('show_master_balance'))
+                    @if(auth()->user()->hasRole('admin'))
                     @else
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
@@ -283,7 +281,7 @@
                     </li>
                     @endpermission
                     @endif
-                    @if(auth()->user()->hasRole(['admin','comaster','master']))
+                    @if(auth()->user()->isInoutPartner() )
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_manage/add') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_manage','add') }}">
@@ -358,25 +356,6 @@
                 </ul>
             </li>
 
-            @permission('pincodes.manage')
-            <li class="{{ Request::is('backend/pincodes*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.pincode.list') }}">
-                    <i class="fa fa-server"></i>
-                    <span>@lang('app.pincodes')</span>
-                </a>
-            </li>
-            @endpermission
-
-            {{-- @permission('games.manage')
-            @if( !(auth()->check() && auth()->user()->shop_id == 0 && auth()->user()->role_id < 6) )
-            <li class="{{ (Request::is('backend/game') || Request::is('backend/game/*')) ? 'active' : ''  }}">
-                <a href="{{ route('backend.game.list') }}">
-                    <i class="fa fa-gamepad"></i>
-                    <span>게임관리</span>
-                </a>
-            </li>
-            @endif
-            @endpermission --}}
 
             @if (
                 Auth::user()->hasPermission('stats.live') ||
@@ -461,7 +440,7 @@
                     @endpermission
 
                     @permission('stats.shop')
-                    @if (auth()->user()->hasRole(['comaster','master']))
+                    @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
                     @else
                     <li class="{{ Request::is('backend/deal_stat*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.deal_stat') }}">
@@ -472,19 +451,11 @@
                     @endif
                     @endpermission
 
-                    {{-- @permission('stats.shift')
-                    <li class="{{ Request::is('backend/shift_stat') ? 'active' : ''  }}">
-                        <a href="{{ route('backend.shift_stat') }}">
-                            <i class="fa fa-circle-o"></i>
-                            @lang('app.shift_stats')
-                        </a>
-                    </li>
-                    @endpermission --}}
                 </ul>
             </li>
 
             @endif
-            @if (auth()->user()->hasRole(['admin', 'master']))
+            @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('backend/settings/notice') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.notice') }}">
                     <i class="fa fa-bell"></i>

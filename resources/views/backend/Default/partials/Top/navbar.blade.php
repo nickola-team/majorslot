@@ -196,7 +196,7 @@
                     </span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    @if(auth()->user()->hasRole(['admin','comaster']) || auth()->user()->hasRole('master') && !settings('show_master_balance'))
+                    @if(auth()->user()->hasRole('admin'))
                     @else
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
@@ -207,7 +207,7 @@
                     </li>
                     @endpermission
                     @endif
-                    @if(auth()->user()->hasRole(['admin','comaster','master']))
+                    @if(auth()->user()->isInoutPartner() )
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_manage/add') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.in_out_manage','add') }}">
@@ -373,7 +373,7 @@
                     @endpermission
 
                     @permission('stats.shop')
-                    @if (auth()->user()->hasRole(['comaster','master']))
+                    @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
                     @else
                     <li class="{{ Request::is('backend/deal_stat*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.deal_stat') }}">
@@ -396,7 +396,7 @@
             </li>
 
             @endif
-            @if (auth()->user()->hasRole(['admin', 'master']))
+            @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('backend/settings/notice') ? 'active' : ''  }}">
                 <a href="{{ route('backend.settings.notice') }}">
                     <i class="fa fa-bell"></i>
@@ -428,7 +428,7 @@
           </ul>
         </div>
         <!-- /.navbar-collapse -->
-        @if (auth()->user()->hasRole(['admin','comaster']))
+        @if (auth()->user()->hasRole(['admin']))
         @else
         <form action="{{ route('backend.user.update.address', auth()->user()->id) }}" method="post" class="navbar-form navbar-left">
             <div class="input-group">
@@ -437,7 +437,7 @@
                     <i class="fa fa-paper-plane"></i>
                     </button>
                 </span>
-                @if (auth()->user()->hasRole('master'))
+                @if (auth()->user()->isInoutPartner())
                 <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="연락처" value="{{auth()->user()->address}}" >
                 <span class="input-group-btn">
                     <button type="submit" name="search"  class="btn btn-flat" style="background:rgba(255,255,255,0.2);">
@@ -447,7 +447,7 @@
                 @else
                 <?php
                     $master = auth()->user()->referral;
-                    while ($master!=null && !$master->hasRole('master'))
+                    while ($master!=null && !$master->isInoutPartner())
                     {
                         $master = $master->referral;
                     }
@@ -460,7 +460,7 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
-          @if(auth()->user()->hasRole(['admin','comaster']) || auth()->user()->hasRole('master') && !settings('show_master_balance'))
+          @if(auth()->user()->hasRole('admin'))
           @else
             <li class="dropdown messages-menu">
               <!-- Menu toggle button -->
@@ -477,7 +477,7 @@
                     @endif</span>
               </a>
             </li>
-            @if(auth()->user()->hasRole(['comaster','master']))
+            @if(auth()->user()->isInoutPartner())
             @else
             <li class="dropdown messages-menu">
               <!-- Menu toggle button -->
@@ -486,11 +486,11 @@
                     @if( Auth::user()->hasRole(['cashier', 'manager']) )
                         @php
                             $shop = \VanguardLTE\Shop::find( auth()->user()->present()->shop_id );
-                            echo $shop?number_format($shop->deal_balance,2):0;
+                            echo $shop?number_format($shop->deal_balance,0):0;
                         @endphp
                         원
                     @else
-                        {{ number_format(auth()->user()->present()->deal_balance - auth()->user()->present()->mileage,2) }}
+                        {{ number_format(auth()->user()->present()->deal_balance - auth()->user()->present()->mileage,0) }}
                         원
                     @endif
                 </span>

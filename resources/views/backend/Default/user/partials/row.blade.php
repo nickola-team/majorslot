@@ -41,7 +41,7 @@
 	@endif
 	<td>
 		@if (Auth::user()->hasRole(['admin','comaster','master','manager']) && $user->hasRole('user'))
-		@if (auth()->user()->hasRole('master') && !settings('show_master_balance'))
+		@if (auth()->user()->hasRole('master') && settings('enable_master_deal'))
 		<button type="button" class="btn btn-block btn-success disabled btn-xs">@lang('app.in')</button>
 		@else
 		<a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user->id }}" >
@@ -54,7 +54,7 @@
 	</td>
 	<td>
 		@if (Auth::user()->hasRole(['admin','comaster','master','manager']) && $user->hasRole('user'))
-		@if (auth()->user()->hasRole('master') && !settings('show_master_balance'))
+		@if (auth()->user()->hasRole('master') && settings('enable_master_deal'))
 		<button type="button" class="btn btn-block btn-danger disabled btn-xs">@lang('app.out')</button>
 		@else
 		<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user->id }}" >

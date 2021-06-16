@@ -790,7 +790,66 @@ namespace VanguardLTE
             ]);
         }
 
+        public function processBetDealerMoney1($betMoney, $game, $type='slot') 
+        {
+            if(!$this->hasRole('user')) {
+                return;
+            }
+            $shop = $this->shop;
+            $deal_balance = 0;
+            $deal_mileage = 0;
+            $deal_percent = 0;
+            $deal_data = [];
+            $deal_percent = ($type==null || $type=='slot')?$shop->deal_percent:$shop->table_deal_percent;
+            $manager = $this->referral;
+            if ($manager != null){
 
+                if($deal_percent > 0) {
+                    $deal_balance = $betMoney * $deal_percent  / 100;
+                    $deal_data[] = [
+                        'user_id' => $this->id, 
+                        'partner_id' => $manager->id, //manager's id
+                        'balance_before' => 0, 
+                        'balance_after' => 0, 
+                        'bet' => abs($betMoney), 
+                        'deal_profit' => $deal_balance,
+                        'game' => $game,
+                        'shop_id' => $shop->id,
+                        'type' => 'shop',
+                        'deal_percent' => $deal_percent,
+                        'mileage' => $deal_mileage
+                    ];
+                }
+                $partner = $manager->referral;
+                while ($partner != null && !$partner->isInoutPartner())
+                {
+                    $deal_mileage = $deal_balance;
+                    $deal_percent = ($type==null || $type=='slot')?$partner->deal_percent:$partner->table_deal_percent;
+                    if($deal_percent > 0) {
+                        $deal_balance = $betMoney * $deal_percent  / 100;
+                        $deal_data[] = [
+                            'user_id' => $this->id, 
+                            'partner_id' => $partner->id,
+                            'balance_before' => 0, 
+                            'balance_after' => 0, 
+                            'bet' => abs($betMoney), 
+                            'deal_profit' => $deal_balance,
+                            'game' => $game,
+                            'shop_id' => $this->shop_id,
+                            'type' => 'partner',
+                            'deal_percent' => $deal_percent,
+                            'mileage' => $deal_mileage
+                        ];
+                    }
+                    $partner = $partner->referral;
+                }
+            }
+
+            if (count($deal_data) > 0)
+            {
+                DealLog::insert($deal_data);
+            }
+        }
         public function processBetDealerMoney($betMoney, $game, $type='slot') 
         {
             if(!$this->hasRole('user')) {
