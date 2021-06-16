@@ -20,7 +20,7 @@
 		unknown
 	@endif
 	</td>
-	@if (auth()->user()->hasRole(['admin', 'comaster','master']))
+	@if (auth()->user()->isInoutPartner())
 	<td>
 		{{number_format($stat->balance,0)}}
 	</td>
