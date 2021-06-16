@@ -484,7 +484,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if (auth()->user()->isInoutPartner())
             {
                 $partners = auth()->user()->hierarchyPartners();
-                $statistics = $statistics->whereIn('partner_id', $partners);
+                $shops = auth()->user()->availableShops();
+                $statistics = $statistics->whereIn('partner_id', $partners)->orWhereIn('shop_id', $shops);
+            }
+            else  if (auth()->user()->hasRole('manager'))
+            {
+                $statistics = $statistics->where(['shop_id' => auth()->user()->shop_id, 'type'=>'shop']);
             }
             else
             {
