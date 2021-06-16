@@ -1,0 +1,47 @@
+<?php
+
+namespace VanguardLTE\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class UpdateDeal implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    protected $deal_data;
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct($data)
+    {
+        $this->deal_data = $data;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        \VanguardLTE\DealLog::insert($this->deal_data);
+        foreach ($this->deal_data as $deal)
+        {
+            if ($deal['type'] == 'shop')
+            {
+                $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$deal['shop_id'])->first();
+                $shop->increment('deal_balance' , $deal['deal_profit']);
+            }
+            else
+            {
+                $partner = \VanguardLTE\User::lockForUpdate()->where('id',$deal['partner_id'])->first();
+                $partner->update(['deal_balance' => $partner->deal_balance + $deal['deal_profit'], 'mileage' => $partner->mileage +  $deal['mileage']]);
+            }
+        }
+    }
+}

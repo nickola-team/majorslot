@@ -790,7 +790,7 @@ namespace VanguardLTE
             ]);
         }
 
-        public function processBetDealerMoney1($betMoney, $game, $type='slot') 
+        public function processBetDealerMoney_Queue($betMoney, $game, $type='slot') 
         {
             if(!$this->hasRole('user')) {
                 return;
@@ -847,7 +847,7 @@ namespace VanguardLTE
 
             if (count($deal_data) > 0)
             {
-                DealLog::insert($deal_data);
+                \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data);
             }
         }
         public function processBetDealerMoney($betMoney, $game, $type='slot') 
