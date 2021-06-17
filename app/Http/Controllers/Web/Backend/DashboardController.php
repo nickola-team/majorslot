@@ -483,9 +483,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $statistics = \VanguardLTE\DealLog::orderBy('deal_log.date_time', 'DESC');
             if (auth()->user()->isInoutPartner())
             {
-                $partners = auth()->user()->hierarchyPartners();
+                $users = auth()->user()->hierarchyUsersOnly();
                 $shops = auth()->user()->availableShops();
-                $statistics = $statistics->whereIn('partner_id', $partners)->orWhereIn('shop_id', $shops);
+                if( $request->user != '' ) 
+                {
+                    $user_ids = \VanguardLTE\User::where('username', 'like', '%' . $request->user . '%')->pluck('id')->toArray();
+                    if (count($user_ids) > 0)
+                    {
+                        $statistics = $statistics->whereIn('deal_log.user_id', $user_ids);
+                    }
+                }
+                else
+                {
+                    $statistics = $statistics->whereIn('deal_log.user_id', $users);
+                }
             }
             else  if (auth()->user()->hasRole('manager'))
             {
@@ -510,23 +521,31 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( $request->user != '' ) 
             {
-                $user = \VanguardLTE\User::where('username', 'like', '%' . $request->user . '%')->first();
-                if ($user)
+                $user_ids = \VanguardLTE\User::where('username', 'like', '%' . $request->user . '%')->pluck('id')->toArray();
+                if (count($user_ids) > 0)
                 {
-                    $statistics = $statistics->where('deal_log.user_id', $user->id);
+                    $statistics = $statistics->whereIn('deal_log.user_id', $user_ids);
                 }
             }
             if( $request->partner != '' ) 
             {
                 if ($request->type == 'shop')
                 {
-                    $statistics = $statistics->join('shops', 'shops.id', '=', 'deal_log.shop_id');
-                    $statistics = $statistics->where('shops.name', 'like', '%' . $request->partner . '%');
+                    $shop_id = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
+                    if (count($shop_id) > 0)
+                    {
+                        $statistics = $statistics->whereIn('shop_id', $shop_id);
+                    }
+                    
                 }
                 else if ($request->type == 'partner')
                 {
-                    $statistics = $statistics->join('users', 'users.id', '=', 'deal_log.partner_id');
-                    $statistics = $statistics->where('users.username', 'like', '%' . $request->partner . '%');
+                    $partner_ids = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
+                    if (count($partner_ids) > 0)
+                    {
+                        $statistics = $statistics->whereIn('deal_log.partner_id', $partner_ids);
+                    }
+
                 }
                 $statistics = $statistics->where('deal_log.type',$request->type);
             }
