@@ -517,8 +517,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 if ($request->type == 'shop')
                 {
-                    $statistics = $statistics->join('shops', 'shops.id', '=', 'deal_log.shop_id');
-                    $statistics = $statistics->where('shops.name', 'like', '%' . $request->partner . '%');
+                    if( $request->user != '' ) 
+                    {
+                        $shop = \VanguardLTE\Shop::where('name', 'like', '%' . $request->partner . '%')->first();
+                        if ($shop)
+                        {
+                            $statistics = $statistics->where('deal_log.shop_id', $shop->id);
+                        }
+                    }
+                    else
+                    {
+                        $statistics = $statistics->join('shops', 'shops.id', '=', 'deal_log.shop_id');
+                        $statistics = $statistics->where('shops.name', 'like', '%' . $request->partner . '%');
+                    }
                 }
                 else if ($request->type == 'partner')
                 {
