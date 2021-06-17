@@ -928,6 +928,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $categories = $categories->get();
             $adjustments = [];
             $game_name = $request->search;
+            
 
             foreach ($categories as $cat)
             {
@@ -1005,6 +1006,24 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $shop_ids = auth()->user()->availableShops();
+
+            if( $request->partner != '' ) 
+            {
+                if ($request->type == 'shop')
+                {
+                    $shop_ids = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
+                }
+                else if ($request->type == 'partner')
+                {
+                    $shop_ids = [];
+                    $partners = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->get();
+                    foreach ($partners as $partner)
+                    {
+                        $shop_ids = array_merge_recursive($shop_ids, $partner->availableShops());
+                    }
+                }
+            }
+
             if (count($shop_ids) == 0) {
                 return redirect()->back()->withError('정산할 매장이 없습니다');
             }
