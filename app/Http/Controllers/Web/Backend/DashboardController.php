@@ -510,26 +510,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( $request->user != '' ) 
             {
-                $statistics = $statistics->join('users', 'users.id', '=', 'deal_log.user_id');
-                $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
+                $user = \VanguardLTE\User::where('username', 'like', '%' . $request->user . '%')->first();
+                if ($user)
+                {
+                    $statistics = $statistics->where('deal_log.user_id', $user->id);
+                }
             }
             if( $request->partner != '' ) 
             {
                 if ($request->type == 'shop')
                 {
-                    if( $request->user != '' ) 
-                    {
-                        $shop = \VanguardLTE\Shop::where('name', 'like', '%' . $request->partner . '%')->first();
-                        if ($shop)
-                        {
-                            $statistics = $statistics->where('deal_log.shop_id', $shop->id);
-                        }
-                    }
-                    else
-                    {
-                        $statistics = $statistics->join('shops', 'shops.id', '=', 'deal_log.shop_id');
-                        $statistics = $statistics->where('shops.name', 'like', '%' . $request->partner . '%');
-                    }
+                    $statistics = $statistics->join('shops', 'shops.id', '=', 'deal_log.shop_id');
+                    $statistics = $statistics->where('shops.name', 'like', '%' . $request->partner . '%');
                 }
                 else if ($request->type == 'partner')
                 {
