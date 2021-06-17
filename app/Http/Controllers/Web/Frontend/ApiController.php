@@ -267,7 +267,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $categories = [$cat1->id];
             if ($cat1->provider != null)
             {
-                $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
+                if ($cat1->provider == 'cq9')
+                {
+                    $selectedGames = [];
+                }
+                else
+                {
+                    $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
+                }
             }
             else{
                 if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers

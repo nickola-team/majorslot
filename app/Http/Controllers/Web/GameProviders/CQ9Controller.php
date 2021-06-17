@@ -977,7 +977,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $games = json_decode($gameList, true);
                 return $games;
             }
-            return null;
             
             $response = Http::withHeaders([
                 'Authorization' => config('app.cq9token'),
