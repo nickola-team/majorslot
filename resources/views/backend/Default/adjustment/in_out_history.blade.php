@@ -110,11 +110,7 @@
 					<table class="table table-bordered table-striped">
 					<thead>
 					<tr>
-						@if(auth()->user()->hasRole('distributor'))
-						<th>매장이름</th>
-						@else
 						<th>파트너이름</th>
-						@endif
 						<th>충전금액</th>
 						<th>환전금액</th>
 						<th>변동전금액</th>
@@ -137,11 +133,7 @@
 					</tbody>
 					<thead>
 					<tr>
-						@if(auth()->user()->hasRole('distributor'))
-						<th>매장이름</th>
-						@else
 						<th>파트너이름</th>
-						@endif
 						<th>충전금액</th>
 						<th>환전금액</th>
 						<th>변동전금액</th>
