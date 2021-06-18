@@ -98,10 +98,10 @@ namespace VanguardLTE\Games\PandaFortune2PM
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
-            $game = \VanguardLTE\Game::where([
+            $game = \VanguardLTE\Game::lockForUpdate()->where([
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
-            ])->lockForUpdate()->first();
+            ])->first();
             if (!$game)
             {
                 exit('unlogged');
