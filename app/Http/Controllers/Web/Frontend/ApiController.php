@@ -379,7 +379,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
 
-            $user = \VanguardLTE\User::find(\Auth::id());
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',\Auth::id())->first();
+            if (!$user)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '다시 시도해주세요.',
+                    'code' => '001'
+                ], 200);
+            }
 
             if($user->hasRole('user')){
                 return response()->json([
@@ -392,7 +400,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $summ = str_replace(',','',$request->summ);
            
             if($user->hasRole('manager')){
-                $shop = $user->shop;
+                
+                $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$user->shop_id)->first();
+                if (!$shop)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '다시 시도해주세요.',
+                        'code' => '001'
+                    ], 200);
+                }
                 $real_deal_balance = $shop->deal_balance - $shop->mileage;
                 if ($summ )
                 {
