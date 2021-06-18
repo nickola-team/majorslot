@@ -30,7 +30,8 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
             // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
-            	$userId = 1;
+            	$response = 'unlogged';
+                exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
