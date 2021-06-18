@@ -34,6 +34,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function gamecodetoname($code)
         {
             $gamelist = PPController::getgamelist('pp');
+            $gamelist_live = PPController::getgamelist('live');
+            $gamelist = array_merge_recursive($gamelist, $gamelist_live);
             $gamename = $code;
             $type = 'table';
             if ($gamelist)
