@@ -110,10 +110,17 @@
 					<table class="table table-bordered table-striped">
 					<thead>
 					<tr>
-						@if(auth()->user()->hasRole('distributor'))
-						<th>매장이름</th>
-						@else
 						<th>파트너이름</th>
+						@if (auth()->user()->isInoutPartner())
+						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
+						<th>@lang('app.distributor')</th>
+						@endif
+						@if (auth()->user()->hasRole(['admin','comaster','master']))
+						<th>@lang('app.agent')</th>
+						@endif
+						@if (auth()->user()->hasRole(['admin','comaster']))
+						<th>@lang('app.master')</th>
+						@endif
 						@endif
 						<th>충전금액</th>
 						<th>환전금액</th>
@@ -137,10 +144,17 @@
 					</tbody>
 					<thead>
 					<tr>
-						@if(auth()->user()->hasRole('distributor'))
-						<th>매장이름</th>
-						@else
 						<th>파트너이름</th>
+						@if (auth()->user()->isInoutPartner())
+						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
+						<th>@lang('app.distributor')</th>
+						@endif
+						@if (auth()->user()->hasRole(['admin','comaster','master']))
+						<th>@lang('app.agent')</th>
+						@endif
+						@if (auth()->user()->hasRole(['admin','comaster']))
+						<th>@lang('app.master')</th>
+						@endif
 						@endif
 						<th>충전금액</th>
 						<th>환전금액</th>

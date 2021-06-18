@@ -1,6 +1,6 @@
 <tr>
 <td>
-@if ($partner==0)	
+@if ($partner==0)
 	<a href="{{ route('backend.statistics', ['user' => $stat->user->username])  }}">
 
 		{{ $stat->user->username }}
@@ -28,12 +28,14 @@
 	]
 
 </td>
-
+@if ($partner==0)
+<td>{{number_format($stat->balance,0)}}</td>
+@else
 @if (auth()->user()->isInoutPartner())
-<td>
-	{{number_format($stat->balance,0)}}
-	</td>
+<td>{{number_format($stat->balance,0)}}</td>
 @endif
+@endif
+
 <td>
 {{number_format($stat->old,0)}}
 </td>

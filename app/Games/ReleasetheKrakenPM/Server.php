@@ -518,7 +518,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
                         }
-                        else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
+                        else if( ($totalWin <= $_winAvaliableMoney || $isBuyFreeSpin==true) && $winType == 'bonus' ) 
                         {
                             $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
                             if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 

@@ -427,7 +427,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/grand/images/partner.png" /><br /><br />Copyright ⓒ
-            2020~2021 그랜드 SLOT All rights reserved.
+            2020~2021 크라운 SLOT All rights reserved.
           </div>
          </div>
          <div>

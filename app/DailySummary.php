@@ -59,11 +59,13 @@ namespace VanguardLTE
                 $adj['dealout'] = $in_out[0]->dealout??0;
                 $adj['totalout'] = $adj['totalout'] + $adj['dealout'];
 
-                $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add"';
+                $shop_users = $shop->getUsersByRole('user')->pluck('id')->toArray();
+
+                $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add"';
                 $user_in_out = \DB::select($query);
                 $adj['moneyin'] = $user_in_out[0]->moneyin??0;
 
-                $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE shop_id='.$shop->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out"';
+                $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out"';
                 $user_in_out = \DB::select($query);
                 $adj['moneyout'] = $user_in_out[0]->moneyout??0;
 
@@ -142,13 +144,20 @@ namespace VanguardLTE
                 $adj['moneyout'] = 0;
 
                 if (count($shops) > 0){
-                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add"';
-                    $user_in_out = \DB::select($query);
-                    $adj['moneyin'] = $user_in_out[0]->moneyin??0;
+                    $shop_users = ShopUser::whereIn('shop_id', $shops)->groupBy('user_id')->pluck('user_id');
+                    if( $shop_users ) 
+                    {
+                        $shop_users = User::where('role_id',1)->whereIn('id', $shop_users)->pluck('id')->toArray();
+                    }
+                    if (count($shop_users) > 0) {
+                        $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add"';
+                        $user_in_out = \DB::select($query);
+                        $adj['moneyin'] = $user_in_out[0]->moneyin??0;
 
-                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE shop_id in ('.implode(',', $shops).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out"';
-                    $user_in_out = \DB::select($query);
-                    $adj['moneyout'] = $user_in_out[0]->moneyout??0;
+                        $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out"';
+                        $user_in_out = \DB::select($query);
+                        $adj['moneyout'] = $user_in_out[0]->moneyout??0;
+                    }
                 }
                 if (count($shops) > 0 )
                 {

@@ -483,9 +483,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $statistics = \VanguardLTE\DealLog::orderBy('deal_log.date_time', 'DESC');
             if (auth()->user()->isInoutPartner())
             {
-                $partners = auth()->user()->hierarchyPartners();
+                $users = auth()->user()->hierarchyUsersOnly();
                 $shops = auth()->user()->availableShops();
-                $statistics = $statistics->whereIn('partner_id', $partners)->orWhereIn('shop_id', $shops);
+                if( $request->user != '' ) 
+                {
+                    $user_ids = \VanguardLTE\User::where('username', 'like', '%' . $request->user . '%')->pluck('id')->toArray();
+                    if (count($user_ids) > 0)
+                    {
+                        $statistics = $statistics->whereIn('deal_log.user_id', $user_ids);
+                    }
+                }
+                else
+                {
+                    $statistics = $statistics->whereIn('deal_log.user_id', $users);
+                }
             }
             else  if (auth()->user()->hasRole('manager'))
             {
@@ -510,20 +521,31 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( $request->user != '' ) 
             {
-                $statistics = $statistics->join('users', 'users.id', '=', 'deal_log.user_id');
-                $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
+                $user_ids = \VanguardLTE\User::where('username', 'like', '%' . $request->user . '%')->pluck('id')->toArray();
+                if (count($user_ids) > 0)
+                {
+                    $statistics = $statistics->whereIn('deal_log.user_id', $user_ids);
+                }
             }
             if( $request->partner != '' ) 
             {
                 if ($request->type == 'shop')
                 {
-                    $statistics = $statistics->join('shops', 'shops.id', '=', 'deal_log.shop_id');
-                    $statistics = $statistics->where('shops.name', 'like', '%' . $request->partner . '%');
+                    $shop_id = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
+                    if (count($shop_id) > 0)
+                    {
+                        $statistics = $statistics->whereIn('shop_id', $shop_id);
+                    }
+                    
                 }
                 else if ($request->type == 'partner')
                 {
-                    $statistics = $statistics->join('users', 'users.id', '=', 'deal_log.partner_id');
-                    $statistics = $statistics->where('users.username', 'like', '%' . $request->partner . '%');
+                    $partner_ids = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
+                    if (count($partner_ids) > 0)
+                    {
+                        $statistics = $statistics->whereIn('deal_log.partner_id', $partner_ids);
+                    }
+
                 }
                 $statistics = $statistics->where('deal_log.type',$request->type);
             }
@@ -906,6 +928,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $categories = $categories->get();
             $adjustments = [];
             $game_name = $request->search;
+            
 
             foreach ($categories as $cat)
             {
@@ -983,6 +1006,24 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $shop_ids = auth()->user()->availableShops();
+
+            if( $request->partner != '' ) 
+            {
+                if ($request->type == 'shop')
+                {
+                    $shop_ids = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
+                }
+                else if ($request->type == 'partner')
+                {
+                    $shop_ids = [];
+                    $partners = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->get();
+                    foreach ($partners as $partner)
+                    {
+                        $shop_ids = array_merge_recursive($shop_ids, $partner->availableShops());
+                    }
+                }
+            }
+
             if (count($shop_ids) == 0) {
                 return redirect()->back()->withError('정산할 매장이 없습니다');
             }

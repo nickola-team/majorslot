@@ -9,9 +9,49 @@
         $available_roles_trans[$key] = $role;
     }
 	?>
+	@if ($in_out_log->user)
 	<td>{{ $in_out_log->user->username }} [{{$available_roles_trans[$in_out_log->user->role_id] }}]</td>
 	@else
+	<td>삭제된 파트너</td>
+	@endif
+	@else
+	@if ($in_out_log->shop)
 	<td>{{ $in_out_log->shop->name }} [매장]</td>
+	@else
+	<td>삭제된 매장 </td>
+	@endif
+	@endif
+	@if (auth()->user()->isInoutPartner())
+	@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
+	<td>
+	@if ($in_out_log->user && $in_out_log->user->role_id == 3)
+	{{$in_out_log->user->referral->username}}
+	@endif
+	</td>
+	@endif
+	@if (auth()->user()->hasRole(['admin','comaster','master']))
+	<td>
+	@if ($in_out_log->user &&  $in_out_log->user->role_id == 3)
+	{{$in_out_log->user->referral->referral->username}}
+	@endif
+	@if ($in_out_log->user &&  $in_out_log->user->role_id == 4)
+	{{$in_out_log->user->referral->username}}
+	@endif
+	</td>
+	@endif
+	@if (auth()->user()->hasRole(['admin','comaster']))
+	<td>
+	@if ($in_out_log->user &&  $in_out_log->user->role_id == 3)
+	{{$in_out_log->user->referral->referral->referral->username}}
+	@endif
+	@if ($in_out_log->user &&  $in_out_log->user->role_id == 4)
+	{{$in_out_log->user->referral->referral->username}}
+	@endif
+	@if ($in_out_log->user &&  $in_out_log->user->role_id == 5)
+	{{$in_out_log->user->referral->username}}
+	@endif
+	</td>
+	@endif
 	@endif
 	@if($in_out_log->type == 'add' )
 	<td><span class="text-green">{{ number_format($in_out_log->sum,0) }}</span></td>
