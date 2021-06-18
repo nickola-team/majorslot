@@ -442,8 +442,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                     $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $bonusType); 
                     if($bonusType == 2){
                         $respinReelPoses = $slotSettings->GetRandomNumber(1, 5, $defaultRespinCount);
-                        $respinReelPoses[0] = 1;
-                        $respinReelPoses[1] = 2;
+                        
                         for($r = 0; $r < count($respinReelPoses); $r++){
                             for($k = 0; $k < 3; $k++){
                                 $reels['reel' . $respinReelPoses[$r]][$k] = 3;
