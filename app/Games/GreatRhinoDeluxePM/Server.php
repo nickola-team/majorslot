@@ -388,6 +388,9 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
                 if($slotEvent['slotEvent'] == 'freespin'){
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') == 1){                                               
+                        $slotSettings->SetGameData($slotSettings->slotId . 'RespinSymbolPoses', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+                    }
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                 }
@@ -856,12 +859,9 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                     }
                     if($rhinoCount > 12){
                         $_obf_winType = 0;
-                    }
-                    if( $_obf_winType== 0 && $slotEvent['slotEvent'] == 'respin' &&  $respinChanged == false){
+                    }else if( $_obf_winType== 0 && $slotEvent['slotEvent'] == 'respin' &&  $respinChanged == false){
                         break;
-                    }
-                    // if( $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : '')) > $totalWin ) 
-                    if( $slotSettings->GetBank('') > $totalWin ) 
+                    }else if( $slotSettings->GetBank('') > $totalWin ) 
                     {
                         break;
                     }
