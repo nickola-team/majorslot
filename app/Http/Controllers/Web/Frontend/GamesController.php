@@ -33,9 +33,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position')->get();
             $hotgames = [];
-            $livegames = [];
 
             $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');
+            $livegames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('live');
 
             if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
             {
@@ -46,11 +46,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         if (in_array($game['gamecode'] , $newgames))
                         {
                             $hotgames[] = $game;
-                        }
-
-                        if (str_contains($game['enname'], 'Live -'))
-                        {
-                            $livegames[] = $game;
                         }
                     }
                 }
@@ -72,10 +67,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         if (in_array($gamename, $ppgamenames))
                         {
                             $hotgames[] = $pg;
-                        }
-                        if (str_contains($pg['enname'], 'Live -'))
-                        {
-                            $livegames[] = $pg;
                         }
                     }
                 }

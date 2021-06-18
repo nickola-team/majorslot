@@ -9,6 +9,7 @@ namespace VanguardLTE\Console
             //$schedule->command('queue:work --daemon')->everyMinute()->withoutOverlapping();
             $schedule->call(function () {
                 \Illuminate\Support\Facades\Redis::del('pplist');
+                \Illuminate\Support\Facades\Redis::del('livelist');
                 \Illuminate\Support\Facades\Redis::del('hbnlist');
                 \Illuminate\Support\Facades\Redis::del('booongolist');
                 \Illuminate\Support\Facades\Redis::del('playsonlist');
