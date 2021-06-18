@@ -1340,6 +1340,30 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         }
                     }
                 }
+                /* 동의개심볼 2이상, 릴심볼갯수 4개이상일때 숫자심볼 동의심볼로 조정 */
+                $reelSymbolsCount = count($reelSymbols);
+                if ($reelSymbolsCount >= 4) {
+                    $uniqueSymbols = array_unique($reelSymbols);
+                    foreach ($uniqueSymbols as $idx => $symbol) {
+                        $sameSymbolPositions = array_keys($reelSymbols, $symbol);
+                        $symbolsCount = count($sameSymbolPositions);
+
+                        if ($this->IsKindOfDog($symbol) && $symbolsCount >= 2) {
+                            $startPos = $sameSymbolPositions[0];
+                            $endPos = $sameSymbolPositions[count($sameSymbolPositions) - 1];
+
+                            if ($startPos >= 2) {
+                                $newSymbol = $reelSymbols[$startPos - 1];
+                                $reelSymbols[$startPos - 2] = $newSymbol;
+                            }
+
+                            if ($reelSymbolsCount - ($endPos + 1) >= 2) {
+                                $newSymbol = $reelSymbols[$endPos + 1];
+                                $reelSymbols[$endPos + 2] = $newSymbol;
+                            }
+                        }
+                    }
+                }
                                 
                 $reels[$reelId] = array_replace($reels[$reelId], $reelSymbols);
             }
