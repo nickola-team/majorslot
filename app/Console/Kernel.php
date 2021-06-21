@@ -116,6 +116,7 @@ namespace VanguardLTE\Console
 
             $schedule->command('daily:summary')->dailyAt('08:10');
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00');
+            $schedule->command('today:summary')->everyMinute();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
@@ -395,7 +396,23 @@ namespace VanguardLTE\Console
                         \VanguardLTE\DailySummary::summary($admin->id, $date);
                     }
                 }
+                if ($date == 'today') {
+                    $day = date("Y-m-d", strtotime("-1 days"));
+                    \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $date])->delete();
+                }
                 $this->info("End summary daily adjustment.");
+            });
+
+            \Artisan::command('today:summary', function () {
+                set_time_limit(0);
+                $this->info("Begin today's adjustment.");
+
+                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                foreach ($admins as $admin)
+                {
+                    \VanguardLTE\DailySummary::summary_today($admin->id);
+                }
+                $this->info("End today's adjustment.");
             });
 
             \Artisan::command('monthly:summary {month=today}', function ($month) {
@@ -414,6 +431,7 @@ namespace VanguardLTE\Console
                 }
                 $this->info("End summary monthly adjustment.");
             });
+
 
 
             \Artisan::command('daily:promo', function () {
@@ -489,6 +507,8 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End');
             });
+
+            
         }
     }
 
