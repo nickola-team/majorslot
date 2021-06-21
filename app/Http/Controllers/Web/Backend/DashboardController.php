@@ -901,19 +901,25 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $childs = $users->paginate(20);
-            $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
-            $end_date = date("Y-m-d H:i:s");
+            $start_date = date("Y-m-d",strtotime("-1 days"));
+            $end_date = date("Y-m-d");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
-                $start_date = $dates_tmp[0] . " 00:00:00";
-                $end_date = $dates_tmp[1] . " 23:59:59";
+                $start_date = $dates_tmp[0];
+                $end_date = $dates_tmp[1];
                 $request->session()->put('dates', $dates);
             }
 
             $adjustments = [];
-            foreach ($childs as $adj_user)
+
+            $adj_days = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->whereIn('user_id', $users->pluck('id')->toArray())->selectRaw('user_id, shop_id, sum(totalin) as totalin,sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage')->get();
+
+            foreach ($adj_days as $adj_user)
             {
-                $adj = \VanguardLTE\DailySummary::adjustment($adj_user->id, $start_date, $end_date);
+                $adj = $adj_user->toArray();
+                $adj['role_id']=$adj_user->user->role_id;
+                $adj['name']=$adj_user->user->username;
+                $adj['type']='today';
                 $adjustments[] = $adj;
             }
             return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
