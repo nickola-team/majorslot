@@ -397,12 +397,14 @@
 
             @endif
             @if (auth()->user()->isInoutPartner())
-            <li class="{{ Request::is('backend/settings/notice') ? 'active' : ''  }}">
-                <a href="{{ route('backend.settings.notice') }}">
+            @if (auth()->user()->isInoutPartner())
+            <li class="{{ Request::is('backend/notices*') ? 'active' : ''  }}">
+                <a href="{{ route('backend.notice.list') }}">
                     <i class="fa fa-bell"></i>
                     <span>공지사항</span>
                 </a>
             </li>
+            @endif
             @endif
 
             @permission('users.activity')
