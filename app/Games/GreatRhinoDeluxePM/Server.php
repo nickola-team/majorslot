@@ -787,6 +787,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                         }
                         for($k = 0; $k < count($respinSymbolPoses); $k++){
                             if($respinSymbolPoses[$k] != 0){
+                                $rhinoCount++;
                                 array_push($arr_accv, $k);
                                 $acc_count++;
                                 if($isMake == true && $mainX < 3){
@@ -884,7 +885,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                     if($rhinoCount > 12){
                         $_obf_winType = 0;
                     }else if($rhinoCount > 13 || ($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames')<= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0)){
-                        if($totalWin > 0 && $winLineCount >= 3){ //$slotSettings->GetBank('') > $totalWin
+                        if($totalWin > 0 && ($winLineCount >= 3 || $rhinoCount <= 2)){ //$slotSettings->GetBank('') > $totalWin
                             break;
                         }else{
                             $_obf_winType = 1;
