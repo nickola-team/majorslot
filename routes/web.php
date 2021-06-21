@@ -924,6 +924,35 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         ]);
 
         /**
+         * notices routes
+         */
+
+        Route::get('notices', [
+            'as' => 'backend.notice.list',
+            'uses' => 'NoticesController@index',
+        ]);
+        Route::get('notices/create', [
+            'as' => 'backend.notice.create',
+            'uses' => 'NoticesController@create',
+        ]);
+        Route::post('notices/create', [
+            'as' => 'backend.notice.store',
+            'uses' => 'NoticesController@store',
+        ]);
+        Route::get('notices/{notice}/edit', [
+            'as' => 'backend.notice.edit',
+            'uses' => 'NoticesController@edit',
+        ]);
+        Route::post('notices/{notice}/update', [
+            'as' => 'backend.notice.update',
+            'uses' => 'NoticesController@update',
+        ]);
+        Route::delete('notices/{notice}/delete', [
+            'as' => 'backend.notice.delete',
+            'uses' => 'NoticesController@delete',
+        ]);
+
+        /**
          * Happyhours routes
          */
 
@@ -1190,18 +1219,6 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.settings.general.update',
         'uses' => 'SettingsController@update',
         'middleware' => 'permission:settings.general'
-    ]);
-    Route::get('settings/notice', [
-        'as' => 'backend.settings.notice',
-        'uses' => 'SettingsController@notice',
-    ]);
-    Route::get('settings/notice/del', [
-        'as' => 'backend.settings.notice.del',
-        'uses' => 'SettingsController@noticedel',
-    ]);
-    Route::post('settings/notice', [
-        'as' => 'backend.settings.notice.update',
-        'uses' => 'SettingsController@noticeupdate',
     ]);
 
     Route::get('settings/auth', [
