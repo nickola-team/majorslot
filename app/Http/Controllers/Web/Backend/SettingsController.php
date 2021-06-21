@@ -26,8 +26,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function notice()
         {
-            $notice = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->first();
-            return view('backend.Default.settings.notice', compact('notice'));
+            if (auth()->user()->hasRole('admin'))
+            {
+                $notices = \VanguardLTE\Notice::all();
+            }
+            else
+            {
+                $notices = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->get();
+            }
+            return view('backend.Default.notices.list', compact('notices'));
         }
         public function noticedel(\Illuminate\Http\Request $request)
         {
