@@ -870,13 +870,21 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                             }
                         }
                     }
+                    $winLineCount = 0;
+                    for($k = 0; $k < 5; $k++){
+                        if($reels[$k][0] == 3 || $reels[$k][1] == 3 || $reels[$k][2] == 3){
+                            $winLineCount++;
+                        }else{
+                            break;
+                        }
+                    }
                     if($i > 500){
                         $_obf_winType = 0;
                     }
                     if($rhinoCount > 12){
                         $_obf_winType = 0;
                     }else if($rhinoCount > 13 || ($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames')<= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0)){
-                        if($totalWin > 0){ //$slotSettings->GetBank('') > $totalWin
+                        if($totalWin > 0 && $winLineCount >= 3){ //$slotSettings->GetBank('') > $totalWin
                             break;
                         }else{
                             $_obf_winType = 1;

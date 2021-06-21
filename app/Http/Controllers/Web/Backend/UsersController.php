@@ -1132,6 +1132,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.user.list')->withErrors([trans('app.no_permission')]);
             }
             $agents = null;
+            $distributors = null;
             if( $user->hasRole('comaster') ) 
             {
                 $masters = $user->childPartners();
