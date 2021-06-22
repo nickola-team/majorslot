@@ -37,6 +37,8 @@ namespace VanguardLTE\Console
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
                 \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
+                
+                $start_date = date("Y-m-d H:i:s",strtotime("-3 days"));
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-30 days"));
