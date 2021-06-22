@@ -407,7 +407,7 @@
             @endif
             @endif
 
-            @permission('users.activity')
+            @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('backend/activity*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.activity.index') }}">
                     <i class="fa fa-server"></i>
@@ -415,7 +415,7 @@
                     <span>접속로그</span>
                 </a>
             </li>
-            @endpermission
+            @endif
 
             @permission('settings.general')
             @if (auth()->user()->hasRole('admin'))
