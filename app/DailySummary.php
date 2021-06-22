@@ -356,7 +356,6 @@ namespace VanguardLTE
                 $b_shop = true;
             }
             
-            $to =  date("Y-m-d H:i:s", strtotime("now"));
             if($b_shop){
                 $todaysumm = \VanguardLTE\DailySummary::where(['shop_id'=> $user->shop_id, 'date' => $day, 'type'=>'today'])->first();
                 if ($todaysumm)
@@ -367,6 +366,7 @@ namespace VanguardLTE
                 {
                     $from =  $day . " 0:0:0";
                 }
+                $to =  date("Y-m-d H:i:s", strtotime("now"));
 
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
@@ -410,6 +410,8 @@ namespace VanguardLTE
                 {
                     $from =  $day . " 0:0:0";
                 }
+                
+                $to =  date("Y-m-d H:i:s", strtotime("now"));
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
                 $adj['type'] ='today';

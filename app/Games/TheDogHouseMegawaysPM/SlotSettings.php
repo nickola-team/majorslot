@@ -173,15 +173,30 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [1, 1, 1, 1], 
                     [1, 2, 1], 
                     [2, 2], 
+
+                    /* 빈도가 높은 배치 */
+                    [1, 1, 1, 1], 
+                    [1, 2, 1], 
+                    [2, 2], 
+
+                    /* 빈도가 낮은 배치 */
                     [3, 1],
-                    [1, 3]
+                    [1, 3],
                 ],
                 5 => [
                     [1, 1, 1, 1, 1], 
                     [1, 2, 2],
                     [1, 3, 1],
                     [2, 2, 1],
-                    [3, 2]
+
+                    /* 빈도가 높은 배치 */
+                    [1, 1, 1, 1, 1], 
+                    [1, 2, 2],
+                    [1, 3, 1],
+                    [2, 2, 1],
+
+                    /* 빈도가 낮은 배치 */
+                    [3, 2],
                 ],
                 6 => [
                     [1, 1, 1, 1, 1, 1], 
@@ -189,9 +204,18 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [1, 2, 2, 1], 
                     [1, 3, 2], 
                     [2, 2, 2], 
+
+                    /* 빈도가 높은 배치 */
+                    [1, 1, 1, 1, 1, 1], 
+                    [1, 2, 3], 
+                    [1, 2, 2, 1], 
+                    [1, 3, 2], 
+                    [2, 2, 2], 
+
+                    /* 빈도가 낮은 배치 */
                     [3, 2, 1], 
                     [2, 3, 1],
-                    [3, 3]
+                    [3, 3],
                 ],
                 7 => [
                     [1, 1, 1, 1, 1, 1, 1], 
@@ -199,9 +223,19 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [1, 2, 2, 2], 
                     [1, 2, 3, 1], 
                     [2, 1, 3, 1], 
-                    [2, 3, 2], 
                     [2, 2, 2, 1],
-                    [3, 2, 2]
+
+                    /* 빈도가 높은 배치 */
+                    [1, 1, 1, 1, 1, 1, 1], 
+                    [1, 1, 2, 3], 
+                    [1, 2, 2, 2], 
+                    [1, 2, 3, 1], 
+                    [2, 1, 3, 1],
+                    [2, 2, 2, 1], 
+
+                    /* 빈도가 낮은 배치 */
+                    [2, 3, 2], 
+                    [3, 2, 2],
                 ]
             ];
 
@@ -1128,7 +1162,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $REELCOUNT = 6;
 
             /* 당첨금이 제일 작은 심볼중 하나 선택 */
-            $startSymbols = [random_int(7, 13), random_int(7, 13)];
+            $startSymbols = [random_int(5, 13), random_int(5, 13)];     
 
             for ($reelId=1; $reelId <= $REELCOUNT; $reelId++) { 
 
@@ -1292,7 +1326,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $unavailableReels = [];
 
                 /* WILD 심볼 생성 */
-                $wildCount = $this->GetWILDCount();
+                $wildCount = $winType == 'bonus' ? 0 : $this->GetWILDCount();
 
                 for ($wildId=0; $wildId < $wildCount; $wildId++) { 
                     while( in_array( ($reelId = random_int(2, 5)), $unavailableReels));
