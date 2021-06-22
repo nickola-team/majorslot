@@ -1514,6 +1514,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     'status'=> \VanguardLTE\WithdrawDeposit::DONE,
                 ])->where('type', $type)->orderBy('created_at','desc')->take(20);
             }
+            else
+            {
+                return redirect()->back()->withErrors('접근권한이 없습니다.');
+            }
             $in_out_request = $in_out_request->orderBy('created_at', 'desc')->get();
             $in_out_request = $in_out_request->paginate(20);
             $in_out_wait = $in_out_wait->orderBy('created_at', 'desc')->get();

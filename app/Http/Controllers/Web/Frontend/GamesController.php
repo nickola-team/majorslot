@@ -115,7 +115,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->first(); //for admin's popup
 
-            if ($shop_id != 0) { //it is logged in
+            /*if ($shop_id != 0) { //it is logged in
                 $master = auth()->user()->referral;
                 while ($master!=null && !$master->hasRole('master'))
                 {
@@ -125,7 +125,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     $notice = \VanguardLTE\Notice::where(['user_id' => $master->id, 'active' => 1])->first(); //for master's popup
                 }
-            }
+            } */
 
 
             return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice'));
