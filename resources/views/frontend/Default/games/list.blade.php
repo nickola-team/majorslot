@@ -12,18 +12,19 @@
 @if ($notice != null)
 <div class="modal fade in" id="liveperson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 58px;">
-        <div class="modal-content" style="border: 0;">
-            <div class="modal-body" style="padding:0;">
-                <img src="{{$notice->image}}" style="width: 100%;vertical-align: bottom;">
+        <div class="modal-content noticecontent">
+            <div class="modal-body noticebox">
+                <?php echo $notice->content ?>
+            </div>
+            <div class="modal-footer noticefooter">
+                <label >
+                    <input type="checkbox" id="hide-today" style="margin-right: 5px;">오늘 하루동안 이 창을 열지 않음
+                </label>
+                &nbsp;&nbsp;
+                <a style="color: red;font-weight:bold; cursor: pointer; margin-right: 10px;" id="banner-close">닫기</a>
             </div>
         </div>
-        <div style="text-align: right;margin: 0 auto;display: block;font-size: 20px;color: #fff;background: #2B2B2B;line-height: 30px;padding-right: 10px;">
-            <label >
-                <input type="checkbox" id="hide-today" style="margin-right: 5px;">오늘 하루동안 이 창을 열지 않음
-            </label>
-            &nbsp;&nbsp;
-            <a style="color: red;font-weight:bold; cursor: pointer; margin-right: 10px;" id="banner-close">닫기</a>
-        </div>
+        
     </div>
 </div>
 @endif

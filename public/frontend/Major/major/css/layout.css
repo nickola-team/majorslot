@@ -819,15 +819,13 @@
 		-webkit-transform: scale(1);
 	}					
 }
-
-
-
-
-
-
-
-
-
-
-
-
+.noticecontent {background-color:transparent; width:500px;left:250px;}
+.noticebox  {background-color:#000000ee; border: 5px solid #044bb6; border-radius:10px; padding:40px; position:relative; font-size: 16px;
+    color: #ffffff;
+    margin: 0 0 0 0;
+    font-family: nanumgothic,Dotum, Arial, Helvetica, sans-serif;
+    letter-spacing:  -1px;
+    line-height: 28px;
+    font-weight: 400;}
+.noticefooter  {font-size: 14px;border-top: 0 none;
+    font-family: nanumgothic,Dotum, Arial, Helvetica, sans-serif;}
