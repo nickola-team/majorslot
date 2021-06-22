@@ -901,7 +901,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $childs = $users->paginate(20);
-            $start_date = date("Y-m-d",strtotime("-1 days"));
+            $start_date = date("Y-m-d");
             $end_date = date("Y-m-d");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
@@ -1003,7 +1003,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ];
 
             $dates = $request->dates;
-            $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
+            $start_date = date("Y-m-d 0:0:0");
             $end_date = date("Y-m-d H:i:s");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $request->dates);
