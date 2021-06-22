@@ -116,7 +116,7 @@ namespace VanguardLTE\Console
 
             $schedule->command('daily:summary')->dailyAt('08:10');
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00');
-            $schedule->command('today:summary')->everyMinute();
+            $schedule->command('today:summary')->hourly();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
