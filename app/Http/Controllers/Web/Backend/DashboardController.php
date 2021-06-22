@@ -901,7 +901,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $childs = $users->paginate(20);
-            $start_date = date("Y-m-d",strtotime("-1 days"));
+            $start_date = date("Y-m-d");
             $end_date = date("Y-m-d");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
@@ -1003,7 +1003,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ];
 
             $dates = $request->dates;
-            $start_date = date("Y-m-d H:i:s",strtotime("-1 days"));
+            $start_date = date("Y-m-d 0:0:0");
             $end_date = date("Y-m-d H:i:s");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $request->dates);
@@ -1513,6 +1513,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     'payeer_id'=> auth()->user()->id,
                     'status'=> \VanguardLTE\WithdrawDeposit::DONE,
                 ])->where('type', $type)->orderBy('created_at','desc')->take(20);
+            }
+            else
+            {
+                return redirect()->back()->withErrors('접근권한이 없습니다.');
             }
             $in_out_request = $in_out_request->orderBy('created_at', 'desc')->get();
             $in_out_request = $in_out_request->paginate(20);

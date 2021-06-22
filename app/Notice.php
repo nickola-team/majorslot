@@ -6,6 +6,7 @@ namespace VanguardLTE
         protected $table = 'notice';
         protected $fillable = [
             'user_id', 
+            'title', 
             'type', 
             'content', 
             'image', 
@@ -16,6 +17,11 @@ namespace VanguardLTE
         public static function boot()
         {
             parent::boot();
+        }
+
+        public function writer()
+        {
+            return $this->hasOne('VanguardLTE\User', 'id', 'user_id');
         }
     }
 
