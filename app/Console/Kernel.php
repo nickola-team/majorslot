@@ -17,12 +17,6 @@ namespace VanguardLTE\Console
                 \Illuminate\Support\Facades\Redis::del('playngolist');
 
                 set_time_limit(0);
-                /*$admins = \VanguardLTE\User::where('role_id',7)->get();
-                foreach ($admins as $admin)
-                {
-                    \VanguardLTE\DailySummary::summary($admin->id);
-                } */
-
                 $_daytime = strtotime("-1 days") * 10000;
                 
                 \VanguardLTE\PPTransaction::where('timestamp', '<', $_daytime)->delete();
@@ -49,75 +43,9 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
             })->dailyAt('08:00');
-            $schedule->call(function()
-            {
-                $users = \VanguardLTE\StatGame::where('date_time', '>', \Carbon\Carbon::now()->subHours()->format('Y-m-d H:i:s'))->groupBy('user_id')->pluck('user_id');
-                if( count($users) ) 
-                {
-                    foreach( $users as $userID ) 
-                    {
-                        $counts = \DB::select("SELECT \n                                        game, COUNT(*) AS number \n                                    FROM \n                                        `w_stat_game` \n                                    WHERE \n                                        user_id=:userID AND \n                                        date_time > :mydate \n                                    GROUP BY game \n                                    ORDER BY COUNT(*) DESC \n                                    LIMIT 5", [
-                            'userID' => $userID, 
-                            'mydate' => \Carbon\Carbon::now()->subHours()->format('Y-m-d H:i:s')
-                        ]);
-                        foreach( $counts as $count ) 
-                        {
-                            \VanguardLTE\GameActivity::create([
-                                'game' => $count->game, 
-                                'number' => $count->number, 
-                                'user_id' => $userID
-                            ]);
-                        }
-                        $counts = \VanguardLTE\StatGame::where('user_id', $userID)->where('win', '>', 0)->where('date_time', '>', \Carbon\Carbon::now()->subHours()->format('Y-m-d H:i:s'))->orderBy('win', 'DESC')->get();
-                        $stats = [];
-                        foreach( $counts as $count ) 
-                        {
-                            if( isset($stats[$count->game]) ) 
-                            {
-                                continue;
-                            }
-                            $stats[$count->game] = $count->win;
-                            if( count($stats) == 5 ) 
-                            {
-                                break;
-                            }
-                        }
-                        foreach( $stats as $key => $stat ) 
-                        {
-                            \VanguardLTE\GameActivity::create([
-                                'game' => $key, 
-                                'max_win' => $stat, 
-                                'user_id' => $userID
-                            ]);
-                        }
-                        $counts = \VanguardLTE\StatGame::where('user_id', $userID)->where('date_time', '>', \Carbon\Carbon::now()->subHours()->format('Y-m-d H:i:s'))->orderBy('bet', 'DESC')->get();
-                        $stats = [];
-                        foreach( $counts as $count ) 
-                        {
-                            if( isset($stats[$count->game]) ) 
-                            {
-                                continue;
-                            }
-                            $stats[$count->game] = $count->bet;
-                            if( count($stats) == 5 ) 
-                            {
-                                break;
-                            }
-                        }
-                        foreach( $stats as $key => $stat ) 
-                        {
-                            \VanguardLTE\GameActivity::create([
-                                'game' => $key, 
-                                'max_bet' => $stat, 
-                                'user_id' => $userID
-                            ]);
-                        }
-                    }
-                }
-            })->hourly();
 
-            $schedule->command('daily:summary')->dailyAt('08:10');
-            $schedule->command('monthly:summary')->monthlyOn(1, '9:00');
+            $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
+            $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping();
             
             if (env('SWITCH_PP', false) == true){
