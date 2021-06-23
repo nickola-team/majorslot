@@ -40,28 +40,20 @@
 </a>
 </td>
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])))
-@if (auth()->user()->hasRole('master') && settings('enable_master_deal'))
-<button type="button" class="btn btn-block btn-success btn-xs" disabled>@lang('app.in')</button>
-@else
+@if (auth()->user()->isInoutPartner() || ($user['id']!=auth()->user()->id && auth()->user()->role_id == $user['role_id']+1))
 <a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }} disabled" >
 <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 </a>
-@endif
 @else
 <button type="button" class="btn btn-block btn-success btn-xs" disabled>@lang('app.in')</button>
 @endif
 </td>
 
 <td>
-@if ($user['role_id']>3 && $user['id']!=auth()->user()->id && (auth()->user()->role_id == $user['role_id']+1||auth()->user()->hasRole(['admin','comaster','master'])))
-@if (auth()->user()->hasRole('master') && settings('enable_master_deal'))
-<button type="button" class="btn btn-block btn-danger btn-xs" disabled>@lang('app.out')</button>
-@else
+@if (auth()->user()->isInoutPartner())
 <a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user['id'] }}" >
 <button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 </a>
-@endif
 @else
 <button type="button" class="btn btn-block btn-danger btn-xs" disabled>@lang('app.out')</button>
 @endif

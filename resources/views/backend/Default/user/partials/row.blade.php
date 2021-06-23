@@ -40,27 +40,19 @@
 	<td>미승인</td>
 	@endif
 	<td>
-		@if (Auth::user()->hasRole(['admin','comaster','master','manager']) && $user->hasRole('user'))
-		@if (auth()->user()->hasRole('master') && settings('enable_master_deal'))
-		<button type="button" class="btn btn-block btn-success disabled btn-xs">@lang('app.in')</button>
-		@else
+		@if( auth()->user()->isInoutPartner() || auth()->user()->hasRole('manager'))
 		<a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user->id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 		</a>
-		@endif
 		@else
-			<button type="button" class="btn btn-block btn-success disabled btn-xs">@lang('app.in')</button>
+		<button type="button" class="btn btn-block btn-success disabled btn-xs">@lang('app.in')</button>
 		@endif
 	</td>
 	<td>
-		@if (Auth::user()->hasRole(['admin','comaster','master','manager']) && $user->hasRole('user'))
-		@if (auth()->user()->hasRole('master') && settings('enable_master_deal'))
-		<button type="button" class="btn btn-block btn-danger disabled btn-xs">@lang('app.out')</button>
-		@else
+		@if( auth()->user()->isInoutPartner() || auth()->user()->hasRole('manager'))
 		<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user->id }}" >
 		<button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 		</a>
-		@endif
 		@else
 			<button type="button" class="btn btn-block btn-danger disabled btn-xs">@lang('app.out')</button>
 		@endif
