@@ -58,7 +58,7 @@ namespace VanguardLTE
                 $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                 $in_out = \DB::select($query);
                 $adj['dealout'] = $in_out[0]->dealout??0;
-                $adj['totalout'] = $adj['totalout'] + $adj['dealout'];
+                //$adj['totalout'] = $adj['totalout'] + $adj['dealout'];
 
                 $shop_users = $shop->getUsersByRole('user')->pluck('id')->toArray();
                 
@@ -124,7 +124,7 @@ namespace VanguardLTE
                     $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                     $in_out = \DB::select($query);
                     $adj['dealout'] = $in_out[0]->dealout??0;
-                    $adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
+                    //$adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
                     
                     //agent, distributor's deal out
                     $partner_users = $partner->availableUsers();
@@ -137,7 +137,7 @@ namespace VanguardLTE
                             $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
                             $in_out = \DB::select($query);
                             $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
-                            $adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
+                            //$adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
 
                             $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
                             $in_out = \DB::select($query);
