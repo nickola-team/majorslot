@@ -357,7 +357,7 @@ namespace VanguardLTE
             }
             
             if($b_shop){
-                $todaysumm = \VanguardLTE\DailySummary::where(['shop_id'=> $user->shop_id, 'date' => $day, 'type'=>'today'])->first();
+                $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
                 if ($todaysumm)
                 {
                     $from = $todaysumm->updated_at;
