@@ -587,10 +587,17 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         [0, 2, 1, 0, 1],
                         [0, 2, 2],
         
-                        [0, 1, 2, 2]
+                        // [0, 1, 2, 2]
+
+                        // 높은빈도
+                        [0, 1, 1, 1],
+                        [0, 1, 1, 0, 1],
+                        [0, 1, 1, 1, 1],
+                        [0, 1, 2],
+                        [0, 2, 1],
                     ];
         
-                    $wildSetId = random_int(0, 10);
+                    $wildSetId = array_rand($wildCountProbabilityMap);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', $wildCountProbabilityMap[$wildSetId]);
                 }
             }
@@ -647,6 +654,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         }
         public function generateStickyWILDs($reels, $wildSet, $lastWILDCollection = [], $fs, $fsmax) {
             $REELCOUNT = 6;
+            $S_WILD = 2;
 
             /* 이전 WILD 심볼 복원 */
             foreach ($lastWILDCollection as $pos => $multiplier) {
@@ -682,7 +690,14 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     continue;
                 }
 
-                $reelId = array_rand($availableReels) + 1;
+                /* 프리스핀 2회까지도 2,3번릴에 WILD 심볼이 없다면 */
+                if ($fs >= 3 && array_search($S_WILD, $reels["reel2"]) == false && array_search($S_WILD, $reels["reel3"]) == false) {
+                    $reelId = array_key_first($availableReels) + 1;
+                }
+                else {
+                    $reelId = array_rand($availableReels) + 1;
+                }
+
 
                 /* WILD를 배치할 위치선택 */ 
                 $availablePoses = array_where($reels["reel{$reelId}"], function ($symbol, $key) {
