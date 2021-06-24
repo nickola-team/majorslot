@@ -312,6 +312,22 @@ namespace VanguardLTE\Console
         {
             require(base_path('routes/console.php'));
 
+            \Artisan::command('daily:gamesummary {date=today}', function ($date) {
+                $this->info("Begin daily game summary adjustment.");
+
+                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                foreach ($admins as $admin)
+                {
+                    if ($date == 'today') {
+                        \VanguardLTE\CategorySummary::summary($admin->id);
+                    }
+                    else{
+                        \VanguardLTE\CategorySummary::summary($admin->id, $date);
+                    }
+                }
+                $this->info("End daily game summary adjustment.");
+            });
+
             \Artisan::command('daily:summary {date=today}', function ($date) {
                 set_time_limit(0);
                 $this->info("Begin summary daily adjustment.");

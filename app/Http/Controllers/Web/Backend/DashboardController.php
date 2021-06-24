@@ -924,6 +924,72 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
         }
+        public function adjustment_game1(\Illuminate\Http\Request $request)
+        {
+            $dates = $request->dates;
+            $start_date = date("Y-m-d 0:0:0");
+            $end_date = date("Y-m-d H:i:s");
+            if($dates != null && $dates != ''){
+                $dates_tmp = explode(' - ', $request->dates);
+                $start_date = $dates_tmp[0] . " 00:00:00";
+                $end_date = $dates_tmp[1] . " 23:59:59";
+            }
+            $user_id = auth()->user()->id;
+            if( $request->partner != '' ) 
+            {
+                if ($request->type == 'shop')
+                {
+                    $shop = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->first();
+                    if (!$shop)
+                    {
+                        return redirect()->back()->withErrors('매장을 찾을수 없습니다.');
+                    }
+                    $user_id = $shop->user_id;
+                }
+                else if ($request->type == 'partner')
+                {
+                    $partner = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->first();
+                    if (!$partner)
+                    {
+                        return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
+                    }
+                    $user_id = $shop->user_id;
+                }
+            }
+
+            $adj_games = \VanguardLTE\CategorySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->where('user_id', $user_id)->orderby('date')->get();
+            $categories = null;
+            if ($adj_games)
+            {
+                $last_date = null;
+                $date_cat = null;
+                foreach ($adj_games as $cat)
+                {
+                    if ($cat->date != $last_date)
+                    {
+                        if ($date_cat)
+                        {
+                            $categories[] = $date_cat;
+                        }
+                        $last_date = $cat->date;
+                        $date_cat = [
+                            'date' => $cat->date,
+                        ];
+                    }
+                    $info = $cat->toArray();
+                    $info['title'] = $cat->category->trans->trans_title;
+                    $date_cat['cat'][] = $info;
+                }
+                if ($date_cat)
+                {
+                    $categories[] = $date_cat;
+                }
+            }
+
+            return view('backend.Default.adjustment.adjustment_game1', compact('categories', 'start_date', 'end_date'));
+
+
+        }
         public function adjustment_game(\Illuminate\Http\Request $request)
         {
             $categories = \VanguardLTE\Category::where('shop_id', 0);
