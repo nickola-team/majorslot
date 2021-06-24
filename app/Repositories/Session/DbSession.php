@@ -69,6 +69,7 @@ class DbSession implements SessionRepository
             ->delete();
 
         $this->users->update($user->id, ['remember_token' => null]);
+        $this->users->update($user->id, ['api_token' => null]);
     }
 
     /**
@@ -95,5 +96,6 @@ class DbSession implements SessionRepository
             ->delete();
 
         $this->users->update($userId, ['remember_token' => null]);
+        $this->users->update($userId, ['api_token' => null]);
     }
 }

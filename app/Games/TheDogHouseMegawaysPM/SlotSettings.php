@@ -175,7 +175,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [2, 2], 
 
                     /* 빈도가 높은 배치 */
-                    [1, 1, 1, 1], 
                     [1, 2, 1], 
                     [2, 2], 
 
@@ -190,9 +189,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [2, 2, 1],
 
                     /* 빈도가 높은 배치 */
-                    [1, 1, 1, 1, 1], 
                     [1, 2, 2],
-                    [1, 3, 1],
                     [2, 2, 1],
 
                     /* 빈도가 낮은 배치 */
@@ -206,8 +203,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [2, 2, 2], 
 
                     /* 빈도가 높은 배치 */
-                    [1, 1, 1, 1, 1, 1], 
-                    [1, 2, 3], 
                     [1, 2, 2, 1], 
                     [1, 3, 2], 
                     [2, 2, 2], 
@@ -226,8 +221,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [2, 2, 2, 1],
 
                     /* 빈도가 높은 배치 */
-                    [1, 1, 1, 1, 1, 1, 1], 
-                    [1, 1, 2, 3], 
                     [1, 2, 2, 2], 
                     [1, 2, 3, 1], 
                     [2, 1, 3, 1],
@@ -1186,14 +1179,14 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $symbolCount = random_int(2, 3);
                 }
 
-                $reel['reel' . $reelId][-1] = random_int(7, 13);
+                $reel['reel' . $reelId][-1] = random_int(3, 13);
 
                 for($k = 0; $k < $symbolCount; $k++){
                     if ($reelId == 1) {
                         $reel['reel' . $reelId][$k] = $startSymbols[$k];
                     }
                     else {
-                        while (in_array(($symbol = random_int(4, 10)), $startSymbols));
+                        while (in_array(($symbol = random_int(4, 9)), $startSymbols));
                         $reel['reel' . $reelId][$k] = $symbol;
                     }
                 }
@@ -1201,7 +1194,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $reel['reel' . $reelId][$k] = 14;
                 }
 
-                while (in_array(($symbol = random_int(9, 13)), $startSymbols));
+                while (in_array(($symbol = random_int(3, 13)), $startSymbols));
                 $reel['reel' . $reelId][7] = $symbol;
             }
             /* 릴배치표 조정, 본사게임과 비슷하게 */
@@ -1218,6 +1211,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $S_BLANK = 14;
             $S_WILD = 2;
             $S_SCATTER = 1;
+            $S_K = 10;
             $isScatter = false;
             $basePosOfReels = [];
 
@@ -1265,7 +1259,12 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $uniqueSymbols = [];
                 foreach ($reelPositionSet as $id => $count) {
                     if ($curPos == 0) {
-                        $randSymbol = random_int(3, 13);
+                        if ($count == 3) {
+                            $randSymbol = random_int(3, 9);
+                        }
+                        else {
+                            $randSymbol = random_int(3, 13);
+                        }
                     }
                     else {
                         $prevSymbol = $reel['reel' . $reelId][$curPos - 1];
@@ -1274,7 +1273,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                                 while( in_array( ($randSymbol = random_int(7, 8)), $uniqueSymbols));
                             }
                             else {
-                                while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
+                                if ($count == 3) {
+                                    while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
+                                }
+                                else {
+                                    while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                }
                             }
                         }
                         else if ($this->IsKindOfNumber($prevSymbol)) {
@@ -1282,21 +1287,33 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                                 while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
                             }
                             else if ($numbersCount + $count < 4) {
-                                while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
+                                if ($count == 3) {
+                                    while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
+                                }
+                                else {
+                                    while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                }
                             }
                             else {
                                 while( in_array( ($randSymbol = random_int(7, 8)), $uniqueSymbols));
                             }
                         }
                         else {
-                            if ($dogsCount + $count >= 4) {
-                                while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
-                            }
-                            else if ($numbersCount + $count >= 4) {
+                            if ($dogsCount + $count < 4) {
                                 while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
                             }
+                            else if ($numbersCount + $count < 4) {
+                                /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
+                                if ($count == 3) {
+                                    while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
+                                }
+                                else {
+                                    while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                }
+                            }
                             else {
-                                while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                while( in_array( ($randSymbol = random_int(7, 8)), $uniqueSymbols));
                             }
                         }
                     }

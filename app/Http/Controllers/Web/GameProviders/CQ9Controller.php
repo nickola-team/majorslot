@@ -975,7 +975,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($gameList)
             {
                 $games = json_decode($gameList, true);
-                return $games;
+                if ($games!=null && count($games) > 0){
+                    return $games;
+                }
             }
             
             $response = Http::withHeaders([

@@ -58,7 +58,7 @@ namespace VanguardLTE
                 $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                 $in_out = \DB::select($query);
                 $adj['dealout'] = $in_out[0]->dealout??0;
-                $adj['totalout'] = $adj['totalout'] + $adj['dealout'];
+                //$adj['totalout'] = $adj['totalout'] + $adj['dealout'];
 
                 $shop_users = $shop->getUsersByRole('user')->pluck('id')->toArray();
                 
@@ -124,7 +124,7 @@ namespace VanguardLTE
                     $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                     $in_out = \DB::select($query);
                     $adj['dealout'] = $in_out[0]->dealout??0;
-                    $adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
+                    //$adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
                     
                     //agent, distributor's deal out
                     $partner_users = $partner->availableUsers();
@@ -137,7 +137,7 @@ namespace VanguardLTE
                             $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
                             $in_out = \DB::select($query);
                             $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
-                            $adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
+                            //$adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
 
                             $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
                             $in_out = \DB::select($query);
@@ -306,7 +306,7 @@ namespace VanguardLTE
             if($b_shop){
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
-                $dailysumm = \VanguardLTE\DailySummary::where(['shop_id'=> $user->shop_id, 'date' => $day, 'type'=>'daily'])->first();
+                $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
                 {
                     $dailysumm->update($adj);
@@ -356,9 +356,8 @@ namespace VanguardLTE
                 $b_shop = true;
             }
             
-            $to =  date("Y-m-d H:i:s", strtotime("now"));
             if($b_shop){
-                $todaysumm = \VanguardLTE\DailySummary::where(['shop_id'=> $user->shop_id, 'date' => $day, 'type'=>'today'])->first();
+                $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
                 if ($todaysumm)
                 {
                     $from = $todaysumm->updated_at;
@@ -367,6 +366,7 @@ namespace VanguardLTE
                 {
                     $from =  $day . " 0:0:0";
                 }
+                $to =  date("Y-m-d H:i:s", strtotime("now"));
 
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
@@ -410,6 +410,8 @@ namespace VanguardLTE
                 {
                     $from =  $day . " 0:0:0";
                 }
+                
+                $to =  date("Y-m-d H:i:s", strtotime("now"));
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
                 $adj['type'] ='today';

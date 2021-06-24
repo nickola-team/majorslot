@@ -168,6 +168,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
         public function getLogout()
         {
             event(new \VanguardLTE\Events\User\LoggedOut());
+            if (\Auth::check()){
+                auth()->user()->update(['api_token' => null]);
+            }
             \Auth::logout();
             return redirect('/');
         }
