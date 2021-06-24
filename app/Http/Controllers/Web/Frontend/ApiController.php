@@ -100,7 +100,32 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
             
-            $user->update(['api_token' => $user->generateCode(36)]);
+            $api_token = $user->generateCode(36);
+            $tryCount = 0;
+            $bToken = false;
+            do{
+                $alreadyUser = \VanguardLTE\User::where('api_token', $api_token)->first();
+                if (!$alreadyUser)
+                {
+                    $bToken = true;
+                    break;
+                }
+                $api_token = $user->generateCode(36);
+                $tryCount = $tryCount + 1;
+            }
+            while ($tryCount < 20);
+            if ($bToken){
+                $user->update(['api_token' => $api_token]);
+                $user = $user->fresh();
+                if ($user->api_token != $api_token)
+                {
+                    return response()->json(['error' => true, 'msg' => '잠시후 다시 시도해주세요.']);
+                }
+            }
+            else
+            {
+                return response()->json(['error' => true, 'msg' => '잠시후 다시 시도해주세요.']);
+            }
 
             event(new \VanguardLTE\Events\User\LoggedIn());
 
