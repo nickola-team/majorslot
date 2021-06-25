@@ -340,6 +340,10 @@ namespace VanguardLTE\Console
                 {
                     \VanguardLTE\CategorySummary::summary_today($admin->id);
                 }
+                if ($date == 'today') {
+                    $day = date("Y-m-d", strtotime("-1 days"));
+                    \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $date])->delete();
+                }
                 $this->info("End today's game adjustment.");
             });
 
