@@ -220,38 +220,6 @@ namespace VanguardLTE
                 }
             }
 
-            if (!$user->hasRole('admin'))
-            {
-                //merge pragmatic and pragmatic play games if not admin
-                $pp_adj = null;
-                $pragmatic_adj = null;
-                $pp_index = 0;
-                $pragmatic_index = 0;
-                foreach ($adjustments as $index => $adj)
-                {
-                    if ($adj['category'] == 'Pragmatic Play')
-                    {
-                        $pp_adj = $adj;
-                        $pp_index = $index;
-                    }
-                    if ($adj['category'] == 'Pragmatic')
-                    {
-                        $pragmatic_adj = $adj;
-                        $pragmatic_index = $index;
-                    }
-                }
-                if ($pp_adj && $pragmatic_adj)
-                {
-                    $pp_adj['games'] = array_merge($pp_adj['games'] , $pragmatic_adj['games']);
-                    $pp_adj['totalwin'] = $pp_adj['totalwin'] + $pragmatic_adj['totalwin'];
-                    $pp_adj['totalbet'] = $pp_adj['totalbet'] + $pragmatic_adj['totalbet'];
-                    $pp_adj['totalcount'] = $pp_adj['totalcount'] + $pragmatic_adj['totalcount'];
-                    $pp_adj['total_deal'] = $pp_adj['total_deal'] + $pragmatic_adj['total_deal'];
-                    $pp_adj['total_mileage'] = $pp_adj['total_mileage'] + $pragmatic_adj['total_mileage'];
-                    $adjustments[$pp_index] = $pp_adj;
-                    unset($adjustments[$pragmatic_index]);
-                }
-            }
             //remove total bet is zero
             $filtered_adjustment = [];
 
