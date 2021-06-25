@@ -35,7 +35,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $hotgames = [];
 
             $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');
-            $livegames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('live');
+            $livegames = [];
+            if (\VanguardLTE\Category::where('shop_id' , $shop_id)->where('href','live')->first())
+            {
+                $livegames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('live');
+            }
 
             if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
             {
