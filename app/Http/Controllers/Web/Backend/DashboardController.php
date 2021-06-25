@@ -1009,43 +1009,45 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if (!auth()->user()->hasRole('admin'))
             {
                 //merge pragmatic and pragmatic play games if not admin
-                foreach ($categories as $i => $cat)
-                {
-                    $pp_adj = null;
-                    $pragmatic_adj = null;
-                    $pp_index = 0;
-                    $pragmatic_index = 0;
-                    foreach ($cat['cat'] as $index => $game)
+                if ($categories){
+                    foreach ($categories as $i => $cat)
                     {
-                        if ($game['name'] == 'Pragmatic Play')
+                        $pp_adj = null;
+                        $pragmatic_adj = null;
+                        $pp_index = 0;
+                        $pragmatic_index = 0;
+                        foreach ($cat['cat'] as $index => $game)
                         {
-                            $pp_adj = $game;
-                            $pp_index = $index;
+                            if ($game['name'] == 'Pragmatic Play')
+                            {
+                                $pp_adj = $game;
+                                $pp_index = $index;
+                            }
+                            if ($game['name'] == 'Pragmatic')
+                            {
+                                $pragmatic_adj = $game;
+                                $pragmatic_index = $index;
+                            }
                         }
-                        if ($game['name'] == 'Pragmatic')
+                        if ($pragmatic_adj)
                         {
-                            $pragmatic_adj = $game;
-                            $pragmatic_index = $index;
+                            if ($pp_adj)
+                            {
+                                $pp_adj['totalwin'] = $pp_adj['totalwin'] + $pragmatic_adj['totalwin'];
+                                $pp_adj['totalbet'] = $pp_adj['totalbet'] + $pragmatic_adj['totalbet'];
+                                $pp_adj['totalcount'] = $pp_adj['totalcount'] + $pragmatic_adj['totalcount'];
+                                $pp_adj['total_deal'] = $pp_adj['total_deal'] + $pragmatic_adj['total_deal'];
+                                $pp_adj['total_mileage'] = $pp_adj['total_mileage'] + $pragmatic_adj['total_mileage'];
+                                $cat['cat'][$pp_index] = $pp_adj;
+                                unset($cat['cat'][$pragmatic_index]);
+                            }
+                            else
+                            {
+                                $pragmatic_adj['title'] = '프라그메틱 플레이';
+                                $cat['cat'][$pragmatic_index] = $pragmatic_adj;
+                            }
+                            $categories[$i] = $cat;
                         }
-                    }
-                    if ($pragmatic_adj)
-                    {
-                        if ($pp_adj)
-                        {
-                            $pp_adj['totalwin'] = $pp_adj['totalwin'] + $pragmatic_adj['totalwin'];
-                            $pp_adj['totalbet'] = $pp_adj['totalbet'] + $pragmatic_adj['totalbet'];
-                            $pp_adj['totalcount'] = $pp_adj['totalcount'] + $pragmatic_adj['totalcount'];
-                            $pp_adj['total_deal'] = $pp_adj['total_deal'] + $pragmatic_adj['total_deal'];
-                            $pp_adj['total_mileage'] = $pp_adj['total_mileage'] + $pragmatic_adj['total_mileage'];
-                            $cat['cat'][$pp_index] = $pp_adj;
-                            unset($cat['cat'][$pragmatic_index]);
-                        }
-                        else
-                        {
-                            $pragmatic_adj['title'] = '프라그메틱 플레이';
-                            $cat['cat'][$pragmatic_index] = $pragmatic_adj;
-                        }
-                        $categories[$i] = $cat;
                     }
                 }
                 
