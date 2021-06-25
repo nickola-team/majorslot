@@ -378,7 +378,7 @@ namespace VanguardLTE
                             'user_id' => $data['user_id'],
                              'type' => 'today',
                              'date' => $data['date'],
-                             'updated_at' => $data['updated_at'],
+                             'updated_at' => date("Y-m-d H:i:s"),
                              'category_id' => $data['category_id'],
                              'shop_id' => $data['shop_id'],
                              'totalbet' => $data['totalbet'],
