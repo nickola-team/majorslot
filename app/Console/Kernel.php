@@ -329,6 +329,10 @@ namespace VanguardLTE\Console
                         \VanguardLTE\CategorySummary::summary($admin->id, $date);
                     }
                 }
+                if ($date == 'today') {
+                    $day = date("Y-m-d", strtotime("-1 days"));
+                    \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $date])->delete();
+                }
                 $this->info("End daily game summary adjustment.");
             });
             \Artisan::command('today:gamesummary', function () {
@@ -339,10 +343,6 @@ namespace VanguardLTE\Console
                 foreach ($admins as $admin)
                 {
                     \VanguardLTE\CategorySummary::summary_today($admin->id);
-                }
-                if ($date == 'today') {
-                    $day = date("Y-m-d", strtotime("-1 days"));
-                    \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $date])->delete();
                 }
                 $this->info("End today's game adjustment.");
             });
