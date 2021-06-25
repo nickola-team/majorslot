@@ -354,7 +354,6 @@ namespace VanguardLTE
                     $bFound = false;
                     foreach ($catsum as $i => $t_sum)
                     {
-                        unset($catsum[$i]['id']);
                         if ($adj['category_id'] == $t_sum['category_id'])
                         {
                             $adj['totalbet'] = $adj['totalbet'] + $t_sum['totalbet'];
@@ -372,8 +371,27 @@ namespace VanguardLTE
                         $catsum[] = $adj;
                     }
                 }
+
+                $new_cat = array_map( 
+                    function($data) {
+                         return [
+                            'user_id' => $data['user_id'],
+                             'type' => 'today',
+                             'date' => $data['date'],
+                             'updated_at' => $data['updated_at'],
+                             'category_id' => $data['category_id'],
+                             'shop_id' => $data['shop_id'],
+                             'totalbet' => $data['totalbet'],
+                             'totalwin' => $data['totalwin'],
+                             'totalcount' => $data['totalcount'],
+                             'total_deal' => $data['total_deal'],
+                             'total_mileage' => $data['total_mileage'],
+                         ]; 
+                        }, 
+                $catsum);
+
                 \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->delete();
-                \VanguardLTE\CategorySummary::insert($catsum);
+                \VanguardLTE\CategorySummary::insert($new_cat);
             }
         }
     }
