@@ -19,13 +19,13 @@
 					</div>
 				</div> 
 				<div class="box-body">
-					<div class="col-md-6">
+				{{--					<div class="col-md-6">
 						<div class="form-group">
 							<label>게임이름</label>
 							<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="게임이름">
 						</div>
 					</div>
-{{--					<div class="col-md-6">
+					<div class="col-md-6">
 						<div class="form-group">
 							<label>@lang('app.category')</label>
 							<select class="form-control select2" name="category[]" id="category" multiple="multiple" style="width: 100%;" data-placeholder="">
@@ -74,7 +74,7 @@
                             <table class="table table-bordered table-striped">
 					<thead>
 					<tr>
-						<th>카테고리</th>
+						<th>날짜</th>
 						<th>게임이름</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
@@ -86,56 +86,21 @@
 					</tr>
 					</thead>
 					<tbody>
-					@if (count($filtered_adjustment))
-						@foreach ($filtered_adjustment as $adjustment)
+					@if (isset($categories))
+						@foreach ($categories as $adjustment)
 						<tr>
-						<td rowspan="{{count($adjustment['games']) + 1}}"> {{ $adjustment['category'] }}</td>
-							@include('backend.Default.adjustment.partials.row_game')
+						<td rowspan="{{count($adjustment['cat'])}}"> {{ $adjustment['date'] }}</td>
+							@include('backend.Default.adjustment.partials.row_game', ['total' => false])
 						</tr>
-						@if ($adjustment['category'])
-						<tr>
-							<td style="color:green;">합계</td>
-							<td style="color:green;">{{ number_format($adjustment['total_bet'],0) }}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_win'],0)}}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_bet'] - $adjustment['total_win'],0)}}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_bet_count'])}}</td>
-							@if(auth()->user()->hasRole('admin'))
-							<td style="color:green;">0</td>
-							<td style="color:green;">{{ number_format($adjustment['total_deal'],0)}}</td>
-							<td style="color:green;">{{ number_format(-$adjustment['total_deal'],0)}}</td>
-							@else
-							<td style="color:green;">{{ number_format($adjustment['total_deal'],0)}}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_mileage'],0)}}</td>
-							<td style="color:green;">{{ number_format($adjustment['total_deal'] - $adjustment['total_mileage'],0)}}</td>
-							@endif
-						</tr>
-						@endif
 
 						@endforeach
-					@else
-						<tr><td colspan="8">@lang('app.no_data')</td></tr>
 					@endif
-					</tbody>
-{{--					<thead>
 					<tr>
-						<td><span class="text-red">합계</span></td>
-						<td></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_bet,0)}}</span></th>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_win,0)}}</span></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_bet_count)}}</span></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_deal,0)}}</span></td>
-						<td><span class="text-red">{{number_format($sum_adjustment->total_mileage,0)}}</span></td>
-						@if(auth()->user()->hasRole('admin'))
-						<td><span class="text-red">{{number_format($sum_adjustment->total_real_profit,0)}}</span></td>
-						@else
-						<td><span class="text-red">{{number_format($sum_adjustment->total_deal - $sum_adjustment->total_mileage,0)}}</span></td>
-						@endif
+					<td > {{ $totalcategory['date'] }}</td>
+					@include('backend.Default.adjustment.partials.row_game', ['adjustment' => ['cat' => [$totalcategory]], 'total' => true])
 					</tr>
-					</thead>--}}
+					</tbody>
                     </table>
-                    {{--</div>
-						{{ $games->appends(Request::except('page'))->links() }}
-                    </div> --}}
 		</div>
 	</section>
 

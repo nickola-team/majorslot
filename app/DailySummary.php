@@ -343,100 +343,57 @@ namespace VanguardLTE
         public static function summary_today($user_id)
         {
             set_time_limit(0);
-            $b_shop = false;
             $user = \VanguardLTE\User::where('id', $user_id)->first();
             if (!$user)
             {
                 return;
             }
-            $day = date("Y-m-d", strtotime("now"));
+            $day = date("Y-m-d");
 
 
-            if($user->hasRole('manager')){
-                $b_shop = true;
-            }
-            
-            if($b_shop){
-                $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
-                if ($todaysumm)
-                {
-                    $from = $todaysumm->updated_at;
-                }
-                else
-                {
-                    $from =  $day . " 0:0:0";
-                }
-                $to =  date("Y-m-d H:i:s", strtotime("now"));
-
-                $adj = DailySummary::adjustment($user_id, $from, $to);
-                $adj['date'] = $day;
-                $adj['type'] ='today';
-                $adj['updated_at'] = $to;
-                if ($todaysumm)
-                {
-                    $adj['user_id']=$user_id;
-                    $adj['shop_id']=$user->shop_id;
-                    $adj['totalin']+=$todaysumm->totalin;
-                    $adj['totalout']+=$todaysumm->totalout;
-                    $adj['moneyin']+=$todaysumm->moneyin;
-                    $adj['moneyout']+=$todaysumm->moneyout;
-                    $adj['dealout']+=$todaysumm->dealout;
-                    $adj['totalbet']+=$todaysumm->totalbet;
-                    $adj['totalwin']+=$todaysumm->totalwin;
-                    $adj['total_deal']+=$todaysumm->total_deal;
-                    $adj['total_mileage']+=$todaysumm->total_mileage;
-                    $adj['balance']=0;
-                    $todaysumm->update($adj);
-                }
-                else
-                {
-                    \VanguardLTE\DailySummary::create($adj);
-                }
-            }
-            else
-            {
+            if(!$user->hasRole('manager')){
                 //repeat child partners
                 $childusers = $user->childPartners(); //하위 파트너들 먼저 정산하고, 그다음 해당 파트너들의 정산을 이용해서 계산
                 foreach ($childusers as $c)
                 {
-                    DailySummary::summary_today($c, $day);
+                    DailySummary::summary_today($c);
                 }
-                $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
-                if ($todaysumm)
-                {
-                    $from = $todaysumm->updated_at;
-                }
-                else
-                {
-                    $from =  $day . " 0:0:0";
-                }
-                
-                $to =  date("Y-m-d H:i:s", strtotime("now"));
-                $adj = DailySummary::adjustment($user_id, $from, $to);
-                $adj['date'] = $day;
-                $adj['type'] ='today';
-                $adj['updated_at'] = $to;
+            }
+            
+            $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
+            if ($todaysumm)
+            {
+                $from = $todaysumm->updated_at;
+            }
+            else
+            {
+                $from =  $day . " 0:0:0";
+            }
+            $to =  date("Y-m-d H:i:s", strtotime("now"));
 
-                if ($todaysumm)
-                {
-                    $adj['user_id']=$user_id;
-                    $adj['shop_id']=$user->shop_id;
-                    $adj['totalin']+=$todaysumm->totalin;
-                    $adj['totalout']+=$todaysumm->totalout;
-                    $adj['moneyin']+=$todaysumm->moneyin;
-                    $adj['moneyout']+=$todaysumm->moneyout;
-                    $adj['dealout']+=$todaysumm->dealout;
-                    $adj['totalbet']+=$todaysumm->totalbet;
-                    $adj['totalwin']+=$todaysumm->totalwin;
-                    $adj['total_deal']+=$todaysumm->total_deal;
-                    $adj['total_mileage']+=$todaysumm->total_mileage;
-                    $adj['balance']=0;
-                    $todaysumm->update($adj);
-                }
-                else
-                {
-                    \VanguardLTE\DailySummary::create($adj);
-                }
+            $adj = DailySummary::adjustment($user_id, $from, $to);
+            $adj['date'] = $day;
+            $adj['type'] ='today';
+            $adj['updated_at'] = $to;
+            if ($todaysumm)
+            {
+                $adj['user_id']=$user_id;
+                $adj['shop_id']=$user->shop_id;
+                $adj['totalin']+=$todaysumm->totalin;
+                $adj['totalout']+=$todaysumm->totalout;
+                $adj['moneyin']+=$todaysumm->moneyin;
+                $adj['moneyout']+=$todaysumm->moneyout;
+                $adj['dealout']+=$todaysumm->dealout;
+                $adj['totalbet']+=$todaysumm->totalbet;
+                $adj['totalwin']+=$todaysumm->totalwin;
+                $adj['total_deal']+=$todaysumm->total_deal;
+                $adj['total_mileage']+=$todaysumm->total_mileage;
+                $adj['balance']=0;
+                $todaysumm->update($adj);
+            }
+            else
+            {
+                \VanguardLTE\DailySummary::create($adj);
             }
         }
     }
