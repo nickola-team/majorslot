@@ -335,7 +335,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game->name),
                         'title' => $game->title,
                         'type' => $game->type,
-                        'icon' => url('/frontend/Default/ico/png/'). '/'. $icon_name . '.jpg',
+                        'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
                     ]);
                 }
                 else
@@ -348,7 +348,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game->name),
                         'title' => $game->title,
                         'type' => $game->type,
-                        'icon' => url('/frontend/Default/ico/png'). '/'. $icon_name . '.jpg',
+                        'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
                         ]);
                 }
             }
