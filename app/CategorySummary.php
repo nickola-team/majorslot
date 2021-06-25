@@ -335,37 +335,46 @@ namespace VanguardLTE
             $to =  date("Y-m-d H:i:s");
 
             $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
-            $catsum = $todaysumm->toArray();
-            foreach ($adj_cats as $adj)
-            {
-                unset($adj['games']);
-                unset($adj['category']);
-                $adj['type'] = 'today';
-                $adj['date'] = $day;
-                $adj['updated_at'] = $to;
-                $bFound = false;
-                foreach ($catsum as $i => $t_sum)
+            if (count($adj_cats) > 0) {
+                if (count($todaysumm) > 0){
+                    $catsum = $todaysumm->toArray();
+                }
+                else
                 {
-                    unset($catsum[$i]['id']);
-                    if ($adj['category_id'] == $t_sum['category_id'])
+                    $catsum = [];
+                }
+                foreach ($adj_cats as $adj)
+                {
+                    unset($adj['games']);
+                    unset($adj['category']);
+
+                    $adj['type'] = 'today';
+                    $adj['date'] = $day;
+                    $adj['updated_at'] = $to;
+                    $bFound = false;
+                    foreach ($catsum as $i => $t_sum)
                     {
-                        $adj['totalbet'] = $adj['totalbet'] + $t_sum['totalbet'];
-                        $adj['totalwin'] = $adj['totalwin'] + $t_sum['totalwin'];
-                        $adj['totalcount'] = $adj['totalcount'] + $t_sum['totalcount'];
-                        $adj['total_deal'] = $adj['total_deal'] + $t_sum['total_deal'];
-                        $adj['total_mileage'] = $adj['total_mileage'] + $t_sum['total_mileage'];
-                        $catsum[$i] = $adj;
-                        $bFound = true;
-                        break;
+                        unset($catsum[$i]['id']);
+                        if ($adj['category_id'] == $t_sum['category_id'])
+                        {
+                            $adj['totalbet'] = $adj['totalbet'] + $t_sum['totalbet'];
+                            $adj['totalwin'] = $adj['totalwin'] + $t_sum['totalwin'];
+                            $adj['totalcount'] = $adj['totalcount'] + $t_sum['totalcount'];
+                            $adj['total_deal'] = $adj['total_deal'] + $t_sum['total_deal'];
+                            $adj['total_mileage'] = $adj['total_mileage'] + $t_sum['total_mileage'];
+                            $catsum[$i] = $adj;
+                            $bFound = true;
+                            break;
+                        }
+                    }
+                    if (!$bFound)
+                    {
+                        $catsum[] = $adj;
                     }
                 }
-                if (!$bFound)
-                {
-                    $catsum[] = $adj;
-                }
+                \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->delete();
+                \VanguardLTE\CategorySummary::insert($catsum);
             }
-            \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->delete();
-            \VanguardLTE\CategorySummary::insert($catsum);
         }
     }
 
