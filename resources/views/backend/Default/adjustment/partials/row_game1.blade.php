@@ -2,7 +2,7 @@
 	@if ($loop->index > 0)
 	<tr>
 	@endif
-	<td >{{ $cat['category_id'] }}</td>
+	<td >{{ $cat['title'] }}</td>
 	<td >{{ number_format($cat['totalbet'],0) }}</td>
 	<td >{{ number_format($cat['totalwin'],0)}}</td>
 	<td >{{ number_format($cat['totalbet'] - $cat['totalwin'],0)}}</td>

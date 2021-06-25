@@ -944,7 +944,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     {
                         return redirect()->back()->withErrors('매장을 찾을수 없습니다.');
                     }
-                    $user_id = $shop->user_id;
+                    $user_id = $shop->getUsersByRole('manager')->first()->id;
                 }
                 else if ($request->type == 'partner')
                 {
@@ -953,7 +953,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     {
                         return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
                     }
-                    $user_id = $shop->user_id;
+                    $user_id = $partner->id;
                 }
             }
 
@@ -969,6 +969,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     {
                         if ($date_cat)
                         {
+                            //sort games per totalbet
+                            usort($date_cat['cat'], function($element1, $element2)
+                            {
+                                return $element2['totalbet'] - $element1['totalbet'];
+                            });
                             $categories[] = $date_cat;
                         }
                         $last_date = $cat->date;
@@ -982,8 +987,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 if ($date_cat)
                 {
+                    //sort games per totalbet
+                    usort($date_cat['cat'], function($element1, $element2)
+                    {
+                        return $element2['totalbet'] - $element1['totalbet'];
+                    });
                     $categories[] = $date_cat;
                 }
+
             }
 
             return view('backend.Default.adjustment.adjustment_game1', compact('categories', 'start_date', 'end_date'));
