@@ -45,8 +45,12 @@ namespace VanguardLTE\Console
             })->dailyAt('08:00');
 
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
+            $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
+
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
+
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping();
+            $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
@@ -326,6 +330,17 @@ namespace VanguardLTE\Console
                     }
                 }
                 $this->info("End daily game summary adjustment.");
+            });
+            \Artisan::command('today:gamesummary', function () {
+                set_time_limit(0);
+                $this->info("Begin today's game adjustment.");
+
+                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                foreach ($admins as $admin)
+                {
+                    \VanguardLTE\CategorySummary::summary_today($admin->id);
+                }
+                $this->info("End today's game adjustment.");
             });
 
             \Artisan::command('daily:summary {date=today}', function ($date) {

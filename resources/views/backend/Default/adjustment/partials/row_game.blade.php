@@ -1,23 +1,20 @@
-@foreach ($adjustment['games'] as $game)
+@foreach ($adjustment['cat'] as $cat)
 	@if ($loop->index > 0)
 	<tr>
 	@endif
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ $game['name'] }}</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_bet'],0) }}</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_win'],0)}}</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_bet'] - $game['total_win'],0)}}</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_bet_count'])}}</td>
-	@if(auth()->user()->hasRole('admin'))
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">0</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_deal'],0)}}</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format(-$game['total_deal'],0)}}</td>
+	<td >
+	<span class="{{$total?'text-red':'text-black'}}">
+	{{$cat['title'] }}
+	</span>
+	</td>
+	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['totalbet'],0) }} </span></td>
+	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['totalwin'],0)}}</span></td>
+	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['totalbet'] - $cat['totalwin'],0)}}</span></td>
+	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['totalcount'])}}</span></td>
+	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['total_deal'],0)}}</span></td>
+	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['total_mileage'],0)}}</span></td>
+	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['total_deal'] - $cat['total_mileage'],0)}}</span></td>
 
-	@else
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_deal'],0)}}</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_mileage'],0)}}</td>
-	<td style="color:{{ $adjustment['category']?'black':'red' }};">{{ number_format($game['total_deal'] - $game['total_mileage'],0)}}</td>
-
-	@endif
 	@if ($loop->index > 0)
 	</tr>
 	@endif

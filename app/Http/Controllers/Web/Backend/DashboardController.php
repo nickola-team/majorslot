@@ -924,7 +924,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
         }
-        public function adjustment_game1(\Illuminate\Http\Request $request)
+        public function adjustment_game(\Illuminate\Http\Request $request)
         {
             $dates = $request->dates;
             $start_date = date("Y-m-d 0:0:0");
@@ -959,6 +959,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $adj_games = \VanguardLTE\CategorySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->where('user_id', $user_id)->orderby('date')->get();
             $categories = null;
+            $totalcategory = [
+                'date' => '',
+                'title' => '합계',
+                'totalbet' => $adj_games->sum('totalbet'),
+                'totalwin' => $adj_games->sum('totalwin'),
+                'totalcount' => $adj_games->sum('totalcount'),
+                'total_deal' => $adj_games->sum('total_deal'),
+                'total_mileage' => $adj_games->sum('total_mileage'),
+            ];
             if ($adj_games)
             {
                 $last_date = null;
@@ -994,295 +1003,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     });
                     $categories[] = $date_cat;
                 }
-
             }
 
-            return view('backend.Default.adjustment.adjustment_game1', compact('categories', 'start_date', 'end_date'));
+            return view('backend.Default.adjustment.adjustment_game', compact('categories', 'totalcategory', 'start_date', 'end_date'));
 
-
-        }
-        public function adjustment_game(\Illuminate\Http\Request $request)
-        {
-            $categories = \VanguardLTE\Category::where('shop_id', 0);
-            $saved_category = $request->category;
-            if($saved_category != null && $saved_category != "0"){
-                $category = $categories->where('id', $saved_category);
-            }
-            $categories = $categories->get();
-            $adjustments = [];
-            $game_name = $request->search;
-            
-
-            foreach ($categories as $cat)
-            {
-                $adj = [
-                    'category' => $cat->title,
-                    'total_win' => 0,
-                    'total_bet' => 0,
-                    'total_bet_count' => 0,
-                    'total_deal' => 0,
-                    'total_mileage' => 0,
-                    'games' => []
-                ];
-
-                if ($cat->provider != null)
-                {
-                    $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist', $cat->href);
-                    if ($games){
-                        foreach ($games as $game)
-                        {
-                            if($game_name != null && $game_name != '' &&  strpos($game['name'], $game_name) === false){
-                                continue;
-                            }
-                            $adj_game = [
-                                'name' => $game['name'],
-                                'total_win' => 0,
-                                'total_bet' => 0,
-                                'total_bet_count' => 0,
-                                'total_deal' => 0,
-                                'total_mileage' => 0,
-                            ];
-                            $adj['games'][] = $adj_game;
-                        }
-                    }
-                }
-                else
-                {
-                    $gameIds = \VanguardLTE\GameCategory::where('category_id', $cat->id)->pluck('game_id')->toArray();
-                    $games = \VanguardLTE\Game::whereIn('id', $gameIds);
-                    if($game_name != null && $game_name != ''){
-                        $games = $games->where('name', 'LIKE', '%'.$game_name.'%');
-                    }
-                    $games = $games->get();
-                    foreach ($games as $game)
-                    {
-                        $adj_game = [
-                            'name' => $game->name,
-                            'total_win' => 0,
-                            'total_bet' => 0,
-                            'total_bet_count' => 0,
-                            'total_deal' => 0,
-                            'total_mileage' => 0,
-                        ];
-                        $adj['games'][] = $adj_game;
-                    }
-
-                }
-                $adjustments[] = $adj;
-            }
-            $totaladj = [
-                'name' => '합계',
-                'total_win' => 0,
-                'total_bet' => 0,
-                'total_bet_count' => 0,
-                'total_deal' => 0,
-                'total_mileage' => 0,
-            ];
-
-            $dates = $request->dates;
-            $start_date = date("Y-m-d 0:0:0");
-            $end_date = date("Y-m-d H:i:s");
-            if($dates != null && $dates != ''){
-                $dates_tmp = explode(' - ', $request->dates);
-                $start_date = $dates_tmp[0] . " 00:00:00";
-                $end_date = $dates_tmp[1] . " 23:59:59";
-            }
-
-            $shop_ids = auth()->user()->availableShops();
-
-            if( $request->partner != '' ) 
-            {
-                if ($request->type == 'shop')
-                {
-                    $shop_ids = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
-                }
-                else if ($request->type == 'partner')
-                {
-                    $shop_ids = [];
-                    $partners = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->get();
-                    foreach ($partners as $partner)
-                    {
-                        $shop_ids = array_merge_recursive($shop_ids, $partner->availableShops());
-                    }
-                }
-            }
-
-            if (count($shop_ids) == 0) {
-                return redirect()->back()->withError('정산할 매장이 없습니다');
-            }
-
-
-            $query = 'SELECT game, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
-            $stat_games = \DB::select($query);
-
-
-            if(auth()->user()->hasRole(['admin','comaster','master'])){
-                $partners = auth()->user()->childPartners();
-                if (count($partners) == 0) {
-                    return redirect()->back()->withError('정산할 부본사가 없습니다');
-                }
-                $query = 'SELECT game, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$partners) . ') AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
-                $deal_logs = \DB::select($query);
-            }
-            else if(auth()->user()->hasRole(['agent','distributor'])){
-                $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . auth()->user()->id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
-                $deal_logs = \DB::select($query);
-
-            }
-            else if(auth()->user()->hasRole('manager')) {
-                $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . auth()->user()->shop_id . ' AND date_time <="'.$end_date .'" AND date_time>="'. $start_date. '" GROUP BY game';
-                $deal_logs = \DB::select($query);
-            }
-
-
-            foreach($stat_games as $stat_game) {
-                $bfound_game = false;
-                foreach ($adjustments as $i => $adj)
-                {
-                    foreach ($adj['games'] as $j => $game)
-                    {
-                        $real_gamename = explode(' ', $stat_game->game)[0];
-                        if (strpos($real_gamename, '_') !== false)
-                        {
-                            $real_gamename = explode('_', $real_gamename)[0];
-                        }
-                        if($real_gamename == $game['name'])
-                        {
-                            $game['total_bet'] = $game['total_bet'] + $stat_game->totalbet;
-                            $game['total_win'] = $game['total_win'] + $stat_game->totalwin;
-                            $game['total_bet_count'] = $game['total_bet_count'] + $stat_game->betcount;
-
-                            $adj['total_bet'] = $adj['total_bet'] + $stat_game->totalbet;
-                            $adj['total_win'] = $adj['total_win'] + $stat_game->totalwin;
-                            $adj['total_bet_count'] = $adj['total_bet_count'] + $stat_game->betcount;
-
-                            $totaladj['total_bet'] = $totaladj['total_bet'] + $stat_game->totalbet;
-                            $totaladj['total_win'] = $totaladj['total_win'] + $stat_game->totalwin;
-                            $totaladj['total_bet_count'] = $totaladj['total_bet_count'] + $stat_game->betcount;
-
-                            $adj['games'][$j] = $game;
-                            $bfound_game = true;
-                            break;
-                        }
-                    }
-                    if ($bfound_game){ 
-                        $adjustments[$i] = $adj;
-                        break; 
-                    }
-                }
-            }
-
-            foreach($deal_logs as $deal_log){
-                $bfound_game = false;
-                foreach ($adjustments as $i => $adj)
-                {
-                    foreach ($adj['games'] as $j => $game)
-                    {
-                        $real_gamename = explode(' ', $deal_log->game)[0];
-                        if (strpos($real_gamename, '_') !== false)
-                        {
-                            $real_gamename = explode('_', $real_gamename)[0];
-                        }
-                        if($real_gamename == $game['name'])
-                        {
-                            $game['total_deal'] = $game['total_deal'] + $deal_log->total_deal;
-                            $game['total_mileage'] = $game['total_mileage'] + $deal_log->total_mileage;
-
-                            $adj['total_deal'] = $adj['total_deal'] + $deal_log->total_deal;
-                            $adj['total_mileage'] = $adj['total_mileage'] + $deal_log->total_mileage;
-
-                            $totaladj['total_deal'] = $totaladj['total_deal'] + $deal_log->total_deal;
-                            $totaladj['total_mileage'] = $totaladj['total_mileage'] + $deal_log->total_mileage;
-                            $bfound_game = true;
-                            $adj['games'][$j] = $game;
-                            break;
-                        }
-                    }
-                    if ($bfound_game){ 
-                        $adjustments[$i] = $adj;
-                        break; 
-                    }
-                }
-            }
-
-            //remove total bet is zero
-            $filtered_adjustment = [];
-
-            foreach ($adjustments as $index => $adj)
-            {
-                if ($adj['total_bet'] > 0)
-                {
-                    $filtered_games = [];
-                    foreach ($adj['games'] as $game)
-                    {
-                        if ($game['total_bet'] > 0)
-                        {
-                            $filtered_games[] = $game;
-                        }
-                    }
-                    usort($filtered_games, function($element1, $element2)
-                    {
-                        return $element2['total_bet'] - $element1['total_bet'];
-                    });
-
-                    $adj['games'] = $filtered_games;
-                    $filtered_adjustment[] = $adj;
-                }
-            }
-
-            usort($filtered_adjustment, function($element1, $element2)
-            {
-                return $element2['total_bet'] - $element1['total_bet'];
-            });
-
-            if (!auth()->user()->hasRole('admin'))
-            {
-                //merge pragmatic and pragmatic play games if not admin
-                $pp_adj = null;
-                $pragmatic_adj = null;
-                $pp_index = 0;
-                $pragmatic_index = 0;
-                foreach ($filtered_adjustment as $index => $adj)
-                {
-                    if ($adj['category'] == 'Pragmatic Play')
-                    {
-                        $pp_adj = $adj;
-                        $pp_index = $index;
-                    }
-                    if ($adj['category'] == 'Pragmatic')
-                    {
-                        $pragmatic_adj = $adj;
-                        $pragmatic_index = $index;
-                    }
-                }
-                if ($pp_adj && $pragmatic_adj)
-                {
-                    $pp_adj['games'] = array_merge($pp_adj['games'] , $pragmatic_adj['games']);
-                    $pp_adj['total_win'] = $pp_adj['total_win'] + $pragmatic_adj['total_win'];
-                    $pp_adj['total_bet'] = $pp_adj['total_bet'] + $pragmatic_adj['total_bet'];
-                    $pp_adj['total_bet_count'] = $pp_adj['total_bet_count'] + $pragmatic_adj['total_bet_count'];
-                    $pp_adj['total_deal'] = $pp_adj['total_deal'] + $pragmatic_adj['total_deal'];
-                    $pp_adj['total_mileage'] = $pp_adj['total_mileage'] + $pragmatic_adj['total_mileage'];
-                    $filtered_adjustment[$pp_index] = $pp_adj;
-                    unset($filtered_adjustment[$pragmatic_index]);
-                }
-            }
-
-            $filtered_adjustment[] = [
-                'category' => null,
-                'total_win' => 0,
-                'total_bet' => 0,
-                'total_bet_count' => 0,
-                'total_deal' => 0,
-                'total_mileage' => 0,
-                'games' => [
-                    $totaladj
-                ]
-            ];
-
-            $categories = \VanguardLTE\Category::where('shop_id', 0)->get();
-
-            return view('backend.Default.adjustment.adjustment_game', compact('filtered_adjustment', 'categories', 'saved_category', 'start_date', 'end_date'));
 
         }
 
