@@ -371,24 +371,23 @@ namespace VanguardLTE
                         $catsum[] = $adj;
                     }
                 }
-
-                $new_cat = array_map( 
-                    function($data) {
-                         return [
-                            'user_id' => $data['user_id'],
-                             'type' => 'today',
-                             'date' => $data['date'],
-                             'updated_at' => date("Y-m-d H:i:s"),
-                             'category_id' => $data['category_id'],
-                             'shop_id' => $data['shop_id'],
-                             'totalbet' => $data['totalbet'],
-                             'totalwin' => $data['totalwin'],
-                             'totalcount' => $data['totalcount'],
-                             'total_deal' => $data['total_deal'],
-                             'total_mileage' => $data['total_mileage'],
-                         ]; 
-                        }, 
-                $catsum);
+                $new_cat = [];
+                foreach ($catsum as $update_cat)
+                {
+                    $new_cat[] = [
+                        'user_id' => $update_cat['user_id'],
+                         'type' => 'today',
+                         'date' => $update_cat['date'],
+                         'updated_at' => $to,
+                         'category_id' => $update_cat['category_id'],
+                         'shop_id' => $update_cat['shop_id'],
+                         'totalbet' => $update_cat['totalbet'],
+                         'totalwin' => $update_cat['totalwin'],
+                         'totalcount' => $update_cat['totalcount'],
+                         'total_deal' => $update_cat['total_deal'],
+                         'total_mileage' => $update_cat['total_mileage'],
+                     ]; 
+                }
 
                 \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->delete();
                 \VanguardLTE\CategorySummary::insert($new_cat);
