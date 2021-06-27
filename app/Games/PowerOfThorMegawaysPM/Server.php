@@ -267,7 +267,8 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                 /* 릴배치표 생성 */
                 if ($overtry) {
                     /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
-                    // $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent']);
+                    $lastReels = $isTumble ? json_decode($LASTSPIN->g, true) : null;
+                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $lastReels, 0);
                 }
                 else {
                     $lastReels = $isTumble ? json_decode($LASTSPIN->g, true) : null;
@@ -289,13 +290,12 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                 else if ( $try >= 1000 ) 
                 {
                     /* 텀블스핀경우 심볼이 떨어지면서 당첨될수밖에 없는경우 */
-                    if ($winType == 'none') {
-                        $winType = 'win';
-                        $_winAvaliableMoney = $bet * $lines * 100;
-                    }
-                    else {
-                        $winType = 'none';
-                    }
+                    // if ($winType == 'none') {
+                    //     $winType = 'win';
+                    //     $_winAvaliableMoney = $bet * $lines * 100;
+                    // }
+
+                    $winType = 'none';
                     continue;
                 }
 
@@ -357,6 +357,20 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
 
             /* 텀블당첨금 */
             $tumbleWin = $slotSettings->GetGameData($slotSettings->slotId . 'TumbleTotalWin');
+
+            /* 최소당첨릴생성인 경우 당첨금 계산 */
+            if ($overtry) {
+                /* 스핀 당첨금 */
+                $winMoney = array_reduce($this->winLines, function($carry, $winLine) {
+                    $carry += $winLine['Money']; 
+                    return $carry;
+                }, 0) * $bet;
+
+                /* 프리스핀시 멀티플라이어 적용 */
+                if ($slotEvent['slotEvent'] == 'freespin') {
+                    $winMoney = $winMoney * ($LASTSPIN->wmv ?? 1);
+                }
+            }
 
             if ($winMoney > 0) {
                 /* 윈라인 구성 */
