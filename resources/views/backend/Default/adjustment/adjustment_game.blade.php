@@ -36,7 +36,6 @@
 							</select>
 						</div>
 					</div> --}}
-					@if (auth()->user()->hasRole('admin'))
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>파트너이름</label>
@@ -49,7 +48,6 @@
 							{!! Form::select('type', ['partner' => '파트너', 'shop' => '매장'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
 						</div>
 					</div>
-					@endif
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>기간선택</label>

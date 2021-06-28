@@ -56,6 +56,7 @@ return [
         "Sun of Egypt 2" => "썬 오브 이집트2",
         "Magic Ball" => "매직 볼",
         "Hit the Gold!" => "히트 더 골드!",
+        "Scarab Boost" => "스크랩 부스트",
 
         /**
          * CQ9 Games
@@ -424,6 +425,16 @@ return [
         "Rise of Samurai Megaways" => "라이즈 오브 사무라이 메가웨이",
         "Live - D&W" => "라이브 - D&W",
         "Live - Other Promos" => "라이브 - 아더 프로모즈",
+        "Blackjack 22 - Azure" => "블랙잭 22 - 애저",
+        "Blackjack 23 - Azure" => "블랙잭 23 - 애저",
+        "Blackjack 24 - Azure" => "블랙잭 24 - 애저",
+        "Blackjack 25 - Azure" => "블랙잭 25 - 애저",
+        "Blackjack 26 - Azure" => "블랙잭 26 - 애저",
+        "Book of Vikings" => "북 오브 바이킹스",
+        "Fruit Party 2" => "후루츠 파티 2",
+        "Hokkaido Wolf" => "홋카이도 울프",
+        "Lucky, Grace & Charm" => "럭키, 그레이스 & 참",
+
 
 
 
@@ -509,6 +520,7 @@ return [
         "Hand of Gold" => "핸드 오브 골드",
         "Rich Diamonds: Hold and Win" => "리치 다이아몬즈:홀드 앤 윈",
         "Book of Gold 2: Double Hit™" => "북오브 골드 2: 더블히트™",
+        "9 Happy Pharaohs" => "9 해피 파라오스",
 
         /**
          * Habanero Games
