@@ -4,7 +4,11 @@
 	@endif
 	<td >
 	<span class="{{$total?'text-red':'text-black'}}">
+	@if (!$total && auth()->user()->hasRole('admin') && Request::get('partner') == '' && Request::get('cat') == '')
+	<a href="{{route('backend.adjustment_game', ['cat'=>$cat['category_id'], 'date' => $cat['date'], 'type'=>$cat['type']] ) }}"> {{$cat['title'] }} </a>
+	@else
 	{{$cat['title'] }}
+	@endif
 	</span>
 	</td>
 	<td ><span class="{{$total?'text-red':'text-black'}}"> {{ number_format($cat['totalbet'],0) }} </span></td>

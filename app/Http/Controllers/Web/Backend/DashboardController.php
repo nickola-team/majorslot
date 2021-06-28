@@ -956,8 +956,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $user_id = $partner->id;
                 }
             }
-
-            $adj_games = \VanguardLTE\CategorySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->where('user_id', $user_id)->orderby('date')->get();
+            $bshowGame = false;
+            if ($request->cat != '' && $request->date != '' && $request->type != '')
+            {
+                $bshowGame = true;
+                $adj_games = \VanguardLTE\GameSummary::where(['date' => $request->date, 'type' => $request->type, 'category_id' => $request->cat, 'user_id'=> $user_id])->orderby('totalbet')->get();
+            }
+            else
+            {
+                $adj_games = \VanguardLTE\CategorySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->where('user_id', $user_id)->orderby('date')->get();
+            }
             $categories = null;
             $totalcategory = [
                 'date' => '',
@@ -991,8 +999,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         ];
                     }
                     $info = $cat->toArray();
-                    $info['title'] = $cat->category->trans->trans_title;
-                    $info['name'] = $cat->category->title;
+                    if ($bshowGame)
+                    {
+                        $info['title'] = $cat->name;
+                        $info['name'] = $cat->name;
+                    }
+                    else
+                    {
+                        $info['title'] = $cat->category->trans->trans_title;
+                        $info['name'] = $cat->category->title;
+                    }
                     $date_cat['cat'][] = $info;
                 }
                 if ($date_cat)
@@ -1050,7 +1066,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         }
                     }
                 }
-                
+
             }
 
             return view('backend.Default.adjustment.adjustment_game', compact('categories', 'totalcategory', 'start_date', 'end_date'));

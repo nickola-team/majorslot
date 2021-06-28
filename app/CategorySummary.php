@@ -63,6 +63,9 @@ namespace VanguardLTE
                         foreach ($games as $game)
                         {
                             $adj_game = [
+                                'user_id' => $user_id,
+                                'category_id' => $cat->id,
+                                'shop_id' => $user->shop_id,
                                 'name' => $game['name'],
                                 'totalwin' => 0,
                                 'totalbet' => 0,
@@ -83,6 +86,9 @@ namespace VanguardLTE
                     {
                         $adj_game = [
                             'id' => $game->id,
+                            'user_id' => $user_id,
+                            'category_id' => $cat->id,
+                            'shop_id' => $user->shop_id,
                             'name' => $game->name,
                             'totalwin' => 0,
                             'totalbet' => 0,
@@ -267,41 +273,42 @@ namespace VanguardLTE
             
             $from =  $day . " 0:0:0";
             $to = $day . " 23:59:59";
-            if($user->hasRole('manager')){
-                $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
-                $catsum = [];
-                foreach ($adj_cats as $adj)
-                {
-                    unset($adj['games']);
-                    unset($adj['category']);
-                    $adj['type'] = 'daily';
-                    $adj['date'] = $day;
-                    $catsum[] = $adj;
-                }
-                \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
-                \VanguardLTE\CategorySummary::insert($catsum);
-            }
-            else
-            {
+            if(!$user->hasRole('manager')){
                 //repeat child partners
                 $childusers = $user->childPartners(); //하위 파트너들 먼저 정산
                 foreach ($childusers as $c)
                 {
                     CategorySummary::summary($c, $day);
                 }
-                $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
-                $catsum = [];
-                foreach ($adj_cats as $adj)
-                {
-                    unset($adj['games']);
-                    unset($adj['category']);
-                    $adj['type'] = 'daily';
-                    $adj['date'] = $day;
-                    $catsum[] = $adj;
-                }
-                \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
-                \VanguardLTE\CategorySummary::insert($catsum);
             }
+            $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
+            $catsum = [];
+            if ($user->hasRole('admin'))
+            {
+                \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
+            }
+            foreach ($adj_cats as $adj)
+            {
+                if ($user->hasRole('admin'))
+                {
+                    $games = [];
+                    foreach ($adj['games'] as $adjgame)
+                    {
+                        $adjgame['type'] = 'daily';
+                        $adjgame['date'] = $day;
+                        $games[] = $adjgame;
+                    }
+                    \VanguardLTE\GameSummary::insert($games);
+                }
+                unset($adj['games']);
+                unset($adj['category']);
+                $adj['type'] = 'daily';
+                $adj['date'] = $day;
+                $catsum[] = $adj;
+            }
+            \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
+            \VanguardLTE\CategorySummary::insert($catsum);
+        
         }
 
         public static function summary_today($user_id)
@@ -345,6 +352,61 @@ namespace VanguardLTE
                 }
                 foreach ($adj_cats as $adj)
                 {
+                    if ($user->hasRole('admin'))
+                    {
+                        $todaygamesumm = \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today', 'category_id' => $adj['category_id']])->get();
+                        if (count($todaygamesumm) > 0){
+                            $gamesum = $todaygamesumm->toArray();
+                        }
+                        else
+                        {
+                            $gamesum = [];
+                        }
+                        foreach ($adj['games'] as $adjgame)
+                        {
+                            $bFound = false;
+                            foreach ($gamesum as $i => $t_gamesum)
+                            {
+                                if ($adjgame['name'] == $t_gamesum['name'])
+                                {
+                                    $adjgame['totalbet'] = $adjgame['totalbet'] + $t_gamesum['totalbet'];
+                                    $adjgame['totalwin'] = $adjgame['totalwin'] + $t_gamesum['totalwin'];
+                                    $adjgame['totalcount'] = $adjgame['totalcount'] + $t_gamesum['totalcount'];
+                                    $adjgame['total_deal'] = $adjgame['total_deal'] + $t_gamesum['total_deal'];
+                                    $adjgame['total_mileage'] = $adjgame['total_mileage'] + $t_gamesum['total_mileage'];
+                                    $gamesum[$i] = $adjgame;
+                                    $bFound = true;
+                                    break;
+                                }
+                            }
+                            if (!$bFound)
+                            {
+                                $gamesum[] = $adjgame;
+                            }
+                        }
+                        $new_games = [];
+                        foreach ($gamesum as $update_game)
+                        {
+                            $new_games[] = [
+                                'user_id' => $update_game['user_id'],
+                                'type' => 'today',
+                                'date' => $day,
+                                'name' => $update_game['name'],
+                                'updated_at' => $to,
+                                'category_id' => $update_game['category_id'],
+                                'shop_id' => $update_game['shop_id'],
+                                'totalbet' => $update_game['totalbet'],
+                                'totalwin' => $update_game['totalwin'],
+                                'totalcount' => $update_game['totalcount'],
+                                'total_deal' => $update_game['total_deal'],
+                                'total_mileage' => $update_game['total_mileage'],
+                            ]; 
+                        }
+
+                        \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today', 'category_id' => $adj['category_id']])->delete();
+                        \VanguardLTE\GameSummary::insert($new_games);
+                    }
+
                     unset($adj['games']);
                     unset($adj['category']);
 
@@ -375,7 +437,7 @@ namespace VanguardLTE
                 foreach ($catsum as $update_cat)
                 {
                     $new_cat[] = [
-                        'user_id' => $update_cat['user_id'],
+                         'user_id' => $update_cat['user_id'],
                          'type' => 'today',
                          'date' => $update_cat['date'],
                          'updated_at' => $to,
