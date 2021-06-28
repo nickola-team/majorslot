@@ -939,7 +939,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 if ($request->type == 'shop')
                 {
-                    $shop = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->first();
+                    $availableShops = auth()->user()->availableShops();
+                    $shop = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->whereIn('id', $availableShops)->first();
                     if (!$shop)
                     {
                         return redirect()->back()->withErrors('매장을 찾을수 없습니다.');
@@ -948,7 +949,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 else if ($request->type == 'partner')
                 {
-                    $partner = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->first();
+                    $availablePartners = auth()->user()->hierarchyPartners();
+                    $partner = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->whereIn('id', $availablePartners)->first();
                     if (!$partner)
                     {
                         return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
