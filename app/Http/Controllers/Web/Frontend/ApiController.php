@@ -468,7 +468,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     
-                    if ($master->balance < $summ * 2)
+                    if ($master->balance < $summ)
                     {
                         return response()->json([
                             'error' => true, 
@@ -477,7 +477,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $summ * 2]
+                        ['balance' => $master->balance - $summ ]
                     );
                     $master = $master->fresh();
                     $open_shift = \VanguardLTE\OpenShift::where([
@@ -487,7 +487,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ])->first();
                     if( $open_shift ) 
                     {
-                        $open_shift->increment('money_in', $summ * 2);
+                        $open_shift->increment('money_in', $summ );
                     }
 
                     $old = $shop->balance;
@@ -561,7 +561,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     
-                    if ($master->balance < $summ *2)
+                    if ($master->balance < $summ )
                     {
                         return response()->json([
                             'error' => true, 
@@ -570,7 +570,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ], 200);
                     }
                     $master->update(
-                        ['balance' => $master->balance - $summ*2]
+                        ['balance' => $master->balance - $summ]
                     );
                     $open_shift = \VanguardLTE\OpenShift::where([
                         'user_id' => $master->id, 

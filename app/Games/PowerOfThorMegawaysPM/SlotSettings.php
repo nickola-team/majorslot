@@ -648,7 +648,11 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'doBonus' ) 
             {
-                $_obf_slotstate = $this->slotId . 'B';
+                $_obf_slotstate = $this->slotId . ' Bonus';
+            }
+            else if( $slotState == 'doGamble' ) 
+            {
+                $_obf_slotstate = $this->slotId. '';
             }
             else if( $slotState == 'doSpin' ) 
             {
