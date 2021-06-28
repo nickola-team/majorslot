@@ -85,7 +85,6 @@ namespace VanguardLTE
                     foreach ($games as $game)
                     {
                         $adj_game = [
-                            'id' => $game->id,
                             'user_id' => $user_id,
                             'category_id' => $cat->id,
                             'shop_id' => $user->shop_id,
