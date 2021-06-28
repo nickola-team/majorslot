@@ -25,12 +25,14 @@
 							<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 						</div>
 					</div>
+					@if (!auth()->user()->hasRole('manager'))
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>파트너이름</label>
 							<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}">
 						</div>
 					</div>
+					@endif
 				</div>
 				<div class="box-footer">
 				<button type="submit" class="btn btn-primary">

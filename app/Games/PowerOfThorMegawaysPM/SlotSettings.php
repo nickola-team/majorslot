@@ -650,17 +650,13 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
             {
                 $_obf_slotstate = $this->slotId . ' Bonus';
             }
-            else if( $slotState == 'doGamble' ) 
-            {
-                $_obf_slotstate = $this->slotId. '';
-            }
             else if( $slotState == 'doSpin' ) 
             {
                 $_obf_slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'slotGamble' ) 
+            else if( $slotState == 'doGamble' ) 
             {
-                $_obf_slotstate = $this->slotId . ' DG';
+                $_obf_slotstate = $this->slotId . '';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -801,7 +797,7 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                     $_obf_currentbank
                 ];
             }
-            if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
+            if( $garantType == 'doSpin' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
                 $_obf_rand = rand(1, 2);
                 if( $_obf_rand == 1 ) 

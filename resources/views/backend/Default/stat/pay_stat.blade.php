@@ -54,6 +54,7 @@
 								<input type="text" class="form-control" name="sum_to" value="{{ Request::get('sum_to') }}">
 							</div>
 						</div>
+						@if (!auth()->user()->hasRole('manager'))
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>매장이름</label>
@@ -66,6 +67,7 @@
 								<input type="text" class="form-control" name="payeername" value="{{ Request::get('payeername') }}">
 							</div>
 						</div>
+						@endif
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>기간</label>

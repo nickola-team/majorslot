@@ -299,6 +299,11 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                     continue;
                 }
 
+                /*  */
+                if ($winType == 'bonus' && count($this->winLines) > 0) {
+                    continue;
+                }
+
                 if ($winType == 'none' && count($this->winLines) == 0) {
                     break;
                 }
@@ -451,6 +456,12 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                 $objRes['balance'] = $BALANCE;
                 $objRes['balance_cash'] = $BALANCE;
 
+                /* 프리스핀 추가 */
+                if ($this->getScatterCount($reels) >= 3) {
+                    $fsmax += 4;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSMax', $fsmax);
+                }
+
                 if ($fsmax > $fs) {
                     /* 프리스핀중에는 스핀타입이 항상 s */
                     $objRes['na'] = 's';
@@ -499,9 +510,9 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                 }
 
                 /* 프리스핀 멀티플라이어 */
-                /* 텀블스핀이면 텀블 멀티플라이어 1증가, 아니면 유지 */
+                /* 이전스핀에서 당첨되었으면 멀티플라이어 1증가, 아니면 유지 */
                 $tumbleMultiplier = $LASTSPIN->wmv ?? 1;
-                $tumbleMultiplier = $isTumble ? $tumbleMultiplier + 1 : $tumbleMultiplier;
+                $tumbleMultiplier = ($LASTSPIN->w ?? 0) > 0 ? $tumbleMultiplier + 1 : $tumbleMultiplier;
                 
                 $objRes['wmt'] = 'pr';
                 $objRes['wmv'] = $tumbleMultiplier;     // 1배 기본
@@ -512,7 +523,7 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
             }
 
             /* 갬블당첨 */
-            if ($winType == 'bonus') {
+            if ($winType == 'bonus') { 
                 $fsCountMap = [
                     4 => 10,
                     5 => 14,
