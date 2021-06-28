@@ -20,6 +20,7 @@
 				</div>
 				<div class="box-body">
 					<div class="row">
+					@if (!auth()->user()->hasRole('manager'))
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>매장</label>
@@ -32,6 +33,7 @@
 								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
 							</div>
 						</div>
+					@endif
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>충/환전</label>
