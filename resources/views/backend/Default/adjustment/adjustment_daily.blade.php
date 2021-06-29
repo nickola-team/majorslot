@@ -73,7 +73,7 @@
 						<th>충전</th>
 						<th>환전</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>본사수익</th>
+						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
 						<th>수익금전환</th>
@@ -81,9 +81,10 @@
 						<th>매장환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
-						<th>매장수익</th>
+						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>최종수익</th>
+						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>순이익금</th>
 						@endif
 					</tr>
 					</thead>
@@ -108,22 +109,23 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
 						@if(auth()->user()->isInoutPartner())
-						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin') - abs($summary->sum('total_deal')- $summary->sum('total_mileage')),0) }}</span></td>
+						<td><span class='text-red'>{{ number_format(($summary->sum('totalbet')-$summary->sum('totalwin')) * settings('money_percent') / 100 ,0) }}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - ($summary->sum('totalbet')-$summary->sum('totalwin') + $summary->sum('total_deal') - $summary->sum('total_mileage')) * settings('money_percent') / 100,0) }}</span></td>
 						@endif
 
 						</tr>
 					@else
-						<tr><td colspan="13">@lang('app.no_data')</td></tr>
+						<tr><td colspan="14">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>
 					<tr>
-						<th>이름</th>
+					<th>이름</th>
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>본사수익</th>
+						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
 						<th>수익금전환</th>
@@ -131,10 +133,11 @@
 						<th>매장환전</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
-						<th>매장수익</th>
+						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>최종수익</th>
-						@endif				
+						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>순이익금</th>
+						@endif		
 					</tr>
 					</thead>
                     </table>
