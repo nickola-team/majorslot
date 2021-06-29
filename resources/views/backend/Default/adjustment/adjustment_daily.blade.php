@@ -120,7 +120,7 @@
 					</tbody>
 					<thead>
 					<tr>
-					<th>이름</th>
+						<th>이름</th>
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
