@@ -139,6 +139,8 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                 $fssticky_wildset = $slotSettings->GetGameData($slotSettings->slotId . 'FSStickyWILDSet');
                 $fssticky_wildset = is_array($fssticky_wildset) ? $fssticky_wildset : [0, 1, 1, 1];
+                /*  */
+                $resetCount = $slotSettings->GetGameData($slotSettings->slotId . 'ResetCount');
 
                 $lines = $slotEvent['l'];       // 라인
                 $bet = $slotEvent['c'];         // 베팅액
@@ -207,7 +209,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent'], $lastWILDCollection);
                     }
                     else {
-                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $defaultScatterCount, $lastWILDCollection);
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $defaultScatterCount, $lastWILDCollection, $resetCount == 0);
                     }
 
                     $originReels = array_merge(array(), $reels);        // 변경되지 않은 릴배치표 보관, 프리스핀에 이용
@@ -287,6 +289,8 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     /* 프리스핀 검사 */
                     $scattersCount = 0;
                     $_obf_scatterposes = [];
+                    
+                    $dogsCount = 0;
                     for($r = 0; $r < 6; $r++){
                         for( $k = 0; $k < 7; $k++ ) 
                         {
@@ -295,8 +299,18 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                                 $scattersCount++;
                                 array_push($_obf_scatterposes, $k * 6 + $r);
                             }
+
+                            if ($slotSettings->IsKindOfDog($reels['reel' . ($r + 1)][$k])) {
+                                $dogsCount ++;
+                            }
                         }
                     }
+
+                     /* 개심볼이 8개이상이면 스킵 */
+                     if ($dogsCount > 8) {
+                        continue;
+                    }
+
                     
                     /* 생성된 릴배치표 검사 */
                     if ($overtry) {
@@ -502,6 +516,14 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'WILDCollection', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'NewWILDCollection', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', []);
+                }
+                /* 1주기 돌기후 랜덤주기 셋팅 */
+                if ($resetCount == 0) {
+                    $resetCount = random_int(2, 6);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ResetCount', $resetCount);
+                }
+                else {
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ResetCount', $resetCount - 1);
                 }
 
                 $_GameLog = json_encode($objRes);
