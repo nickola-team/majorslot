@@ -59,6 +59,10 @@
 						]
 					</a>
 					@endif
+
+				<div class="pull-right box-tools">
+							마지막갱신시간 {{$updated_at}}
+				</div>
 				
 			</div>
                     <div class="box-body">
