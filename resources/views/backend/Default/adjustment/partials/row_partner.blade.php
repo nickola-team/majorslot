@@ -29,7 +29,11 @@
 	<td>{{ number_format($adjustment['totalwin'],0)}}</td>
 	<td>{{ number_format($adjustment['totalbet'] - $adjustment['totalwin'],0) }}</td>
 	@if(auth()->user()->isInoutPartner())
-	<td>{{ number_format(($adjustment['totalbet'] - $adjustment['totalwin']) * settings('money_percent') / 100,0) }}</td>
-	<td>{{ number_format($adjustment['totalin'] - $adjustment['totalout'] - ($adjustment['totalbet'] - $adjustment['totalwin'] + $adjustment['total_deal'] - $adjustment['total_mileage']) * settings('money_percent') / 100 ,0) }}</td>
+	<?php
+	$money = ($adjustment['totalbet'] - $adjustment['totalwin'] + $adjustment['totalin'] - $adjustment['totalout']) * settings('money_percent') / 100;
+	$deal_money = ($adjustment['total_deal'] - $adjustment['total_mileage']) * settings('money_percent') / 100;
+	?>
+	<td>{{ number_format($money,0) }}</td>
+	<td>{{ number_format($adjustment['totalin'] - - $money + $deal_money ,0) }}</td>
 	@endif
 </tr>
