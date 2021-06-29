@@ -912,7 +912,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $adjustments = [];
 
-            $adj_days = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->whereIn('user_id', $users->pluck('id')->toArray())->selectRaw('user_id, shop_id, sum(totalin) as totalin,sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage')->get();
+            $adj_days = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->whereIn('user_id', $users->pluck('id')->toArray())->selectRaw('user_id, shop_id, sum(totalin) as totalin,sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage, updated_at')->get();
 
             foreach ($adj_days as $adj_user)
             {
@@ -922,7 +922,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $adj['type']='today';
                 $adjustments[] = $adj;
             }
-            return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'childs'));
+            $updated_at = '00:00:00';
+            if (count($adj_days) > 0)
+            {
+                $updated_at = $adj_days->last()->updated_at;
+            }
+            return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'updated_at', 'childs'));
         }
         public function adjustment_game(\Illuminate\Http\Request $request)
         {
@@ -1071,7 +1076,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             }
 
-            return view('backend.Default.adjustment.adjustment_game', compact('categories', 'totalcategory', 'start_date', 'end_date'));
+            $updated_at = '00:00:00';
+            if (count($adj_games) > 0)
+            {
+                $updated_at = $adj_games->last()->updated_at;
+            }
+
+            return view('backend.Default.adjustment.adjustment_game', compact('categories', 'totalcategory', 'updated_at','start_date', 'end_date'));
 
 
         }

@@ -59,6 +59,10 @@
 						]
 					</a>
 					@endif
+
+				<div class="pull-right box-tools">
+							마지막갱신시간 {{$updated_at}}
+				</div>
 				
 			</div>
                     <div class="box-body">
@@ -71,18 +75,19 @@
 						<th>충전</th>
 						<th>환전</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>본사수익</th>
+						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
-						<th>수익금전환</th>
+						{{--<th>수익금전환</th>
 						<th>매장충전</th>
-						<th>매장환전</th>
+						<th>매장환전</th> --}}
 						<th>베팅금</th>
 						<th>당첨금</th>
-						<th>매장수익</th>
+						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>최종수익</th>
-						@endif
+						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>순이익금</th>
+						@endif		
 					</tr>
 					</thead>
 					<tbody>
@@ -91,28 +96,29 @@
 							@include('backend.Default.adjustment.partials.row_partner')
 						@endforeach
 					@else
-						<tr><td colspan="9">@lang('app.no_data')</td></tr>
+						<tr><td colspan="14">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>
 					<tr>
-						<th>이름</th>
+					<th>이름</th>
 						<th>등급</th>
 						<th>충전</th>
 						<th>환전</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>본사수익</th>
+						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
-						<th>수익금전환</th>
+						{{--<th>수익금전환</th>
 						<th>매장충전</th>
-						<th>매장환전</th>
+						<th>매장환전</th> --}}
 						<th>베팅금</th>
 						<th>당첨금</th>
-						<th>매장수익</th>
+						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>최종수익</th>
-						@endif				
+						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>순이익금</th>
+						@endif
 					</tr>
 					</thead>
                     </table>

@@ -206,8 +206,13 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
             }
             else {
                 /* 텀블스핀 */
+                /* 프리스핀 멀티플라이어 */
+                $tumbleMultiplier = $LASTSPIN->wmv ?? 1;
                 if (isset($LASTSPIN->rs)) {
                     $isTumble = true;
+
+                    /* 텀블스핀이면 멀티플라이어 1증가, 아니면 유지 */
+                    $tumbleMultiplier = $isTumble ? $tumbleMultiplier + 1 : $tumbleMultiplier;
                 }
 
                 /* 남은 프리스핀이 있을 경우 */
@@ -299,7 +304,7 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                     continue;
                 }
 
-                /*  */
+                /* 윈라인이 없을때만 갬블발동 */
                 if ($winType == 'bonus' && count($this->winLines) > 0) {
                     continue;
                 }
@@ -316,7 +321,7 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
 
                     /* 프리스핀시 멀티플라이어 적용 */
                     if ($slotEvent['slotEvent'] == 'freespin') {
-                        $winMoney = $winMoney * ($LASTSPIN->wmv ?? 1);
+                        $winMoney = $winMoney * $tumbleMultiplier;
                     }
 
                     /* 당첨금이 한도이상일때 스킵 */
@@ -373,7 +378,7 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
 
                 /* 프리스핀시 멀티플라이어 적용 */
                 if ($slotEvent['slotEvent'] == 'freespin') {
-                    $winMoney = $winMoney * ($LASTSPIN->wmv ?? 1);
+                    $winMoney = $winMoney * $tumbleMultiplier;
                 }
             }
 
@@ -384,7 +389,7 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
 
                     /* 프리스핀시 멀티플라이어 적용 */
                     if ($slotEvent['slotEvent'] == 'freespin') {
-                        $winLineMoney = $winLine['Money'] * $bet * ($LASTSPIN->wmv ?? 1);
+                        $winLineMoney = $winLine['Money'] * $bet * $tumbleMultiplier;
                     }
                     else {
                         $winLineMoney = $winLine['Money'] * $bet;
@@ -509,11 +514,6 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
                     /* throw exception */
                 }
 
-                /* 프리스핀 멀티플라이어 */
-                /* 이전스핀에서 당첨되었으면 멀티플라이어 1증가, 아니면 유지 */
-                $tumbleMultiplier = $LASTSPIN->wmv ?? 1;
-                $tumbleMultiplier = ($LASTSPIN->w ?? 0) > 0 ? $tumbleMultiplier + 1 : $tumbleMultiplier;
-                
                 $objRes['wmt'] = 'pr';
                 $objRes['wmv'] = $tumbleMultiplier;     // 1배 기본
 

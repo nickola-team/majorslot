@@ -68,6 +68,9 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">게임별정산</h3>
+				<div class="pull-right box-tools">
+							마지막갱신시간 {{$updated_at}}
+				</div>
 			</div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -78,7 +81,7 @@
 						<th>게임이름</th>
 						<th>베팅금</th>
 						<th>당첨금</th>
-						<th>수익금</th>
+						<th>죽은금액</th>
 						<th>베팅횟수</th>
 						<th>딜비수익</th>
 						<th>하위수익</th>

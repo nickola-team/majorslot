@@ -173,12 +173,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [1, 1, 1, 1], 
                     [1, 2, 1], 
                     [2, 2], 
-
-                    /* 빈도가 높은 배치 */
-                    [1, 2, 1], 
-                    [2, 2], 
-
-                    /* 빈도가 낮은 배치 */
                     [3, 1],
                     [1, 3],
                 ],
@@ -187,12 +181,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [1, 2, 2],
                     [1, 3, 1],
                     [2, 2, 1],
-
-                    /* 빈도가 높은 배치 */
-                    [1, 2, 2],
-                    [2, 2, 1],
-
-                    /* 빈도가 낮은 배치 */
                     [3, 2],
                 ],
                 6 => [
@@ -201,13 +189,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [1, 2, 2, 1], 
                     [1, 3, 2], 
                     [2, 2, 2], 
-
-                    /* 빈도가 높은 배치 */
-                    [1, 2, 2, 1], 
-                    [1, 3, 2], 
-                    [2, 2, 2], 
-
-                    /* 빈도가 낮은 배치 */
                     [3, 2, 1], 
                     [2, 3, 1],
                     [3, 3],
@@ -219,14 +200,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     [1, 2, 3, 1], 
                     [2, 1, 3, 1], 
                     [2, 2, 2, 1],
-
-                    /* 빈도가 높은 배치 */
-                    [1, 2, 2, 2], 
-                    [1, 2, 3, 1], 
-                    [2, 1, 3, 1],
-                    [2, 2, 2, 1], 
-
-                    /* 빈도가 낮은 배치 */
                     [2, 3, 2], 
                     [3, 2, 2],
                 ]
@@ -1072,13 +1045,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $sum = random_int(0, 100);
             if($sum <= 40){
                 $ret = 2;
-            }else if($sum <= 60){
+            }else if($sum <= 70){
                 $ret = 3;
-            }else if($sum <= 80){
-                $ret = 4;
             }else if($sum <= 90){
-                $ret = 5;
+                $ret = 4;
             }else if($sum <= 95){
+                $ret = 5;
+            }else if($sum <= 98){
                 $ret = 6;
             }else{
                 $ret = 7;
@@ -1204,7 +1177,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             return $reel;
         }
 
-        public function GetReelStrips($winType, $slotEvent,  $scatterCount, $lastWILDCollection)
+        public function GetReelStrips($winType, $slotEvent,  $scatterCount, $lastWILDCollection, $reset = false)
         {
             $REELCOUNT = 6;
             $MAXSYMBOLCOUNT = 7;
@@ -1245,8 +1218,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 else {
                     $symbolCount = $this->GetSymbolCount();
                 }
-            
-                $positionSetId = array_rand($this->reelPositionMap[$symbolCount]);
+                /* 6 스핀이내에 동의심볼이 없는 릴셋생성 */
+                if ($reset == true) {
+                    $positionSetId = 0;
+                }
+                else {
+                    $positionSetId = array_rand($this->reelPositionMap[$symbolCount]);
+                }
                 $reelPositionSet = $this->reelPositionMap[$symbolCount][$positionSetId];
 
                 $reel['reel' . $reelId] = array_fill(0, $MAXSYMBOLCOUNT, $S_BLANK);

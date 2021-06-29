@@ -41,16 +41,6 @@
                     @lang('app.edit_settings')
                 </button>
 
-                @if( Auth::user()->hasRole('admin'))
-
-                    <a href="{{ route('backend.settings.sync') }}"
-                       class="btn btn-danger "
-                       data-method="PUT"
-                       data-confirm-title="@lang('app.please_confirm')"
-                       data-confirm-text="@lang('app.do_you_want_to_sync_shops')"
-                       data-confirm-delete="@lang('app.yes_i_do')">
-                        <b>Sync</b></a>
-                @endif
 
                 <button type="button" class="btn btn-primary" id="generate-freespin" onclick="check_pp();">
                     프라그메틱 체크
