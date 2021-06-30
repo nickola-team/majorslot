@@ -31,9 +31,13 @@
 		@endif
 	
 	@else
-	<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
-	{{ $in_out_log->shop->name }} [매장]
-	</a>
+	@if ($in_out_log->shop)
+		<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
+		{{ $in_out_log->shop->name }} [매장]
+		</a>
+	@else
+		삭제된 매장
+	@endif
 	@endif
 	
 </td>
