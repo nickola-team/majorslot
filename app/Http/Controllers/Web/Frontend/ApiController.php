@@ -37,11 +37,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             //check admin id per site
-            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
-            $adminid = 1; //default admin id
-            if ($site)
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->get();
+            $adminid = [1]; //default admin id
+            if (count($site) > 0)
             {
-                $adminid = $site->adminid;
+                $adminid = $site->pluck('adminid')->toArray();
             }
 
             $admin = $user;
@@ -54,7 +54,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $admin = $admin->referral;
             }
 
-            if (!$admin || $admin->id != $adminid)
+            if (!$admin || !in_array($admin->id, $adminid))
             {
                 return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
             }
@@ -78,7 +78,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             
             $sessions = $sessionRepository->getUserSessions($user->id);
-            $expiretime = env('EXPIRE_TIME_CLOSE'. 30);
+            $expiretime = env('EXPIRE_TIME_CLOSE', 600);
             $count = count($sessions);
             if(count($sessions) > 0 ) 
             {
