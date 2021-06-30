@@ -73,6 +73,10 @@ namespace VanguardLTE\Console
                 {
                     $task->update(['finished' => 1]);
                     $shop = \VanguardLTE\Shop::find($task->item_id);
+                    if (!$shop)
+                    {
+                        return;
+                    }
                     $shopCategories = \VanguardLTE\ShopCategory::where('shop_id', $shop->id)->get();
                     if( count($shopCategories) ) 
                     {
