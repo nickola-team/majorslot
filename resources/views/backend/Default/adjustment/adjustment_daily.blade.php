@@ -76,8 +76,8 @@
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
-						{{--<th>수익금전환</th>
-						<th>매장충전</th>
+						<th>딜비전환</th>
+						{{--<th>매장충전</th>
 						<th>매장환전</th> --}}
 						<th>베팅금</th>
 						<th>당첨금</th>
@@ -102,8 +102,8 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
 						@endif
 						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
-						{{--<td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
+						{{--<td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>--}}
 						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
@@ -132,7 +132,8 @@
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
-						{{--<th>수익금전환</th>
+						<th>딜비전환</th>
+						{{--
 						<th>매장충전</th>
 						<th>매장환전</th> --}}
 						<th>베팅금</th>
