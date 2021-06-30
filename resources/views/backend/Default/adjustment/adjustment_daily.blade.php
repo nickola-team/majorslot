@@ -111,7 +111,7 @@
 						@if(auth()->user()->isInoutPartner())
 						<?php
 						$money = ($summary->sum('totalbet')-$summary->sum('totalwin') + $summary->sum('totalin') - $summary->sum('totalout')) * settings('money_percent') / 100;
-						$deal_money = ($summary->sum('total_deal') - $summary->sum('total_mileage')) * settings('money_percent') / 100;
+						$deal_money = ($summary->sum('dealout')) * settings('money_percent') / 100;
 						?>
 						<td><span class='text-red'>{{ number_format($money ,0) }}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - $money + $deal_money,0) }}</span></td>
