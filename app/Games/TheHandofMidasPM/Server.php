@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 }
                 else
                 {
-                    $bet = $slotSettings->Bet[0];
+                    $bet = '100.00';
                     $otherResponse = '&s=' . implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
                     $initReel = [4,11,6,6,5,13,10,9,13,7,10,9,3,4,11];
                 }

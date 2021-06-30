@@ -82,7 +82,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 }
                 else
                 {
-                    $bet = $slotSettings->Bet[0];
+                    $bet = '80.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';
