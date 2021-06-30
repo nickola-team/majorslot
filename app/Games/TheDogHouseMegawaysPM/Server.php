@@ -519,7 +519,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
                 /* 1주기 돌기후 랜덤주기 셋팅 */
                 if ($resetCount == 0) {
-                    $resetCount = random_int(2, 6);
+                    $resetCount = random_int(1, 5);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ResetCount', $resetCount);
                 }
                 else {
