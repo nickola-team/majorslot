@@ -114,7 +114,7 @@
 						$deal_money = ($summary->sum('dealout')) * settings('money_percent') / 100;
 						?>
 						<td><span class='text-red'>{{ number_format($money ,0) }}</span></td>
-						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - $money + $deal_money,0) }}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - $money - $deal_money,0) }}</span></td>
 						@endif
 
 						</tr>
