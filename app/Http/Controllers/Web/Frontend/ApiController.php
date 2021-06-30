@@ -1141,64 +1141,62 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $amount = $transaction->sum;
             $type = $transaction->type;
             $requestuser = \VanguardLTE\User::where('id', $transaction->user_id)->get()->first();
-
-            if ($requestuser->hasRole('manager')) // for shops
-            {
-                $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
-                if($type == 'out'){
-                    $shop->update([
-                        'balance' => $shop->balance + $amount
-                    ]);
-                    $open_shift = \VanguardLTE\OpenShift::where([
-                        'shop_id' => $shop->id, 
-                        'end_date' => null,
-                        'type' => 'shop'
-                    ])->first();
-                    if( $open_shift ) 
-                    {
-                        $open_shift->decrement('balance_out', $amount);
+            if ($requestuser){
+                if ($requestuser->hasRole('manager')) // for shops
+                {
+                    $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
+                    if($type == 'out'){
+                        $shop->update([
+                            'balance' => $shop->balance + $amount
+                        ]);
+                        $open_shift = \VanguardLTE\OpenShift::where([
+                            'shop_id' => $shop->id, 
+                            'end_date' => null,
+                            'type' => 'shop'
+                        ])->first();
+                        if( $open_shift ) 
+                        {
+                            $open_shift->decrement('balance_out', $amount);
+                        }
                     }
-                }
-                else if($type == 'deal_out'){
-                    $shop->update([
-                        'deal_balance' => $shop->deal_balance + $amount
-                    ]);
-                    $open_shift = \VanguardLTE\OpenShift::where([
-                        'shop_id' => $shop->id, 
-                        'end_date' => null,
-                        'type' => 'shop'
-                    ])->first();
-                    if( $open_shift ) 
-                    {
-                        $open_shift->decrement('balance_out', $amount);
+                    else if($type == 'deal_out'){
+                        $shop->update([
+                            'deal_balance' => $shop->deal_balance + $amount
+                        ]);
+                        $open_shift = \VanguardLTE\OpenShift::where([
+                            'shop_id' => $shop->id, 
+                            'end_date' => null,
+                            'type' => 'shop'
+                        ])->first();
+                        if( $open_shift ) 
+                        {
+                            $open_shift->decrement('balance_out', $amount);
+                        }
                     }
-                }
 
-                $transaction->update([
+                }
+                else
+                {
+                    if($type == 'out'){
+                        $requestuser->update([
+                            'balance' => $requestuser->balance + $amount
+                        ]);
+                        $open_shift = \VanguardLTE\OpenShift::where([
+                            'user_id' => $requestuser->id, 
+                            'end_date' => null,
+                            'type' => 'partner'
+                        ])->first();
+                        if( $open_shift ) 
+                        {
+                            $open_shift->decrement('balance_out', $amount);
+                        }
+                    }
+
+                }
+            }
+            $transaction->update([
                 'status' => 2
-                ]);
-            }
-            else
-            {
-                if($type == 'out'){
-                    $requestuser->update([
-                        'balance' => $requestuser->balance + $amount
-                    ]);
-                    $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => $requestuser->id, 
-                        'end_date' => null,
-                        'type' => 'partner'
-                    ])->first();
-                    if( $open_shift ) 
-                    {
-                        $open_shift->decrement('balance_out', $amount);
-                    }
-                }
-
-                $transaction->update([
-                    'status' => 2
-                ]);
-            }
+            ]);
            return redirect()->back()->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }
 
