@@ -975,7 +975,7 @@ namespace VanguardLTE\Games\TheDogHousePM
         public function GetNoneWinReels($winType, $slotEvent)
         {
             $reel = $this->GetReelStrips($winType, $slotEvent);
-            $reel['reel1'][0] = mt_rand(12,13);
+/*            $reel['reel1'][0] = mt_rand(12,13);
             $reel['reel1'][1] = 11;
             $reel['reel1'][2] = mt_rand(12,13);
 
@@ -994,7 +994,7 @@ namespace VanguardLTE\Games\TheDogHousePM
             $reel['reel5'][0] = 4;
             $reel['reel5'][1] =  mt_rand(7,8);
             $reel['reel5'][2] = mt_rand(9,10);
-            
+            */
             return $reel;
         }
         public function GetReelStrips($winType, $slotEvent)
