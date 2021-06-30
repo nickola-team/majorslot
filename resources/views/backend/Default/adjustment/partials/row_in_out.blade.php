@@ -10,19 +10,25 @@
 	?>
 <td>
 	<?php
-		$level = $in_out_log->user->level();
-		$parent = $in_out_log->user->referral;
 		$hierarchy = '';
-		for (;$level<Auth::user()->level();$level++)
-		{
-			$hierarchy = $hierarchy . ' > ' . $parent->username .'[' .$available_roles_trans[$parent->role_id]. ']';
-			$parent = $parent->referral;
+		if ($in_out_log->user){
+			$level = $in_out_log->user->level();
+			$parent = $in_out_log->user->referral;
+			for (;$level<Auth::user()->level();$level++)
+			{
+				$hierarchy = $hierarchy . ' > ' . $parent->username .'[' .$available_roles_trans[$parent->role_id]. ']';
+				$parent = $parent->referral;
+			}
 		}
 	?>
 	@if($in_out_log->partner_type == 'partner')
-	<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
+		@if ($in_out_log->user)
+		<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
 		{{ $in_out_log->user->username }} [{{$available_roles_trans[$in_out_log->user->role_id] }}]
 		</a>
+		@else
+		삭제된 파트너
+		@endif
 	
 	@else
 	<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
