@@ -1327,7 +1327,19 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     while( in_array( ($reelId = random_int(2, 5)), $unavailableReels));
 
                     /* 릴의 랜덤 위치 */
-                    $availablePoses = array_where($reel["reel{$reelId}"], function ($symbol, $key) {
+                    $symbols = $reel["reel{$reelId}"];
+                    $availablePoses = array_where($symbols, function ($symbol, $key) use ($symbols) {
+                        /* 이전심볼이 개이라면 (6번심볼 제외) */
+                        if ($key > 0 && $symbols[$key - 1] <= 5) {
+                            return false;
+                        }
+
+                        /* 다음심볼이 개이라면 (6번심볼 제외) */
+                        if (isset($symbols[$key + 1]) && $symbols[$key + 1] <= 5) {
+                            return false;
+                        }
+
+                        /* BLANK, WILD */
                         return $symbol != 14 && $symbol != 2 && $key != -1 && $key != 7;
                     });
 
@@ -1350,7 +1362,18 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     while( in_array( ($reelId = random_int(1, 6)), $unavailableReels));
 
                     /* 릴의 랜덤 위치 */
-                    $availablePoses = array_where($reel["reel{$reelId}"], function ($symbol, $key) {
+                    $symbols = $reel["reel{$reelId}"];
+                    $availablePoses = array_where($symbols, function ($symbol, $key) use ($symbols) {
+                        /* 이전심볼이 개이라면 (6번심볼 제외) */
+                        if ($key > 0 && $symbols[$key - 1] <= 5) {
+                            return false;
+                        }
+
+                        /* 다음심볼이 개이라면 (6번심볼 제외) */
+                        if (isset($symbols[$key + 1]) && $symbols[$key + 1] <= 5) {
+                            return false;
+                        }
+
                         return $symbol != 14 && $symbol != 2 && $key != -1 && $key != 7;
                     });
 
