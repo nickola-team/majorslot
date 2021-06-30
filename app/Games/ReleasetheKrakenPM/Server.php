@@ -136,7 +136,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 }
                 else
                 {
-                    $bet = $slotSettings->Bet[0];
+                    $bet = '100.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

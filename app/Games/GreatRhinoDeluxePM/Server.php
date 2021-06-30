@@ -268,7 +268,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                 }
                 else
                 {
-                    $bet = $slotSettings->Bet[0];
+                    $bet = '100.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

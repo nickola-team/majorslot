@@ -52,7 +52,7 @@ namespace VanguardLTE\Games\PowerOfThorMegawaysPM
         
         public function __construct()
         {
-            $temp = file(base_path() . '/app/Games/PowerOfThorMegawaysPM/reels.txt');
+            $temp = file(base_path() . '/app/Games/PowerofThorMegawaysPM/reels.txt');
             foreach( $temp as $str ) 
             {
                 $str = explode('=', $str);

@@ -113,7 +113,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 }
                 else
                 {
-                    $bet = $slotSettings->Bet[0];
+                    $bet = '100.00';
                 }
                 $currentReelSet = 4;
                 $spinType = 's';
