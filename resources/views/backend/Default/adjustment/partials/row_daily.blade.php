@@ -22,7 +22,7 @@
 	$money = ($adjustment->totalbet - $adjustment->totalwin + $adjustment->totalin - $adjustment->totalout) * settings('money_percent') / 100;
 	$deal_money = ($adjustment->dealout) * settings('money_percent') / 100;
 	?>
-	<td>{{ number_format($money,0) }}</td>
+	<td>{{ number_format($money+$deal_money,0) }}</td>
 	<td>{{ number_format($adjustment->totalin - $adjustment->totalout - $money - $deal_money,0) }}</td>
 	@endif
 </tr>
