@@ -458,7 +458,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                         $spinType = 's';
                         $strOtherResponse = '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fs=1&fsres=0.00';
                     }                    
-                    if($scattersCount >= 2){
+                    if($scattersCount >= 1){
                         $n_reel_set = 1;
                     }
                 }
