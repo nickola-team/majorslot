@@ -478,6 +478,18 @@ namespace VanguardLTE\Console
                 $this->info('End');
             });
 
+            \Artisan::command('daily:dealsum {from} {to}', function ($from, $to) {
+                set_time_limit(0);                
+                $this->info("Begin deal calculation");
+                $stat_games = \VanguardLTE\StatGame::where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->get();
+                foreach ($stat_games as $stat)
+                {
+                    $user = \VanguardLTE\User::where('id',$stat->user_id)->first();
+                    $user->processBetDealerMoney($stat->bet, $stat->game, $stat->type);
+                }
+                $this->info('End deal calculation');
+            });
+
             
         }
     }
