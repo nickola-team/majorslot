@@ -336,6 +336,7 @@ namespace VanguardLTE\Console
                 if ($date == 'today') {
                     $day = date("Y-m-d", strtotime("-1 days"));
                     \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $day])->delete();
+                    \VanguardLTE\GameSummary::where(['type' => 'today', 'date' => $day])->delete();
                 }
                 $this->info("End daily game summary adjustment.");
             });
@@ -367,7 +368,7 @@ namespace VanguardLTE\Console
                 }
                 if ($date == 'today') {
                     $day = date("Y-m-d", strtotime("-1 days"));
-                    \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $date])->delete();
+                    \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $day])->delete();
                 }
                 $this->info("End summary daily adjustment.");
             });
