@@ -110,7 +110,7 @@
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
 						@if(auth()->user()->isInoutPartner())
 						<?php
-						$money = ($summary->sum('totalbet')-$summary->sum('totalwin') + $summary->sum('totalin') - $summary->sum('totalout')) * settings('money_percent') / 100;
+						$money = ($summary->sum('totalin') - $summary->sum('totalout')) * settings('money_percent') / 100;
 						$deal_money = ($summary->sum('dealout')) * settings('money_percent') / 100;
 						?>
 						<td><span class='text-red'>{{ number_format($money+$deal_money ,0) }}</span></td>

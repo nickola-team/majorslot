@@ -30,7 +30,7 @@
 	<td>{{ number_format($adjustment['totalbet'] - $adjustment['totalwin'],0) }}</td>
 	@if(auth()->user()->isInoutPartner())
 	<?php
-	$money = ($adjustment['totalbet'] - $adjustment['totalwin'] + $adjustment['totalin'] - $adjustment['totalout']) * settings('money_percent') / 100;
+	$money = ($adjustment['totalin'] - $adjustment['totalout']) * settings('money_percent') / 100;
 	$deal_money = ($adjustment['dealout']) * settings('money_percent') / 100;
 	?>
 	<td>{{ number_format($money+$deal_money,0) }}</td>
