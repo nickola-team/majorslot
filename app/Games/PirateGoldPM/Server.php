@@ -132,14 +132,16 @@ namespace VanguardLTE\Games\PirateGoldPM
                         $objRes = array_merge($objRes, $winLines);
                         
                         /* 프리스핀 */
-                        $objRes['balance'] = $LASTSPIN->balance ?? null;
-                        $objRes['balance_cash'] = $LASTSPIN->balance_cash ?? null;
-
                         $objRes['fsmul'] = $LASTSPIN->fsmul ?? null;
                         $objRes['fsmax'] = $LASTSPIN->fsmax ?? null;
                         $objRes['fs'] = $LASTSPIN->fs ?? null;
                         $objRes['fsres'] = $LASTSPIN->fsres ?? null;
                         $objRes['fswin'] = $LASTSPIN->fswin ?? null;
+
+                        if ($objRes['fsmax'] != null && $objRes['fsmax'] > 0) {
+                            $objRes['balance'] = $LASTSPIN->balance ?? null;
+                            $objRes['balance_cash'] = $LASTSPIN->balance_cash ?? null;
+                        }
                     }
                 }
             }
