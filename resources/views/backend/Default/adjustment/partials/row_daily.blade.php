@@ -2,7 +2,7 @@
 	@if($adjustment->user->hasRole('manager'))
 	<td>{{ $adjustment->user->username }}</td>
 	@else
-	<td><a href="{{ route('backend.adjustment_daily', 'parent='.$adjustment->user_id) }}">{{ $adjustment->user->username }}</a></td>
+	<td><a href="{{ $type=='daily'?route('backend.adjustment_daily', ['parent'=>$adjustment->user_id]):route('backend.adjustment_monthly', ['parent'=>$adjustment->user_id]) }}">{{ $adjustment->user->username }}</a></td>
 	@endif
 	<td>{{ $type=='daily'?date('Y-m-d',strtotime($adjustment->date)):date('Y-m',strtotime($adjustment->date))}}</td>
 	<td>{{ number_format($adjustment->totalin,0) }}</td>
