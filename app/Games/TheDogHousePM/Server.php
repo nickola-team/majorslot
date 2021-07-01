@@ -528,6 +528,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                         {
                             // $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
                             // exit( $response );
+                            break;
                             if ($mustNotWin)
                             {
                                 break;
