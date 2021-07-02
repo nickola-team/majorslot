@@ -308,7 +308,7 @@
                 </div>
               </div>
               <div class="container demo-2">
-                <div id="slider" class="sl-slider-wrapper">
+                <div id="slider" class="sl-slider-wrapper" style="right:120px;">
                   <div class="sl-slider" style="width: 100%; height: 392px">
                     <div class="sl-slides-wrapper">
                       <div
