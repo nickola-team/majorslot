@@ -310,7 +310,7 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
 
-                    @permission('stats.live')
+{{--                    @permission('stats.live')
                     <li class="{{ Request::is('backend/live') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.live_stat') }}">
                             <i class="fa fa-circle-o"></i>
@@ -319,7 +319,7 @@
                         </a>
                     </li>
                     @endpermission
-
+                    --}}
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/statistics*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.statistics') }}">

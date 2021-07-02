@@ -320,7 +320,7 @@
 
                     
 
-                    @permission('stats.pay')
+                   {{-- @permission('stats.pay')
                     
                     <li class="{{ Request::is('backend/adjustment_partner') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.adjustment_partner') }}">
@@ -329,7 +329,7 @@
                         </a>
                     </li>
                     
-                    @endpermission
+                    @endpermission --}}
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/adjustment_game') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.adjustment_game') }}">
