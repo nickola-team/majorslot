@@ -938,7 +938,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetReelStrips($winType, $slotEvent)
+        public function GetReelStrips($winType, $slotEvent, $bonusType)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
@@ -971,7 +971,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     ];
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
-                        if( $i == 1 || $i == 2 || $i == 3 ) 
+                        if( ($i == 1 || $i == 2 || $i == 3 )  && $bonusType == 1 ) 
                         {
                             $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStripBonus' . $_obf_reelStripNumber[$i]});
                             $isScatter = true;
@@ -1012,7 +1012,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     ];
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
-                        if( $i == 1 || $i == 2 || $i == 3 ) 
+                        if( ($i == 1 || $i == 2 || $i == 3)  && $bonusType == 1) 
                         {
                             $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
                             $isScatter = true;
@@ -1110,6 +1110,31 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     return $sym;
                 }
             }
+        }
+        public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=4){
+            $random = [];
+            $tmp_random = [];
+            $ino = 0;
+            for($i=$num_first;$i<$num_last;$i++) {
+                $tmp_random[$ino] = $i;
+                $ino++;
+            }
+            $tmp_cnt = count($tmp_random);
+            $tmp_last = $tmp_cnt - 1;
+            for($i=0;$i<$get_cnt;$i++) {
+                $tmp_no=mt_rand(0,$tmp_last);
+                $random[$i] = $tmp_random[$tmp_no];
+                $tno = 0;
+                for($j=0;$j<$tmp_cnt;$j++) {
+                    if($random[$i] != $tmp_random[$j]) {
+                        $tmp_random[$tno] = $tmp_random[$j];               
+                        $tno++;
+                    }
+                }
+                $tmp_cnt = $tno;
+                $tmp_last = $tmp_cnt - 1;
+            }
+            return $random;
         }
     }
 
