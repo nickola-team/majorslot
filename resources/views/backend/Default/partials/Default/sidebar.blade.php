@@ -320,7 +320,7 @@
 
                     
 
-                   {{-- @permission('stats.pay')
+                    @permission('stats.pay')
                     
                     <li class="{{ Request::is('backend/adjustment_partner') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.adjustment_partner') }}">
@@ -329,7 +329,7 @@
                         </a>
                     </li>
                     
-                    @endpermission --}}
+                    @endpermission
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/adjustment_game') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.adjustment_game') }}">
@@ -377,7 +377,7 @@
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
 
-                    @permission('stats.live')
+                {{--    @permission('stats.live')
                     <li class="{{ Request::is('backend/live') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.live_stat') }}">
                             <i class="fa fa-circle-o"></i>
@@ -385,7 +385,7 @@
                             실시간내역
                         </a>
                     </li>
-                    @endpermission
+                    @endpermission --}}
 
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/statistics*') ? 'active' : ''  }}">
