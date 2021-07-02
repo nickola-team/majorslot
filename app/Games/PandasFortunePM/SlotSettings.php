@@ -900,7 +900,7 @@ namespace VanguardLTE\Games\PandasFortunePM
         }
         public function GenerateFreeSpinCount(){
             $sum = rand(0, 100);
-            if($sum <= 80){
+            if($sum <= 90){
                 return 3;
             }else if($sum <= 100){
                 return 4;
