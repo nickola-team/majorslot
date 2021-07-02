@@ -314,12 +314,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->payeername . '%');
             }
+            $start_date = date("Y-m-d") . " 00:00:00";
+            $end_date = date("Y-m-d H:i:s");
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);
-                $statistics = $statistics->where('transactions.created_at', '>=', $dates[0]);
-                $statistics = $statistics->where('transactions.created_at', '<=', $dates[1]);
+                $start_date = $dates[0];
+                $end_date = $dates[1];
             }
+
+            $statistics = $statistics->where('transactions.created_at', '>=', $start_date);
+            $statistics = $statistics->where('transactions.created_at', '<=', $end_date);
+
+            
             if( $request->shifts != '' ) 
             {
                 $shift = \VanguardLTE\OpenShift::find($request->shifts);
@@ -549,13 +556,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 $statistics = $statistics->where('deal_log.type',$request->type);
             }
+            $start_date = date("Y-m-d") . " 00:00:00";
+            $end_date = date("Y-m-d H:i:s");
 
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);
-                $statistics = $statistics->where('deal_log.date_time', '>=', $dates[0]);
-                $statistics = $statistics->where('deal_log.date_time', '<=', $dates[1]);
+                $start_date = $dates[0];
+                $end_date = $dates[1];
             }
+
+            $statistics = $statistics->where('deal_log.date_time', '>=', $start_date);
+            $statistics = $statistics->where('deal_log.date_time', '<=', $end_date);
             
             $game_stat = $statistics->paginate(20);
             return view('backend.Default.stat.deal_stat', compact('game_stat'));
