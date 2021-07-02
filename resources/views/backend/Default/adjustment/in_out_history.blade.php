@@ -113,13 +113,13 @@
 						<th>파트너이름</th>
 						@if (auth()->user()->isInoutPartner())
 						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>@lang('app.distributor')</th>
+						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>@lang('app.agent')</th>
+						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>@lang('app.master')</th>
+						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
 						@endif
 						@endif
 						<th>충전금액</th>
@@ -147,13 +147,13 @@
 						<th>파트너이름</th>
 						@if (auth()->user()->isInoutPartner())
 						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>@lang('app.distributor')</th>
+						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>@lang('app.agent')</th>
+						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>@lang('app.master')</th>
+						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
 						@endif
 						@endif
 						<th>충전금액</th>

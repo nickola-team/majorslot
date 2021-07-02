@@ -52,14 +52,14 @@
                     <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
                         <a href="{{ route('backend.user.list') }}">
                             <i class="fa fa-users"></i>
-                            <span>회원리스트</span>
+                            <span>{{\VanguardLTE\Role::where('slug','user')->first()->description}}리스트</span>
                         </a>
                     </li>
                     @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master','agent']) )
                     <li class="{{ Request::is('backend/partner/4') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 4) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>총판리스트</span>
+                            <span>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}리스트</span>
                         </a>
                     </li>
                     @endif
@@ -67,7 +67,7 @@
                     <li class="{{ Request::is('backend/partner/5') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 5) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>부본사리스트</span>
+                            <span>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}리스트</span>
                         </a>
                     </li>
                     @endif
@@ -75,7 +75,7 @@
                     <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 6) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>본사리스트</span>
+                            <span>{{\VanguardLTE\Role::where('slug','master')->first()->description}}리스트</span>
                         </a>
                     </li>
                     @endif
@@ -83,7 +83,7 @@
                     <li class="{{ Request::is('backend/partner/7') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>총본사리스트</span>
+                            <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}리스트</span>
                         </a>
                     </li>
                     @endif
@@ -498,26 +498,23 @@
                 <!-- The user image in the navbar-->
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs">{{auth()->user()->username}}[
-                @foreach(['8'=>'app.admin','7'=>'app.comaster','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
-                    @if($role_id == Auth::user()->role_id)
-                        @lang($role_name)
-                    @endif
-                @endforeach
-                ]</span>
+                <?php  
+					$available_roles = Auth::user()->available_roles( true );
+					$available_roles_trans = [];
+					foreach ($available_roles as $key=>$role)
+					{
+						$role = \VanguardLTE\Role::find($key)->description;
+						$available_roles_trans[$key] = $role;
+					}
+				?>
+                <span class="hidden-xs">{{auth()->user()->username}}[ {{$available_roles_trans[auth()->user()->role_id]}} ]</span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
                 <p>
-                {{ Auth::user()->username }}[
-                @foreach(['8'=>'app.admin','7'=>'app.comaster','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
-                    @if($role_id == Auth::user()->role_id)
-                        @lang($role_name)
-                    @endif
-                @endforeach
-                ]님 
+                {{ Auth::user()->username }}[{{$available_roles_trans[auth()->user()->role_id]}}]님 
                 </p>
                 </li>
                 <!-- Menu Footer-->

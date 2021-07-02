@@ -49,16 +49,19 @@
 				<h3 class="box-title">
 				{{$type=='daily'?'일별':'월별'}}정산
 				</h3>
+				<?php  
+					$available_roles = Auth::user()->available_roles( true );
+					$available_roles_trans = [];
+					foreach ($available_roles as $key=>$role)
+					{
+						$role = \VanguardLTE\Role::find($key)->description;
+						$available_roles_trans[$key] = $role;
+					}
+				?>
 					@if($user != null)
 					<a href="{{ route('backend.adjustment_daily', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
-						[
-						@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
-						@if($role_id == $user->role_id)
-							@lang($role_name)
-						@endif
-						@endforeach
-						]
+						[ {{$available_roles_trans[$user->role_id]}} ]
 					</a>
 					@endif
 				

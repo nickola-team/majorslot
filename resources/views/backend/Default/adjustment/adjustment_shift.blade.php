@@ -17,13 +17,6 @@
 				@if($user != null)
 					<a href="{{ route('backend.adjustment_shift', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
-						[
-						@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
-						@if($role_id == $user->role_id)
-							@lang($role_name)
-						@endif
-						@endforeach
-						]
 					</a>
 				@endif
 			</div>

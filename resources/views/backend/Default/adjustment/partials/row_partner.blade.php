@@ -7,15 +7,9 @@
 	@endif
 	</td>
 	<?php  
-    $available_roles = Auth::user()->available_roles( true );
-    $available_roles_trans = [];
-    foreach ($available_roles as $key=>$role)
-    {
-        $role = trans("app." . strtolower($role));
-        $available_roles_trans[$key] = $role;
-    }
+		$role = \VanguardLTE\Role::find($adjustment['role_id']);
 	?>
-	<td>{{ $available_roles_trans[$adjustment['role_id']] }}</td>
+	<td>{{ $role->description }}</td>
 	<td>{{ number_format($adjustment['totalin'],0) }}</td>
 	<td>{{ number_format($adjustment['totalout'],0) }}</td>
 	@if(auth()->user()->isInoutPartner())

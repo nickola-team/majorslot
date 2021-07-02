@@ -106,16 +106,16 @@
 					<tr>
 						<th>@lang('app.name')</th>
 						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>@lang('app.distributor')</th>
+						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>@lang('app.agent')</th>
+						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>@lang('app.master')</th>
+						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
 						@endif
 						<th>@lang('app.credit')</th>
-						@if(auth()->user()->hasRole('admin') && !Session::get('isCashier'))
+						@if(auth()->user()->hasRole('admin'))
 						<th>@lang('app.percent')%</th>
 						@endif
 						<th>수익금</th>
@@ -142,17 +142,17 @@
 					<tr>
 						<th>@lang('app.name')</th>
 						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>@lang('app.distributor')</th>
+						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>@lang('app.agent')</th>
+						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
 						@endif
 						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>@lang('app.master')</th>
+						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
 						@endif
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
-						@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
+						@if(auth()->user()->hasRole('admin'))
 						<th>@lang('app.percent')%</th>
 						@endif
 						<th>수익금</th>
