@@ -377,15 +377,6 @@
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
 
-                    @permission('stats.live')
-                    <li class="{{ Request::is('backend/live') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.live_stat') }}">
-                            <i class="fa fa-circle-o"></i>
-                            {{-- @lang('app.live_stats') --}}
-                            실시간내역
-                        </a>
-                    </li>
-                    @endpermission
 
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/statistics*') ? 'active' : ''  }}">
