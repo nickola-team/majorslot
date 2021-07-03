@@ -214,12 +214,12 @@ namespace VanguardLTE\Console
                         \VanguardLTE\GameCategory::where('game_id', $game->id)->delete();
                         \VanguardLTE\GameLog::where('game_id', $game->id)->delete();
                     }
-                    \VanguardLTE\Transaction::where('shop_id', $shopId)->delete();
-                    \VanguardLTE\StatGame::where('shop_id', $shopId)->delete();
+                    //\VanguardLTE\Transaction::where('shop_id', $shopId)->delete();
+                    //\VanguardLTE\StatGame::where('shop_id', $shopId)->delete();
                     \VanguardLTE\Category::where('shop_id', $shopId)->delete();
                     \VanguardLTE\Returns::where('shop_id', $shopId)->delete();
                     \VanguardLTE\OpenShift::where('shop_id', $shopId)->delete();
-                    \VanguardLTE\ShopStat::where('shop_id', $shopId)->delete();
+                    //\VanguardLTE\ShopStat::where('shop_id', $shopId)->delete();
                     \VanguardLTE\ShopUser::where('shop_id', $shopId)->delete();
                     \VanguardLTE\BankStat::where('shop_id', $shopId)->delete();
                     \VanguardLTE\Api::where('shop_id', $shopId)->delete();

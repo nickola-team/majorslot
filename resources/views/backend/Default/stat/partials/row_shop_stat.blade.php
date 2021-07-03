@@ -4,7 +4,7 @@
 	@if ($stat->shop)
 		{{ $stat->shop->name }}
 	@else
-		unknown
+		삭제된 매장 - {{$stat->shop_id}}
 	@endif
 	</td>
 	<td>
@@ -20,7 +20,7 @@
 	@if ($stat->user)
 		{{ $stat->user ? $stat->user->username : 'unknown'  }} [ {{$available_roles_trans[$stat->user->role_id]}} ]
 	@else
-		unknown
+		삭제된 파트너 - {{$stat->user_id}}
 	@endif
 	</td>
 	@if (auth()->user()->isInoutPartner())

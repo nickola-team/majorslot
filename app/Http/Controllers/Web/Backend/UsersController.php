@@ -1101,7 +1101,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.user.list')->withErrors([trans('app.balance_not_zero')]);
             }
-            if( (auth()->user()->hasRole('admin') && $user->hasRole('agent') || auth()->user()->hasRole('agent') && $user->hasRole('distributor') || auth()->user()->hasRole('distributor') && $user->hasRole('manager')) && ($count = \VanguardLTE\User::where('parent_id', $user->id)->count()) ) 
+            if( auth()->user()->hasRole(['admin','comaster','master','agent','distributor','manager']) && ($count = \VanguardLTE\User::where('parent_id', $user->id)->count()) ) 
             {
                 return redirect()->route('backend.user.list')->withErrors([trans('app.has_users', ['name' => $user->username])]);
             }
@@ -1110,13 +1110,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.user.list')->withErrors([trans('app.has_stats', ['name' => $user->username])]);
             }
             $user->detachAllRoles();
-            \VanguardLTE\Transaction::where('user_id', $user->id)->delete();
+            //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
             \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
-            \VanguardLTE\StatGame::where('user_id', $user->id)->delete();
+            //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
             \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
-            \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
-            \VanguardLTE\Session::where('user_id', $user->id)->delete();
-            \VanguardLTE\Info::where('user_id', $user->id)->delete();
+            //\VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
+            //\VanguardLTE\Session::where('user_id', $user->id)->delete();
+            //\VanguardLTE\Info::where('user_id', $user->id)->delete();
             event(new \VanguardLTE\Events\User\Deleted($user));
             $user->delete();
             return redirect()->route('backend.user.list')->withSuccess(trans('app.user_deleted'));
@@ -1162,10 +1162,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 foreach( $distributors as $distributor ) 
                 {
+                    if ($distributor->balance > 0)
+                    {
+                        return redirect()->back()->withErrors(['보유금이  0이 아닌 파트너가 있습니다.']);
+                    }
                     if( $distributor->rel_shops ) 
                     {
                         foreach( $distributor->rel_shops as $shop ) 
                         {
+                            if ($shop->balance > 0)
+                            {
+                                return redirect()->back()->withErrors(['보유금이  0이 아닌 매장이 있습니다.']);
+                            }
+                            if (\VanguardLTE\User::where('role_id', 1)->where('shop_id', $shop->shop_id)->where('balance', '>', 0)->get()->count() > 0)
+                            {
+                                return redirect()->back()->withErrors(['회원보유금이  0이 아닌 매장이 있습니다.']);
+                            }
+
                             \VanguardLTE\ShopUser::where('shop_id', $shop->shop_id)->delete();
                             \VanguardLTE\Shop::where('id', $shop->shop_id)->delete();
                             \VanguardLTE\Task::create([
@@ -1201,6 +1214,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 foreach( $agents as $agent ) 
                 {
+                    if ($agent->balance > 0)
+                    {
+                        return redirect()->back()->withErrors(['보유금이  0이 아닌 파트너가 있습니다.']);
+                    }
                     event(new \VanguardLTE\Events\User\Deleted($agent));
                     \VanguardLTE\ShopUser::where('user_id', $agent->id)->delete();
                     $agent->delete();
@@ -1208,6 +1225,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if($user->hasRole(['comaster','master','agent'])) 
             {
+                if ($user->balance > 0)
+                {
+                    return redirect()->back()->withErrors(['보유금이  0이 아닌 파트너가 있습니다.']);
+                }
                 event(new \VanguardLTE\Events\User\Deleted($user));
                 \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
                 $user->delete();

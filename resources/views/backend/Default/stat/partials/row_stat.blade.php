@@ -9,18 +9,19 @@
 		}
 	?>
 <td>
+@if ($stat->user)
 @if ($partner==0)
 	<a href="{{ route('backend.statistics', ['user' => $stat->user->username])  }}">
 		{{ $stat->user->username }}
 @else
 	<a href="{{ route('backend.statistics_partner', ['user' => $stat->user->username])  }}">
-	@if ($stat->user)
 	{{ $stat->user->username }} [ {{$available_roles_trans[$stat->user->role_id]}} ]
-	@else
-	Unknown
-	@endif
 @endif
-	</a>
+</a>
+@else
+삭제된 유저 - {{$stat->user_id}}
+@endif
+	
 </td>
 <td>
 	@if ($stat->admin)
