@@ -12,34 +12,40 @@
 	<section class="content">
 		<form action="" method="GET">
 			<div class="box box-danger pay_stat_show">
-				{{-- <div class="box-header with-border">
+				<div class="box-header with-border">
 					<h3 class="box-title">@lang('app.filter')</h3>
 					<div class="box-tools pull-right">
-						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 					</div>
 				</div> 
 				<input type="hidden" name="start_date" id="start_date" value="{{ $start_date }}">
-				<input type="hidden" name="end_date" id="end_date" value="{{ $end_date }}">--}}
+				<input type="hidden" name="end_date" id="end_date" value="{{ $end_date }}">
 				<div class="box-body">
-					<div class="row">
-						<div class="col-md-4">
-							<div class="form-group">
-								<table class="table">
-								<td style="vertical-align: inherit;">
-									<span>기간선택</span>
-								</td>
-								<td>
-									<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
-								</td>
-								<td>
-									<button type="submit" class="btn btn-primary">
-									@lang('app.filter')
-									</button>
-								</td>
-								</table>
-							</div>
+					@if (!auth()->user()->hasRole('manager'))
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>파트너이름</label>
+							<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}">
 						</div>
 					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>타입</label>
+							{!! Form::select('type', ['partner' => '파트너', 'shop' => '매장'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
+						</div>
+					</div>
+					@endif
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>기간선택</label>
+							<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
+						</div>
+					</div>
+				</div>
+				<div class="box-footer">
+				<button type="submit" class="btn btn-primary">
+					@lang('app.filter')
+				</button>
 				</div>
 			</div>
 		</form>
