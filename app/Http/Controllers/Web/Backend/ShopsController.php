@@ -22,7 +22,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('frontend.page.error_license');
             }*/
-            $shops = \VanguardLTE\Shop::select('shops.*', 'shops.id AS shop_id');
+            $shops = \VanguardLTE\Shop::select('shops.*', 'shops.id AS shop_id')->where('pending','<>', 2);
             if( $shopIds = auth()->user()->shops(true) ) 
             {
                 $shops = $shops->whereIn('shops.id', $shopIds);
@@ -313,7 +313,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $manager = \VanguardLTE\User::create($manager + [
                 'parent_id' => auth()->user()->id, 
-                'role_id' => 3
+                'role_id' => 3,
+                'status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE, 
             ]);
             $roles = \jeremykenedy\LaravelRoles\Models\Role::get();
             $manager->attachRole($roles->find(3));
@@ -324,7 +325,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'shop_id' => $shop->id, 
                 'user_id' => $manager->id
             ]);
-
+            
+            event(new \VanguardLTE\Events\Shop\ShopCreated($shop));
 
             return redirect()->route('backend.shop.list')->withSuccess(trans('app.shop_created'));
         }
@@ -682,69 +684,37 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function delete($shop)
         {
-            $usersWithBalance = \VanguardLTE\User::where('shop_id', $shop)->where('role_id', 1)->where('balance', '>', 0)->count();
-            if( $usersWithBalance ) 
+            $shop_ids = auth()->user()->availableShops();
+            if (!in_array($shop, $shop_ids))
             {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.users_with_balance', ['count' => $usersWithBalance])]);
-            }
-            $gamesWithBalance = \VanguardLTE\GameBank::where('shop_id', $shop)->where(function($query)
-            {
-                return $query->where('slots', '>', 0)->orWhere('little', '>', 0)->orWhere('table_bank', '>', 0)->orWhere('fish', '>', 0)->orWhere('bonus', '>', 0);
-            })->count();
-            if( $gamesWithBalance ) 
-            {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.games_with_gamebank', ['count' => $gamesWithBalance])]);
-            }
-            $jackpotsWithBalance = \VanguardLTE\JPG::where('shop_id', $shop)->where('balance', '>', 0)->count();
-            if( $jackpotsWithBalance ) 
-            {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.jackpots_with_balance', ['count' => $jackpotsWithBalance])]);
-            }
-            $pincodesWithBalance = \VanguardLTE\Pincode::where('shop_id', $shop)->where('nominal', '>', 0)->count();
-            if( $pincodesWithBalance ) 
-            {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.pincodes_with_nominal', ['count' => $pincodesWithBalance])]);
+                return redirect()->route('backend.shop.list')->withErrors(['비정상적인 접근입니다.']);
             }
             $shopInfo = \VanguardLTE\Shop::find($shop);
             if( $shopInfo && $shopInfo->balance > 0 ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.shop_balance')]);
+                return redirect()->route('backend.shop.list')->withErrors(['매장보유금이 0이 아닙니다.']);
             }
-            $distributors = \VanguardLTE\User::where('role_id', 4)->whereHas('rel_shops', function($query) use ($shop)
+            $usersWithBalance = \VanguardLTE\User::where('shop_id', $shop)->where('role_id', 1)->where('balance', '>', 0)->count();
+            if( $usersWithBalance ) 
             {
-                $query->where('shop_id', $shop);
-            })->pluck('id')->toArray();
-            if( count($distributors) ) 
-            {
-                $distributorsWithBalance = \VanguardLTE\User::whereIn('id', $distributors)->where('balance', '>', 0)->get();
-                foreach( $distributorsWithBalance as $distributor ) 
-                {
-                    if( count($distributor->shops()) == 1 && $distributor->shop_id == $shopInfo->id ) 
-                    {
-                        return redirect()->route('backend.shop.list')->withErrors([trans('app.distributors_with_balance', ['count' => count($distributorsWithBalance)])]);
-                    }
-                }
+                return redirect()->route('backend.shop.list')->withErrors([$usersWithBalance . '명의 회원보유금이 0이 아닙니다.']);
             }
-            \VanguardLTE\Shop::where('id', $shop)->delete();
-            \VanguardLTE\ShopUser::where('shop_id', $shop)->delete();
+           
+            $shopInfo->update(['pending'=>2]);
+
             \VanguardLTE\Task::create([
+                'user_id' => auth()->user()->id,
                 'category' => 'shop', 
                 'action' => 'delete', 
                 'item_id' => $shop
             ]);
-            $usersToDelete = \VanguardLTE\User::whereIn('role_id', [
+            $toDelete = \VanguardLTE\User::whereIn('role_id', [
                 1, 
                 2, 
                 3
-            ])->where('shop_id', $shop)->get();
-            if( $usersToDelete ) 
-            {
-                foreach( $usersToDelete as $userDelete ) 
-                {
-                    $userDelete->delete();
-                }
-            }
-            return redirect()->route('backend.shop.list')->withSuccess(trans('app.shop_deleted'));
+            ])->where('shop_id', $shop)->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
+            event(new \VanguardLTE\Events\Shop\ShopDeleted($shopInfo));
+            return redirect()->route('backend.shop.list')->withSuccess(['매장을 삭제하였습니다.']);
         }
         public function hard_delete($shop)
         {

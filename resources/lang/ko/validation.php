@@ -73,7 +73,7 @@ return [
     ],
     'string'               => ': 문자열이어야합니다.',
     'timezone'             => ': 유효한 영역이어야합니다.',
-    'unique'               => ': 속성은 이미 사용되었습니다.',
+    'unique'               => '그 :attribute 은 이미 사용되고있습니다.',
     'url'                  => ': 형식이 잘못되었습니다.',
     'captcha'              => 'reCAPTCHA 값이 잘못되었습니다.',
 

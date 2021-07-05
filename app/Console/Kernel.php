@@ -181,15 +181,47 @@ namespace VanguardLTE\Console
             })->everyMinute();
             $schedule->call(function()
             {
+                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
+                $task = \VanguardLTE\Task::where([
+                    'finished' => 0, 
+                    'category' => 'user', 
+                    'action' => 'delete'
+                ])->where('created_at', '<=', $date_time)->first();
+                if( $task ) 
+                {
+                    $task->update(['finished' => 1]);
+                    $user = \VanguardLTE\User::find($task->item_id);
+                    if ($user){
+                        $user->detachAllRoles();
+                        //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
+                        \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
+                        //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
+                        \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
+                        \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Session::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Info::where('user_id', $user->id)->delete();
+                        $user->delete();
+                    }
+
+                }
+            })->everyMinute();
+            $schedule->call(function()
+            {
+                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
                 $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'shop', 
                     'action' => 'delete'
-                ])->first();
+                ])->where('created_at', '<=', $date_time)->first();
                 if( $task ) 
                 {
                     $task->update(['finished' => 1]);
                     $shopId = $task->item_id;
+                    $shopInfo = \VanguardLTE\Shop::find($shop);
+                    if ($shopInfo)
+                    {
+                        $shopInfo->delete();
+                    }
                     $rel_users = \VanguardLTE\User::whereHas('rel_shops', function($query) use ($shopId)
                     {
                         $query->where('shop_id', $shopId);
@@ -241,30 +273,9 @@ namespace VanguardLTE\Console
                                 'distributor'
                             ]) ) 
                             {
-                                $shops = $user->shops(true);
-                                if( count($shops) ) 
-                                {
-                                    if( !is_array($shops) ) 
-                                    {
-                                        $shops = $shops->toArray();
-                                    }
-                                    $user->update(['shop_id' => array_shift($shops)]);
-                                }
-                                else
-                                {
-                                    $user->update(['shop_id' => 0]);
-                                }
+                                $user->update(['shop_id' => 0]);
                             }
                         }
-                    }
-                    \VanguardLTE\User::doesntHave('rel_shops')->where('shop_id', '!=', 0)->whereIn('role_id', [
-                        4, 
-                        5
-                    ])->update(['shop_id' => 0]);
-                    $admin = \VanguardLTE\User::where('role_id', 6)->first();
-                    if( $admin->shop_id == $shopId ) 
-                    {
-                        $admin->update(['shop_id' => 0]);
                     }
                 }
             })->everyMinute();
@@ -315,6 +326,8 @@ namespace VanguardLTE\Console
                     }
                 }
             })->everyMinute();
+
+            
         }
         protected function commands()
         {
@@ -401,8 +414,6 @@ namespace VanguardLTE\Console
                 }
                 $this->info("End summary monthly adjustment.");
             });
-
-
 
             \Artisan::command('daily:promo', function () {
                 set_time_limit(0);

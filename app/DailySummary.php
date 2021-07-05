@@ -139,6 +139,10 @@ namespace VanguardLTE
                             $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
                             //$adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
 
+                            $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
+                            $in_out = \DB::select($query);
+                            $adj['totalin'] = $adj['totalin'] + $in_out[0]->totalin;
+
                             $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
                             $in_out = \DB::select($query);
                             $adj['totalout'] = $adj['totalout'] + $in_out[0]->totalout;
