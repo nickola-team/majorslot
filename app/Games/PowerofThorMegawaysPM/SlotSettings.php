@@ -1219,6 +1219,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 /* reg 릴배치표 생성 */
                 foreach( $basePosOfReels['reg'] as $reelId => $basePos ) 
                 {
+                    /* 해당 릴배치표에서 랜덤갯수의 심볼배열 뽑기 */
                     $symbols = $this->SliceSymbols('reg', $basePos, $regReelSetId, $reelId);
                     
                     $reels['reg']['symbols'][$reelId] = $symbols;
@@ -1291,7 +1292,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
 
                 /* Scatter 심볼 체크 */
                 if ($winType == 'bonus') {
-                    /* scatters will be only on top reel */
+                    /* 프리스핀에서 보너스당첨인 경우 스캐터심볼이 Top릴에만 위치 */
                     if ($slotEvent == 'freespin') {
                         $remainingScatterCount = $scatterCount - $topScatterCount;
                         if ($remainingScatterCount > 0) {
@@ -1311,7 +1312,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                         }
                     }
                     else {
-                        /* 부족한 SCATTER 심볼 생성 */
+                        /* 일반 보너스당첨일때 reg릴셋에만 스캐터심볼 위치, 부족한 SCATTER 심볼 생성 */
                         $remainingScatterCount = $scatterCount - $regScatterCount;
                         if ($remainingScatterCount > 0) {
                             for ($i=0; $i < $remainingScatterCount; $i++) { 
