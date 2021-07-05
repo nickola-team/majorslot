@@ -552,7 +552,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'shop_id' => 0
             ])->get();
             if( \Auth::user()->hasRole([
-                'comaster', 
                 'master', 
                 'agent', 
                 'distributor', 
@@ -587,7 +586,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function update(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository, \VanguardLTE\Shop $shop)
         {
             if( \Auth::user()->hasRole([
-                'comaster', 
                 'master', 
                 'agent', 
                 'distributor', 

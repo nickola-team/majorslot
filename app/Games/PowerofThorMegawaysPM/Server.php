@@ -150,9 +150,6 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $objRes['puri'] = $LASTSPIN->puri ?? null;
                 
                 /* 프리스핀 */
-                $objRes['balance'] = $LASTSPIN->balance ?? $BALANCE;
-                $objRes['balance_cash'] = $LASTSPIN->balance_cash ?? $BALANCE;
-
                 $objRes['fsmul'] = $LASTSPIN->fsmul ?? null;
                 $objRes['fsmax'] = $LASTSPIN->fsmax ?? null;
                 $objRes['fs'] = $LASTSPIN->fs ?? null;
@@ -184,6 +181,13 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $objRes['wins_mask'] = $LASTSPIN->wins_mask ?? null;
                 $objRes['wp'] = $LASTSPIN->wp ?? null;
                 $objRes['end'] = $LASTSPIN->end ?? null;
+
+                /* 프리스핀, 텀블스핀일경우 당첨금 */
+                $fsmax = $slotSettings->GetGameData($slotSettings->slotId . 'FSMax');
+                if ($fsmax > 0 || $objRes['rs'] != null) {
+                    $objRes['balance'] = $LASTSPIN->balance ?? $BALANCE;
+                    $objRes['balance_cash'] = $LASTSPIN->balance_cash ?? $BALANCE;
+                }
             }
 
             return $objRes;

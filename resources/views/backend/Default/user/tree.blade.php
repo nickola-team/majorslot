@@ -36,18 +36,20 @@
 			</div>
         <div class="box box-primary">
             <div class="box-header with-border">
-                {{-- <h3 class="box-title">{{ $role->name }} @lang('app.tree')</h3> --}}
+			<?php  
+				$available_roles = \jeremykenedy\LaravelRoles\Models\Role::orderby('id')->pluck('name', 'id');
+				$available_roles_trans = [];
+				foreach ($available_roles as $key=>$role)
+				{
+					$role = \VanguardLTE\Role::find($key)->description;
+					$available_roles_trans[$key] = $role;
+				}
+			?>
                 <h3 class="box-title">파트너목록</h3>
                 @if($user != null && !$user->hasRole('admin'))
 					<a href="{{ route('backend.user.tree', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
-						[
-						@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager'] AS $role_id=>$role_name)
-						@if($role_id == $user->role_id)
-							@lang($role_name)
-						@endif
-						@endforeach
-						]
+						[ {{$available_roles_trans[$user->role_id]}}]
 					</a>
 				@endif
                 <div class="pull-right box-tools" style="display:flex;align-item:center;">

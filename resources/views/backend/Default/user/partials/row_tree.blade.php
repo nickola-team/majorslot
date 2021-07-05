@@ -12,7 +12,7 @@
     $available_roles_trans = [];
     foreach ($available_roles as $key=>$role)
     {
-        $role = trans("app." . strtolower($role));
+        $role = \VanguardLTE\Role::find($key)->description;
         $available_roles_trans[$key] = $role;
     }
 ?>

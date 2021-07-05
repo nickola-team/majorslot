@@ -81,14 +81,16 @@
         <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-
-            <li class="header" style="text-align: center; color:#b8c7ce;"><span style="color:red;">{{ Auth::user()->username }}</span>[
-            @foreach(['8'=>'app.admin','7'=>'app.comaster','6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
-                @if($role_id == Auth::user()->role_id)
-                    @lang($role_name)
-                @endif
-            @endforeach
-            ]님 안녕하세요 </li> 
+                <?php  
+					$available_roles = Auth::user()->available_roles( true );
+					$available_roles_trans = [];
+					foreach ($available_roles as $key=>$role)
+					{
+						$role = \VanguardLTE\Role::find($key)->description;
+						$available_roles_trans[$key] = $role;
+					}
+				?>
+            <li class="header" style="text-align: center; color:#b8c7ce;"><span style="color:red;">{{ Auth::user()->username }}</span>[ {{$available_roles_trans[auth()->user()->role_id]}} ]님 안녕하세요 </li> 
 
             @permission('dashboard')
             @if (auth()->user()->hasRole('admin'))
@@ -130,7 +132,7 @@
                     <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.list') }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>회원관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','user')->first()->description}}관리</span>
                         </a>
                     </li>
 
@@ -138,7 +140,7 @@
                     <li class="{{ Request::is('backend/partner/4') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 4) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>총판관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}관리</span>
                         </a>
                     </li>
                     @endif
@@ -146,7 +148,7 @@
                     <li class="{{ Request::is('backend/partner/5') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 5) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>부본사관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}관리</span>
                         </a>
                     </li>
                     @endif
@@ -154,7 +156,7 @@
                     <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 6) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>본사관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','master')->first()->description}}관리</span>
                         </a>
                     </li>
                     @endif
@@ -162,7 +164,7 @@
                     <li class="{{ Request::is('backend/partner/7') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>총본사관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}관리</span>
                         </a>
                     </li>
                     @endif
@@ -377,15 +379,6 @@
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
 
-                    @permission('stats.live')
-                    <li class="{{ Request::is('backend/live') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.live_stat') }}">
-                            <i class="fa fa-circle-o"></i>
-                            {{-- @lang('app.live_stats') --}}
-                            실시간내역
-                        </a>
-                    </li>
-                    @endpermission
 
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/statistics*') ? 'active' : ''  }}">

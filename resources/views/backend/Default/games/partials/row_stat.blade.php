@@ -1,6 +1,12 @@
 <tr>
     <td>{{ $stat->game }}</td>
-	<td>{{ $stat->user->username }}</td>
+	<td>
+	@if ($stat->user)
+	{{ $stat->user->username }}
+	@else
+	삭제된 회원 - {{$stat->user_id}}
+	@endif
+	</td>
 	<td><span class="text-green">{{ number_format($stat->balance,0) }}</span></td>
 	<td>{{ number_format($stat->bet,0) }}</td>
 	<td>{{ number_format($stat->win,0) }}</td>

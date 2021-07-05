@@ -1,13 +1,4 @@
 <tr>
-<?php  
-    $available_roles = Auth::user()->available_roles( true );
-    $available_roles_trans = [];
-    foreach ($available_roles as $key=>$role)
-    {
-        $role = trans("app." . strtolower($role));
-        $available_roles_trans[$key] = $role;
-    }
-	?>
 <td>
 	<?php
 		$hierarchy = '';
@@ -16,7 +7,8 @@
 			$parent = $in_out_log->user->referral;
 			for (;$level<Auth::user()->level();$level++)
 			{
-				$hierarchy = $hierarchy . ' > ' . $parent->username .'[' .$available_roles_trans[$parent->role_id]. ']';
+				$role = \VanguardLTE\Role::find($parent->role_id);
+				$hierarchy = $hierarchy . ' > ' . $parent->username .'[' .$role->description. ']';
 				$parent = $parent->referral;
 			}
 		}
@@ -24,7 +16,7 @@
 	@if($in_out_log->partner_type == 'partner')
 		@if ($in_out_log->user)
 		<a class="partnerInfo" href="#" data-toggle="modal" data-target="#infoModal" data-id="{{ $hierarchy }}" >
-		{{ $in_out_log->user->username }} [{{$available_roles_trans[$in_out_log->user->role_id] }}]
+		{{ $in_out_log->user->username }} [{{\VanguardLTE\Role::find($in_out_log->user->role_id)->description }}]
 		</a>
 		@else
 		삭제된 파트너

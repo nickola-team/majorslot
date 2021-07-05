@@ -4,20 +4,23 @@
 	@if ($stat->shop)
 		{{ $stat->shop->name }}
 	@else
-		unknown
+		삭제된 매장 - {{$stat->shop_id}}
 	@endif
 	</td>
 	<td>
+	<?php  
+		$available_roles = \jeremykenedy\LaravelRoles\Models\Role::orderby('id')->pluck('name', 'id');
+		$available_roles_trans = [];
+		foreach ($available_roles as $key=>$role)
+		{
+			$role = \VanguardLTE\Role::find($key)->description;
+			$available_roles_trans[$key] = $role;
+		}
+	?>
 	@if ($stat->user)
-		{{ $stat->user ? $stat->user->username : 'unknown'  }} [ 
-		@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
-			@if($stat->user && $role_id == $stat->user->role_id)
-				@lang($role_name)
-			@endif
-		@endforeach
-		]
+		{{ $stat->user ? $stat->user->username : 'unknown'  }} [ {{$available_roles_trans[$stat->user->role_id]}} ]
 	@else
-		unknown
+		삭제된 파트너 - {{$stat->user_id}}
 	@endif
 	</td>
 	@if (auth()->user()->isInoutPartner())

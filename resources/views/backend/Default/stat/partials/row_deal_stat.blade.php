@@ -1,10 +1,22 @@
 <tr>
     <td>{{ $stat->game }}</td>
-	<td>{{ $stat->user->username }}</td>
+	<td>
+	@if ($stat->user)
+	{{ $stat->user->username }}
+	@else
+	삭제된 회원 - {{$stat->user_id}}
+	@endif
+	</td>
 	@if($stat->type == 'shop')
 	<td>{{ $stat->shop->name }}</td>
 	@else
-	<td>{{ $stat->partner->username }}</td>
+	<td>
+	@if ($stat->partner)
+		{{ $stat->partner->username }}
+	@else
+		삭제된 파트너 - {{$stat->partner_id}}
+	@endif
+	</td>
 	@endif
 	{{-- <td><span class="text-green">{{ number_format($stat->balance_before) }}</span></td>
 	<td><span class="text-green">{{ number_format($stat->balance_after) }}</span></td> --}}

@@ -214,12 +214,12 @@ namespace VanguardLTE\Console
                         \VanguardLTE\GameCategory::where('game_id', $game->id)->delete();
                         \VanguardLTE\GameLog::where('game_id', $game->id)->delete();
                     }
-                    \VanguardLTE\Transaction::where('shop_id', $shopId)->delete();
-                    \VanguardLTE\StatGame::where('shop_id', $shopId)->delete();
+                    //\VanguardLTE\Transaction::where('shop_id', $shopId)->delete();
+                    //\VanguardLTE\StatGame::where('shop_id', $shopId)->delete();
                     \VanguardLTE\Category::where('shop_id', $shopId)->delete();
                     \VanguardLTE\Returns::where('shop_id', $shopId)->delete();
                     \VanguardLTE\OpenShift::where('shop_id', $shopId)->delete();
-                    \VanguardLTE\ShopStat::where('shop_id', $shopId)->delete();
+                    //\VanguardLTE\ShopStat::where('shop_id', $shopId)->delete();
                     \VanguardLTE\ShopUser::where('shop_id', $shopId)->delete();
                     \VanguardLTE\BankStat::where('shop_id', $shopId)->delete();
                     \VanguardLTE\Api::where('shop_id', $shopId)->delete();
@@ -476,6 +476,18 @@ namespace VanguardLTE\Console
                     file_put_contents($path, str_replace('PP_GAMES='.$oldValue, 'PP_GAMES='.$newValue, file_get_contents($path)));
                 }
                 $this->info('End');
+            });
+
+            \Artisan::command('daily:dealsum {from} {to}', function ($from, $to) {
+                set_time_limit(0);                
+                $this->info("Begin deal calculation");
+                $stat_games = \VanguardLTE\StatGame::where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->get();
+                foreach ($stat_games as $stat)
+                {
+                    $user = \VanguardLTE\User::where('id',$stat->user_id)->first();
+                    $user->processBetDealerMoney($stat->bet, $stat->game, $stat->type);
+                }
+                $this->info('End deal calculation');
             });
 
             

@@ -1,16 +1,10 @@
 <tr>
 	@if($in_out_log->partner_type == 'partner')
-	<?php  
-    $available_roles = Auth::user()->available_roles( true );
-    $available_roles_trans = [];
-    foreach ($available_roles as $key=>$role)
-    {
-        $role = trans("app." . strtolower($role));
-        $available_roles_trans[$key] = $role;
-    }
-	?>
 	@if ($in_out_log->user)
-	<td>{{ $in_out_log->user->username }} [{{$available_roles_trans[$in_out_log->user->role_id] }}]</td>
+	<?php  
+		$role = \VanguardLTE\Role::find($in_out_log->user->role_id);
+	?>
+	<td>{{ $in_out_log->user->username }} [{{$role->description }}]</td>
 	@else
 	<td>삭제된 파트너</td>
 	@endif

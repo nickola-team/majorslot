@@ -1,31 +1,34 @@
 <tr>
+<?php  
+		$available_roles = \jeremykenedy\LaravelRoles\Models\Role::orderby('id')->pluck('name', 'id');
+		$available_roles_trans = [];
+		foreach ($available_roles as $key=>$role)
+		{
+			$role = \VanguardLTE\Role::find($key)->description;
+			$available_roles_trans[$key] = $role;
+		}
+	?>
 <td>
+@if ($stat->user)
 @if ($partner==0)
 	<a href="{{ route('backend.statistics', ['user' => $stat->user->username])  }}">
-
 		{{ $stat->user->username }}
 @else
 	<a href="{{ route('backend.statistics_partner', ['user' => $stat->user->username])  }}">
-
-	{{ $stat->user->username }} [ 
-	@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
-		@if($role_id == $stat->user->role_id)
-			@lang($role_name)
-		@endif
-    @endforeach
-	]
+	{{ $stat->user->username }} [ {{$available_roles_trans[$stat->user->role_id]}} ]
 @endif
-	</a>
+</a>
+@else
+삭제된 유저 - {{$stat->user_id}}
+@endif
+	
 </td>
 <td>
-
-	{{ $stat->admin ? $stat->admin->username : $stat->system  }} [ 
-	@foreach(['8'=>'app.admin','7'=>'app.comaster', '6' => 'app.master','5' => 'app.agent', '4' => 'app.distributor', 'shop' => 'app.shop', '3' => 'app.manager', '2' => 'app.cashier'] AS $role_id=>$role_name)
-		@if($stat->admin && $role_id == $stat->admin->role_id)
-			@lang($role_name)
-		@endif
-    @endforeach
-	]
+	@if ($stat->admin)
+	{{ $stat->admin ? $stat->admin->username : $stat->system  }} [ {{$available_roles_trans[$stat->admin->role_id]}} ]
+	@else
+	Unknown
+	@endif
 
 </td>
 @if ($partner==0)
