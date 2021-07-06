@@ -47,7 +47,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $admin = $user;
             while ($admin !=null && !$admin ->hasRole('comaster'))
             {
-                if ($admin->status == Support\Enum\UserStatus::DELETED)
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
                 {
                     return response()->json(['error' => true, 'msg' => '삭제된 계정입니다.']);
                 }
