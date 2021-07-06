@@ -107,7 +107,7 @@ namespace VanguardLTE\Games\PandasFortunePM
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
-            $this->jackpotSymbolChance = 60;
+            $this->jackpotSymbolChance = 40;
 
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
