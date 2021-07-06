@@ -284,7 +284,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                         $scattersWin = $betline * $lines * $slotSettings->freeSpinCount[0][$scattersCount];
                     }
                     for($k = 0; $k < 3; $k++){
-                        if(($slotEvent['slotEvent'] == 'freespin' && $initReels['reel5'][$k] == 14) || $initReels['reel5'][$k] == $scatter){
+                        if($initReels['reel5'][$k] == $scatter){
                             $isJackpots[$k] = false;
                         }else{
                             $isJackpots[$k] = $slotSettings->CheckJackpotSymbol();
