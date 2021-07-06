@@ -121,12 +121,15 @@
 				<div class="row">
 					<div class="col-md-3">
 						<label>충/환전금액:</label>
-						<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요.">
+						<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요." readonly>
 					</div>
 				</div>
 			</div>
 
 			<div class="box-footer">
+				<button class="btn btn-primary" id="money-50k" onclick="add_money(10000);">
+					+10,000
+				</button>
 				<button class="btn btn-primary" id="money-50k" onclick="add_money(50000);">
 					+50,000
 				</button>
