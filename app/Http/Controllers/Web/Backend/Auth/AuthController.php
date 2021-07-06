@@ -74,6 +74,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
 
                 while ($admin !=null && !$admin ->hasRole('comaster'))
                 {
+                    if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
+                    {
+                        return redirect()->to('backend/login' . $to)->withErrors('삭제된 계정입니다.');
+                    }
                     if (!$admin->isActive())
                     {
                         return redirect()->to('backend/login' . $to)->withErrors('계정이 임시 차단되었습니다.');

@@ -808,21 +808,49 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $users = [];
             $shops = [];
             $user = null;
-            if($user_id == null || $user_id == 0)
+            if ($request->search != '')
             {
-                $user_id = auth()->user()->id;
-                $users = [$user_id];
-                $request->session()->put('dates', null);
-                $dates = $request->dates;
-            }
-            else {
-                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                if ($request->type == 'shop')
                 {
-                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                    $availableShops = auth()->user()->availableShops();
+                    $shop = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->search . '%')->whereIn('id', $availableShops)->first();
+                    if (!$shop)
+                    {
+                        return redirect()->back()->withErrors('매장을 찾을수 없습니다.');
+                    }
+                    $user_id = $shop->getUsersByRole('manager')->first()->id;
                 }
-                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-                $users = $user->childPartners();
-                $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
+                else
+                {
+                    $availablePartners = auth()->user()->hierarchyPartners();
+                    $partner = \VanguardLTE\User::where('username', 'like', '%' . $request->search . '%')->whereIn('id', $availablePartners)->first();
+                    if (!$partner)
+                    {
+                        return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
+                    }
+                    $user_id = $partner->id;
+                }
+                $dates = $request->dates;
+                $users = [$user_id];
+            }
+            else
+            {
+                if($user_id == null || $user_id == 0)
+                {
+                    $user_id = auth()->user()->id;
+                    $users = [$user_id];
+                    $request->session()->put('dates', null);
+                    $dates = $request->dates;
+                }
+                else {
+                    if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                    {
+                        return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                    }
+                    $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                    $users = $user->childPartners();
+                    $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
+                }
             }
             
             $start_date = date("Y-m-d",strtotime("-1 days"));
@@ -847,24 +875,52 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $users = [];
             $shops = [];
             $user = null;
-            if($user_id == null || $user_id == 0)
+            if ($request->search != '')
             {
-                $user_id = auth()->user()->id;
-                $users = [$user_id];
-                $request->session()->put('dates', null);
-                $dates = $request->dates;
-            }
-            else {
-                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                if ($request->type == 'shop')
                 {
-                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                    $availableShops = auth()->user()->availableShops();
+                    $shop = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->search . '%')->whereIn('id', $availableShops)->first();
+                    if (!$shop)
+                    {
+                        return redirect()->back()->withErrors('매장을 찾을수 없습니다.');
+                    }
+                    $user_id = $shop->getUsersByRole('manager')->first()->id;
                 }
-                $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-                $users = $user->childPartners();
-                $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
+                else
+                {
+                    $availablePartners = auth()->user()->hierarchyPartners();
+                    $partner = \VanguardLTE\User::where('username', 'like', '%' . $request->search . '%')->whereIn('id', $availablePartners)->first();
+                    if (!$partner)
+                    {
+                        return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
+                    }
+                    $user_id = $partner->id;
+                }
+                $dates = $request->dates;
+                $users = [$user_id];
+            }
+            else
+            {
+                if($user_id == null || $user_id == 0)
+                {
+                    $user_id = auth()->user()->id;
+                    $users = [$user_id];
+                    $request->session()->put('dates', null);
+                    $dates = $request->dates;
+                }
+                else {
+                    if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                    {
+                        return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                    }
+                    $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                    $users = $user->childPartners();
+                    $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
+                }
             }
             
-            $start_date = date("Y-m-01",strtotime("-1 days"));
+            $start_date = date("Y-m-01",strtotime("-1 months"));
             $end_date = date("Y-m-01");
             if($dates != null && $dates != ''){
                 $dates_tmp = explode(' - ', $dates);
@@ -888,10 +944,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $user = null;
             if ($request->search != '')
             {
-                $users = \VanguardLTE\User::orderBy('username', 'ASC');
-                $users = $users->whereIn('id', auth()->user()->hierarchyPartners());
-                $users = $users->where('username', 'like', '%' . $request->search . '%');
+                if ($request->type == 'shop')
+                {
+                    $availableShops = auth()->user()->availableShops();
+                    $shop = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->search . '%')->whereIn('id', $availableShops)->first();
+                    if (!$shop)
+                    {
+                        return redirect()->back()->withErrors('매장을 찾을수 없습니다.');
+                    }
+                    $user_id = $shop->getUsersByRole('manager')->first()->id;
+                }
+                else
+                {
+                    $availablePartners = auth()->user()->hierarchyPartners();
+                    $partner = \VanguardLTE\User::where('username', 'like', '%' . $request->search . '%')->whereIn('id', $availablePartners)->first();
+                    if (!$partner)
+                    {
+                        return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
+                    }
+                    $user_id = $partner->id;
+                }
                 $dates = $request->dates;
+                $users = \VanguardLTE\User::where('id', $user_id);
             }
             else
             {

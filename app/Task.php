@@ -12,7 +12,8 @@ namespace VanguardLTE
             'details', 
             'ip_address', 
             'user_agent', 
-            'finished'
+            'finished',
+            'created_at'
         ];
         public $timestamps = false;
         public static function boot()

@@ -27,19 +27,7 @@
                 <button type="submit" class="btn btn-primary">
                     확인
                 </button>
-
-                @if( Auth::user()->hasRole(['admin','comaster','master','agent']) )
-                    <a href="{{ route('backend.shop.hard_delete', $shop->id) }}"
-                       class="btn btn-danger"
-                       data-method="DELETE"
-                       data-confirm-title="@lang('app.please_confirm')"
-                       data-confirm-text="@lang('app.are_you_sure_delete_shop')"
-                       data-confirm-delete="@lang('app.yes_delete_him')">
-                        @lang('app.hard_delete')
-                    </a>
-                @endif
-
-                @if( Auth::user()->hasRole('distributor') && count(Auth::user()->shops()) > 1 )
+                @if(!Auth::user()->hasRole('manager') )
                 <a href="{{ route('backend.shop.delete', $shop->id) }}"
                    class="btn btn-danger"
                    data-method="DELETE"

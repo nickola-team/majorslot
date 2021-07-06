@@ -7,6 +7,7 @@ class UserStatus
     const UNCONFIRMED = 'Unconfirmed';
     const ACTIVE = 'Active';
     const BANNED = 'Banned';
+    const DELETED = 'Deleted';
 
     public static function lists()
     {

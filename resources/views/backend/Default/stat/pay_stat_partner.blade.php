@@ -26,7 +26,19 @@
 								<input type="text" class="form-control" name="system_str" value="{{ Request::get('system_str') }}">
 							</div>
 						</div> --}}
-						<div class="col-md-3">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>파트너이름</label>
+								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>상위파트너이름</label>
+								<input type="text" class="form-control" name="payeer" value="{{ Request::get('user') }}">
+							</div>
+						</div>
+						<div class="col-md-6">
 							<div class="form-group">
 								<label>충전/환전/수익금전환</label>
 								<select name="type" class="form-control">
@@ -37,7 +49,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label>계좌정보</label>
 								<select name="in_out" class="form-control">
@@ -47,25 +59,15 @@
 								</select>
 							</div>
 						</div>
+						
+						
 						<div class="col-md-6">
-							<div class="form-group">
-								<label>파트너이름</label>
-								<input type="text" class="form-control" name="user" value="{{ Request::get('user') }}">
-							</div>
-						</div>
-						{{-- <div class="col-md-6">
-							<div class="form-group">
-								<label>@lang('app.payeer')</label>
-								<input type="text" class="form-control" name="payeer" value="{{ Request::get('payeer') }}">
-							</div>
-						</div> --}}
-						<div class="col-md-3">
 							<div class="form-group">
 								<label>최소금액</label>
 								<input type="text" class="form-control" name="sum_from" value="{{ Request::get('sum_from') }}">
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label>최대금액</label>
 								<input type="text" class="form-control" name="sum_to" value="{{ Request::get('sum_to') }}">

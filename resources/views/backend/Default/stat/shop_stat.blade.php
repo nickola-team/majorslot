@@ -36,7 +36,7 @@
 					@endif
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>충/환전</label>
+								<label>충전/환전/수익금전환</label>
 								{!! Form::select('type', ['' => '모두', 'add' => '충전', 'out' => '환전', 'deal_out' => '수익금환전'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
 							</div>
 						</div>

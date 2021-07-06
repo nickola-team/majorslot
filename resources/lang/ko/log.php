@@ -15,7 +15,7 @@ return [
     'created_account' => '계정을 만들었습니다.',
     'updated_avatar' => '프로필 아바타가 업데이트되었습니다.',
     'updated_profile' => '프로필 세부 정보가 업데이트되었습니다.',
-    'deleted_user' => '삭제 된 사용자 :name.',
+    'deleted_user' => '유저 :name을 삭제하였습니다.',
     'banned_user' => '금지 된 사용자 :name.',
     'updated_profile_details_for' => '업데이트 된 프로필 세부 정보 :name.',
     'created_account_for' => '사용자 계정 생성 :name.',

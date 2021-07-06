@@ -4,6 +4,8 @@ namespace VanguardLTE\Listeners;
 
 use VanguardLTE\Activity;
 use VanguardLTE\Events\Shop\ShopEdited;
+use VanguardLTE\Events\Shop\ShopDeleted;
+use VanguardLTE\Events\Shop\ShopCreated;
 use VanguardLTE\Services\Logging\UserActivity\Logger;
 
 class ShopEventsSubscriber
@@ -16,12 +18,21 @@ class ShopEventsSubscriber
         $this->logger = $logger;
     }
 
+    public function onShopCreate(ShopCreated $event)
+    {
+        $shop = $event->getCreatedshop();
+
+        $text = '매장생성 ' . $shop->name . ' ';
+
+        $this->logger->log($text);
+    }
+
     public function onShopEdit(ShopEdited $event)
     {
         $shop = $event->getEditedshop();
         $changes = $shop->getChanges();
 
-        $text = 'Update Shop / ' . $shop->name . ' / ';
+        $text = '매장업데이트 / ' . $shop->name . ' / ';
 
         if( count($changes)){
             foreach($changes AS $key=>$change){
@@ -37,6 +48,15 @@ class ShopEventsSubscriber
         $this->logger->log($text);
     }
 
+    public function onShopDelete(ShopDeleted $event)
+    {
+        $shop = $event->getDeletedshop();
+
+        $text = '매장 삭제  ' . $shop->name . ' ';
+
+        $this->logger->log($text);
+    }
+
 
     /**
      * Register the listeners for the subscriber.
@@ -48,5 +68,8 @@ class ShopEventsSubscriber
         $class = 'VanguardLTE\Listeners\ShopEventsSubscriber';
 
         $events->listen(ShopEdited::class, "{$class}@onShopEdit");
+        $events->listen(ShopDeleted::class, "{$class}@onShopDelete");
+        $events->listen(ShopCreated::class, "{$class}@onShopCreate");
+        
     }
 }

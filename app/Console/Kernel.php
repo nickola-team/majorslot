@@ -181,15 +181,47 @@ namespace VanguardLTE\Console
             })->everyMinute();
             $schedule->call(function()
             {
+                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
+                $task = \VanguardLTE\Task::where([
+                    'finished' => 0, 
+                    'category' => 'user', 
+                    'action' => 'delete'
+                ])->where('created_at', '<=', $date_time)->first();
+                if( $task ) 
+                {
+                    $task->update(['finished' => 1]);
+                    $user = \VanguardLTE\User::find($task->item_id);
+                    if ($user){
+                        $user->detachAllRoles();
+                        //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
+                        \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
+                        //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
+                        \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
+                        \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Session::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Info::where('user_id', $user->id)->delete();
+                        $user->delete();
+                    }
+
+                }
+            })->everyMinute();
+            $schedule->call(function()
+            {
+                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
                 $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'shop', 
                     'action' => 'delete'
-                ])->first();
+                ])->where('created_at', '<=', $date_time)->first();
                 if( $task ) 
                 {
                     $task->update(['finished' => 1]);
                     $shopId = $task->item_id;
+                    $shopInfo = \VanguardLTE\Shop::find($shop);
+                    if ($shopInfo)
+                    {
+                        $shopInfo->delete();
+                    }
                     $rel_users = \VanguardLTE\User::whereHas('rel_shops', function($query) use ($shopId)
                     {
                         $query->where('shop_id', $shopId);
@@ -241,30 +273,9 @@ namespace VanguardLTE\Console
                                 'distributor'
                             ]) ) 
                             {
-                                $shops = $user->shops(true);
-                                if( count($shops) ) 
-                                {
-                                    if( !is_array($shops) ) 
-                                    {
-                                        $shops = $shops->toArray();
-                                    }
-                                    $user->update(['shop_id' => array_shift($shops)]);
-                                }
-                                else
-                                {
-                                    $user->update(['shop_id' => 0]);
-                                }
+                                $user->update(['shop_id' => 0]);
                             }
                         }
-                    }
-                    \VanguardLTE\User::doesntHave('rel_shops')->where('shop_id', '!=', 0)->whereIn('role_id', [
-                        4, 
-                        5
-                    ])->update(['shop_id' => 0]);
-                    $admin = \VanguardLTE\User::where('role_id', 6)->first();
-                    if( $admin->shop_id == $shopId ) 
-                    {
-                        $admin->update(['shop_id' => 0]);
                     }
                 }
             })->everyMinute();
@@ -315,6 +326,8 @@ namespace VanguardLTE\Console
                     }
                 }
             })->everyMinute();
+
+            
         }
         protected function commands()
         {
@@ -402,8 +415,6 @@ namespace VanguardLTE\Console
                 $this->info("End summary monthly adjustment.");
             });
 
-
-
             \Artisan::command('daily:promo', function () {
                 set_time_limit(0);
                 $this->info("Begin pp game promotions");
@@ -478,14 +489,82 @@ namespace VanguardLTE\Console
                 $this->info('End');
             });
 
-            \Artisan::command('daily:dealsum {from} {to}', function ($from, $to) {
+            \Artisan::command('daily:dealsum {from} {to} {game=all}', function ($from, $to, $game) {
                 set_time_limit(0);                
                 $this->info("Begin deal calculation");
-                $stat_games = \VanguardLTE\StatGame::where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->get();
+                if ($game=='all'){
+                    $stat_games = \VanguardLTE\StatGame::where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->get();
+                }
+                else
+                {
+                    $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', $game)->selectRaw('SUM(bet) as bet, game, type, user_id')->get();
+                }
                 foreach ($stat_games as $stat)
                 {
+                    usleep(10);
                     $user = \VanguardLTE\User::where('id',$stat->user_id)->first();
-                    $user->processBetDealerMoney($stat->bet, $stat->game, $stat->type);
+                    if ($game=='all')
+                    {
+                        $user->processBetDealerMoney_Queue($stat->bet, $stat->game, $stat->type);
+                    }
+                    else
+                    {
+                        $betMoney = $stat->bet;
+                        $shop = $user->shop;
+                        $deal_balance = 0;
+                        $deal_mileage = 0;
+                        $deal_percent = 0;
+                        $deal_data = [];
+                        $deal_percent = $shop->deal_percent - $shop->table_deal_percent;
+                        $manager = $user->referral;
+                        if ($manager != null){
+                            if($deal_percent > 0) {
+                                $deal_balance = $betMoney * $deal_percent  / 100;
+                                $deal_data[] = [
+                                    'user_id' => $user->id, 
+                                    'partner_id' => $manager->id, //manager's id
+                                    'balance_before' => 0, 
+                                    'balance_after' => 0, 
+                                    'bet' => abs($betMoney), 
+                                    'deal_profit' => $deal_balance,
+                                    'game' => $game,
+                                    'shop_id' => $shop->id,
+                                    'type' => 'shop',
+                                    'deal_percent' => $deal_percent,
+                                    'mileage' => $deal_mileage
+                                ];
+                            }
+                            $partner = $manager->referral;
+                            while ($partner != null && !$partner->isInoutPartner())
+                            {
+                                $deal_mileage = $deal_balance;
+                                $deal_percent = $partner->deal_percent-$partner->table_deal_percent;
+                                if($deal_percent > 0) {
+                                    $deal_balance = $betMoney * $deal_percent  / 100;
+                                    $deal_data[] = [
+                                        'user_id' => $user->id, 
+                                        'partner_id' => $partner->id,
+                                        'balance_before' => 0, 
+                                        'balance_after' => 0, 
+                                        'bet' => abs($betMoney), 
+                                        'deal_profit' => $deal_balance,
+                                        'game' => $game,
+                                        'shop_id' => $user->shop_id,
+                                        'type' => 'partner',
+                                        'deal_percent' => $deal_percent,
+                                        'mileage' => $deal_mileage
+                                    ];
+                                }
+                                $partner = $partner->referral;
+                            }
+                        }
+            
+                        if (count($deal_data) > 0)
+                        {
+                            \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data);
+                        }
+                    }
+                    
                 }
                 $this->info('End deal calculation');
             });

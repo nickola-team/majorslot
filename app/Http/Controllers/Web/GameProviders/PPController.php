@@ -646,7 +646,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'name' => preg_replace('/\s+/', '', $game['gameName']),
                                     'title' => __('gameprovider.'.$game['gameName']),
                                     'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
-                                    'type' => $game['gameTypeID']=="vs"?'slot':'table',
+                                    'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
+                                    'gameType' => $game['gameTypeID'],
                                     'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
                                 ]);
                             }
@@ -659,7 +660,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'name' => preg_replace('/\s+/', '', $game['gameName']),
                                     'title' => __('gameprovider.'.$game['gameName']),
                                     'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
-                                    'type' => $game['gameTypeID']=="vs"?'slot':'table',
+                                    'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
+                                    'gameType' => $game['gameTypeID'],
                                     'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
                                 ]);
                             }

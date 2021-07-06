@@ -12,33 +12,39 @@
 	<section class="content">
 		<form action="" method="GET">
 			<div class="box box-danger users_show">
-			{{--<div class="box-header with-border">
+			<div class="box-header with-border">
 					<h3 class="box-title">@lang('app.filter')</h3>
 					<div class="box-tools pull-right">
-						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 					</div>
-				</div> --}}
+				</div>
 				<div class="box-body">
+					@if (!auth()->user()->hasRole('manager'))
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>파트너이름</label>
+							<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>타입</label>
+							{!! Form::select('type', ['partner' => '파트너', 'shop' => '매장'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
+						</div>
+					</div>
+					@endif
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>기간선택</label>
 							<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 						</div>
 					</div>
-					@if (!auth()->user()->hasRole('manager'))
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>파트너이름</label>
-							<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}">
-						</div>
-					</div>
-					@endif
 				</div>
 				<div class="box-footer">
 				<button type="submit" class="btn btn-primary">
 					@lang('app.filter')
 				</button>
-			</div>
+				</div>
 			</div>
 		</form>
 

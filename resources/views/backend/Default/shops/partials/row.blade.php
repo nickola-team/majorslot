@@ -46,7 +46,7 @@
 		@endif
 	</td>
 	<td>
-		@if( auth()->user()->isInoutPartner() || auth()->user()->hasRole('distributor'))
+		@if((auth()->user()->isInoutPartner() || auth()->user()->hasRole('distributor')) &&  !$shop->is_blocked)
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $shop->shop_id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs"> 충전</button>
 	    </a>
@@ -55,7 +55,7 @@
 		@endif
 	</td>
 	<td>
-		@if( auth()->user()->isInoutPartner())
+		@if( auth()->user()->isInoutPartner() &&  !$shop->is_blocked)
 		<a class="outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $shop->shop_id }}" >
 	    <button type="button" class="btn btn-block btn-danger btn-xs"> 환전</button>
 		</a>
