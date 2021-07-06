@@ -489,14 +489,82 @@ namespace VanguardLTE\Console
                 $this->info('End');
             });
 
-            \Artisan::command('daily:dealsum {from} {to}', function ($from, $to) {
+            \Artisan::command('daily:dealsum {from} {to} {game=all}', function ($from, $to, $game) {
                 set_time_limit(0);                
                 $this->info("Begin deal calculation");
-                $stat_games = \VanguardLTE\StatGame::where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->get();
+                if ($game=='all'){
+                    $stat_games = \VanguardLTE\StatGame::where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->get();
+                }
+                else
+                {
+                    $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', $game)->selectRaw('SUM(bet) as bet, game, type, user_id')->get();
+                }
                 foreach ($stat_games as $stat)
                 {
+                    usleep(10);
                     $user = \VanguardLTE\User::where('id',$stat->user_id)->first();
-                    $user->processBetDealerMoney($stat->bet, $stat->game, $stat->type);
+                    if ($game=='all')
+                    {
+                        $user->processBetDealerMoney_Queue($stat->bet, $stat->game, $stat->type);
+                    }
+                    else
+                    {
+                        $betMoney = $stat->bet;
+                        $shop = $user->shop;
+                        $deal_balance = 0;
+                        $deal_mileage = 0;
+                        $deal_percent = 0;
+                        $deal_data = [];
+                        $deal_percent = $shop->deal_percent - $shop->table_deal_percent;
+                        $manager = $user->referral;
+                        if ($manager != null){
+                            if($deal_percent > 0) {
+                                $deal_balance = $betMoney * $deal_percent  / 100;
+                                $deal_data[] = [
+                                    'user_id' => $user->id, 
+                                    'partner_id' => $manager->id, //manager's id
+                                    'balance_before' => 0, 
+                                    'balance_after' => 0, 
+                                    'bet' => abs($betMoney), 
+                                    'deal_profit' => $deal_balance,
+                                    'game' => $game,
+                                    'shop_id' => $shop->id,
+                                    'type' => 'shop',
+                                    'deal_percent' => $deal_percent,
+                                    'mileage' => $deal_mileage
+                                ];
+                            }
+                            $partner = $manager->referral;
+                            while ($partner != null && !$partner->isInoutPartner())
+                            {
+                                $deal_mileage = $deal_balance;
+                                $deal_percent = $partner->deal_percent-$partner->table_deal_percent;
+                                if($deal_percent > 0) {
+                                    $deal_balance = $betMoney * $deal_percent  / 100;
+                                    $deal_data[] = [
+                                        'user_id' => $user->id, 
+                                        'partner_id' => $partner->id,
+                                        'balance_before' => 0, 
+                                        'balance_after' => 0, 
+                                        'bet' => abs($betMoney), 
+                                        'deal_profit' => $deal_balance,
+                                        'game' => $game,
+                                        'shop_id' => $user->shop_id,
+                                        'type' => 'partner',
+                                        'deal_percent' => $deal_percent,
+                                        'mileage' => $deal_mileage
+                                    ];
+                                }
+                                $partner = $partner->referral;
+                            }
+                        }
+            
+                        if (count($deal_data) > 0)
+                        {
+                            \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data);
+                        }
+                    }
+                    
                 }
                 $this->info('End deal calculation');
             });
