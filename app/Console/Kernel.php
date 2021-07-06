@@ -499,6 +499,7 @@ namespace VanguardLTE\Console
                 {
                     $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', $game)->selectRaw('SUM(bet) as bet, game, type, user_id')->get();
                 }
+                $this->info("total bet = " . $stat_games->sum('bet') . ', count=' . $stat_games->count());
                 foreach ($stat_games as $stat)
                 {
                     usleep(10);
