@@ -717,9 +717,16 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     continue;
                 }
 
-                /* 프리스핀 2회까지도 2,3번릴에 WILD 심볼이 없다면 */
-                if ($fs >= 3 && array_search($S_WILD, $reels["reel2"]) == false && array_search($S_WILD, $reels["reel3"]) == false) {
-                    $reelId = array_key_first($availableReels) + 1;
+                if ($fs >= 3) {
+                    if (array_search($S_WILD, $reels["reel2"]) === false) {
+                        $reelId = 2;
+                    }
+                    else if (array_search($S_WILD, $reels["reel3"]) === false) {
+                        $reelId = 3;
+                    }
+                    else {
+                        $reelId = array_rand($availableReels) + 1;
+                    }
                 }
                 else {
                     $reelId = array_rand($availableReels) + 1;
