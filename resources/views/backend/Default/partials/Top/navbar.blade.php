@@ -364,15 +364,12 @@
                     @endpermission
 
                     @permission('stats.shop')
-                    @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
-                    @else
                     <li class="{{ Request::is('backend/deal_stat*') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.deal_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             딜비적립내역
                         </a>
                     </li>
-                    @endif
                     @endpermission
 
                     {{-- @permission('stats.shift')
