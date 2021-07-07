@@ -35,7 +35,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>상위파트너이름</label>
-								<input type="text" class="form-control" name="payeer" value="{{ Request::get('user') }}">
+								<input type="text" class="form-control" name="payeer" value="{{ Request::get('payeer') }}">
 							</div>
 						</div>
 						<div class="col-md-6">
