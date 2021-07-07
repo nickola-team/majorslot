@@ -1043,7 +1043,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         
         public function GetSymbolCount($default = 2){   // 한개 릴의 심볼 갯수를 결정하는 함수
             $sum = random_int(0, 100);
-            if($sum <= 40){
+            if($sum <= 30){
                 $ret = 2;
             }else if($sum <= 70){
                 $ret = 3;
@@ -1127,14 +1127,15 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         public function GetLimitedReelStrips($slotEvent, $lastWILDCollection) {
             $REELCOUNT = 6;
 
-            /* 당첨금이 제일 작은 심볼중 하나 선택 */
-            $startSymbols = [random_int(5, 13), random_int(5, 13)];     
+           /* 당첨금이 작은 심볼위주로 2개 또는 3개의 심볼 결정 */
+           $startSymbols = [random_int(5, 13), random_int(5, 13), random_int(5, 13)];
+
 
             for ($reelId=1; $reelId <= $REELCOUNT; $reelId++) { 
 
                 /* 스티키 프리스핀일때 릴의 최소 심볼갯수 계산 */
                 if ($reelId == 1) {
-                    $symbolCount = 2;
+                    $symbolCount = random_int(2, 3);
                 }
                 else if ($slotEvent === 'fsSticky' && count($lastWILDCollection) > 0) {
                     $minCount = 2;
