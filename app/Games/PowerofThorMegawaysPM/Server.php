@@ -38,7 +38,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
 
             if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
-                $objRes = $this->doInit($slotEvent, $slotSettings);
+                $objRes = $this->doInit($slotEvent, $slotSettings, $LASTSPIN);
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
@@ -66,9 +66,8 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             return $this->toResponse($objRes);
         }
 
-        public function doInit($slotEvent, $slotSettings) {
+        public function doInit($slotEvent, $slotSettings, $LASTSPIN) {
             $BALANCE = $slotSettings->GetBalance();
-            $LASTSPIN = $slotSettings->GetHistory();
 
             $objRes = [
                 'tw' => '0',
@@ -107,7 +106,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 'l' => '20',
                 'paytable' => '0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;400,200,100,20,10,0;100,50,40,10,0,0;50,30,20,10,0,0;40,15,10,5,0,0;30,12,8,4,0,0;25,10,8,4,0,0;20,10,5,3,0,0;18,10,5,3,0,0;16,8,4,2,0,0;12,8,4,2,0,0;0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0',
                 'rtp' => '96.55,96.97',
-                'total_bet_max' => $slotSettings->game->rezerv,
+                'total_bet_max' => '10,000,000.00',
                 'reel_set0' => '6,2,11,12,9,11,10,5,12,5,9,12,4,9,5,7,4,12,4,17,11,14,12,8,2,7,7,12,11,3,8,12,12,5,5,12,9,10,7,9,5,14,16,17,12,10,2,5,17,9,10,4,11,12,9,14,8,2,4,9,9,2,2,8,9,5,7,9,12,9,10,7,12,12,4,17,12,5,5,3,7,12,10,4,11,10,10,7,3,12,7,5,2,7,6,5,18,3,3,4,8,9,9,9,12,12,9,9,12,10,9,9,12,7,5,7,2,9,5,10,9,5,4,10,9,4,9,17,2,7,12,10,12,5,9,10,9,15,12,7,4,4,8,9,7,9,17,3,16,8,4,9,8,17,2,10,5,3,17,2,10,9,9,4,12,12,10,10,18,8,7,12,10,3,9,7,17,7,11,17,2,4,2,4,17,2,12,7,6,3,14,10,9,4,6,12,18,3,9,7,7,10,2,6,12,3,10,10,10,4,8,9,6,16,12,7,3,2,9,6,11,7,4,5,5,12,11,10,4,5,4,9,9,2,15,12,3,4,2,10,10,12,9,2,5,12,7,3,3,9,4,2,3,5,17,2,4,9,4,7,17,9,8,9,12,7,10,12,15,8,7,10,9,3,15,6,7,2,18,17,3,9,5,17,12,4,2,9,12,9,9,3,5,10,12,10,2,4,17,6,2,10,5,16,12,11,8,6,7,7,4,7',
                 's' => '19,9,8,2,10,19,5,10,4,12,6,5,4,12,9,12,6,9,5,19,9,6,8,5,7,19,4,19,19,19,19,19,4,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19',
                 'accInit' => '[{id:0,mask:"cp;mp"}]',
@@ -198,8 +197,20 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             $lines = $slotEvent['l'];       // 라인
             $bet = $slotEvent['c'];         // 베팅액
 
-            /* 텀블스핀 판정깃발 */
+            /* 텀블스핀 */
+            /* 프리스핀 멀티플라이어 */
             $isTumble = false;
+
+            $tumbleMultiplier = $LASTSPIN->wmv ?? 1;
+            if (isset($LASTSPIN->rs)) {
+                $isTumble = true;
+
+                /* 텀블스핀이면 멀티플라이어 1증가, 아니면 유지 */
+                $tumbleMultiplier = $isTumble ? $tumbleMultiplier + 1 : $tumbleMultiplier;
+            }
+            
+            /* 텀블보너스 당첨인 경우 */
+            $isTumbleBonus = $slotSettings->GetGameData($slotSettings->slotId . 'TumbleBonus');
 
             /* 프리스핀 구매 */
             if (isset($slotEvent['pur'])) {
@@ -208,17 +219,11 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $winType = 'bonus';                   // 보상방식
                 $_winAvaliableMoney = 0;        // 당첨금 한도
             }
+            else if ($isTumbleBonus) {
+                $winType = 'bonus';                   // 보상방식
+                $_winAvaliableMoney = 0;        // 당첨금 한도
+            }
             else {
-                /* 텀블스핀 */
-                /* 프리스핀 멀티플라이어 */
-                $tumbleMultiplier = $LASTSPIN->wmv ?? 1;
-                if (isset($LASTSPIN->rs)) {
-                    $isTumble = true;
-
-                    /* 텀블스핀이면 멀티플라이어 1증가, 아니면 유지 */
-                    $tumbleMultiplier = $isTumble ? $tumbleMultiplier + 1 : $tumbleMultiplier;
-                }
-
                 /* 남은 프리스핀이 있을 경우 */
                 $fsmax = $slotSettings->GetGameData($slotSettings->slotId . 'FSMax');
                 $fs = $slotSettings->GetGameData($slotSettings->slotId . 'FSNext');
@@ -227,7 +232,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 if ($LASTSPIN !== NULL && $fsmax > 0) {
                     $slotEvent['slotEvent'] = 'freespin';
                 }
-                
+
                 /* 스핀결과 결정 */
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $bet * $lines, $lines);
 
@@ -244,7 +249,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
                 $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney, 0);
             }
-            else if ($slotEvent['slotEvent'] === 'freespin' || $isTumble == true) {
+            else if ($slotEvent['slotEvent'] === 'freespin' || $isTumble) {
                 /* 프리스핀, 텀블스핀일때 베팅금 없음 */
                 $allBet = 0;
             }
@@ -263,11 +268,48 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             $defaultScatterCount = 0;
             if($winType == 'bonus'){      
                 if ($slotEvent['slotEvent'] == 'freespin') {
-                    /*  */
+                    /* 프리스핀중 보너스당첨은 심볼갯수 3개일때 */
                     $defaultScatterCount = 3;
                 }
                 else {
-                    $defaultScatterCount = $slotSettings->GenerateScatterCount();  // 생성되어야할 Scatter갯수 결정
+                    if ($isTumbleBonus) {
+                        $tumbleBonusStepCount = $slotSettings->GetGameData($slotSettings->slotId . 'TumbleBonusStepCount');
+                        $curTumbleBonusStep = $slotSettings->GetGameData($slotSettings->slotId . 'TumbleBonusCurrentStep');
+                        $totalScatterCount = $slotSettings->GetGameData($slotSettings->slotId . 'TumbleBonusScatterCount');
+                        $defaultScatterCount = $slotSettings->GetGameData($slotSettings->slotId . 'TumbleBonusCurrentScatterCount');
+
+                        /* 텀블 마지막 스핀이면 */
+                        $curTumbleBonusStep += 1;
+                        if ($curTumbleBonusStep >= $tumbleBonusStepCount) {
+                            $defaultScatterCount = $totalScatterCount;
+                        }
+                        else if ($defaultScatterCount < $totalScatterCount) {
+                            $defaultScatterCount += random_int(0, 1);
+                        }
+
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentStep', $curTumbleBonusStep);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentScatterCount', $defaultScatterCount);
+                    }
+                    else {
+                        $isTumbleBonus = true;
+
+                        // 생성되어야할 Scatter갯수 결정
+                        $totalScatterCount = $slotSettings->GenerateScatterCount();  
+
+                        /* 텀블스텝 결정 */
+                        $tumbleBonusStepCount = random_int(1, 3);
+
+                        /* 스텝이 1이라면 텀블보너스가 아님 */
+                        /* 처음 생성할 스캐터심볼 갯수 랜덤결정, 최소 2개 */
+                        $defaultScatterCount = ($tumbleBonusStepCount == 1) ? $totalScatterCount : random_int(2, $totalScatterCount);
+                        $curTumbleBonusStep = 1;
+                        
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonus', true);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusStepCount', $tumbleBonusStepCount);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentStep', $curTumbleBonusStep);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusScatterCount', $totalScatterCount);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentScatterCount', $defaultScatterCount);
+                    }
                 }
             }
 
@@ -347,21 +389,41 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     break;
                 }
                 else if ($winType == 'bonus') {
-                    /* 윈라인이 없을때만 갬블발동 */
-                    if (count($this->winLines) > 0) {
-                        continue;
-                    }
+                    if ($isTumbleBonus) {
+                        /* 보너스텀블 완료시점에서 윈라인이 없어야 한다 */
+                        if ($curTumbleBonusStep >= $tumbleBonusStepCount) {
+                            if (count($this->winLines) == 0) {
+                                break;
+                            }
+                        }
+                        else {
+                            /* 텀블보너스인경우 윈라인이 반드시 있어야 */
+                            if (count($this->winLines) > 0) {
+                                /* 스핀 당첨금 */
+                                $winMoney = array_reduce($this->winLines, function($carry, $winLine) {
+                                    $carry += $winLine['Money']; 
+                                    return $carry;
+                                }, 0) * $bet;
 
-                    if ($slotEvent['slotEvent'] == 'freespin' && $scatterCount == 3) {
-                        break;
-                    } 
-                    else if ($slotEvent['slotEvent'] != 'freespin' && $scatterCount >= 4) {
-                        /* 윈라인이 없을때만 갬블발동 */
-                        break;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        /* 텀블보너스가 아닌 경우 윈라인이 없을때만 갬블발동 */
+                        if (count($this->winLines) > 0) {
+                            continue;
+                        }
+
+                        if ($slotEvent['slotEvent'] == 'freespin' && $scatterCount == 3) {
+                            break;
+                        } 
+                        if ($slotEvent['slotEvent'] != 'freespin' && $scatterCount >= 4) {
+                            break;
+                        }
                     }
                 }
                 else {
-
                 }
             }
 
@@ -548,61 +610,73 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 }
             }
             else if ($winType == 'bonus') { 
-                /* 갬블당첨 */
-                $fsCountMap = [
-                    4 => 10,
-                    5 => 14,
-                    6 => 18, 
-                    7 => 22,
-                    8 => 26,
-                    9 => 30
-                ];
-
-                /* 생성된 SCATTER 심볼 갯수 */
-                $scattersCount = $this->getScatterCount($reels);
-
-                /* 프리스핀 22개이상 당첨이면 갬블 스킵, 프리스핀 바로 발동 */
-                if ($fsCountMap[$scattersCount] >= 22) {
-                    /*  */
-                    // $objRes[''] = '';
-
-                    $fsCount = $fsCountMap[$scattersCount];
-                    $gambleStep = -1;
+                /* 텀블보너스 스텝이 다 되기전까지 갬블 미당첨 */
+                if ($curTumbleBonusStep < $tumbleBonusStepCount) {
                 }
                 else {
-                    // 갬블시작 스텝설정 (10, 14, 18, 22)
-                    $gambleStep = $scattersCount - 4;
+                    /* 갬블당첨 */
+                    $fsCountMap = [
+                        4 => 10,
+                        5 => 14,
+                        6 => 18, 
+                        7 => 22,
+                        8 => 26,
+                        9 => 30
+                    ];
 
-                    $status = [0, 0, 0, 0];
-                    $status[$gambleStep] = 1;
+                    /* 생성된 SCATTER 심볼 갯수 */
+                    $scattersCount = $this->getScatterCount($reels);
 
-                    /* 갬블 설정 */
-                    $objRes['na'] = 'b';
-                    $objRes['bgid'] = 0;
-                    $objRes['wins'] = '10,14,18,22';
-                    $objRes['coef'] = $bet * $lines;
-                    $objRes['level'] = 0;       // 0 레벨;
-                    $objRes['status'] = implode(",", $status);
-                    $objRes['bgt'] = 35;
-                    $objRes['lifes'] = 1;
-                    $objRes['bw'] = 1;
-                    $objRes['wins_mask'] = 'nff,nff,nff,nff';
-                    $objRes['wp'] = 0;
-                    $objRes['end'] = 0;
+                    /* 프리스핀 22개이상 당첨이면 갬블 스킵, 프리스핀 바로 발동 */
+                    if ($fsCountMap[$scattersCount] >= 22) {
+                        /*  */
+                        // $objRes[''] = '';
 
-                    /* 갬블 스핀횟수 결정 */
-                    $fsCount = $slotSettings->GetNewGambleFSCount();
+                        $fsCount = $fsCountMap[$scattersCount];
+                        $gambleStep = -1;
+                    }
+                    else {
+                        // 갬블시작 스텝설정 (10, 14, 18, 22)
+                        $gambleStep = $scattersCount - 4;
+
+                        $status = [0, 0, 0, 0];
+                        $status[$gambleStep] = 1;
+
+                        /* 갬블 설정 */
+                        $objRes['na'] = 'b';
+                        $objRes['bgid'] = 0;
+                        $objRes['wins'] = '10,14,18,22';
+                        $objRes['coef'] = $bet * $lines;
+                        $objRes['level'] = 0;       // 0 레벨;
+                        $objRes['status'] = implode(",", $status);
+                        $objRes['bgt'] = 35;
+                        $objRes['lifes'] = 1;
+                        $objRes['bw'] = 1;
+                        $objRes['wins_mask'] = 'nff,nff,nff,nff';
+                        $objRes['wp'] = 0;
+                        $objRes['end'] = 0;
+
+                        /* 갬블 스핀횟수 결정 */
+                        $fsCount = $slotSettings->GetNewGambleFSCount();
+                    }
+
+                    /* 프리스핀 구매 */
+                    if ($slotEvent['slotEvent'] === 'doGamble') {
+                        $objRes['purtr'] = 1;
+                        $objRes['puri'] = 0;
+                    }
+
+                    /* 갬블 당첨갯수, 현재 스텝 저장 */
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Gamble_WinCount', $fsCount);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Gamble_CurStep', $gambleStep);
+
+                    /* 텀블보너스 리셋 */
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonus', false);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusStepCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentStep', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusScatterCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentScatterCount', 0);
                 }
-
-                /* 프리스핀 구매 */
-                if ($slotEvent['slotEvent'] === 'doGamble') {
-                    $objRes['purtr'] = 1;
-                    $objRes['puri'] = 0;
-                }
-
-                /* 갬블 당첨갯수, 현재 스텝 저장 */
-                $slotSettings->SetGameData($slotSettings->slotId . 'Gamble_WinCount', $fsCount);
-                $slotSettings->SetGameData($slotSettings->slotId . 'Gamble_CurStep', $gambleStep);
             }
 
             /* 밸런스 업데이트 */
