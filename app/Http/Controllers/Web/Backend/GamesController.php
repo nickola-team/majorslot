@@ -23,25 +23,41 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('frontend.page.error_license');
             }*/
             $views = [
-                '' => 'All', 
-                'Active', 
-                '0' => 'Disabled'
+                '' => '모두', 
+                '1' => '활성', 
+                '0' => '비활성'
             ];
             $devices = [
-                '' => 'All', 
-                '2' => 'Mobile + Desktop', 
-                '0' => 'Mobile', 
-                '1' => 'Desktop'
+                '2' => '모바일 + 데스크탑', 
+                '0' => '모바일', 
+                '1' => '데스크탑'
             ];
+            $shop_id = $request->shop_id;
+            if ($request->shop == '')
+            {
+                $shop_id = 0;
+            }
+            else
+            {
+                $shop = \VanguardLTE\Shop::where('name', 'like', $request->shop)->first();
+                if ($shop)
+                {
+                    $shop_id = $shop->id;
+                }
+                else
+                {
+                    return redirect()->back()->withErrors(['매장을 찾을수 없습니다.']);
+                }
+                
+            }
+            
             $categories = \VanguardLTE\Category::where([
                 'parent' => 0, 
-                'shop_id' => auth()->user()->shop_id
+                'provider' => null,
+                'shop_id' => $shop_id
             ])->get();
-            $shop_id = $request->shop_id;
-            $games = \VanguardLTE\Game::select('games.*')->where('shop_id', auth()->user()->shop_id)->orderBy('name', 'ASC');
-            if($shop_id != 0) {
-                $games = \VanguardLTE\Game::select('games.*')->where('shop_id', $shop_id)->orderBy('name', 'ASC');
-            }
+            
+            $games = \VanguardLTE\Game::select('games.*')->where('shop_id', $shop_id)->orderBy('name', 'ASC');
             
             $savedCategory = ($request->session()->exists('games_category') ? explode(',', $request->session()->get('games_category')) : []);
             if( (count($request->all()) || isset($request->category)) && $request->session()->get('games_category') != $request->category ) 
@@ -77,6 +93,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $games = $games->where('device', $request->device);
             }
+            else
+            {
+                $games = $games->where('device', 2); //mobile + desktop
+            }
             if( $request->gamebank != '' ) 
             {
                 $games = $games->where('gamebank', $request->gamebank);
@@ -95,40 +115,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $games = $games->whereIn('game_categories.category_id', $savedCategory);
             }
             $games = $games->paginate(50);
-            $emptyGame = new \VanguardLTE\Game();
-            $stats = [
-                'bank' => 0, 
-                'in' => 0, 
-                'out' => 0, 
-                'rtp' => 0, 
-                'slots' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('slots'), 
-                'little' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('little'), 
-                'table_bank' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('table_bank'), 
-                'fish' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('fish'), 
-                'bonus' => \VanguardLTE\GameBank::where('shop_id', auth()->user()->shop_id)->sum('bonus'), 
-                'deal_profit' => \VanguardLTE\OpenShift::where([
-                    'shop_id' => auth()->user()->shop_id,
-                    'type' => 'shop',
-                    'end_date' => null])->sum('deal_profit'),
-                'games' => \VanguardLTE\Game::where([
-                    'shop_id' => auth()->user()->shop_id, 
-                    'view' => 1
-                ])->count(), 
-                'disabled' => \VanguardLTE\Game::where([
-                    'shop_id' => auth()->user()->shop_id, 
-                    'view' => 0
-                ])->count()
-            ];
-            $allGames = \VanguardLTE\Game::select('games.*')->where('shop_id', auth()->user()->shop_id)->get();
-            foreach( $allGames as $game ) 
-            {
-                $stats['in'] += $game['stat_in'];
-                $stats['out'] += $game['stat_out'];
-            }
-            $stats['bank'] = $stats['slots'] + $stats['little'] + $stats['table_bank'] + $stats['fish'] + $stats['bonus'];
-            $stats['rtp'] = ($stats['in'] > 0 ? $stats['out'] / $stats['in'] * 100 : 0);
-            $jpgs = \VanguardLTE\JPG::where('shop_id', auth()->user()->shop_id)->pluck('name', 'id')->toArray();
-            return view('backend.Default.games.list', compact('games', 'views', 'jpgs', 'devices', 'categories', 'emptyGame', 'stats', 'savedCategory'));
+            return view('backend.Default.games.list', compact('games', 'views',  'devices', 'categories', 'savedCategory'));
         }
         public function bank(\Illuminate\Http\Request $request)
         {
@@ -406,10 +393,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $after = microtime(true);
             return redirect()->route('backend.game.list')->withSuccess(trans('app.games_updated'));
         }
-        public function view(\VanguardLTE\User $user, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)
+        public function view(\VanguardLTE\Game $game, \Illuminate\Http\Request $request)
         {
-            $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
-            return view('backend.Default.user.view', compact('user', 'userActivities'));
+            $games = \VanguardLTE\Game::where('original_id', $game->original_id);
+            $games->update(['view' => $request->view]);
+            return redirect()->back()->withSuccess('게임상태를 변경하였습니다.');
         }
         public function create()
         {

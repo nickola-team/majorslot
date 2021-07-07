@@ -24,16 +24,22 @@
 	</td>
 	@endpermission
 	<td>{{ number_format($game->bids) }}</td>
-	{{-- <td>{{ $game->denomination }}</td> --}}
-{{-- <td>
-
-	<label class="checkbox-container">
-		<input type="checkbox" name="checkbox[{{ $game->id }}]">
-		<span class="checkmark"></span>
-	</label> --}}
-			<!--
-        <input class="custom-control-input minimal" id="cb-[{{ $game->id }}]" name="checkbox[{{ $game->id }}]" type="checkbox">
-
-			-->
-{{-- </td> --}}
+	<td>
+		@if($game->view == 1)
+			<span class="text-green"> 활성
+		@else
+			<span class="text-red"> 비활성
+		@endif	
+		</span>
+	</td>
+	<td>
+		@if($game->view == 1)
+			<a href="{{route('backend.game.show', $game->id) . '?view=0'}}">
+			<button type="button" class="btn btn-block btn-danger btn-xs">비활성</button>
+		@else
+		<a href="{{route('backend.game.show', $game->id) . '?view=1'}}">
+			<button type="button" class="btn btn-block btn-success btn-xs">활성</button>
+		@endif	
+			</a>
+	</td>
 </tr>

@@ -10,251 +10,6 @@
 	</section>
 
 	<section class="content">
-		<div class="box box-primary">
-			<div class="box-header with-border">
-				<div class="col-md-6">
-					<form id="change-shop-form"  name = "set_shop" action="{{ route('backend.profile.setshop') }}" method="POST">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>매장</label>
-							{!! Form::select('shop_id',
-								[0=>'기본매장']+Auth::user()->shops_array(), Auth::user()->shop_id, ['class' => 'form-control', 'style' => 'width: 100%;', 'id' => 'shop_id']) !!}
-							<input type="hidden" name="_token" value="{{ csrf_token() }}">
-						</div>
-					</div>
-					</form>	
-				</div>
-				
-			</div>
-		</div>
-		@permission('games.info')
-		<div class="row">
-			<!-- ./col -->
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-green">
-					<div class="inner">
-						<h3>{{ number_format($stats['in'],0) }}</h3>
-						<p>총베팅금</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-level-up"></i>
-					</div>
-				</div>
-			</div>
-			<!-- ./col -->
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-yellow">
-					<div class="inner">
-						<h3>{{ number_format($stats['out'],0) }}</h3>
-						<p>총당첨금</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-level-down"></i>
-					</div>
-				</div>
-			</div>
-			<!-- ./col -->
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-
-						<h3>{{ number_format($stats['deal_profit'],0) }}</h3>
-
-						<p>딜비수익금</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-line-chart"></i>
-					</div>
-				</div>
-			</div>
-			<!-- ./col -->
-			{{-- <div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-
-						<h3>{{ number_format($stats['disabled']) }}</h3>
-
-						<p>Disabled Games</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-line-chart"></i>
-					</div>
-				</div>
-			</div> --}}
-			<!-- ./col -->
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-
-						<h3>{{ auth()->user()->shop?auth()->user()->shop->percent:'0' }}</h3>
-
-						<p>환수율%</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-line-chart"></i>
-					</div>
-				</div>
-			</div>
-			
-		</div>
-		<div class="row">
-			
-			<!-- ./col -->
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-						<h3>{{ number_format( $stats['rtp'], 2 ) }}</h3>
-						<p>@lang('app.average_RTP')%</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-line-chart"></i>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-						<h3>{{ number_format( $stats['bonus'], 0 ) }}</h3>
-						<p>보너스환수금</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-line-chart"></i>
-					</div>
-					@if( auth()->user()->hasRole('admin') )
-						<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="bonus">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
-				</div>
-			</div>
-			<!-- ./col -->
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-light-blue">
-					<div class="inner">
-						<h3>{{ number_format($stats['slots'], 0) }}</h3>
-						<p>슬롯 환수금</p>
-					</div>
-					<div class="icon"> 
-						<i class="fa fa-refresh"></i>
-					</div>
-					@if( auth()->user()->hasRole('admin') )
-					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="slots">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
-				</div>
-			</div>
-			<div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box  bg-green">
-					<div class="inner">
-						<h3>{{ number_format($stats['table_bank'],0) }}</h3>
-						<p>테이블환수금</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-refresh"></i>
-					</div>
-					@if( auth()->user()->hasRole('admin') )
-					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="table_bank">환수금조절 <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
-				</div>
-			</div>
-			<!-- ./col -->
-			{{-- <div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-green" >
-					<div class="inner">
-						<h3>{{ number_format($stats['little'], 0) }}</h3>
-						<p>@lang('app.little')</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-level-up"></i>
-					</div>
-					@if( auth()->user()->hasRole('distributor') )
-					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="little">@lang('app.gamebank') @lang('app.pay_in') <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
-				</div>
-			</div> --}}
-		</div>
-		<div class="row">
-			<!-- ./col -->
-			{{-- <div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-yellow">
-					<div class="inner">
-						<h3>{{ number_format($stats['table_bank'], 0) }}</h3>
-						<p>@lang('app.table_bank')</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-level-down"></i>
-					</div>
-					@if( auth()->user()->hasRole('distributor') )
-					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="table_bank">@lang('app.gamebank') @lang('app.pay_in') <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
-				</div>
-			</div> --}}
-			<!-- ./col -->
-			{{-- <div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-						<h3>{{ number_format( $stats['fish'], 0 ) }}</h3>
-						<p>@lang('app.fish')</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-line-chart"></i>
-					</div>
-					@if( auth()->user()->hasRole('distributor') )
-					<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="fish">@lang('app.gamebank') @lang('app.pay_in') <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
-				</div>
-			</div> --}}
-			<!-- ./col -->
-			{{-- <div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-						<h3>{{ number_format( $stats['bonus'], 0 ) }}</h3>
-						<p>@lang('app.bonus')</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-line-chart"></i>
-					</div>
-					@if( auth()->user()->hasRole('distributor') )
-						<a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="bonus">@lang('app.gamebank') @lang('app.pay_in') <i class="fa fa-arrow-circle-right"></i></a>
-					@endif
-				</div>
-			</div> --}}
-			<!-- ./col -->
-			{{-- <div class="col-lg-3 col-xs-6">
-				<!-- small box -->
-				<div class="small-box bg-light-blue">
-					<div class="inner">
-						<h3>{{ $stats['bank'] }}</h3>
-						<p>@lang('app.total_banks')</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-refresh"></i>
-					</div>
-				</div>
-			</div> --}}
-			<!-- ./col -->
-		</div>
-		@endpermission
-
-
-		@if( Auth::user()->shop && Auth::user()->shop->pending )
-			<div class="alert alert-warning">
-				<h4>@lang('app.shop_is_creating')</h4>
-				<p>@lang('app.games_will_be_added_in_few_minutes')</p>
-			</div>
-		@endif
-
-		@if( !Auth::user()->shop || (Auth::user()->shop && !Auth::user()->shop->pending) )
 		<form action="" id="games-form" method="GET">
 			<div class="box box-danger collapsed-box games_show">
 				<div class="box-header with-border">
@@ -264,7 +19,6 @@
 					</div>
 				</div>
 				<div class="box-body">
-					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>이름</label>
@@ -285,6 +39,12 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
+								<label>매장</label>
+								<input type="text" class="form-control" name="shop" value="{{ Request::get('shop') }}" placeholder="매장이름">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
 								<label>@lang('app.category')</label>
 								<select class="form-control select2" name="category[]" id="category" multiple="multiple" style="width: 100%;" data-placeholder="">
 									<option value=""></option>
@@ -297,31 +57,8 @@
 								</select>
 							</div>
 						</div>
-					</div>
+						
 
-					{{-- <div class="row">
-
-						<div class="col-md-4">
-							<div class="form-group">
-								<label>@lang('app.gamebank')</label>
-								{!! Form::select('gamebank', ['' => '---'] + $emptyGame->gamebankNames, Request::get('gamebank'), ['id' => 'gamebank', 'class' => 'form-control']) !!}
-							</div>
-						</div>
-
-						<div class="col-md-4">
-							<div class="form-group">
-								<label>@lang('app.labels')</label>
-								{!! Form::select('label', ['' => '---'] + $emptyGame->labels, Request::get('label'), ['id' => 'label', 'class' => 'form-control']) !!}
-							</div>
-						</div>
-
-						<div class="col-md-4">
-							<div class="form-group">
-								<label>@lang('app.jpg')</label>
-								{!! Form::select('jpg', ['' => '---'] + $jpgs, Request::get('jpg'), ['id' => 'jpg', 'class' => 'form-control']) !!}
-							</div>
-						</div>
-					</div> --}}
 				</div>
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary">
@@ -353,19 +90,12 @@
 						<thead>
 						<tr>
 							<th>@lang('app.game')</th>
-							@permission('games.in_out')
 							<th>베팅금</th>
 							<th>당첨금</th>
-							<th>@lang('app.total')</th>
-							@endpermission
+							<th>죽은금액</th>
 							<th>베팅횟수</th>
-							{{-- <th>@lang('app.denomination')</th> --}}
-							{{-- <th>
-								<label class="checkbox-container">
-									<input type="checkbox" class="checkAll">
-									<span class="checkmark"></span>
-								</label>
-							</th> --}}
+							<th>상태</th>
+							<th>===</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -374,25 +104,18 @@
 								@include('backend.Default.games.partials.row')
 							@endforeach
 						@else
-							<tr><td colspan="9">@lang('app.no_data')</td></tr>
+							<tr><td colspan="6">@lang('app.no_data')</td></tr>
 						@endif
 						</tbody>
 						<thead>
 						<tr>
-							<th>@lang('app.game')</th>
-							@permission('games.in_out')
+						<th>@lang('app.game')</th>
 							<th>베팅금</th>
 							<th>당첨금</th>
-							<th>@lang('app.total')</th>
-							@endpermission
+							<th>죽은금액</th>
 							<th>베팅횟수</th>
-							{{-- <th>@lang('app.denomination')</th> --}}
-							{{-- <th>
-								<label class="checkbox-container">
-									<input type="checkbox" class="checkAll">
-									<span class="checkmark"></span>
-								</label>
-							</th> --}}
+							<th>상태</th>
+							<th>===</th>
 						</tr>
 						</thead>
                             </table>
@@ -401,7 +124,6 @@
                     </div>
 			</div>
 		</form>
-		@endif
 
 
 		<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
