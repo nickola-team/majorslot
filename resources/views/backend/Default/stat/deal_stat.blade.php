@@ -50,7 +50,7 @@
 								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
 							</div>
 						</div>
-						@if (auth()->user()->hasRole('admin'))
+						@if (auth()->user()->isInoutPartner())
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>파트너이름</label>
