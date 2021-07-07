@@ -475,7 +475,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                 $_obf_strinternallog = file_get_contents(storage_path('logs/') . $this->slotId . 'Internal.log');
             }
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
-            exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
+            //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
@@ -915,6 +915,53 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             }
             return [$reels, $bonusPoses];
         }
+        public function GetTumbReelIndex($key, $lastSymbol){
+            $index = 0;
+            $rc = count($key);
+            while(true){
+                $index = mt_rand(1, $rc - 1);
+                if($key[$index] != $lastSymbol && $key[$index] == $key[$index -1]){
+                    break;
+                }
+            }
+            return $index;
+        }
+        public function GetTumbReelStrips($lastReel, $slotReelId){
+            $slotReelId = $slotReelId + 1;
+            $reel = [
+                'rp' => []
+            ];
+            for($i = 1; $i <= 6; $i++){
+                $key = $this->{'reelStrip'.$slotReelId . '_' . $i};
+                $rc = count($key);
+                $reel['reel' . $i] = [];
+                $lastIndex = -1;
+                for($k = 4; $k >= 0; $k--){
+                    if($lastReel[$i - 1][$k] > -1){
+                        $reel['reel' . $i][$k] = $lastReel[$i - 1][$k];
+                    }else{
+                        if($lastIndex > -1 || $k == 4 || $reel['reel' . $i][$k + 1] == 1 || $reel['reel' . $i][$k + 1] == 12 || ($k < 3 && $reel['reel' . $i][$k + 1] == $reel['reel' . $i][$k + 2])){                                
+                            if($lastIndex == -1){
+                                if($k == 4){
+                                    $lastIndex = $this->GetTumbReelIndex($key, 1);
+                                }else{
+                                    $lastIndex = $this->GetTumbReelIndex($key, $reel['reel' . $i][$k + 1]);
+                                }
+                            }
+                            $reel['reel' . $i][$k] = $key[$lastIndex];
+                            $lastIndex = ($lastIndex - 1 + $rc) % $rc;
+                        }else{
+                            $reel['reel' . $i][$k] = $reel['reel' . $i][$k + 1];
+                            $lastIndex = $this->GetTumbReelIndex($key, $reel['reel' . $i][$k + 1]);
+                        }
+                    }
+                }
+                $reel['reel' . $i][-1] = rand(3, 10);
+                $reel['reel' . $i][5] = rand(3, 10);
+                $reel['rp'][$i] = $lastIndex;
+            }
+            return $reel;
+        }
         public function GetReelStrips($winType, $slotEvent, $slotReelId, $scattercount = 0)
         {
             $slotReelId = $slotReelId + 1;
@@ -979,12 +1026,8 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                 $key[-1] = $key[$rc - 1];
                 $key[$rc] = $key[0];
                 $reel['reel' . $index][-1] = $key[$value - 1];
-                if($winType == 'win'){
-                    $diffNum = rand(1, 1);
-                }else{
-                    $diffNum = 1;
-                }
-                
+                $diffNum = 1;                
+                $scatterPos = 0;
                 if($isScatter == false){
                     $reel['reel' . $index][0] = $key[$value];
                     $reel['reel' . $index][1] = $key[($value + $diffNum) % $rc];
@@ -1011,7 +1054,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                     $reel['reel' . $index][4] = $key[abs($value + (4 - $scatterPos) * $diffNum) % $rc];
                 }
                 $reel['reel' . $index][5] = rand(3, 10);
-                $reel['rp'][] = $value;
+                $reel['rp'][$index] = $value - $scatterPos;
             }
             return $reel;
         }
