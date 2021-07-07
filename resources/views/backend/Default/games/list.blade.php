@@ -125,42 +125,6 @@
 			</div>
 		</form>
 
-
-		<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<form action="" method="POST" id="gamebank_add">
-
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title">환수금조절</h4>
-						</div>
-
-						<div class="modal-body">
-							<div class="form-group">
-								<input type="text" class="form-control" id="AddSum" name="summ" placeholder="@lang('app.sum')" required>
-								<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<br>
-									<button type="button" class="btn btn-default changeAddSum" data-value="10000">10000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="20000">20000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="30000">30000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="50000">50000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="100000">100000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="200000">200000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="300000">300000</button>
-									<button type="button" class="btn btn-default changeAddSum" data-value="500000">500000</button>
-							</div>
-						</div>
-						<div class="modal-footer" style="text-align: left;">
-							<a href="" class="btn btn-warning openAddClear">환수금초기화</a>
-							<button type="submit" class="btn btn-submit">금액추가</a>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
 	</section>
 
 @stop
