@@ -693,6 +693,11 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             if ($fs == 1) {
                 $newWILDCount = random_int(0, 1);
             }
+            /* 프리스핀 3회이내에 2,3번릴에 와일드심볼 생성 */
+            else if ($fs == 3 && (array_search($S_WILD, $reels["reel2"]) === false || array_search($S_WILD, $reels["reel3"]) === false)) {
+                $newWILDCount = array_search($S_WILD, $reels["reel2"]) === false ? 1 : 0;
+                $newWILDCount += array_search($S_WILD, $reels["reel3"]) === false ? 1 : 0;
+            }
             else {
                 $newWILDCount = random_int(1, 2);
             }
