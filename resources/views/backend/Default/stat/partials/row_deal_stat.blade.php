@@ -1,5 +1,11 @@
 <tr>
-    <td>{{ $stat->game }}</td>
+    <td>	
+	<?php
+		$game = preg_replace('/PM/', '_pp', $stat->game);
+		$game = explode(' ', $game)[0];
+	?>
+	{{$game}}
+	</td>
 	<td>
 	@if ($stat->user)
 	{{ $stat->user->username }}
