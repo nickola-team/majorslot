@@ -130,7 +130,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
-                $lastWILDCollection = $slotSettings->GetGameData($slotSettings->slotId . 'WILDCollection');
+                $lastWILDCollection = $slotSettings->GetGameData($slotSettings->slotId . 'WILDCollection') ?? [];
 
                 /* 남은 프리스핀이 있을 경우 */
                 $fsmax = $slotSettings->GetGameData($slotSettings->slotId . 'FSMax');

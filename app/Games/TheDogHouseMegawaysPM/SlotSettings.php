@@ -397,7 +397,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             }
             else
             {
-                return 0;
+                return null;
             }
         }
         public function FormatFloat($num)
