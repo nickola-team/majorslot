@@ -712,7 +712,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
         public function doBonus($slotEvent, $LASTSPIN) {
             $slotSettings = $this->slotSettings;
 
-            $BALANCE = $slotSettings->GetBalance();
+            $BALANCE = $LASTSPIN->balance;
             $MaxFreespinCount = 22;
 
             /* 갬블레벨 대 프리스핀 갯수 */
@@ -727,7 +727,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             $nextStep = $prevStep + 1;
             
             $objRes = [
-                'tw' => '0',
+                'tw' => $LASTSPIN->tw ?? 0,
                 'bgid' => '0',
                 'balance' => $BALANCE,
                 'wins' => '10,14,18,22',
