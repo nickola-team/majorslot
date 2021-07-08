@@ -854,18 +854,22 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetBonusMul(){
+        public function GetBonusMul($isTumb, $winType){
             $bonusMuls = [
-                [11,11,11,9,9,9,8,8,8,7,6,2,1],
-                [2,3,4,5,6,8,10,12,15,20,25,50,100]
+                    [30,23,13,9,7,3,2,1,1,1,3,3,3],
+                    [2,3,4,5,6,8,10,12,15,20,25,50,100]
             ];
-            $percent = rand(0, 90);
+            if($isTumb == true || $winType != 'none'){
+                    $percent = rand(0, 90);
+            }else{
+                    $percent = rand(0, 100);
+            }
             $sum = 0;
             for($i = 0; $i < count($bonusMuls[0]); $i++){
-                $sum = $sum + $bonusMuls[0][$i];
-                if($percent <= $sum){
-                    return $bonusMuls[1][$i];
-                }
+                    $sum = $sum + $bonusMuls[0][$i];
+                    if($percent <= $sum){
+                            return $bonusMuls[1][$i];
+                    }
             }
             return $bonusMuls[1][0];
         }

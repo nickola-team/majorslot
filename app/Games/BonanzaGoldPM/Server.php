@@ -315,7 +315,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                             }
                         }
                         if($isExit == false){
-                            array_push($bonusMuls, $slotSettings->GetBonusMul());
+                            array_push($bonusMuls, $slotSettings->GetBonusMul($isTumb, $winType));
                             array_push($bonusMulPoses, $winLines[$bonus][$r]);
                         }
                     }
@@ -345,7 +345,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                             // exit( $response );
                             break;
                         }
-                        if( $scattersCount >= 4 && ($winType != 'bonus'  || $scattersCount != $defaultScatterCount)) 
+                        if( ($scattersCount >= 4 || ($scattersCount >= 3 && $slotEvent['slotEvent'] == 'freespin')) && ($winType != 'bonus'  || $scattersCount != $defaultScatterCount)) 
                         {
                             if($winType == 'none' && $i > 500){
                                 break;
