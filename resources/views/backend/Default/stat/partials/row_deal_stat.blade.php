@@ -1,8 +1,15 @@
 <tr>
     <td>	
 	<?php
-		$game = preg_replace('/PM/', '_pp', $stat->game);
-		$game = explode(' ', $game)[0];
+		if (auth()->user()->hasRole('admin'))
+		{
+			$game = $stat->game;
+		}
+		else
+		{
+			$game = preg_replace('/PM/', '_pp', $stat->game);
+			$game = explode(' ', $game)[0];
+		}
 	?>
 	{{$game}}
 	</td>
