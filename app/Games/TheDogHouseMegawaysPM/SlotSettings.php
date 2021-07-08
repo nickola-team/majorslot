@@ -1043,7 +1043,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         
         public function GetSymbolCount($default = 2){   // 한개 릴의 심볼 갯수를 결정하는 함수
             $sum = random_int(0, 100);
-            if($sum <= 40){
+            if($sum <= 30){
                 $ret = 2;
             }else if($sum <= 70){
                 $ret = 3;
@@ -1127,14 +1127,31 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         public function GetLimitedReelStrips($slotEvent, $lastWILDCollection) {
             $REELCOUNT = 6;
 
-            /* 당첨금이 제일 작은 심볼중 하나 선택 */
-            $startSymbols = [random_int(5, 13), random_int(5, 13)];     
+          /* 당첨금이 작은 심볼위주로 2개 또는 3개의 심볼 결정 */
+          $symbolA = random_int(5, 8);
+          $symbolB = random_int(9, 12);
+
+          $firstReelSet = [
+              [$symbolA, $symbolA],
+              [$symbolA, $symbolB],
+              [$symbolB, $symbolA],
+              [$symbolB, $symbolB],
+              [$symbolA, $symbolA, $symbolA],
+              [$symbolA, $symbolA, $symbolB],
+              [$symbolA, $symbolB, $symbolB],
+              [$symbolB, $symbolB, $symbolB],
+              [$symbolB, $symbolB, $symbolA],
+              [$symbolB, $symbolA, $symbolA],
+          ];
+
+          $startSymbols = $firstReelSet[array_rand($firstReelSet)];
+
 
             for ($reelId=1; $reelId <= $REELCOUNT; $reelId++) { 
 
                 /* 스티키 프리스핀일때 릴의 최소 심볼갯수 계산 */
                 if ($reelId == 1) {
-                    $symbolCount = 2;
+                    $symbolCount = count($startSymbols);
                 }
                 else if ($slotEvent === 'fsSticky' && count($lastWILDCollection) > 0) {
                     $minCount = 2;
@@ -1188,6 +1205,17 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $isScatter = false;
             $basePosOfReels = [];
 
+            $stickyWilds = [0, 0];  // 스티키프리스핀때 2,3번릴에 위치한 와일드심볼 갯수배열
+            foreach ($lastWILDCollection as $pos => $multiplier) {
+                $wildReelId = $pos % $REELCOUNT + 1;
+                if ($wildReelId == 2) {
+                    $stickyWilds[0] += 1;
+                }
+                else if ($wildReelId == 3) {
+                    $stickyWilds[1] += 1;
+                }
+            }
+
             /* 릴셋 찾기 */
             if (array_key_exists($slotEvent, $this->reelsetMap)) {
                 $reelsetIds = $this->reelsetMap[$slotEvent];
@@ -1218,13 +1246,27 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 else {
                     $symbolCount = $this->GetSymbolCount();
                 }
-                /* 6 스핀이내에 동의심볼이 없는 릴셋생성 */
-                if ($reset == true) {
-                    $positionSetId = 0;
+                /* 스티키프리스핀일때 1번릴배치표 조정 */
+                if ($slotEvent === 'fsSticky' && $reelId == 1) {
+                    /* 2, 3번릴에 와일드심볼이 있다면  */
+                    if (array_sum($stickyWilds) >= 2) {
+                        /* 0번 셋은 선택하지 않는다 */
+                        $positionSetId = random_int(1, count($this->reelPositionMap[$symbolCount]) - 1);
+                    }
+                    else {
+                        $positionSetId = array_rand($this->reelPositionMap[$symbolCount]);
+                    }
                 }
                 else {
-                    $positionSetId = array_rand($this->reelPositionMap[$symbolCount]);
+                    /* 6 스핀이내에 동의심볼이 없는 릴셋생성 */
+                    if ($reset == true) {
+                        $positionSetId = 0;
+                    }
+                    else {
+                        $positionSetId = array_rand($this->reelPositionMap[$symbolCount]);
+                    }
                 }
+
                 $reelPositionSet = $this->reelPositionMap[$symbolCount][$positionSetId];
 
                 $reel['reel' . $reelId] = array_fill(0, $MAXSYMBOLCOUNT, $S_BLANK);
