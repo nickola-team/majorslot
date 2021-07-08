@@ -1128,18 +1128,16 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $REELCOUNT = 6;
 
           /* 당첨금이 작은 심볼위주로 2개 또는 3개의 심볼 결정 */
-          $symbolA = random_int(5, 8);
+          
           $symbolB = random_int(9, 12);
 
           $firstReelSet = [
               [$symbolA, $symbolA],
               [$symbolA, $symbolB],
-              [$symbolB, $symbolA],
               [$symbolB, $symbolB],
               [$symbolA, $symbolA, $symbolA],
               [$symbolA, $symbolA, $symbolB],
               [$symbolA, $symbolB, $symbolB],
-              [$symbolB, $symbolB, $symbolB],
               [$symbolB, $symbolB, $symbolA],
               [$symbolB, $symbolA, $symbolA],
           ];
