@@ -456,7 +456,7 @@ namespace VanguardLTE\Games\PirateGoldPM
                 return $this->Bank / $this->CurrentDenom;
             }
 
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'fsSticky' || $slotState == 'fsRaining' ) 
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' ) 
             {
                 $slotState = 'bonus';
             }
