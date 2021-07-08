@@ -448,7 +448,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'fsSticky' || $slotState == 'fsRaining' ) 
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' ) 
             {
                 $slotState = 'bonus';
             }
