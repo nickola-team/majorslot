@@ -217,7 +217,7 @@ namespace VanguardLTE\Console
                 {
                     $task->update(['finished' => 1]);
                     $shopId = $task->item_id;
-                    $shopInfo = \VanguardLTE\Shop::find($shop);
+                    $shopInfo = \VanguardLTE\Shop::find($shopId);
                     if ($shopInfo)
                     {
                         $shopInfo->delete();
