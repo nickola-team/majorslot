@@ -1275,7 +1275,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 /* 망치심볼 출현횟수 조정 */
                 $isValidHammer = (random_int(1, 10) < 3);
                 
-                if ($isValidHammer || $winType == 'bonus') {
+                if (!$isValidHammer || $winType == 'bonus') {
                     for ($i=0; $i < 4; $i++) { 
                         if ($reels['top']['symbols'][$i] == $S_HAMMER) {
                             $reels['top']['symbols'][$i] = random_int(7, 12);

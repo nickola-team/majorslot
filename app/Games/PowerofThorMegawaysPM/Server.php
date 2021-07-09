@@ -300,8 +300,9 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                         $tumbleBonusStepCount = random_int(1, 3);
 
                         /* 스텝이 1이라면 텀블보너스가 아님 */
-                        /* 처음 생성할 스캐터심볼 갯수 랜덤결정, 최소 2개 */
-                        $defaultScatterCount = ($tumbleBonusStepCount == 1) ? $totalScatterCount : random_int(2, $totalScatterCount);
+                        /* 처음 생성할 스캐터심볼 갯수 랜덤결정, 최종갯수와 2이상 차이나지 않도록 */
+                        $defaultScatterCount = ($tumbleBonusStepCount == 1) ? $totalScatterCount : random_int($totalScatterCount - 2, $totalScatterCount);
+                        
                         $curTumbleBonusStep = 1;
                         
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonus', true);
@@ -399,6 +400,11 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                         else {
                             /* 텀블보너스인경우 윈라인이 반드시 있어야 */
                             if (count($this->winLines) > 0) {
+                                /* reg 텀블심볼갯수가 최소한 2개가 되어야, 스캐터갯수보다 작으면 오류  */
+                                if ($this->getTumbleSymbolCount($reels) < 2) {
+                                    continue;
+                                }
+
                                 /* 스핀 당첨금 */
                                 $winMoney = array_reduce($this->winLines, function($carry, $winLine) {
                                     $carry += $winLine['Money']; 
@@ -914,6 +920,36 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             }
 
             return null;
+        }
+
+        public function getTumbleSymbolCount($reels) {
+            $REELCOUNT = 6;
+
+            /* 텀블심볼정보 추가 */
+            $count = 0;
+            $winLines = $this->winLines;
+
+            if (count($winLines) > 0) {
+                /* 윈라인 심볼 얻기 */
+                $winSymbolPositions = [];
+                foreach ($winLines as $winLine) {
+                    $winSymbolPositions = array_merge($winSymbolPositions, $winLine['Positions']);
+                }
+                $winSymbolPositions = array_unique($winSymbolPositions);
+
+                /* 윈라인 심볼분리 */
+                foreach ($winSymbolPositions as $pos) {
+                    if ($pos < $REELCOUNT) {
+                        /* top 릴에 위치한 심볼 */
+                    }
+                    else {
+                        /* reg 릴셋에 위치한 심볼 */
+                        $count ++;
+                    }
+                }
+            }
+
+            return $count;
         }
 
         public function buildReelSetResponse($reels) {
