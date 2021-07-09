@@ -105,10 +105,14 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
-            $game = \VanguardLTE\Game::where([
+            $game = \VanguardLTE\Game::lockForUpdate()->where([
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
-            ])->lockForUpdate()->first();
+            ])->first();
+            if (!$game)
+            {
+                exit('unlogged');
+            }
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
@@ -465,6 +469,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
         {
             $_obf_strlog = '';
             $_obf_strlog .= "\n";
+            $_obf_strlog .= date("Y-m-d H:i:s") . ' ';
             $_obf_strlog .= ('{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}');
             $_obf_strlog .= "\n";
             $_obf_strlog .= ' ############################################### ';
