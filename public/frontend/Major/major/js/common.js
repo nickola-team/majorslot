@@ -311,7 +311,7 @@ function openGroup(obj, category) {
                     if (data.games[i].demo)
                     {
                         strHtml += '<p><a href="javascript:;" onclick="openDemoApp(\'' + data.games[i].demo +'\');">';
-                        strHtml += '<span class="demo_btn">데모보기</span>';
+                        strHtml += '<span class="demo_btn">무료게임</span>';
                         //strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:18px;">DemoPlay</span>';
                         strHtml += '</a>';
                     }
