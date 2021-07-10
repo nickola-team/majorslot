@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>@yield('page-title') - {{ settings('app_name') }}</title>
+    <title>@yield('page-title')}}</title>
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/frontend/Default/img/favicon.png" >
 
