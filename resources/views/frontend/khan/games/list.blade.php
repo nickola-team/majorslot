@@ -396,7 +396,7 @@
                 @endif
         @endforeach
         <?php
-            $comingSoon = (intval(count($categories)/4) + 1 ) * 4 - count($categories);
+            $comingSoon = (intval((count($categories)-1)/4) + 1 ) * 4 - count($categories);
         ?>
         @for ($i=0;$i<$comingSoon;$i++)
             <a href="#none" onclick="Swal.fire('준비중입니다.');" class="slot-btn">
