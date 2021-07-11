@@ -366,7 +366,7 @@
                                     </span>
                                 </div>
                                 <div class="gameborder">
-                                    <img width="100%" height="100%" src="/frontend/Default/categories/border.png" />
+                                    <img width="100%" height="100%" src="/frontend/khan/khan/images/border.png" />
                                 </div>
                             </div>
                             
@@ -377,17 +377,19 @@
                         <div class="inner">
                             <div class="category">
                                 <div class="gameicon">
-                                    <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                    <span style="font-size:24px;">
-                                    @if ($category->trans)
-                                        {{ $category->trans->trans_title }}
-                                    @else
-                                        {{ $category->title }}
-                                    @endif
-                                    </span>
+                                    <img width="100%" height="65%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                    <div style="background:black;">
+                                        <span style="font-size:16px">
+                                        @if ($category->trans)
+                                            {{ $category->trans->trans_title }}
+                                        @else
+                                            {{ $category->title }}
+                                        @endif
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="gameborder">
-                                    <img width="100%" height="100%" src="/frontend/Default/categories/border.png" />
+                                    <img width="100%" height="100%" src="/frontend/khan/khan/images/border.png" />
                                 </div>
                             </div>
                             
@@ -409,7 +411,7 @@
                             </span>
                         </div>
                         <div class="gameborder">
-                            <img width="100%" height="100%" src="/frontend/Default/categories/border.png" />
+                            <img width="100%" height="100%" src="/frontend/khan/khan/images/border.png" />
                         </div>
                     </div>
                     
