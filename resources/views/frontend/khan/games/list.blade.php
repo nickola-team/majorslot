@@ -356,14 +356,16 @@
                         <div class="inner">
                             <div class="category">
                                 <div class="gameicon">
-                                    <img width="100%" height="82%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
-                                    <span style="font-size:24px;">
+                                    <img width="100%" height="65%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                    <div style="background:black;">
+                                    <span style="font-size:16px;">
                                     @if ($category->trans)
                                         {{ $category->trans->trans_title }}
                                     @else
                                         {{ $category->title }}
                                     @endif
                                     </span>
+                                    </div>
                                 </div>
                                 <div class="gameborder">
                                     <img width="100%" height="100%" src="/frontend/khan/khan/images/border.png" />
@@ -405,10 +407,12 @@
                 <div class="inner">
                     <div class="category">
                         <div class="gameicon">
-                            <img width="100%" height="82%" src="/frontend/Default/categories/coming_soon.png" />
-                            <span style="font-size:24px;">
-                                준비중
-                            </span>
+                            <img width="100%" height="65%" src="/frontend/Default/categories/coming_soon.png" />
+                            <div style="background:black;">
+                                <span style="font-size:16px;">
+                                    준비중
+                                </span>
+                            </div>
                         </div>
                         <div class="gameborder">
                             <img width="100%" height="100%" src="/frontend/khan/khan/images/border.png" />
