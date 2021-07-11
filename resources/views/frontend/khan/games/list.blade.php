@@ -356,7 +356,7 @@
                         <div class="inner">
                             <div class="category">
                                 <div class="gameicon">
-                                    <img width="100%" height="65%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                    <img width="100%" height="65%" src="/frontend/khan/categories/{{ $category->title.'.jpg' }}" />
                                     <div style="background:black;">
                                     <span style="font-size:16px;">
                                     @if ($category->trans)
@@ -379,7 +379,7 @@
                         <div class="inner">
                             <div class="category">
                                 <div class="gameicon">
-                                    <img width="100%" height="65%" src="/frontend/Default/categories/{{ $category->title.'.jpg' }}" />
+                                    <img width="100%" height="65%" src="/frontend/khan/categories/{{ $category->title.'.jpg' }}" />
                                     <div style="background:black;">
                                         <span style="font-size:16px">
                                         @if ($category->trans)
@@ -407,7 +407,7 @@
                 <div class="inner">
                     <div class="category">
                         <div class="gameicon">
-                            <img width="100%" height="65%" src="/frontend/Default/categories/coming_soon.png" />
+                            <img width="100%" height="65%" src="/frontend/khan/categories/coming_soon.png" />
                             <div style="background:black;">
                                 <span style="font-size:16px;">
                                     준비중
