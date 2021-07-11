@@ -57,6 +57,7 @@ return [
         "Magic Ball" => "매직 볼",
         "Hit the Gold!" => "히트 더 골드!",
         "Scarab Boost" => "스크랩 부스트",
+        "Wukong" => "우콩",
 
         /**
          * CQ9 Games
@@ -521,6 +522,7 @@ return [
         "Rich Diamonds: Hold and Win" => "리치 다이아몬즈:홀드 앤 윈",
         "Book of Gold 2: Double Hit™" => "북오브 골드 2: 더블히트™",
         "9 Happy Pharaohs" => "9 해피 파라오스",
+        "Hot Burning Wins" => "핫 버닝 윈스",
 
         /**
          * Habanero Games
@@ -647,5 +649,6 @@ return [
         "Cashosaurus" => "캐쇼사우러스",
         "Return To The Feature" => "리턴 투 더 피쳐",
         "Candy Tower" => "캔디 타워",
+        "Marvelous Furlongs" => "마블러스 퍼롱스",
 
 ];
