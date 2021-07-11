@@ -202,6 +202,9 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                     $reelsAndPoses = $slotSettings->GetLastReel($slotSettings->GetGameData($slotSettings->slotId . 'LastReel'), $slotSettings->GetGameData($slotSettings->slotId . 'BinaryReel'), $slotSettings->GetGameData($slotSettings->slotId . 'BonusMplPos'));
                     $lastReel = $reelsAndPoses[0];
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMplPos', $reelsAndPoses[1]);
+                    if($slotEvent['slotEvent'] == 'freespin'){
+                        $reelSet_Num = 1;
+                    }
                 }else{
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', []);
@@ -211,7 +214,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                         $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
                         $reelSet_Num = 1;
-                        if($isdoublechance == 1){
+                        if($winType == 'none'){
                             $reelSet_Num = 3;
                         }
                     }else
@@ -244,6 +247,9 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                 $defaultScatterCount = 0;
                 if($winType == 'bonus'){                    
                     $defaultScatterCount = $slotSettings->GenerateFreeSpinCount($slotEvent);
+                    if($slotEvent['slotEvent'] == 'freespin' && mt_rand(0, 100) < 80){
+                        $defaultScatterCount = 3;
+                    }
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {

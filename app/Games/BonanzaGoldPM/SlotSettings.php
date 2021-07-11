@@ -860,30 +860,34 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             return $spinWin;
         }
         public function GetBonusMul($isTumb, $winType){
-            $bonusMuls = [
+            if($isTumb == true || $winType != 'none'){
+                $percent = rand(0, 90);
+                $bonusMuls = [
                     [30,23,13,9,7,3,2,1,1,1,3,3,3],
                     [2,3,4,5,6,8,10,12,15,20,25,50,100]
-            ];
-            if($isTumb == true || $winType != 'none'){
-                    $percent = rand(0, 90);
+                ];
             }else{
-                    $percent = rand(0, 100);
+                $percent = rand(0, 100);
+                $bonusMuls = [
+                    [5,5,5,10,10,10,10,10,10,10,5,5,5],
+                    [2,3,4,5,6,8,10,12,15,20,25,50,100]
+                ];
             }
             $sum = 0;
             for($i = 0; $i < count($bonusMuls[0]); $i++){
-                    $sum = $sum + $bonusMuls[0][$i];
-                    if($percent <= $sum){
-                            return $bonusMuls[1][$i];
-                    }
+                $sum = $sum + $bonusMuls[0][$i];
+                if($percent <= $sum){
+                    return $bonusMuls[1][$i];
+                }
             }
             return $bonusMuls[1][0];
         }
         public function GenerateFreeSpinCount(){
             $freeSpins = [
-                [75, 20, 5],
+                [85, 10, 5],
                 [4, 5, 6]
             ];
-            $percent = rand(0, 95);
+            $percent = rand(0, 90);
             $sum = 0;
             for($i = 0; $i < count($freeSpins[0]); $i++){
                 $sum = $sum + $freeSpins[0][$i];
@@ -929,7 +933,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             $rc = count($key);
             while(true){
                 $index = mt_rand(1, $rc - 1);
-                if($key[$index] != $lastSymbol && $key[$index] == $key[$index -1]){
+                if(($key[$index] != $lastSymbol && $key[$index] == $key[$index -1]) || $key[$index] == 1 || $key[$index] != 12 ){
                     break;
                 }
             }
