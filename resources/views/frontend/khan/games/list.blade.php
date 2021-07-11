@@ -244,7 +244,7 @@
 <div class="hot_wrap">
     <div class="hot_box">
         <p class="title">
-            <span>인기게임</span>
+            <span>라이브 카지노</span>
         </p>
     </div>
 </div>
@@ -253,7 +253,18 @@
     <div class="hot_box">
         <div class="carousel slide" id="myCarousel" style="background:black;padding:2px;">
             <div class="carousel-inner">
-                @forelse ($hotgames as $hot)
+                <?php
+                    if (isset($livegames) && count($livegames) % 4 > 0)
+                    {
+                        $len = count($livegames);
+                        $remainCount = 4 - $len % 4;
+                        for ($i=0;$i<$remainCount;$i++)
+                        {
+                            $livegames[] = $livegames[$i];
+                        }
+                    }
+                ?>
+                @forelse ($livegames as $hot)
                     @if ($loop->index % 4 == 0)
                     <div class="item {{$loop->index==0?'active':''}}">
                     @endif
@@ -261,7 +272,6 @@
                             <div class="parent" onclick="">
                             <div class="child">
                                 @if (isset($hot['provider']))
-
                                     @if (isset($hot['icon']))
                                         <img src="{{ $hot['icon']}}" style="width: 100%; height: 100%;">
                                     @else
@@ -386,7 +396,7 @@
                 @endif
         @endforeach
         <?php
-            $comingSoon = (intval(count($categories)/4) + 1 ) * 4 - count($categories);
+            $comingSoon = (intval((count($categories)-1)/4) + 1 ) * 4 - count($categories);
         ?>
         @for ($i=0;$i<$comingSoon;$i++)
             <a href="#none" onclick="Swal.fire('준비중입니다.');" class="slot-btn">
