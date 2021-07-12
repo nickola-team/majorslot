@@ -837,6 +837,42 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
+        public function GetBuyFreespinRandomScatterPos($rp, $isdoubleScatter = false)
+        {
+            $_obf_scatterposes = [];
+            for( $i = 0; $i < count($rp); $i++ ) 
+            {
+                if( $rp[$i] == '1' ) 
+                {
+                    array_push($_obf_scatterposes, $i);
+                }
+            }
+            $double_scatterposes = [];
+            $single_scatterposes = [];
+            for($i = 0; $i < count($_obf_scatterposes); $i++){
+                if(isset($_obf_scatterposes[$i + 1]) && ($_obf_scatterposes[$i + 1] - $_obf_scatterposes[$i]) <= 4){
+                    array_push($double_scatterposes, $_obf_scatterposes[$i]);
+                    $i++;
+                }else{
+                    array_push($single_scatterposes, $_obf_scatterposes[$i]);
+                }
+            }
+            shuffle($double_scatterposes);
+            shuffle($single_scatterposes);
+            if( !isset($double_scatterposes[0]) ) 
+            {
+                $double_scatterposes[0] = rand(2, count($rp) - 3);
+            }
+            if( !isset($single_scatterposes[0]) ) 
+            {
+                $single_scatterposes[0] = rand(2, count($rp) - 3);
+            }
+            if($isdoubleScatter == true){
+                return $double_scatterposes[0];
+            }else{
+                return $single_scatterposes[0];
+            }
+        }
         public function GetRandomScatterPos($rp)
         {
             $_obf_scatterposes = [];
@@ -972,6 +1008,74 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                 $reel['reel' . $i][-1] = rand(3, 10);
                 $reel['reel' . $i][5] = rand(3, 10);
                 $reel['rp'][$i] = $lastIndex;
+            }
+            return $reel;
+        }
+        public function GetBuyFreeSpinReelStrips($scattercount = 0)
+        {
+            $_obf_reelStripNumber = [
+                1, 
+                2, 
+                3, 
+                4, 
+                5,
+                6
+            ];
+            $scatterStripReelNumber = $this->GetRandomNumber(0, 6, $scattercount - 1);
+            $doubleReelIndex = $scatterStripReelNumber[0];
+            for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
+            {
+                $issame = false;
+                for($j = 0; $j < $scattercount - 1; $j++){
+                    if($i == $scatterStripReelNumber[$j]){
+                        $issame = true;
+                        break;
+                    }
+                }
+                if($issame == true){
+                    $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetBuyFreespinRandomScatterPos($this->{'reelStrip5_'. $_obf_reelStripNumber[$i]}, $doubleReelIndex == $i);
+                }else{
+                    $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStrip5_'. $_obf_reelStripNumber[$i]}));
+                }
+            }
+            
+            $reel = [
+                'rp' => []
+            ];
+            foreach( $_obf_reelStripCounts as $index => $value ) 
+            {
+                $key = $this->{'reelStrip5_' . $index};
+                // if($slotEvent=='freespin'){
+                //     $key = $this->{'reelStripBonus' . $index};
+                // }
+                $rc = count($key);
+                $key[-1] = $key[$rc - 1];
+                $key[$rc] = $key[0];
+                $reel['reel' . $index][-1] = $key[$value - 1];
+                $diffNum = 1;               
+                if($doubleReelIndex == $index - 1) {
+                    $scatterPos = mt_rand(0, 1);
+                }else{
+                    $scatterPos = rand(0, 100);
+                    if($scatterPos < 20){
+                        $scatterPos = 0;
+                    }else if($scatterPos < 40){
+                        $scatterPos = 1;
+                    }else if($scatterPos < 60){
+                        $scatterPos = 2;
+                    }else if($scatterPos < 80){
+                        $scatterPos = 3;
+                    }else{
+                        $scatterPos = 4;
+                    }
+                }
+                $reel['reel' . $index][0] = $key[abs($value - $scatterPos * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][1] = $key[abs($value + (1 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][2] = $key[abs($value + (2 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][3] = $key[abs($value + (3 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][4] = $key[abs($value + (4 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][5] = rand(3, 10);
+                $reel['rp'][$index] = $value - $scatterPos;
             }
             return $reel;
         }

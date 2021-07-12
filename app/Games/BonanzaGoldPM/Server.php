@@ -268,7 +268,11 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                     if($isTumb == true && $lastReel != null){
                         $reels = $slotSettings->GetTumbReelStrips($lastReel, $reelSet_Num);
                     }else{
-                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelSet_Num, $defaultScatterCount);
+                        if($isbuyfreespin == 0 && mt_rand(0, 100) < 20){
+                            $reels = $slotSettings->GetBuyFreeSpinReelStrips($defaultScatterCount);
+                        }else{
+                            $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelSet_Num, $defaultScatterCount);
+                        }
                     }
                     for($j = 1; $j < 13; $j++){
                         $arr_symbols = [];
