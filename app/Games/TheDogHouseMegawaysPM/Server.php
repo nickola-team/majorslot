@@ -330,9 +330,9 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     if( $scattersCount >= 3 && ( $winType != 'bonus' || $scattersCount != $defaultScatterCount)) 
                     {
                     }
-                    // else if( $slotEvent['slotEvent'] == 'freespin' && $freeSpinNum > 0 && random_int(0, 100) < 90 ){
-                    //     // 프리스핀에서 프리스핀당첨 확률 10%
-                    // }
+                    else if ($winType == 'bonus' && $totalWin > 0) {
+                        continue;
+                    }
                     else if( $winType == 'bonus' && $scattersCount >= 3 ) 
                     {
                         $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
