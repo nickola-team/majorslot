@@ -903,7 +903,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                     [2,3,4,5,6,8,10,12,15,20,25,50,100]
                 ];
             }else{
-                $percent = rand(0, 100);
+                $percent = rand(0, 95);
                 $bonusMuls = [
                     [5,5,5,10,10,10,10,10,10,10,5,5,5],
                     [2,3,4,5,6,8,10,12,15,20,25,50,100]
