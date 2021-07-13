@@ -10,7 +10,8 @@ namespace VanguardLTE
             'raceprizes',
             'racewinners',
             'tournamentdetails',
-            'tournamentleaderboard'
+            'tournamentleaderboard',
+            'games'
         ];
         public $timestamps = false;
         public static function boot()
