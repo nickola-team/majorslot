@@ -1014,7 +1014,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 if ($comaster)
                 {
-                    $adj['ggr'] = ($adj['totalbet'] - $adj['totalwin']) * $comaster->money_percent;
+                    $adj['ggr'] = ($adj['totalbet'] - $adj['totalwin']) * $comaster->money_percent / 100;
                 }
                 else
                 {
