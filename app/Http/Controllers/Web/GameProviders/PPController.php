@@ -764,6 +764,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $promo = \VanguardLTE\PPPromo::take(1)->first();
             if ($promo){
                 $data = $promo->games;
+                $json_data = json_decode($data, true);
+                $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                $data = json_encode($json_data);
             }
             else{
                 $data = '';
