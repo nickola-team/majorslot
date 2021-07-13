@@ -965,15 +965,21 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             return [$reels, $bonusPoses];
         }
         public function GetTumbReelIndex($key, $lastSymbol){
-            $index = 0;
             $rc = count($key);
-            while(true){
-                $index = mt_rand(1, $rc - 1);
-                if(($key[$index] != $lastSymbol && $key[$index] == $key[$index -1]) || $key[$index] == 1 || $key[$index] != 12 ){
-                    break;
+            $symbol_poses = [];
+            for( $i = 1; $i < $rc; $i++ ) 
+            {
+                if( ($key[$i] != $lastSymbol && $key[$i] == $key[$i -1]) || $key[$i] == 1 || $key[$i] != 12 ) 
+                {
+                    array_push($symbol_poses, $i);
                 }
             }
-            return $index;
+            shuffle($symbol_poses);
+            if( !isset($symbol_poses[0]) ) 
+            {
+                $symbol_poses[0] = rand(2, count($rp) - 3);
+            }
+            return $symbol_poses[0];
         }
         public function GetTumbReelStrips($lastReel, $slotReelId){
             $slotReelId = $slotReelId + 1;

@@ -358,14 +358,14 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                         }
                         if( ($scattersCount >= 4 || ($scattersCount >= 3 && $slotEvent['slotEvent'] == 'freespin')) && ($winType != 'bonus'  || $scattersCount != $defaultScatterCount)) 
                         {
-                            if($winType == 'none' && $i > 500){
+                            if($winType == 'none' && ($totalWin - $scattersWin) == 0 && $i > 500){
                                 break;
                             }
                         }
                         else if($scattersCount >= 6){
                             
                         }
-                        else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 20 && $freeSpinNum > 0){
+                        else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 15 && $freeSpinNum > 0){
                         
                         }
                         else if( $totalWin * $bonusMul <= $_winAvaliableMoney && $winType == 'bonus' ) 
@@ -426,6 +426,8 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $bonusMuls);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMplPos', $bonusMulPoses);
                 if($isNewTumb == true){
+                    $totalWin = $totalWin - $scattersWin;
+                    $scattersWin = 0;
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') + 1);
                 }else{
                     if( $freeSpinNum > 0 ) 
