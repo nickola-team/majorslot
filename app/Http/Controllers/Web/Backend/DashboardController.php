@@ -1028,7 +1028,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $updated_at = $adj_days->last()->updated_at;
             }
             return view('backend.Default.adjustment.adjustment_partner', compact('adjustments', 'start_date', 'end_date', 'user', 'updated_at', 'childs'));
-        }
+        } 
         public function adjustment_game(\Illuminate\Http\Request $request)
         {
             $dates = $request->dates;
