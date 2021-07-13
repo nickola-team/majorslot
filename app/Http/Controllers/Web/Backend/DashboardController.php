@@ -863,6 +863,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
+            
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->paginate(31);
             $type = 'daily';
@@ -1006,6 +1007,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $adj['role_id']=$adj_user->user->role_id;
                 $adj['name']=$adj_user->user->username;
                 $adj['type']='today';
+                $comaster = $adj_user->user;
+                while ($comaster && !$comaster->hasRole('comaster'))
+                {
+                    $comaster = $comaster->referral;
+                }
+                if ($comaster)
+                {
+                    $adj['ggr'] = ($adj['totalbet'] - $adj['totalwin']) * $comaster->money_percent;
+                }
+                else
+                {
+                    $adj['ggr'] = 0;
+                }
                 $adjustments[] = $adj;
             }
             $updated_at = '00:00:00';

@@ -8,13 +8,6 @@
 </div>
 
 <div class="form-group">
-    <label>
-        머니퍼센트(%)
-    </label>
-    <input type="text" name="money_percent" class="form-control" value="{{ settings('money_percent', 8) }}">
-</div>
-
-<div class="form-group">
     <input type="hidden" value="0" name="siteisclosed">
     <label class="checkbox-container">
         @lang('app.turn_off_the_site')

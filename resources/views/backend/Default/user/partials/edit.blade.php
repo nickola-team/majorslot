@@ -22,8 +22,13 @@
         {!! Form::select('shops[]', $shops, ($edit && $user->hasRole(['admin', 'agent', 'distributor'])) ? $user->shops(true) : Auth::user()->shop_id,
             ['class' => 'form-control', 'id' => 'shops', ($edit) ? 'disabled' : '', ($edit && $user->hasRole(['agent','distributor'])) ? 'multiple' : '']) !!}
     </div>
-
-    @if($user->hasRole(['agent','distributor']) || (auth()->user()->hasRole('admin') && $user->hasRole('master')))
+    @if($user->hasRole('comaster'))
+    <div class="form-group">
+        <label>머니퍼센트</label>
+        <input type="number" step="0.01" class="form-control" id="money_percent" name="money_percent" value="0">
+    </div>
+    @endif
+    @if($user->hasRole(['master','agent','distributor']) || (auth()->user()->hasRole('admin') && $user->hasRole('comaster')))
         <div class="form-group">
             <label>딜비%</label>
             <input type="text" class="form-control" id="deal_percent" name="deal_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->deal_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>

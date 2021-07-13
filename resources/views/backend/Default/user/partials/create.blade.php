@@ -32,6 +32,14 @@
             ['class' => 'form-control', 'id' => 'role_id', '']) !!}
     </div>
 </div>
+@if(auth()->user()->hasRole('admin'))
+<div class="col-md-6">
+    <div class="form-group">
+    <label>머니퍼센트</label>
+    <input type="number" step="0.01" class="form-control" id="money_percent" name="money_percent" value="0">
+    </div>
+</div>
+@endif
 @if(auth()->user()->hasRole(['comaster','master','agent']))
 <div class="col-md-6">
     <div class="form-group">

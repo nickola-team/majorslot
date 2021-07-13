@@ -109,6 +109,9 @@
                             <th>수익금</th>
                             <th>딜비</th>
 							<th>라이브딜비</th>
+							@if ($role_id==7)
+							<th>머니퍼센트</th>
+							@endif
                             <th>충전</th>
                             <th>환전</th>
                         </tr>
@@ -139,6 +142,9 @@
                                 <th>수익금</th>
                                 <th>딜비</th>
 								<th>라이브딜비</th>
+								@if ($role_id==7)
+								<th>머니퍼센트</th>
+								@endif
                                 <th>충전</th>
                                 <th>환전</th>
                             </tr>

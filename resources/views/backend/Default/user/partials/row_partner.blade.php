@@ -20,6 +20,9 @@
 <td>{{ number_format($user->deal_percent,2) }}</td>
 <td>{{ number_format($user->table_deal_percent,2) }}</td>
 
+@if ($user->role_id == 7)
+<td>{{ number_format($user->money_percent,2) }}</td>
+@endif
 
 <td>
 @if (auth()->user()->isInoutPartner() || (auth()->user()->role_id == $user->role_id+1))

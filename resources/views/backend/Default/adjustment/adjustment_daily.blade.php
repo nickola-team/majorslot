@@ -92,15 +92,31 @@
 						<th>당첨금</th>
 						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>머니금액</th>
 						<th>순이익금</th>
 						@endif
 					</tr>
 					</thead>
 					<tbody>
+					<?php
+						$totalggr = 0;
+					?>
 					@if (count($summary))
 						@foreach ($summary as $adjustment)
-							@include('backend.Default.adjustment.partials.row_daily')
+							<?php
+								$ggr = 0;
+								$comaster = $adjustment->user;
+								while ($comaster && !$comaster->hasRole('comaster'))
+								{
+									$comaster = $comaster->referral;
+								}
+								if ($comaster)
+								{
+									$ggr = ($adjustment->totalbet - $adjustment->totalwin) * $comaster->money_percent / 100;
+								}
+								$totalggr = $totalggr + $ggr;
+							?>
+							@include('backend.Default.adjustment.partials.row_daily', ['ggr' => $ggr])
 						@endforeach
 						<tr>
 						<td><span class='text-red'></span></td>
@@ -118,12 +134,8 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
 						@if(auth()->user()->isInoutPartner())
-						<?php
-						$money = ($summary->sum('totalin') - $summary->sum('totalout')) * settings('money_percent') / 100;
-						$deal_money = ($summary->sum('dealout')) * settings('money_percent') / 100;
-						?>
-						<td><span class='text-red'>{{ number_format($money+$deal_money ,0) }}</span></td>
-						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - $money - $deal_money,0) }}</span></td>
+						<td><span class='text-red'>{{ number_format($totalggr ,0) }}</span></td>
+						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - $totalggr,0) }}</span></td>
 						@endif
 
 						</tr>
@@ -149,7 +161,7 @@
 						<th>당첨금</th>
 						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>머니금액</th>
 						<th>순이익금</th>
 						@endif		
 					</tr>

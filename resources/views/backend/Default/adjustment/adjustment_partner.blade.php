@@ -94,7 +94,7 @@
 						<th>당첨금</th>
 						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>머니금액</th>
 						<th>순이익금</th>
 						@endif		
 					</tr>
@@ -125,7 +125,7 @@
 						<th>당첨금</th>
 						<th>죽은금액</th>
 						@if(auth()->user()->isInoutPartner())
-						<th>머니금액 ({{settings('money_percent')}}%)</th>
+						<th>머니금액</th>
 						<th>순이익금</th>
 						@endif
 					</tr>

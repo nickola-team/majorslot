@@ -43,6 +43,7 @@ namespace VanguardLTE
             'deal_balance', 
             'deal_percent',
             'table_deal_percent',
+            'money_percent',
             'mileage',
             'bank_name',
             'recommender',
