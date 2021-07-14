@@ -268,8 +268,14 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             $defaultScatterCount = 0;
             if($winType == 'bonus'){      
                 if ($slotEvent['slotEvent'] == 'freespin') {
-                    /* 프리스핀중 보너스당첨은 심볼갯수 3개일때 */
-                    $defaultScatterCount = 3;
+                    /* 프리스핀 텀블스핀일 경우 보너스당첨은 없다 */
+                    if ($isTumble) {
+                        $winType = 'none';
+                    }
+                    else {
+                        /* 프리스핀중 보너스당첨은 심볼갯수 3개일때 */
+                        $defaultScatterCount = 3;
+                    }
                 }
                 else {
                     if ($isTumbleBonus) {

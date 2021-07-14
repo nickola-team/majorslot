@@ -788,7 +788,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
             if ($this->happyhouruser)
             {
                 $bonus_spin = rand(1, 10);
-                $spin_percent = 5;
+                $spin_percent = 8;
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
             }
             if( $bonusWin == 1 && $this->slotBonus ) 
