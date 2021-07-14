@@ -368,18 +368,9 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                         else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 15 && $freeSpinNum > 0){
                         
                         }
-                        else if( $totalWin * $bonusMul <= $_winAvaliableMoney && $winType == 'bonus' ) 
+                        else if($isbuyfreespin == 0 || ($totalWin * $bonusMul <= $_winAvaliableMoney && $winType == 'bonus')) 
                         {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
-                            if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
-                            {
-                                $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;
-                            }
-                            else
-                            {
-                                
-                                break;
-                            }
+                            break;
                         }
                         else if( $totalWin > 0 && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin')) * $bonusMul <= $_winAvaliableMoney && $winType == 'win' )
                         {

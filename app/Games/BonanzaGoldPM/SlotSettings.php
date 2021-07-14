@@ -625,6 +625,10 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             {
                 $_obf_slotstate = $this->slotId . '';
             }
+            else if( $slotState == 'doSpin' ) 
+            {
+                $_obf_slotstate = $this->slotId . '';
+            }
             else if( $slotState == 'slotGamble' ) 
             {
                 $_obf_slotstate = $this->slotId . ' DG';
