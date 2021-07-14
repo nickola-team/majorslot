@@ -94,6 +94,10 @@ return [
 
     'date_time_format' => 'Y-m-d H:i:s',
 
+    'stylename' => env('STYLENAME', 'major'),
+    'replayurl' => env('REPLAYURL', 'http://replay.pragmeticplay.net'),
+
+
     /*
     CQ9 Auth key
     */

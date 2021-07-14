@@ -309,7 +309,7 @@ namespace VanguardLTE\Games\TheDogHousePM
             }
             else
             {
-                return 0;
+                return null;
             }
         }
         public function FormatFloat($num)

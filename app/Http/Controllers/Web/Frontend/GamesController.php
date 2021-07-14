@@ -228,8 +228,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->route('frontend.game.list');
             }
+            $envID = $game->original_id;
+            $styleName = config('app.stylename');
+            $replayUrl = config('app.replayurl');
             $is_api = false;
-            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api'));
+            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl'));
         }
         public function server(\Illuminate\Http\Request $request, $game)
         {
