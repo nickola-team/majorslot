@@ -22,7 +22,7 @@
         {!! Form::select('shops[]', $shops, ($edit && $user->hasRole(['admin', 'agent', 'distributor'])) ? $user->shops(true) : Auth::user()->shop_id,
             ['class' => 'form-control', 'id' => 'shops', ($edit) ? 'disabled' : '', ($edit && $user->hasRole(['agent','distributor'])) ? 'multiple' : '']) !!}
     </div>
-    @if($user->hasRole('comaster'))
+    @if(auth()->user()->hasRole('admin') && $user->hasRole('comaster'))
     <div class="form-group">
         <label>머니퍼센트</label>
         <input type="number" step="0.01" class="form-control" id="money_percent" name="money_percent" value="0">
