@@ -234,6 +234,10 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                     $lastReel = $arr_lastReel[0];
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusTumbMplPos', $arr_lastReel[1]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusTumbMpls', $arr_lastReel[2]);
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') > 3){
+                        $winType = 'none';
+                        $_winAvaliableMoney = 0;
+                    }
                 }else{
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusTumbMpl', 1);
