@@ -892,7 +892,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'partner_type' => 'shop'
                 ]);
 
-                $shop = \VanguardLTE\Shop::where('id', $user->shop_id)->get()->first();
+                $shop = \VanguardLTE\Shop::lockforUpdate()->where('id', $user->shop_id)->get()->first();
                 $shop->update([
                     'balance' => $shop->balance - $money,
                 ]);
@@ -990,7 +990,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if ($requestuser->hasRole('manager')) // for shops
             {
-                $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->get()->first();
+                $shop = \VanguardLTE\Shop::lockforUpdate()->where('id', $transaction->shop_id)->get()->first();
                 if($type == 'add'){
                     if($user->balance < $amount) {
                         if (auth()->user()->hasRole('comaster'))

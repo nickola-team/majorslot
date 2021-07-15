@@ -40,7 +40,7 @@
 </a>
 </td>
 <td>
-@if (auth()->user()->isInoutPartner() || ($user['id']!=auth()->user()->id && auth()->user()->role_id == $user['role_id']+1))
+@if ($user['role_id']!=3 && (auth()->user()->isInoutPartner() || ($user['id']!=auth()->user()->id && auth()->user()->role_id == $user['role_id']+1)))
 <a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }} disabled" >
 <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 </a>
@@ -50,7 +50,7 @@
 </td>
 
 <td>
-@if (auth()->user()->isInoutPartner())
+@if ($user['role_id']!=3 && auth()->user()->isInoutPartner())
 <a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal" data-id="{{ $user['id'] }}" >
 <button type="button" class="btn btn-block btn-danger btn-xs">@lang('app.out')</button>
 </a>
