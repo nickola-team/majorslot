@@ -320,6 +320,7 @@
 
 
 		function withdraw_balance() {
+			$('#withdraw-balance-btn').attr('disabled', 'disabled');
             var money = $('#withdraw_money').val();
             var _token = $('#_token').val();
 
