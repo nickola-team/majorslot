@@ -628,11 +628,13 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             else if( $slotState == 'doSpin' ) 
             {
                 $_obf_slotstate = $this->slotId . '';
+                $bet = 0;
             }
             else if( $slotState == 'slotGamble' ) 
             {
                 $_obf_slotstate = $this->slotId . ' DG';
             }
+            
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
             $game->increment('stat_out', $win * $this->CurrentDenom);
@@ -656,6 +658,10 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
+            if ($bet == 0 && $win == 0)
+            {
+                return;   
+            }
             \VanguardLTE\StatGame::create([
                 'user_id' => $this->playerId, 
                 'balance' => $this->Balance * $this->CurrentDenom, 

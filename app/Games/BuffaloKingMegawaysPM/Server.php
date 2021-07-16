@@ -176,7 +176,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 }
                 $lines = 20;      
                 $allbet = $betline * $lines;
-                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
                 if($replayLog && count($replayLog) && $totalWin > $allbet){
                     $current_replayLog["cr"] = $paramData;
@@ -518,10 +518,10 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $strReelSa = $reels['reel1'][8].','.$reels['reel2'][8].','.$reels['reel3'][8].','.$reels['reel4'][8].','.$reels['reel5'][8].','.$reels['reel6'][8];
                 $strReelSb = $reels['reel1'][-1].','.$reels['reel2'][-1].','.$reels['reel3'][-1].','.$reels['reel4'][-1].','.$reels['reel5'][-1].','.$reels['reel6'][-1];               
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
-                $slotSettings->SetGameData($slotSettings->slotId . 'BinaryReel', $binaryReel);
+                $slotSettings->SetGameData($slotSettings->slotId . 'BinaryReel', $binaryReel);             
+                $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') + $totalWin);
                 if($isNewTumb == true){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') + 1); // 텀브스핀이 회수 증가                
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') + $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') + 1); // 텀브스핀이 회수 증가   
                 }else{
                     if( $freeSpinNum > 0 ) 
                     {
@@ -642,7 +642,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
 
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $isNewTumb == false) 
                 {
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
+                    //$slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }
@@ -653,7 +653,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                        $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin'));
                     }
                 }
                 //------------ ReplayLog ---------------
