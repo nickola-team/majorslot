@@ -76,6 +76,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 40);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [11,5,7,7,5,1,6,9,9,6,12,11,9,9,11,12,11,5,5,11]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -89,6 +90,9 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
                     $bet = $lastEvent->serverResponse->bet;
+                    if (isset($lastEvent->serverResponse->ReplayGameLogs)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
                 }
                 else
                 {
@@ -125,6 +129,38 @@ namespace VanguardLTE\Games\WildWestGoldPM
             {
                 $Balance = $slotSettings->GetBalance();
                 $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+
+                //------------ ReplayLog ---------------                
+                $lastEvent = $slotSettings->GetHistory();
+                if($lastEvent != NULL){
+                    $betline = $lastEvent->serverResponse->bet;
+                }
+                else
+                {
+                    $betline = $slotSettings->Bet[0];
+                }
+                $lines = 20;      
+                $allbet = $betline * $lines;
+                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if($replayLog && count($replayLog) && $totalWin > $allbet){
+                    $current_replayLog["cr"] = $paramData;
+                    $current_replayLog["sr"] = $response;
+                    array_push($replayLog, $current_replayLog);
+
+                    \VanguardLTE\Jobs\UpdateReplay::dispatch([
+                        'user_id' => $userId,
+                        'game_id' => $slotSettings->game->original_id,
+                        'bet' => $allbet,
+                        'brand_id' => config('app.stylename'),
+                        'base_bet' => $allbet,
+                        'win' => $totalWin,
+                        'rtp' => $totalWin / $allbet,
+                        'game_logs' => urlencode(json_encode($replayLog))
+                    ]);
+                }
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []);
+                //------------ *** ---------------
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
@@ -249,6 +285,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $leftFreeGames = 0;
                 }
                 
@@ -628,9 +665,18 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }
 
+                //------------ ReplayLog ---------------
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if (!$replayLog) $replayLog = [];
+                $current_replayLog["cr"] = $paramData;
+                $current_replayLog["sr"] = $response;
+                array_push($replayLog, $current_replayLog);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
+                //------------ *** ---------------
+
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
-                    ',"Balance":' . $Balance . ',"wildValues":'.json_encode($_wildValue) . ',"wildPos":'.json_encode($_wildPos).',"wildReelValues":'.json_encode($_wildReelValue).
+                    ',"Balance":' . $Balance . ',"wildValues":'.json_encode($_wildValue) . ',"wildPos":'.json_encode($_wildPos).',"wildReelValues":'.json_encode($_wildReelValue).',"ReplayGameLogs":'.json_encode($replayLog).
                     ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';
                 if ($buyFreeSpin){

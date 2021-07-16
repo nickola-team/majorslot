@@ -72,6 +72,7 @@ namespace VanguardLTE\Games\MustangGoldPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 25);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,7,4,2,8,9,8,5,6,7,8,6,7,3,9]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -87,6 +88,9 @@ namespace VanguardLTE\Games\MustangGoldPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'JackpotNumber', $lastEvent->serverResponse->JackpotNumbers);
                     }                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
+                    if (isset($lastEvent->serverResponse->ReplayGameLogs)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
                     $bet = $lastEvent->serverResponse->bet;
                 }
                 else
@@ -133,6 +137,37 @@ namespace VanguardLTE\Games\MustangGoldPM
             {
                 $Balance = $slotSettings->GetBalance();
                 $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                //------------ ReplayLog ---------------                
+                $lastEvent = $slotSettings->GetHistory();
+                if($lastEvent != NULL){
+                    $betline = $lastEvent->serverResponse->bet;
+                }
+                else
+                {
+                    $betline = $slotSettings->Bet[0];
+                }
+                $lines = 25;      
+                $allbet = $betline * $lines;
+                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if($replayLog && count($replayLog) && $totalWin > $allbet){
+                    $current_replayLog["cr"] = $paramData;
+                    $current_replayLog["sr"] = $response;
+                    array_push($replayLog, $current_replayLog);
+
+                    \VanguardLTE\Jobs\UpdateReplay::dispatch([
+                        'user_id' => $userId,
+                        'game_id' => $slotSettings->game->original_id,
+                        'bet' => $allbet,
+                        'brand_id' => config('app.stylename'),
+                        'base_bet' => $allbet,
+                        'win' => $totalWin,
+                        'rtp' => $totalWin / $allbet,
+                        'game_logs' => urlencode(json_encode($replayLog))
+                    ]);
+                }
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []);
+                //------------ *** ---------------
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
@@ -396,6 +431,7 @@ namespace VanguardLTE\Games\MustangGoldPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 }
                 $Balance = $slotSettings->GetBalance();
                 if( $slotEvent['slotEvent'] != 'bet' ) 
@@ -704,9 +740,19 @@ namespace VanguardLTE\Games\MustangGoldPM
                 // $slotSettings->SetGameData($slotSettings->slotId . 'JackpotReel', $lastEvent->serverResponse->JackpotReels);
                 // $slotSettings->SetGameData($slotSettings->slotId . 'JackpotNumber', $lastEvent->serverResponse->JackpotNumbers);
 
+                //------------ ReplayLog ---------------
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if (!$replayLog) $replayLog = [];
+                $current_replayLog["cr"] = $paramData;
+                $current_replayLog["sr"] = $response;
+                array_push($replayLog, $current_replayLog);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
+                //------------ *** ---------------
+
+
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
-                    ',"JackpotWin":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotWin')) . ',"JackpotLevel":' . $slotSettings->GetGameData($slotSettings->slotId . 'JackpotLevel') . ',"JackpotReels":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotReel')) . ',"JackpotNumbers":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotNumber')) . 
+                    ',"JackpotWin":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotWin')) . ',"JackpotLevel":' . $slotSettings->GetGameData($slotSettings->slotId . 'JackpotLevel') . ',"JackpotReels":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotReel')) . ',"JackpotNumbers":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotNumber')) . ',"ReplayGameLogs":'.json_encode($replayLog).
                     ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
@@ -811,10 +857,18 @@ namespace VanguardLTE\Games\MustangGoldPM
                 $response = 'bgid=0&balance='.$Balance .'&coef='. ($betline * $lines) .'&index='. $slotEvent['index'] . '&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinResponse.
                     '&bg_i=1000,200,100,50&stime=' . floor(microtime(true) * 1000) .'&wins_mask=' . implode(',', $wins_mask).'&bgt=18&sver=5&bg_i_mask=pw,pw,pw,pw&counter='. ((int)$slotEvent['counter'] + 1);
                 
+                //------------ ReplayLog ---------------
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if (!$replayLog) $replayLog = [];
+                $current_replayLog["cr"] = $paramData;
+                $current_replayLog["sr"] = $response;
+                array_push($replayLog, $current_replayLog);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
+                //------------ *** ---------------
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
-                    ',"JackpotWin":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotWin')) . ',"JackpotLevel":' . $slotSettings->GetGameData($slotSettings->slotId . 'JackpotLevel') . ',"JackpotReels":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotReel')) . ',"JackpotNumbers":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotNumber')) . 
+                    ',"JackpotWin":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotWin')) . ',"JackpotLevel":' . $slotSettings->GetGameData($slotSettings->slotId . 'JackpotLevel') . ',"JackpotReels":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotReel')) . ',"JackpotNumbers":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'JackpotNumber')) . ',"ReplayGameLogs":'.json_encode($replayLog).
                     ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""'.'}}';
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $totalWin, $slotEvent['slotEvent']);
             }

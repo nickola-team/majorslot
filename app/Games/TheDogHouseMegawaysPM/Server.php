@@ -384,6 +384,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $strReelSb = $reels['reel1'][-1].','.$reels['reel2'][-1].','.$reels['reel3'][-1].','.$reels['reel4'][-1].','.$reels['reel5'][-1].','.$reels['reel6'][-1];               
 
                 $objRes = [
+                    'action' => 'doSpin',
                     'tw' => $totalWin,
                     'balance' => $BALANCE,
                     'index' => $slotEvent['index'],
@@ -402,9 +403,6 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     's' => $strLastReel,
                     'w' => $totalWin
                 ];
-
-                /* Needed for init */
-                // $objRes['action'] = $slotEvent['action'];       // ?? 재검토
 
                 /* 당첨금 */
                 if ($strWinLine !== '') {
@@ -526,12 +524,23 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'ResetCount', $resetCount - 1);
                 }
 
+                /* 라운드 등록 */
+                if ($winType == 'bonus' || $winType == 'win' || $slotEvent['slotEvent'] == 'fsSticky' || $slotEvent['slotEvent'] == 'fsRaining') {
+                    $roundLogs = $slotSettings->GetGameData($slotSettings->slotId . 'RNDLogs') ?? [];
+                    array_push($roundLogs, $objRes);
+
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RNDLogs', $roundLogs);
+                }
+
+
                 $_GameLog = json_encode($objRes);
                 $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $totalWin, $slotEvent['slotEvent']);
             }
             else if( $slotEvent['slotEvent'] == 'doCollect') 
             {
                 $objRes = [
+                    'action' => 'doCollect',
+
                     'balance' => $BALANCE,
                     'index' => $slotEvent['index'],
                     'balance_cash' => $BALANCE,
@@ -541,6 +550,9 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     'sver' => '5',
                     'counter' => ((int)$slotEvent['counter'] + 1),
                 ];
+                
+                /* 라운드 등록 */
+                $this->submitRound($slotSettings, $LASTSPIN, $objRes);
             }
             else if( $slotEvent['slotEvent'] == 'update' ) 
             {
@@ -570,6 +582,8 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                 /* 프리스핀 모드선택 */
                 $objRes = [
+                    'action' => 'doFSOption',
+
                     'fsmul' => '1',
                     'fs_opt_mask' => 'fs,m,msk',
                     'balance' => $BALANCE,
@@ -622,6 +636,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $wildSetId = array_rand($wildCountProbabilityMap);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyWILDSet', $wildCountProbabilityMap[$wildSetId]);
                 }
+                
+                /* 라운드 등록 */
+                $roundLogs = $slotSettings->GetGameData($slotSettings->slotId . 'RNDLogs') ?? [];
+                array_push($roundLogs, $objRes);
+
+                $slotSettings->SetGameData($slotSettings->slotId . 'RNDLogs', $roundLogs);
+            
             }
 
             $slotSettings->SaveGameData();
@@ -916,6 +937,101 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 's' => implode(",", $lastReel)
             ];
         }
+
+        public function submitRound($slotSettings, $LASTSPIN, $objRes) {
+            /* 라운드 체크 */
+            $roundLogs = $slotSettings->GetGameData($slotSettings->slotId . 'RNDLogs') ?? [];
+
+            /* 라운드시작상태가 아니거나 라운드스핀갯수가 0이라면 스킵 */
+            if (count($roundLogs) == 0) {
+                return;
+            }
+
+            /* 환수율 체크 */
+            $base_bet = $LASTSPIN->c * $LASTSPIN->l;
+            $bet = $base_bet;       // 프리스핀구매일 경우  x100
+            $win = $LASTSPIN->tw;
+            $rtp = $win / $bet;
+
+            /* 베팅금보다 작다면 스킵 */
+            if ($rtp < 1) {
+                /* 라운드 리셋 */
+                $slotSettings->SetGameData($slotSettings->slotId . 'RNDLogs', []);
+
+                return;
+            }
+
+            /* 리플레이라운드 빌드 */
+            $replayLogs = [];
+
+            foreach($roundLogs as $gameLog) {
+                $cr = [
+                    'symbol' => 'vswaysdogs',
+                    'repeat' => 0,
+                    'action' => $gameLog['action'],
+                    'index' => $gameLog['index'],
+                    'counter' => $gameLog['counter'],
+                ];
+                
+                if ($gameLog['action'] == 'doSpin') {
+                    $cr['c'] = $gameLog['c'];
+                    $cr['l'] = $gameLog['l'];
+
+                    /* 프리스핀 구입 */
+                    if (isset($gameLog['purtr'])) {
+                        $cr['pur'] = 0;
+                    }
+                }
+                else if ($gameLog['action'] == 'doFSOption') {
+                    $cr['ind'] = $gameLog['fsopt_i'];       // 스티키, 레이닝 프리스핀 타입
+                }
+                
+                $cr = $this->toResponse($cr);
+                $sr = $this->toResponse($gameLog);
+                
+                array_push($replayLogs, [
+                    'cr' => $cr,
+                    'sr' => $sr
+                ]);
+            }
+            
+            /* 라운드 마감 doCollect 이벤트 */
+            $cr = $this->toResponse([
+                'symbol' => 'vswaysdogs',
+                'repeat' => 0,
+                'action' => 'doCollect',
+                'index' => $objRes['index'],
+                'counter' => $objRes['counter'],
+            ]);
+            
+            $sr = $this->toResponse($objRes);
+
+            array_push($replayLogs, [
+                'cr' => $cr,
+                'sr' => $sr
+            ]);
+
+            /* 리플레이 등록 */
+            $userId = $slotSettings->user->id;
+            $gameId = $slotSettings->game->original_id;
+
+            \VanguardLTE\Jobs\UpdateReplay::dispatch([
+                'user_id' => $userId,
+                'game_id' => $gameId,
+                'bet' => $bet,
+                'brand_id' => config('app.stylename'),
+                'base_bet' => $base_bet,
+                'win' => $win,
+                'rtp' => $rtp,
+                'game_logs' => urlencode(json_encode($replayLogs)),
+            ]);
+
+
+            /* 라운드 리셋 */
+            $slotSettings->SetGameData($slotSettings->slotId . 'RNDLogs', []);
+        }
+
+
 
         public function toResponse($obj) {
             $response = '';

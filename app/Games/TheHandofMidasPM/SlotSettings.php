@@ -408,7 +408,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
             foreach( $history as $log ) 
             {
                 $jsonLog = json_decode($log->str);
-                if( $jsonLog->responseEvent != 'gambleResult' ) 
+                if( $jsonLog && $jsonLog->responseEvent != 'gambleResult' ) 
                 {
                     $this->lastEvent = $log->str;
                     break;

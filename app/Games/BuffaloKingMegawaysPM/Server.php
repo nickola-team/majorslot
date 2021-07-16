@@ -76,6 +76,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [113,11,9,11,7,13,12,11,5,7,12,12,8,7,5,4,12,12,8,9,5,4,12,12,8,9,12,9,6,7,6,5,11,10,13,8,12,9,13,10,13,13,13,3,13,13,13,13]);
                 $slotSettings->setGameData($slotSettings->slotId . 'BinaryReel', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReelSymbolCount', [0, 0, 0, 0, 0, 0]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $strTopTmb = '';
                 $strMainTmb = '';
                 $strTopTmb = '';
@@ -103,6 +104,9 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                     }
                     if($lastEvent->serverResponse->BonusTumbMplPos != ""){
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusTumbMplPos', explode(',', $lastEvent->serverResponse->BonusTumbMplPos));
+                    }
+                    if (isset($lastEvent->serverResponse->ReplayGameLogs)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
                     $bet = $lastEvent->serverResponse->bet;
                     $strTopTmb = str_replace('|', '"', $lastEvent->serverResponse->strTopTmb);
@@ -161,6 +165,37 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             {
                 $Balance = $slotSettings->GetBalance();
                 $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                //------------ ReplayLog ---------------                
+                $lastEvent = $slotSettings->GetHistory();
+                if($lastEvent != NULL){
+                    $betline = $lastEvent->serverResponse->bet;
+                }
+                else
+                {
+                    $betline = $slotSettings->Bet[0];
+                }
+                $lines = 20;      
+                $allbet = $betline * $lines;
+                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if($replayLog && count($replayLog) && $totalWin > $allbet){
+                    $current_replayLog["cr"] = $paramData;
+                    $current_replayLog["sr"] = $response;
+                    array_push($replayLog, $current_replayLog);
+
+                    \VanguardLTE\Jobs\UpdateReplay::dispatch([
+                        'user_id' => $userId,
+                        'game_id' => $slotSettings->game->original_id,
+                        'bet' => $allbet,
+                        'brand_id' => config('app.stylename'),
+                        'base_bet' => $allbet,
+                        'win' => $totalWin,
+                        'rtp' => $totalWin / $allbet,
+                        'game_logs' => urlencode(json_encode($replayLog))
+                    ]);
+                }
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []);
+                //------------ *** ---------------
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
@@ -262,6 +297,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                         $leftFreeGames = 0;
                     }
                 }
@@ -620,8 +656,17 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
                     }
                 }
+                //------------ ReplayLog ---------------
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if (!$replayLog) $replayLog = [];
+                $current_replayLog["cr"] = $paramData;
+                $current_replayLog["sr"] = $response;
+                array_push($replayLog, $current_replayLog);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
+                //------------ *** ---------------
+                
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusTumbMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'). ',"TumbState":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .   ',"freeBalance":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance') .  ',"tumbWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . ',"winLines":"'.$strWinLine.'","Jackpots":""' . ',"DoubleChance":'.$slotSettings->GetGameData($slotSettings->slotId . 'DoubleChance') .  ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"strTopTmb":"'.str_replace('"', '|', $strTopTmb) . '","strMainTmb":"'.str_replace('"', '|', $strMainTmb) .  '","strTopRmul":"'.str_replace('"', '|', $strTopRmul) . '","strMainRmul":"'.str_replace('"', '|', $strMainRmul) . '","LastReel":'.json_encode($lastReel) . ',"BonusTumbMpls":"'.implode(',',$slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMpls')). '","BonusTumbMplPos":"'.implode(',',$slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMplPos')). '","BinaryReel":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'BinaryReel')). ',"ReelSymbolCount":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'ReelSymbolCount')).'}}';
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'). ',"TumbState":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .   ',"freeBalance":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance') . ',"ReplayGameLogs":'.json_encode($replayLog). ',"tumbWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . ',"winLines":"'.$strWinLine.'","Jackpots":""' . ',"DoubleChance":'.$slotSettings->GetGameData($slotSettings->slotId . 'DoubleChance') .  ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"strTopTmb":"'.str_replace('"', '|', $strTopTmb) . '","strMainTmb":"'.str_replace('"', '|', $strMainTmb) .  '","strTopRmul":"'.str_replace('"', '|', $strTopRmul) . '","strMainRmul":"'.str_replace('"', '|', $strMainRmul) . '","LastReel":'.json_encode($lastReel) . ',"BonusTumbMpls":"'.implode(',',$slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMpls')). '","BonusTumbMplPos":"'.implode(',',$slotSettings->GetGameData($slotSettings->slotId . 'BonusTumbMplPos')). '","BinaryReel":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'BinaryReel')). ',"ReelSymbolCount":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'ReelSymbolCount')).'}}';
                 
                     $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $totalWin, $slotEvent['slotEvent']);
             }
