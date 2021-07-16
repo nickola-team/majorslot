@@ -146,9 +146,9 @@ namespace VanguardLTE\Games\MustangGoldPM
                 {
                     $betline = $slotSettings->Bet[0];
                 }
-                $lines = 25;      
+                $lines = 25;
                 $allbet = $betline * $lines;
-                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
                 if($replayLog && count($replayLog) && $totalWin > $allbet){
                     $current_replayLog["cr"] = $paramData;
@@ -729,8 +729,8 @@ namespace VanguardLTE\Games\MustangGoldPM
 
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
+                    //$slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }

@@ -125,7 +125,7 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                 }
                 $lines = 25;      
                 $allbet = $betline * $lines;
-                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
                 if($replayLog && count($replayLog) && $totalWin > $allbet){
                     $current_replayLog["cr"] = $paramData;
@@ -678,9 +678,10 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                     $totalRespinMoney = $totalRespinMoney + $freemoneyTotalWin;
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalRespinMoney', $totalRespinMoney);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                     $spinType = 's';
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');                    
-                    $strFreeSpinResponse = '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                    $strFreeSpinResponse = '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                     {
                         if($_reelset == 2){
@@ -688,15 +689,13 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                             $strFreeSpinResponse =  $strFreeSpinResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&prg_m=cp,acw&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&prg='. $totalRespinMoney . ',' . ($totalRespinMoney * $betline) .
                             '&mo_c=1&rs_t=1&rs_win='. $totalWin .'&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=2';
                         }else{
-                            $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                             $strFreeSpinResponse = $strFreeSpinResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&prg_m=cp,acw&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&prg='. $totalRespinMoney . ',' . ($totalRespinMoney * $betline) .
                                 '&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&rs=t&rs_p=0&rs_c=1&rs_m=1&n_reel_set=1';
                         }
                     }
                     else
                     {
-                        $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
-                        $strFreeSpinResponse = $strFreeSpinResponse . '&prg_m=cp,acw&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&prg='. $totalRespinMoney . ',' . ($totalRespinMoney * $betline) .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=1';
+                        $strFreeSpinResponse = $strFreeSpinResponse . '&prg_m=cp,acw&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&prg='. $totalRespinMoney . ',' . ($totalRespinMoney * $betline) .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=1';
                     }
                     if($scattersCount >=3 ){
                         $spinType = 's';
@@ -777,7 +776,7 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                 if($_reelset == 2) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
+                    //$slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalRespinMoney', 0);
