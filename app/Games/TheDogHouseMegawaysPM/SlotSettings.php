@@ -1043,15 +1043,15 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         
         public function GetSymbolCount($default = 2){   // 한개 릴의 심볼 갯수를 결정하는 함수
             $sum = random_int(0, 100);
-            if($sum <= 30){
+            if($sum <= 25){
                 $ret = 2;
-            }else if($sum <= 70){
+            }else if($sum <= 50){
                 $ret = 3;
-            }else if($sum <= 90){
+            }else if($sum <= 65){
                 $ret = 4;
-            }else if($sum <= 95){
+            }else if($sum <= 80){
                 $ret = 5;
-            }else if($sum <= 98){
+            }else if($sum <= 90){
                 $ret = 6;
             }else{
                 $ret = 7;
@@ -1275,6 +1275,8 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $dogsCount = 0;
                 $numbersCount = 0;
                 $uniqueSymbols = [];
+                /* 일정확율로 불도그는 뺀다 */
+                $uniqueSymbols = (random_int(1, 2) % 2 == 1) ? [] : [3];
                 foreach ($reelPositionSet as $id => $count) {
                     if ($curPos == 0) {
                         if ($count == 3) {
