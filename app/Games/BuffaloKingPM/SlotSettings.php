@@ -739,16 +739,16 @@ namespace VanguardLTE\Games\BuffaloKingPM
         public function GenerateFreeSpinCount($slotEvent){
             if($slotEvent == 'freespin'){
                 $freeSpins = [
-                    [50, 30, 10, 8, 2],
+                    [60, 25, 10, 3, 2],
                     [2, 3, 4, 5, 5] //no need 6 frespins
                 ];
             }else{                
                 $freeSpins = [
-                    [70, 20, 8, 2],
+                    [85, 10, 3, 2],
                     [3, 4, 5, 5]//no need 6 frespins
                 ];
             }
-            $percent = rand(0, 100);
+            $percent = rand(0, 97);
             $sum = 0;
             for($i = 0; $i < count($freeSpins[0]); $i++){
                 $sum = $sum + $freeSpins[0][$i];
