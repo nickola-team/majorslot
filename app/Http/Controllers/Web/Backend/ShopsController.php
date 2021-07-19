@@ -253,7 +253,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $manager['username'] = $request->input('name');
             }
             $validator = \Illuminate\Support\Facades\Validator::make($manager, [
-                'username' => 'required|regex:/^[A-Za-z0-9]+$/|unique:users,username', 
+                'username' => 'required|regex:/^[A-Za-z0-9가-힣]+$/|unique:users,username', 
                 'password' => 'required|min:6'
             ]);
             if( $validator->fails() ) 
@@ -404,7 +404,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ] as $role_name ) 
             {
                 $validator = \Illuminate\Support\Facades\Validator::make($request->input($role_name), [
-                    'username' => 'required|regex:/^[A-Za-z0-9]+$/|unique:users,username', 
+                    'username' => 'required|regex:/^[A-Za-z0-9가-힣]+$/|unique:users,username', 
                     'password' => 'required|min:6'
                 ]);
                 if( $validator->fails() ) 
