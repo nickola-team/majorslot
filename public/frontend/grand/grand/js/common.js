@@ -308,13 +308,6 @@ function openGroup(obj, category) {
                         strHtml += '</a>';
                     }
                     strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:16px;">' + data.games[i].title + '</span>';
-                    if (data.games[i].demo)
-                    {
-                        strHtml += '<p><a href="javascript:;" onclick="openDemoApp(\'' + data.games[i].demo +'\');">';
-                        strHtml += '<span class="demo_btn">무료게임</span>';
-                        //strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:18px;">DemoPlay</span>';
-                        strHtml += '</a>';
-                    }
                     strHtml += '</div>';
                 }
             } else {
