@@ -542,6 +542,10 @@ namespace VanguardLTE\Games\GameOfLuckEGT
                                 }
                             }
                         }
+                        if ($scattersCount > 4)
+                        {
+                            continue;
+                        }
                         $scattersWin = $slotSettings->Paytable['SYM_' . $scatter][$scattersCount] * $allbet;
                         $_obf_0D341E1906402E012D2302041A0B29343137123F023201 = 0;
                         if( $scattersWin > 0 ) 
