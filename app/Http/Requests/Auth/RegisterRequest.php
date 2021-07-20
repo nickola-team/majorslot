@@ -6,7 +6,7 @@ namespace VanguardLTE\Http\Requests\Auth
         public function rules()
         {
             $rules = [
-                'username' => 'required|regex:/^[A-Za-z0-9]+$/|unique:users,username', 
+                'username' => 'required|regex:/^[A-Za-z0-9가-힣]+$/|unique:users,username', 
                 'password' => 'required|confirmed|min:6'
             ];
             if( settings('tos') ) 
