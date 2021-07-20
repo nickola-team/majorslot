@@ -621,7 +621,8 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                         if($slotEvent['slotEvent'] != 'freespin' && $scattersCount < 4){
                             $spinType = 'c';
                         }
-                        $otherResponse = $otherResponse.'&tmb_res='.$slotSettings->GetGameData($slotSettings->slotId . 'TumbWin').'&rs_t='.$slotSettings->GetGameData($slotSettings->slotId . 'TumbleState').'&tmb_win='.($slotSettings->GetGameData($slotSettings->slotId . 'TumbWin'));
+                        $otherResponse = $otherResponse.'&tmb_res='.$slotSettings->GetGameData($slotSettings->slotId . 'TumbWin').'&rs_t='.$slotSettings->GetGameData($slotSettings->slotId . 'TumbleState').'&tmb_win='.($slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') - $totalWin);                        
+                        
                         if($slotEvent['slotEvent'] == 'freespin' && $totalWin > 0){
                             $otherResponse = $otherResponse.'&apwa='.$totalWin.'&apt=tumbling_win_mul';
                         }
@@ -632,11 +633,11 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
                     $otherResponse = $otherResponse . '&puri=0';
                 }
-                if($isEnd == true){
-                    $otherResponse = $otherResponse.'&w='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
-                }else{
+                // if($isEnd == true){
+                //     $otherResponse = $otherResponse.'&w='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                // }else{
                     $otherResponse = $otherResponse.'&w='.$totalWin;
-                }
+                // }
                 
                 $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .'&balance='.$Balance.'&bl='.$isdoublechance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .'&sh=8&c='.$betline.'&st=rect&sw=6&sver=5'.$otherResponse.'&g={reg:{reel_set:"'. ($reelSet_Num * 2) .'"'. $strMainRmul .',s:"'. implode(',', $mainLastReel) .'",sa:"'.$strReelSa.'",sb:"'.$strReelSb.'",sh:"7",st:"rect",sw:"6"'. $strMainTmb .'},top:{reel_set:"'. ($reelSet_Num * 2 + 1) .'"'. $strTopRmul .',s:"'. implode(',', $topLastReel) .'",sa:"'.rand(6, 12).'",sb:"'.rand(6, 12).'",sh:"4",st:"rect",sw:"1"'. $strTopTmb .'}}&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel;
 
