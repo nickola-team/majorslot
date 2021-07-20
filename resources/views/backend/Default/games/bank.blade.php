@@ -22,9 +22,9 @@
 						<tr>
                         <th>매장이름</th>
                         <th>환수율%</th>
-                        <th>슬롯환수금</th>
-                        <th>테이블환수금</th>
-                        <th>보너스환수금</th>
+                        <th>슬롯환수금 &nbsp;&nbsp;&nbsp; <a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="slots" data-shop="{{ 0 }}">일괄조절 <i class="fa fa-arrow-circle-right"></i></a></th>
+                        <th>테이블환수금 &nbsp;&nbsp;&nbsp; <a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="table_bank" data-shop="{{ 0 }}">일괄조절 <i class="fa fa-arrow-circle-right"></i></a></th></th>
+                        <th>보너스환수금 &nbsp;&nbsp;&nbsp; <a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="bonus" data-shop="{{ 0 }}">일괄조절 <i class="fa fa-arrow-circle-right"></i></a></th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -40,9 +40,9 @@
 						<tr>
                         <th>매장이름</th>
                         <th>환수율%</th>
-                        <th>슬롯환수금</th>
-                        <th>테이블환수금</th>
-                        <th>보너스환수금</th>
+                        <th>슬롯환수금 &nbsp;&nbsp;&nbsp; <a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="slots" data-shop="{{ 0 }}">일괄조절 <i class="fa fa-arrow-circle-right"></i></a></th>
+                        <th>테이블환수금 &nbsp;&nbsp;&nbsp; <a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="table_bank" data-shop="{{ 0 }}">일괄조절 <i class="fa fa-arrow-circle-right"></i></a></th></th>
+                        <th>보너스환수금 &nbsp;&nbsp;&nbsp; <a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="bonus" data-shop="{{ 0 }}">일괄조절 <i class="fa fa-arrow-circle-right"></i></a></th></th>
                         </tr>
                         </thead>
                     </table>
