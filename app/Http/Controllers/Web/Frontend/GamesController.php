@@ -120,7 +120,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
             $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->first(); //for admin's popup
 
-            if ($shop_id != 0) { //it is logged in
+            if ($notice==null || $shop_id != 0) { //it is logged in
                 $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->first(); //for admin's popup
             }
 
