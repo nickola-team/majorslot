@@ -1027,7 +1027,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         }
         public function GenerateScatterCount(){ // Scatter수 생성 함수
             $freeSpins = [
-                [80, 20/* , 4, 1 */],
+                [95, 5/* , 4, 1 */],
                 [3, 4/* , 5, 6 */]
             ];
             $percent = random_int(0, 100);
