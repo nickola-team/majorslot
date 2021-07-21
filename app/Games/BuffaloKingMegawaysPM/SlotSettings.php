@@ -377,7 +377,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             foreach( $history as $log ) 
             {
                 $jsonLog = json_decode($log->str);
-                if( $jsonLog->responseEvent != 'gambleResult' ) 
+                if( $jsonLog && $jsonLog->responseEvent != 'gambleResult' ) 
                 {
                     $this->lastEvent = $log->str;
                     break;
