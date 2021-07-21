@@ -162,13 +162,15 @@ return [
         "Hot Pinatas" => "핫 파이네터스",
         "King of Atlantis" => "킹 오브 애틀란티스",
         "Monster Hunter" => "몬스터 헌터",
+        "Sky Lanterns" => "스카이 랜턴스",
+        "Dragon's Treasure" => "드래곤스 트레저",
 
 
         /**
          * Pragmatic Play Games
          */
         "Aztec Gems" => "아즈텍 겜스",
-        "Sweet Bonanza" => "스위트 보난자",
+        "Sweet Bonanza" => "스위트 보난사",
         "Joker's Jewels" => "조커스 즈웰",
         "Wild West Gold" => "와일드 웨스트 골드",
         "Aztec Gems Deluxe" => "아즈텍 겜스 디럭스",
@@ -435,8 +437,7 @@ return [
         "Fruit Party 2" => "후루츠 파티 2",
         "Hokkaido Wolf" => "홋카이도 울프",
         "Lucky, Grace & Charm" => "럭키, 그레이스 & 참",
-
-
+        "Chicken Drop" => "치킨 드랍",
 
 
         /**
@@ -523,6 +524,8 @@ return [
         "Book of Gold 2: Double Hit™" => "북오브 골드 2: 더블히트™",
         "9 Happy Pharaohs" => "9 해피 파라오스",
         "Hot Burning Wins" => "핫 버닝 윈스",
+        "Pearl Diver" => "펄스 다이버",
+        "5 Fortunator" => "5 포츄네터",
 
         /**
          * Habanero Games
