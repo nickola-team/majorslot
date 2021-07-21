@@ -1276,7 +1276,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $numbersCount = 0;
                 $uniqueSymbols = [];
                 /* 일정확율로 불도그는 뺀다 */
-                $uniqueSymbols = [];
+                $uniqueSymbols = (random_int(1, 2) % 2 == 1) ? [] : [3];
                 foreach ($reelPositionSet as $id => $count) {
                     if ($curPos == 0) {
                         if ($count == 3) {
