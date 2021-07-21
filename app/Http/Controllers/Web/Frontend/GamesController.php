@@ -117,19 +117,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             shuffle($hotgames);
 
-            $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->first(); //for admin's popup
+            $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
+            $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->first(); //for admin's popup
 
-            /*if ($shop_id != 0) { //it is logged in
-                $master = auth()->user()->referral;
-                while ($master!=null && !$master->hasRole('master'))
-                {
-                    $master = $master->referral;
-                }
-                if ($master)
-                {
-                    $notice = \VanguardLTE\Notice::where(['user_id' => $master->id, 'active' => 1])->first(); //for master's popup
-                }
-            } */
+            if ($shop_id != 0) { //it is logged in
+                $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->first(); //for admin's popup
+            }
 
 
             return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice'));
