@@ -496,7 +496,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
                     $otherResponse = $otherResponse.$strtmp.'&rs=t&tmb_win='.$slotSettings->GetGameData($slotSettings->slotId . 'TumbWin').'&rs_p='.($slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') - 1).'&rs_c=1&rs_m=1';
                 }else{
                     if($isTumb == true){
-                        if($slotEvent['slotEvent'] != 'freespin'){
+                        if($slotEvent['slotEvent'] != 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') == 0){
                             $spinType = 'c';
                         }
                         $otherResponse = $otherResponse.'&tmb_res='.$slotSettings->GetGameData($slotSettings->slotId . 'TumbWin').'&rs_t='.$slotSettings->GetGameData($slotSettings->slotId . 'TumbleState').'&tmb_win='.($slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') - $totalWin);
