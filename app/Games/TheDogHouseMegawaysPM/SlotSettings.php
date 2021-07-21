@@ -1128,7 +1128,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             $REELCOUNT = 6;
 
           /* 당첨금이 작은 심볼위주로 2개 또는 3개의 심볼 결정 */
-          $symbolA = random_int(5, 9);
+          $symbolA = random_int(3, 9);
           $symbolB = random_int(9, 12);
 
           $firstReelSet = [
@@ -1276,7 +1276,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $numbersCount = 0;
                 $uniqueSymbols = [];
                 /* 일정확율로 불도그는 뺀다 */
-                $uniqueSymbols = (random_int(1, 2) % 2 == 1) ? [] : [3];
+                $uniqueSymbols = [];
                 foreach ($reelPositionSet as $id => $count) {
                     if ($curPos == 0) {
                         if ($count == 3) {
