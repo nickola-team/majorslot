@@ -422,7 +422,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $scattersWin = 0;
                     $_obf_0D33120B1B18292D30293B191C3D383E3D2D0C195B2101 = '';
                     if($slotEvent['slotEvent'] == 'freespin'){
-                        $freeSpinScatters = $slotSettings->GetFreeScatters();
+                        $freeSpinScatters = $slotSettings->GetFreeScatters($winType, $_wildPos);
                         $freespinCount = 0;
                         for($r = 0; $r < count($freeSpinScatters); $r++){
                             for($k = 0; $k < count($_wildPos); $k++){
@@ -601,11 +601,11 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                     {
                         $isEnd = true;
-                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=0';
+                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&reel_set=0';
                     }
                     else
                     {
-                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=1';
+                        $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&reel_set=1';
                     }
 
                     $strSty = '';
@@ -646,14 +646,14 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     // $_obf_0D5C3B1F210914123C222630290E271410213E320B0A11 = $totalWin;
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
-                    $n_reel_set = '0';
+                    $reel_set = '0';
                     if($scattersCount >=3 ){
                         $spinType = 's';
-                        $n_reel_set = '0&fsmul=1&fsmax='.$freeSpinNum.'&fswin=0.00&fs=1&fsres=0.00';
+                        $reel_set = '0&fsmul=1&fsmax='.$freeSpinNum.'&fswin=0.00&fs=1&fsres=0.00';
                     }
 
                     $response = 'tw='.$totalWin . $strWildResponse .'&ls=0&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&mbri=1,2,3&stime=' . floor(microtime(true) * 1000) .
-                        '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline.'&sver=5&n_reel_set='.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=40&s='.$strLastReel.'&w='.$totalWin.'&mbr='. implode(',',$_wildReelValue);
+                        '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline.'&sver=5&reel_set='.$reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=40&s='.$strLastReel.'&w='.$totalWin.'&mbr='. implode(',',$_wildReelValue);
                 }
 
 
@@ -708,7 +708,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 $response = 'fsmul='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl').'&bgid=0&balance='.$Balance.'&win_fs='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').
                     '&wins='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeSpinWins').'&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&index='.$slotEvent['index'].
                     '&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
-                    '&bgt=32&wins_mask=nff,nff,nff,nff,nff,nff,nff,nff,nff&end=1&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&sver=5&n_reel_set=1&counter='. ((int)$slotEvent['counter'] + 1);
+                    '&bgt=32&wins_mask=nff,nff,nff,nff,nff,nff,nff,nff,nff&end=1&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&sver=5&reel_set=1&counter='. ((int)$slotEvent['counter'] + 1);
             }
             $slotSettings->SaveGameData();
             \DB::commit();

@@ -742,31 +742,44 @@ namespace VanguardLTE\Games\WildWestGoldPM
             }
             return $freeSpinNums;
         }
-        public function GetFreeScatters(){
-            $sum = rand(0, 100);
-            if( $sum <= 30){
-                $count = 0;
-            }else if($sum <= 60){
-                $count = 1;
-            }else if($sum <= 80){
-                $count = 2;
-            }else if($sum <= 95){
-                $count = 3;
-            }else if($sum <= 98){
-                $count = 4;
-            }else{
-                $count = 5;
-            }
-            $scatters = [];
-            for($i = 0; $i < 5; $i++){
-                if($count <= count($scatters)){
-                    break;
-                }else{
-                    $sum = rand(0, 100);
-                    if($sum < 10){
-                        array_push($scatters, $i + rand(0, 3) * 5);
-                    }
+        public function GetFreeScatters($winType, $_wildPos){
+            $sum = mt_rand(0, 95);
+            if($winType == 'bonus'){
+                if($sum <= 90){
+                    $count = 2;
+                }else if($sum <= 95){
+                    $count = 3;
                 }
+            }else{
+                if($sum < 70){
+                    $count = 0;
+                }else{
+                    $count = 1;
+                }
+            }
+            
+            $scatters = [];
+            for($i = 0; $i < $count; $i++){
+                while(true){
+                    $rand_scatter = rand(0, 19);
+                    $isSame = false;
+                    for($k = 0; $k < count($scatters); $k++){
+                        if($scatters[$k] == $rand_scatter){
+                            $isSame = true;
+                            break;
+                        }
+                    }
+                    for($k = 0; $k < count($_wildPos); $k++){
+                        if($_wildPos[$k] == $rand_scatter){
+                            $isSame = true;
+                            break;
+                        }
+                    }
+                    if($isSame == false){
+                        array_push($scatters, rand(0, 19));
+                        break;
+                    }
+                }                
             }
             return $scatters;
         }
