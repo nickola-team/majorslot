@@ -120,6 +120,7 @@ return [
     'bng_api_token' => env('BNG_TOKEN','ibIIBDDIgo1gHsjd3BaeH4kCE'),
     'bng_game_server' => env('BNG_SERVER','https://gate2.betsrv.com/op/'),
     'bng_project_name' => env('BNG_PRJ_NAME','major'),
+    'bng_brand' => env('BNG_BRAND','major'),
     'bng_wl' => env('BNG_WL','prod'),
 
     /*

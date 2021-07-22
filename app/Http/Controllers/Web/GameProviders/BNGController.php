@@ -109,7 +109,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'uid' => $uid,
                 'player' => [
                     'id' => strval($user->id),
-                    'brand' => 'major',
+                    'brand' => config('app.bng_brand'),
                     'currency' => 'KRW',
                     'mode' => 'REAL',
                     'is_test' => $is_test,
@@ -433,7 +433,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     [
                         'player_id' => $data['player_id'],
                         'ext_bonus_id' => '',
-                        'brand' => 'major'
+                        'brand' => config('app.bng_brand')
                     ]
                 ]
             ];
@@ -478,7 +478,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'campaign' => null,
                 'game_id' => null,
                 'player_id' => null,
-                'brand' => 'major',
+                'brand' => config('app.bng_brand'),
                 'include_expired' => true,
                 'fetch_size' => 100,
                 'fetch_state' => null
