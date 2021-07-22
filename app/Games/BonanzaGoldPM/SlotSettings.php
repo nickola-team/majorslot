@@ -979,7 +979,7 @@ namespace VanguardLTE\Games\BonanzaGoldPM
             $symbol_poses = [];
             for( $i = 1; $i < $rc; $i++ ) 
             {
-                if( ($key[$i] != $lastSymbol && $key[$i] == $key[$i -1]) || $key[$i] == 1 || $key[$i] != 12 ) 
+                if( ($key[$i] != $lastSymbol && $key[$i] == $key[$i -1]) || $key[$i] == 1) 
                 {
                     array_push($symbol_poses, $i);
                 }
