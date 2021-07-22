@@ -666,7 +666,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
 
                     foreach ($bonus_bank as $bb){
-                        $master = \VanguardLTE\User::find($bb->master_id)->first();
+                        $master = \VanguardLTE\User::where('id', $bb->master_id)->first();
                         if ($master)
                         {
                             $name = $master->username;
@@ -742,7 +742,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
 
                     foreach ($bonus_bank as $bb){
-                        $master = \VanguardLTE\User::find($bb->master_id)->first();
+                        $master = \VanguardLTE\User::where('id', $bb->master_id)->first();
                         if ($master)
                         {
                             $name = $master->username;
