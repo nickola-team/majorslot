@@ -671,20 +671,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         {
                             $name = $master->username;
                             $shop_id = 0;
+                            $old = $bb->bank;
+                            $bb->increment('bank', abs($request->summ));
+                            $new = $bb->bank;
+                            $type = 'bonus';
+                            \VanguardLTE\BankStat::create([
+                                'name' => ucfirst($type) . "[$name]", 
+                                'user_id' => \Illuminate\Support\Facades\Auth::id(), 
+                                'type' => 'add', 
+                                'sum' => $request->summ, 
+                                'old' => $old, 
+                                'new' => $new, 
+                                'shop_id' => $shop_id
+                            ]);
                         }
-                        $old = $bb->bank;
-                        $bb->increment('bank', abs($request->summ));
-                        $new = $bb->bank;
-                        $type = 'bonus';
-                        \VanguardLTE\BankStat::create([
-                            'name' => ucfirst($type) . "[$name]", 
-                            'user_id' => \Illuminate\Support\Facades\Auth::id(), 
-                            'type' => 'add', 
-                            'sum' => $request->summ, 
-                            'old' => $old, 
-                            'new' => $new, 
-                            'shop_id' => $shop_id
-                        ]);
+                        
                     }
                 }
                 else
@@ -747,19 +748,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         {
                             $name = $master->username;
                             $shop_id = 0;
+                            $old = $bb->bank;
+                            $bb->update(['bank' => 0]);
+                            $type = 'bonus';
+                            \VanguardLTE\BankStat::create([
+                                'name' => ucfirst($type) . "[$name]", 
+                                'user_id' => \Illuminate\Support\Facades\Auth::id(), 
+                                'type' =>  ($old<0)?'add':'out', 
+                                'sum' => abs($old), 
+                                'old' => $old, 
+                                'new' => 0, 
+                                'shop_id' => $shop_id
+                            ]);
                         }
-                        $old = $bb->bank;
-                        $bb->update(['bank' => 0]);
-                        $type = 'bonus';
-                        \VanguardLTE\BankStat::create([
-                            'name' => ucfirst($type) . "[$name]", 
-                            'user_id' => \Illuminate\Support\Facades\Auth::id(), 
-                            'type' =>  ($old<0)?'add':'out', 
-                            'sum' => abs($old), 
-                            'old' => $old, 
-                            'new' => 0, 
-                            'shop_id' => $shop_id
-                        ]);
+                        
                     }
                 }
                 else
