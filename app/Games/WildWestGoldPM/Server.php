@@ -268,8 +268,8 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     if($buyFreeSpin == true){
                         $slotSettings->SetBalance(-1 * ($betline * 2000), $slotEvent['slotEvent']);
                         $winType = 'bonus';
-                        $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
-                        $_sum = $betline * 2000;
+                        $_winAvaliableMoney = $slotSettings->GetBank('bonus');
+                        $_sum = $betline * 2000 * $slotSettings->GetPercent() / 100;
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], true);
                     }else{
                         $slotSettings->SetBalance(-1 * ($betline * $lines / 2), $slotEvent['slotEvent']);
@@ -297,6 +297,10 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 // if($winType == 'win'){
                 //     $test = 1;
                 // }
+                $isScatter = false;
+                if(mt_rand(0, 100) < 10){
+                    $isScatter = true;
+                }
                 $mustNotWin = false;
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
@@ -315,7 +319,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     {
                         $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
                     }
-                    else
+                    else 
                     {
                         $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
                     }
@@ -357,15 +361,22 @@ namespace VanguardLTE\Games\WildWestGoldPM
                             $tempReels['reel' . ($r+1)][$k] = $reels['reel' . ($r+1)][$k];
                         }
                     }
+                    
+                    $isReelWild = [0,0,0,0,0];
                     if($slotEvent['slotEvent'] == 'freespin'){
                         for($r = 0; $r < count($_wildPos); $r++){
                             $col = $_wildPos[$r] % 5;
                             $row = floor($_wildPos[$r] / 5);
                             $reels['reel'.($col + 1)][$row] = $wild;
                             $tempWildReels[$col][$row] = $_wildValue[$r];
+                            $isReelWild[$col] = 1;
+                        }
+                        if($isReelWild[1] == 1 && $isReelWild[2] == 1 && $winType = 'none'){
+                            $winType = 'win';
+                            $_winAvaliableMoney = $slotSettings->GetBank('bonus');
                         }
                     }
-
+                    
                     $_lineWinNumber = 1;
                     for( $k = 0; $k < $lines; $k++ ) 
                     {
@@ -422,7 +433,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $scattersWin = 0;
                     $_obf_0D33120B1B18292D30293B191C3D383E3D2D0C195B2101 = '';
                     if($slotEvent['slotEvent'] == 'freespin'){
-                        $freeSpinScatters = $slotSettings->GetFreeScatters($winType, $_wildPos);
+                        $freeSpinScatters = $slotSettings->GetFreeScatters($isScatter, $_wildPos);
                         $freespinCount = 0;
                         for($r = 0; $r < count($freeSpinScatters); $r++){
                             for($k = 0; $k < count($_wildPos); $k++){
@@ -484,8 +495,14 @@ namespace VanguardLTE\Games\WildWestGoldPM
                                 break;
                             }
                         }
+                        if($i > 1000){
+                            $isScatter = false;
+                        }
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
+                        }
+                        else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 16){
+                            $isScatter = false;
                         }
                         else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 20 && $freeSpinNum > 0){
                         }
@@ -496,23 +513,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                         }
                         else if( ($totalWin <= $_winAvaliableMoney || $buyFreeSpin == true) && $winType == 'bonus' ) 
                         {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
-                            if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
-                            {
-                                $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;
-                            }
-                            else
-                            {
-                                if($freeSpinNum > 0){
-                                    if($_winAvaliableMoney > $totalWin * $freeSpinNum){
-                                        break;
-                                    }else{
-                                        continue;
-                                    }
-                                }else{
-                                    break;
-                                }
-                            }
+                            break;
                         }
                         else if( $totalWin > 0 && $totalWin <= $_winAvaliableMoney && $winType == 'win' ) 
                         {

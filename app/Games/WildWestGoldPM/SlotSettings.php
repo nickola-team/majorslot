@@ -108,7 +108,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
             }
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
-            $this->increaseRTP = rand(0, 1);
+            $this->increaseRTP = 1;
 
             $this->doubleWildChance = 90;
 
@@ -742,9 +742,9 @@ namespace VanguardLTE\Games\WildWestGoldPM
             }
             return $freeSpinNums;
         }
-        public function GetFreeScatters($winType, $_wildPos){
+        public function GetFreeScatters($isScatter, $_wildPos){
             $sum = mt_rand(0, 95);
-            if($winType == 'bonus'){
+            if($isScatter == true){
                 if($sum <= 90){
                     $count = 2;
                 }else if($sum <= 95){
@@ -854,11 +854,6 @@ namespace VanguardLTE\Games\WildWestGoldPM
             {
                 $bonus_spin = rand(1, 10);
                 $spin_percent = 5;
-                if ($garantType == 'freespin')
-                {
-                    $spin_percent = 3;
-
-                }
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
             }
             if( $bonusWin == 1 && $this->slotBonus ) 
