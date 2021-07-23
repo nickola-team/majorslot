@@ -231,8 +231,9 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 }
 
                 /* 남은 프리스핀이 있을 경우 */
-                $fsmax = $slotSettings->GetGameData($slotSettings->slotId . 'FSMax');
-                $fs = $slotSettings->GetGameData($slotSettings->slotId . 'FSNext');
+                $fsmax = $slotSettings->GetGameData($slotSettings->slotId . 'FSMax') ?? 0;
+                $fs = $slotSettings->GetGameData($slotSettings->slotId . 'FSNext') ?? 0;
+                $fsMultiplier = $slotSettings->GetGameData($slotSettings->slotId . 'FSMultiplier') ?? 0;
 
                 /* 이전 프리스핀검사, 새 스핀결과 결정 */
                 if ($LASTSPIN !== NULL && $fsmax > 0) {
@@ -354,7 +355,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                     
                     /* 텀블당첨금이 한도이상일때 스킵 */
                     $multiplier = $this->getTumbleMultiplier($reels);
-                    if (($lastTumbleWin + $winMoney) * $multiplier >= $_winAvaliableMoney) {
+                    if (($lastTumbleWin + $winMoney) * ($multiplier + $fsMultiplier) >= $_winAvaliableMoney) {
                         continue;
                     }
 
@@ -531,18 +532,11 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSMax', $objRes['fsmax']);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', 1);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $BALANCE);
-
-                /* 밸런스 업데이트 */
-                $slotSettings->SetBalance($scattersWinMoney);
-                $slotSettings->SetBank($slotEvent['slotEvent'] ?? '', -1 * $scattersWinMoney);
             }
             /* 프리스핀 중 */
             else if ($slotEvent['slotEvent'] === 'freespin') {
                 /* 프리스핀 시작밸런스 로드 */
                 $BALANCE = $slotSettings->GetGameData($slotSettings->slotId . 'FSStartBalance');
-
-                /* 프리스핀 멀티플라이어 합계 */
-                $fsMultiplier = $slotSettings->GetGameData($slotSettings->slotId . 'FSMultiplier') ?? 0;
 
                 /* 프리스핀 응답 빌드 */
                 $objRes['tw'] = ($LASTSPIN->tw ?? 0) + $winMoney;
@@ -634,22 +628,28 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 }
             }
 
-            /* 텀블스핀완료후 밸런스 업데이트 */
-            if( $isTumble && $winMoney == 0) 
+            /* 밸런스 업데이트 */
+            if ($slotEvent['slotEvent'] === 'buy_freespin' || ($winType == 'bonus' && $slotEvent['slotEvent'] !== 'freespin')) { 
+                $winMoney = $scattersWinMoney;
+            }
+            else if( $isTumble && $winMoney == 0) 
             {
+                /* 텀블스핀완료후 */
                 if ($slotEvent['slotEvent'] === 'freespin' && $tumbleMultiplier > 1) {
                     $winMoney = $lastTumbleWin * ($tumbleMultiplier + $fsMultiplier);
                 }
                 else {
                     $winMoney = $lastTumbleWin * $tumbleMultiplier;
                 }
-
-                $slotSettings->SetBalance($winMoney);
-                $slotSettings->SetBank($slotEvent['slotEvent'] ?? '', -1 * $winMoney);
             }
             else {
                 /* 텀블중일때는 당첨이 없는것으로 기록 */
                 $winMoney = 0;                
+            }
+
+            if ($winMoney > 0) {
+                $slotSettings->SetBalance($winMoney);
+                $slotSettings->SetBank($slotEvent['slotEvent'] ?? '', -1 * $winMoney);
             }
 
             /* 라운드 등록 */
@@ -829,7 +829,6 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 'game_logs' => urlencode(json_encode($replayLogs)),
             ]);
 
-            
             /* 라운드 리셋 */
             $slotSettings->SetGameData($slotSettings->slotId . 'RNDLogs', []);
         }
