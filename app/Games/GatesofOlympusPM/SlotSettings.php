@@ -689,13 +689,13 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             {
                 $_obf_slotstate = $this->slotId . ' Bonus';
             }
-            else if( $slotState == 'doSpin' ) 
+            else if( $slotState == 'doSpin' || $slotState == 'buy_freespin') 
             {
                 $_obf_slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'doGamble' ) 
+            else if( $slotState == 'freespin' ) 
             {
-                $_obf_slotstate = $this->slotId . '';
+                $_obf_slotstate = $this->slotId . ' FG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -942,9 +942,9 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 }
                 else {
                     $probabilityMap = [
-                        4 => 70,
-                        5 => 25,
-                        6 => 5
+                        4 => 95,
+                        5 => 4,
+                        6 => 1
                     ];
                 }
             }
@@ -973,8 +973,8 @@ namespace VanguardLTE\Games\GatesofOlympusPM
         public function GenerateMultiplierCount($slotEvent) {
             if ($slotEvent == 'freespin') {
                 $probabilityMap = [
-                    0 => 60,
-                    1 => 40
+                    0 => 70,
+                    1 => 30
                 ];
             }
             else {
@@ -996,6 +996,56 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             }
 
             return 0;  
+        }
+
+        public function GenerateMultiplier($winType, $isTumble) {
+            if ($winType != 'none' || $isTumble) {
+                $probabilityMap = [
+                    2 => 30,
+                    3 => 23,
+                    4 => 13,
+                    5 => 9,
+                    6 => 7,
+                    8 => 3,
+                    10 => 2,
+                    12 => 1,
+                    15 => 1,
+                    20 => 0,
+                    25 => 0,
+                    50 => 0,
+                    100 => 0,
+                ];
+            }
+            else {
+                $probabilityMap = [
+                    2 => 5,
+                    3 => 5,
+                    4 => 5,
+                    5 => 10,
+                    6 => 10,
+                    8 => 10,
+                    10 => 10,
+                    12 => 10,
+                    15 => 10,
+                    20 => 10,
+                    25 => 5,
+                    50 => 5,
+                    100 => 5,
+                ];
+            }
+            
+            $sum = array_sum(array_values($probabilityMap));
+            $randNum = random_int(1, $sum);
+
+            $sum = 0;
+            foreach ($probabilityMap as $key => $probability) {
+                $sum += $probability;
+                if ($randNum <= $sum) {
+                    return $key;
+                }
+            }
+
+            return 0;
         }
 
         public function GetLimitedReelStrips($slotEvent, $lastWILDCollection) {
@@ -1181,7 +1231,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                             }
                             else {
                                 /* 멀티플라이어 등록 */
-                                $multiplierSymbols[$pos] = random_int(2, 10);
+                                $multiplierSymbols[$pos] = $this->GenerateMultiplier($winType, $lastReels != null);
                                 $isEnoughMultiplier = true;    
                             }    
                         }
