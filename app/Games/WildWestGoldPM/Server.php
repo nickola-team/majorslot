@@ -436,12 +436,12 @@ namespace VanguardLTE\Games\WildWestGoldPM
                         $freeSpinScatters = $slotSettings->GetFreeScatters($isScatter, $_wildPos);
                         $freespinCount = 0;
                         for($r = 0; $r < count($freeSpinScatters); $r++){
-                            for($k = 0; $k < count($_wildPos); $k++){
-                                if($freeSpinScatters[$r] == $_wildPos[$k]){
-                                    $freeSpinScatters[$r] = -1;
-                                    break;
-                                }
-                            }
+                            // for($k = 0; $k < count($_wildPos); $k++){
+                            //     if($freeSpinScatters[$r] == $_wildPos[$k]){
+                            //         $freeSpinScatters[$r] = -1;
+                            //         break;
+                            //     }
+                            // }
                             if($freeSpinScatters[$r] >= 0){
                                 $freespinCount++;
                             }
@@ -501,11 +501,10 @@ namespace VanguardLTE\Games\WildWestGoldPM
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
                         }
-                        else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 16){
+                        else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 16 && $freeSpinNum > 0){
                             $isScatter = false;
                         }
-                        else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 20 && $freeSpinNum > 0){
-                        }
+                        
                         else if($slotEvent['slotEvent'] == 'freespin' && ($i > 1000 && $freeSpinNum)){
                             if($totalWin * ($leftFreeGames + $freeSpinNum) < $_winAvaliableMoney){
                                 break;

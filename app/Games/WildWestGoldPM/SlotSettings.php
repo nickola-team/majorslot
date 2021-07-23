@@ -742,44 +742,35 @@ namespace VanguardLTE\Games\WildWestGoldPM
             }
             return $freeSpinNums;
         }
-        public function GetFreeScatters($isScatter, $_wildPos){
+        public function GetFreeScatters($isScatter, $wildPos){
             $sum = mt_rand(0, 95);
             if($isScatter == true){
-                if($sum <= 90){
-                    $count = 2;
-                }else if($sum <= 95){
-                    $count = 3;
-                }
+                    if($sum <= 90){
+                            $count = 2;
+                    }else if($sum <= 95){
+                            $count = 3;
+                    }
             }else{
-                if($sum < 70){
-                    $count = 0;
-                }else{
-                    $count = 1;
-                }
+                    if($sum < 70){
+                            $count = 0;
+                    }else{
+                            $count = 1;
+                    }
             }
             
             $scatters = [];
-            for($i = 0; $i < $count; $i++){
-                while(true){
-                    $rand_scatter = rand(0, 19);
+            $randReels = $this->GetRandomNumber(0, 4, $count);
+            for($i = 0; $i < 5; $i++){
                     $isSame = false;
-                    for($k = 0; $k < count($scatters); $k++){
-                        if($scatters[$k] == $rand_scatter){
-                            $isSame = true;
-                            break;
-                        }
+                    for($j = 0; $j < $count; $j++){
+                            if($i == $randReels[$j]){
+                                    $isSame = true;
+                                    break;
+                            }
                     }
-                    for($k = 0; $k < count($_wildPos); $k++){
-                        if($_wildPos[$k] == $rand_scatter){
-                            $isSame = true;
-                            break;
-                        }
+                    if($isSame == true){
+                            array_push($scatters, rand(0, 3) * 5 + $i);
                     }
-                    if($isSame == false){
-                        array_push($scatters, rand(0, 19));
-                        break;
-                    }
-                }                
             }
             return $scatters;
         }
