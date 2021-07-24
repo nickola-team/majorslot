@@ -191,7 +191,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 $linesId[21] = [3,3,2,3,3];
                 $linesId[22] = [2,2,1,2,2];
                 $linesId[23] = [1,1,4,1,1];
-                $linesId[24] = [1,3,3,3,1];
+                $linesId[24] = [1,2,2,2,1];
                 $linesId[25] = [2,3,3,3,2];
                 $linesId[26] = [3,4,4,4,3];
                 $linesId[27] = [4,1,1,1,4];
