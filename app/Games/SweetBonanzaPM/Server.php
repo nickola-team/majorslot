@@ -398,7 +398,7 @@ namespace VanguardLTE\Games\SweetBonanzaPM
                                 break;
                             }
                         }
-                        else if($scattersCount >= 6){
+                        else if($scattersCount >= 5){
                             
                         }
                         else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 15 && $freeSpinNum > 0){
