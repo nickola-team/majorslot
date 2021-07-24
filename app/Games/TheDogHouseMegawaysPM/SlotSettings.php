@@ -1041,7 +1041,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             return $freeSpins[1][0];  
         }
         
-        public function GetSymbolCount($default = 2){   // 한개 릴의 심볼 갯수를 결정하는 함수
+        public function GetSymbolCount($default = 2, $maxCount = 7){   // 한개 릴의 심볼 갯수를 결정하는 함수
             $sum = random_int(0, 100);
             if($sum <= 25){
                 $ret = 2;
@@ -1057,7 +1057,17 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $ret = 7;
             }
 
-            return $ret < $default ? $default : $ret;
+            if ($ret < $default) {
+                $ret = $default;
+            }
+            else if ($ret > $maxCount) {
+                $ret = $maxCount;
+            }
+            else {
+
+            }
+            
+            return $ret;
         }
 
         public function GetLastReel($lastReel, $lastBinaryReel, $bonusTumbPoses, $bonusTumbMpls){    // 텀브스핀일때 당첨된 심볼들을 제외한 릴배치도 얻기
@@ -1126,24 +1136,26 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
         }
         public function GetLimitedReelStrips($slotEvent, $lastWILDCollection) {
             $REELCOUNT = 6;
+            $MAXSYMBOLCOUNT = 7;
+            $S_BLANK = 14;
+            $S_K = 10;
 
-          /* 당첨금이 작은 심볼위주로 2개 또는 3개의 심볼 결정 */
-          $symbolA = random_int(3, 9);
-          $symbolB = random_int(9, 12);
+            /* 당첨금이 작은 심볼위주로 2개 또는 3개의 심볼 결정 */
+            $symbolA = random_int(3, 9);
+            $symbolB = random_int(9, 12);
 
-          $firstReelSet = [
-              [$symbolA, $symbolA],
-              [$symbolA, $symbolB],
-              [$symbolB, $symbolB],
-              [$symbolA, $symbolA, $symbolA],
-              [$symbolA, $symbolA, $symbolB],
-              [$symbolA, $symbolB, $symbolB],
-              [$symbolB, $symbolB, $symbolA],
-              [$symbolB, $symbolA, $symbolA],
-          ];
+            $firstReelSet = [
+                [$symbolA, $symbolA],
+                [$symbolA, $symbolB],
+                [$symbolB, $symbolB],
+                [$symbolA, $symbolA, $symbolA],
+                [$symbolA, $symbolA, $symbolB],
+                [$symbolA, $symbolB, $symbolB],
+                [$symbolB, $symbolB, $symbolA],
+                [$symbolB, $symbolA, $symbolA],
+            ];
 
-          $startSymbols = $firstReelSet[array_rand($firstReelSet)];
-
+            $startSymbols = $firstReelSet[array_rand($firstReelSet)];
 
             for ($reelId=1; $reelId <= $REELCOUNT; $reelId++) { 
 
@@ -1153,6 +1165,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
                 else if ($slotEvent === 'fsSticky' && count($lastWILDCollection) > 0) {
                     $minCount = 2;
+                    $maxCount = 4;
                     foreach ($lastWILDCollection as $pos => $multiplier) {
                         $wildReelId = $pos % $REELCOUNT + 1;
                         if ($reelId == $wildReelId) {
@@ -1161,33 +1174,107 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         }
                     }
                     
-                    $symbolCount = $this->GetSymbolCount($minCount);
+                    $symbolCount = $this->GetSymbolCount($minCount, $maxCount);
                 }
                 else {
-                    $symbolCount = random_int(2, 3);
+                    $symbolCount = random_int(2, 4);
                 }
 
-                $reel['reel' . $reelId][-1] = random_int(3, 13);
+                $reel['reel' . $reelId] = array_fill(0, $MAXSYMBOLCOUNT, $S_BLANK);
+                $reel['reel' . $reelId][-1] = random_int(7, 13);
+                $reel['reel' . $reelId][7] = random_int(7, 13);
 
-                for($k = 0; $k < $symbolCount; $k++){
-                    if ($reelId == 1) {
+                if ($reelId == 1) {
+                    for($k = 0; $k < $symbolCount; $k++){
                         $reel['reel' . $reelId][$k] = $startSymbols[$k];
                     }
-                    else {
-                        while (in_array(($symbol = random_int(4, 9)), $startSymbols));
-                        $reel['reel' . $reelId][$k] = $symbol;
+                }
+                else {
+                    $positionSetId = random_int(1, count($this->reelPositionMap[$symbolCount]) - 1);
+                    $reelPositionSet = $this->reelPositionMap[$symbolCount][$positionSetId];
+
+                    $curPos = 0;
+                    $dogsCount = 0;
+                    $numbersCount = 0;
+
+                    $uniqueSymbols = $startSymbols;
+                    array_push($uniqueSymbols, 3);
+
+                    foreach ($reelPositionSet as $id => $count) {
+                        if ($curPos == 0) {
+                            while( in_array( ($randSymbol = random_int(4, 13)), $uniqueSymbols));
+                        }
+                        else {
+                            $prevSymbol = $reel['reel' . $reelId][$curPos - 1];
+                            if ($this->IsKindOfDog($prevSymbol)) {
+                                if ($numbersCount + $count >= 5) {
+                                    while( in_array( ($randSymbol = random_int(7, 8)), $uniqueSymbols));
+                                }
+                                else {
+                                    /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
+                                    if ($count == 3) {
+                                        while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
+                                    }
+                                    else {
+                                        while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                    }
+                                }
+                            }
+                            else if ($this->IsKindOfNumber($prevSymbol)) {
+                                if ($dogsCount + $count < 4) {
+                                    while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
+                                }
+                                else if ($numbersCount + $count < 4) {
+                                    /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
+                                    if ($count == 3) {
+                                        while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
+                                    }
+                                    else {
+                                        while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                    }
+                                }
+                                else {
+                                    while( in_array( ($randSymbol = random_int(7, 8)), $uniqueSymbols));
+                                }
+                            }
+                            else {
+                                if ($dogsCount + $count < 4) {
+                                    while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
+                                }
+                                else if ($numbersCount + $count < 4) {
+                                    /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
+                                    if ($count == 3) {
+                                        while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
+                                    }
+                                    else {
+                                        while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                                    }
+                                }
+                                else {
+                                    while( in_array( ($randSymbol = random_int(7, 8)), $uniqueSymbols));
+                                }
+                            }
+                        }
+
+                        $randSymbols = array_fill($curPos, $count, $randSymbol);
+                        $reel['reel' . $reelId] = array_replace($reel['reel' . $reelId], $randSymbols);
+
+                        $curPos += $count;
+
+                        array_push($uniqueSymbols, $randSymbol);
+                        if ($this->IsKindOfDog($randSymbol)) {
+                            $dogsCount += $count;
+                        }
+                        else if ($this->IsKindOfNumber($randSymbol)) {
+                            $numbersCount += $count;
+                        }
+                        else {
+                            
+                        }
                     }
                 }
-                for($k = $symbolCount; $k < 7; $k++){
-                    $reel['reel' . $reelId][$k] = 14;
-                }
-
-                while (in_array(($symbol = random_int(3, 13)), $startSymbols));
-                $reel['reel' . $reelId][7] = $symbol;
             }
-            /* 릴배치표 조정, 본사게임과 비슷하게 */
-            $reel = $this->AdjustReels($reel);
-
+            
             $reel['id'] = 8;        // 랜덤
             return $reel;
         }

@@ -933,7 +933,7 @@ namespace VanguardLTE\Games\SweetBonanzaPM
                 [90, 7, 3],
                 [4, 5, 6]
             ];
-            $percent = rand(0, 95);
+            $percent = rand(0, 90);
             $sum = 0;
             for($i = 0; $i < count($freeSpins[0]); $i++){
                 $sum = $sum + $freeSpins[0][$i];
