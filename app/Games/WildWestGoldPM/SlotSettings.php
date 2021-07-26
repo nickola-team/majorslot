@@ -1038,10 +1038,10 @@ namespace VanguardLTE\Games\WildWestGoldPM
         public function GetNoneWinReels($winType, $slotEvent)
         {
             $reel = $this->GetReelStrips($winType, $slotEvent);
-            $reel['reel1'][0] = mt_rand(11,13);
-            $reel['reel1'][1] = mt_rand(11,13);
-            $reel['reel1'][2] = mt_rand(11,13);
-            $reel['reel1'][3] = mt_rand(11,13);
+            $reel['reel1'][0] = mt_rand(7,13);
+            $reel['reel1'][1] = mt_rand(7,13);
+            $reel['reel1'][2] = mt_rand(7,13);
+            $reel['reel1'][3] = mt_rand(7,13);
 
             $reel['reel2'][0] = mt_rand(5,10);
             $reel['reel2'][1] = mt_rand(5,10);
