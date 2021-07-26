@@ -471,15 +471,15 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     {
                         $winType = 'none';
                     }
-                    if( $slotSettings->increaseRTP && $winType == 'win' && $totalWin < ($lines * $betline * rand(2, 5) / 2) ) 
+                    /*if( $slotSettings->increaseRTP && $winType == 'win' && $totalWin < ($lines * $betline * rand(2, 5) / 2) ) 
                     {
                     }
                     else if( !$slotSettings->increaseRTP && $winType == 'win' && $lines * $betline / 2 < $totalWin ) 
                     {
                     }
-                    else
+                    else*/
                     {
-                        if( $i > 1500 ) 
+                        if( $i > 1200 ) 
                         {
                             if ($mustNotWin)
                             {

@@ -583,6 +583,9 @@ namespace VanguardLTE\Games\TheDogHousePM
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
                         }
+                        else if($scattersCount == 2 && mt_rand(0, 100) < 50){
+
+                        }
                         else if($slotEvent['slotEvent'] == 'freespin'&& $i > 1000){
                             if($totalWin * $leftFreeGames < $_winAvaliableMoney){
                                 break;
