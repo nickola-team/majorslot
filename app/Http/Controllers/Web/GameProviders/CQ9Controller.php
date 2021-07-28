@@ -979,19 +979,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return $games;
                 }
             }
-            
-            $response = Http::withHeaders([
-                'Authorization' => config('app.cq9token'),
-                'Content-Type' => 'application/x-www-form-urlencoded'
-            ])->get(config('app.cq9api') . '/gameboy/game/list/cq9');
-            if (!$response->ok())
+            $response = null;
+            try {
+                $response = Http::withHeaders([
+                    'Authorization' => config('app.cq9token'),
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->get(config('app.cq9api') . '/gameboy/game/list/cq9');
+
+            } catch (\Exception $e) {
+                return null;
+            }
+           
+            if ($response==null && !$response->ok())
             {
                 return null;
             }
             $detect = new \Detection\MobileDetect();
             $plat = ($detect->isMobile() || $detect->isTablet())?'mobile':'web';
             $data = $response->json();
-            if ($data['status']['code'] == 0){
+            if ($data!=null && $data['status']['code'] == 0){
                 $gameList = [];
                 foreach ($data['data'] as $game)
                 {
