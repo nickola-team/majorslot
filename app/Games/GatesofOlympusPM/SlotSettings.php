@@ -1002,10 +1002,10 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             if ($slotEvent == 'freespin') {
                 if ($winType != 'none' || $isTumble) {
                     $probabilityMap = [
-                        2 => 30,
-                        3 => 20,
+                        2 => 40,
+                        3 => 30,
                         4 => 20,
-                        5 => 10,
+                        5 => 5,
                         6 => 3,
                         8 => 2,
                         10 => 0,

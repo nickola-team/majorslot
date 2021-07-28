@@ -344,6 +344,21 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                     }
                 }
                 else if ($winType == 'win' && count($this->winLines) > 0) {
+                    if ($slotEvent['slotEvent'] == 'freespin') {
+                        $skip = false;
+                        foreach ($this->winLines as $winLine) {
+                            /* 고액당첨이 있을경우 패스 */
+                            if ($winLine['FirstSymbol'] < 5 || $winLine['RepeatCount'] >= 10) {
+                                $skip = true;
+                                break;
+                            }
+                        }
+
+                        if ($skip) {
+                            continue;
+                        }
+                    }
+
                     /* 스핀 당첨금 */
                     $winMoney = array_reduce($this->winLines, function($carry, $winLine) {
                         $carry += $winLine['Money']; 
@@ -362,6 +377,10 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                     break;
                 }
                 else if ($winType == 'bonus') {
+                    if (count($this->winLines) > 0) {
+                        continue;
+                    }
+
                     if ($slotEvent['slotEvent'] == 'freespin' && $scatterCount == 3) {
                         break;
                     } 
