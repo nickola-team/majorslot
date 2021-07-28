@@ -275,6 +275,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.shop.list')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
             } 
+            $data['reset_days'] = auth()->user()->reset_days;
+            $data['last_reset_at'] = date('Y-m-d');
             $shop = \VanguardLTE\Shop::create($data + ['user_id' => auth()->user()->id]);
             $user = \VanguardLTE\User::find(\Auth::id());
             if( isset($request->categories) && count($request->categories) ) 
