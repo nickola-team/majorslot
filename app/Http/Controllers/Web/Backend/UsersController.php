@@ -969,6 +969,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     return redirect()->route('backend.user.tree')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
                 }
             }
+            if ($user->last_reset_at == null )
+            {
+                $data['last_reset_at'] = date('Y-m-d');
+            }
             $this->users->update($user->id, $data);
             if (isset($data['reset_days']))
             {
