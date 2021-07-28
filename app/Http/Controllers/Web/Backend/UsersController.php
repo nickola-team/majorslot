@@ -542,6 +542,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $data['reset_days'] = auth()->user()->reset_days;
             }
+            $data['last_reset_at'] = date('Y-m-d');
             $role = \jeremykenedy\LaravelRoles\Models\Role::find($role_id);
             if( (auth()->user()->hasRole('distributor') && $role->slug == 'manager' || auth()->user()->hasRole('manager') && $role->slug == 'cashier') && \VanguardLTE\User::where([
                 'role_id' => $role->id, 
