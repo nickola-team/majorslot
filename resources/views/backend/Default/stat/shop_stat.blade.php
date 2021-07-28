@@ -36,8 +36,8 @@
 					@endif
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>충전/환전/수익금전환</label>
-								{!! Form::select('type', ['' => '모두', 'add' => '충전', 'out' => '환전', 'deal_out' => '수익금환전'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
+								<label>충환전타입</label>
+								{!! Form::select('type', ['' => '모두', 'add' => '충전', 'out' => '환전', 'deal_out' => '딜비전환', 'ggr_out' => '죽장전환'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -97,7 +97,10 @@
 						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
-						<th>수익금전환</th>
+						<th>딜비전환</th>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장전환</th>
+						@endif
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -108,6 +111,7 @@
 						$totalin=0;
 						$totalout=0;
 						$totaldealout=0;
+						$totalggrout=0;
 					?>
 					@if (count($shops_stat))
 						@foreach ($shops_stat as $stat)
@@ -116,6 +120,7 @@
 								if ($stat->type == 'add'){ $totalin = $totalin + abs($stat->sum);}
 								if ($stat->type == 'out'){ $totalout = $totalout + abs($stat->sum);}
 								if ($stat->type == 'deal_out'){ $totaldealout = $totaldealout + abs($stat->sum);}
+								if ($stat->type == 'ggr_out'){ $totalggrout = $totalggrout + abs($stat->summ);}
 							?>
 						@endforeach
 						<td></td>
@@ -128,6 +133,9 @@
 						<td><span class="text-green">{{number_format($totalin,0)}}</span></td>
 						<td><span class="text-red">{{number_format($totalout,0)}}</span></td>
 						<td><span class="text-red">{{number_format($totaldealout,0)}}</span></td>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<td><span class="text-red">{{number_format($totalggrout,0)}}</span></td>
+						@endif
 						<td></td>
 						<td></td>
 						<td></td>
@@ -146,7 +154,10 @@
 						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
-						<th>수익금전환</th>
+						<th>딜비전환</th>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장전환</th>
+						@endif
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>

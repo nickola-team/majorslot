@@ -385,8 +385,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'name' => $partner->username,
                         'balance' => $shop->balance,
                         'profit' => $shop->deal_balance - $shop->mileage,
+                        'ggr_profit' => $shop->ggr_balance - $shop->ggr_mileage - ($shop->count_deal_balance - $shop->count_mileage),
                         'deal_percent' => $shop->deal_percent,
                         'table_deal_percent' => $shop->table_deal_percent,
+                        'ggr_percent' => $shop->ggr_percent,
+                        'reset_days' => $shop->reset_days,
                         'bonus' => 0,
                         'role_id' => $partner->role_id,
                         'shop' => $shop->name,
@@ -410,8 +413,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'name' => $partner->username,
                         'balance' => $partner->balance,
                         'profit' => $partner->deal_balance - $partner->mileage,
+                        'ggr_profit' => $partner->ggr_balance - $partner->ggr_mileage - ($partner->count_deal_balance - $partner->count_mileage),
                         'deal_percent' => $partner->deal_percent,
                         'table_deal_percent' => $partner->table_deal_percent,
+                        'ggr_percent' => $partner->ggr_percent,
+                        'reset_days' => $partner->reset_days,
                         'bonus' => 0,
                         'role_id' => $partner->role_id
                     ];
@@ -532,6 +538,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $role_id = (isset($data['role_id']) && $data['role_id'] < auth()->user()->role_id ? $data['role_id'] : auth()->user()->role_id - 1);
             $data['role_id'] = $role_id;
+            if (empty($data['reset_days']))
+            {
+                $data['reset_days'] = auth()->user()->reset_days;
+            }
             $role = \jeremykenedy\LaravelRoles\Models\Role::find($role_id);
             if( (auth()->user()->hasRole('distributor') && $role->slug == 'manager' || auth()->user()->hasRole('manager') && $role->slug == 'cashier') && \VanguardLTE\User::where([
                 'role_id' => $role->id, 
@@ -541,7 +551,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.user.list')->withErrors([trans('app.only_1', ['type' => $role->slug])]);
             }
 
-            if( $data['role_id'] == 4) //distributor?
+            if( $data['role_id'] == 4 || $data['role_id'] == 5 || $data['role_id'] == 6) //distributor, agent, master
             {
                 $parent = auth()->user();
                 if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
@@ -552,19 +562,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
                 }
-            }
-            if( $data['role_id'] == 5) //agent?
-            {
-                $parent = auth()->user();
-                if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null && $parent->ggr_percent < $data['ggr_percent'])
                 {
-                    return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
-                }
-                if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
-                {
-                    return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
+                    return redirect()->route('backend.user.tree')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
                 }
             }
+
             $user = $this->users->create($data);
             $user->detachAllRoles();
             $user->attachRole($role);
@@ -863,11 +866,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $deal_percent = $user->shop->deal_percent;
                 $table_deal_percent = $user->shop->table_deal_percent;
+                $ggr_percent = $user->shop->ggr_percent;
             }
             else
             {
                 $deal_percent = $user->deal_percent;
                 $table_deal_percent = $user->table_deal_percent;
+                $ggr_percent = $user->ggr_percent;
             }
 
             if (   ($user->hasRole('agent') && $master->deal_percent < $deal_percent) 
@@ -881,6 +886,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 || ($user->hasRole('manager') && $distributor->table_deal_percent < $table_deal_percent) )
             {
                 return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다.']);
+            }
+            if (   ($user->hasRole('agent') && $master->ggr_percent < $ggr_percent) 
+                || ($user->hasRole('distributor') && $agent->ggr_percent < $ggr_percent) 
+                || ($user->hasRole('manager') && $distributor->ggr_percent < $ggr_percent) )
+            {
+                return redirect()->back()->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다.']);
             }
             if ($user->hasRole('manager'))
             {
@@ -938,8 +949,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route('backend.user.list')->withErrors([trans('max_users', ['max' => $this->max_users])]);
             }
             unset($data['role_id']);
+
             if( $user->hasRole([
-                'distributor',
+                'distributor', 'agent', 'master'
             ]))
             {
                 $parent = $user->referral;
@@ -951,22 +963,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
                 }
-            }
-            if( $user->hasRole([
-                'agent',
-            ]))
-            {
-                $parent = $user->referral;
-                if ($parent!=null && isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null && isset($data['ggr_percent']) && $parent->ggr_percent < $data['ggr_percent'])
                 {
-                    return redirect()->route('backend.user.tree')->withErrors(['딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
-                }
-                if ($parent!=null && isset($data['table_deal_percent']) && $parent->table_deal_percent < $data['table_deal_percent'])
-                {
-                    return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 슈퍼어드민에서 설정한 값보다 클수 없습니다']);
+                    return redirect()->route('backend.user.tree')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
                 }
             }
             $this->users->update($user->id, $data);
+            if (isset($data['reset_days']))
+            {
+                //update all child partners reset days
+                $child_partners = $user->hierarchyPartners();
+                $shops = $user->availableShops();
+                \VanguardLTE\User::whereIn('id', $child_partners)->update(['reset_days' => $data['reset_days']]);
+                \VanguardLTE\Shop::whereIn('id', $shops)->update(['reset_days' => $data['reset_days']]);
+            }
             if( $user->hasRole([
                 'distributor', 
                 'cashier', 

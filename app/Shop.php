@@ -9,6 +9,9 @@ namespace VanguardLTE
             'alias',
             'balance', 
             'percent', 
+            'count_deal_balance', 
+            'mileage', 
+            'count_mileage', 
             'deal_balance',
             'deal_percent',
             'table_deal_percent',
@@ -17,7 +20,12 @@ namespace VanguardLTE
             'is_blocked', 
             'orderby', 
             'user_id', 
-            'pending'
+            'pending',
+            'ggr_percent',
+            'ggr_balance',
+            'ggr_mileage',
+            'reset_days',
+            'last_reset_at'
         ];
         public static $values = [
             'currency' => [

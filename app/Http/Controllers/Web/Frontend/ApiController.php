@@ -447,7 +447,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         return response()->json([
                             'error' => true, 
-                            'msg' => '수익금이 부족합니다.',
+                            'msg' => '딜비수익이 부족합니다.',
                             'code' => '000'
                         ], 200);
                     }
@@ -525,7 +525,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 else{
                     return response()->json([
                         'error' => true, 
-                        'msg' => '수익금이 없습니다.',
+                        'msg' => '딜비수익이 없습니다.',
                         'code' => '000'
                     ], 200);
                 }
@@ -539,7 +539,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         return response()->json([
                             'error' => true, 
-                            'msg' => '수익금이 부족합니다.',
+                            'msg' => '딜비수익이 부족합니다.',
                             'code' => '000'
                         ], 200);
                     }
@@ -620,7 +620,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 else{
                     return response()->json([
                         'error' => true, 
-                        'msg' => '수익금이 없습니다.',
+                        'msg' => '딜비수익이 없습니다.',
                         'code' => '000'
                     ], 200);
                 }
@@ -675,7 +675,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if($summ > $shop->deal_balance) {
                 return response()->json([
                     'error' => true, 
-                    'msg' => '환전금액은 수익금액을 초과할수 없습니다',
+                    'msg' => '환전금액은 딜비수익을 초과할수 없습니다',
                     'code' => '002'
                 ], 200);
             }

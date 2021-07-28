@@ -17,8 +17,15 @@
 ?>
 <td>{{ number_format($user->balance,0) }}</td>
 <td>{{ number_format($user->deal_balance - $user->mileage,0) }}</td>
+@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+<td>{{ number_format($user->ggr_balance - $user->ggr_mileage - ($user->count_deal_balance - $user->count_mileage),0) }}</td>
+@endif
 <td>{{ number_format($user->deal_percent,2) }}</td>
 <td>{{ number_format($user->table_deal_percent,2) }}</td>
+@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+<td>{{ number_format($user->ggr_percent,2) }}</td>
+<td>{{ $user->reset_days??0 }}일</td>
+@endif
 
 @if ($user->role_id == 7)
 <td>{{ number_format($user->money_percent,2) }}</td>

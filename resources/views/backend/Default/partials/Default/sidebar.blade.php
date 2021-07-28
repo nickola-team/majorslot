@@ -21,32 +21,49 @@
                         {{ number_format(auth()->user()->present()->balance,0) }}원
                     @endif
 			</p>
-            @if(auth()->user()->isInoutPartner())
-            @else
-            <p>수익금:
-
-                @if( Auth::user()->hasRole(['cashier', 'manager']) )
-                    @php
-                        $shop = \VanguardLTE\Shop::find( auth()->user()->present()->shop_id );
-                        echo $shop?number_format($shop->deal_balance,0):0;
-                    @endphp
-                    원
-                @else
-                    {{ number_format(auth()->user()->present()->deal_balance - auth()->user()->present()->mileage,0) }}
-                    원
-                @endif
-
-            </p>
-            @endif
-
-			{{-- <a href="javascript:;" data-toggle="modal" data-target="#openChangeModal">
-				<i class="fa fa-circle text-success"></i>
-				@if(Auth::user()->shop) {{ Auth::user()->shop->name }} @else @lang('app.no_shop') @endif
-			</a> --}}
-
             </div>
             @endif
         </div>
+        @if(auth()->user()->isInoutPartner())
+        @else
+        <div class="user-panel"  style="height:90px;color:white;">
+            <div>
+                <?php
+                    $shop = \VanguardLTE\Shop::find( auth()->user()->shop_id );
+                    $ggr_percent = auth()->user()->hasRole('manager')?$shop->ggr_percent:auth()->user()->ggr_percent;
+                    $deal_percent = auth()->user()->hasRole('manager')?$shop->deal_percent:auth()->user()->deal_percent;
+                ?>
+                <p>딜비수익({{$deal_percent}}%):
+
+                    @if( Auth::user()->hasRole(['cashier', 'manager']) )
+                        {{number_format($shop->deal_balance,0)}}
+                        원
+                    @else
+                        {{ number_format(auth()->user()->deal_balance - auth()->user()->mileage,0) }}
+                        원
+                    @endif
+                </p>
+                @if ($ggr_percent > 0)
+                <p>죽장수익({{$ggr_percent}}%):
+                    @if( Auth::user()->hasRole(['cashier', 'manager']) )
+                        {{number_format($shop->ggr_balance - $shop->count_deal_balance,0)}}
+                        원
+                    @else
+                        {{ number_format(auth()->user()->ggr_balance - auth()->user()->ggr_mileage - (auth()->user()->count_deal_balance - auth()->user()->count_mileage),0) }}
+                        원
+                    @endif
+                </p>
+                @endif
+                <p>정산시간 : 
+                @if( Auth::user()->hasRole(['cashier', 'manager']) )
+                {{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
+                @else
+                {{auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"))}}
+                @endif
+                </p>
+            </div>
+        </div>
+        @endif
         <!-- search form -->
         @if (auth()->user()->hasRole(['admin']))
         @else

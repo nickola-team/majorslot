@@ -34,3 +34,4 @@ composer.lock
 bootstrap/cache/routes-v7.php
 bootstrap/cache/services.php
 /public/front/uploads
+bootstrap/cache/config.php

@@ -123,7 +123,7 @@
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						</div>
 						<div class="form-group">
-							<label for="DealSum">수익금전환</label>
+							<label for="DealSum">딜비전환</label>
 							<input type="text" class="form-control" id="DealSum" name="dealsumm" placeholder="전환금액"   required>
 						</div>
 					</div>

@@ -37,6 +37,15 @@
             <label>라이브딜비%</label>
             <input type="text" class="form-control" id="table_deal_percent" name="table_deal_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->table_deal_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
         </div>
+        <div class="form-group">
+            <label>죽장%</label>
+            <input type="text" class="form-control" id="ggr_percent" name="ggr_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->ggr_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
+        </div>
+        <div class="form-group">
+            <label>정산기간</label>
+            {!! Form::select('reset_days', \VanguardLTE\User::$values['reset_days'], $edit ? $user->reset_days : '' ,
+            ['class' => 'form-control', 'id' => 'reset_days', 'disabled' => ($user->hasRole(['master']) && $user->id != auth()->user()->id) ? false: true]) !!}
+        </div>
     @endif
 
 

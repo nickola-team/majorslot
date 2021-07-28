@@ -85,6 +85,9 @@
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
 						<th>딜비전환</th>
 						{{--<th>매장충전</th>
 						<th>매장환전</th> --}}
@@ -127,6 +130,9 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
 						@endif
 						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
+						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<td><span class='text-red'>{{ number_format($summary->sum('total_ggr')- $summary->sum('total_ggr_mileage')-($summary->sum('total_deal')- $summary->sum('total_mileage')),0) }}</span></td>
+						@endif
 						<td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
 						{{--<td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>--}}
@@ -153,6 +159,9 @@
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
 						<th>딜비전환</th>
 						{{--
 						<th>매장충전</th>

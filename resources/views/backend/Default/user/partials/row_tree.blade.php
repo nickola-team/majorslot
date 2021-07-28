@@ -25,15 +25,17 @@
 </td>
 @endif
 <td>{{ number_format($user['balance'],0) }}</td>
-@if (auth()->user()->hasRole(['master']) && $user['role_id']==6 && !settings('enable_master_deal'))
-<td>없음</td>
-<td>없음</td>
-<td>없음</td>
-@else
 <td>{{ number_format($user['profit'],0) }}</td>
+@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+<td>{{ number_format($user['ggr_profit'],0) }}</td>
+@endif
 <td>{{ number_format($user['deal_percent'],2) }}</td>
 <td>{{ number_format($user['table_deal_percent'],2) }}</td>
+@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+<td>{{ number_format($user['ggr_percent'],2) }}</td>
+<td>{{ $user['reset_days']??0 }}일</td>
 @endif
+
 <td>
 <a href="{{ route('backend.user.edit', $user['id']) }}">
 <button type="button" class="btn btn-block btn-primary btn-xs">편집</button>

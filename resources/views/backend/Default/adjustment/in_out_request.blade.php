@@ -80,12 +80,12 @@
 					</div>
 				</div>
 			</li>
-			@if(auth()->user()->hasRole(['agent','distributor','manager']) || auth()->user()->hasRole('master') && settings('enable_master_deal'))
+			@if(auth()->user()->hasRole(['agent','distributor','manager']) || (auth()->user()->hasRole('master') && settings('enable_master_deal')))
 			
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-2" style="line-height:2">
-						<b>수익금:</b> ({{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->deal_percent:auth()->user()->deal_percent,2)}}%,{{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->table_deal_percent:auth()->user()->table_deal_percent,2)}}%) <a class="pull-right">{{ 
+						<b>딜비수익:</b> ({{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->deal_percent:auth()->user()->deal_percent,2)}}%,{{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->table_deal_percent:auth()->user()->table_deal_percent,2)}}%) <a class="pull-right">{{ 
 							number_format($dealvalue,0) 
 							}}원 </a>
 							
@@ -93,7 +93,7 @@
 					<div class="col-md-2">
 					<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal"  data-id="{{ (int)($dealvalue / 10000) * 10000 }}">
 							<button class="btn btn-success" id="convert-deal-balance-btn">
-							수익금전환
+							딜비전환
 							</button>
 						</a>
 					</div>
@@ -252,7 +252,7 @@
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="OutSum">수익금전환</label>
+							<label for="OutSum">딜비전환</label>
 							<input type="text" class="form-control" id="OutSum" name="OutSum" placeholder="전환금액"   required>
 						</div>
 					</div>

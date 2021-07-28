@@ -118,12 +118,16 @@
 						@if(auth()->user()->hasRole('admin'))
 						<th>@lang('app.percent')%</th>
 						@endif
-						<th>수익금</th>
+						<th>딜비수익</th>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
 						<th>딜비</th>
 						<th>라이브딜비</th>
-						{{-- <th>@lang('app.frontend')</th>
-						<th>@lang('app.currency')</th>
-						<th>@lang('app.order')</th> --}}
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장퍼센트</th>
+						<th>정산기간</th>
+						@endif
 						<th>@lang('app.status')</th>
 						<th>@lang('app.pay_in')</th>
 						<th>@lang('app.pay_out')</th>
@@ -135,7 +139,7 @@
 							@include('backend.Default.shops.partials.row')
 						@endforeach
 					@else
-						<tr><td colspan="12">@lang('app.no_data')</td></tr>
+						<tr><td colspan="14">@lang('app.no_data')</td></tr>
 					@endif
 					</tbody>
 					<thead>
@@ -155,12 +159,16 @@
 						@if(auth()->user()->hasRole('admin'))
 						<th>@lang('app.percent')%</th>
 						@endif
-						<th>수익금</th>
+						<th>딜비수익</th>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
 						<th>딜비</th>
 						<th>라이브딜비</th>
-						{{-- <th>@lang('app.frontend')</th>
-						<th>@lang('app.currency')</th>
-						<th>@lang('app.order')</th> --}}
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장퍼센트</th>
+						<th>정산기간</th>
+						@endif
 						<th>@lang('app.status')</th>
 						<th>@lang('app.pay_in')</th>
 						<th>@lang('app.pay_out')</th>

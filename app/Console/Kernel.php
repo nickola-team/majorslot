@@ -44,6 +44,7 @@ namespace VanguardLTE\Console
 
             })->dailyAt('08:00');
 
+            $schedule->command('daily:reset_ggr')->dailyAt('00:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
@@ -568,6 +569,247 @@ namespace VanguardLTE\Console
                     
                 }
                 $this->info('End deal calculation');
+            });
+            \Artisan::command('daily:reset_ggr', function () {
+                $this->info('Begin reset calculation');
+                $reset_masters = \VanguardLTE\User::whereRaw('`last_reset_at` < NOW()  - INTERVAL `reset_days` DAY')->where('role_id', 6)->where('ggr_percent', '>', 0)->get();
+                if (count($reset_masters) > 0)
+                {
+                    foreach ($reset_masters as $master)
+                    {
+                        $partner_users = $master->availableUsers() + [$master->id];
+                        $level = $master->level();
+                        $childpartners = \VanguardLTE\User::lockForUpdate()->whereIn('role_id', range(4,$level))->whereIn('id', $partner_users)->get();
+                        foreach ($childpartners as $user){
+                            $ggr = $user->ggr_balance - $user->ggr_mileage - ($user->count_deal_balance - $user->count_mileage);
+                            if ($ggr > 0)
+                            {
+                                //add ggr
+                                $summ = $ggr;
+                                if ($summ > 0) {
+                                    //out balance from master
+                                    $master = $user->referral;
+                                    while ($master!=null && !$master->isInoutPartner())
+                                    {
+                                        $master = $master->referral;
+                                    }
+
+                                    if ($master == null)
+                                    {
+                                        $this->warn('Can not find master');
+                                        return ;
+                                    }
+                                    
+                                    if ($master->balance < $summ )
+                                    {
+                                        $this->warn('Masters balance is not enough');
+                                        return ;
+                                    }
+                                    $master->update(
+                                        ['balance' => $master->balance - $summ]
+                                    );
+                                    
+                                    $old = $user->balance;
+
+                                    $user->balance = $user->balance + $summ;
+                                    $user->save();
+                                    $user = $user->fresh();
+
+                                    $master = $master->fresh();
+
+                                    \VanguardLTE\Transaction::create([
+                                        'user_id' => $user->id,
+                                        'payeer_id' => $master->id,
+                                        'system' => $user->username,
+                                        'type' => 'ggr_out',
+                                        'summ' => $summ,
+                                        'old' => $old,
+                                        'new' => $user->balance,
+                                        'balance' => $master->balance,
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            //convert all deal balances
+                            $real_deal_balance = $user->deal_balance - $user->mileage;
+                            $summ = $real_deal_balance;
+                            if ($summ > 0) {
+                                //out balance from master
+                                $master = $user->referral;
+                                while ($master!=null && !$master->isInoutPartner())
+                                {
+                                    $master = $master->referral;
+                                }
+
+                                if ($master == null)
+                                {
+                                    $this->warn('Can not find master');
+                                    return ;
+                                }
+                                
+                                if ($master->balance < $summ )
+                                {
+                                    $this->warn('Masters balance is not enough');
+                                    return ;
+                                }
+                                $master->update(
+                                    ['balance' => $master->balance - $summ]
+                                );
+                                
+                                $old = $user->balance;
+
+                                $user->balance = $user->balance + $summ;
+                                $user->deal_balance = 0;
+                                $user->mileage = 0;
+                                
+                                $user->save();
+                                $user = $user->fresh();
+
+                                $master = $master->fresh();
+
+                                \VanguardLTE\Transaction::create([
+                                    'user_id' => $user->id,
+                                    'payeer_id' => $master->id,
+                                    'system' => $user->username,
+                                    'type' => 'deal_out',
+                                    'summ' => $summ,
+                                    'old' => $old,
+                                    'new' => $user->balance,
+                                    'balance' => $master->balance,
+                                    'shop_id' => 0
+                                ]);
+                            }
+
+                            $user->ggr_balance = 0;
+                            $user->ggr_mileage = 0;
+                            //reset count deal balances
+                            $user->count_deal_balance = 0;
+                            $user->count_mileage = 0;
+                            $user->last_reset_at = date('Y-m-d');
+                            $user->save();
+                        }
+                    }
+                    
+                    $partner_shops = $master->availableShops();
+                    $reset_shops = \VanguardLTE\Shop::lockForUpdate()->whereIn('id', $partner_shops)->get();
+                    if (count($reset_shops) > 0)
+                    {
+                        foreach ($reset_shops as $shop)
+                        {
+                            $ggr = $shop->ggr_balance - $shop->ggr_mileage - ($shop->count_deal_balance - $shop->count_mileage);
+                            if ($ggr > 0)
+                            {
+                                //add ggr
+                                $summ = $ggr;
+                                if ($summ > 0) {
+                                    //out balance from master
+                                    $master = $shop->creator;
+                                    while ($master!=null && !$master->isInoutPartner())
+                                    {
+                                        $master = $master->referral;
+                                    }
+
+                                    if ($master == null)
+                                    {
+                                        $this->warn('Can not find master');
+                                        return ;
+                                    }
+                                    
+                                    if ($master->balance < $summ )
+                                    {
+                                        $this->warn('Masters balance is not enough');
+                                        return ;
+                                    }
+                                    $master->update(
+                                        ['balance' => $master->balance - $summ]
+                                    );
+                                    
+                                    $old = $shop->balance;
+
+                                    $shop->balance = $shop->balance + $summ;
+
+                                    $shop->save();
+                                    $shop = $shop->fresh();
+
+                                    $master = $master->fresh();
+
+                                    \VanguardLTE\ShopStat::create([
+                                        'user_id' => $master->id,
+                                        'type' => 'ggr_out',
+                                        'sum' => $summ,
+                                        'old' => $old,
+                                        'new' => $shop->balance,
+                                        'balance' => $master->balance,
+                                        'shop_id' => $shop->id,
+                                        'date_time' => \Carbon\Carbon::now()
+                                    ]);
+                                }
+                            }
+
+                            //convert all deal balances
+                            $real_deal_balance = $shop->deal_balance - $shop->mileage;
+                            $summ = $real_deal_balance;
+                            if ($summ > 0) {
+                                //out balance from master
+                                $master = $shop->creator;
+                                while ($master!=null && !$master->isInoutPartner())
+                                {
+                                    $master = $master->referral;
+                                }
+
+                                if ($master == null)
+                                {
+                                    $this->warn('Can not find master');
+                                    return ;
+                                }
+                                
+                                if ($master->balance < $summ )
+                                {
+                                    $this->warn('Masters balance is not enough');
+                                    return ;
+                                }
+                                $master->update(
+                                    ['balance' => $master->balance - $summ]
+                                );
+                                
+                                $old = $shop->balance;
+
+                                $shop->balance = $shop->balance + $summ;
+                                $shop->deal_balance = $real_deal_balance - $summ;
+                                $shop->mileage = 0;
+                                
+                                
+                                $shop->save();
+                                $shop = $shop->fresh();
+
+                                $master = $master->fresh();
+
+                                \VanguardLTE\ShopStat::create([
+                                    'user_id' => $master->id,
+                                    'type' => 'deal_out',
+                                    'sum' => $summ,
+                                    'old' => $old,
+                                    'new' => $shop->balance,
+                                    'balance' => $master->balance,
+                                    'shop_id' => $shop->id,
+                                    'date_time' => \Carbon\Carbon::now()
+                                ]);
+                            }
+                            $shop->ggr_balance = 0;
+                            $shop->ggr_mileage = 0;
+                            //reset count deal balances
+                            $shop->count_deal_balance = 0;
+                            $shop->count_mileage = 0;
+                            $shop->last_reset_at = date('Y-m-d');
+                            $shop->save();
+
+                        }
+                    }
+                }
+
+                
+                $this->info('End reset calculation');
             });
 
             

@@ -97,11 +97,14 @@
 						<th>게임명</th>
 						<th>회원이름</th>
 						<th>파트너(매장)</th>
-						{{-- <th>변동전금액</th>
-						<th>변동후금액</th> --}}
-						<th>베팅금액</th>
-						<th>수익금액</th>
-						<th>베팅시간</th>
+						<th>배팅금액</th>
+						<th>당첨금액</th>
+						<th>딜비수익</th>
+						@if (auth()->user()->hasRole('admin')  || (auth()->user()->hasRole(['master','agent', 'distributor']) && auth()->user()->ggr_percent > 0) 
+							|| (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
+						<th>배팅시간</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -118,11 +121,14 @@
 						<th>게임명</th>
 						<th>회원이름</th>
 						<th>파트너(매장)</th>
-						{{-- <th>변동전금액</th>
-						<th>변동후금액</th> --}}
-						<th>베팅금액</th>
-						<th>수익금액</th>
-						<th>베팅시간</th>
+						<th>배팅금액</th>
+						<th>당첨금액</th>
+						<th>딜비수익</th>
+						@if (auth()->user()->hasRole('admin')  || (auth()->user()->hasRole(['master','agent', 'distributor']) && auth()->user()->ggr_percent > 0) 
+							|| (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
+						<th>배팅시간</th>
 					</tr>
 					</thead>
                             </table>

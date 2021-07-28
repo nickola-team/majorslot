@@ -40,12 +40,13 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>충전/환전/수익금전환</label>
+								<label>충환전타입</label>
 								<select name="type" class="form-control">
 									<option value="" @if (Request::get('type') == '') selected @endif>@lang('app.all')</option>
 									<option value="add" @if (Request::get('type') == 'add') selected @endif>충전</option>
 									<option value="out" @if (Request::get('type') == 'out') selected @endif>환전</option>
-									<option value="deal_out" @if (Request::get('type') == 'deal_out') selected @endif>수익금전환</option>
+									<option value="deal_out" @if (Request::get('type') == 'deal_out') selected @endif>딜비전환</option>
+									<option value="ggr_out" @if (Request::get('type') == 'ggr_out') selected @endif>죽장전환</option>
 								</select>
 							</div>
 						</div>
@@ -109,7 +110,10 @@
 						<th>변동후금액</th>
 						<th>충전</th>
 						<th>환전</th>
-						<th>수익금전환</th>
+						<th>딜비전환</th>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장전환</th>
+						@endif
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>
@@ -120,6 +124,7 @@
 						$totalin=0;
 						$totalout=0;
 						$totaldealout=0;
+						$totalggrout=0;
 					?>
 					@if (count($statistics))
 						@foreach ($statistics as $stat)
@@ -128,6 +133,7 @@
 								if ($stat->type == 'add'){ $totalin = $totalin + abs($stat->summ);}
 								if ($stat->type == 'out'){ $totalout = $totalout + abs($stat->summ);}
 								if ($stat->type == 'deal_out'){ $totaldealout = $totaldealout + abs($stat->summ);}
+								if ($stat->type == 'ggr_out'){ $totalggrout = $totalggrout + abs($stat->summ);}
 							?>
 						@endforeach
 						<td></td>
@@ -140,6 +146,9 @@
 						<td><span class="text-green">{{number_format($totalin,0)}}</span></td>
 						<td><span class="text-red">{{number_format($totalout,0)}}</span></td>
 						<td><span class="text-red">{{number_format($totaldealout,0)}}</span></td>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<td><span class="text-red">{{number_format($totalggrout,0)}}</span></td>
+						@endif
 						<td></td>
 						<td></td>
 						<td></td>
@@ -158,7 +167,10 @@
 						<th>변동후금액</th>						
 						<th>충전</th>
 						<th>환전</th>
-						<th>수익금전환</th>
+						<th>딜비전환</th>
+						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장전환</th>
+						@endif
 						<th>계좌정보</th>
 						<th>예금주</th>
 						<th>시간</th>
