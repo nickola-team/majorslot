@@ -563,7 +563,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
                 }
-                if ($parent!=null && $parent->ggr_percent < $data['ggr_percent'])
+                if (!$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
                 }
