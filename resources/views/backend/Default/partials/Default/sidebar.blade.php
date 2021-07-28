@@ -26,13 +26,17 @@
         </div>
         @if(auth()->user()->isInoutPartner())
         @else
+        <?php
+            $shop = \VanguardLTE\Shop::find( auth()->user()->shop_id );
+            $ggr_percent = auth()->user()->hasRole('manager')?$shop->ggr_percent:auth()->user()->ggr_percent;
+            $deal_percent = auth()->user()->hasRole('manager')?$shop->deal_percent:auth()->user()->deal_percent;
+        ?>
+        @if ($ggr_percent > 0)
         <div class="user-panel"  style="height:90px;color:white;">
+        @else
+        <div class="user-panel"  style="height:40px;color:white;">
+        @endif
             <div>
-                <?php
-                    $shop = \VanguardLTE\Shop::find( auth()->user()->shop_id );
-                    $ggr_percent = auth()->user()->hasRole('manager')?$shop->ggr_percent:auth()->user()->ggr_percent;
-                    $deal_percent = auth()->user()->hasRole('manager')?$shop->deal_percent:auth()->user()->deal_percent;
-                ?>
                 <p>딜비수익({{$deal_percent}}%):
 
                     @if( Auth::user()->hasRole(['cashier', 'manager']) )
@@ -53,7 +57,6 @@
                         원
                     @endif
                 </p>
-                @endif
                 <p>정산시간 : 
                 @if( Auth::user()->hasRole(['cashier', 'manager']) )
                 {{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
@@ -61,6 +64,8 @@
                 {{auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"))}}
                 @endif
                 </p>
+                @endif
+                
             </div>
         </div>
         @endif
