@@ -287,7 +287,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                         $slotEvent['slotEvent'] = 'bet';
                         $slotSettings->SetBalance(-1 * ($allBet), $slotEvent['slotEvent']);
                         if($isBuyFreespin == 0){
-                            $_sum = $allBet;
+                            $_sum = $allBet/ 100 * $slotSettings->GetPercent();
                         }else{
                             $_sum = $allBet / 100 * $slotSettings->GetPercent();
                         }
