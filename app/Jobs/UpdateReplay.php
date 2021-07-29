@@ -31,11 +31,18 @@ class UpdateReplay implements ShouldQueue
      */
     public function handle()
     {
-        $response = Http::asForm()->post(config('app.replayurl') . '/api/top/winnings', $this->replay_data);
-        if (!$response->ok())
-        {
-            return -1;
+        try {
+            $response = Http::timeout(3)->asForm()->post(config('app.replayurl') . '/api/top/winnings', $this->replay_data);
+            if (!$response->ok())
+            {
+                return -1;
+            }
         }
+        catch (\Exception $ex)
+        {
+            return 0;
+        }
+
         return 0;
     }
 }
