@@ -30,10 +30,30 @@
 @if ($user->role_id == 7)
 <td>{{ number_format($user->money_percent,2) }}</td>
 @endif
+<td>
+@if ($user->ggr_percent > 0)
+        @if( $user->hasRole(['cashier', 'manager']) )
+        {{$user->shop->last_reset_at?\Carbon\Carbon::parse($user->shop->last_reset_at)->addDays($user->shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $user->shop->reset_days . " days"))}}
+        @else
+        {{$user->last_reset_at?\Carbon\Carbon::parse($user->last_reset_at)->addDays($user->reset_days):date('Y-m-d', strtotime("+" . $user->reset_days . " days"))}}
+        @endif
+@endif
+</td>
+@if ($user->role_id == 6)
+<td>
+@if ($user->ggr_percent > 0)
+<a class="newReset allowReset" href="#" data-toggle="modal" data-target="#openResetModal" data-id="{{ $user['id'] }}" >
+<button type="button" class="btn btn-block btn-primary btn-xs">리셋</button>
+</a>
+@else
+<button type="button" class="btn btn-block btn-primary btn-xs" disabled>리셋</button>
+@endif
+</td>
+@endif
 
 <td>
 @if (auth()->user()->isInoutPartner() || (auth()->user()->role_id == $user->role_id+1))
-<a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }} disabled" >
+<a class="newPayment addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $user['id'] }}" >
 <button type="button" class="btn btn-block btn-success btn-xs">@lang('app.in')</button>
 </a>
 @else

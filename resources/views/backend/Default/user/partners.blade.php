@@ -115,9 +115,13 @@
 							@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 							<th>죽장퍼센트</th>
 							<th>정산기간</th>
+							<th>다음정산시간</th>
 							@endif
 							@if ($role_id==7)
 							<th>머니퍼센트</th>
+							@endif
+							@if ($role_id==6)
+							<th>수익금리셋</th>
 							@endif
                             <th>충전</th>
                             <th>환전</th>
@@ -155,9 +159,13 @@
 								@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 								<th>죽장퍼센트</th>
 								<th>정산기간</th>
+								<th>다음정산시간</th>
 								@endif
 								@if ($role_id==7)
 								<th>머니퍼센트</th>
+								@endif
+								@if ($role_id==6)
+								<th>수익금리셋</th>
 								@endif
                                 <th>충전</th>
                                 <th>환전</th>
@@ -244,6 +252,31 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="openResetModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="{{ route('backend.user.partner.reset_ggr') }}" method="POST" id="addForm">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">리셋</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="OutSum">리셋하시겠습니까</label>
+							<input type="hidden" id="masterid" name="masterid">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">아니오</button>
+						<button type="submit" class="btn btn-primary" id="btnAddSum">네</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 
 @stop
 
@@ -252,6 +285,15 @@
 
 		$(function() {
 
+
+		$('.allowReset').click(function(event){
+			if( $(event.target).is('.newReset') ){
+				var id = $(event.target).attr('data-id');
+			}else{
+				var id = $(event.target).parents('.newReset').attr('data-id');
+			}
+			$('#masterid').val(id);
+		});
 		$('.addPayment').click(function(event){
 			if( $(event.target).is('.newPayment') ){
 				var id = $(event.target).attr('data-id');
@@ -259,7 +301,6 @@
 				var id = $(event.target).parents('.newPayment').attr('data-id');
 			}
 			$('#AddId').val(id);
-
 		});
 		$('.changeAddSum').click(function(event){
 			$v = Number($('#AddSum').val());

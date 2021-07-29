@@ -570,9 +570,16 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End deal calculation');
             });
-            \Artisan::command('daily:reset_ggr', function () {
+            \Artisan::command('daily:reset_ggr {masterid}', function ($masterid) {
                 $this->info('Begin reset calculation');
-                $reset_masters = \VanguardLTE\User::whereRaw('`last_reset_at` < NOW()  - INTERVAL `reset_days` DAY')->where('role_id', 6)->where('ggr_percent', '>', 0)->get();
+                if ($masterid)
+                {
+                    $reset_masters = \VanguardLTE\User::where('id', $masterid)->get();
+                }
+                else
+                {
+                    $reset_masters = \VanguardLTE\User::whereRaw('`last_reset_at` < NOW()  - INTERVAL `reset_days` DAY')->where('role_id', 6)->where('ggr_percent', '>', 0)->get();
+                }
                 if (count($reset_masters) > 0)
                 {
                     foreach ($reset_masters as $master)

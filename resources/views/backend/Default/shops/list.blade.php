@@ -127,6 +127,7 @@
 						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 						<th>죽장퍼센트</th>
 						<th>정산기간</th>
+						<th>다음정산시간</th>
 						@endif
 						<th>@lang('app.status')</th>
 						<th>@lang('app.pay_in')</th>
@@ -168,6 +169,7 @@
 						@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 						<th>죽장퍼센트</th>
 						<th>정산기간</th>
+						<th>다음정산시간</th>
 						@endif
 						<th>@lang('app.status')</th>
 						<th>@lang('app.pay_in')</th>

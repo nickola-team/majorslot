@@ -39,6 +39,11 @@
 	@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 	<td>{{ $shop->ggr_percent }}</td>
 	<td>{{ $shop->reset_days??0 }}일</td>
+	<td>
+		@if ($shop->ggr_percent > 0)
+			{{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
+		@endif
+	</td>
 	@endif
 	<td>
 		@if($shop->is_blocked)

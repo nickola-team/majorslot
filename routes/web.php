@@ -607,6 +607,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'DashboardController@mileage_stat',
         'middleware' => 'permission:stats.pay',
     ]);	
+    Route::post('partner/master/reset_ggr', [
+        'uses' => 'UsersController@reset_ggr',
+		'as' => 'backend.user.partner.reset_ggr',
+    ]);
 	Route::post('profile/balance/update', [
         'uses' => 'UsersController@updateBalance',
 		'as' => 'backend.user.balance.update',

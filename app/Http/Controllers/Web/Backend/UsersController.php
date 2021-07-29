@@ -491,6 +491,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             return view('backend.Default.user.add', compact('roles', 'statuses', 'shops', 'availibleUsers', 'happyhour'));
         }
+        public function reset_ggr(\Illuminate\Http\Request $request)
+        {
+            \Artisan::call('daily:reset_ggr', ['masterid' => $request->masterid]);
+            return redirect()->back()->withSuccess('리셋되었습니다.');
+        }
+
         public function store(\VanguardLTE\Http\Requests\User\CreateUserRequest $request)
         {
             $count = \VanguardLTE\User::where([
