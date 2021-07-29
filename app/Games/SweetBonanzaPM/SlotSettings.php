@@ -860,7 +860,7 @@ namespace VanguardLTE\Games\SweetBonanzaPM
             $double_scatterposes = [];
             $single_scatterposes = [];
             for($i = 0; $i < count($_obf_scatterposes); $i++){
-                if(isset($_obf_scatterposes[$i + 1]) && ($_obf_scatterposes[$i + 1] - $_obf_scatterposes[$i]) <= 4){
+                if(isset($_obf_scatterposes[$i + 1]) && ($_obf_scatterposes[$i + 1] - $_obf_scatterposes[$i]) <= 3){
                     array_push($double_scatterposes, $_obf_scatterposes[$i]);
                     $i++;
                 }else{
