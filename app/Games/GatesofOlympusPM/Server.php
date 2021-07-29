@@ -171,6 +171,12 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 $objRes['fswin'] = $LASTSPIN->fswin ?? null;
                 $objRes['fsres'] = $LASTSPIN->fsres ?? null;
                 
+                $objRes['fs_total'] = $LASTSPIN->fs_total ?? null;
+                $objRes['fsend_total'] = $LASTSPIN->fsend_total ?? null;
+                $objRes['fsmul_total'] = $LASTSPIN->fsmul_total ?? null;
+                $objRes['fsres_total'] = $LASTSPIN->fsres_total ?? null;
+                $objRes['fswin_total'] = $LASTSPIN->fswin_total ?? null;
+
                 /* 텀블스핀 */
                 $objRes['tmb_win'] = $LASTSPIN->tmb_win ?? null;
 

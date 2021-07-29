@@ -970,12 +970,21 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             return 0;  
         }
 
-        public function GenerateMultiplierCount($slotEvent) {
+        public function GenerateMultiplierCount($winType, $slotEvent, $isTumble) {
             if ($slotEvent == 'freespin') {
-                $probabilityMap = [
-                    0 => 90,
-                    1 => 10
-                ];
+                if (!$isTumble && $winType == 'none') {
+                    $probabilityMap = [
+                        0 => 60,
+                        1 => 20,
+                        2 => 20,
+                    ];
+                }
+                else {
+                    $probabilityMap = [
+                        0 => 80,
+                        1 => 20
+                    ];
+                }
             }
             else {
                 $probabilityMap = [
@@ -1082,16 +1091,23 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             $S_SCATTER = 1;
             $S_MULTIPLIER = 12;
 
+            $isTumble = ($lastReels != null && isset($lastReels->tmb));
             /* 멀티플라이어 심볼배열 */
             $multiplierSymbols = [];
 
             /* 생성될 멀티플라이어심볼 갯수 */
-            $multiplierCount = $this->GenerateMultiplierCount($slotEvent);
+            $multiplierCount = $this->GenerateMultiplierCount($winType, $slotEvent, $isTumble);
+            
+            /* 보너스당첨이 있을경우 멀티플라이어는 생성하지 않는다 */
+            if ($proposedScatterCount >= 3) {
+                $multiplierCount = 0;
+            }
+
             $multiplierReelId = random_int(0, $REELCOUNT - 1);
             $multiplierPos = random_int(0, $SYMBOLCOUNT - 1);
             
             /* 텀블스핀인 경우 기본릴셋은 유지, 텀블심볼만 재생성, */
-            if ($lastReels != null && isset($lastReels->tmb)) {
+            if ($isTumble) {
                 /* 릴셋 역구성 */
                 $lastFlattenSymbols = explode(",", $lastReels->s);
                 $newSymbols = [];
@@ -1145,7 +1161,8 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                             if ($multiplierPos == $i) {
                                 $newSymbol = $S_MULTIPLIER;    
 
-                                $multiplierCount --;
+                                /* 텀블인 경우 멀티플라이어 심볼은 최대 1개까지만 생성 */
+                                $multiplierCount = 0;
                             }
                             else {
                                 $newSymbol = random_int(3, 11);
@@ -1208,7 +1225,9 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 }
 
                 /* 멀티플라이어심볼 생성 */
-                if ($multiplierCount > 0) {
+                for ($i=0; $i < $multiplierCount; $i++) { 
+                    $multiplierReelId = random_int(0, $REELCOUNT - 1);
+                    $multiplierPos = random_int(0, $SYMBOLCOUNT - 1);
                     $reels['symbols'][$multiplierReelId][$multiplierPos] = $S_MULTIPLIER;
                 }
 
@@ -1238,7 +1257,6 @@ namespace VanguardLTE\Games\GatesofOlympusPM
 
             /* 릴배치표 평활화, 멀티플라이어 체크 */
             $flattenSymbols = [];
-            $isEnoughMultiplier = false;
             foreach ($reels['symbols'] as $reelId => $symbols) {
                 foreach ($symbols as $k => $symbol) {
                     /* 멀티플라이어 체크 */
@@ -1246,16 +1264,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                         $pos = $reelId + $k * $REELCOUNT;
 
                         if (!array_key_exists($pos, $multiplierSymbols)) {
-                            /* 이미 1개이상 생성되었다면 다른 심볼로 치환 */
-                            if ($isEnoughMultiplier == true) {
-                                $symbol = random_int(3, 11);
-                                $reels['symbols'][$reelId][$k] = $symbol;
-                            }
-                            else {
-                                /* 멀티플라이어 등록 */
-                                $multiplierSymbols[$pos] = $this->GenerateMultiplier($slotEvent, $winType, $lastReels != null);
-                                $isEnoughMultiplier = true;    
-                            }    
+                            $multiplierSymbols[$pos] = $this->GenerateMultiplier($slotEvent, $winType, $lastReels != null);
                         }
                     }
 
