@@ -35,7 +35,7 @@ namespace VanguardLTE\Console
                 $start_date = date("Y-m-d H:i:s",strtotime("-3 days"));
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
 
-                $start_date = date("Y-m-d H:i:s",strtotime("-30 days"));
+                $start_date = date("Y-m-d H:i:s",strtotime("-90 days"));
                 \VanguardLTE\ShopStat::where('date_time', '<', $start_date)->delete();
                 \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
                 \VanguardLTE\WithdrawDeposit::where('created_at', '<', $start_date)->delete();
