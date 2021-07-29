@@ -27,9 +27,6 @@
 <td>{{ $user->reset_days??0 }}일</td>
 @endif
 
-@if ($user->role_id == 7)
-<td>{{ number_format($user->money_percent,2) }}</td>
-@endif
 <td>
 @if ($user->ggr_percent > 0)
         @if( $user->hasRole(['cashier', 'manager']) )
@@ -39,6 +36,9 @@
         @endif
 @endif
 </td>
+@if ($user->role_id == 7)
+<td>{{ number_format($user->money_percent,2) }}</td>
+@endif
 @if ($user->role_id == 6)
 <td>
 @if ($user->ggr_percent > 0)
