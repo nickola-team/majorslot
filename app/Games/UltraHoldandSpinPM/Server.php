@@ -105,7 +105,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 'wilds' => '2~250,0,0~1,1,1',
                 'bonuses' => '0',
                 'fsbonus' => '',
-                'c' => '10.00',
+                'c' => '250.00',
                 'sver' => '5',
                 'counter' => ((int)$slotEvent['counter'] + 1),
                 'l' => '5',
@@ -254,7 +254,14 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                     break;
                 }
                 else if ($winType == 'bonus' && count($reels['coinSymbols']) == 3) {
-                    break;
+                    $wp = 0;
+                    foreach ($reels['coinSymbols'] as $pos => $coin) {
+                        $wp += $coin['value'];
+                    }
+
+                    if ($wp * $bet < $_winAvaliableMoney) {
+                        break;
+                    }
                 }
             }
 
@@ -280,54 +287,6 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 'w' => $winMoney,
             ];
 
-            /* 코인심볼 체크 */
-            $coinSymbols = $reels['coinSymbols'];
-            if (count($coinSymbols) > 0) {
-                $coinValues = array_fill(0, $REELCOUNT * $SYMBOLCOUNT, 0);
-                $coinTypes = array_fill(0, $REELCOUNT * $SYMBOLCOUNT, 'r');
-
-                $wp = 0;
-                foreach ($coinSymbols as $pos => $coin) {
-                    $pos = 1 + $pos * $REELCOUNT;
-                    $coinValues[$pos] = $coin['value'];
-                    $coinTypes[$pos] = $coin['type'];
-
-                    $wp += $coin['value'];
-                }
-
-                $objRes["mo"] = implode(",", $coinValues);
-                $objRes["mo_t"] = implode(",", $coinTypes);
-
-                /* 리스핀 발동 */
-                if ($winType == 'bonus' && count($coinSymbols) == 3) {
-
-                    $objRes['na'] = 'b';
-                    $objRes['rsb_rt'] = 0;
-                    $objRes['bgid'] = 0;
-                    $objRes['bgt'] = 48;
-
-                    $objRes['coef'] = $bet;
-                    $objRes['rw'] = $wp * $bet;
-                    $objRes['wp'] = $wp;
-
-                    $objRes['lifes'] = '4';
-                    $objRes['bw'] = '1';
-                    $objRes['end'] = '0';
-
-                    /* 밸런스 업데이트 */
-                    $slotSettings->SetBalance($objRes['rw']);
-                    $slotSettings->SetBank($slotEvent['slotEvent'] ?? '', -1 * $objRes['rw']);
-
-                    /* 리스핀 시작밸런스 유지 */
-                    // $slotSettings->SetGameData($slotSettings->slotId . 'RSStartBalance', $BALANCE);
-
-                    /* 리스핀 셋팅 */
-                    $respinCount = $slotSettings->GenerateRespinCount();
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RSRoundCount', $respinCount);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RSCurrentRound', 0);
-                }
-            }
-            
             if ($winMoney > 0) {
                 $objRes['na'] = 'c';
                 
@@ -358,10 +317,61 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 $objRes['s'] = implode(",", $reels['orgFlatSymbols']);
             }
 
+            /* 코인심볼 체크 */
+            $coinSymbols = $reels['coinSymbols'];
+            if (count($coinSymbols) > 0) {
+                $coinValues = array_fill(0, $REELCOUNT * $SYMBOLCOUNT, 0);
+                $coinTypes = array_fill(0, $REELCOUNT * $SYMBOLCOUNT, 'r');
+
+                $wp = 0;
+                foreach ($coinSymbols as $pos => $coin) {
+                    $pos = 1 + $pos * $REELCOUNT;
+                    $coinValues[$pos] = $coin['value'];
+                    $coinTypes[$pos] = $coin['type'];
+
+                    $wp += $coin['value'];
+                }
+
+                $objRes["mo"] = implode(",", $coinValues);
+                $objRes["mo_t"] = implode(",", $coinTypes);
+
+                /* 리스핀 발동 */
+                if ($winType == 'bonus' && count($coinSymbols) == 3) {
+                    $winMoney = $wp * $bet;
+
+                    $objRes['na'] = 'b';
+                    $objRes['rsb_rt'] = 0;
+                    $objRes['bgid'] = 0;
+                    $objRes['bgt'] = 48;
+
+                    $objRes['coef'] = $bet;
+                    $objRes['rw'] = $wp * $bet;
+                    $objRes['wp'] = $wp;
+
+                    $objRes['lifes'] = '4';
+                    $objRes['bw'] = '1';
+                    $objRes['end'] = '0';
+
+                    /* 리스핀 시작밸런스 유지 */
+                    // $slotSettings->SetGameData($slotSettings->slotId . 'RSStartBalance', $BALANCE);
+
+                    /* 리스핀 셋팅 */
+                    $respinCount = $slotSettings->GenerateRespinCount();
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RSRoundCount', $respinCount);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RSCurrentRound', 0);
+                }
+            }
+            
             if($winMoney > 0) 
             {
                 $slotSettings->SetBalance($winMoney);
-                $slotSettings->SetBank($slotEvent['slotEvent'] ?? '', -1 * $winMoney);
+
+                if ($winType == 'bonus') {
+                    $slotSettings->SetBank('bonus', -1 * $winMoney);
+                }
+                else {
+                    $slotSettings->SetBank($slotEvent['slotEvent'] ?? '', -1 * $winMoney);
+                }
             }
 
             $_GameLog = json_encode($objRes);
@@ -401,28 +411,46 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             $isEnded = false;
 
             /* 리스핀 결과 결정 */
-            $newCoinCount = $slotSettings->GetRespinSetting($curRound, $maxRound, $lifes);
+            [$newCoinCount, $_winAvaliableMoney] = $slotSettings->GetRespinSetting($curRound, $maxRound, $lifes, $bet);
 
+            $winMoney = 0;
+            $overtry = false;           // 50번이상 시행했을때 true
+            
             if ($newCoinCount > 0) {
-                /* 리스핀 릴셋 생성 */
-                $coins = $slotSettings->GetRespinReelStrips($startSpin, $newCoinCount);
+                for ($try=0; $try < 100; $try++) { 
+                    /* 리스핀 릴셋 생성 */
+                    $coins = $slotSettings->GetRespinReelStrips($startSpin, $newCoinCount);
 
-                $coinValues = $coins['values'];
-                $coinTypes = $coins['types'];
-                $coinSymbols = $coins['symbols'];
+                    $coinValues = $coins['values'];
+                    $coinTypes = $coins['types'];
+                    $coinSymbols = $coins['symbols'];
 
-                $winMoney = array_sum($coinValues);
-                $totalWin = $LASTSPIN->wp + $winMoney;
+                    $winMoney = array_sum($coinValues);
 
-                /* 다음 라운드 */
-                $lifes = 4;
-                $curRound ++;
+                    if ($try > 50) {
+                        $overtry = true;
+                        break;
+                    }
 
-                /* 밸런스 업데이트 */
-                $slotSettings->SetBalance($winMoney * $bet);
-                $slotSettings->SetBank($slotEvent['slotEvent'] ?? '', -1 * $winMoney * $bet);
+                    if ($winMoney * $bet < $_winAvaliableMoney) {
+                        break;
+                    }
+                }
+                
+                if (!$overtry) {
+                    $totalWin = $LASTSPIN->wp + $winMoney;
+
+                    /* 다음 라운드 */
+                    $lifes = 4;
+                    $curRound ++;
+    
+                    /* 밸런스 업데이트 */
+                    $slotSettings->SetBalance($winMoney * $bet);
+                    $slotSettings->SetBank('bonus', -1 * $winMoney * $bet);
+                }
             }
-            else {
+
+            if ($newCoinCount == 0 || $overtry) {
                 $lifes --;
                 
                 if ($lifes == 0) {
@@ -474,7 +502,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             $slotSettings->SetGameData($slotSettings->slotId . 'RSCurrentRound', $curRound);
             
             $_GameLog = json_encode(array_merge($objRes, ['start_with' => $isStartSpin ? $LASTSPIN : $LASTSPIN->start_with]));
-            $slotSettings->SaveLogReport($_GameLog, /* $allBet, $slotEvent['l'], $winMoney,*/ 0, 0, 0, $slotEvent['slotEvent']);
+            $slotSettings->SaveLogReport($_GameLog, 0, 0, $winMoney * $bet, $slotEvent['slotEvent']);
 
             return $objRes;
         }

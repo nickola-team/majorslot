@@ -711,13 +711,9 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             {
                 $_obf_slotstate = $this->slotId . ' Bonus';
             }
-            else if( $slotState == 'doSpin' || $slotState == 'buy_freespin') 
+            else if( $slotState == 'doSpin') 
             {
                 $_obf_slotstate = $this->slotId . '';
-            }
-            else if( $slotState == 'freespin' ) 
-            {
-                $_obf_slotstate = $this->slotId . ' FG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -1164,9 +1160,20 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             return $reels;
         }
 
-        public function GetRespinSetting($curRound, $maxRound, $lifes) {
+        public function GetRespinSetting($curRound, $maxRound, $lifes, $bet) {
             $newCoinCount = 0;
+            $garantType = 'bonus';
+            $_obf_currentbank = $this->GetBank($garantType);
+
             if ($curRound < $maxRound) {
+                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
+                {
+                    return [
+                        $newCoinCount,
+                        $_obf_currentbank
+                    ];
+                }
+
                 /* 더이상 리스핀갯수가 없다면 무조건 생성 */
                 if ($lifes == 1) {
                     $newCoinCount = $this->GenerateRespinCoinCount();
@@ -1185,7 +1192,10 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 $newCoinCount = 0;
             }
 
-            return $newCoinCount;
+            return [
+                $newCoinCount,
+                $_obf_currentbank
+            ];
         }
 
         public function GetRespinReelStrips($startSpin, $newCoinCount) {
