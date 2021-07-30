@@ -144,7 +144,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'description' => 'player not found']);
             }
 
-            $transaction = $this->checkreference($reference);
+            /*$transaction = $this->checkreference($reference);
             if ($transaction)
             {
                 return response()->json([
@@ -155,7 +155,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'usedPromo' => 0,
                     'error' => 0,
                     'description' => 'success']);
-            }
+            }*/
 
             if ($user->balance < $amount)
             {
