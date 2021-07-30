@@ -203,6 +203,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'bonus' => 0,
                 'usedPromo' => 0,
                 'error' => 0,
+                'time' => $this->microtime_string(),
                 'description' => 'success']);
         }
 
