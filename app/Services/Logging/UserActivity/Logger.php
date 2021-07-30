@@ -46,7 +46,7 @@ class Logger
             'description' => $description,
             'user_id' => $this->getUserId(),
             'shop_id' => auth()->user()->shop_id,
-            'ip_address' => $this->request->server('REMOTE_ADDR'),
+            'ip_address' => $this->request->server('HTTP_CF_CONNECTING_IP'),
             'user_agent' => $this->getUserAgent()
         ]);
     }
