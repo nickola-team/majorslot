@@ -15,12 +15,12 @@ namespace VanguardLTE\Http\Middleware
 
             $params = $request->except('hash');
             $calc_hash = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::calcHash($params);
-            /*if ($request->hash != $calc_hash )
+            if ($request->hash != $calc_hash )
             {
                 $response = \Response::json(['error' => 5, 'description' => 'hash is incorrect'], 200, []);
                 $response->header('Content-Type', 'application/json');
                 return $response;
-            }*/
+            }
             return $next($request);
         }
     }
