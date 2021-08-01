@@ -90,7 +90,7 @@
 @media screen and (max-width: 960px) {
     .jackpot_right_wrap {position:absolute; z-index:1;top:198px; left:1000px;}
 }
-.crown_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/crownjp.png") center top no-repeat; background-size: contain; margin:15px 0 15px 0}
+.crown_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/grandjp.png") center top no-repeat; background-size: contain; margin:15px 0 15px 0}
 .major_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/majorjp.png") center top no-repeat; background-size: contain;margin:15px 0 15px 0}
 .minor_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/minorjp.png") center top no-repeat; background-size: contain;margin:15px 0 15px 0}
 .mini_jackpot_box {text-align: center; z-index:1;  width:400px; height:140px; background:url("../images/minijp.png") center top no-repeat; background-size: contain;margin:15px 0 15px 0}
