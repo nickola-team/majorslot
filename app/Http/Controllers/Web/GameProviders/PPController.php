@@ -629,7 +629,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
                 {
-                    if ($game['gameID'] == '106' || $game['gameID'] == '110' || $game['gameID'] == '111')
+                    if ($game['gameID'] == '106' || $game['gameID'] == '110' || $game['gameID'] == '111' || $game['gameID'] == '535' || $game['gameID'] == '536')
                     {
 
                     }
