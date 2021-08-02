@@ -27,15 +27,24 @@
 	
 	{{-- <td><a href="{{ route('frontend.jpstv', $shop->shop_id) }}" target="_blank">{{ $shop->shop_id }}</a></td> --}}
     <td>{{ number_format($shop->balance,0) }}</td>
-	@if(auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
+	@if(auth()->user()->hasRole('admin'))
 	<td>{{ $shop->percent }}</td>
 	@endif
 	<td>{{ number_format($shop->deal_balance,0) }}</td>
+	@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+	<td>{{ number_format($shop->ggr_balance-$shop->count_deal_balance,0) }}</td>
+	@endif
 	<td>{{ $shop->deal_percent }}</td>
 	<td>{{ $shop->table_deal_percent }}</td>
-	{{-- <td>{{ $shop->frontend }}</td>
-	<td>{{ $shop->currency }}</td>
-	<td>{{ $shop->orderby }}</td> --}}
+	@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+	<td>{{ $shop->ggr_percent }}</td>
+	<td>{{ $shop->reset_days??0 }}일</td>
+	<td>
+		@if ($shop->ggr_percent > 0)
+			{{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
+		@endif
+	</td>
+	@endif
 	<td>
 		@if($shop->is_blocked)
 			<small><i class="fa fa-circle text-red"></i></small>

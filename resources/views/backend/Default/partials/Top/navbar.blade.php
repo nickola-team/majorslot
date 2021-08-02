@@ -466,26 +466,44 @@
                         {{ number_format(auth()->user()->present()->balance,0) }}원
                     @endif</span>
               </a>
+              <?php
+                    $shop = \VanguardLTE\Shop::find( auth()->user()->shop_id );
+                    $ggr_percent = auth()->user()->hasRole('manager')?$shop->ggr_percent:auth()->user()->ggr_percent;
+                    $deal_percent = auth()->user()->hasRole('manager')?$shop->deal_percent:auth()->user()->deal_percent;
+                ?>
             </li>
             @if(auth()->user()->isInoutPartner())
             @else
             <li class="dropdown messages-menu">
               <!-- Menu toggle button -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span>수익금:
+                <span>딜비수익({{$deal_percent}}%):
                     @if( Auth::user()->hasRole(['cashier', 'manager']) )
-                        @php
-                            $shop = \VanguardLTE\Shop::find( auth()->user()->present()->shop_id );
-                            echo $shop?number_format($shop->deal_balance,0):0;
-                        @endphp
+                        {{number_format($shop->deal_balance,0)}}
                         원
                     @else
-                        {{ number_format(auth()->user()->present()->deal_balance - auth()->user()->present()->mileage,0) }}
+                        {{ number_format(auth()->user()->deal_balance - auth()->user()->mileage,0) }}
                         원
                     @endif
                 </span>
               </a>
             </li>
+            @if ($ggr_percent > 0)
+                <li class="dropdown messages-menu">
+                    <!-- Menu toggle button -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span>죽장수익({{$ggr_percent}}%):
+                            @if( Auth::user()->hasRole(['cashier', 'manager']) )
+                                {{number_format($shop->ggr_balance - $shop->count_deal_balance,0)}}
+                                원
+                            @else
+                                {{ number_format(auth()->user()->ggr_balance - auth()->user()->ggr_mileage - (auth()->user()->count_deal_balance - auth()->user()->count_mileage),0) }}
+                                원
+                            @endif
+                        </span>
+                    </a>
+                </li>
+            @endif
             @endif
         @endif
             <!-- User Account Menu -->
@@ -512,6 +530,13 @@
                 <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
                 <p>
                 {{ Auth::user()->username }}[{{$available_roles_trans[auth()->user()->role_id]}}]님 
+                </p>
+                <p style="font-size:14px;">정산시간 : 
+                @if( Auth::user()->hasRole(['cashier', 'manager']) )
+                {{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
+                @else
+                {{auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"))}}
+                @endif
                 </p>
                 </li>
                 <!-- Menu Footer-->

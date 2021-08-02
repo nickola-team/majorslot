@@ -35,12 +35,23 @@ class UpdateDeal implements ShouldQueue
             if ($deal['type'] == 'shop')
             {
                 $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$deal['shop_id'])->first();
-                $shop->increment('deal_balance' , $deal['deal_profit']);
+                $shop->update([
+                    'count_deal_balance' => $shop->count_deal_balance + $deal['deal_profit'], 
+                    'deal_balance' => $shop->deal_balance + $deal['deal_profit'], 
+                    'ggr_balance' => $shop->ggr_balance + $deal['ggr_profit'], 
+                ]);
             }
             else
             {
                 $partner = \VanguardLTE\User::lockForUpdate()->where('id',$deal['partner_id'])->first();
-                $partner->update(['deal_balance' => $partner->deal_balance + $deal['deal_profit'], 'mileage' => $partner->mileage +  $deal['mileage']]);
+                $partner->update([
+                    'count_deal_balance' => $partner->count_deal_balance + $deal['deal_profit'], 
+                    'count_mileage' => $partner->count_mileage +  $deal['mileage'],
+                    'deal_balance' => $partner->deal_balance + $deal['deal_profit'], 
+                    'mileage' => $partner->mileage +  $deal['mileage'],
+                    'ggr_balance' => $partner->ggr_balance + $deal['ggr_profit'], 
+                    'ggr_mileage' => $partner->ggr_mileage +  $deal['ggr_mileage'],
+                ]);
             }
         }
     }

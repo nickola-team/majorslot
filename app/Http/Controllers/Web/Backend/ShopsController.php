@@ -271,6 +271,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('backend.shop.list')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
             } 
+            if ($parent!=null && $parent->ggr_percent < $data['ggr_percent'])
+            {
+                return redirect()->route('backend.shop.list')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
+            } 
+            $data['reset_days'] = auth()->user()->reset_days;
+            $data['last_reset_at'] = date('Y-m-d');
             $shop = \VanguardLTE\Shop::create($data + ['user_id' => auth()->user()->id]);
             $user = \VanguardLTE\User::find(\Auth::id());
             if( isset($request->categories) && count($request->categories) ) 
@@ -608,6 +614,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'percent', 
                 'deal_percent', 
                 'table_deal_percent', 
+                'ggr_percent', 
                 'orderby', 
                 'is_blocked'
             ]);
@@ -631,6 +638,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
             {
                 return redirect()->route('backend.shop.list')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+            }
+            if ($parent!=null && $parent->ggr_percent < $data['ggr_percent'])
+            {
+                return redirect()->route('backend.shop.list')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
             }
             $shop->update($data);
             //added by shev for random win

@@ -91,24 +91,26 @@ namespace VanguardLTE
 
             $model = static::query()->create($attributes);
             $filterGames = [' FG', ' FG1', ' respin', ' RS', ' JP', ' debit', ' credit', ' refund', ' payoff', ' RB', ' recredit'];
-            foreach($filterGames as $ignoreGame) 
+            /*foreach($filterGames as $ignoreGame) 
             {
                 if (substr_compare($model->game, $ignoreGame, -strlen($ignoreGame)) === 0)
                 {
                     return $model;
                 }
-            }
-            if ($model->bet > 0) {
+            } */
+            if ($model->bet > 0 || $model->win > 0) {
                 $user = \VanguardLTE\User::where('id',$model->user_id)->first();
                 $deal_method = env('DEAL_PROCESS', 'direct');
-                if ($deal_method == 'direct')
+                /*if ($deal_method == 'direct')
                 {
+                    // we did not implement ggr profit part.
+                    //please use queue mode for ggr profit.
                     $user->processBetDealerMoney($model->bet, $model->game, $model->type);
                 }
                 else if ($deal_method == 'queue')
-                {
-                    $user->processBetDealerMoney_Queue($model->bet, $model->game, $model->type);
-                }
+                {*/
+                    $user->processBetDealerMoney_Queue($model->bet, $model->win, $model->game, $model->type);
+                //}
             }
             return $model;
         }

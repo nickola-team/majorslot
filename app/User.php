@@ -40,15 +40,22 @@ namespace VanguardLTE
             'parent_id', 
             'shop_id', 
             'session',
+            'count_deal_balance', 
             'deal_balance', 
             'deal_percent',
             'table_deal_percent',
             'money_percent',
             'mileage',
+            'count_mileage',
             'bank_name',
             'recommender',
             'account_no',
-            'api_token'
+            'api_token',
+            'ggr_percent',
+            'ggr_balance',
+            'ggr_mileage',
+            'reset_days',
+            'last_reset_at'
         ];
 
 
@@ -108,6 +115,19 @@ namespace VanguardLTE
                 '중국공상', 
                 '펀드온라인코리아', 
                 '케이티비투자증권'
+            ],
+            'reset_days' => [
+                '',
+                '1일', 
+                '2일',  
+                '3일',  
+                '4일',  
+                '5일',  
+                '6일',  
+                '7일',  
+                '8일',  
+                '9일',  
+                '10일',  
             ]
         ];
 
@@ -791,7 +811,7 @@ namespace VanguardLTE
             ]);
         }
 
-        public function processBetDealerMoney_Queue($betMoney, $game, $type='slot') 
+        public function processBetDealerMoney_Queue($betMoney, $winMoney, $game, $type='slot') 
         {
             if(!$this->hasRole('user')) {
                 return;
@@ -800,46 +820,62 @@ namespace VanguardLTE
             $deal_balance = 0;
             $deal_mileage = 0;
             $deal_percent = 0;
+            $ggr_profit = 0;
+            $ggr_mileage = 0;
+            $ggr_percent = 0;
+
             $deal_data = [];
             $deal_percent = ($type==null || $type=='slot')?$shop->deal_percent:$shop->table_deal_percent;
+            $ggr_percent = $shop->ggr_percent;
             $manager = $this->referral;
             if ($manager != null){
-
-                if($deal_percent > 0) {
+                if($deal_percent > 0 || $ggr_percent > 0) {
                     $deal_balance = $betMoney * $deal_percent  / 100;
+                    $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
                     $deal_data[] = [
                         'user_id' => $this->id, 
                         'partner_id' => $manager->id, //manager's id
                         'balance_before' => 0, 
                         'balance_after' => 0, 
                         'bet' => abs($betMoney), 
+                        'win' => abs($winMoney), 
                         'deal_profit' => $deal_balance,
                         'game' => $game,
                         'shop_id' => $shop->id,
                         'type' => 'shop',
                         'deal_percent' => $deal_percent,
-                        'mileage' => $deal_mileage
+                        'mileage' => $deal_mileage,
+                        'ggr_profit' => $ggr_profit,
+                        'ggr_mileage' => $ggr_mileage,
+                        'ggr_percent' => $ggr_percent,
                     ];
                 }
                 $partner = $manager->referral;
                 while ($partner != null && !$partner->isInoutPartner())
                 {
                     $deal_mileage = $deal_balance;
+                    $ggr_mileage = $ggr_profit;
                     $deal_percent = ($type==null || $type=='slot')?$partner->deal_percent:$partner->table_deal_percent;
-                    if($deal_percent > 0) {
+                    $ggr_percent = $partner->ggr_percent;
+                    if($deal_percent > 0 || $ggr_percent > 0) {
                         $deal_balance = $betMoney * $deal_percent  / 100;
+                        $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
                         $deal_data[] = [
                             'user_id' => $this->id, 
                             'partner_id' => $partner->id,
                             'balance_before' => 0, 
                             'balance_after' => 0, 
-                            'bet' => abs($betMoney), 
+                            'bet' => abs($betMoney),
+                            'win' => abs($winMoney),
                             'deal_profit' => $deal_balance,
                             'game' => $game,
                             'shop_id' => $this->shop_id,
                             'type' => 'partner',
                             'deal_percent' => $deal_percent,
-                            'mileage' => $deal_mileage
+                            'mileage' => $deal_mileage,
+                            'ggr_profit' => $ggr_profit,
+                            'ggr_mileage' => $ggr_mileage,
+                            'ggr_percent' => $ggr_percent,
                         ];
                     }
                     $partner = $partner->referral;

@@ -87,6 +87,9 @@
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
 						<th>딜비전환</th>
 						{{--<th>매장충전</th>
 						<th>매장환전</th> --}}
@@ -118,6 +121,9 @@
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+						<th>죽장수익</th>
+						@endif
 						<th>딜비전환</th>
 						{{--<th>매장충전</th>
 						<th>매장환전</th> --}}

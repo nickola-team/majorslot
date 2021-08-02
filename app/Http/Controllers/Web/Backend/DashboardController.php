@@ -349,7 +349,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             $users = auth()->user()->hierarchyPartners();
             array_push($users,auth()->user()->id);
-            $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC');
+            $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC')->orderBy('transactions.balance', 'ASC');
             $statistics = $statistics->whereIn('transactions.user_id', $users);
             if( $request->system_str != '' ) 
             {
@@ -654,7 +654,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $shops = \VanguardLTE\Shop::whereIn('id', $ids)->pluck('name', 'id');
                 }
             }
-            $statistics = \VanguardLTE\ShopStat::select('shops_stat.*')->whereIn('shops_stat.shop_id', auth()->user()->availableShops())->orderBy('shops_stat.date_time', 'DESC');
+            $statistics = \VanguardLTE\ShopStat::select('shops_stat.*')->whereIn('shops_stat.shop_id', auth()->user()->availableShops())->orderBy('shops_stat.date_time', 'DESC')->orderBy('shops_stat.balance', 'ASC');
             if( $request->name != '' ) 
             {
                 $statistics = $statistics->join('shops', 'shops.id', '=', 'shops_stat.shop_id');
@@ -999,7 +999,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $adjustments = [];
 
-            $adj_days = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->whereIn('user_id', $users->pluck('id')->toArray())->selectRaw('user_id, shop_id, sum(totalin) as totalin,sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage, updated_at')->get();
+            $adj_days = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->whereIn('user_id', $users->pluck('id')->toArray())->selectRaw('user_id, shop_id, sum(totalin) as totalin,sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, updated_at')->get();
 
             foreach ($adj_days as $adj_user)
             {

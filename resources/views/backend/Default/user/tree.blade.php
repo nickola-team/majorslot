@@ -75,9 +75,16 @@
                             <th>매장이름</th>
                             @endif
                             <th>보유금</th>
-                            <th>수익금</th>
+                            <th>딜비수익</th>
+							@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+							<th>죽장수익</th>
+							@endif
                             <th>딜비</th>
 							<th>라이브딜비</th>
+							@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+							<th>죽장퍼센트</th>
+							<th>정산기간</th>
+							@endif
                             <th>편집</th>
                             <th>충전</th>
                             <th>환전</th>
@@ -104,9 +111,16 @@
                                 <th>매장이름</th>
                                 @endif
                                 <th>보유금</th>
-                                <th>수익금</th>
+                                <th>딜비수익</th>
+								@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+								<th>죽장수익</th>
+								@endif
                                 <th>딜비</th>
 								<th>라이브딜비</th>
+								@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+								<th>죽장퍼센트</th>
+								<th>정산기간</th>
+								@endif
                                 <th>편집</th>
                                 <th>충전</th>
                                 <th>환전</th>

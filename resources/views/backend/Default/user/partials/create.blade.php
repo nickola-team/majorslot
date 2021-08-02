@@ -53,6 +53,21 @@
     <input type="number" step="0.01" class="form-control" id="table_deal_percent" name="table_deal_percent" value="0">
     </div>
 </div>
+<div class="col-md-6">
+    <div class="form-group">
+    <label>죽장%</label>
+    <input type="number" step="0.01" class="form-control" id="ggr_percent" name="ggr_percent" value="0">
+    </div>
+</div>
+@if(auth()->user()->hasRole(['comaster']))
+<div class="col-md-6">
+    <div class="form-group">
+        <label>정산기간</label>
+        {!! Form::select('reset_days', \VanguardLTE\User::$values['reset_days'], '' ,
+        ['class' => 'form-control', 'id' => 'reset_days']) !!}
+    </div>
+</div>
+@endif
 @endif
 
 @if(auth()->user()->hasRole(['distributor']))

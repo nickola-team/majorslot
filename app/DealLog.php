@@ -11,12 +11,16 @@ namespace VanguardLTE
             'balance_before',
             'balance_after',
             'bet', 
+            'win', 
             'deal_profit',
             'mileage',
             'game', 
             'shop_id',
             'type',
-            'deal_percent'
+            'deal_percent',
+            'ggr_percent',
+            'ggr_profit',
+            'ggr_mileage'
         ];
         public $timestamps = false;
         public static function boot()

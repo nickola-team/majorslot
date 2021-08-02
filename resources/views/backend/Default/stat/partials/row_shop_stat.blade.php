@@ -49,6 +49,13 @@
 			<span class="text-red">{{ number_format(abs($stat->sum),0) }}</span>
 		@endif
 	</td>
+	@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+	<td>
+		@if ($stat->type == 'ggr_out')
+				<span class="text-red">{{ number_format(abs($stat->sum),0) }}</span>
+		@endif
+	</td>
+	@endif
 	@if($stat->requestInfo)
 	<td> {{"[ " . $stat->requestInfo->bank_name . " ] ". $stat->requestInfo->account_no}} </td>
 	<td>{{ $stat->requestInfo->recommender }}</td>

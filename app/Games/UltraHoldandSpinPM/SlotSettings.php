@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GatesofOlympusPM
+namespace VanguardLTE\Games\UltraHoldandSpinPM
 {
     class SlotSettings
     {
@@ -9,52 +9,10 @@ namespace VanguardLTE\Games\GatesofOlympusPM
         public $reelStrip0_0 = null;
         public $reelStrip0_1 = null;
         public $reelStrip0_2 = null;
-        public $reelStrip0_3 = null;
-        public $reelStrip0_4 = null;
-        public $reelStrip0_5 = null;
         public $reelStrip1_0 = null;
         public $reelStrip1_1 = null;
         public $reelStrip1_2 = null;
-        public $reelStrip1_3 = null;
-        public $reelStrip1_4 = null;
-        public $reelStrip1_5 = null;
-        public $reelStrip2_0 = null;
-        public $reelStrip2_1 = null;
-        public $reelStrip2_2 = null;
-        public $reelStrip2_3 = null;
-        public $reelStrip2_4 = null;
-        public $reelStrip2_5 = null;
-        public $reelStrip3_0 = null;
-        public $reelStrip3_1 = null;
-        public $reelStrip3_2 = null;
-        public $reelStrip3_3 = null;
-        public $reelStrip3_4 = null;
-        public $reelStrip3_5 = null;
-        public $reelStrip4_0 = null;
-        public $reelStrip4_1 = null;
-        public $reelStrip4_2 = null;
-        public $reelStrip4_3 = null;
-        public $reelStrip4_4 = null;
-        public $reelStrip4_5 = null;
-        public $reelStrip5_0 = null;
-        public $reelStrip5_1 = null;
-        public $reelStrip5_2 = null;
-        public $reelStrip5_3 = null;
-        public $reelStrip5_4 = null;
-        public $reelStrip5_5 = null;
-        public $reelStrip6_0 = null;
-        public $reelStrip6_1 = null;
-        public $reelStrip6_2 = null;
-        public $reelStrip6_3 = null;
-        public $reelStrip6_4 = null;
-        public $reelStrip6_5 = null;
-        public $reelStrip7_0 = null;
-        public $reelStrip7_1 = null;
-        public $reelStrip7_2 = null;
-        public $reelStrip7_3 = null;
-        public $reelStrip7_4 = null;
-        public $reelStrip7_5 = null;
-
+        
         public $slotId = '';
         public $slotDBId = '';
         public $Line = null;
@@ -80,6 +38,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
         public $slotScatterType = null;
         public $slotGamble = null;
         public $PayTable = [];
+        public $CoinTable = [];
         public $slotSounds = [];
         private $jpgs = null;
         private $Bank = null;
@@ -96,13 +55,13 @@ namespace VanguardLTE\Games\GatesofOlympusPM
         public $credits = null;
         public $freespinCount = [];
         public $doubleWildChance = null;
-        public $reelPositionMap = [];
 
         // public $happyhouruser = null;
 
         /* 프리스핀 관련 */
         public $freeSpinTable = [];
         public $reelsetMap = [];
+        public $reelPositionMap = [];
 
         public function __construct($sid, $playerId, $credits = null)
         {
@@ -136,46 +95,171 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             $this->scaleMode = 0;
             $this->numFloat = 0;
             $this->PayTable = [
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2000,100,60,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,500,500,200,200,0,0,0,0,0,0,0],
-                [500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,200,200,50,50,0,0,0,0,0,0,0],
-                [300,300,300,300,300,300,300,300,300,300,300,300,300,300,300,300,300,300,300,100,100,40,40,0,0,0,0,0,0,0],
-                [240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,40,40,30,30,0,0,0,0,0,0,0],
-                [200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,30,30,20,20,0,0,0,0,0,0,0],
-                [160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,24,24,16,16,0,0,0,0,0,0,0],
-                [100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,20,20,10,10,0,0,0,0,0,0,0],
-                [80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,18,18,8,8,0,0,0,0,0,0,0],
-                [40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,15,15,5,5,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0],
+                [0,0,0],
+                [250,0,0],
+                [250,0,0],
+                [150,0,0],
+                [100,0,0],
+                [80,0,0],
+                [80,0,0],
+                [20,0,0],
+                [20,0,0],
+                [20,0,0],
+                [20,0,0],
+                [0,0,0],
+                [0,0,0],
+                [0,0,0],
+                [0,0,0],
             ];
 
-            $this->reelsetMap = [
-                'spin' => [0, 1, 2],
-                'buy_freespin' => [6],
-                'freespin' => [3, 4],
+            $this->PayLines = [
+                [3, 4, 5],
+                [0, 1, 2],
+                [6, 7, 8],
+                [0, 4, 8],
+                [6, 4, 2]
+            ];
+
+            $this->CoinTable = [
+                [
+                    'value' => 5,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ],
+                [
+                    'value' => 10,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 15,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 20,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 25,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 30,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 35,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 40,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 45,
+                    'symbol' => 13,
+                    'type' => 'sc',
+                    'probability' => 10
+                ], 
+                [
+                    'value' => 50,
+                    'symbol' => 14,
+                    'type' => 'gc',
+                    'probability' => 5
+                ], 
+                [
+                    'value' => 55,
+                    'symbol' => 14,
+                    'type' => 'gc',
+                    'probability' => 5
+                ], 
+                [
+                    'value' => 60,
+                    'symbol' => 14,
+                    'type' => 'gc',
+                    'probability' => 5
+                ], 
+                [
+                    'value' => 70,
+                    'symbol' => 14,
+                    'type' => 'gc',
+                    'probability' => 2
+                ], 
+                [
+                    'value' => 80,
+                    'symbol' => 14,
+                    'type' => 'gc',
+                    'probability' => 2
+                ], 
+                [
+                    'value' => 90,
+                    'symbol' => 14,
+                    'type' => 'gc',
+                    'probability' => 2
+                ], 
+                [
+                    'value' => 100,
+                    'symbol' => 14,
+                    'type' => 'gc',
+                    'probability' => 2
+                ], 
+                [
+                    'value' => 500,
+                    'symbol' => 15,
+                    'type' => 'dc',
+                    'probability' => 0
+                ], 
+                [
+                    'value' => 1000,
+                    'symbol' => 15,
+                    'type' => 'dc',
+                    'probability' => 0
+                ], 
+                [
+                    'value' => 1500,
+                    'symbol' => 15,
+                    'type' => 'dc',
+                    'probability' => 0
+                ], 
+                [
+                    'value' => 2000,
+                    'symbol' => 15,
+                    'type' => 'dc',
+                    'probability' => 0
+                ], 
+                [
+                    'value' => 2500,
+                    'symbol' => 15,
+                    'type' => 'dc',
+                    'probability' => 0
+                ],
             ];
 
             $this->reelPositionMap = [
-                3 => [
-                    [1, 2, 2],
-                    [1, 3, 1],
-                    [2, 1, 2],
-                    [2, 2, 1],
-                    [2, 3],
-                    [3, 2]
-                ],
-                5 => [
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 2],
-                    [1, 1, 2, 1],
-                    [1, 2, 1, 1],
-                    [1, 2, 2],
-                    [2, 1, 1, 1],
-                    [2, 1, 2],
-                    [2, 2, 1],
-                ]
+                [1, 1, 1],
+                [1, 2],
+                [2, 1],
+                [3]
+            ];
+
+            $this->reelsetMap = [
+                'spin' => [0],
+                'freespin' => [1],
             ];
 
             $reel = new GameReel();
@@ -183,58 +267,10 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 'reelStrip0_0',
                 'reelStrip0_1',
                 'reelStrip0_2',
-                'reelStrip0_3',
-                'reelStrip0_4',
-                'reelStrip0_5',
-
+              
                 'reelStrip1_0',
                 'reelStrip1_1',
                 'reelStrip1_2',
-                'reelStrip1_3',
-                'reelStrip1_4',
-                'reelStrip1_5',
-
-                'reelStrip2_0',
-                'reelStrip2_1',
-                'reelStrip2_2',
-                'reelStrip2_3',
-                'reelStrip2_4',
-                'reelStrip2_5',
-
-                'reelStrip3_0',
-                'reelStrip3_1',
-                'reelStrip3_2',
-                'reelStrip3_3',
-                'reelStrip3_4',
-                'reelStrip3_5',
-
-                'reelStrip4_0',
-                'reelStrip4_1',
-                'reelStrip4_2',
-                'reelStrip4_3',
-                'reelStrip4_4',
-                'reelStrip4_5',
-
-                'reelStrip5_0',
-                'reelStrip5_1',
-                'reelStrip5_2',
-                'reelStrip5_3',
-                'reelStrip5_4',
-                'reelStrip5_5',
-
-                'reelStrip6_0',
-                'reelStrip6_1',
-                'reelStrip6_2',
-                'reelStrip6_3',
-                'reelStrip6_4',
-                'reelStrip6_5',
-
-                'reelStrip7_0',
-                'reelStrip7_1',
-                'reelStrip7_2',
-                'reelStrip7_3',
-                'reelStrip7_4',
-                'reelStrip7_5',
             ] as $reelStrip ) 
             {
                 if( count($reel->reelsStrip[$reelStrip]) ) 
@@ -281,21 +317,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             ];
             $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
             $this->Balance = $user->balance;
-            // $this->SymbolGame = [
-            //     '1', 
-            //     '2', 
-            //     '3', 
-            //     '4', 
-            //     '5', 
-            //     '6', 
-            //     '7', 
-            //     '8', 
-            //     '9', 
-            //     '10', 
-            //     '11', 
-            //     '12',
-            //     '13'
-            // ];
+
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
             $this->WinGamble = $game->rezerv;
@@ -689,13 +711,9 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             {
                 $_obf_slotstate = $this->slotId . ' Bonus';
             }
-            else if( $slotState == 'doSpin' || $slotState == 'buy_freespin') 
+            else if( $slotState == 'doSpin') 
             {
                 $_obf_slotstate = $this->slotId . '';
-            }
-            else if( $slotState == 'freespin' ) 
-            {
-                $_obf_slotstate = $this->slotId . ' FG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -734,7 +752,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 'shop_id' => $this->shop_id
             ]);
         }
-        public function GetSpinSettings($garantType = 'doSpin', $bet, $lines, $isDouble)
+        public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
             $_obf_linecount = 10;
             switch( $lines ) 
@@ -783,11 +801,6 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             $_obf_grantwin_count++;
             $_obf_grantbonus_count++;
 
-            if ($isDouble) {
-                $_obf_grantwin_count++;
-                $_obf_grantbonus_count++;
-            }
-            
             $return = [
                 'none', 
                 0
@@ -907,52 +920,29 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             return $win[$number];
         }
 
-        public function GetRandomScatterPos($symbols)
-        {
-            $_obf_scatterposes = [];
-            for( $i = 0; $i < count($symbols); $i++ ) 
-            {
-                if( $symbols[$i] == '1' ) 
-                {
-                    array_push($_obf_scatterposes, $i);
-                }
-            }
-            shuffle($_obf_scatterposes);
-            if( !isset($_obf_scatterposes[0]) ) 
-            {
-                $_obf_scatterposes[0] = random_int(2, count($symbols) - 3);
-            }
-            return $_obf_scatterposes[0];
-        }
-
         public function GetGambleSettings()
         {
             $spinWin = random_int(1, $this->WinGamble);
             return $spinWin;
         }
 
-        public function GenerateScatterCount($winType, $slotEvent){ // Scatter수 생성 함수
+        public function GenerateCoinCount($winType){ // Scatter수 생성 함수
             if($winType == 'bonus'){      
-                if ($slotEvent == 'freespin') {
-                    /* 프리스핀중에는 스캐터 3개이상일때 보너스당첨 */
-                    $probabilityMap = [
-                        3 => 90,
-                        4 => 10
-                    ];
-                }
-                else {
-                    $probabilityMap = [
-                        4 => 95,
-                        5 => 4,
-                        6 => 1
-                    ];
-                }
+                $probabilityMap = [
+                    3 => 100,
+                ];
+            }
+            else if($winType == 'win'){      
+                $probabilityMap = [
+                    0 => 90,
+                    1 => 10,
+                ];
             }
             else {
                 $probabilityMap = [
-                    0 => 80,
-                    1 => 15,
-                    2 => 5
+                    0 => 90,
+                    1 => 8,
+                    2 => 2
                 ];
             }
             
@@ -970,28 +960,13 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             return 0;  
         }
 
-        public function GenerateMultiplierCount($winType, $slotEvent, $isTumble) {
-            if ($slotEvent == 'freespin') {
-                if (!$isTumble && $winType == 'none') {
-                    $probabilityMap = [
-                        0 => 60,
-                        1 => 20,
-                        2 => 20,
-                    ];
-                }
-                else {
-                    $probabilityMap = [
-                        0 => 80,
-                        1 => 20
-                    ];
-                }
-            }
-            else {
-                $probabilityMap = [
-                    0 => 85,
-                    1 => 15
-                ];
-            }
+        public function GenerateRespinCount() {
+            $probabilityMap = [
+                // 0 => 10,
+                1 => 80,
+                2 => 20,
+                3 => 0,
+            ];
 
             $sum = array_sum(array_values($probabilityMap));
             $randNum = random_int(1, $sum);
@@ -1007,61 +982,15 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             return 0;  
         }
 
-        public function GenerateMultiplier($slotEvent, $winType, $isTumble) {
-            if ($slotEvent == 'freespin') {
-                if ($winType != 'none' || $isTumble) {
-                    $probabilityMap = [
-                        2 => 40,
-                        3 => 30,
-                        4 => 20,
-                        5 => 5,
-                        6 => 3,
-                        8 => 2,
-                        10 => 0,
-                        12 => 0,
-                        15 => 0,
-                        20 => 0,
-                        25 => 0,
-                        50 => 0,
-                        100 => 0,
-                    ];
-                }
-                else {
-                    $probabilityMap = [
-                        2 => 20,
-                        3 => 20,
-                        4 => 20,
-                        5 => 10,
-                        6 => 10,
-                        8 => 10,
-                        10 => 7,
-                        12 => 7,
-                        15 => 5,
-                        20 => 3,
-                        25 => 2,
-                        50 => 1,
-                        100 => 0,
-                    ];
-                }
-            }
-            else {
-                $probabilityMap = [
-                    2 => 15,
-                    3 => 15,
-                    4 => 15,
-                    5 => 10,
-                    6 => 10,
-                    8 => 10,
-                    10 => 5,
-                    12 => 3,
-                    15 => 3,
-                    20 => 2,
-                    25 => 2,
-                    50 => 1,
-                    100 => 0,
-                ];
-            }
-            
+        public function GenerateRespinCoinCount() {
+            $probabilityMap = [
+                2 => 80,
+                3 => 10,
+                4 => 7,
+                5 => 3,
+                6 => 0,
+            ];
+
             $sum = array_sum(array_values($probabilityMap));
             $randNum = random_int(1, $sum);
 
@@ -1073,7 +1002,62 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 }
             }
 
-            return 0;
+            return 2;  
+        }
+
+        public function GenerateRandomCoin() {
+            $max = 0;
+            foreach ($this->CoinTable as $coin) {
+                $max += $coin['probability'];
+            }
+            
+            $randNum = random_int(1, $max);
+
+            $sum = 0;
+            foreach ($this->CoinTable as $coin) {
+                $sum += $coin['probability'];
+
+                if ($randNum <= $sum) {
+                    return $coin;
+                }
+            }
+
+            return $this->CoinTable[0];
+        }
+
+        public function GenerateWildCount($winType) {
+            if($winType == 'bonus'){      
+                $probabilityMap = [
+                    0 => 100,
+                ];
+            }
+            else if ($winType == 'none') {
+                $probabilityMap = [
+                    0 => 90,
+                    1 => 10,
+                    2 => 0
+                ];
+            }
+            else {
+                $probabilityMap = [
+                    0 => 90,
+                    1 => 8,
+                    2 => 2
+                ];
+            }
+               
+            $sum = array_sum(array_values($probabilityMap));
+            $randNum = random_int(1, $sum);
+
+            $sum = 0;
+            foreach ($probabilityMap as $key => $probability) {
+                $sum += $probability;
+                if ($randNum <= $sum) {
+                    return $key;
+                }
+            }
+
+            return 0;  
         }
 
         public function GetLimitedReelStrips($slotEvent, $lastWILDCollection) {
@@ -1082,200 +1066,165 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             return null;
         }
 
-        public function GetReelStrips($winType, $slotEvent, $lastReels, $proposedScatterCount, $lastMULTIPLIERCollection)
+        public function GetReelStrips($winType, $slotEvent, $proposedCoinCount, $proposedWildCount)
         {
-            $REELCOUNT = 6;
-            $SYMBOLCOUNT = 5;
-            $S_REMOVED = -1;
+            $REELCOUNT = 3;
+            $SYMBOLCOUNT = 3;
+            $S_WILD = 2;
             $S_BLANK = 0;
-            $S_SCATTER = 1;
-            $S_MULTIPLIER = 12;
+           
+            /* 릴배치표 생성 */
+            $reels = [
+                'id' => /* $reelsetId */ 0,
+                'symbols' => [],
+                'flatSymbols' => [],
+                'symbolsAfter' => [],
+                'symbolsBefore' => [],
+                'coinSymbols' => []
+            ];
 
-            $isTumble = ($lastReels != null && isset($lastReels->tmb));
-            /* 멀티플라이어 심볼배열 */
-            $multiplierSymbols = [];
+            for ($reelId=0; $reelId < $REELCOUNT; $reelId++) { 
+                $positionSetId = array_rand($this->reelPositionMap);
+                $positionSet = $this->reelPositionMap[$positionSetId];
 
-            /* 생성될 멀티플라이어심볼 갯수 */
-            $multiplierCount = $this->GenerateMultiplierCount($winType, $slotEvent, $isTumble);
-            
-            /* 보너스당첨이 있을경우 멀티플라이어는 생성하지 않는다 */
-            if ($proposedScatterCount >= 3) {
-                $multiplierCount = 0;
-            }
+                $uniqueSymbols = [];
+                $curPos = 0;
+                $reels['symbols'][$reelId] = array_fill(0, $SYMBOLCOUNT, $S_BLANK);
 
-            $multiplierReelId = random_int(0, $REELCOUNT - 1);
-            $multiplierPos = random_int(0, $SYMBOLCOUNT - 1);
-            
-            /* 텀블스핀인 경우 기본릴셋은 유지, 텀블심볼만 재생성, */
-            if ($isTumble) {
-                /* 릴셋 역구성 */
-                $lastFlattenSymbols = explode(",", $lastReels->s);
-                $newSymbols = [];
-
-                foreach ($lastFlattenSymbols as $pos => $symbol) {
-                    $reelPos = intdiv($pos, $REELCOUNT);
-                    $reelId = $pos % $REELCOUNT;
-                    $newSymbols[$reelId][$reelPos] = $symbol;
-                }
-
-                /* tumble 심볼 삭제, 기타심볼 떨구기 */
-                $tumbleSymbols = explode("~", $lastReels->tmb);
-
-                foreach ($tumbleSymbols as $value) {
-                    [$pos, $symbol] = explode(",", $value);
-                    $reelPos = intdiv($pos, $REELCOUNT);
-                    $reelId = $pos % $REELCOUNT;
-                    $newSymbols[$reelId][$reelPos] = $S_REMOVED;
-                }
-
-                /* 텀블멀티플라이어 심볼 유지, 재정열 */
-                foreach ($lastMULTIPLIERCollection as $pos => $value) {
-                    $reelPos = intdiv($pos, $REELCOUNT);
-                    $reelId = $pos % $REELCOUNT;
-
-                    $removedSymbolCount = 0;
-                    for ($i=$reelPos; $i < $SYMBOLCOUNT; $i++) { 
-                        if ($newSymbols[$reelId][$i] == $S_REMOVED) {
-                            $removedSymbolCount ++;
-                        }
+                foreach ($positionSet as $count) { 
+                    if ($count == 3) {
+                        while( in_array( ($newSymbol = random_int(8, 11)), $uniqueSymbols));
                     }
-                    
-                    $multiplierSymbols[$pos + $removedSymbolCount * $REELCOUNT] = $value;
-                }
-
-                for ($reelId=0; $reelId < $REELCOUNT; $reelId++) { 
-                    $remainingReelSymbols = array_diff($newSymbols[$reelId], [$S_REMOVED]);
-
-                    /* 릴에 삭제된 텀블심볼이 없다면 스킵 */
-                    $removedSymbolCount = count($newSymbols[$reelId]) - count($remainingReelSymbols);
-                    if ($removedSymbolCount > 0) {
-                        $multiplierPos = -1;
-
-                        if ($multiplierReelId >= $reelId && $multiplierCount > 0) {
-                            $multiplierPos = random_int(0, $removedSymbolCount - 1);
-                        }
-
-                        /* 삭제된 텀블심볼 갯수만큼 랜덤심볼 추가, 재정렬 */
-                        for ($i=0; $i < $removedSymbolCount; $i++) { 
-                            /* 멀티플라이어 생성 */
-                            if ($multiplierPos == $i) {
-                                $newSymbol = $S_MULTIPLIER;    
-
-                                /* 텀블인 경우 멀티플라이어 심볼은 최대 1개까지만 생성 */
-                                $multiplierCount = 0;
-                            }
-                            else {
-                                $newSymbol = random_int(3, 11);
-                                if (count(array_keys($remainingReelSymbols, $newSymbol)) >= 2) {
-                                    $newSymbol = random_int(3, 11);
-                                }
-                            }
-                            
-                            array_unshift($remainingReelSymbols, $newSymbol);
-                        }
-                        
-                        $newSymbols[$reelId] = array_values($remainingReelSymbols);    
+                    else if ($count == 2) {
+                        while( in_array( ($newSymbol = random_int(6, 11)), $uniqueSymbols));
                     }
-                }
-
-                $reels = [
-                    'id' => $lastReels->reel_set,
-                    'symbols' => $newSymbols,
-                    'flattenSymbols' => [],
-                    'symbolsAfter' => explode(",", $lastReels->sa),
-                    'symbolsBefore' => explode(",", $lastReels->sb),
-                    'multiplierSymbols' => [],
-                ];
-            }
-            else {
-                /* 릴배치표 생성 */
-                $reels = [
-                    'id' => /* $reelsetId */1,
-                    'symbols' => [],
-                    'flattenSymbols' => [],
-                    'symbolsAfter' => [],
-                    'symbolsBefore' => [],
-                    'multiplierSymbols' => [],
-                ];
-    
-                $reelsetHeight = array_rand($this->reelPositionMap);
-                $position = $this->reelPositionMap[$reelsetHeight];
-
-                for ($reelId=0; $reelId < $REELCOUNT; $reelId++) { 
-                    $positionSetId = array_rand($this->reelPositionMap[$reelsetHeight]);
-                    $positionSet = $this->reelPositionMap[$reelsetHeight][$positionSetId];
-
-                    $uniqueSymbols = [];
-                    $curPos = 0;
-                    $reels['symbols'][$reelId] = array_fill(0, $SYMBOLCOUNT, $S_BLANK);
-
-                    foreach ($positionSet as $count) {
+                    else {
                         while( in_array( ($newSymbol = random_int(3, 11)), $uniqueSymbols));
-
-                        $newSymbols = array_fill($curPos, $count, $newSymbol);
-                        $reels['symbols'][$reelId] = array_replace($reels['symbols'][$reelId], $newSymbols);
-    
-                        $curPos += $count;
-    
-                        array_push($uniqueSymbols, $newSymbol);
                     }
 
-                    array_push($reels['symbolsBefore'], random_int(3, 11));
-                    array_push($reels['symbolsAfter'], random_int(3, 11));
+                    $newSymbols = array_fill($curPos, $count, $newSymbol);
+                    $reels['symbols'][$reelId] = array_replace($reels['symbols'][$reelId], $newSymbols);
+
+                    $curPos += $count;
+
+                    array_push($uniqueSymbols, $newSymbol);
                 }
 
-                /* 멀티플라이어심볼 생성 */
-                for ($i=0; $i < $multiplierCount; $i++) { 
-                    $multiplierReelId = random_int(0, $REELCOUNT - 1);
-                    $multiplierPos = random_int(0, $SYMBOLCOUNT - 1);
-                    $reels['symbols'][$multiplierReelId][$multiplierPos] = $S_MULTIPLIER;
-                }
-
-                /* 부족한 SCATTER 심볼 생성 */
-                if ($proposedScatterCount > 0) {
-                    $uniqueSymbols = [];
-                    for ($i=0; $i < $proposedScatterCount; $i++) { 
-                        while( in_array( ($randReelId = random_int(0, $REELCOUNT - 1)), $uniqueSymbols));
-
-                        /* 스캐터심볼을 넣을수 있는 위치배열 */
-                        $availablePoses = array_where($reels['symbols'][$randReelId], function ($symbol, $key) {
-                            return $symbol != 1;
-                        });
-
-                        if (count($availablePoses) === 0 ) {
-                            $i--;
-                            continue;
-                        }
-
-                        $randomPos = array_rand($availablePoses);         
-                        $reels['symbols'][$randReelId][$randomPos] = $S_SCATTER;
-
-                        array_push($uniqueSymbols, $randReelId);
-                    }    
-                }
+                array_push($reels['symbolsBefore'], random_int(3, 11));
+                array_push($reels['symbolsAfter'], random_int(3, 11));
             }
 
-            /* 릴배치표 평활화, 멀티플라이어 체크 */
-            $flattenSymbols = [];
+            /* WILD 심볼 생성 */
+            $limited_reels = [];
+
+            /* 코인심볼이 있을경우 갯수조정 */
+            if ($proposedCoinCount > 0) {
+                $proposedWildCount = ($proposedWildCount > 1) ? 1 : $proposedWildCount;
+                array_push($limited_reels, 1);
+            }
+
+            for ($i=0; $i < $proposedWildCount; $i++) { 
+                while( in_array( ($rand_reel_id = random_int(0, $REELCOUNT - 1)), $limited_reels));
+
+                $rand_pos = random_int(0, $SYMBOLCOUNT - 1);
+                $reels['symbols'][$rand_reel_id][$rand_pos] = $S_WILD;
+                array_push($limited_reels, $rand_reel_id);
+            }
+
+            /* 코인심볼 생성 */
+            $limited_positions = [];
+            for ($i=0; $i < $proposedCoinCount; $i++) { 
+                while( in_array( ($rand_pos = random_int(0, $SYMBOLCOUNT - 1)), $limited_positions));
+
+                $coin = $this->GenerateRandomCoin();
+                if ($slotEvent == 'doSpin' && $coin['type'] == 'gc') {
+                    $coin = $this->GenerateRandomCoin();
+                }
+
+                $reels['symbols'][1][$rand_pos] = $coin['symbol'];
+                $reels['coinSymbols'][$rand_pos] = $coin;
+
+                array_push($limited_positions, $rand_pos); 
+            }
+
+            /* 릴배치표 평활화 */
+            $flatSymbols = [];
             foreach ($reels['symbols'] as $reelId => $symbols) {
                 foreach ($symbols as $k => $symbol) {
-                    /* 멀티플라이어 체크 */
-                    if ($symbol == $S_MULTIPLIER) {
-                        $pos = $reelId + $k * $REELCOUNT;
-
-                        if (!array_key_exists($pos, $multiplierSymbols)) {
-                            $multiplierSymbols[$pos] = $this->GenerateMultiplier($slotEvent, $winType, $lastReels != null);
-                        }
-                    }
-
-                    $flattenSymbols[$reelId + $k * $REELCOUNT] = $symbol;
+                    $flatSymbols[$reelId + $k * $REELCOUNT] = $symbol;
                 }
             }
-            ksort($flattenSymbols);
+            ksort($flatSymbols);
 
-            $reels['flattenSymbols'] = $flattenSymbols;
-            $reels['multiplierSymbols'] = $multiplierSymbols;
+            $reels['flatSymbols'] = $flatSymbols;
             return $reels;
+        }
+
+        public function GetRespinSetting($curRound, $maxRound, $lifes, $bet) {
+            $newCoinCount = 0;
+            $garantType = 'bonus';
+            $_obf_currentbank = $this->GetBank($garantType);
+
+            if ($curRound < $maxRound) {
+                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
+                {
+                    return [
+                        $newCoinCount,
+                        $_obf_currentbank
+                    ];
+                }
+
+                /* 더이상 리스핀갯수가 없다면 무조건 생성 */
+                if ($lifes == 1) {
+                    $newCoinCount = $this->GenerateRespinCoinCount();
+                }
+                else {
+                    /* 리스핀갯수가 아직 남아있다면 랜덤결정 */
+                    if (random_int(1, 10) % 3 == 1) {
+                        $newCoinCount = $this->GenerateRespinCoinCount();
+                    }
+                    else {
+
+                    }
+                }
+            }
+            else {
+                $newCoinCount = 0;
+            }
+
+            return [
+                $newCoinCount,
+                $_obf_currentbank
+            ];
+        }
+
+        public function GetRespinReelStrips($startSpin, $newCoinCount) {
+            $blankSymbolPositions = [0, 2, 3, 5, 6, 8];
+
+            $newCoinPositionIds = array_rand($blankSymbolPositions, $newCoinCount);
+
+            $coinSymbols = explode(",", $startSpin->s);
+            $coinValues = explode(",", $startSpin->mo);
+            $coinTypes = explode(",", $startSpin->mo_t);
+
+            for ($i=0; $i < $newCoinCount; $i++) { 
+                $coin = $this->GenerateRandomCoin();
+
+                $pos = $blankSymbolPositions[$newCoinPositionIds[$i]];
+
+                $coinSymbols[$pos] = $coin['symbol'];
+                $coinValues[$pos] = $coin['value'];
+                $coinTypes[$pos] = $coin['type'];
+            }
+
+            /* 일반심볼 필터 */
+            $coinSymbols = array_map(function($symbol) { return ($symbol > 12 ? $symbol : 12); }, $coinSymbols);
+
+            return [
+                'symbols' => $coinSymbols,
+                'types' => $coinTypes,
+                'values' => $coinValues
+            ];
         }
 
         public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=3){

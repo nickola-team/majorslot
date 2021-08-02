@@ -31,10 +31,13 @@
 	@endif
 	</td>
 	@endif
-	{{-- <td><span class="text-green">{{ number_format($stat->balance_before) }}</span></td>
-	<td><span class="text-green">{{ number_format($stat->balance_after) }}</span></td> --}}
 	<td>{{ number_format($stat->bet,2) }}</td>
+	<td>{{ number_format($stat->win,2) }}</td>
 	<td><span class="text-green">{{ number_format($stat->deal_profit  - $stat->mileage,2) }}</span></td>
+	@if (auth()->user()->hasRole('admin')  || (auth()->user()->hasRole(['master','agent', 'distributor']) && auth()->user()->ggr_percent > 0) 
+		|| (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+	<td><span class="text-green">{{ number_format($stat->ggr_profit  - $stat->ggr_mileage - ($stat->deal_profit  - $stat->mileage),2) }}</span></td>
+	@endif
 	<td>{{ date(config('app.date_time_format'), strtotime($stat->date_time)) }}</td>
     @if(isset($show_shop) && $show_shop)
         @if($stat->shop)
