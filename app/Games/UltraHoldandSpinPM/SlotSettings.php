@@ -56,7 +56,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
         public $freespinCount = [];
         public $doubleWildChance = null;
 
-        // public $happyhouruser = null;
+         public $happyhouruser = null;
 
         /* 프리스핀 관련 */
         public $freeSpinTable = [];
@@ -69,11 +69,11 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             $this->playerId = $playerId;
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
-            // $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
-            //     'user_id' => $user->id, 
-            //     'status' => 1,
-            //     'time' => date('G')
-            // ])->first();
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                'time' => date('G')
+            ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
@@ -504,11 +504,11 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
         }
         public function GetBank($slotState = '')
         {
-            // if ($this->happyhouruser)
-            // {
-            //     $this->Bank = $this->happyhouruser->current_bank;
-            //     return $this->Bank / $this->CurrentDenom;
-            // }
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin') 
             {
                 $slotState = 'bonus';
@@ -572,17 +572,17 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             {
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
-                    // if ($this->happyhouruser){
-                    //     $this->happyhouruser->increment('over_bank', abs($diffMoney));
-                    // }
-                    // else {
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {
                         $normalbank = $game->get_gamebank('');
                         if ($normalbank + $diffMoney < 0)
                         {
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
-                    // }
+                    }
                     $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
@@ -631,13 +631,13 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             {
                 $this->toGameBanks = $sum;
             }
-            // if ($this->happyhouruser)
-            // {
-            //     $this->happyhouruser->increment('current_bank', $sum);
-            //     $this->happyhouruser->save();
-            // }
-            // else
-            // {
+            if ($this->happyhouruser)
+            {
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
+            }
+            else
+            {
                 if( $_obf_bonus_systemmoney > 0 ) 
                 {
                     $sum -= $_obf_bonus_systemmoney;
@@ -645,7 +645,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
-            // }
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -820,16 +820,12 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
-            // if ($this->happyhouruser)
-            // {
-            //     $bonus_spin = rand(1, 10);
-            //     $spin_percent = 5;
-            //     if ($garantType == 'freespin')
-            //     {
-            //         $spin_percent = 3;
-            //     }
-            //     $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-            // }
+            if ($this->happyhouruser)
+            {
+                $bonus_spin = rand(1, 10);
+                $spin_percent = 5;
+                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
