@@ -62,6 +62,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
             }
+            if (!$admin->isActive())
+            {
+                return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+            }
 
             if( !$user->hasRole('admin') && setting('siteisclosed') ) 
             {
