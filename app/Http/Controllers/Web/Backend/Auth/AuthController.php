@@ -89,6 +89,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
                 {
                     return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
                 }
+
+                if (!$admin->isActive())
+                {
+                    return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+                }
             }
 
             if( $request->lang ) 
