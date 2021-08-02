@@ -59,6 +59,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $microstr = str_replace('.', '', $microstr);
             return $microstr;
         }
+        public static function microtime_string_st()
+        {
+            $microstr = sprintf('%.4f', microtime(TRUE));
+            $microstr = str_replace('.', '', $microstr);
+            return $microstr;
+        }
         /*
         * FROM Pragmatic Play, BACK API
         */
@@ -674,28 +680,120 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [];
         }
 
-        public static function getgamelink_pp($gamecode, $token)
+        public static function getgamelink_pp($gamecode, $user) //at BT integration, $token is userId
         {
             $detect = new \Detection\MobileDetect();
-            $key = [
-                'token' => $token,
-                'symbol' => $gamecode,
-                'language' => 'ko',
-                'technology' => 'H5',
-                'platform' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
-                'cashierUrl' => \URL::to('/'),
-                'lobbyUrl' => \URL::to('/'),
-            ];
-            $str_params = implode('&', array_map(
-                function ($v, $k) {
-                    return $k.'='.$v;
-                }, 
-                $key,
-                array_keys($key)
-            ));
-            $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . '&stylename=' . config('app.ppsecurelogin');
+            if (config('app.ppmode') == 'bt') // BT integration mode
+            {
+                $data = [
+                    'secureLogin' => config('app.ppsecurelogin'),
+                    'externalPlayerId' => $user->id,
+                    'gameId' => $gamecode,
+                    'language' => 'ko',
+                ];
+                $data['hash'] = PPController::calcHash($data);
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/game/start/', $data);
+                if (!$response->ok())
+                {
+                    return ['error' => true, 'data' => '제공사응답 오류'];
+                }
+                $data = $response->json();
+                if ($data['error'] == 0)
+                {
+                    return ['error' => false, 'data' => ['url' => $data['gameURL']]];
+                }
+                return ['error' => true, 'data' => '제공사응답 오류'];
+            }
+            else // seamless integration mode
+                {
+                
+                $key = [
+                    'token' => $user->api_token,
+                    'symbol' => $gamecode,
+                    'language' => 'ko',
+                    'technology' => 'H5',
+                    'platform' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
+                    'cashierUrl' => \URL::to('/'),
+                    'lobbyUrl' => \URL::to('/'),
+                ];
+                $str_params = implode('&', array_map(
+                    function ($v, $k) {
+                        return $k.'='.$v;
+                    }, 
+                    $key,
+                    array_keys($key)
+                ));
+                $url = config('app.ppgameserver') . '/gs2c/playGame.do?key='.urlencode($str_params) . '&stylename=' . config('app.ppsecurelogin');
+            }
             return ['error' => false, 'data' => ['url' => $url]];
         }
+
+        /*
+            FOR BALANCE TRANSFER INTEGRATION
+        */
+        public static function createPlayer($userId)
+        {
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'externalPlayerId' => $userId,
+                'currency' => 'KRW',
+            ];
+            $data['hash'] = PPController::calcHash($data);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/player/account/create/', $data);
+            if (!$response->ok())
+            {
+                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            }
+            $data = $response->json();
+            return $data;
+        }
+        public static function transfer($userId, $amount)
+        {
+            $transaction = \VanguardLTE\PPTransaction::create([
+                'reference' => $userId, 
+                'timestamp' => PPController::microtime_string_st(),
+                'data' => $amount
+            ]);
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'externalPlayerId' => $userId,
+                'externalTransactionId' => $transaction->id,
+                'amount' => $amount,
+            ];
+            $data['hash'] = PPController::calcHash($data);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/balance/transfer/', $data);
+            if (!$response->ok())
+            {
+                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            }
+            $data = $response->json();
+            return $data;
+        }
+
+        public static function getBalance($userId)
+        {
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'externalPlayerId' => $userId,
+            ];
+            $data['hash'] = PPController::calcHash($data);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/balance/current/', $data);
+            if (!$response->ok())
+            {
+                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            }
+            $data = $response->json();
+            return $data;
+        }
+
         public static function getgamelink($gamecode)
         {
             return ['error' => false, 'data' => ['url' => route('frontend.providers.pp.render', $gamecode)]];
@@ -877,7 +975,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
-            $url = PPController::getgamelink_pp('vs5aztecgems', $anyuser->api_token);
+            $url = PPController::getgamelink_pp('vs5aztecgems', $anyuser);
             $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
             if ($response->status() == 302)
             {
