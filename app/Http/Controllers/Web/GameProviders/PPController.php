@@ -630,7 +630,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [];
             }
             $data = $response->json();
-            $newgames = \VanguardLTE\NewGame::where('provider', 'pp')->get()->pluck('gameid')->toArray();
+            $newgames = \VanguardLTE\NewGame::where('provider', $href)->get()->toArray();
             if ($data['error'] == "0"){
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
@@ -643,37 +643,37 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $bExclude = ($href == 'live')  ^ ($game['gameTypeID'] == 'lg');
                         if ($bExclude == false){
-                            if (in_array($game['gameID'] , $newgames) )
-                            {
-                                array_unshift($gameList, [
-                                    'provider' => 'pp',
-                                    'gamecode' => $game['gameID'],
-                                    'enname' => $game['gameName'],
-                                    'name' => preg_replace('/\s+/', '', $game['gameName']),
-                                    'title' => __('gameprovider.'.$game['gameName']),
-                                    'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
-                                    'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
-                                    'gameType' => $game['gameTypeID'],
-                                    'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
-                                ]);
-                            }
-                            else
-                            {
-                                array_push($gameList, [
-                                    'provider' => 'pp',
-                                    'gamecode' => $game['gameID'],
-                                    'enname' => $game['gameName'],
-                                    'name' => preg_replace('/\s+/', '', $game['gameName']),
-                                    'title' => __('gameprovider.'.$game['gameName']),
-                                    'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
-                                    'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
-                                    'gameType' => $game['gameTypeID'],
-                                    'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
-                                ]);
-                            }
+                            array_push($gameList, [
+                                'provider' => 'pp',
+                                'gamecode' => $game['gameID'],
+                                'enname' => $game['gameName'],
+                                'name' => preg_replace('/\s+/', '', $game['gameName']),
+                                'title' => __('gameprovider.'.$game['gameName']),
+                                'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
+                                'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
+                                'gameType' => $game['gameTypeID'],
+                                'demo' => 'https://demogamesfree-asia.pragmaticplay.net/gs2c/openGame.do?gameSymbol='.$game['gameID'].'&lang=ko&cur=KRW&lobbyURL='. \URL::to('/')
+                            ]);
                         }
                     }
                 }
+            usort($gameList, function ($a,$b) use($newgames)
+                {
+                    $a_id = 999;
+                    $b_id = 999;
+                    foreach ($newgames as $game)
+                    {
+                        if ($a['gamecode'] == $game['gameid'])
+                        {
+                            $a_id = $game['id'];
+                        }
+                        if ($b['gamecode'] == $game['gameid'])
+                        {
+                            $b_id = $game['id'];
+                        }
+                    }
+                    return $a_id - $b_id;
+                });
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
                 return $gameList;
             }
