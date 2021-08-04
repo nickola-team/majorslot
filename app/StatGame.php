@@ -109,7 +109,7 @@ namespace VanguardLTE
                 }
                 else if ($deal_method == 'queue')
                 {*/
-                    $user->processBetDealerMoney_Queue($model->bet, $model->win, $model->game, $model->type);
+                    $user->processBetDealerMoney_Queue($model->bet, $model->win, $model->game, $model->date_time, $model->type);
                 //}
             }
             return $model;

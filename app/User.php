@@ -813,7 +813,7 @@ namespace VanguardLTE
             ]);
         }
 
-        public function processBetDealerMoney_Queue($betMoney, $winMoney, $game, $type='slot') 
+        public function processBetDealerMoney_Queue($betMoney, $winMoney, $game, $date_time, $type='slot') 
         {
             if(!$this->hasRole('user')) {
                 return;
@@ -850,6 +850,7 @@ namespace VanguardLTE
                         'ggr_profit' => $ggr_profit,
                         'ggr_mileage' => $ggr_mileage,
                         'ggr_percent' => $ggr_percent,
+                        'date_time' => $date_time, 
                     ];
                 }
                 $partner = $manager->referral;
@@ -878,6 +879,7 @@ namespace VanguardLTE
                             'ggr_profit' => $ggr_profit,
                             'ggr_mileage' => $ggr_mileage,
                             'ggr_percent' => $ggr_percent,
+                            'date_time' => $date_time, 
                         ];
                     }
                     $partner = $partner->referral;
