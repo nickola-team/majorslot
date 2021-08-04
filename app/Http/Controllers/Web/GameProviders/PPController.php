@@ -690,6 +690,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'externalPlayerId' => $user->id,
                     'gameId' => $gamecode,
                     'language' => 'ko',
+                    'lobbyURL' => \URL::to('/'),
                 ];
                 $data['hash'] = PPController::calcHash($data);
                 $response = Http::withHeaders([
