@@ -471,7 +471,7 @@ namespace VanguardLTE\Console
                 $pp_users = \VanguardLTE\User::where('playing_game','pp')->get()->toArray();
                 $pp_playing_users = [];
                 foreach ($pp_users as $user) {
-                    if ( time() - $user['played_at'] > 360000) //6min
+                    if ( time() - $user['played_at'] > 300) //10min
                     {
                         \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['playing_game' => null]);
                     }
