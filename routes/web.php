@@ -1333,6 +1333,7 @@ Route::group(['middleware' => 'cq9', 'prefix' => 'cq9',], function () {
 /**
  * Pragmatic Play Game Provider
  */
+Route::post('/pp/userbet', 'GameProviders\PPController@userbet');
 Route::group(['middleware' => 'pp', 'prefix' => 'pp',], function () {
 	Route::post('/auth', 'GameProviders\PPController@auth');
 	Route::post('/balance', 'GameProviders\PPController@balance');

@@ -21,8 +21,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]
             )->get()->first();
             $enhancedgames = env('PP_GAMES', '1');
+            $alonegame = 0;
             if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
                 $url = url('/game/' . $gamename);
+                $alonegame = 1;
             }
             else {
                 $user = auth()->user();
@@ -35,6 +37,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getBalance($user->id);
                     if ($data['error'] == -1) {
                         //연동오류
+                        $data['msg'] = 'balance';
+                        return view('frontend.Default.games.pragmatic', compact('data'));
                     }
                     else if ($data['error'] == 17) //Player not found
                     {
@@ -42,6 +46,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         if ($data['error'] != 0) //create player failed
                         {
                             //오류
+                            $data['msg'] = 'createplayer';
+                            return view('frontend.Default.games.pragmatic', compact('data'));
                         }
                     }
                     else if ($data['error'] == 0)
@@ -54,12 +60,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     else //알수 없는 오류
                     {
                         //오류
+                        $data['msg'] = 'balance';
+                        return view('frontend.Default.games.pragmatic', compact('data'));
                     }
                     //밸런스 넘기기
                     $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($user->id, $user->balance);
                     if ($data['error'] != 0)
                     {
                         //밸런스 넘기기 오류
+                        $data['msg'] = 'transfer';
+                        return view('frontend.Default.games.pragmatic', compact('data'));
                     }
 
                     //게임런칭
@@ -74,7 +84,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else
             {
-                return view('frontend.Default.games.pragmatic', compact('url'));
+                return view('frontend.Default.games.pragmatic', compact('url', 'alonegame'));
             }
         }
     }

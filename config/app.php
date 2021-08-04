@@ -111,7 +111,7 @@ return [
     'ppmode' => env('PP_INTEGRATION_MODE', 'sw'),
     'ppsecretkey' =>  env('PP_SECRETKEY', 'hmc7ZC55a88F6DhB'),
     'ppsecurelogin' =>  env('PP_SECURELOGIN', 'mjr_major'),
-    'ppapi' => env('PP_API','https://api-sg0.pragmaticplay.net/IntegrationService/v3/http'),
+    'ppapi' => env('PP_API','https://api-sg0.pragmaticplay.net/IntegrationService/v3'),
     'ppgameserver' => env('PP_SERVER','https://major-sg0.pragmaticplay.net'),
     
     /*

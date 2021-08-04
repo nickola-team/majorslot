@@ -624,7 +624,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->get(config('app.ppapi') . '/CasinoGameAPI/getCasinoGames/', $data);
+                ])->get(config('app.ppapi') . '/http/CasinoGameAPI/getCasinoGames/', $data);
             if (!$response->ok())
             {
                 return [];
@@ -694,7 +694,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data['hash'] = PPController::calcHash($data);
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/x-www-form-urlencoded'
-                    ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/game/start/', $data);
+                    ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/game/start/', $data);
                 if (!$response->ok())
                 {
                     return ['error' => true, 'data' => '제공사응답 오류'];
@@ -733,6 +733,45 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         /*
             FOR BALANCE TRANSFER INTEGRATION
         */
+
+        public function userbet(\Illuminate\Http\Request $request)
+        {
+            $user = \VanguardLTE\User::lockForUpdate()->Where('id',auth()->id())->get()->first();
+            if (!$user)
+            {
+                return response()->json([
+                    'error' => '1',
+                    'description' => 'unlogged']);
+            }
+            if ($request->name == 'notifyCloseContainer')
+            {
+                $data = PPController::getBalance($user->id);
+                if ($user->playing_game=='pp' && $data['error'] == 0) {
+                    $user->update([
+                        'balance' => $data['balance'],
+                        'playing_game' => null,
+                        'played_at' => time()
+                    ]);
+                }
+                else
+                {
+                    $user->update([
+                        'playing_game' => null,
+                        'played_at' => time()
+                    ]);
+                }
+            }
+            else
+            {
+                $user->update([
+                    'playing_game' => 'pp',
+                    'played_at' => time()
+                ]);
+            }
+            return response()->json([
+                'error' => '0',
+                'description' => 'OK']);
+        }
         public static function createPlayer($userId)
         {
             $data = [
@@ -743,7 +782,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/player/account/create/', $data);
+                ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/player/account/create/', $data);
             if (!$response->ok())
             {
                 return ['error' => '-1', 'description' => '제공사응답 오류'];
@@ -767,13 +806,81 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/balance/transfer/', $data);
+                ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/transfer/', $data);
             if (!$response->ok())
             {
                 return ['error' => '-1', 'description' => '제공사응답 오류'];
             }
             $data = $response->json();
             return $data;
+        }
+
+        public static function gamerounds($timepoint, $dataType='RNG')
+        {
+            $data = [
+                'login' => config('app.ppsecurelogin'),
+                'password' => config('app.ppsecretkey'),
+                'dataType' => $dataType,
+                'timepoint' => $timepoint,
+            ];
+            $response = null;
+            try {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->get(config('app.ppapi') . '/DataFeeds/gamerounds/finished/', $data);
+            } catch (\Exception $e) {
+                return null;
+            }
+            if (!$response->ok())
+            {
+                return null;
+            }
+            $data = $response->body();
+            return $data;
+        }
+
+        public static function processGameRound($dataType)
+        {
+            $timepoint = settings($dataType . 'timepoint');
+            $data = PPController::gamerounds($timepoint, $dataType);
+            $count = 0;
+            if ($data)
+            {
+                $parts = explode("\n", $data);
+                $timepoint = explode("=",$parts[0])[1];
+                \Settings::set($dataType .'timepoint', $timepoint);
+                \Settings::save();
+                //ignore $parts[2]
+                for ($i=2;$i<count($parts);$i++)
+                {
+                    $round = explode(",", $parts[$i]);
+                    if (count($round) < 2)
+                    {
+                        continue;
+                    }
+                    if ($round[7] == "C") {
+                        $time = strtotime($round[5].' UTC');
+                        $dateInLocal = date("Y-m-d H:i:s", $time);
+                        $shop = \VanguardLTE\ShopUser::where('user_id', $round[1])->first();
+                        \VanguardLTE\StatGame::create([
+                            'user_id' => $round[1], 
+                            'balance' => floatval(0), 
+                            'bet' => $round[9], 
+                            'win' => $round[10], 
+                            'game' => PPController::gamecodetoname($round[2])[0] . '_pp', 
+                            'percent' => 0, 
+                            'percent_jps' => 0, 
+                            'percent_jpg' => 0, 
+                            'profit' => 0, 
+                            'denomination' => 0, 
+                            'date_time' => $dateInLocal,
+                            'shop_id' => $shop->shop_id,
+                        ]);
+                        $count = $count + 1;
+                    }
+                }
+            }
+            return [$count, $timepoint];
         }
 
         public static function getBalance($userId)
@@ -785,7 +892,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/CasinoGameAPI/balance/current/', $data);
+                ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/current/', $data);
             if (!$response->ok())
             {
                 return ['error' => '-1', 'description' => '제공사응답 오류'];
@@ -809,7 +916,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/FreeRoundsBonusAPI/createFRB', $data);
+                ])->asForm()->post(config('app.ppapi') . '/http/FreeRoundsBonusAPI/createFRB', $data);
             if (!$response->ok())
             {
                 return ['error' => '-1', 'description' => '제공사응답 오류'];
@@ -826,7 +933,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/FreeRoundsBonusAPI/cancelFRB', $data);
+                ])->asForm()->post(config('app.ppapi') . '/http/FreeRoundsBonusAPI/cancelFRB', $data);
             if (!$response->ok())
             {
                 return ['error' => '-1', 'description' => '제공사응답 오류'];
@@ -844,7 +951,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data['hash'] = PPController::calcHash($data);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/FreeRoundsBonusAPI/getPlayersFRB', $data);
+                ])->asForm()->post(config('app.ppapi') . '/http/FreeRoundsBonusAPI/getPlayersFRB', $data);
             if (!$response->ok())
             {
                 return ['error' => '-1', 'description' => '제공사응답 오류'];

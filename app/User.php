@@ -55,7 +55,9 @@ namespace VanguardLTE
             'ggr_balance',
             'ggr_mileage',
             'reset_days',
-            'last_reset_at'
+            'last_reset_at',
+            'playing_game',
+            'played_at'
         ];
 
 

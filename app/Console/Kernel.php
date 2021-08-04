@@ -1,6 +1,12 @@
 <?php 
 namespace VanguardLTE\Console
 {
+    use GuzzleHttp\Client;
+    use GuzzleHttp\Exception\RequestException;
+    use GuzzleHttp\Pool;
+    use GuzzleHttp\Psr7\Request;
+    use GuzzleHttp\Psr7\Response;
+    use \VanguardLTE\Http\Controllers\Web\GameProviders\PPController;
     class Kernel extends \Illuminate\Foundation\Console\Kernel
     {
         protected $commands = [];
@@ -452,6 +458,85 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End');
             });
+            \Artisan::command('pp:gameround {debug=0}', function ($debug) {
+                $data = PPController::processGameRound('RNG');
+                $this->info('saved ' . $data[0] . ' RNG bet/win record.');
+                $this->info('new RNG timepoint = ' . $data[1]);
+                $data = PPController::processGameRound('LC');
+                $this->info('saved ' . $data[0] . ' LC bet/win record.');
+                $this->info('new LC timepoint = ' . $data[1]);
+            });
+
+            \Artisan::command('pp:syncbalance {debug=1}', function ($debug) {
+                $pp_users = \VanguardLTE\User::where('playing_game','pp')->get()->toArray();
+                $pp_playing_users = [];
+                foreach ($pp_users as $user) {
+                    if ( time() - $user['played_at'] > 360000) //6min
+                    {
+                        \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['playing_game' => null]);
+                    }
+                    else
+                    {
+                        $pp_playing_users[] = $user;
+                    }
+                }
+
+                $client = new Client();
+
+                $requests = function () use ($pp_playing_users) {
+                    foreach ($pp_playing_users as $user) {
+                        $data = [
+                            'secureLogin' => config('app.ppsecurelogin'),
+                            'externalPlayerId' => $user['id'],
+                        ];
+                        $data['hash'] = PPController::calcHash($data);
+                        yield new Request('POST', config('app.ppapi') . '/http/CasinoGameAPI/balance/current/' , 
+                                                ['Content-Type' => 'application/x-www-form-urlencoded'],
+                                                http_build_query($data, null, '&'));
+                    }
+                };
+
+                $synccount = 0;
+                $failedcount = 0;
+
+                $pool = new Pool($client, $requests(), [
+                    'fulfilled' => function (Response $response, $index) use ($pp_playing_users, &$synccount, &$failedcount, $debug) {
+                        // this is delivered each successful response
+                        $data = json_decode($response->getBody(), true);
+                        if ($data['error'] == 0){
+                            $user = $pp_playing_users[$index];
+                            if ($debug == 1) {
+                                $this->info('sync id = ' . $user['id'] . ', old balance = ' . $user['balance'] .  ', pp balance = ' . $data['balance']);
+                            }
+                            \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['balance' => $data['balance']]);
+                            $synccount = $synccount + 1;
+                        }
+                        else
+                        {
+                            if ($debug == 1) {
+                                $this->info('failed id = ' . $user['id'] . ', old balance = ' . $user['balance'] .  ', pp return code = ' . $data['error']);
+                            }
+                            $failedcount = $failedcount + 1;
+                        }                       
+                    },
+                    'rejected' => function (RequestException $reason, $index) use ($pp_playing_users, &$failedcount, $debug){
+                        if ($debug == 1) {
+                            $this->info('failed id = ' . $user['id'] . ', old balance = ' . $user['balance'] );
+                        }
+                        $failedcount = $failedcount + 1;
+                    },
+                ]);
+
+                // Initiate the transfers and create a promise
+                $promise = $pool->promise();
+
+                // Force the pool of requests to complete.
+                $promise->wait();
+
+                $this->info('Synchronized ' . $synccount .  ' users, failed ' . $failedcount . ' users.');
+
+            });
+
             \Artisan::command('daily:newcategory {originalid}', function ($originalid) {
                 set_time_limit(0);
                 $this->info("Begin adding new category to all shop");

@@ -121,7 +121,7 @@
 					<tr>
 						<th>게임명</th>
 						<th>아이디</th>
-						<th>보유금액</th>
+						{{--<th>보유금액</th>--}}
 						<th>베팅금액</th>
 						<th>당첨금액</th>
 						{{-- <th>@lang('app.in_game')</th>
@@ -147,7 +147,7 @@
 					<tr>
 						<th>게임명</th>
 						<th>아이디</th>
-						<th>보유금액</th>
+						{{--<th>보유금액</th>--}}
 						<th>베팅금액</th>
 						<th>당첨금액</th>
 						{{-- <th>@lang('app.in_game')</th>

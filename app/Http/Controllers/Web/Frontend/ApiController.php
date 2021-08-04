@@ -155,65 +155,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             $provider = $request->provider;
             $gamecode = $request->gamecode;
-            $major_domain = env('MAJOR_DOMAIN', 'http://major999.com/');
-            $brand = env('MAJOR_BRAND');
-            if ($brand == null || $brand == 'major') //this is main server
-            {
-                $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
-                return response()->json($res);
-            }
-            else
-            {
-                $user = auth()->user();
-                $response = Http::withHeaders([
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->get($major_domain . 'api/website/getgamelink', [
-                    'token' => $user->api_token . '_' . $brand,
-                    'provider' => $provider,
-                    'gamecode' => $gamecode,
-                ]);
-                if (!$response->ok())
-                {
-                    return null;
-                }
-                $data = $response->json();
-                return response()->json($data);
-            }
+            $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
+            return response()->json($res);
         }
 
         public function gamelistbyProvider($provider, $href)
         {
             $games = null;
-            $major_domain = env('MAJOR_DOMAIN', 'http://major999.com/');
-            $brand = env('MAJOR_BRAND');
-            if ($brand == null || $brand == 'major') //this is main server
-            {
-                $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist', $href);
-            }
-            else
-            {
-                $gameList = \Illuminate\Support\Facades\Redis::get($href.'list');
-                if ($gameList)
-                {
-                    $games = json_decode($gameList, true);
-                    return $games;
-                }
-
-                $response = Http::withHeaders([
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->get($major_domain . 'api/website/getgamelist', [
-                    'provider' => $provider,
-                    'href' => $href,
-                    'brand' => $brand
-                ]);
-                if (!$response->ok())
-                {
-                    return null;
-                }
-                
-                $games = $response->json();
-                \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($games));
-            }
+            $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist', $href);
             return $games;
         }
 
