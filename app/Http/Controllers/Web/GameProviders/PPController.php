@@ -815,6 +815,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $data;
         }
 
+        public static function terminate($userId)
+        {
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'externalPlayerId' => $userId,
+            ];
+            $data['hash'] = PPController::calcHash($data);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/game/session/terminate/', $data);
+            if (!$response->ok())
+            {
+                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            }
+            $data = $response->json();
+            return $data;
+        }
+
         public static function gamerounds($timepoint, $dataType='RNG')
         {
             $data = [
