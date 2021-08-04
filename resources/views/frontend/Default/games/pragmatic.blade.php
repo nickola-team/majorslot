@@ -154,7 +154,7 @@
         </div>
     @endif
     </body>
-    @if ($alonegame == 0)
+    @if (isset($alonegame) && $alonegame == 0)
     <script type="text/javascript">
         var urlPath = "{{$url??''}}";
         const url = new URL(urlPath);
