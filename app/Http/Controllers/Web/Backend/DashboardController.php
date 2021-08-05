@@ -457,7 +457,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $statistics = $statistics->join('users', 'users.id', '=', 'stat_game.user_id');
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
             }
-            $start_date = date("Y-m-d") . " 00:00:00";
+            $start_date = date("Y-m-d H:i:s", strtotime("-12 hours"));
             $end_date = date("Y-m-d H:i:s");
             if( $request->dates != '' ) 
             {
@@ -552,11 +552,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     {
                         $statistics = $statistics->whereIn('deal_log.partner_id', $partner_ids);
                     }
-
                 }
                 $statistics = $statistics->where('deal_log.type',$request->type);
             }
-            $start_date = date("Y-m-d") . " 00:00:00";
+            $start_date = date("Y-m-d H:i:s", strtotime("-12 hours"));
             $end_date = date("Y-m-d H:i:s");
 
             if( $request->dates != '' ) 
