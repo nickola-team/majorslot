@@ -13,6 +13,7 @@
 	
 	<link href="/back/dist/css/offline.css" type="text/css" rel="stylesheet">
 	<title>@yield('title')</title>
+	<link rel="stylesheet" href="/frontend/Default/css/error.css">
 </head>
 <body>
 	<div class="offpage">
