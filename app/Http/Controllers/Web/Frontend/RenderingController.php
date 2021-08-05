@@ -78,6 +78,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $url = $data['data']['url'];
                 }
             }
+            if ($alonegame == 0)
+            {
+                $user->update([
+                    'playing_game' => 'pp',
+                    'played_at' => time(),
+                ]);
+            }
             if ($lobby == 'mini')
             {
                 return redirect($url);

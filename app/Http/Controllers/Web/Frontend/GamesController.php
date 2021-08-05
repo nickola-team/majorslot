@@ -191,6 +191,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $detect = new \Detection\MobileDetect();
             $userId = \Illuminate\Support\Facades\Auth::id();
+            //reset playing_game field to null for standalone games.
+            $user = auth()->user();
+            if ($user)
+            {
+                $user->update(['playing_game' => null]);
+            }
             $object = '\VanguardLTE\Games\\' . $game . '\SlotSettings';
             $slot = new $object($game, $userId);
             $game = \VanguardLTE\Game::where([
