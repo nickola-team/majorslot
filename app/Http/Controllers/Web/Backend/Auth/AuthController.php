@@ -34,6 +34,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             {
                 $title = $site->title;
             }
+            else
+            {
+                return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
+            }
             return view('backend.Default.auth.login', compact('directories','title', 'site'));
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
