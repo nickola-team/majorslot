@@ -810,9 +810,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/transfer/', $data);
             if (!$response->ok())
             {
+                $transaction->update(['refund' => 1]);
                 return ['error' => '-1', 'description' => '제공사응답 오류'];
             }
             $data = $response->json();
+            if ($data['error'] != 0)
+            {
+                $transaction->update(['refund' => 1]);
+            }
             return $data;
         }
 
