@@ -1202,7 +1202,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                     foreach ($reelPositionSet as $id => $count) {
                         if ($curPos == 0) {
-                            while( in_array( ($randSymbol = random_int(4, 13)), $uniqueSymbols));
+                            if ($symbolCount < 6) {
+                                while( in_array( ($randSymbol = random_int(4, 13)), $uniqueSymbols));
+                            }
+                            else {
+                                /* 릴 심볼갯수가 6이상일때 맨윗심볼 7,8은 될수 없다 */
+                                while( in_array( ($randSymbol = random_int(9, 13)), $uniqueSymbols));
+                            }
                         }
                         else {
                             $prevSymbol = $reel['reel' . $reelId][$curPos - 1];
@@ -1224,7 +1230,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                                 if ($dogsCount + $count < 4) {
                                     while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
                                 }
-                                else if ($numbersCount + $count < 4) {
+                                else if ($numbersCount + $count < 5) {
                                     /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
                                     if ($count == 3) {
                                         while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
@@ -1241,7 +1247,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                                 if ($dogsCount + $count < 4) {
                                     while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
                                 }
-                                else if ($numbersCount + $count < 4) {
+                                else if ($numbersCount + $count < 5) {
                                     /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
                                     if ($count == 3) {
                                         while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
@@ -1393,7 +1399,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                             if ($dogsCount + $count < 4) {
                                 while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
                             }
-                            else if ($numbersCount + $count < 4) {
+                            else if ($numbersCount + $count < 5) {
                                 /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
                                 if ($count == 3) {
                                     while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
@@ -1410,7 +1416,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                             if ($dogsCount + $count < 4) {
                                 while( in_array( ($randSymbol = random_int(3, 6)), $uniqueSymbols));
                             }
-                            else if ($numbersCount + $count < 4) {
+                            else if ($numbersCount + $count < 5) {
                                 /* 생성할 심볼갯수가 3개이면 K 심볼은 선택하지 않는다 */
                                 if ($count == 3) {
                                     while( in_array( ($randSymbol = random_int(9, 13)), array_merge($uniqueSymbols, [$S_K])));
