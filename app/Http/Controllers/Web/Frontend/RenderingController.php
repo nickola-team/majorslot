@@ -75,6 +75,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     //게임런칭
 
                     $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelink_pp($gamecode, $user);
+                    if ($data['error'] == true)
+                    {
+                        $data['msg'] = 'getgamelink';
+                        return view('frontend.Default.games.pragmatic', compact('data'));
+                    }
                     $url = $data['data']['url'];
                 }
             }
