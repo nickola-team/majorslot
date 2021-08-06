@@ -129,7 +129,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
@@ -262,7 +262,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -442,7 +442,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
@@ -597,7 +597,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
@@ -703,7 +703,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = json_decode($record->data, true);
 
             
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$data['target']['account'])->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$data['target']['account'])->get()->first();
             if (!$user || !$user->hasRole('user')){
                 \DB::commit();
                 return response()->json([
@@ -830,7 +830,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
 
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
@@ -918,7 +918,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function balance($account, \Illuminate\Http\Request $request)
         {
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             if ($user && $user->hasRole('user'))
             {
                 $resjson = json_encode([
@@ -949,7 +949,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checkplayer($account, \Illuminate\Http\Request $request)
         {
-            $user = \VanguardLTE\User::lockForUpdate()->where('username',$account)->get()->first();
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             $data = false;
             if ($user && $user->hasRole('user')) {
                 $data = true;
@@ -1045,7 +1045,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'Authorization' => config('app.cq9token'),
                 'Content-Type' => 'application/x-www-form-urlencoded'
             ])->asForm()->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
-                'account' => $user->username,
+                'account' => $user->id,
                 'gamehall' => 'cq9',
                 'gamecode' => $gamecode,
                 'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
