@@ -698,14 +698,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/game/start/', $data);
                 if (!$response->ok())
                 {
-                    return ['error' => true, 'data' => '제공사응답 오류'];
+                    return ['error' => true, 'data' => '제공사응답 오류', 'original' => $response->body()];
                 }
                 $data = $response->json();
                 if ($data['error'] == 0)
                 {
                     return ['error' => false, 'data' => ['url' => $data['gameURL']]];
                 }
-                return ['error' => true, 'data' => '제공사응답 오류'];
+                return ['error' => true, 'data' => '제공사응답 오류', 'original' => $data];
             }
             else // seamless integration mode
                 {
