@@ -11,7 +11,7 @@
 			$game = explode(' ', $game)[0];
 		}
 
-		$game = preg_replace('/[^a-zA-Z0-9 -]+/', '', $game);
+		$game = preg_replace('/^_/', '', $game);
 	?>
 	{{$game}}
 
