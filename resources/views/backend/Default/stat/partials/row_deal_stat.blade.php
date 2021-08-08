@@ -10,6 +10,7 @@
 			$game = preg_replace('/PM/', '_pp', $stat->game);
 			$game = explode(' ', $game)[0];
 		}
+		$game = preg_replace('/[^a-zA-Z0-9 -]+/', '', $game);
 	?>
 	{{$game}}
 	</td>
