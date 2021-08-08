@@ -504,8 +504,8 @@ namespace VanguardLTE\Console
                     'fulfilled' => function (Response $response, $index) use ($pp_playing_users, &$synccount, &$failedcount, $debug) {
                         // this is delivered each successful response
                         $data = json_decode($response->getBody(), true);
+                        $user = $pp_playing_users[$index];
                         if ($data['error'] == 0){
-                            $user = $pp_playing_users[$index];
                             if ($debug == 1) {
                                 $this->info('sync id = ' . $user['id'] . ', old balance = ' . $user['balance'] .  ', pp balance = ' . $data['balance']);
                             }
