@@ -27,7 +27,7 @@ namespace VanguardLTE
         public static function boot()
         {
             parent::boot();
-            self::created(function($model)
+            /*self::created(function($model)
             {
                 try
                 {
@@ -61,7 +61,7 @@ namespace VanguardLTE
                 catch( \Predis\Connection\ConnectionException $e ) 
                 {
                 }
-            });
+            });*/
         }
 
         public function requestInfo()

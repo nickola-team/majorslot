@@ -37,7 +37,7 @@ namespace VanguardLTE
                     $sum = '<span class="text-red">' . number_format(abs($model->summ), 0, '.', '') . '</span>';
                 }
                 $usdata = '<a href="' . route('backend.statistics', ['user' => $model->user->username]) . '">' . $model->user->username . '</a>';
-                try
+                /*try
                 {
                     \Illuminate\Support\Facades\Redis::publish('Lives', json_encode([
                         'event' => 'NewLive', 
@@ -68,7 +68,7 @@ namespace VanguardLTE
                 }
                 catch( \Predis\Connection\ConnectionException $e ) 
                 {
-                }
+                }*/
             });
         }
         public function admin()
