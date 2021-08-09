@@ -561,15 +561,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if( $data['role_id'] == 4 || $data['role_id'] == 5 || $data['role_id'] == 6) //distributor, agent, master
             {
                 $parent = auth()->user();
-                if ($parent!=null && !$parent->isInoutPartner() && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null &&  $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
-                if ($parent!=null && !$parent->isInoutPartner() && $parent->table_deal_percent < $data['table_deal_percent'])
+                if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
                 }
-                if (!$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
+                if ($parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
                 }
@@ -962,11 +962,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]))
             {
                 $parent = $user->referral;
-                if ($parent!=null && !$parent->isInoutPartner() && isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
+                if ($parent!=null &&  isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
-                if ($parent!=null && !$parent->isInoutPartner() && isset($data['table_deal_percent']) && $parent->table_deal_percent < $data['table_deal_percent'])
+                if ($parent!=null &&  isset($data['table_deal_percent']) && $parent->table_deal_percent < $data['table_deal_percent'])
                 {
                     return redirect()->route('backend.user.tree')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
                 }
