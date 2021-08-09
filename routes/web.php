@@ -212,6 +212,16 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'RenderingController@pragmaticrender'
     ]);
 
+    Route::get('providers/waiting/{provider}/{gamecode}', [
+        'as' => 'frontend.providers.waiting',
+        'uses' => 'RenderingController@waiting'
+    ]);
+
+    Route::get('providers/launch/{requestid}', [
+        'as' => 'frontend.providers.launch',
+        'uses' => 'RenderingController@launch'
+    ]);
+
 
 	/*
 	Route::get('games', [
@@ -1313,6 +1323,8 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
 
 	});
 });
+
+
 
 
 /**

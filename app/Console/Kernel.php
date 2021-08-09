@@ -65,6 +65,12 @@ namespace VanguardLTE\Console
 
             $schedule->call(function()
             {
+                $start_date = date("Y-m-d H:i:s",strtotime("-12 hours"));
+                \VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->where('finished', 1)->delete();
+            })->hourly();
+
+            $schedule->call(function()
+            {
                 \VanguardLTE\Session::where('user_id', 'NULL')->delete();
                 \VanguardLTE\Session::where('user_id', '')->delete();
                 \VanguardLTE\Task::where('finished', 1)->delete();
@@ -458,6 +464,34 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End');
             });
+
+            \Artisan::command('launch:makeurl', function () {
+                $launchRequests = \VanguardLTE\GameLaunch::where('finished', 0)->orderby('created_at', 'asc')->get();
+                $processed_users = [];
+                foreach ($launchRequests as $request)
+                {
+                    if (in_array($request->user_id, $processed_users)) //process 1 request per one user
+                    {
+                        $this->info('skipping userid=' . $request->user_id . ', id=' . $request->id);
+                        continue;
+                    }
+                    if ($request->provider == 'pp')
+                    {
+                        $url = PPController::makelink($request->gamecode, $request->user_id);
+                        if ($url != null)
+                        {
+                            $request->update([
+                                'launchUrl' => $url,
+                                'finished' => 1,
+                            ]);
+                            $processed_users[] = $request->user_id;
+                        }
+                    }
+                }
+
+            });
+
+
             \Artisan::command('pp:gameround {debug=0}', function ($debug) {
                 $data = PPController::processGameRound('RNG');
                 $this->info('saved ' . $data[0] . ' RNG bet/win record.');
@@ -504,8 +538,8 @@ namespace VanguardLTE\Console
                     'fulfilled' => function (Response $response, $index) use ($pp_playing_users, &$synccount, &$failedcount, $debug) {
                         // this is delivered each successful response
                         $data = json_decode($response->getBody(), true);
+                        $user = $pp_playing_users[$index];
                         if ($data['error'] == 0){
-                            $user = $pp_playing_users[$index];
                             if ($debug == 1) {
                                 $this->info('sync id = ' . $user['id'] . ', old balance = ' . $user['balance'] .  ', pp balance = ' . $data['balance']);
                             }
@@ -523,7 +557,8 @@ namespace VanguardLTE\Console
                             $failedcount = $failedcount + 1;
                         }                       
                     },
-                    'rejected' => function (RequestException $reason, $index) use ($pp_playing_users, &$failedcount, $debug){
+                    'rejected' => function ($reason, $index) use ($pp_playing_users, &$failedcount, $debug){
+                        $user = $pp_playing_users[$index];
                         if ($debug == 1) {
                             $this->info('failed id = ' . $user['id'] . ', old balance = ' . $user['balance'] );
                         }

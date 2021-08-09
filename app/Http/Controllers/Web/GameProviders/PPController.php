@@ -680,6 +680,52 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [];
         }
 
+        public static function makelink($gamecode, $userid)
+        {
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            $data = PPController::getBalance($userid);
+            if ($data['error'] == -1) {
+                //연동오류
+                $data['msg'] = 'balance';
+                return null;
+            }
+            else if ($data['error'] == 17) //Player not found
+            {
+                $data = PPController::createPlayer($user->id);
+                if ($data['error'] != 0) //create player failed
+                {
+                    //오류
+                    $data['msg'] = 'createplayer';
+                    return null;
+                }
+            }
+            else if ($data['error'] == 0)
+            {
+                if ($data['balance'] > 0) //이미 밸런스가 있다면
+                {
+                    $data = PPController::transfer($user->id, -$data['balance']);
+                    // if ($data['status'] == 'Not found')
+                    // {
+                    //     return null;
+                    // }
+                }
+            }
+            else //알수 없는 오류
+            {
+                //오류
+                $data['msg'] = 'balance';
+                return null;
+            }
+            //밸런스 넘기기
+            $data = PPController::transfer($user->id, $user->balance);
+            // if ($data['status'] == 'Not found')
+            // {
+            //     return null;
+            // }
+            
+            return '/providers/pp/'.$gamecode;
+        }
+
         public static function getgamelink_pp($gamecode, $user) //at BT integration, $token is userId
         {
             $detect = new \Detection\MobileDetect();
@@ -817,8 +863,36 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($data['error'] != 0)
             {
                 $transaction->update(['refund' => 1]);
+                return ['error' => '-1', 'description' => '밸런스 전송 오류'];
             }
             return $data;
+
+            //check transfer status
+            // $tryCount = 0;
+            // $resdata['status'] = 'Not found';
+            // while ($tryCount < 5 && $resdata['status'] != 'success') {
+            //     $data = [
+            //         'secureLogin' => config('app.ppsecurelogin'),
+            //         'externalTransactionId' => $transaction->id,
+            //     ];
+            //     $data['hash'] = PPController::calcHash($data);
+            //     $response = Http::withHeaders([
+            //         'Content-Type' => 'application/x-www-form-urlencoded'
+            //         ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/transfer/status/', $data);
+
+            //     if ($response->ok())
+            //     {
+            //         $resdata = $response->json();
+            //         if ($resdata == null)
+            //         {
+            //             $resdata['status'] = 'Not found';
+            //         }
+            //     }
+            //     $tryCount = $tryCount + 1;
+            //     sleep(1);
+            // }
+
+            // return $resdata;
         }
 
         public static function terminate($userId)
@@ -865,15 +939,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function processGameRound($dataType)
         {
-            $timepoint = settings($dataType . 'timepoint');
+            $tpoint = \VanguardLTE\Settings::where('key', $dataType . 'timepoint')->first();
+            if ($tpoint)
+            {
+                $timepoint = $tpoint->value;
+            }
+            else
+            {
+                $timepoint = null;
+            }
+            
             $data = PPController::gamerounds($timepoint, $dataType);
             $count = 0;
             if ($data)
             {
                 $parts = explode("\n", $data);
                 $timepoint = explode("=",$parts[0])[1];
-                \Settings::set($dataType .'timepoint', $timepoint);
-                \Settings::save();
+                if ($tpoint)
+                {
+                    $tpoint->update(['value' => $timepoint]);
+                }
+                else
+                {
+                    \VanguardLTE\Settings::create(['key' => $dataType .'timepoint', 'value' => $timepoint]);
+                }
                 //ignore $parts[2]
                 for ($i=2;$i<count($parts);$i++)
                 {
@@ -927,7 +1016,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            return ['error' => false, 'data' => ['url' => route('frontend.providers.pp.render', $gamecode)]];
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', ['pp', $gamecode])]];
         }
 
         public static function createfrb($frbdata)
@@ -1101,12 +1190,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function syncpromo()
         {
-            $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNotNull('api_token')->first();
+            if (config('app.ppmode') == 'bt') // BT integration mode
+            {
+                $anyuser = \VanguardLTE\User::where('role_id', 1)->where('playing_game', 'pp')->first();
+            }
+            else
+            {
+                $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNotNull('api_token')->first();
+            }
+            
             if (!$anyuser)
             {
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
             $url = PPController::getgamelink_pp('vs5aztecgems', $anyuser);
+            if ($url['error'] == true)
+            {
+                return ['error' => true, 'msg' => 'game link error'];
+            }
             $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
             if ($response->status() == 302)
             {

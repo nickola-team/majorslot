@@ -8,6 +8,56 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $this->middleware('auth');
         }
 
+        public function waiting($provider, $gamecode, \Illuminate\Http\Request $request)
+        {
+            $alreadyRequest = \VanguardLTE\GameLaunch::where([
+                'user_id' => auth()->user()->id,
+                'provider' => $provider,
+                'finished' => '0'
+            ])->first();
+            $requestId = 0;
+            if ($alreadyRequest)
+            {
+                $requestId = $alreadyRequest->id;
+            }
+            else{
+                $launchRequest = \VanguardLTE\GameLaunch::create(
+                    [
+                        'user_id' => auth()->user()->id,
+                        'provider' => $provider,
+                        'gamecode' => $gamecode,
+                        'finished' => '0'
+                    ]
+                );
+                $requestId = $launchRequest->id;
+            }
+
+
+            return view('frontend.Default.games.waiting', compact('requestId'));
+        }
+
+        public function launch($requestid, \Illuminate\Http\Request $request)
+        {
+            $launchRequest = \VanguardLTE\GameLaunch::where('id', $requestid)->first();
+            if ($requestid)
+            {
+                if ($launchRequest->user_id != auth()->user()->id)
+                {
+                    return response()->json(['error' => true, 'url' => '']);
+                }
+                if ($launchRequest->finished != 1)
+                {
+                    return response()->json(['error' => true, 'url' => '']);
+                }
+                return response()->json(['error' => false, 'url' => $launchRequest->launchUrl]);
+            }
+            else
+            {
+                return response()->json(['error' => true, 'url' => '']);
+            }
+
+        }
+
         public function pragmaticrender($gamecode, \Illuminate\Http\Request $request)
         {
             $lobby = $request->lobby;
@@ -21,6 +71,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'view' => 1,
                 ]
             )->get()->first();
+            $user = auth()->user();
             $enhancedgames = env('PP_GAMES', '1');
             $alonegame = 0;
             if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
@@ -28,53 +79,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $alonegame = 1;
             }
             else {
-                $user = auth()->user();
-                if (!$user)
-                {
-                    $url = url('/');
-                }
-                else
-                {
-                    $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getBalance($user->id);
-                    if ($data['error'] == -1) {
-                        //연동오류
-                        $data['msg'] = 'balance';
-                        return view('frontend.Default.games.pragmatic', compact('data'));
-                    }
-                    else if ($data['error'] == 17) //Player not found
-                    {
-                        $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::createPlayer($user->id);
-                        if ($data['error'] != 0) //create player failed
-                        {
-                            //오류
-                            $data['msg'] = 'createplayer';
-                            return view('frontend.Default.games.pragmatic', compact('data'));
-                        }
-                    }
-                    else if ($data['error'] == 0)
-                    {
-                        if ($data['balance'] > 0) //이미 밸런스가 있다면
-                        {
-                            $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($user->id, -$data['balance']);
-                        }
-                    }
-                    else //알수 없는 오류
-                    {
-                        //오류
-                        $data['msg'] = 'balance';
-                        return view('frontend.Default.games.pragmatic', compact('data'));
-                    }
-                    //밸런스 넘기기
-                    $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($user->id, $user->balance);
-                    if ($data['error'] != 0)
-                    {
-                        //밸런스 넘기기 오류
-                        $data['msg'] = 'transfer';
-                        return view('frontend.Default.games.pragmatic', compact('data'));
-                    }
-
                     //게임런칭
-
                     $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelink_pp($gamecode, $user);
                     if ($data['error'] == true)
                     {
@@ -82,8 +87,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         return view('frontend.Default.games.pragmatic', compact('data'));
                     }
                     $url = $data['data']['url'];
-                }
             }
+
             if ($alonegame == 0)
             {
                 $user->update([
