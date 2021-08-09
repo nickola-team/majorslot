@@ -865,15 +865,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function processGameRound($dataType)
         {
-            $timepoint = settings($dataType . 'timepoint');
+            $tpoint = \VanguardLTE\Settings::where('key', $dataType . 'timepoint')->first();
+            if ($tpoint)
+            {
+                $timepoint = $tpoint->value;
+            }
+            else
+            {
+                $timepoint = null;
+            }
+            
             $data = PPController::gamerounds($timepoint, $dataType);
             $count = 0;
             if ($data)
             {
                 $parts = explode("\n", $data);
                 $timepoint = explode("=",$parts[0])[1];
-                \Settings::set($dataType .'timepoint', $timepoint);
-                \Settings::save();
+                if ($tpoint)
+                {
+                    $tpoint->update(['value' => $timepoint]);
+                }
+                else
+                {
+                    \VanguardLTE\Settings::create(['key' => $dataType .'timepoint', 'value' => $timepoint]);
+                }
                 //ignore $parts[2]
                 for ($i=2;$i<count($parts);$i++)
                 {
