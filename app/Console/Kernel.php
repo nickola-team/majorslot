@@ -523,7 +523,8 @@ namespace VanguardLTE\Console
                             $failedcount = $failedcount + 1;
                         }                       
                     },
-                    'rejected' => function (RequestException $reason, $index) use ($pp_playing_users, &$failedcount, $debug){
+                    'rejected' => function ($reason, $index) use ($pp_playing_users, &$failedcount, $debug){
+                        $user = $pp_playing_users[$index];
                         if ($debug == 1) {
                             $this->info('failed id = ' . $user['id'] . ', old balance = ' . $user['balance'] );
                         }

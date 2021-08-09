@@ -1101,12 +1101,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function syncpromo()
         {
-            $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNotNull('api_token')->first();
+            if (config('app.ppmode') == 'bt') // BT integration mode
+            {
+                $anyuser = \VanguardLTE\User::where('role_id', 1)->where('playing_game', 'pp')->first();
+            }
+            else
+            {
+                $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNotNull('api_token')->first();
+            }
+            
             if (!$anyuser)
             {
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
             $url = PPController::getgamelink_pp('vs5aztecgems', $anyuser);
+            if ($url['error'] == true)
+            {
+                return ['error' => true, 'msg' => 'game link error'];
+            }
             $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
             if ($response->status() == 302)
             {
