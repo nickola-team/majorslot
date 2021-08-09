@@ -458,6 +458,34 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End');
             });
+
+            \Artisan::command('launch:makeurl', function () {
+                $launchRequests = \VanguardLTE\GameLaunch::where('finished', 0)->orderby('created_at', 'asc')->get();
+                $processed_users = [];
+                foreach ($launchRequests as $request)
+                {
+                    if (in_array($request->user_id, $processed_users)) //process 1 request per one user
+                    {
+                        $this->info('skipping userid=' . $request->user_id . ', id=' . $request->id);
+                        continue;
+                    }
+                    if ($request->provider == 'pp')
+                    {
+                        $url = PPController::makelink($request->gamecode, $request->user_id);
+                        if ($url != null)
+                        {
+                            $request->update([
+                                'launchUrl' => $url,
+                                'finished' => 1,
+                            ]);
+                            $processed_users[] = $request->user_id;
+                        }
+                    }
+                }
+
+            });
+
+
             \Artisan::command('pp:gameround {debug=0}', function ($debug) {
                 $data = PPController::processGameRound('RNG');
                 $this->info('saved ' . $data[0] . ' RNG bet/win record.');

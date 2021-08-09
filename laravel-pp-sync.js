@@ -3,6 +3,7 @@ const { exec } = require("child_process");
 
 let balanceSync = 5000;
 let betwinSync = 60000;
+let launchSync = 3000;
 console.log('======= Starting pragmatic play balance synchronization thread =============');
 console.log(' Balance Sync = %d seconds', balanceSync / 1000);
 console.log(' Bet/Win Sync = %d seconds', betwinSync / 1000);
@@ -40,3 +41,20 @@ setInterval(() => {
       console.log(`stdout: \n${stdout}`);
   });
 }, betwinSync);
+
+setInterval(() => {
+    var datetime = new Date();
+    console.log('making launch', datetime.toLocaleString());
+  
+    exec("php artisan launch:makeurl", (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: \n${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: \n${stderr}`);
+            return;
+        }
+        console.log(`stdout: \n${stdout}`);
+    });
+  }, launchSync);
