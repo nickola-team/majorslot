@@ -380,7 +380,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/newworld/images/partner.png" /><br /><br />Copyright ⓒ
-            2020~2021 킹덤 SLOT All rights reserved.
+            2020~2021 신세계 SLOT All rights reserved.
           </div>
          </div>
          <div>
