@@ -703,11 +703,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if ($data['balance'] > 0) //이미 밸런스가 있다면
                 {
-                    $data = PPController::transfer($user->id, -$data['balance']);
-                    // if ($data['status'] == 'Not found')
-                    // {
-                    //     return null;
-                    // }
+                    if ($user->playing_game == 'pp') //이전에 게임을 하고있었다면??
+                    {
+                        //유저의 밸런스를 업데이트
+                        $user->update(['balance' => $data['balance']]);
+                    }
+                    else //밸런스 초기화
+                    {
+                        $data = PPController::transfer($user->id, -$data['balance']);
+                        // if ($data['status'] == 'Not found')
+                        // {
+                        //     return null;
+                        // }
+                    }
                 }
             }
             else //알수 없는 오류
@@ -717,12 +725,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             //밸런스 넘기기
-            $data = PPController::transfer($user->id, $user->balance);
-            // if ($data['status'] == 'Not found')
-            // {
-            //     return null;
-            // }
-            
+            if ($user->playing_game == 'pp') //이전에 게임을 하고있었다면??,
+            {
+                //유저의 밸런스가 게임사 밸런스로 업데이트되었으므로, ...
+            }
+            else
+            {
+                $data = PPController::transfer($user->id, $user->balance);
+                // if ($data['status'] == 'Not found')
+                // {
+                //     return null;
+                // }
+            }
+                
             return '/providers/pp/'.$gamecode;
         }
 
