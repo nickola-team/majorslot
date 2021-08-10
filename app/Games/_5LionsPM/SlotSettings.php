@@ -880,9 +880,9 @@ namespace VanguardLTE\Games\_5LionsPM
             else {
                 if ($slotEvent == 'freespin') {
                     $probabilityMap = [
-                        0 => 70,
-                        1 => 28,
-                        2 => 2
+                        0 => 55,
+                        1 => 33,
+                        2 => 12
                     ];
                 }
                 else {
