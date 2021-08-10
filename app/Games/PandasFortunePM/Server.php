@@ -338,14 +338,14 @@ namespace VanguardLTE\Games\PandasFortunePM
                         if($isJackpots[$pos] == true){
                             if($jackpotWinLines[$k]['isWild'] == true){
                                 $jackpotWin = $jackpotWin + $betline * $lines * $slotSettings->jackpotMulti[0];
-                                array_push($arrJackpotWin, $lastReel['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[0]);
+                                array_push($arrJackpotWin, $lastReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[0]);
                             }else{
-                                if($lastReel['reel5'][$pos] >= 3 && $lastReel['reel5'][$pos] <= 7 ){
+                                if($lastReels['reel5'][$pos] >= 3 && $lastReels['reel5'][$pos] <= 7 ){
                                     $jackpotWin = $jackpotWin + $betline * $lines * $slotSettings->jackpotMulti[2];
-                                    array_push($arrJackpotWin, $lastReel['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[2]);
-                                }else if($lastReel['reel5'][$pos] > 7){
+                                    array_push($arrJackpotWin, $lastReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[2]);
+                                }else if($lastReels['reel5'][$pos] > 7){
                                     $jackpotWin = $jackpotWin + $betline * $lines * $slotSettings->jackpotMulti[1];
-                                    array_push($arrJackpotWin, $lastReel['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[1]);
+                                    array_push($arrJackpotWin, $lastReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[1]);
                                 }
                             }
                         }
