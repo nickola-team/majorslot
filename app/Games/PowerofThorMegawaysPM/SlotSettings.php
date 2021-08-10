@@ -1099,7 +1099,12 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
 
                         /* 모자라는 갯수만큼 랜덤포스 결정 */
                         if ($scatterCount > $remainingScatterCount) {
-                            $scatterPoses = array_rand($tumbleSymbols, $scatterCount - $remainingScatterCount);
+                            $proposedCount = $scatterCount - $remainingScatterCount;
+                            if (count($tumbleSymbols) < $proposedCount) {
+                                $proposedCount = count($tumbleSymbols);
+                            }
+
+                            $scatterPoses = array_rand($tumbleSymbols, $proposedCount);
                         }
                     }
                     
