@@ -58,6 +58,7 @@ return [
         "Hit the Gold!" => "히트 더 골드!",
         "Scarab Boost" => "스크랩 부스트",
         "Wukong" => "우콩",
+        "3 Coins: Egypt" => "3 코인스:이집트",
 
         /**
          * CQ9 Games
@@ -164,6 +165,7 @@ return [
         "Monster Hunter" => "몬스터 헌터",
         "Sky Lanterns" => "스카이 랜턴스",
         "Dragon's Treasure" => "드래곤스 트레저",
+        "Aladdin's lamp" => "알라딘스 램프",
 
 
         /**
@@ -438,6 +440,12 @@ return [
         "Hokkaido Wolf" => "홋카이도 울프",
         "Lucky, Grace & Charm" => "럭키, 그레이스 & 참",
         "Chicken Drop" => "치킨 드랍",
+        "Yum Yum Powerways" => "움 움 파워웨이",
+        "Rise of Giza PowerNudge" => "라이즈 오브 기자 파워누드",
+        "Aztec King Megaways" => "아즈텍 킹 메가웨이",
+        "Chilli Heat Megaways" => "칠리 허트 메가웨이",
+        "Dewavegas Joker's Jewels" => "디워베가스 조커스 즈웰",
+        "LaLiga Champions" => "라리가 챔피언스",
 
 
         /**
@@ -526,6 +534,7 @@ return [
         "Hot Burning Wins" => "핫 버닝 윈스",
         "Pearl Diver" => "펄스 다이버",
         "5 Fortunator" => "5 포츄네터",
+        "Eagle Power: Hold and Win" => "이글 파워: 홀드 앤 윈",
 
         /**
          * Habanero Games
@@ -653,5 +662,6 @@ return [
         "Return To The Feature" => "리턴 투 더 피쳐",
         "Candy Tower" => "캔디 타워",
         "Marvelous Furlongs" => "마블러스 퍼롱스",
+        "Calaveras Explosivas" => "칼라베라스 익스프로시버스",
 
 ];
