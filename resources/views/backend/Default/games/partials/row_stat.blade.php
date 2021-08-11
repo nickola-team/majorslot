@@ -24,7 +24,7 @@
 	@endif
 	</td>
 	<td>
-	@if ($stat->balance < 0)
+	@if (preg_match('/_pp$/',$game))
 		<a href="javascript:void(0);"><span class="text-red getbalance" data-id="{{$stat->id}}">보기</span> </a>
 	@else
 		<span class="text-green">{{ number_format($stat->balance,0) }}</span>
