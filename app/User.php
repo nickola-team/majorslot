@@ -888,7 +888,7 @@ namespace VanguardLTE
 
             if (count($deal_data) > 0)
             {
-                \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data);
+                \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
             }
         }
         public function processBetDealerMoney($betMoney, $game, $type='slot') 

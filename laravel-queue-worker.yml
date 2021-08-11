@@ -1,8 +1,18 @@
 apps:
-  - name: laravel-queue-worker
+  - name: queue-worker-replay
     script: artisan
     exec_mode: fork
     interpreter: php
     instances: 1
     args:
-      - queue:work
+      - queue:work 
+      - --queue=default
+  - name: queue-worker-deal
+    script: artisan
+    exec_mode: fork
+    interpreter: php
+    instances: 1
+    args:
+      - queue:work 
+      - --queue=deal
+
