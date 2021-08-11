@@ -711,10 +711,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     else //밸런스 초기화
                     {
                         $data = PPController::transfer($user->id, -$data['balance']);
-                        // if ($data['status'] == 'Not found')
-                        // {
-                        //     return null;
-                        // }
+                        if ($data['error'] != 0)
+                        {
+                            return null;
+                        }
                     }
                 }
             }
@@ -732,10 +732,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             else
             {
                 $data = PPController::transfer($user->id, $user->balance);
-                // if ($data['status'] == 'Not found')
-                // {
-                //     return null;
-                // }
+                if ($data['error'] != 0)
+                {
+                    return null;
+                }
             }
                 
             return '/providers/pp/'.$gamecode;
@@ -1110,7 +1110,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function minilobby_start(\Illuminate\Http\Request $request)
         {
             $gamecode = $request->gameSymbol;
-            return redirect(route('frontend.providers.pp.render', $gamecode) . '?lobby=mini');
+            return redirect(route('frontend.providers.waiting', ['pp', $gamecode]). '?lobby=mini');
         }
         
         public function promoactive(\Illuminate\Http\Request $request)

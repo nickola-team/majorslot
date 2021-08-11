@@ -10,7 +10,8 @@ namespace VanguardLTE
             'gamecode', 
             'launchUrl', 
             'finished', 
-            'created_at'
+            'created_at',
+            'argument'
         ];
         public $timestamps = false;
         public static function boot()

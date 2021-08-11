@@ -7,10 +7,11 @@
         margin: 0;
         }
     </style>
-    <link rel="stylesheet" href="/frontend/Default/css/error.css">
+    <link rel="stylesheet" href="/frontend/Default/css/wait.css">
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
     
     </head>
+    @if ($prompt)
     <body>
     <div class="box">
     <div class="box__ghost">
@@ -45,7 +46,10 @@
         
         </div>
     </body>
-    
+    @else
+    <body style="background:black;">
+    </body>
+    @endif
     <script type="text/javascript">
         function doAjax() {
             $.ajax({

@@ -15,25 +15,36 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'provider' => $provider,
                 'finished' => '0'
             ])->first();
+
+            $args = $request->all();
             $requestId = 0;
             if ($alreadyRequest)
             {
                 $requestId = $alreadyRequest->id;
             }
             else{
+                $query_string = null;
+                if (count($args) > 0)
+                {
+                    $query_string = http_build_query($args);
+                }
                 $launchRequest = \VanguardLTE\GameLaunch::create(
                     [
                         'user_id' => auth()->user()->id,
                         'provider' => $provider,
                         'gamecode' => $gamecode,
-                        'finished' => '0'
+                        'finished' => '0',
+                        'argument' => $query_string
                     ]
                 );
                 $requestId = $launchRequest->id;
             }
-
-
-            return view('frontend.Default.games.waiting', compact('requestId'));
+            $prompt = true;
+            if (count($args) > 0)
+            {
+                $prompt = false;
+            }
+            return view('frontend.Default.games.waiting', compact('requestId', 'prompt'));
         }
 
         public function launch($requestid, \Illuminate\Http\Request $request)
@@ -49,7 +60,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     return response()->json(['error' => true, 'url' => '']);
                 }
-                return response()->json(['error' => false, 'url' => $launchRequest->launchUrl]);
+                if ($launchRequest->argument)
+                {
+                    return response()->json(['error' => false, 'url' => $launchRequest->launchUrl. '?' . $launchRequest->argument]);
+                }
+                else
+                {
+                    return response()->json(['error' => false, 'url' => $launchRequest->launchUrl]);
+                }
             }
             else
             {
