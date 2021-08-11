@@ -121,7 +121,7 @@
 					<tr>
 						<th>게임명</th>
 						<th>아이디</th>
-						{{--<th>보유금액</th>--}}
+						<th>보유금액</th>
 						<th>베팅금액</th>
 						<th>당첨금액</th>
 						{{-- <th>@lang('app.in_game')</th>
@@ -147,7 +147,7 @@
 					<tr>
 						<th>게임명</th>
 						<th>아이디</th>
-						{{--<th>보유금액</th>--}}
+						<th>보유금액</th>
 						<th>베팅금액</th>
 						<th>당첨금액</th>
 						{{-- <th>@lang('app.in_game')</th>
@@ -189,6 +189,27 @@
 				} else {
 					$.removeCookie('game_stat_show');
 				}
+			});
+			$('.getbalance').click(function(event)
+			{
+				var item = $(event.target);
+				var id = item.attr('data-id');
+				$.ajax({
+					type: 'GET',
+					url: "{{route('backend.game_stat.balance')}}?id=" + id,
+					cache: false,
+					async: false,
+					success: function (data) {
+						if (data['error'] == false)
+						{
+							$(event.target).removeClass('text-red').addClass('text-green');
+							$(event.target).text(data['balance']);
+						}
+					},
+					error: function (err, xhr) {
+						console.log(err.responseText);
+					},
+				});
 			});
 
 			if( $.cookie('game_stat_show') ){

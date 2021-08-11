@@ -138,6 +138,38 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             return response()->json(['error' => false, 'msg' => '성공']);
         }
+        public function stat_game_balance(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
+            $statid = $request->id;
+            $gamestat = \VanguardLTE\StatGame::where('id', $statid)->first();
+            $balance = 0;
+            if ($gamestat)
+            {
+                if ($gamestat->balance > 0)
+                {
+                    $balance = $gamestat->balance;
+                }
+                else
+                {
+                    $category = $gamestat->category;
+                    if ($category && $gamestat->roundid > 0)
+                    {
+                        if ($category->provider == 'pp')
+                        {
+                            $balance = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getRoundBalance($gamestat);
+                            if ($balance != null)
+                            {
+                                $gamestat->update(['balance' => $balance]);
+                            }
+                        }
+                    }
+                }
+            }
+            return response()->json(['error' => false, 'balance' => $balance]);
+        }
         public function getbalance(\Illuminate\Http\Request $request)
         {
             if( !\Illuminate\Support\Facades\Auth::check() ) {

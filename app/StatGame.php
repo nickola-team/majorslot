@@ -19,7 +19,10 @@ namespace VanguardLTE
             'profit', 
             'game_bank', 
             'jack_balance', 
-            'shop_id'
+            'shop_id',
+            'category_id',
+            'game_id',
+            'roundid',
         ];
         public $timestamps = false;
         public static function boot()
@@ -60,6 +63,10 @@ namespace VanguardLTE
                 {
                 }
             });*/
+        }
+        public function category()
+        {
+            return $this->belongsTo('VanguardLTE\Category', 'category_id');
         }
         public function user()
         {

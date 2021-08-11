@@ -951,6 +951,41 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->body();
             return $data;
         }
+        public static function getRoundBalance($gamestat)
+        {
+            $datetime = explode(' ', $gamestat->date_time);
+            $data = [
+                'secureLogin' => config('app.ppsecurelogin'),
+                'playerId' => $gamestat->user_id,
+                'datePlayed' => $datetime[0],
+                'timeZone' => 'GMT+9',
+                'gameId' => $gamestat->game_id,
+                'hour' => explode(':',  $datetime[1])[0],
+            ];
+            $data['hash'] = PPController::calcHash($data);
+            $response = null;
+            try {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post(config('app.ppapi') . '/http/HistoryAPI/GetGameRounds/', $data);
+            } catch (\Exception $e) {
+                return null;
+            }
+            if (!$response->ok())
+            {
+                return null;
+            }
+            $data = $response->json();
+            $balance = 0;
+            foreach ($data['rounds'] as $round)
+            {
+                if ($round['roundId'] == $gamestat->roundid)
+                {
+                    $balance = $round['balance'];
+                }
+            }
+            return $balance;
+        }
 
         public static function processGameRound($dataType)
         {
@@ -962,6 +997,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             else
             {
                 $timepoint = null;
+            }
+
+            //get category id
+            $category = null;
+            if ($dataType == 'RNG'){
+                $category = \VanguardLTE\Category::where(['provider' => 'pp', 'shop_id' => 0, 'href' => 'pp'])->first();
+            }
+            else
+            {
+                $category = \VanguardLTE\Category::where(['provider' => 'pp', 'shop_id' => 0, 'href' => 'live'])->first();
             }
             
             $data = PPController::gamerounds($timepoint, $dataType);
@@ -992,7 +1037,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $shop = \VanguardLTE\ShopUser::where('user_id', $round[1])->first();
                         \VanguardLTE\StatGame::create([
                             'user_id' => $round[1], 
-                            'balance' => floatval(0), 
+                            'balance' => floatval(-1), 
                             'bet' => $round[9], 
                             'win' => $round[10], 
                             'game' => PPController::gamecodetoname($round[2])[0] . '_pp', 
@@ -1003,6 +1048,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'denomination' => 0, 
                             'date_time' => $dateInLocal,
                             'shop_id' => $shop->shop_id,
+                            'category_id' => isset($category)?$category->id:0,
+                            'game_id' => $round[2],
+                            'roundid' => $round[3],
                         ]);
                         $count = $count + 1;
                     }

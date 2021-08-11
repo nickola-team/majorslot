@@ -321,6 +321,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@convertDealBalance',
     ]);
 
+    Route::get('/api/stat_game_balance', [
+        'as' => 'backend.game_stat.balance',
+        'uses' => 'ApiController@stat_game_balance',
+    ]);
+
     Route::post('api/allow_in_out', [
         'as' => 'frontend.api.allow_in_out',
         'uses' => 'ApiController@allowInOut',
@@ -400,6 +405,7 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'DashboardController@game_stat',
         'middleware' => 'permission:stats.game',
     ]);
+    
 	Route::delete('/game_stat/clear', [
         'as' => 'backend.game_stat.clear',
         'uses' => 'DashboardController@game_stat_clear'
