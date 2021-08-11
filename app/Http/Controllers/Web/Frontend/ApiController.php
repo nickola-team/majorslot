@@ -168,7 +168,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     }
                 }
             }
-            return response()->json(['error' => false, 'balance' => $balance]);
+            return response()->json(['error' => false, 'balance' => number_format($balance,0)]);
         }
         public function getbalance(\Illuminate\Http\Request $request)
         {
