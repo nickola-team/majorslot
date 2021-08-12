@@ -731,10 +731,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else
             {
-                $data = PPController::transfer($user->id, $user->balance);
-                if ($data['error'] != 0)
-                {
-                    return null;
+                if ($user->balance > 0) {
+                    $data = PPController::transfer($user->id, $user->balance);
+                    if ($data['error'] != 0)
+                    {
+                        return null;
+                    }
                 }
             }
                 
