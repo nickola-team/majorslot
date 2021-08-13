@@ -820,6 +820,10 @@ namespace VanguardLTE
             $winMoney = $stat_game->win;
             $game = $stat_game->game;
             $date_time = $stat_game->date_time;
+            if ($date_time == null)
+            {
+                $date_time = date('Y-m-d H:i:s');
+            }
             $type=$stat_game->type;
             $category_id = $stat_game->category_id;
             $game_id = $stat_game->game_id;
