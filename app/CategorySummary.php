@@ -253,7 +253,6 @@ namespace VanguardLTE
                 }
             }
             return $filtered_adjustment;
-
         }
         public static function summary_month($shop_id, $month=null)
         {
