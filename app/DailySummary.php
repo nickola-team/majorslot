@@ -262,7 +262,7 @@ namespace VanguardLTE
                 DailySummary::summary_month($c, $month);
             }
 
-            $d_summary = \VanguardLTE\DailySummary::where('date', '>=', $from)->where('date', '<=', $to)->where(['type' => 'daily', 'user_id' => $user_id]);
+            $d_summary = \VanguardLTE\DailySummary::where('date', '>=', $from)->where('date', '<=', $to)->where(['user_id' => $user_id]);
             
             $adj['user_id']=$user_id;
             $adj['shop_id']=$user->shop_id;
