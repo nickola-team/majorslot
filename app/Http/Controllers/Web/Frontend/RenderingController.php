@@ -86,6 +86,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 //this is irlegal request.
                 return redirect('/');
             }
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
+            if ($user->id != $launchRequest->user_id)
+            {
+                return redirect('/');
+            }
+
             $launchRequest->delete();
 
             $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::gamecodetoname($gamecode)[0];
@@ -98,11 +108,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'view' => 1,
                 ]
             )->get()->first();
-            $user = auth()->user();
-            if (!$user)
-            {
-                return redirect('/');
-            }
+            
             $enhancedgames = env('PP_GAMES', '1');
             $alonegame = 0;
             if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
