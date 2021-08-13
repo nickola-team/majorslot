@@ -51,12 +51,12 @@ namespace VanguardLTE\Console
             })->dailyAt('08:00');
 
             $schedule->command('daily:reset_ggr')->dailyAt('00:00')->runInBackground();
-            $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
+            //$schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             //$schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
-            $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+            //$schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             //$schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){

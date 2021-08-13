@@ -861,7 +861,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $request->session()->put('dates', $dates);
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->paginate(31);
