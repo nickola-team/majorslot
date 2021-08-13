@@ -68,9 +68,6 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">게임별정산</h3>
-				<div class="pull-right box-tools">
-							마지막갱신시간 {{$updated_at}}
-				</div>
 			</div>
                     <div class="box-body">
                         <div class="table-responsive">
