@@ -62,11 +62,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 if ($launchRequest->argument)
                 {
-                    return response()->json(['error' => false, 'url' => $launchRequest->launchUrl. '?' . $launchRequest->argument]);
+                    return response()->json(['error' => false, 'url' => $launchRequest->launchUrl. '?' . $launchRequest->argument . '&t=' . $launchRequest->id]);
                 }
                 else
                 {
-                    return response()->json(['error' => false, 'url' => $launchRequest->launchUrl]);
+                    return response()->json(['error' => false, 'url' => $launchRequest->launchUrl . '?t=' . $launchRequest->id]);
                 }
             }
             else
@@ -79,6 +79,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function pragmaticrender($gamecode, \Illuminate\Http\Request $request)
         {
             $lobby = $request->lobby;
+            $t = $request->t; //check timestamp if it is normal request
+            $launchRequest = \VanguardLTE\GameLaunch::where('id', $t)->first();
+            if (!$launchRequest)
+            {
+                //this is irlegal request.
+                return redirect('/');
+            }
+            $launchRequest->delete();
+
             $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::gamecodetoname($gamecode)[0];
             $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
             $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
@@ -90,6 +99,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]
             )->get()->first();
             $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
             $enhancedgames = env('PP_GAMES', '1');
             $alonegame = 0;
             if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
