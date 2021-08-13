@@ -96,6 +96,23 @@ namespace VanguardLTE
                 }
             }
 
+            if (empty($attributes['category_id']) || empty($attributes['game_id']))
+            {
+                //search manually category_id and game_id
+                $real_game = explode(' ', $attributes['game']);
+                $game = \VanguardLTE\Game::where(['name' => $real_game[0], 'shop_id' => 0])->first();
+                if ($game)
+                {
+                    $attributes['game_id'] = $game->id;
+                    $category = $game->categories->first();
+                    $attributes['category_id'] = $category->category_id;
+                }
+                else
+                {
+                    
+                }
+            }
+
             $model = static::query()->create($attributes);
             $filterGames = [' FG', ' FG1', ' respin', ' RS', ' JP', ' debit', ' credit', ' refund', ' payoff', ' RB', ' recredit'];
             /*foreach($filterGames as $ignoreGame) 
@@ -107,17 +124,7 @@ namespace VanguardLTE
             } */
             if ($model->bet > 0 || $model->win > 0) {
                 $user = \VanguardLTE\User::where('id',$model->user_id)->first();
-                $deal_method = env('DEAL_PROCESS', 'direct');
-                /*if ($deal_method == 'direct')
-                {
-                    // we did not implement ggr profit part.
-                    //please use queue mode for ggr profit.
-                    $user->processBetDealerMoney($model->bet, $model->game, $model->type);
-                }
-                else if ($deal_method == 'queue')
-                {*/
-                    $user->processBetDealerMoney_Queue($model->bet, $model->win, $model->game, $model->date_time, $model->type);
-                //}
+                $user->processBetDealerMoney_Queue($model);
             }
             return $model;
         }

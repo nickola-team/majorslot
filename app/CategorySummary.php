@@ -11,10 +11,13 @@ namespace VanguardLTE
             'date',
             'totalbet',
             'totalwin',
+            'totalcount',
             'total_deal',
             'total_mileage',
             'type',
-            'updated_at'
+            'updated_at',
+            'total_ggr',
+            'total_ggr_mileage'
         ];
         public $timestamps = false;
         public static function boot()

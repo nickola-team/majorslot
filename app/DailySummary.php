@@ -78,7 +78,7 @@ namespace VanguardLTE
                     $user_in_out = \DB::select($query);
                     $adj['moneyout'] = $user_in_out[0]->moneyout??0;
                 }
-
+/*
                 $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
                 $game_bet = \DB::select($query);
                 $adj['totalbet'] = $game_bet[0]->totalbet??0;
@@ -89,10 +89,9 @@ namespace VanguardLTE
                 $adj['total_deal'] = $deal_logs[0]->total_deal??0;
                 $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
                 $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
-                $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;*/
                 $adj['balance'] = $shop->balance;
                 $adj['shop_id'] = $shop->id;
-                $adj['name'] = $shop->name;
                 $adj['role_id'] = $user->role_id;
                 //manager's id
                 $adj['user_id'] = $user_id;
@@ -174,72 +173,70 @@ namespace VanguardLTE
                         $adj['moneyout'] = $user_in_out[0]->moneyout??0;
                     }
                 }
-                if (count($shops) > 0 )
-                {
-                    $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shops) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                }
-                else
-                {
-                    $query = 'SELECT 0 as totalbet, 0 as totalwin';
-                }
-                $game_bet = \DB::select($query);
-                $adj['totalbet'] = $game_bet[0]->totalbet??0;
-                $adj['totalwin'] = $game_bet[0]->totalwin??0;
+                // if (count($shops) > 0 )
+                // {
+                //     $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shops) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                // }
+                // else
+                // {
+                //     $query = 'SELECT 0 as totalbet, 0 as totalwin';
+                // }
+                // $game_bet = \DB::select($query);
+                // $adj['totalbet'] = $game_bet[0]->totalbet??0;
+                // $adj['totalwin'] = $game_bet[0]->totalwin??0;
                 
-                if ($partner->hasRole('admin'))
-                {
-                    $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                }
-                else if ($partner->hasRole('comaster'))
-                {
-                    if (settings('enable_master_deal'))
-                    {
-                        $masters = $partner->childPartners();
-                        if (count($masters) > 0){
-                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage,  SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$masters) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                        }
-                        else
-                        {
-                            $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                        }
-                    }
-                    else
-                    {
-                        $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                    }
-                }
-                else if ($partner->hasRole('master'))
-                {
-                    if (settings('enable_master_deal'))
-                    {
-                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                    }
-                    else
-                    {
-                        $agents = $partner->childPartners();
-                        if (count($agents) > 0){
-                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                        }
-                        else
-                        {
-                            $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                        }
-                    }
-                }
-                else
-                {
-                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                }
-                $deal_logs = \DB::select($query);
-                $adj['total_deal'] = $deal_logs[0]->total_deal??0;
-                $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
-                $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
-                $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                // if ($partner->hasRole('admin'))
+                // {
+                //     $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
+                // }
+                // else if ($partner->hasRole('comaster'))
+                // {
+                //     if (settings('enable_master_deal'))
+                //     {
+                //         $masters = $partner->childPartners();
+                //         if (count($masters) > 0){
+                //             $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage,  SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$masters) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                //         }
+                //         else
+                //         {
+                //             $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
+                //         }
+                //     }
+                //     else
+                //     {
+                //         $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
+                //     }
+                // }
+                // else if ($partner->hasRole('master'))
+                // {
+                //     if (settings('enable_master_deal'))
+                //     {
+                //         $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                //     }
+                //     else
+                //     {
+                //         $agents = $partner->childPartners();
+                //         if (count($agents) > 0){
+                //             $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                //         }
+                //         else
+                //         {
+                //             $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
+                //         }
+                //     }
+                // }
+                // else
+                // {
+                //     $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                // }
+                // $deal_logs = \DB::select($query);
+                // $adj['total_deal'] = $deal_logs[0]->total_deal??0;
+                // $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
+                // $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
+                // $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
                 $adj['balance'] = $partner->balance;
-                $adj['name'] = $partner->username;
                 $adj['user_id'] = $partner->id;
                 $adj['role_id'] = $partner->role_id;
-                $adj['profit'] = 0;
                 return $adj;
             }
         }
@@ -318,9 +315,10 @@ namespace VanguardLTE
             if($b_shop){
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
-                $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
+                $dailysumm = \VanguardLTE\DailySummary::lockforUpdate()->where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
                 if ($dailysumm)
                 {
+                    $adj['type'] = 'daily';
                     $dailysumm->update($adj);
                 }
                 else
@@ -339,9 +337,10 @@ namespace VanguardLTE
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;             
 
-                $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
+                $dailysumm = \VanguardLTE\DailySummary::lockforUpdate()->where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
                 if ($dailysumm)
                 {
+                    $adj['type'] = 'daily';
                     $dailysumm->update($adj);
                 }
                 else
@@ -372,7 +371,7 @@ namespace VanguardLTE
                 }
             }
             
-            $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
+            $todaysumm = \VanguardLTE\DailySummary::lockforUpdate()->where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
             if ($todaysumm)
             {
                 $from = $todaysumm->updated_at;
@@ -396,12 +395,12 @@ namespace VanguardLTE
                 $adj['moneyin']+=$todaysumm->moneyin;
                 $adj['moneyout']+=$todaysumm->moneyout;
                 $adj['dealout']+=$todaysumm->dealout;
-                $adj['totalbet']+=$todaysumm->totalbet;
-                $adj['totalwin']+=$todaysumm->totalwin;
-                $adj['total_deal']+=$todaysumm->total_deal;
-                $adj['total_mileage']+=$todaysumm->total_mileage;
-                $adj['total_ggr']+=$todaysumm->total_ggr;
-                $adj['total_ggr_mileage']+=$todaysumm->total_ggr_mileage;
+                // $adj['totalbet']+=$todaysumm->totalbet;
+                // $adj['totalwin']+=$todaysumm->totalwin;
+                // $adj['total_deal']+=$todaysumm->total_deal;
+                // $adj['total_mileage']+=$todaysumm->total_mileage;
+                // $adj['total_ggr']+=$todaysumm->total_ggr;
+                // $adj['total_ggr_mileage']+=$todaysumm->total_ggr_mileage;
                 $adj['balance']=0;
                 $todaysumm->update($adj);
             }

@@ -183,6 +183,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
@@ -195,7 +196,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gamecode,
+                'roundid' => 0,
             ]);
 
             \DB::commit();
@@ -341,6 +345,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             if (floatval($totalamount) > 0) {
+                $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
                 \VanguardLTE\StatGame::create([
                     'user_id' => $user->id, 
                     'balance' => floatval($user->balance), 
@@ -352,7 +357,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'percent_jpg' => 0, 
                     'profit' => 0, 
                     'denomination' => 0, 
-                    'shop_id' => $user->shop_id
+                    'shop_id' => $user->shop_id,
+                    'category_id' => isset($category)?$category->id:0,
+                    'game_id' => $gamecode,
+                    'roundid' => 0,
                 ]);
             }
 
@@ -496,6 +504,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -507,7 +516,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gamecode,
+                'roundid' => 0,
             ]);
 
             \DB::commit();
@@ -630,7 +642,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
-
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -642,7 +654,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gamecode,
+                'roundid' => 0,
             ]);
 
             \DB::commit();
@@ -730,7 +745,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record->refund = 1;
             $record->data = json_encode($data);
             $record->save();
-
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -742,7 +757,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => 'CQ9_cq9',
+                'roundid' => 0,
             ]);
 
             \DB::commit();
@@ -864,6 +882,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -875,7 +894,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => 'CQ9_cq9',
+                'roundid' => 0,
             ]);
 
             \DB::commit();

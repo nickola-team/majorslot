@@ -182,6 +182,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 if ($total_bet > 0 || $total_win > 0)
                 {
+                    $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
                     \VanguardLTE\StatGame::create([
                         'user_id' => $user->id, 
                         'balance' => floatval($user->balance), 
@@ -193,7 +194,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'percent_jpg' => 0, 
                         'profit' => 0, 
                         'denomination' => 0, 
-                        'shop_id' => $user->shop_id
+                        'shop_id' => $user->shop_id,
+                        'category_id' => isset($category)?$category->id:0,
+                        'game_id' => $fundtransferrequest->gamedetails->keyname,
+                        'roundid' => 0,
                     ]);
                 }
     
@@ -244,6 +248,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $response['fundtransferresponse']['balance'] = $user->balance;
                     if ($total_bet > 0 || $total_win > 0)
                     {
+                        $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
                         \VanguardLTE\StatGame::create([
                             'user_id' => $user->id, 
                             'balance' => floatval($user->balance), 
@@ -255,7 +260,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'percent_jpg' => 0, 
                             'profit' => 0, 
                             'denomination' => 0, 
-                            'shop_id' => $user->shop_id
+                            'shop_id' => $user->shop_id,
+                            'category_id' => isset($category)?$category->id:0,
+                            'game_id' => $fundtransferrequest->gamedetails->keyname,
+                            'roundid' => 0,
                         ]);
                     }
                     return $response;
@@ -291,6 +299,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     if ($total_bet > 0 || $total_win > 0)
                     {
+                        $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
                         \VanguardLTE\StatGame::create([
                             'user_id' => $user->id, 
                             'balance' => floatval($user->balance), 
@@ -302,7 +311,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'percent_jpg' => 0, 
                             'profit' => 0, 
                             'denomination' => 0, 
-                            'shop_id' => $user->shop_id
+                            'shop_id' => $user->shop_id,
+                            'category_id' => isset($category)?$category->id:0,
+                            'game_id' => $fundtransferrequest->gamedetails->keyname,
+                            'roundid' => 0,
                         ]);
                     }
                     return $response;
@@ -336,6 +348,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 if ($total_bet > 0 || $total_win > 0)
                 {
+                    $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
                     \VanguardLTE\StatGame::create([
                         'user_id' => $user->id, 
                         'balance' => floatval($user->balance), 
@@ -347,7 +360,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'percent_jpg' => 0, 
                         'profit' => 0, 
                         'denomination' => 0, 
-                        'shop_id' => $user->shop_id
+                        'shop_id' => $user->shop_id,
+                        'category_id' => isset($category)?$category->id:0,
+                        'game_id' => $fundtransferrequest->gamedetails->keyname,
+                        'roundid' => 0,
                     ]);
                 }
                 return $response;

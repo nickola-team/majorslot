@@ -173,7 +173,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response['real'] = $user->balance;
 
             $game = $this->gamecodetoname($gameId);
-
+            $category = \VanguardLTE\Category::where(['provider' => 'png', 'shop_id' => 0, 'href' => 'playngo'])->first();
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -186,7 +186,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gameId,
+                'roundid' => 0,
             ]);
 
             return $response;
@@ -217,6 +220,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $user->save();
                 $game = $this->gamecodetoname($gameId);
                 
+                $category = \VanguardLTE\Category::where(['provider' => 'png', 'shop_id' => 0, 'href' => 'playngo'])->first();
+
                 \VanguardLTE\StatGame::create([
                     'user_id' => $user->id, 
                     'balance' => floatval($user->balance), 
@@ -229,7 +234,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'percent_jpg' => 0, 
                     'profit' => 0, 
                     'denomination' => 0, 
-                    'shop_id' => $user->shop_id
+                    'shop_id' => $user->shop_id,
+                    'category_id' => isset($category)?$category->id:0,
+                    'game_id' => $gameId,
+                    'roundid' => 0,
                 ]);
             }
             $response['real'] = $user->balance;
@@ -286,6 +294,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->save();
             $game = $this->gamecodetoname($gameId);
 
+            $category = \VanguardLTE\Category::where(['provider' => 'png', 'shop_id' => 0, 'href' => 'playngo'])->first();
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -298,7 +308,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gameId,
+                'roundid' => 0,
             ]);
 
             return $response;

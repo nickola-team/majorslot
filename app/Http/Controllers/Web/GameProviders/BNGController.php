@@ -127,6 +127,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $uid = $data['uid'];
             $args = $data['args'];
             $gamename = $data['game_name'];
+            $game_id = $data['game_id'];
+            $provider_name = $data['provider_name'];
             $userId = $args['player']['id'];
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
@@ -160,6 +162,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user->save();
 
+            $category = \VanguardLTE\Category::where(['provider' => 'bng', 'shop_id' => 0, 'href' => $provider_name])->first();
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -171,7 +175,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $game_id,
+                'roundid' => 0,
             ]);
 
             return [
@@ -190,6 +197,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $args = $data['args'];
             $transaction_uid = $args['transaction_uid'];
             $userId = $args['player']['id'];
+            $game_id = $data['game_id'];
+            $provider_name = $data['provider_name'];
+
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             if (!$user || !$user->hasRole('user')){
                 return [
@@ -243,6 +253,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $win = floatval($args['win']);
             }
 
+            $category = \VanguardLTE\Category::where(['provider' => 'bng', 'shop_id' => 0, 'href' => $provider_name])->first();
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
@@ -254,7 +266,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $game_id,
+                'roundid' => 0,
             ]);
             $user->save();
             $record->refund = 1;
