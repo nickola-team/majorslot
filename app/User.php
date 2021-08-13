@@ -844,7 +844,7 @@ namespace VanguardLTE
             $ggr_percent = $shop->ggr_percent;
             $manager = $this->referral;
             if ($manager != null){
-                if($deal_percent > 0 || $ggr_percent > 0) {
+                // if($deal_percent > 0 || $ggr_percent > 0) {
                     $deal_balance = $betMoney * $deal_percent  / 100;
                     $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
                     $deal_data[] = [
@@ -867,7 +867,7 @@ namespace VanguardLTE
                         'category_id' => $category_id,
                         'game_id' => $game_id,
                     ];
-                }
+                // }
                 $partner = $manager->referral;
                 while ($partner != null && !$partner->isInoutPartner())
                 {
@@ -875,7 +875,7 @@ namespace VanguardLTE
                     $ggr_mileage = $ggr_profit;
                     $deal_percent = ($type==null || $type=='slot')?$partner->deal_percent:$partner->table_deal_percent;
                     $ggr_percent = $partner->ggr_percent;
-                    if($deal_percent > 0 || $ggr_percent > 0) {
+                    // if($deal_percent > 0 || $ggr_percent > 0) {
                         $deal_balance = $betMoney * $deal_percent  / 100;
                         $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
                         $deal_data[] = [
@@ -898,7 +898,7 @@ namespace VanguardLTE
                             'category_id' => $category_id,
                             'game_id' => $game_id,
                         ];
-                    }
+                    // }
                     $partner = $partner->referral;
                 }
             }
