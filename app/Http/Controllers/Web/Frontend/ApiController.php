@@ -1150,6 +1150,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $date = date('Y-m-d');
+            $user = $requestuser;
             while ($user != null){
                 $daily_summary = \VanguardLTE\DailySummary::lockForUpdate()->where([
                     'user_id' => $user->id, 
