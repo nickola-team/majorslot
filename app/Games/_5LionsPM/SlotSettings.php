@@ -379,6 +379,12 @@ namespace VanguardLTE\Games\_5LionsPM
                     $this->SetBalance($this->jpgs[$i]->pay_sum / $this->CurrentDenom);
                     if( $this->jpgs[$i]->pay_sum > 0 ) 
                     {
+                        $cat_id = 0;
+                        $cat = $this->game->categories->first();
+                        if ($cat)
+                        {
+                            $cat_id = $cat->category->original_id;
+                        }
                         \VanguardLTE\StatGame::create([
                             'user_id' => $this->playerId, 
                             'balance' => $this->Balance * $this->CurrentDenom, 
@@ -389,7 +395,10 @@ namespace VanguardLTE\Games\_5LionsPM
                             'percent_jps' => 0, 
                             'percent_jpg' => 0, 
                             'profit' => 0, 
-                            'shop_id' => $this->shop_id
+                            'shop_id' => $this->shop_id,
+                            'category_id' => $cat_id,
+                            'game_id' => $this->game->original_id,
+                            'roundid' => 0,
                         ]);
                     }
                 }
@@ -646,6 +655,12 @@ namespace VanguardLTE\Games\_5LionsPM
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
+            $cat_id = 0;
+            $cat = $this->game->categories->first();
+            if ($cat)
+            {
+                $cat_id = $cat->category->original_id;
+            }
             \VanguardLTE\StatGame::create([
                 'user_id' => $this->playerId, 
                 'balance' => $this->Balance * $this->CurrentDenom, 
@@ -657,7 +672,10 @@ namespace VanguardLTE\Games\_5LionsPM
                 'percent_jpg' => $this->toSlotJackBanks, 
                 'profit' => $this->betProfit, 
                 'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id
+                'shop_id' => $this->shop_id,
+                'category_id' => $cat_id,
+                'game_id' => $this->game->original_id,
+                'roundid' => 0,
             ]);
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
@@ -1020,8 +1038,13 @@ namespace VanguardLTE\Games\_5LionsPM
                     array_push($uniqueSymbols, $newSymbol);
                 }
 
-                array_push($reels['symbolsBefore'], random_int(3, 13));
                 array_push($reels['symbolsAfter'], random_int(3, 13));
+                if ($this->isHighLevelSymbol($newSymbol)) {
+                    array_push($reels['symbolsBefore'], random_int(8, 13));
+                }
+                else {
+                    array_push($reels['symbolsBefore'], random_int(3, 13));
+                }
             }
 
             /* SCATTER 심볼 생성 */
