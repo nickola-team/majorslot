@@ -111,6 +111,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             
             $enhancedgames = env('PP_GAMES', '1');
             $alonegame = 0;
+            $url = null;
+            $data = [];
             if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
                 $url = url('/game/' . $gamename);
                 $alonegame = 1;
@@ -139,7 +141,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else
             {
-                return view('frontend.Default.games.pragmatic', compact('url', 'alonegame'));
+                return view('frontend.Default.games.pragmatic', compact('url', 'alonegame', 'data'));
             }
         }
     }
