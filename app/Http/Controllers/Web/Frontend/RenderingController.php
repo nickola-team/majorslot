@@ -50,7 +50,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function launch($requestid, \Illuminate\Http\Request $request)
         {
             $launchRequest = \VanguardLTE\GameLaunch::where('id', $requestid)->first();
-            if ($requestid)
+            if ($launchRequest && $requestid)
             {
                 if ($launchRequest->user_id != auth()->user()->id)
                 {
