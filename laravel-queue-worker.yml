@@ -15,4 +15,12 @@ apps:
     args:
       - queue:work 
       - --queue=deal
+  - name: queue-worker-summary
+    script: artisan
+    exec_mode: fork
+    interpreter: php
+    instances: 1
+    args:
+      - queue:work 
+      - --queue=summary
 
