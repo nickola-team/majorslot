@@ -29,7 +29,7 @@ class UpdateDeal implements ShouldQueue
      */
     public function handle()
     {
-        //\VanguardLTE\DealLog::insert($this->deal_data);
+        \VanguardLTE\DealLog::insert($this->deal_data);
         foreach ($this->deal_data as $index => $deal)
         {
             $partner = \VanguardLTE\User::lockForUpdate()->where('id',$deal['partner_id'])->first();
