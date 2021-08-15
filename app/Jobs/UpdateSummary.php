@@ -29,6 +29,7 @@ class UpdateSummary implements ShouldQueue
      */
     public function handle()
     {
+        $count = count($this->deal_data);
         foreach ($this->deal_data as $index => $deal)
         {
             $partner = \VanguardLTE\User::where('id',$deal['partner_id'])->first();
@@ -117,9 +118,9 @@ class UpdateSummary implements ShouldQueue
                     );
             }
 
-            $parent = $partner->referral;
-            if ($parent && $parent->isInoutPartner()) //record comaster and admin
+            if ($index == $count - 1) //record comaster and admin
             {
+                $parent = $partner->referral;
                 while ($parent != null)
                 {
                     $cat_summary = \VanguardLTE\CategorySummary::lockForUpdate()->where([
