@@ -1016,14 +1016,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($data)
             {
                 $parts = explode("\n", $data);
-                $timepoint = explode("=",$parts[0])[1];
-                if ($tpoint)
-                {
-                    $tpoint->update(['value' => $timepoint]);
-                }
-                else
-                {
-                    \VanguardLTE\Settings::create(['key' => $dataType .'timepoint', 'value' => $timepoint]);
+                $updatetime = explode("=",$parts[0]);
+                if (count($updatetime) > 1) {
+                    $timepoint = $updatetime[1];
+                    if ($tpoint)
+                    {
+                        $tpoint->update(['value' => $timepoint]);
+                    }
+                    else
+                    {
+                        \VanguardLTE\Settings::create(['key' => $dataType .'timepoint', 'value' => $timepoint]);
+                    }
                 }
                 //ignore $parts[2]
                 for ($i=2;$i<count($parts);$i++)

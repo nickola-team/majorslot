@@ -15,4 +15,3 @@ apps:
     args:
       - queue:work 
       - --queue=deal
-
