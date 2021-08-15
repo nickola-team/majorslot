@@ -92,6 +92,7 @@ namespace VanguardLTE
                 $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
                 $adj['balance'] = $shop->balance;
                 $adj['shop_id'] = $shop->id;
+                $adj['name'] = $shop->name;
                 $adj['role_id'] = $user->role_id;
                 //manager's id
                 $adj['user_id'] = $user_id;
@@ -102,7 +103,7 @@ namespace VanguardLTE
                 //repeat child partners
                 $partner = $user;
                 $shops = $partner->availableShops();
-                if( $partner->hasRole('admin') ) 
+                /*if( $partner->hasRole('admin') ) 
                 {
                     $partners = $partner->childPartners();
                     $shops = \VanguardLTE\ShopUser::whereIn('user_id', $partners)->pluck('shop_id')->toArray();
@@ -110,7 +111,7 @@ namespace VanguardLTE
                 else
                 {
                     $shops = \VanguardLTE\ShopUser::where('user_id', $partner->id)->pluck('shop_id')->toArray();
-                }
+                }*/
                 $adj['totalin'] = 0;
                 $adj['totalout'] = 0;
                 $adj['dealout'] = 0;
@@ -235,8 +236,10 @@ namespace VanguardLTE
                 $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
                 $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
                 $adj['balance'] = $partner->balance;
+                $adj['name'] = $partner->username;
                 $adj['user_id'] = $partner->id;
                 $adj['role_id'] = $partner->role_id;
+                $adj['profit'] = 0;
                 return $adj;
             }
         }
@@ -262,7 +265,7 @@ namespace VanguardLTE
                 DailySummary::summary_month($c, $month);
             }
 
-            $d_summary = \VanguardLTE\DailySummary::where('date', '>=', $from)->where('date', '<=', $to)->where(['user_id' => $user_id]);
+            $d_summary = \VanguardLTE\DailySummary::where('date', '>=', $from)->where('date', '<=', $to)->where(['type' => 'daily', 'user_id' => $user_id]);
             
             $adj['user_id']=$user_id;
             $adj['shop_id']=$user->shop_id;
@@ -315,10 +318,9 @@ namespace VanguardLTE
             if($b_shop){
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
-                $dailysumm = \VanguardLTE\DailySummary::lockforUpdate()->where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
+                $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
                 {
-                    $adj['type'] = 'daily';
                     $dailysumm->update($adj);
                 }
                 else
@@ -337,10 +339,9 @@ namespace VanguardLTE
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;             
 
-                $dailysumm = \VanguardLTE\DailySummary::lockforUpdate()->where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
+                $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
                 {
-                    $adj['type'] = 'daily';
                     $dailysumm->update($adj);
                 }
                 else
@@ -371,7 +372,7 @@ namespace VanguardLTE
                 }
             }
             
-            $todaysumm = \VanguardLTE\DailySummary::lockforUpdate()->where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
+            $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
             if ($todaysumm)
             {
                 $from = $todaysumm->updated_at;
