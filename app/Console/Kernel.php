@@ -435,7 +435,7 @@ namespace VanguardLTE\Console
                 $this->info($res['msg']);
             });
 
-            \Artisan::command('daily:newgame {originalid}', function ($originalid) {
+            \Artisan::command('daily:newgame {categoryid} {originalid}', function ($categoryid, $originalid) {
                 set_time_limit(0);
                 $this->info("Begin adding new game to all shop");
                 
@@ -456,9 +456,9 @@ namespace VanguardLTE\Console
                     else{
                         $data['shop_id'] = $id;
                         $game = \VanguardLTE\Game::create($data);
-                        $ppcat = \VanguardLTE\Category::where(['shop_id' => $id, 'href' => 'pragmatic'])->first();
-                        if ($ppcat){
-                            \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$ppcat->id]);
+                        $cat = \VanguardLTE\Category::where(['shop_id' => $id, 'original_id' => $categoryid])->first();
+                        if ($cat){
+                            \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$cat->id]);
                         }
                     }
                 }
