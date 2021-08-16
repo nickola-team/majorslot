@@ -68,6 +68,7 @@ namespace VanguardLTE
                             $adj_game = [
                                 'user_id' => $user_id,
                                 'category_id' => $cat->id,
+                                'game_id' => $game['gamecode'],
                                 'shop_id' => $user->shop_id,
                                 'name' => $game['name'],
                                 'totalwin' => 0,
@@ -90,6 +91,7 @@ namespace VanguardLTE
                         $adj_game = [
                             'user_id' => $user_id,
                             'category_id' => $cat->id,
+                            'game_id' => $game->id,
                             'shop_id' => $user->shop_id,
                             'name' => $game->name,
                             'totalwin' => 0,
@@ -106,7 +108,7 @@ namespace VanguardLTE
 
             $shop_ids = $user->availableShops();
             if (count($shop_ids) > 0) {
-                $query = 'SELECT game, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game';
+                $query = 'SELECT game, game_id, category_id, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
                 $stat_games = \DB::select($query);
             }
             else
@@ -115,7 +117,7 @@ namespace VanguardLTE
             }
             if ($user->hasRole('admin'))
             {
-                $query = 'SELECT "" as game, 0 as total_deal, 0 as total_mileage';
+                $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
             }
             else if ($user->hasRole('comaster'))
             {
@@ -123,44 +125,44 @@ namespace VanguardLTE
                 {
                     $masters = $user->childPartners();
                     if (count($masters) > 0){
-                        $query = 'SELECT game, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$masters) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game';
+                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$masters) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
                     }
                     else
                     {
-                        $query = 'SELECT "" as game, 0 as total_deal, 0 as total_mileage';
+                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
                     }
                 }
                 else
                 {
-                    $query = 'SELECT "" as game, 0 as total_deal, 0 as total_mileage';
+                    $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
                 }
             }
             else if ($user->hasRole('master'))
             {
                 if (settings('enable_master_deal'))
                 {
-                    $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game';
+                    $query = 'SELECT game,game_id, category_id,  SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
 
                 }
                 else
                 {
                     $agents = $user->childPartners();
                     if (count($agents) > 0){
-                        $query = 'SELECT game, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$agents) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game';
+                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$agents) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
                     }
                     else
                     {
-                        $query = 'SELECT "" as game, 0 as total_deal, 0 as total_mileage';
+                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
                     }
                 }
             }
             else if($user->hasRole(['agent','distributor']))
             {
-                $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game';
+                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
             }
             else if($user->hasRole('manager'))
             {
-                $query = 'SELECT game, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $user->shop_id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game';
+                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $user->shop_id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
             }
             $deal_logs = \DB::select($query);
 
@@ -171,12 +173,13 @@ namespace VanguardLTE
                 {
                     foreach ($adj['games'] as $j => $game)
                     {
-                        $real_gamename = explode(' ', $stat_game->game)[0];
-                        if (strpos($real_gamename, '_') !== false)
-                        {
-                            $real_gamename = explode('_', $real_gamename)[0];
-                        }
-                        if($real_gamename == $game['name'])
+                        // $real_gamename = explode(' ', $stat_game->game)[0];
+                        // if (strpos($real_gamename, '_') !== false)
+                        // {
+                        //     $real_gamename = explode('_', $real_gamename)[0];
+                        // }
+                        // if($real_gamename == $game['name'])
+                        if($stat_game->game_id == $game['game_id'] && $stat_game->category_id == $adj['category_id'])
                         {
                             $game['totalbet'] = $game['totalbet'] + $stat_game->totalbet;
                             $game['totalwin'] = $game['totalwin'] + $stat_game->totalwin;
@@ -203,12 +206,13 @@ namespace VanguardLTE
                 {
                     foreach ($adj['games'] as $j => $game)
                     {
-                        $real_gamename = explode(' ', $deal_log->game)[0];
-                        if (strpos($real_gamename, '_') !== false)
-                        {
-                            $real_gamename = explode('_', $real_gamename)[0];
-                        }
-                        if($real_gamename == $game['name'])
+                        // $real_gamename = explode(' ', $deal_log->game)[0];
+                        // if (strpos($real_gamename, '_') !== false)
+                        // {
+                        //     $real_gamename = explode('_', $real_gamename)[0];
+                        // }
+                        // if($real_gamename == $game['name'])
+                        if($deal_log->game_id == $game['game_id']&& $deal_log->category_id == $adj['category_id'])
                         {
                             $game['total_deal'] = $game['total_deal'] + $deal_log->total_deal;
                             $game['total_mileage'] = $game['total_mileage'] + $deal_log->total_mileage;
