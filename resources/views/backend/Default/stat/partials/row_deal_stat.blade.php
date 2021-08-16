@@ -8,6 +8,7 @@
 		else
 		{
 			$game = preg_replace('/PM/', '_pp', $stat->game);
+			$game = preg_replace('/HBN/', '_HBN', $stat->game);
 			$game = explode(' ', $game)[0];
 		}
 		$game = preg_replace('/^_/', '', $game);
