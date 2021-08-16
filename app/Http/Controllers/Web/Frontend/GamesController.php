@@ -118,10 +118,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             shuffle($hotgames);
 
             $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
-            $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->first(); //for admin's popup
+            $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
 
             if ($notice==null || $shop_id != 0) { //it is logged in
-                $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->first(); //for admin's popup
+                $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
             }
 
 

@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="/back/plugins/iCheck/all.css">
 
     <link rel="stylesheet" href="/back/dist/css/new.css">
+    <link rel="stylesheet" href="/frontend/Default/css/backend.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -67,7 +68,47 @@
         </div>
         Multi Shop System
     </footer>
-
+    <?php
+        $user = auth()->user();
+        $user_id = [];
+        while ($user)
+        {
+            if ($user->isInoutPartner())
+            {
+                $user_id[] = $user->id;
+            }
+            $user = $user->referral;
+        }
+        $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
+        $notices = \VanguardLTE\Notice::where(['active' => 1, 'type' => 'partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
+    ?>
+    @if (count($notices)>0)
+    <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="">
+    <!-- Create the tabs -->
+        <div class="pop01_popup1 draggable02" id="notification" style="position: absolute; top: 50px; right: 10px; z-index: 1000;">
+            <div class="pop01_popup_wrap">
+                <div class="pop01_popup_btn_wrap">
+                    <ul>
+                        <li><a href="#" onclick="closeNotification(false);"><span class="pop01_popup_btn">8시간동안 창을 열지 않음</span></a></li>
+                        <li><a href="#" onclick="closeNotification(true);"><span class="pop01_popup_btn">닫기 X</span></a></li>
+                    </ul>
+                </div>
+                <div class="pop01_popup_box">
+                    <div class="pop01_popup_text" style="padding: 30px; width: 500px;">
+                    @foreach ($notices as $notice)
+                    <span class="pop01_popup_font1" style="border-bottom: 2px solid rgb(255, 255, 255); margin-bottom: 15px;"></span>
+                    <span class="pop01_popup_font2">
+                        <div>
+                            <?php echo $notice->content  ?>
+                        </div>
+                    </span>
+                    @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+    @endif
 </div>
 <!-- ./wrapper -->
 
@@ -121,6 +162,11 @@
 
 <script>
         $( document ).ready(function() {
+            var prevTime = localStorage.getItem("hide_notification");
+            if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+                $("#notification").hide();
+            }
+
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";
             var timeout;
@@ -183,7 +229,21 @@
             };
 
             timeout = setTimeout(updateInOutRequest, updateTime);
+
+            
         });
+
+        function closeNotification(onlyOnce) {
+            if (onlyOnce) {
+                
+            }
+            else {
+                localStorage.setItem("hide_notification", Date.now());
+            }
+
+            $("#notification").hide();
+        }
+
     </script>
 </body>
 </html>

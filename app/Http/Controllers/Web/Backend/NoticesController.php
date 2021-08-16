@@ -28,6 +28,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $data = $request->only([
                 'title',
                 'content',
+                'type',
                 'active',
             ]);
             if ($request->user != '')
@@ -119,6 +120,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $data = $request->only([
                 'title',
                 'content',
+                'type',
                 'active',
             ]);
             if ($request->user != '')
