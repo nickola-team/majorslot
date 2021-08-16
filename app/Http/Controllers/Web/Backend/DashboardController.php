@@ -861,7 +861,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $request->session()->put('dates', $dates);
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
             
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->paginate(31);
@@ -1131,13 +1131,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if (!auth()->user()->hasRole('admin'))
             {
                 //merge pragmatic and pragmatic play games if not admin
+                //merge habanero and habanero play games if not admin
                 if ($categories){
                     foreach ($categories as $i => $cat)
                     {
-                        $pp_adj = null;
-                        $pragmatic_adj = null;
+                        $pp_adj = null; //provider's game
+                        $pragmatic_adj = null; // owner's game
                         $pp_index = 0;
                         $pragmatic_index = 0;
+
+                        $hbn_adj = null; // provider's game
+                        $hbn_play_adj = null; // owner's game
+                        $hbn_index = 0;
+                        $hbn_play_index = 0;
                         foreach ($cat['cat'] as $index => $game)
                         {
                             if ($game['name'] == 'Pragmatic Play')
@@ -1149,6 +1155,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             {
                                 $pragmatic_adj = $game;
                                 $pragmatic_index = $index;
+                            }
+                            if ($game['name'] == 'Habanero Play')
+                            {
+                                $hbn_play_adj = $game;
+                                $hbn_play_index = $index;
+                            }
+                            if ($game['name'] == 'Habanero')
+                            {
+                                $hbn_adj = $game;
+                                $hbn_index = $index;
                             }
                         }
                         if ($pragmatic_adj)
@@ -1167,6 +1183,25 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             {
                                 $pragmatic_adj['title'] = '프라그메틱 플레이';
                                 $cat['cat'][$pragmatic_index] = $pragmatic_adj;
+                            }
+                            $categories[$i] = $cat;
+                        }
+                        if ($hbn_play_adj)
+                        {
+                            if ($hbn_adj)
+                            {
+                                $hbn_adj['totalwin'] = $hbn_adj['totalwin'] + $hbn_play_adj['totalwin'];
+                                $hbn_adj['totalbet'] = $hbn_adj['totalbet'] + $hbn_play_adj['totalbet'];
+                                $hbn_adj['totalcount'] = $hbn_adj['totalcount'] + $hbn_play_adj['totalcount'];
+                                $hbn_adj['total_deal'] = $hbn_adj['total_deal'] + $hbn_play_adj['total_deal'];
+                                $hbn_adj['total_mileage'] = $hbn_adj['total_mileage'] + $hbn_play_adj['total_mileage'];
+                                $cat['cat'][$hbn_index] = $hbn_adj;
+                                unset($cat['cat'][$hbn_play_index]);
+                            }
+                            else
+                            {
+                                $hbn_play_adj['title'] = '하바네로';
+                                $cat['cat'][$hbn_play_index] = $hbn_play_adj;
                             }
                             $categories[$i] = $cat;
                         }
