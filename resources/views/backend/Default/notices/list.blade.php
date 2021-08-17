@@ -24,6 +24,7 @@
 					<tr>
 						<th>제목</th>
 						<th>등록날짜</th>
+						<th>공지대상</th>
 						<th>상태</th>
                         @if (auth()->user()->hasRole('admin'))
                         <th>작성자</th>
@@ -44,6 +45,7 @@
 					<tr>
                         <th>제목</th>
 						<th>등록날짜</th>
+						<th>공지대상</th>
 						<th>상태</th>
                         @if (auth()->user()->hasRole('admin'))
                         <th>작성자</th>

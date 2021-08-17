@@ -25,6 +25,13 @@
 
 <div class="col-md-8">
     <div class="form-group">
+        <label>공지대상</label>
+        {!! Form::select('type', \VanguardLTE\Notice::lists(), $edit ? $notice->type : 'user', ['id' => 'type', 'class' => 'form-control']) !!}
+    </div>
+</div>
+
+<div class="col-md-8">
+    <div class="form-group">
         <label>@lang('app.status')</label>
         {!! Form::select('active', ['0' => '비활성', '1' => '활성'], $edit ? $notice->active : 1, ['id' => 'active', 'class' => 'form-control']) !!}
     </div>

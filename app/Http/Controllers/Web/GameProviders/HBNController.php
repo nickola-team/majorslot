@@ -25,6 +25,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $microstr = str_replace('.', '', $microstr);
             return $microstr;
         }
+        public static function gamecodetoname($code)
+        {
+            $gamelist = HBNController::getgamelist('hbn');
+            $gamename = $code;
+            if ($gamelist)
+            {
+                foreach($gamelist as $game)
+                {
+                    if ($game['gamecode'] == $code)
+                    {
+                        $gamename = $game['name'];
+                        break;
+                    }
+                }
+            }
+            return $gamename;
+        }
         /*
         * FROM HABANERO, BACK API
         */
@@ -196,7 +213,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'denomination' => 0, 
                         'shop_id' => $user->shop_id,
                         'category_id' => isset($category)?$category->id:0,
-                        'game_id' => $fundtransferrequest->gamedetails->keyname,
+                        'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                         'roundid' => 0,
                     ]);
                 }
@@ -262,7 +279,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'denomination' => 0, 
                             'shop_id' => $user->shop_id,
                             'category_id' => isset($category)?$category->id:0,
-                            'game_id' => $fundtransferrequest->gamedetails->keyname,
+                            'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                             'roundid' => 0,
                         ]);
                     }
@@ -313,7 +330,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'denomination' => 0, 
                             'shop_id' => $user->shop_id,
                             'category_id' => isset($category)?$category->id:0,
-                            'game_id' => $fundtransferrequest->gamedetails->keyname,
+                            'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                             'roundid' => 0,
                         ]);
                     }
@@ -362,7 +379,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'denomination' => 0, 
                         'shop_id' => $user->shop_id,
                         'category_id' => isset($category)?$category->id:0,
-                        'game_id' => $fundtransferrequest->gamedetails->keyname,
+                        'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                         'roundid' => 0,
                     ]);
                 }
@@ -497,14 +514,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            $url = HBNController::makegamelink($gamecode, 'real');
-            if ($url){
-                return ['error' => false, 'data' => ['url' => $url]];
-            }
-            else
-            {
-                return ['error' => true, 'msg' => '로그인하세요'];
-            }
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.hbn.render', $gamecode)]];
+            // $url = HBNController::makegamelink($gamecode, 'real');
+            // if ($url){
+            //     return ['error' => false, 'data' => ['url' => $url]];
+            // }
+            // else
+            // {
+            //     return ['error' => true, 'msg' => '로그인하세요'];
+            // }
         }
 
         public static function playerResponse(){

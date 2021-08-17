@@ -14,6 +14,14 @@ namespace VanguardLTE
             'date_time', 
         ];
         public $timestamps = false;
+        public static function lists()
+        {
+            return [
+                'user' => '회원',
+                'partner' => '파트너',
+                'all' => '전체'
+            ];
+        }
         public static function boot()
         {
             parent::boot();

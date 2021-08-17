@@ -144,6 +144,40 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return view('frontend.Default.games.pragmatic', compact('url', 'alonegame', 'data'));
             }
         }
+
+        public function habanerorender($gamecode, \Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
+
+            $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\HBNController::gamecodetoname($gamecode);
+            $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
+            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+            $shop_id = \Auth::user()->shop_id;
+            $hbn_games = \VanguardLTE\Game::where([
+                'shop_id' => $shop_id,
+                'name' => $gamename,
+                'view' => 1,
+                ]
+            )->get()->first();
+            
+            $alonegame = 0;
+            $url = null;
+            $data = [];
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $hbn_games) {
+                $url = url('/game/' . $gamename);
+                $alonegame = 1;
+            }
+            else {
+                    //게임런칭
+                    $url = \VanguardLTE\Http\Controllers\Web\GameProviders\HBNController::makegamelink($gamecode, 'real');
+            }
+            return view('frontend.Default.games.habanero', compact('url', 'alonegame', 'data'));
+            
+        }
     }
 
 }

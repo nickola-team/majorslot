@@ -211,6 +211,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.providers.pp.render',
         'uses' => 'RenderingController@pragmaticrender'
     ]);
+    Route::get('providers/hbn/{gamecode}', [
+        'as' => 'frontend.providers.hbn.render',
+        'uses' => 'RenderingController@habanerorender'
+    ]);
 
     Route::get('providers/waiting/{provider}/{gamecode}', [
         'as' => 'frontend.providers.waiting',

@@ -76,6 +76,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'shop_id' => auth()->user()->shop_id, 
                 'time' => date('G')
             ])->first();
+
             return view('backend.Default.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour', 'stat'));
         }
         public function createuserfromcsv(\Illuminate\Http\Request $request)
