@@ -326,7 +326,7 @@ namespace VanguardLTE\Games\_5LionsPM
         }
         public function GetHistory()
         {
-            $history = \VanguardLTE\GameLog::whereRaw('game_id=? and user_id=? ORDER BY id DESC LIMIT 10', [
+            $history = \VanguardLTE\GameLog::whereRaw('game_id=? and user_id=? ORDER BY id DESC LIMIT 1', [
                 $this->slotDBId, 
                 $this->playerId
             ])->get();
@@ -928,6 +928,9 @@ namespace VanguardLTE\Games\_5LionsPM
 
         public function GenerateWildMultiplier($slotEvent, $multipliers) {
             if ($slotEvent == 'freespin') {
+                if ($multipliers == null) {
+                    return 1;
+                }
                 $probabilityMap = [];
                 $probabilityMap[$multipliers[0]] = 60;
                 $probabilityMap[$multipliers[1]] = 30;

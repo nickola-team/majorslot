@@ -1044,11 +1044,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $data['type'] = 'add';
             }
-            \DB::beginTransaction();
             $user = \VanguardLTE\User::lockForUpdate()->find($request->user_id);
             if (!$user)
             {
-                \DB::commit();
                 return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
             }
             $summ = str_replace(',','',$request->summ);
@@ -1060,7 +1058,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $result = $user->addBalance($data['type'], abs($summ));
             $result = json_decode($result, true);
 
-            \DB::commit();
 
             if( $result['status'] == 'error' ) 
             {
