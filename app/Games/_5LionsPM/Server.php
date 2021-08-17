@@ -53,7 +53,7 @@ namespace VanguardLTE\Games\_5LionsPM
             else if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 /* 리스핀일 경우 스핀 첫밸런스 로드 */
-                if ($LASTSPIN->na == 'fso' || isset($LASTSPIN->fsopt_i)) {
+                if ((isset($LASTSPIN->na) && $LASTSPIN->na == 'fso') || isset($LASTSPIN->fsopt_i)) {
                     $BALANCE = $LASTSPIN->balance;
                 }
 
