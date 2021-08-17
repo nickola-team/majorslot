@@ -185,9 +185,10 @@ namespace VanguardLTE\Games\_5LionsPM
             $bet = $slotEvent['c'];         // 베팅액
 
             /* 남은 프리스핀이 있을 경우 */
-            $fsmax = $slotSettings->GetGameData($slotSettings->slotId . 'FSMax');
-            $fs = $slotSettings->GetGameData($slotSettings->slotId . 'FSNext');
-            $fsopt = $slotSettings->GetGameData($slotSettings->slotId . 'FSOpt');
+            $fsmax = $slotSettings->GetGameData($slotSettings->slotId . 'FSMax') ?? 0;
+            $fs = $slotSettings->GetGameData($slotSettings->slotId . 'FSNext') ?? 0;
+            $fsopt = $slotSettings->GetGameData($slotSettings->slotId . 'FSOpt') ?? 0;
+            $fswildcount = $slotSettings->GetGameData($slotSettings->slotId . 'FSWildCount') ?? 0;
             
             /* 프리스핀 타입검사 */
             if ($LASTSPIN !== NULL && $fsmax > 0) {
@@ -223,6 +224,10 @@ namespace VanguardLTE\Games\_5LionsPM
 
             /* WILD 생성갯수 */
             $defaultWildCount = $slotSettings->GenerateWildCount($winType, $slotEvent['slotEvent']);
+            if ($slotEvent['slotEvent'] === 'freespin' && $fsmax <= $fs && $fswildcount == 0) {
+                /* 프리스핀중 WILD심볼이 한번도 없었다면 */
+                $defaultWildCount = 1;
+            }
 
             /* 릴배치표 생성, 2천번 시행 */
             /*************************************************** */
@@ -234,7 +239,7 @@ namespace VanguardLTE\Games\_5LionsPM
                 /* 릴배치표 생성 */
                 if ($overtry) {
                     /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
-                    // $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $lastReels, 0);
+                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], 0, 0, null);
                 }
                 else {
                     $availableMultipliers = ($slotEvent['slotEvent'] === 'freespin' ? $fsopt['multipliers'] : null);
@@ -378,6 +383,11 @@ namespace VanguardLTE\Games\_5LionsPM
                     $objRes['fsres'] = $objRes['tw'];
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', $fs + 1);
+                    
+                    /* 프리스핀중 와일드 출현횟수 */
+                    $fswildcount += $defaultWildCount;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSWildCount', $fswildcount);
+
                 }
                 else if ($fsmax <= $fs) {
                     /* 프리스핀 완료 */
@@ -395,6 +405,7 @@ namespace VanguardLTE\Games\_5LionsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSMax', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSOpt', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSWildCount', 0);
                 }
             }
 

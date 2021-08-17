@@ -928,6 +928,9 @@ namespace VanguardLTE\Games\_5LionsPM
 
         public function GenerateWildMultiplier($slotEvent, $multipliers) {
             if ($slotEvent == 'freespin') {
+                if ($multipliers == null) {
+                    return 1;
+                }
                 $probabilityMap = [];
                 $probabilityMap[$multipliers[0]] = 60;
                 $probabilityMap[$multipliers[1]] = 30;
