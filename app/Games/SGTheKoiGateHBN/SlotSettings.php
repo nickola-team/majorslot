@@ -869,10 +869,10 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
         public function GenerateRespinCount() {
             $probabilityMap = [
                 1 => 10,
-                2 => 25,
-                3 => 30,
-                4 => 30,
-                5 => 5
+                2 => 20,
+                3 => 25,
+                4 => 25,
+                5 => 20
             ];
             
             $sum = array_sum(array_values($probabilityMap));
@@ -902,6 +902,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                 'symbols' => [],
                 'extendedSymbols' => [],
                 'flatSymbols' => [],
+                'scatterSymbols' => []
             ];
 
             for ($reelId=0; $reelId < $REELCOUNT; $reelId++) { 
@@ -969,16 +970,21 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             
             /* 릴배치표 평활화 */
             $flatSymbols = [];
-            // $flatScatterSymbols = [];
+            $flatScatterSymbols = [];
             foreach ($reels['symbols'] as $reelId => $symbols) {
                 foreach ($symbols as $k => $symbol) {
                     $flatPos = $reelId + $k * $REELCOUNT;
                     $flatSymbols[$flatPos] = $symbol;
+                    
+                    if ($symbol == $S_SCATTER) {
+                        array_push($flatScatterSymbols, $flatPos);
+                    }
                 }
             }
             ksort($flatSymbols);
 
             $reels['flatSymbols'] = $flatSymbols;
+            $reels['scatterSymbols'] = $flatScatterSymbols;
             return $reels;
         }
 
@@ -993,14 +999,14 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
 
         public function isValidReels($reels) {
             $highLevelSymbolCount = array_reduce($reels['flatSymbols'], function($carry, $symbol) {
-                if ($symbol <= 7) {
+                if ($symbol > 2 && $symbol < 8) {
                     $carry += 1;
                 }
 
                 return $carry;
             });
 
-            if ($highLevelSymbolCount > 6){
+            if ($highLevelSymbolCount > 8){
                 return false;
             }
 

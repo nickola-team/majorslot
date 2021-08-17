@@ -23,19 +23,14 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             $credits = $userId == 1 ? $ACTION === 'init' ? 5000 : $user->balance : null;
 
             $slotSettings = new SlotSettings($game, $userId, $credits);
-            $this->slotSettings = $slotSettings;
             
-            /* 전역상수 */
-            $LASTSPIN = $slotSettings->GetHistory();
-            $LASTSPIN = null;
-
             switch ($ACTION) {
                 case 'init':
                     $objRes = $this->init($slotEvent, $slotSettings);
                     break;
                 
                 case 'game':
-                    $objRes = $this->game($slotEvent, $slotSettings, $LASTSPIN);
+                    $objRes = $this->game($slotEvent, $slotSettings);
                     break;
 
                 case 'balance':
@@ -170,7 +165,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             $BALANCE = $slotSettings->GetBalance();
 
             /* 생성할 SCATTER 심볼 갯수 */
-            if ($gameMode == 'free' && $rs >= $rsMax) {
+            if ($gameMode == 'free' && $rs >= $rsMax - 1) {
                 /* 프리스핀 완료스핀이면 */
                 $proposedScatterCount = 0;
             }
@@ -196,7 +191,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                 }
 
                 /* 윈라인 체크 */
-                [$winLines, $winScatters] = $this->checkWinLines($reels['flatSymbols'], $slotSettings, $bet);
+                $winLines = $this->checkWinLines($reels, $slotSettings, $bet);
                 
                 /* 생성된 릴배치표 검사 */
                 if ($overtry) {
@@ -215,6 +210,11 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                     $propsedWildCount = 0;
                 }
 
+                /* 릴셋 유효성 검사 */
+                if ($slotSettings->isValidReels($reels) == false) {
+                    continue;
+                }
+                
                 if ($winType == 'none') {
                     if (count($winLines) == 0) {
                         break;
@@ -233,7 +233,12 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
 
                     break;
                 }
-                else if ($winType == 'bonus' && count($winScatters) >= 1) {
+                else if ($winType == 'bonus') {
+                    /* 스캐터심볼이나 당첨이 없으면 스킵 */
+                    if (count($reels['scatterSymbols']) == 0 || count($winLines) == 0) {
+                        continue;
+                    }
+
                     /* 스핀 당첨금 */
                     $winMoney = array_reduce($winLines, function($carry, $winLine) {
                         $carry += $winLine['wincash']; 
@@ -258,15 +263,16 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                 array_push($responseReels, $symbols);
             }
             
-            /* 스캐터릴 확장 */
+            /* 스캐터릴 확장, 스캐터심볼이 있고 당첨라인이 있을경우에만 */
             $expandingWilds = [];
-
-            foreach($winScatters as $scatterSymbol) {
-                $reelindex = $scatterSymbol % $REELCOUNT;
-                $symbolindex = intdiv($scatterSymbol, $REELCOUNT);
-                array_push($expandingWilds, [
-                    'symbolid' => $S_SCATTER, 'reelindex' => $reelindex, 'symbolindex' => $symbolindex
-                ]);
+            if (count($winLines) > 0 && count($reels['scatterSymbols']) > 0) {
+                foreach($reels['scatterSymbols'] as $scatterSymbol) {
+                    $reelindex = $scatterSymbol % $REELCOUNT;
+                    $symbolindex = intdiv($scatterSymbol, $REELCOUNT);
+                    array_push($expandingWilds, [
+                        'symbolid' => $S_SCATTER, 'reelindex' => $reelindex, 'symbolindex' => $symbolindex
+                    ]);
+                }
             }
             
             /* 스핀응답 빌드 */
@@ -342,7 +348,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                 $objRes['portmessage']['totalwincash'] = $LASTSPIN->portmessage->totalwincash + $winMoney;
 
                 /* 프리스핀 완료 */
-                if ($rs > $rsMax) {
+                if ($rs >= $rsMax) {
                     $objRes['portmessage']['isgamedone'] = true;
                     $objRes['portmessage']['nextgamestate'] = 'main';
 
@@ -360,7 +366,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                 }
             }
             /* 보너스 당첨 */
-            else if ($winType == 'bonus' && count($winScatters) >= 1) {
+            else if ($winType == 'bonus') {
                 $objRes['portmessage']['featuretriggered'] = true;
                 $objRes['portmessage']['isgamedone'] = false;
                 $objRes['portmessage']['nextgamestate'] = 'freegame';
@@ -407,7 +413,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             return $objRes;
         }
 
-        public function checkWinLines($flatSymbols, $slotSettings, $bet, $scatterExpansion = true, $winScatters = []) {
+        public function checkWinLines($reels, $slotSettings, $bet) {
             $S_SCATTER = 1;
             $S_WILD = 2;
             $REELCOUNT = 5;
@@ -415,6 +421,20 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             $PayLines = $slotSettings->PayLines;
             $PayTable = $slotSettings->PayTable;
 
+            $flatSymbols = $reels['flatSymbols'];
+            $scatterSymbols = $reels['scatterSymbols'];
+
+            /* 스캐터릴 확장 */
+            foreach ($scatterSymbols as $scatterPos) {
+                $reelindex = $scatterPos % $REELCOUNT;
+
+                for ($i=0; $i < $SYMBOLCOUNT; $i++) { 
+                    $pos = $i * $REELCOUNT + $reelindex;
+                    $flatSymbols[$pos] = $S_SCATTER;    
+                }
+            }
+
+            /* 윈라인 체크 */
             $winLines = [];
             foreach ($PayLines as $payLine) {
                 $sameSymbolsCount = 0;
@@ -463,42 +483,18 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                         'reelindex' => $reelindex,
                         'symbolindex' => $symbolindex
                     ]);
-
-                    /* 스캐터릴확장가능하고 윈라인에 스캐터심볼이 있다면 */
-                    if ($scatterExpansion && $flatSymbols[$pos] == $S_SCATTER) {
-                        array_push($winScatters, $pos);
-                    }
                 }
                 
                 array_push($winLines, [
                     'symbolid' => $symbolid,
-                    // 'RepeatCount' => $sameSymbolsCount,
                     'paylineindex' => $payLineId,
                     'wincash' => $lineMoney * $bet,
-                    // 'Positions' => array_slice($payLineSymbols, 0, $sameSymbolsCount)
                     'winningwindows' => $winningwindows,
                     'multiplier' => 1
                 ]);
             }
-
-            /* 윈라인에 스캐터심볼이 있다면, 릴확장 및 윈라인 재검사 */
-            if ($scatterExpansion && count($winScatters) > 0) {
-                $winScatters = array_unique($winScatters);
-                
-                foreach ($winScatters as $scatterPos) {
-                    $reelindex = $scatterPos % $REELCOUNT;
-
-                    for ($i=0; $i < $SYMBOLCOUNT; $i++) { 
-                        $pos = $i * $REELCOUNT + $reelindex;
-                        $flatSymbols[$pos] = $S_SCATTER;    
-                    }
-                }
-                
-                /* 윈라인 재검사, 재귀 */
-                return $this->checkWinLines($flatSymbols, $slotSettings, $bet, false, $winScatters);
-            }
             
-            return [$winLines, $winScatters];
+            return $winLines;
         }
 
         public function toResponse($obj) {
