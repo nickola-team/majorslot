@@ -1037,7 +1037,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         continue;
                     }
                     if ($round[7] == "C") {
-                        $time = strtotime($round[5].' UTC');
+                        $time = strtotime($round[6].' UTC');
                         $dateInLocal = date("Y-m-d H:i:s", $time);
                         $shop = \VanguardLTE\ShopUser::where('user_id', $round[1])->first();
                         \VanguardLTE\StatGame::create([
