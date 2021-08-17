@@ -354,7 +354,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
         }
         public function GetHistory()
         {
-            $history = \VanguardLTE\GameLog::whereRaw('game_id=? and user_id=? ORDER BY id DESC LIMIT 10', [
+            $history = \VanguardLTE\GameLog::whereRaw('game_id=? and user_id=? ORDER BY id DESC LIMIT 1', [
                 $this->slotDBId, 
                 $this->playerId
             ])->get();
