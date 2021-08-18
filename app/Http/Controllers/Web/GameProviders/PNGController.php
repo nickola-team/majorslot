@@ -21,10 +21,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $microstr;
         }
 
-        public static function gamecodetoname($code)
+        public static function gameIdtoname($code)
         {
             $gamelist = PNGController::getgamelist('png');
             $gamename = $code;
+            $gamecode = $code;
             $type = 'table';
             if ($code > 100000)
             {
@@ -38,11 +39,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $gamename = $game['name'];
                         $type = $game['type'];
+                        $gamecode = $game['gamecode'];
                         break;
                     }
                 }
             }
-            return [$gamename,$type];
+            return [$gamename,$type, $gamecode];
         }
 
         /*
@@ -172,7 +174,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $response['real'] = $user->balance;
 
-            $game = $this->gamecodetoname($gameId);
+            $game = $this->gameIdtoname($gameId);
             $category = \VanguardLTE\Category::where(['provider' => 'png', 'shop_id' => 0, 'href' => 'playngo'])->first();
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
@@ -188,7 +190,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id,
                 'category_id' => isset($category)?$category->id:0,
-                'game_id' => $gameId,
+                'game_id' => $game[2],
                 'roundid' => 0,
             ]);
 
@@ -218,7 +220,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($win)));
                 $user->save();
-                $game = $this->gamecodetoname($gameId);
+                $game = $this->gameIdtoname($gameId);
                 
                 $category = \VanguardLTE\Category::where(['provider' => 'png', 'shop_id' => 0, 'href' => 'playngo'])->first();
 
@@ -236,7 +238,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'denomination' => 0, 
                     'shop_id' => $user->shop_id,
                     'category_id' => isset($category)?$category->id:0,
-                    'game_id' => $gameId,
+                    'game_id' => $game[2],
                     'roundid' => 0,
                 ]);
             }
@@ -292,7 +294,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($bet)));
             $user->save();
-            $game = $this->gamecodetoname($gameId);
+            $game = $this->gameIdtoname($gameId);
 
             $category = \VanguardLTE\Category::where(['provider' => 'png', 'shop_id' => 0, 'href' => 'playngo'])->first();
 
@@ -310,7 +312,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id,
                 'category_id' => isset($category)?$category->id:0,
-                'game_id' => $gameId,
+                'game_id' => $game[2],
                 'roundid' => 0,
             ]);
 
@@ -332,7 +334,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $gameList = [];
             $newgames = \VanguardLTE\NewGame::where('provider', 'png')->get()->pluck('gameid')->toArray();
-            $query = 'SELECT * FROM w_png_games WHERE view=1';
+            $query = 'SELECT * FROM w_provider_games WHERE view=1 AND provider="png"';
             $png_games = \DB::select($query);
             foreach ($png_games as $game)
             {
