@@ -278,7 +278,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                     }
                 }
             }
-            return $totalPayRatio / $ratioCount / 2;
+            return $totalPayRatio / $ratioCount / 3;
         }
         public function HasGameData($key)
         {

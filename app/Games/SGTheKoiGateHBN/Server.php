@@ -145,7 +145,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             }
 
             /* 스핀결과 결정 */
-            $_spinSettings = $slotSettings->GetSpinSettings($gameMode, $bet, $lines);
+            $_spinSettings = $slotSettings->GetSpinSettings($gameMode, $bet * $lines, $lines);
 
             $winType = $_spinSettings[0];                   // 보상방식
             $_winAvaliableMoney = $_spinSettings[1];        // 당첨금 한도
