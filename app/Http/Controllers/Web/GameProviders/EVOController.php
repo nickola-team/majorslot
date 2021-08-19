@@ -459,7 +459,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $data = $response->json();
                 if (isset($data['entry'])){
-                    $url = $api_server . './' . $data['entry'];
+                    $url = $data['entry'];
                 }
             }
             catch (\Exception $ex)
