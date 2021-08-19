@@ -409,14 +409,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $api_server = config('app.evo_apihost_slot');
             $api_key = config('app.evo_casinokey_slot');
-            $api_token = config('evo_authtoken_slot');
+            $api_token = config('app.evo_authtoken_slot');
 
             $game = EVOController::getGameObj($gamecode);
             if ($game['type'] != 'slot')
             {
                 $api_server = config('app.evo_apihost_live');
                 $api_key = config('app.evo_casinokey_live');
-                $api_token = config('evo_authtoken_live');
+                $api_token = config('app.evo_authtoken_live');
             }
 
             $code = ($detect->isMobile() || $detect->isTablet())?$game['gamecode1'] : $game['gamecode'];
