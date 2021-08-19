@@ -452,14 +452,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
             $url = null;
             try {
-                $response = Http::timeout(5)->post($api_server . '/ua/v1/' .  $api_key . '/' . $api_token, $data);
+                $response = Http::timeout(10)->post($api_server . '/ua/v1/' .  $api_key . '/' . $api_token, $data);
                 if (!$response->ok())
                 {
                     return null;
                 }
                 $data = $response->json();
                 if (isset($data['entry'])){
-                    $url = $api_server . $data['entry'];
+                    $url = $api_server . './' . $data['entry'];
                 }
             }
             catch (\Exception $ex)
