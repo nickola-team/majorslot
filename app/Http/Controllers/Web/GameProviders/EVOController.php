@@ -40,7 +40,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         return $game;
                         break;
                     }
-                    if (isset($game['gamecode1'] && ($game['gamecode1'] == $code))
+                    if (isset($game['gamecode1']) && ($game['gamecode1'] == $code))
                     {
                         return $game;
                         break;
