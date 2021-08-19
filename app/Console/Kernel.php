@@ -594,7 +594,7 @@ namespace VanguardLTE\Console
                 $data = $cat->toArray();
                 foreach ($shop_ids as $id)
                 {
-                    if (\VanguardLTE\Category::where(['shop_id'=> $id, 'href' => $cat->href])->first())
+                    if (\VanguardLTE\Category::where(['shop_id'=> $id, 'href' => $cat->href, 'provider' => $cat->provider])->first())
                     {
                         $this->info("Category already exist in " . $id . " shop");
                     }
