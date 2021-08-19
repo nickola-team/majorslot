@@ -616,36 +616,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ], 200);
                 }
             }
-            $date = date('Y-m-d');
-            while ($user != null){
-                $daily_summary = \VanguardLTE\DailySummary::lockForUpdate()->where([
-                    'user_id' => $user->id, 
-                    'date' => $date,
-                    'type' => 'today',
-                    ])->first();
-                if ($daily_summary)
-                {
-                    $daily_summary->update(
-                        [
-                            'dealout' => $daily_summary->dealout + abs($summ),
-                        ]
-                    );
-                }
-                else
-                {
-                    \VanguardLTE\DailySummary::create(
-                        [
-                            'user_id' => $user->id, 
-                            'date' => $date,
-                            'type' => 'today',
-                            'shop_id' => $user->shop_id,
-                            'dealout' => abs($summ),
-                        ]
-                    );
-                }
-                $user = $user->referral;
-            }
-            
             
             return response()->json(['error' => false]);
         }
@@ -1149,60 +1119,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
             }
 
-            $date = date('Y-m-d');
-            $user = $requestuser;
-            while ($user != null){
-                $daily_summary = \VanguardLTE\DailySummary::lockForUpdate()->where([
-                    'user_id' => $user->id, 
-                    'date' => $date,
-                    'type' => 'today',
-                    ])->first();
-                if ($daily_summary)
-                {
-                    if ($type=='add') {
-                        $daily_summary->update(
-                            [
-                                'totalin' => $daily_summary->totalin + abs($amount),
-                            ]
-                        );
-                    }
-                    else
-                    {
-                        $daily_summary->update(
-                            [
-                                'totalout' => $daily_summary->totalout + abs($amount),
-                            ]
-                        );
-                    }
-                }
-                else
-                {
-                    if ($type=='add') {
-                        \VanguardLTE\DailySummary::create(
-                            [
-                                'user_id' => $user->id, 
-                                'date' => $date,
-                                'type' => 'today',
-                                'shop_id' => $user->shop_id,
-                                'totalin' => abs($amount),
-                            ]
-                        );
-                    }
-                    else
-                    {
-                        \VanguardLTE\DailySummary::create(
-                            [
-                                'user_id' => $user->id, 
-                                'date' => $date,
-                                'type' => 'today',
-                                'shop_id' => $user->shop_id,
-                                'totalout' => abs($amount),
-                            ]
-                        );
-                    }
-                }
-                $user = $user->referral;
-            }
 
             return redirect()->route('backend.in_out_manage', $type)->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }

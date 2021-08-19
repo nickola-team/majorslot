@@ -341,6 +341,10 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
 
                 /* 윈라인 검사 */
                 $this->checkWinLines($reels);
+
+                /* 스캐터심볼 검사 */
+                $scatterCount = $this->getScatterCount($reels);
+                
                 
                 /* 생성된 릴배치표 검사 */
                 if ($overtry) {
@@ -353,13 +357,9 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 }
                 else if ( $try >= 1000 ) 
                 {
-                    /* 텀블스핀경우 심볼이 떨어지면서 당첨될수밖에 없는경우 */
-                    // if ($winType == 'none') {
-                    //     $winType = 'win';
-                    //     $_winAvaliableMoney = $bet * $lines * 100;
-                    // }
-
-                    $winType = 'none';
+                    if ($winType == 'win') {
+                        $winType = 'none';
+                    }
                 }
 
                 $scatterCount = $this->getScatterCount($reels);
@@ -399,7 +399,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     if ($isTumbleBonus) {
                         /* 보너스텀블 완료시점에서 윈라인이 없어야 한다 */
                         if ($curTumbleBonusStep >= $tumbleBonusStepCount) {
-                            if (count($this->winLines) == 0) {
+                            if (count($this->winLines) == 0 && $scatterCount >= 4) {
                                 break;
                             }
                         }
@@ -434,8 +434,6 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                             break;
                         }
                     }
-                }
-                else {
                 }
             }
 
@@ -622,10 +620,18 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 }
             }
             else if ($winType == 'bonus') { 
-                /* 텀블보너스 스텝이 다 되기전까지 갬블 미당첨 */
-                if ($curTumbleBonusStep < $tumbleBonusStepCount) {
+                /* 보너스 당첨조건이 안될 경우, 예로 overtry = true */
+                if ($winMoney == 0 && $scatterCount < 4) {
+                    /* 텀블보너스 리셋 */
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonus', false);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusStepCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentStep', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusScatterCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentScatterCount', 0);
                 }
-                else {
+                /* 텀블보너스 스텝이 다 되었거나 가능한 릴생성이 불가능한 경우 */
+                else if ($winMoney == 0 && $scatterCount >= 4 && ($overtry || $curTumbleBonusStep >= $tumbleBonusStepCount)) {
+
                     /* 갬블당첨 */
                     $fsCountMap = [
                         4 => 10,
@@ -636,21 +642,15 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                         9 => 30
                     ];
 
-                    /* 생성된 SCATTER 심볼 갯수 */
-                    $scattersCount = $this->getScatterCount($reels);
-
+                    
                     /* 프리스핀 22개이상 당첨이면 갬블 스킵, 프리스핀 바로 발동 */
-                    if ($fsCountMap[$scattersCount] >= 22) {
-                        /*  */
-                        // $objRes[''] = '';
-
-                        $fsCount = $fsCountMap[$scattersCount];
+                    if ($fsCountMap[$scatterCount] >= 22) {
+                        $fsCount = $fsCountMap[$scatterCount];
                         $gambleStep = -1;
                     }
                     else {
                         // 갬블시작 스텝설정 (10, 14, 18, 22)
-                        $gambleStep = $scattersCount - 4;
-
+                        $gambleStep = $scatterCount - 4;
                         $status = [0, 0, 0, 0];
                         $status[$gambleStep] = 1;
 
