@@ -429,8 +429,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'player' => [
                     'id' => $user->id,
                     'update' => true,
-                    'firstName' => $user->first_name,
-                    'lastName' => $user->last_name,
+                    'firstName' => 'major',
+                    'lastName' => 'player_' . $user->id,
                     'nickName' => $user->username,
                     'country' => 'KR',
                     'language' => 'ko',
@@ -452,15 +452,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
             $url = null;
             try {
-                $response = Http::timeout(5)->withHeaders([
-                    'Content-Type' => 'application/json'
-                    ])->post($api_server . '/ua/v1/' .  $api_key . '/' . $api_token, ['body' => json_encode($data)]);
+                $response = Http::timeout(5)->post($api_server . '/ua/v1/' .  $api_key . '/' . $api_token, $data);
                 if (!$response->ok())
                 {
                     return null;
                 }
                 $data = $response->json();
-                $url = $api_server . $data['entry'];
+                if (isset($data['entry'])){
+                    $url = $api_server . $data['entry'];
+                }
             }
             catch (\Exception $ex)
             {
