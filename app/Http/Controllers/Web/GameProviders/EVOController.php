@@ -358,7 +358,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $gameList = [];
             $newgames = \VanguardLTE\NewGame::where('provider', 'evo')->get()->pluck('gameid')->toArray();
-            $query = 'SELECT * FROM w_provider_games WHERE view=1 AND provider="evo' . $href .'"';
+            $query = 'SELECT * FROM w_provider_games WHERE provider="evo' . $href .'"';
             $evo_games = \DB::select($query);
             foreach ($evo_games as $game)
             {
@@ -376,6 +376,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'title' => $game->title,
                         'type' => $game->type,
                         'href' => $href,
+                        'view' => $game->view,
                         'icon' => '/frontend/Default/ico/evo/'. $icon_name . '.jpg',
                     ]);
                 }
@@ -391,6 +392,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'title' => $game->title,
                         'type' => $game->type,
                         'href' => $href,
+                        'view' => $game->view,
                         'icon' => '/frontend/Default/ico/evo/'. $icon_name . '.jpg',
                         ]);
                 }
