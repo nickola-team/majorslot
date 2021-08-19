@@ -40,7 +40,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         return $game;
                         break;
                     }
-                    if ($game['gamecode1'] == $code)
+                    if (isset($game['gamecode1'] && ($game['gamecode1'] == $code))
                     {
                         return $game;
                         break;
@@ -424,6 +424,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $code =  $game['gamecode'];
             }
+
             $data = [
                 'uuid' => EVOController::microtime_string(),
                 'player' => [
@@ -450,6 +451,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]
             ];
+            if ($code == 'lobby') //evolution live casino lobby
+            {  
+                unset($data['config']['game']['table']);
+            }
             $url = null;
             try {
                 $response = Http::timeout(10)->post($api_server . '/ua/v1/' .  $api_key . '/' . $api_token, $data);
