@@ -1,0 +1,485 @@
+<?php 
+namespace VanguardLTE\Http\Controllers\Web\GameProviders
+{
+    use Illuminate\Support\Facades\Http;
+    class EVOController extends \VanguardLTE\Http\Controllers\Controller
+    {
+        /*
+        * UTILITY FUNCTION
+        */
+
+        public function checktransaction($id)
+        {
+            $record = \VanguardLTE\EVOTransaction::Where('transactionId',$id)->first();
+            return $record;
+        }
+
+        public static function microtime_string()
+        {
+            $microstr = sprintf('%.4f', microtime(TRUE));
+            $microstr = str_replace('.', '', $microstr);
+            return $microstr;
+        }
+
+        public static function getGameObj($code)
+        {
+            $gamelist_rt = EVOController::getgamelist('rt');
+            $gamelist_ne = EVOController::getgamelist('ne');
+            $gamelist_live = EVOController::getgamelist('live');
+
+            $gamelist = $gamelist_rt;
+            $gamelist = array_merge_recursive($gamelist, $gamelist_ne);
+            $gamelist = array_merge_recursive($gamelist, $gamelist_live);
+
+            if ($gamelist)
+            {
+                foreach($gamelist as $game)
+                {
+                    if ($game['gamecode'] == $code)
+                    {
+                        return $game;
+                        break;
+                    }
+                    if ($game['gamecode1'] == $code)
+                    {
+                        return $game;
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /*
+        * FROM Evolution, BACK API
+        */
+
+        public function endpoint($service, \Illuminate\Http\Request $request)
+        {
+            $authToken = $request->authToken;
+            $slottoken = config('app.evo_authtoken_slot');
+            $livetoken = config('app.evo_authtoken_live');
+            if ($authToken==null || ($authToken != $slottoken && $authToken != $livetoken))
+            {
+                //auth is not valid
+                return response()->json([
+                    'status' => 'INVALID_TOKEN_ID',
+                    'sid' => null,
+                    'uuid' => EVOController::microtime_string(),
+                ]);
+            }
+            $data = json_decode($request->getContent(), true);
+            switch ($service)
+            {
+                case 'check':
+                    $response = $this->check($data);
+                    break;
+                case 'balance':
+                    $response = $this->balance($data);
+                    break;
+                case 'debit':
+                    $response = $this->debit($data);
+                    break;
+                case 'credit':
+                    $response = $this->credit($data);
+                    break;
+                case 'cancel':
+                    $response = $this->cancel($data);
+                    break;
+                default :
+                    $response = [
+                        'status' => 'UNKNOWN_ERROR',
+                        'sid' => null,
+                        'uuid' => EVOController::microtime_string(),
+                    ];
+                    break;
+            }
+            $resjson = json_encode($response);
+            $pattern = '/("balance":)"([.\d]+)"/x';
+            $replacement = '${1}${2}';
+            return response(preg_replace($pattern, $replacement, $resjson), 200)->header('Content-Type', 'application/json');
+            
+        }
+
+        public function check($data)
+        {
+            $token = $data['sid'];
+            $userid = $data['userId'];
+            $response = [
+                'status' => 'OK',
+                'sid' => null,
+                'uuid' => EVOController::microtime_string(),
+            ];
+
+            $user = \VanguardLTE\User::where('id',$userid)->first();
+            if (!$user || !$user->hasRole('user') || $user->api_token != $token){
+                $response['status'] = 'INVALID_SID';
+                return $response;
+            }
+            return $response;
+        }
+
+
+        public function debit($data)
+        {
+            $token = $data['sid'];
+            $userid = $data['userId'];
+            $tableid = $data['game']['details']['table']['id'];
+            $amount = $data['transaction']['amount'];
+            $trid = $data['transaction']['id'];
+            $roundid =  $data['game']['id'];
+
+            $response = [
+                'status' => 'OK',
+                'balance' => null,
+                'bonus' => 0,
+                'uuid' => EVOController::microtime_string(),
+            ];
+
+            $user = \VanguardLTE\User::find($userid);
+            if (!$user || !$user->hasRole('user') || $user->api_token != $token){
+                $response['status'] = 'INVALID_SID';
+                return $response;
+            }
+            $record = $this->checktransaction($trid);
+            if ($record)
+            {
+                $response['status'] = 'BET_ALREADY_EXIST';
+                $response['balance'] = number_format ($user->balance,2,'.','');
+                return $response;
+            }
+
+            if ($amount > 0){
+                if ($user->balance < $amount){
+                    $response['status'] = 'INSUFFICIENT_FUNDS';
+                    $response['balance'] = number_format ($user->balance,2,'.','');
+                    return $response;
+                }
+                $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
+                $user->save();
+
+                $game = $this->getGameObj($tableid);
+                
+                $category = \VanguardLTE\Category::where(['provider' => 'evo', 'shop_id' => 0, 'href' => $game['href']])->first();
+
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => floatval($user->balance), 
+                    'bet' => $amount, 
+                    'win' => 0, 
+                    'game' => $game['name'] . '_' . $game['href'], 
+                    'type' => ($game['type']=='slot')?'slot':'table',
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id,
+                    'category_id' => isset($category)?$category->id:0,
+                    'game_id' => $game['gamecode'],
+                    'roundid' => $roundid,
+                ]);
+            }
+
+            $response['balance'] = number_format ($user->balance,2,'.','');
+
+            \VanguardLTE\EVOTransaction::create([
+                'transactionId' => $trid, 
+                'timestamp' => EVOController::microtime_string(),
+                'data' => json_encode($data),
+                'response' => json_encode($response)
+            ]);
+            return $response;
+        }
+
+        public function credit($data)
+        {
+            $token = $data['sid'];
+            $userid = $data['userId'];
+            $tableid = $data['game']['details']['table']['id'];
+            $amount = $data['transaction']['amount'];
+            $trid = $data['transaction']['id'];
+            $roundid =  $data['game']['id'];
+
+            $response = [
+                'status' => 'OK',
+                'balance' => null,
+                'bonus' => 0,
+                'uuid' => EVOController::microtime_string(),
+            ];
+
+            $user = \VanguardLTE\User::find($userid);
+            if (!$user || !$user->hasRole('user') || $user->api_token != $token){
+                $response['status'] = 'INVALID_SID';
+                return $response;
+            }
+
+            $record = $this->checktransaction($trid);
+            if ($record)
+            {
+                $response['status'] = 'BET_ALREADY_EXIST';
+                $response['balance'] = number_format ($user->balance,2,'.','');
+                return $response;
+            }
+
+            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+            $user->save();
+
+            $game = $this->getGameObj($tableid);
+            
+            $category = \VanguardLTE\Category::where(['provider' => 'evo', 'shop_id' => 0, 'href' => $game['href']])->first();
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => $amount, 
+                'game' => $game['name'] . '_' . $game['href'], 
+                'type' => ($game['type']=='slot')?'slot':'table',
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $game['gamecode'],
+                'roundid' => $roundid,
+            ]);
+
+            $response['balance'] = number_format ($user->balance,2,'.','');
+
+            \VanguardLTE\EVOTransaction::create([
+                'transactionId' => $trid, 
+                'timestamp' => EVOController::microtime_string(),
+                'data' => json_encode($data),
+                'response' => json_encode($response)
+            ]);
+            return $response;
+        }
+
+        public function cancel($data)
+        {
+            $token = $data['sid'];
+            $userid = $data['userId'];
+            $tableid = $data['game']['details']['table']['id'];
+            $amount = $data['transaction']['amount'];
+            $trid = $data['transaction']['id'];
+            $roundid =  $data['game']['id'];
+
+            $response = [
+                'status' => 'OK',
+                'balance' => null,
+                'bonus' => 0,
+                'uuid' => EVOController::microtime_string(),
+            ];
+
+            $user = \VanguardLTE\User::find($userid);
+            if (!$user || !$user->hasRole('user')){
+                $response['status'] = 'INVALID_SID';
+                return $response;
+            }
+
+            $record = $this->checktransaction($trid);
+            if (!$record)
+            {
+                $response['status'] = 'BET_DOES_NOT_EXIST';
+                return $response;
+            }
+            $tdata = json_decode($record->data, true);
+            $amount = $tdata['transaction']['amount'];
+
+            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+            $user->save();
+
+            $game = $this->getGameObj($tableid);
+            
+            $category = \VanguardLTE\Category::where(['provider' => 'evo', 'shop_id' => 0, 'href' => $game['href']])->first();
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => $amount, 
+                'game' => $game['name'] . '_' . $game['href'] . '_refund', 
+                'type' => ($game['type']=='slot')?'slot':'table',
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $game['gamecode'],
+                'roundid' => $roundid,
+            ]);
+
+            $response['balance'] = number_format ($user->balance,2,'.','');
+            
+            return $response;
+        }
+
+        public function balance($data)
+        {
+            $userId = $data['userId'];
+            $token = $data['sid'];
+            $response = [
+                'status' => 'OK',
+                'balance' => null,
+                'bonus' => 0,
+                'uuid' => EVOController::microtime_string(),
+            ];
+
+
+            $user = \VanguardLTE\User::find($userId);
+            if (!$user || !$user->hasRole('user') || $user->api_token != $token){
+                $response['status'] = 'INVALID_TOKEN_ID';
+                return $response;
+            }
+
+            $response['balance'] = number_format ($user->balance,2,'.','');
+            return $response;
+
+        }
+
+        /*
+        * FROM CONTROLLER, API
+        */
+        
+        public static function getgamelist($href)
+        {
+            $gameList = \Illuminate\Support\Facades\Redis::get($href.'list');
+            if ($gameList)
+            {
+                $games = json_decode($gameList, true);
+                if ($games!=null && count($games) > 0){
+                    return $games;
+                }
+            }
+            $gameList = [];
+            $newgames = \VanguardLTE\NewGame::where('provider', 'evo')->get()->pluck('gameid')->toArray();
+            $query = 'SELECT * FROM w_provider_games WHERE view=1 AND provider="evo' . $href .'"';
+            $evo_games = \DB::select($query);
+            foreach ($evo_games as $game)
+            {
+                $icon_name = str_replace(' ', '_', $game->name);
+                $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                if (in_array($game->gamecode , $newgames))
+                {
+                    array_unshift($gameList, [
+                        'provider' => 'evo',
+                        'gameid' => $game->gameid,
+                        'gamecode' => $game->gamecode,
+                        'gamecode1' => $game->gamecode1,
+                        'enname' => $game->name,
+                        'name' => preg_replace('/\s+/', '', $game->name),
+                        'title' => $game->title,
+                        'type' => $game->type,
+                        'href' => $href,
+                        'icon' => '/frontend/Default/ico/evo/'. $icon_name . '.jpg',
+                    ]);
+                }
+                else
+                {
+                    array_push($gameList, [
+                        'provider' => 'evo',
+                        'gameid' => $game->gameid,
+                        'gamecode' => $game->gamecode,
+                        'gamecode1' => $game->gamecode1,
+                        'enname' => $game->name,
+                        'name' => preg_replace('/\s+/', '', $game->name),
+                        'title' => $game->title,
+                        'type' => $game->type,
+                        'href' => $href,
+                        'icon' => '/frontend/Default/ico/evo/'. $icon_name . '.jpg',
+                        ]);
+                }
+            }
+            \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
+            return $gameList;
+        }
+
+        public static function makegamelink($gamecode)
+        {
+            $detect = new \Detection\MobileDetect();
+            $user = auth()->user();
+            if ($user == null)
+            {
+                return null;
+            }
+            $api_server = config('app.evo_apihost_slot');
+            $api_key = config('app.evo_casinokey_slot');
+            $api_token = config('evo_authtoken_slot');
+
+            $game = EVOController::getGameObj($gamecode);
+            if ($game['type'] != 'slot')
+            {
+                $api_server = config('app.evo_apihost_live');
+                $api_key = config('app.evo_casinokey_live');
+                $api_token = config('evo_authtoken_live');
+            }
+
+            $code = ($detect->isMobile() || $detect->isTablet())?$game['gamecode1'] : $game['gamecode'];
+            if ($code == null)
+            {
+                $code =  $game['gamecode'];
+            }
+            $data = [
+                'uuid' => EVOController::microtime_string(),
+                'player' => [
+                    'id' => $user->id,
+                    'update' => true,
+                    'firstName' => $user->first_name,
+                    'lastName' => $user->last_name,
+                    'nickName' => $user->username,
+                    'country' => 'KR',
+                    'language' => 'ko',
+                    'currency' => 'KRW',
+                    'session' => [
+                        'id' => $user->api_token,
+                        'ip' => \Request::ip(),
+                    ],
+                ],
+                'config' => [
+                    'game' => [
+                        'category' => $game['type'],
+                        'interface' => 'view1',
+                        'table' => [
+                            'id' => $code,
+                        ]
+                    ]
+                ]
+            ];
+            $url = null;
+            try {
+                $response = Http::timeout(5)->withHeaders([
+                    'Content-Type' => 'application/json'
+                    ])->post($api_server . '/ua/v1/' .  $api_key . '/' . $api_token, ['body' => json_encode($data)]);
+                if (!$response->ok())
+                {
+                    return null;
+                }
+                $data = $response->json();
+                $url = $api_server . $data['entry'];
+            }
+            catch (\Exception $ex)
+            {
+                return null;
+            }
+
+            return $url;
+        }
+
+        public static function getgamelink($gamecode)
+        {
+            $url = EVOController::makegamelink($gamecode);
+            if ($url)
+            {
+                return ['error' => false, 'data' => ['url' => $url]];
+            }
+            return ['error' => true, 'msg' => '로그인하세요'];
+        }
+
+    }
+
+}

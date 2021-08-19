@@ -1396,8 +1396,16 @@ Route::group(['middleware' => 'hbn', 'prefix' => 'hbn',], function () {
 });
 
 /**
- * Habanero Game Provider
+ * Play'n Go Game Provider
  */
 Route::group(['prefix' => 'png',], function () {
 	Route::post('/endpoint/{service}', 'GameProviders\PNGController@endpoint');
+});
+
+/**
+ * Play'n Go Game Provider
+ */
+Route::group(['prefix' => 'evo',], function () {
+	Route::post('/rtne/{service}', 'GameProviders\EVOController@endpoint');
+    Route::post('/live/{service}', 'GameProviders\EVOController@endpoint');
 });

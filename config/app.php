@@ -141,6 +141,17 @@ return [
     'png_pid' => env('PNG_PRODUCT_ID', '8951'),
 
     /*
+    Evolution Auth key
+    */
+    'evo_apihost_slot' => env('EVO_APIHOST_SLOT', 'https://evostage.klonostek.com'),
+    'evo_casinokey_slot' => env('EVO_CASINOKEY_SLOT', 'otzthxlytee8epl6'),
+    'evo_authtoken_slot' => env('EVO_AUTHTOKEN_SLOT', '9a7b0809d2c89f43ab44532b7a075ac9'),
+    
+    'evo_apihost_live' => env('EVO_APIHOST_LIVE', 'http://staging.evolution.asia-live.com'),
+    'evo_casinokey_live' => env('EVO_CASINOKEY_LIVE', '7jpwpzbumpihdled'),
+    'evo_authtoken_live' => env('EVO_AUTHTOKEN_LIVE', '435ab6e9328cc23ce102f81c7daa61a9'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
