@@ -25,7 +25,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist_rt = EVOController::getgamelist('rt');
             $gamelist_ne = EVOController::getgamelist('ne');
-            $gamelist_live = EVOController::getgamelist('live');
+            $gamelist_live = EVOController::getgamelist('casino');
 
             $gamelist = $gamelist_rt;
             $gamelist = array_merge_recursive($gamelist, $gamelist_ne);
@@ -167,7 +167,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => floatval($user->balance), 
                     'bet' => $amount, 
                     'win' => 0, 
-                    'game' => $game['name'] . '_' . $game['href'] . '_' . $tableid, 
+                    'game' => $game['name'] . '_' . $game['href'], 
                     'type' => ($game['type']=='slot')?'slot':'table',
                     'percent' => 0, 
                     'percent_jps' => 0, 
@@ -234,7 +234,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => $amount, 
-                'game' => $game['name'] . '_' . $game['href'] . '_' . $tableid, 
+                'game' => $game['name'] . '_' . $game['href'], 
                 'type' => ($game['type']=='slot')?'slot':'table',
                 'percent' => 0, 
                 'percent_jps' => 0, 
