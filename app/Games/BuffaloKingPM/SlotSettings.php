@@ -544,7 +544,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
             //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
-        public function SetBank($slotState = '', $sum, $slotEvent = '')
+        public function SetBank($slotState = '', $sum, $slotEvent = '', $isBuyFreespin = -1)
         {
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -560,6 +560,11 @@ namespace VanguardLTE\Games\BuffaloKingPM
             }
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
+            if($isBuyFreespin == 0){
+                $game->set_gamebank($sum, 'inc', 'bonus');
+                $game->save();
+                return $game;
+            }
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet' ) 
             {
