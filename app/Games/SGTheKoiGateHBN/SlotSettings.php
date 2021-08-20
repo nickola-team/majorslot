@@ -835,6 +835,13 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                     0 => 100,
                 ];
             }
+            else if ($winType == 'win' && $slotEvent !== 'free') {
+                $probabilityMap = [
+                    0 => 5,
+                    1 => 95,
+                    2 => 10
+                ];
+            }
             else {
                 if ($slotEvent == 'free') {
                     $probabilityMap = [
@@ -865,6 +872,36 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
 
             return 0;  
         }
+        public function GetRandWildReelId($limited_reels) {
+            $probabilityMap = [
+                0 => 2,
+                1 => 3,
+                2 => 90,
+                3 => 3,
+                4 => 2
+            ];
+
+            /* 금지된 릴에 확률 0 적용 */
+            foreach ($limited_reels as $reelId) {
+                $probabilityMap[$reelId] = 0;
+            }
+
+            $sum = array_sum(array_values($probabilityMap));
+            $randNum = random_int(1, $sum);
+
+            $sum = 0;
+            $res = 0;       
+            foreach ($probabilityMap as $key => $probability) {
+                $sum += $probability;
+                if ($randNum <= $sum) {
+                    $res = $key;
+                    break;
+                }
+            }
+
+            return $res;
+        }
+
 
         public function GenerateRespinCount() {
             $probabilityMap = [
@@ -949,7 +986,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                 }
 
                 /* WILD 심볼이 위치할 랜덤릴 */
-                while( in_array( ($rand_reel_id = random_int(0, $REELCOUNT - 1)), $limited_reels));
+                $rand_reel_id = $this->GetRandWildReelId($limited_reels);
 
                 $pos = array_rand($reels['symbols'][$rand_reel_id]);
                 $reels['symbols'][$rand_reel_id][$pos] = $S_WILD;
