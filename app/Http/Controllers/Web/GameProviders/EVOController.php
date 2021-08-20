@@ -362,7 +362,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $evo_games = \DB::select($query);
             foreach ($evo_games as $game)
             {
-                $icon_name = str_replace(' ', '_', $game->name);
+                $icon_name = str_replace(' ', '_', $game->gameid);
                 $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
                 if (in_array($game->gamecode , $newgames))
                 {
@@ -377,7 +377,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'type' => $game->type,
                         'href' => $href,
                         'view' => $game->view,
-                        'icon' => '/frontend/Default/ico/evo/'. $icon_name . '.jpg',
+                        'icon' => '/frontend/Default/ico/evo/'. $href . '/' . $icon_name . '.jpg',
                     ]);
                 }
                 else
@@ -393,7 +393,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'type' => $game->type,
                         'href' => $href,
                         'view' => $game->view,
-                        'icon' => '/frontend/Default/ico/evo/'. $icon_name . '.jpg',
+                        'icon' => '/frontend/Default/ico/evo/'. $href . '/' . $icon_name . '.jpg',
                         ]);
                 }
             }
