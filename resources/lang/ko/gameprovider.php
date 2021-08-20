@@ -166,6 +166,8 @@ return [
         "Sky Lanterns" => "스카이 랜턴스",
         "Dragon's Treasure" => "드래곤스 트레저",
         "Aladdin's lamp" => "알라딘스 램프",
+        "Dollar Bomb" => "덜러 봄브",
+        "King Kong Shake" => "킹콩 세이크",
 
 
         /**
@@ -446,6 +448,7 @@ return [
         "Chilli Heat Megaways" => "칠리 허트 메가웨이",
         "Dewavegas Joker's Jewels" => "디워베가스 조커스 즈웰",
         "LaLiga Champions" => "라리가 챔피언스",
+        "Bigger Bass Bonanza" => "비거 배스 보난자",
 
 
         /**
@@ -535,6 +538,7 @@ return [
         "Pearl Diver" => "펄스 다이버",
         "5 Fortunator" => "5 포츄네터",
         "Eagle Power: Hold and Win" => "이글 파워: 홀드 앤 윈",
+        "Spirit of Egypt: Hold and Win" => "스피릿 오브 이짚트: 홀드 앤 윈",
 
         /**
          * Habanero Games
