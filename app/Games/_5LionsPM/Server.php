@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\_5LionsPM
                 'stime' => floor(microtime(true) * 1000),
                 'sa' => '3,5,4,13,9',
                 'sb' => '6,7,7,9,7',
-                'sc' => '10.00,20.00,50.00,100.00,200.00,500.00,1000.00,2200.00',
+                'sc' => implode(',', $slotSettings->Bet),
                 'defc' => 50.00,
                 'sh' => '4',
                 'wilds' => '2~0,0,0,0,0~1,1,1,1,1',
