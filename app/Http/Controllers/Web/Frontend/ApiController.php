@@ -122,6 +122,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             while ($tryCount < 20);
             if ($bToken){
                 $user->update(['api_token' => $api_token]);
+                if ($user->playing_game != null)
+                {
+                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                    $user->update(['playing_game' => null]);
+                }
                 $user = $user->fresh();
                 if ($user->api_token != $api_token)
                 {
@@ -132,6 +137,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '잠시후 다시 시도해주세요.']);
             }
+
+            
 
             event(new \VanguardLTE\Events\User\LoggedIn());
 
