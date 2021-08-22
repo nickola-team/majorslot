@@ -1011,11 +1011,15 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 }
 
                 /* 망치심볼 추가 */
-                if (isset($reels['reg']['hammer_reels'])) {
-                    foreach ($reels['reg']['hammer_reels'] as $reelId) {
-                        /* top 릴기준 변환 */
-                        $pos = 3 - ($reelId - 1);
-                        array_push($topSymbols, "${pos},${S_HAMMER}");
+                $hammerReels = $reels['reg']['hammer_reels'] ?? null;
+                if (isset($hammerReels)) {
+                    // 1, 2번릴에 나란히 있을때만
+                    if (count($hammerReels) >= 2 && ($hammerReels[0] + $hammerReels[1] == 3)) {
+                        foreach ($hammerReels as $reelId) {
+                            /* top 릴기준 변환 */
+                            $pos = 3 - ($reelId - 1);
+                            array_push($topSymbols, "${pos},${S_HAMMER}");
+                        }
                     }
                 }
             }

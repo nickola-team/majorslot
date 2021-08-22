@@ -1065,6 +1065,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
         {
             $REELCOUNT = 6;
             $MAXSYMBOLCOUNT = 7;
+            $TOPSYMBOLCOUNT = 4;
             $S_REMOVED = -1;
             $S_BLANK = 19;
             $S_SCATTER = 1;
@@ -1152,7 +1153,19 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
 
                     foreach ($tumbleSymbols as $value) {
                         [$pos, $symbol] = explode(",", $value);
+                        
+                        /* 텀블스핀중 망치심볼은 삭제하지 않는다 */
+                        if ($symbol == $S_HAMMER) {
+                            continue;
+                        }
+
                         $newTopSymbols[$pos] = $S_REMOVED;
+                    }
+
+                    /* 망치심볼이 맨앞위치에 있으면 삭제 */
+                    if ($newTopSymbols[$TOPSYMBOLCOUNT - 1] == $S_HAMMER && $newTopSymbols[$TOPSYMBOLCOUNT - 2] == $S_HAMMER) {
+                        $newTopSymbols[$TOPSYMBOLCOUNT - 1] = $S_REMOVED;
+                        $newTopSymbols[$TOPSYMBOLCOUNT - 2] = $S_REMOVED;
                     }
 
                     $remainingReelSymbols = array_diff($newTopSymbols, [$S_REMOVED]);
@@ -1188,135 +1201,20 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     ],
                 ];
 
-                return $reels;
-            }
-            
-            /* 텀블스핀인이 아닌 경우 */
+                /* 망치심볼 체크 */
+                $hammerReels = [];
+                $isHammerShifted = false;
+                $lastTopSymbols = explode(",", $lastReels['top']['s']);
+                for ($i=0; $i < 4; $i++) { 
+                    if ($reels['top']['symbols'][$i] == $S_HAMMER) {
+                        array_push($hammerReels, $i + 1);
 
-            /* 릴셋 찾기 */
-            if (array_key_exists($slotEvent, $this->reelsetMap)) {
-                $reelsetIds = $this->reelsetMap[$slotEvent];
-            }
-            else {
-                $reelsetIds = $this->reelsetMap['spin'];
-            }
-
-            $randomId = random_int(0, count($reelsetIds['top']) - 1);
-            $topReelSetId = $reelsetIds['top'][$randomId];
-            $regReelSetId = $reelsetIds['reg'][$randomId];
-
-            /* 릴셋기준 랜덤위치 선택 */
-            $reelStrip = "reelStrip${topReelSetId}_0";
-
-            $basePosOfReels = [];
-            $basePosOfReels['top'][0] = random_int(4, count($this->$reelStrip) - 4);
-
-            foreach( [
-                'reelStrip'.$regReelSetId.'_0', 
-                'reelStrip'.$regReelSetId.'_1', 
-                'reelStrip'.$regReelSetId.'_2', 
-                'reelStrip'.$regReelSetId.'_3', 
-                'reelStrip'.$regReelSetId.'_4', 
-                'reelStrip'.$regReelSetId.'_5', 
-            ] as $index => $reelStrip ) 
-            {
-                if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
-                {
-                    $basePosOfReels['reg'][$index] = random_int(3, count($this->$reelStrip) - 3);
-                }
-            }
-            
-            /* */
-            $reels = [
-                'reg' => [
-                    'after_symbols' => [],
-                    'before_symbols' => [],
-                    'symbols' => [],
-                    'reelset_id' => $regReelSetId,
-                ],
-                'top' => [
-                    'after_symbols' => [],
-                    'before_symbols' => [],
-                    'symbols' => [],
-                    'reelset_id' => $topReelSetId,
-                ],
-            ];
-
-            $topScatterCount = 0;
-            $regScatterCount = 0;
-            $regScatterReels = [];
-
-            /* top 릴배치표 생성 */
-            $symbols = $this->SliceSymbols('top', $basePosOfReels['top'][0], $topReelSetId, 0);
-            $reels['top']['symbols'] = $symbols;
-            $reels['top']['after_symbols'] = random_int(7, 12);
-            $reels['top']['before_symbols'] = random_int(7, 12);
-
-            $topScatterCount = count(array_keys($reels['top']['symbols'], $S_SCATTER));
-            
-            /* reg 릴배치표 생성 */
-            foreach( $basePosOfReels['reg'] as $reelId => $basePos ) 
-            {
-                /* 해당 릴배치표에서 랜덤갯수의 심볼배열 뽑기 */
-                $symbols = $this->SliceSymbols('reg', $basePos, $regReelSetId, $reelId);
-                
-                $reels['reg']['symbols'][$reelId] = $symbols;
-                array_push($reels['reg']['after_symbols'], random_int(7, 12));
-                array_push($reels['reg']['before_symbols'], random_int(7, 12));
-
-                $count = count(array_keys($reels['reg']['symbols'][$reelId], $S_SCATTER));
-                $regScatterCount += $count;
-
-                /* 스캐터생성에 이용 */
-                if ($count > 0) {
-                    array_push($regScatterReels, $reelId);
-                }
-            }
-
-            /* 망치심볼 체크 */
-            $hammerSymbols = array_keys($reels['top']['symbols'], $S_HAMMER);
-            $hammerReels = [];
-            if (count($hammerSymbols) > 0) {
-                /* 망치심볼 출현횟수 조정 */
-                $isValidHammer = (random_int(1, 10) < 3);
-                
-                if (!$isValidHammer || $winType == 'bonus') {
-                    for ($i=0; $i < 4; $i++) { 
-                        if ($reels['top']['symbols'][$i] == $S_HAMMER) {
-                            $reels['top']['symbols'][$i] = random_int(7, 12);
+                        if ($lastTopSymbols[3 - $i] != $S_HAMMER) {
+                            $isHammerShifted = true;
                         }
                     }
                 }
-                else {
-                    $isChecked = false;
-                    for ($i=0; $i < 4; $i++) { 
-                        if ($reels['top']['symbols'][$i] == $S_HAMMER) {
-                            /* 이미 망치심볼이 있다면 현재 망치심볼 삭제 */
-                            if ($isChecked) {
-                                $reels['top']['symbols'][$i] = random_int(7, 12);
-                                continue;
-                            }
-
-                            /* 망치심볼옆에 1개 더 추가, 2개 유지 */
-                            if ($i == 3) {
-                                $reels['top']['symbols'][$i - 1] = $S_HAMMER;
-
-                                /* reg 릴셋에서는 1 증가 */
-                                $hammerReels = [$i, $i + 1];
-                            }
-                            else {
-                                $reels['top']['symbols'][$i + 1] = $S_HAMMER;
-
-                                /* reg 릴셋에서는 1 증가 */
-                                $hammerReels = [$i + 1, $i + 2];
-
-                                $i++;
-                            }
-
-                            $isChecked = true;
-                        }
-                    }
-
+                if ($isHammerShifted) {
                     /* 기본 릴셋, 망치릴 보관 */
                     $reels['reg']['isymbols'] = $reels['reg']['symbols'];
                     $reels['reg']['hammer_reels'] = $hammerReels;
@@ -1329,71 +1227,214 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                         $reels['reg']['symbols'][$reelId] = array_replace($reels['reg']['symbols'][$reelId], $newReel);
                     }    
                 }
+
             }
+            else {
+            
+                /* 텀블스핀인이 아닌 경우 */
 
-            /* Scatter 심볼 체크 */
-            if ($winType == 'bonus') {
-                /* 프리스핀에서 보너스당첨인 경우 스캐터심볼이 Top릴에만 위치 */
-                if ($slotEvent == 'freespin') {
-                    $remainingScatterCount = $scatterCount - $topScatterCount;
-                    if ($remainingScatterCount > 0) {
-                        for ($i=0; $i < $remainingScatterCount; $i++) { 
-                            $availablePoses = array_where($reels['top']['symbols'], function ($symbol, $key) {
-                                return $symbol != 19 && $symbol != 1;
-                            });
-
-                            if (count($availablePoses) === 0 ) {
-                                $i--;
-                                continue;
-                            }
-
-                            $randomPos = array_rand($availablePoses);         
-                            $reels['top']['symbols'][$randomPos] = $S_SCATTER;
-                        }    
-                    }
+                /* 릴셋 찾기 */
+                if (array_key_exists($slotEvent, $this->reelsetMap)) {
+                    $reelsetIds = $this->reelsetMap[$slotEvent];
                 }
                 else {
-                    /* 일반 보너스당첨일때 reg릴셋에만 스캐터심볼 위치, 부족한 SCATTER 심볼 생성 */
-                    $remainingScatterCount = $scatterCount - $regScatterCount;
-                    if ($remainingScatterCount > 0) {
-                        for ($i=0; $i < $remainingScatterCount; $i++) { 
-                            while (in_array(($randReelId = random_int(0, $REELCOUNT - 1)), $regScatterReels));
-                            
-                            $availablePoses = array_where($reels['reg']['symbols'][$randReelId], function ($symbol, $key) {
-                                return $symbol != 19 && $symbol != 1;
-                            });
+                    $reelsetIds = $this->reelsetMap['spin'];
+                }
 
-                            if (count($availablePoses) === 0 ) {
-                                $i--;
-                                continue;
+                $randomId = random_int(0, count($reelsetIds['top']) - 1);
+                $topReelSetId = $reelsetIds['top'][$randomId];
+                $regReelSetId = $reelsetIds['reg'][$randomId];
+
+                /* 릴셋기준 랜덤위치 선택 */
+                $reelStrip = "reelStrip${topReelSetId}_0";
+
+                $basePosOfReels = [];
+                $basePosOfReels['top'][0] = random_int(4, count($this->$reelStrip) - 4);
+
+                foreach( [
+                    'reelStrip'.$regReelSetId.'_0', 
+                    'reelStrip'.$regReelSetId.'_1', 
+                    'reelStrip'.$regReelSetId.'_2', 
+                    'reelStrip'.$regReelSetId.'_3', 
+                    'reelStrip'.$regReelSetId.'_4', 
+                    'reelStrip'.$regReelSetId.'_5', 
+                ] as $index => $reelStrip ) 
+                {
+                    if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
+                    {
+                        $basePosOfReels['reg'][$index] = random_int(3, count($this->$reelStrip) - 3);
+                    }
+                }
+                
+                /* */
+                $reels = [
+                    'reg' => [
+                        'after_symbols' => [],
+                        'before_symbols' => [],
+                        'symbols' => [],
+                        'reelset_id' => $regReelSetId,
+                    ],
+                    'top' => [
+                        'after_symbols' => [],
+                        'before_symbols' => [],
+                        'symbols' => [],
+                        'reelset_id' => $topReelSetId,
+                    ],
+                ];
+
+                $topScatterCount = 0;
+                $regScatterCount = 0;
+                $regScatterReels = [];
+
+                /* top 릴배치표 생성 */
+                $symbols = $this->SliceSymbols('top', $basePosOfReels['top'][0], $topReelSetId, 0);
+                $reels['top']['symbols'] = $symbols;
+                $reels['top']['after_symbols'] = random_int(7, 12);
+                $reels['top']['before_symbols'] = random_int(7, 12);
+
+                $topScatterCount = count(array_keys($reels['top']['symbols'], $S_SCATTER));
+                
+                /* reg 릴배치표 생성 */
+                foreach( $basePosOfReels['reg'] as $reelId => $basePos ) 
+                {
+                    /* 해당 릴배치표에서 랜덤갯수의 심볼배열 뽑기 */
+                    $symbols = $this->SliceSymbols('reg', $basePos, $regReelSetId, $reelId);
+                    
+                    $reels['reg']['symbols'][$reelId] = $symbols;
+                    array_push($reels['reg']['after_symbols'], random_int(7, 12));
+                    array_push($reels['reg']['before_symbols'], random_int(7, 12));
+
+                    $count = count(array_keys($reels['reg']['symbols'][$reelId], $S_SCATTER));
+                    $regScatterCount += $count;
+
+                    /* 스캐터생성에 이용 */
+                    if ($count > 0) {
+                        array_push($regScatterReels, $reelId);
+                    }
+                }
+
+                /* 망치심볼 체크 */
+                $hammerSymbols = array_keys($reels['top']['symbols'], $S_HAMMER);
+                $hammerReels = [];
+                if (count($hammerSymbols) > 0) {
+                    /* 망치심볼 출현횟수 조정 */
+                    $isValidHammer = (random_int(1, 10) < 3);
+                    
+                    if (!$isValidHammer || $winType == 'bonus') {
+                        for ($i=0; $i < 4; $i++) { 
+                            if ($reels['top']['symbols'][$i] == $S_HAMMER) {
+                                $reels['top']['symbols'][$i] = random_int(7, 12);
                             }
+                        }
+                    }
+                    else {
+                        $isChecked = false;
+                        for ($i=0; $i < 4; $i++) { 
+                            if ($reels['top']['symbols'][$i] == $S_HAMMER) {
+                                /* 이미 망치심볼이 있다면 현재 망치심볼 삭제 */
+                                if ($isChecked) {
+                                    $reels['top']['symbols'][$i] = random_int(7, 12);
+                                    continue;
+                                }
 
-                            $randomPos = array_rand($availablePoses);         
-                            $reels['reg']['symbols'][$randReelId][$randomPos] = $S_SCATTER;
+                                /* 망치심볼옆에 1개 더 추가, 2개 유지 */
+                                if ($i == 3) {
+                                    $reels['top']['symbols'][$i - 1] = $S_HAMMER;
 
-                            array_push($regScatterReels, $randReelId);
+                                    /* reg 릴셋에서는 1 증가 */
+                                    $hammerReels = [$i, $i + 1];
+                                }
+                                else {
+                                    $reels['top']['symbols'][$i + 1] = $S_HAMMER;
+
+                                    /* reg 릴셋에서는 1 증가 */
+                                    $hammerReels = [$i + 1, $i + 2];
+
+                                    $i++;
+                                }
+
+                                $isChecked = true;
+                            }
+                        }
+
+                        /* 기본 릴셋, 망치릴 보관 */
+                        $reels['reg']['isymbols'] = $reels['reg']['symbols'];
+                        $reels['reg']['hammer_reels'] = $hammerReels;
+
+                        /* 망치심볼이 있는 reg릴을 WILD로 치환 */
+                        foreach ($hammerReels as $reelId) {
+                            $blankSymbolCount = count(array_keys($reels['reg']['symbols'][$reelId], $S_BLANK));
+                            $newReel = array_fill(0, $MAXSYMBOLCOUNT - $blankSymbolCount, $S_WILD);
+
+                            $reels['reg']['symbols'][$reelId] = array_replace($reels['reg']['symbols'][$reelId], $newReel);
                         }    
                     }
                 }
-            }
-            else if ($regScatterCount >= 4) {
-                /* 일반스핀에서 스캐터갯수가 필요이상이면 삭제 */
-                $removableScatterCount = $regScatterCount - 2;
 
-                for ($reelId=0; $reelId < $REELCOUNT; $reelId++) { 
-                    $count = count(array_keys($reels['reg']['symbols'][$reelId], $S_SCATTER));
+                /* Scatter 심볼 체크 */
+                if ($winType == 'bonus') {
+                    /* 프리스핀에서 보너스당첨인 경우 스캐터심볼이 Top릴에만 위치 */
+                    if ($slotEvent == 'freespin') {
+                        $remainingScatterCount = $scatterCount - $topScatterCount;
+                        if ($remainingScatterCount > 0) {
+                            for ($i=0; $i < $remainingScatterCount; $i++) { 
+                                $availablePoses = array_where($reels['top']['symbols'], function ($symbol, $key) {
+                                    return $symbol != 19 && $symbol != 1;
+                                });
 
-                    if ($count > 0) {
-                        array_map(function($symbol) use ($S_SCATTER) {
-                            return $symbol == $S_SCATTER ? random_int(3, 12) : $symbol;
-                        }, $reels['reg']['symbols'][$reelId]);
+                                if (count($availablePoses) === 0 ) {
+                                    $i--;
+                                    continue;
+                                }
 
-                        $removableScatterCount -= $count;
+                                $randomPos = array_rand($availablePoses);         
+                                $reels['top']['symbols'][$randomPos] = $S_SCATTER;
+                            }    
+                        }
                     }
+                    else {
+                        /* 일반 보너스당첨일때 reg릴셋에만 스캐터심볼 위치, 부족한 SCATTER 심볼 생성 */
+                        $remainingScatterCount = $scatterCount - $regScatterCount;
+                        if ($remainingScatterCount > 0) {
+                            for ($i=0; $i < $remainingScatterCount; $i++) { 
+                                while (in_array(($randReelId = random_int(0, $REELCOUNT - 1)), $regScatterReels));
+                                
+                                $availablePoses = array_where($reels['reg']['symbols'][$randReelId], function ($symbol, $key) {
+                                    return $symbol != 19 && $symbol != 1;
+                                });
 
-                    /* 다 삭제되었다면 */
-                    if ($removableScatterCount <= 0) {
-                        break;
+                                if (count($availablePoses) === 0 ) {
+                                    $i--;
+                                    continue;
+                                }
+
+                                $randomPos = array_rand($availablePoses);         
+                                $reels['reg']['symbols'][$randReelId][$randomPos] = $S_SCATTER;
+
+                                array_push($regScatterReels, $randReelId);
+                            }    
+                        }
+                    }
+                }
+                else if ($regScatterCount >= 4) {
+                    /* 일반스핀에서 스캐터갯수가 필요이상이면 삭제 */
+                    $removableScatterCount = $regScatterCount - 2;
+
+                    for ($reelId=0; $reelId < $REELCOUNT; $reelId++) { 
+                        $count = count(array_keys($reels['reg']['symbols'][$reelId], $S_SCATTER));
+
+                        if ($count > 0) {
+                            array_map(function($symbol) use ($S_SCATTER) {
+                                return $symbol == $S_SCATTER ? random_int(3, 12) : $symbol;
+                            }, $reels['reg']['symbols'][$reelId]);
+
+                            $removableScatterCount -= $count;
+                        }
+
+                        /* 다 삭제되었다면 */
+                        if ($removableScatterCount <= 0) {
+                            break;
+                        }
                     }
                 }
             }
