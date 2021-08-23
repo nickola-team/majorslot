@@ -85,7 +85,7 @@
     @if (count($notices)>0)
     <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="">
     <!-- Create the tabs -->
-        <div class="pop01_popup1 draggable02" id="notification" style="position: absolute; top: 50px; right: 10px; z-index: 1000;">
+        <div class="pop01_popup1 draggable02" id="notification">
             <div class="pop01_popup_wrap">
                 <div class="pop01_popup_btn_wrap">
                     <ul>
@@ -94,7 +94,7 @@
                     </ul>
                 </div>
                 <div class="pop01_popup_box">
-                    <div class="pop01_popup_text" style="padding: 30px; width: 500px;">
+                    <div class="pop01_popup_text" style="padding: 30px;">
                     @foreach ($notices as $notice)
                     <span class="pop01_popup_font1" style="border-bottom: 2px solid rgb(255, 255, 255); margin-bottom: 15px;"></span>
                     <span class="pop01_popup_font2">
