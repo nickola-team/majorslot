@@ -407,7 +407,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user = auth()->user();
             if ($user == null)
             {
-                return null;
+                return ['error' => true, 'data' => 'login failed'];
             }
             $api_server = config('app.evo_apihost_slot');
             $api_key = config('app.evo_casinokey_slot');
@@ -462,7 +462,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::timeout(10)->post($api_server . '/ua/v1/' .  $api_key . '/' . $api_token, $data);
                 if (!$response->ok())
                 {
-                    return null;
+                    return ['error' => true, 'data' => $response->body()];
                 }
                 $data = $response->json();
                 if (isset($data['entry'])){
@@ -471,20 +471,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             catch (\Exception $ex)
             {
-                return null;
+                return ['error' => true, 'data' => 'request failed'];
             }
 
-            return $url;
+            return ['error' => false, 'data' => ['url' => $url]];
         }
 
         public static function getgamelink($gamecode)
         {
-            $url = EVOController::makegamelink($gamecode);
-            if ($url)
+            $data = EVOController::makegamelink($gamecode);
+            if ($data['error'] == true)
             {
-                return ['error' => false, 'data' => ['url' => $url]];
+                $data['msg'] = '로그인하세요';
             }
-            return ['error' => true, 'msg' => '로그인하세요'];
+            return $data;
         }
 
     }
