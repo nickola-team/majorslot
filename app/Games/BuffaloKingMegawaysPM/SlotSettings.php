@@ -373,7 +373,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $this->slotDBId, 
                 $this->playerId
             ])->get();
-            $this->lastEvent = 'NULL';
+            $this->lastEvent = null;
             foreach( $history as $log ) 
             {
                 $jsonLog = json_decode($log->str);
@@ -389,7 +389,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             }
             else
             {
-                return 'NULL';
+                return null;
             }
         }
         public function ClearJackpot($jid)

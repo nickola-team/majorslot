@@ -237,7 +237,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                         exit( $response );
                     }
                     if($slotEvent['slotEvent'] == 'freespin'){
-                        if ($lastEvent->serverResponse->bet != $betline){
+                        if ($lastEvent!=null && $lastEvent->serverResponse->bet != $betline){
                             $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid Bets"}';
                         exit( $response );
                         }
