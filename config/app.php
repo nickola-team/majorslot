@@ -150,6 +150,7 @@ return [
     'evo_apihost_live' => env('EVO_APIHOST_LIVE', 'http://staging.evolution.asia-live.com'),
     'evo_casinokey_live' => env('EVO_CASINOKEY_LIVE', '7jpwpzbumpihdled'),
     'evo_authtoken_live' => env('EVO_AUTHTOKEN_LIVE', '435ab6e9328cc23ce102f81c7daa61a9'),
+    'evo_groupid_live' => env('EVO_GROUPID_LIVE', 'pn3fb7cbs3a2b3vr'),
 
     /*
     |--------------------------------------------------------------------------

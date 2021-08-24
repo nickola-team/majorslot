@@ -443,6 +443,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'id' => $user->api_token,
                         'ip' => \Request::ip(),
                     ],
+                    'group' => [
+                        'id' => config('app.evo_groupid_live'),
+                        'action' => 'assign',
+                    ]
                 ],
                 'config' => [
                     'game' => [
