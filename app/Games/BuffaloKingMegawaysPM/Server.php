@@ -84,7 +84,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $strTopRmul = '';
                 $strMainRmul = '';
                 $strWinLine = '';
-                if( $lastEvent != 'NULL' ) 
+                if( $lastEvent != null ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $lastEvent->serverResponse->totalFreeGames);
@@ -167,7 +167,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
                 //------------ ReplayLog ---------------                
                 $lastEvent = $slotSettings->GetHistory();
-                if($lastEvent != NULL){
+                if($lastEvent != null){
                     $betline = $lastEvent->serverResponse->bet;
                 }
                 else
