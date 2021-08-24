@@ -626,7 +626,7 @@ namespace VanguardLTE\Console
                 }
                 else
                 {
-                    $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', $game)->selectRaw('SUM(bet) as bet, game, type, user_id')->get();
+                    $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', 'like', '%' . $game . '%')->selectRaw('SUM(bet) as bet, game, type, user_id')->get();
                 }
                 $this->info("total bet = " . $stat_games->sum('bet') . ', count=' . $stat_games->count());
                 foreach ($stat_games as $stat)
@@ -650,19 +650,10 @@ namespace VanguardLTE\Console
                         if ($manager != null){
                             if($deal_percent > 0) {
                                 $deal_balance = $betMoney * $deal_percent  / 100;
-                                $deal_data[] = [
-                                    'user_id' => $user->id, 
-                                    'partner_id' => $manager->id, //manager's id
-                                    'balance_before' => 0, 
-                                    'balance_after' => 0, 
-                                    'bet' => abs($betMoney), 
-                                    'deal_profit' => $deal_balance,
-                                    'game' => $game,
-                                    'shop_id' => $shop->id,
-                                    'type' => 'shop',
-                                    'deal_percent' => $deal_percent,
-                                    'mileage' => $deal_mileage
-                                ];
+                                if ($manager->deal_balance > $deal_balance)
+                                {
+                                    $manager->decrement('deal_balance',  $deal_balance);
+                                }
                             }
                             $partner = $manager->referral;
                             while ($partner != null && !$partner->isInoutPartner())
@@ -671,27 +662,13 @@ namespace VanguardLTE\Console
                                 $deal_percent = $partner->deal_percent-$partner->table_deal_percent;
                                 if($deal_percent > 0) {
                                     $deal_balance = $betMoney * $deal_percent  / 100;
-                                    $deal_data[] = [
-                                        'user_id' => $user->id, 
-                                        'partner_id' => $partner->id,
-                                        'balance_before' => 0, 
-                                        'balance_after' => 0, 
-                                        'bet' => abs($betMoney), 
-                                        'deal_profit' => $deal_balance,
-                                        'game' => $game,
-                                        'shop_id' => $user->shop_id,
-                                        'type' => 'partner',
-                                        'deal_percent' => $deal_percent,
-                                        'mileage' => $deal_mileage
-                                    ];
+                                    if ($partner->deal_balance > $deal_balance)
+                                    {
+                                        $partner->decrement('deal_balance',  $deal_balance);
+                                    }
                                 }
                                 $partner = $partner->referral;
                             }
-                        }
-            
-                        if (count($deal_data) > 0)
-                        {
-                            \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data);
                         }
                     }
                     
