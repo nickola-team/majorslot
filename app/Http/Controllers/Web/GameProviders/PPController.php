@@ -1046,6 +1046,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'bet' => $round[9], 
                             'win' => $round[10], 
                             'game' => PPController::gamecodetoname($round[2])[0] . '_pp', 
+                            'type' => ($dataType=='RNG')?'slot':'table',
                             'percent' => 0, 
                             'percent_jps' => 0, 
                             'percent_jpg' => 0, 
