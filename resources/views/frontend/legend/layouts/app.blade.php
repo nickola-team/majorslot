@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>@yield('page-title')</title>
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" href="/frontend/Default/img/favicon.png" >
+    <link rel="icon" href="/frontend/legend/img/logo_layer.png" >
 
 	<script type="text/javascript" src="/frontend/legend/js/jquery-1.12.3.min.js"></script>
 	<script type="text/javascript" src="/frontend/legend/js/jquery-ui.js"></script>
