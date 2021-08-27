@@ -810,7 +810,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($request->name == 'notifyCloseContainer')
             {
                 $data = PPController::getBalance($user->id);
-                if ($user->playing_game=='pp' && $data['error'] == 0) {
+                if ($user->playing_game=='pp' && $data['error'] == 0 && $data['balance']!=null) {
                     $user->update([
                         'balance' => $data['balance'],
                         'playing_game' => null,
