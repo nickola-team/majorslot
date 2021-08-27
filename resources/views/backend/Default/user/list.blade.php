@@ -28,7 +28,7 @@
 				<!-- ./col -->
 				<div class="col-lg-4 col-xs-6">
 					<!-- small box -->
-					<div class="small-box bg-green">
+					<div class="small-box bg-light-blue">
 						<div class="inner">
 							<h3>{{ number_format($stat['onlineuser'], 0) }}</h3>
 							<p>온라인 회원수</p>
@@ -41,7 +41,7 @@
 				<!-- ./col -->
 				<div class="col-lg-4 col-xs-6">
 					<!-- small box -->
-					<div class="small-box bg-yellow">
+					<div class="small-box bg-light-blue">
 						<div class="inner">
 							<h3>{{ number_format ($stat['totalbalance'], 0) }}</h3>
 							<p>회원 보유금</p>
