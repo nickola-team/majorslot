@@ -111,7 +111,7 @@ return [
 
     // Dashboard
     'welcome' => '어서 오십시오',
-    'dashboard' => '대시보드',
+    'dashboard' => '상황판',
     'new_users_this_month' => '이달의 사용자',
     'view_all_users' => '모든 사용자보기',
     'total_users' => '전체사용자',

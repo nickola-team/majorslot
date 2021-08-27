@@ -51,6 +51,51 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">
+					수익금
+				</h3>
+			</div>
+			<?php
+				$shop = \VanguardLTE\Shop::find( auth()->user()->shop_id );
+				$ggr_percent = auth()->user()->hasRole('manager')?$shop->ggr_percent:auth()->user()->ggr_percent;
+				$deal_percent = auth()->user()->hasRole('manager')?$shop->deal_percent:auth()->user()->deal_percent;
+				$table_percent = auth()->user()->hasRole('manager')?$shop->table_deal_percent:auth()->user()->table_deal_percent;
+				$deal_balance = auth()->user()->hasRole('manager')?$shop->deal_balance:(auth()->user()->deal_balance - auth()->user()->mileage);
+				$ggr_balance =  auth()->user()->hasRole('manager')?($shop->ggr_balance - $shop->count_deal_balance):(auth()->user()->ggr_balance - auth()->user()->ggr_mileage - (auth()->user()->count_deal_balance - auth()->user()->count_mileage));
+				if (auth()->user()->hasRole('manager')){
+					$reset_time = $shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"));
+				}
+				else
+				{
+					$reset_time = auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"));
+				}
+        	?>
+			<div class="box-body">
+				<div class="col-md-3">
+					<div class="form-group">
+						<label>딜비수익({{$deal_percent}}%, {{$table_percent}}%)</label>
+						<input type="text" class="form-control" value="{{ number_format($deal_balance,0) }}원" disabled>
+					</div>
+				</div>
+				@if ($ggr_percent > 0)
+				<div class="col-md-3">
+					<div class="form-group">
+						<label>죽장수익({{$ggr_percent}}%)</label>
+						<input type="text" class="form-control" value="{{ number_format($ggr_balance,0) }}원" disabled>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="form-group">
+						<label>정산시간</label>
+						<input type="text" class="form-control" value="{{ $reset_time }}" disabled>
+					</div>
+				</div>
+				@endif
+            </div>			
+		</div>
+
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">
 				실시간정산
 				</h3>
 				<?php  

@@ -39,7 +39,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <button type="submit" class="btn {{ $layout == 'Top'?'btn-success':'btn-primary'}} btn-block btn-flat" id="btn-login">
+            <button type="submit" class="btn {{ $layout == 'Top'?'btn-success':'btn-primary'}} btn-block btn-flat btn-login" id="btn-login">
               @lang('app.log_in')
             </button>
 

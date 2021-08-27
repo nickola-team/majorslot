@@ -29,7 +29,7 @@
             <!-- ./col -->
             <div class="col-lg-3 col-xs-6">
                 <!-- small box -->
-                <div class="small-box bg-green">
+                <div class="small-box  bg-light-blue">
                     <div class="inner">
                         <h3>{{ number_format($stats['new']) }}</h3>
                         <p>@lang('app.new_users_this_month')</p>
@@ -43,7 +43,7 @@
             <!-- ./col -->
             <div class="col-lg-3 col-xs-6">
                 <!-- small box -->
-                <div class="small-box bg-yellow">
+                <div class="small-box  bg-light-blue">
                     <div class="inner">
                         <h3>{{ number_format($stats['banned']) }}</h3>
                         <p>@lang('app.banned_users')</p>
@@ -57,7 +57,7 @@
             <!-- ./col -->
             <div class="col-lg-3 col-xs-6">
                 <!-- small box -->
-                <div class="small-box bg-red">
+                <div class="small-box bg-light-blue">
                     <div class="inner">
                         <h3>{{ number_format($stats['todayprofit'],0) }}</h3>
                         <p>이달 수익금</p>

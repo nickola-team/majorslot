@@ -466,45 +466,7 @@
                         {{ number_format(auth()->user()->present()->balance,0) }}원
                     @endif</span>
               </a>
-              <?php
-                    $shop = \VanguardLTE\Shop::find( auth()->user()->shop_id );
-                    $ggr_percent = auth()->user()->hasRole('manager')?$shop->ggr_percent:auth()->user()->ggr_percent;
-                    $deal_percent = auth()->user()->hasRole('manager')?$shop->deal_percent:auth()->user()->deal_percent;
-                ?>
             </li>
-            @if(auth()->user()->isInoutPartner())
-            @else
-            <li class="dropdown messages-menu">
-              <!-- Menu toggle button -->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span>딜비수익({{$deal_percent}}%):
-                    @if( Auth::user()->hasRole(['cashier', 'manager']) )
-                        {{number_format($shop->deal_balance,0)}}
-                        원
-                    @else
-                        {{ number_format(auth()->user()->deal_balance - auth()->user()->mileage,0) }}
-                        원
-                    @endif
-                </span>
-              </a>
-            </li>
-            @if ($ggr_percent > 0)
-                <li class="dropdown messages-menu">
-                    <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span>죽장수익({{$ggr_percent}}%):
-                            @if( Auth::user()->hasRole(['cashier', 'manager']) )
-                                {{number_format($shop->ggr_balance - $shop->count_deal_balance,0)}}
-                                원
-                            @else
-                                {{ number_format(auth()->user()->ggr_balance - auth()->user()->ggr_mileage - (auth()->user()->count_deal_balance - auth()->user()->count_mileage),0) }}
-                                원
-                            @endif
-                        </span>
-                    </a>
-                </li>
-            @endif
-            @endif
         @endif
             <!-- User Account Menu -->
             <li class="dropdown user user-menu">
