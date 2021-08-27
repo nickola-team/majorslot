@@ -1464,7 +1464,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( $request->sum_to != '' ) 
             {
-                $in_out_logs = $in_out_logs->where('sum', '<=', $request->sum_from);
+                $in_out_logs = $in_out_logs->where('sum', '<=', $request->sum_to);
             }
             if( $request->dates != '' ) 
             {
