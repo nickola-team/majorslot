@@ -356,7 +356,7 @@
                         <div class="inner">
                             <div class="category">
                                 <div class="gameicon">
-                                    <img width="100%" height="65%" src="/frontend/bank/categories/{{ $category->title.'.jpg' }}" />
+                                    <img width="100%" height="65%" src="/frontend/bank/categories/{{ $category->title.'.png' }}" />
                                     <div style="background:black;">
                                     <span style="font-size:16px;">
                                     @if ($category->trans)
@@ -379,9 +379,9 @@
                         <div class="inner">
                             <div class="category">
                                 <div class="gameicon">
-                                    <img width="100%" height="65%" src="/frontend/bank/categories/{{ $category->title.'.jpg' }}" />
+                                    <img width="100%" height="62%" src="/frontend/bank/categories/{{ $category->title.'.png' }}" />
                                     <div style="background:black;">
-                                        <span style="font-size:16px">
+                                        <span style="font-size:18px">
                                         @if ($category->trans)
                                             {{ $category->trans->trans_title }}
                                         @else
@@ -407,9 +407,9 @@
                 <div class="inner">
                     <div class="category">
                         <div class="gameicon">
-                            <img width="100%" height="65%" src="/frontend/bank/categories/coming_soon.png" />
+                            <img width="100%" height="62%" src="/frontend/bank/categories/coming_soon.png" />
                             <div style="background:black;">
-                                <span style="font-size:16px;">
+                                <span style="font-size:18px;">
                                     준비중
                                 </span>
                             </div>

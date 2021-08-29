@@ -698,8 +698,8 @@
 .category {float:left; width:330px; height:220px;  position: static; z-index:10000; text-align:center; font-family:'nanumgothic', sans-serif; letter-spacing:-1px; font-weight:bold; color:#f0e6e4; padding:0 0 0 0;
     top:0px; left:0px;}
 .category .gameicon{ 
-        margin: 25px 25px 25px 25px;
-        height: 220px;
+        margin: 10px;
+        height: 280px;
         text-align: center;
         position:relative
 }
