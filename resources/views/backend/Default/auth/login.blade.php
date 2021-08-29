@@ -17,7 +17,7 @@
 
               @include('backend.Default.partials.messages')
 
-    <div class="login-box-body" style={{ $layout == 'Top'?'background-color:lightblue;':''}}>
+    <div class="login-box-body">
 
       <form role="form" action="<?= route('backend.auth.login.post') ?>" method="POST" id="login-form" autocomplete="off">
 

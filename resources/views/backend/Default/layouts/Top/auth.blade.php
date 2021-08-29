@@ -32,7 +32,7 @@
   @yield('header-scripts')
   <style>
     .login-box-body {
-      background-color: transparent !important;
+      background-color:lightblue !important;
     }
 
     .logo-lg {
