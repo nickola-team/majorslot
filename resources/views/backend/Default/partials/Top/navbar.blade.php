@@ -385,7 +385,6 @@
 
             @endif
             @if (auth()->user()->isInoutPartner())
-            @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('backend/notices*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.notice.list') }}">
                     <i class="fa fa-bell"></i>
@@ -393,6 +392,14 @@
                 </a>
             </li>
             @endif
+
+            @if (auth()->user()->hasRole('admin'))
+            <li class="{{ Request::is('backend/websites*') ? 'active' : ''  }}">
+                <a href="{{ route('backend.website.list') }}">
+                    <i class="fa fa-chrome"></i>
+                    <span>도메인리스트</span>
+                </a>
+            </li>
             @endif
 
             @if (auth()->user()->isInoutPartner())

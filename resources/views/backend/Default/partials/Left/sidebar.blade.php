@@ -432,6 +432,15 @@
             </li>
             @endif
 
+            @if (auth()->user()->hasRole('admin'))
+            <li class="{{ Request::is('backend/websites*') ? 'active' : ''  }}">
+                <a href="{{ route('backend.website.list') }}">
+                    <i class="fa fa-chrome"></i>
+                    <span>도메인관리</span>
+                </a>
+            </li>
+            @endif
+
             @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('backend/activity*') ? 'active' : ''  }}">
                 <a href="{{ route('backend.activity.index') }}">
