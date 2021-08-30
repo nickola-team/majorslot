@@ -117,7 +117,7 @@ namespace VanguardLTE\Console
                             $newCategory = $category->replicate();
                             $newCategory->shop_id = $shop->id;
                             $newCategory->save();
-                            $superCategories[$category->id] = $newCategory->id;
+                            $superCategories[$category->original_id] = $newCategory->id;
                             $categories_2 = \VanguardLTE\Category::where([
                                 'shop_id' => 0, 
                                 'parent' => $category->id
