@@ -17,6 +17,11 @@ namespace VanguardLTE
         {
             parent::boot();
         }
+
+        public function admin()
+        {
+            return $this->hasOne('VanguardLTE\User', 'id', 'adminid');
+        }
     }
 
 }

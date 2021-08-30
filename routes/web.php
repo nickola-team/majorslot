@@ -987,6 +987,35 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         ]);
 
         /**
+         * websites routes
+         */
+
+        Route::get('websites', [
+            'as' => 'backend.website.list',
+            'uses' => 'WebsitesController@index',
+        ]);
+        Route::get('websites/create', [
+            'as' => 'backend.website.create',
+            'uses' => 'WebsitesController@create',
+        ]);
+        Route::post('websites/create', [
+            'as' => 'backend.website.store',
+            'uses' => 'WebsitesController@store',
+        ]);
+        Route::get('websites/{website}/edit', [
+            'as' => 'backend.website.edit',
+            'uses' => 'WebsitesController@edit',
+        ]);
+        Route::post('websites/{website}/update', [
+            'as' => 'backend.website.update',
+            'uses' => 'WebsitesController@update',
+        ]);
+        Route::delete('websites/{website}/delete', [
+            'as' => 'backend.website.delete',
+            'uses' => 'WebsitesController@delete',
+        ]);
+
+        /**
          * Happyhours routes
          */
 
