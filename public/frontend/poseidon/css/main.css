@@ -243,7 +243,7 @@ header div.loggedbox {
     width: 1250px;
     position: absolute;
     left: 50%;
-    margin-left: -625px;
+    margin-left: -700px;
 }
 
 .main_slide .slide_wrap>div {
@@ -252,7 +252,7 @@ header div.loggedbox {
 }
 
 .main_slide .slide_wrap .slider {
-    width: 900px;
+    width: 1042px;
     margin-right: 0px;
     margin-left: 175px;
 }
@@ -1830,13 +1830,13 @@ footer font {
     width: calc(100% - 16px);
     height: calc(100% - 16px);
     border: solid 1px #ffffff;
-    background-image: linear-gradient(#faa07c, #ff6600);
+    background-image: linear-gradient(#fae77c, #ffee00);
 }
 
 .slot-btn .inner-cont:after {
     width: calc(100% - 32px);
     height: calc(100% - 32px);
-    background-image: linear-gradient(#ff8c7d, #fa4700);
+    background-image: linear-gradient(#b4a759, #ada202);
 }
 
 .slot-btn:hover .inner-cont:before {
