@@ -82,7 +82,7 @@
     @if (count($notices)>0)
     <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="background:transparent;">
     <!-- Create the tabs -->
-        <div class="pop01_popup1 draggable02" style="top: 50px;" id="notification">
+        <div class="pop01_popup1 draggable02" style="top: 50px; display: none;" id="notification">
             <div class="pop01_popup_wrap">
                 <div class="pop01_popup_btn_wrap">
                     <ul>
@@ -163,6 +163,10 @@
             if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
                 $("#notification").hide();
             }
+            else{
+                $("#notification").show();
+            }
+
 
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";

@@ -88,7 +88,7 @@
     @if (count($notices)>0)
     <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="">
     <!-- Create the tabs -->
-        <div class="pop01_popup1 draggable02" id="notification">
+        <div class="pop01_popup1 draggable02" style="display: none;" id="notification">
             <div class="pop01_popup_wrap">
                 <div class="pop01_popup_btn_wrap">
                     <ul>
@@ -168,6 +168,9 @@
             var prevTime = localStorage.getItem("hide_notification");
             if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
                 $("#notification").hide();
+            }
+            else{
+                $("#notification").show();
             }
 
             var updateTime = 3000;
