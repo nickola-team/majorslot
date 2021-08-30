@@ -442,7 +442,7 @@ return [
         "Hokkaido Wolf" => "홋카이도 울프",
         "Lucky, Grace & Charm" => "럭키, 그레이스 & 참",
         "Chicken Drop" => "치킨 드랍",
-        "Yum Yum Powerways" => "움 움 파워웨이",
+        "Yum Yum Powerways" => "냠냠 파워웨이",
         "Rise of Giza PowerNudge" => "라이즈 오브 기자 파워누드",
         "Aztec King Megaways" => "아즈텍 킹 메가웨이",
         "Chilli Heat Megaways" => "칠리 허트 메가웨이",
