@@ -479,7 +479,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['KeyName']),
                         'title' => __('gameprovider.'.$game['Name']),
                         'icon' => config('app.hbn_game_server') . '/img/rect/300/'. $game['KeyName'] . '.png',
-                        'demo' => HBNController::makegamelink($game['BrandGameId'], 'fun')
+                        // 'demo' => HBNController::makegamelink($game['BrandGameId'], 'fun')
                     ];
                 }
             }
