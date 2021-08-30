@@ -192,7 +192,16 @@ namespace VanguardLTE\Games\_5LionsPM
             
             /* 프리스핀 타입검사 */
             if ($LASTSPIN !== NULL && $fsmax > 0) {
-                $slotEvent['slotEvent'] = 'freespin';
+                if (isset($LASTSPIN->fsopt_i)) {
+                    $slotEvent['slotEvent'] = 'freespin';
+                }
+                else {
+                    /* 세션과 게임로그사이 동기가 맞지않을경우 프리스핀 리셋 */
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSMax', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSOpt', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FSWildCount', 0);
+                }
             }
 
             /* 스핀결과 결정 */
