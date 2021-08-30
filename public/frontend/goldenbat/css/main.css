@@ -240,10 +240,10 @@ header div.loggedbox {
 }
 
 .main_slide .slide_wrap {
-    width: 1250px;
+    width: 1300px;
     position: absolute;
     left: 50%;
-    margin-left: -625px;
+    margin-left: -850px;
 }
 
 .main_slide .slide_wrap>div {
@@ -252,7 +252,7 @@ header div.loggedbox {
 }
 
 .main_slide .slide_wrap .slider {
-    width: 900px;
+    width: 1300px;
     margin-right: 0px;
     margin-left: 175px;
 }
