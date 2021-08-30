@@ -55,7 +55,7 @@
 		@endif
 	</td>
 	<td>
-		@if((auth()->user()->isInoutPartner() || auth()->user()->hasRole('distributor')) &&  !$shop->is_blocked)
+		@if(auth()->user()->role_id>3 &&  !$shop->is_blocked)
 		<a class="addPayment" href="#" data-toggle="modal" data-target="#openAddModal" data-id="{{ $shop->shop_id }}" >
 		<button type="button" class="btn btn-block btn-success btn-xs"> 충전</button>
 	    </a>
