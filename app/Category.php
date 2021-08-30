@@ -11,7 +11,8 @@ namespace VanguardLTE
             'href', 
             'provider',
             'original_id', 
-            'shop_id'
+            'shop_id',
+            'site_id'
         ];
         public $timestamps = false;
         public static function boot()

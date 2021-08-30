@@ -31,7 +31,25 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
             }
 
-            $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position')->get();
+            if ($shop_id == 0)
+            {
+                $categories = \VanguardLTE\Category::where([
+                    'shop_id' => $shop_id,
+                    'site_id' => $site->id,
+                ])->whereNotIn('href',$excat)->orderby('position')->get();
+
+                if (count($categories) == 0) // use default category
+                {
+                    $categories = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'site_id' => 0,
+                    ])->whereNotIn('href',$excat)->orderby('position')->get();
+                }
+            }
+            else
+            {
+                $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position')->get();
+            }
             $hotgames = [];
 
             $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');

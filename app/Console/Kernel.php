@@ -99,8 +99,17 @@ namespace VanguardLTE\Console
                     $superCategories = [];
                     $categories = \VanguardLTE\Category::where([
                         'shop_id' => 0, 
-                        'parent' => 0
+                        'parent' => 0,
+                        'site_id' => $task->details,
                     ])->get();
+                    if( count($categories) == 0) 
+                    {
+                        $categories = \VanguardLTE\Category::where([
+                            'shop_id' => 0, 
+                            'parent' => 0,
+                            'site_id' => 0,
+                        ])->get();
+                    }
                     if( count($categories) ) 
                     {
                         foreach( $categories as $category ) 

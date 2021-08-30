@@ -305,10 +305,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 ]); //for master
             }
             $user->update(['shop_id' => $shop->id]);
+            $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
             \VanguardLTE\Task::create([
                 'category' => 'shop', 
                 'action' => 'create', 
-                'item_id' => $shop->id
+                'item_id' => $shop->id,
+                'details' => $site->id,
             ]);
             $open_shift = \VanguardLTE\OpenShift::create([
                 'start_date' => \Carbon\Carbon::now(), 
