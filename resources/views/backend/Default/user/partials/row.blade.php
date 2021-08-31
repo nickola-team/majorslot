@@ -28,10 +28,11 @@
 
 	@permission('users.balance.manage')
 	<td>{{ number_format($user->balance,0) }}</td>
-	{{-- <td>{{ $user->bonus }}</td> --}}
+	<td>{{ number_format($user->deal_balance, 0) }}</td>
+	<td>{{ $user->deal_percent }}</td>
+	<td>{{ $user->table_deal_percent }}</td>
 	<td>{{ number_format($user->total_in,0) }}</td>
 	<td>{{ number_format($user->total_out,0) }}</td>
-	<td>{{ number_format($user->wager,0) }}</td>
 	@if($user->status == 'Active')
 	<td>활성</td>
 	@elseif($user->status == 'Banned')
@@ -57,28 +58,18 @@
 			<button type="button" class="btn btn-block btn-danger disabled btn-xs">@lang('app.out')</button>
 		@endif
 	</td>
-	{{-- @if(Auth::user()->hasRole('cashier'))
+
 	<td>
-		@if(
-    		$user->rating == 1 
-		)
-		<a class="newPayment outPayment" href="{{ route('backend.user.balance.bonus', $user->id )}}">
-		<button type="button" class="btn btn-block btn-danger btn-xs">설정</button>
+		@if( auth()->user()->isInoutPartner() || auth()->user()->hasRole('manager'))
+		<a class="newPayment dealoutPayment" href="#" data-toggle="modal" data-target="#openDealOutModal"  data-id="{{ $user->id }}" data-val="{{ (int)($user->deal_balance / 10000) * 10000 }}">
+			<button type="button" class="btn btn-block btn-primary btn-xs" id="convert-deal-balance-btn">
+			딜비전환
+			</button>
 		</a>
 		@else
-		<a class="newPayment outPayment" href="{{ route('backend.user.balance.bonus', $user->id )}}">
-			<button type="button" class="btn btn-block btn-danger btn-xs">해제</button>
-		</a>
+			<button type="button" class="btn btn-block btn-primary disabled btn-xs">딜비전환</button>
 		@endif
 	</td>
-	@endif --}}
     @endpermission
 
-	@if(isset($show_shop) && $show_shop)
-		@if($user->shop)
-			<td><a href="{{ route('backend.shop.edit', $user->shop->id) }}">{{ $user->shop->name }}</a></td>
-			@else
-			<td></td>
-		@endif
-	@endif
 </tr>

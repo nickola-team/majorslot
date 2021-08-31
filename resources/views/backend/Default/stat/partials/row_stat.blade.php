@@ -55,6 +55,11 @@
 		<span class="text-red">{{ number_format(abs($stat->summ),0) }}</span>
 	@endif
 </td>
+<td>
+	@if ($stat->type == 'deal_out')
+		<span class="text-red">{{ number_format(abs($stat->summ),0) }}</span>
+	@endif
+</td>
 @if ($partner==1)
 <td>
 	@if ($stat->type == 'deal_out')

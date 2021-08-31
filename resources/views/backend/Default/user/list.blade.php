@@ -136,16 +136,15 @@
 								@endif
 								@permission('users.balance.manage')
 								<th>@lang('app.balance')</th>
-								{{-- <th>@lang('app.bonus')</th> --}}
+								<th>딜비수익</th>
+								<th>딜비</th>
+								<th>라이브딜비</th>
 								<th>@lang('app.total_in')</th>
 								<th>@lang('app.total_out')</th>
-								<th>@lang('app.wager')</th>
 								<th>@lang('app.status')</th>
 								<th>@lang('app.pay_in')</th>
 								<th>@lang('app.pay_out')</th>
-								{{-- @if(Auth::user()->hasRole('cashier'))
-								<th>보너스당첨</th>
-								@endif --}}
+								<th>딜비전환</th>
 								@endpermission
 
 							</tr>
@@ -156,7 +155,7 @@
 									@include('backend.Default.user.partials.row')
 								@endforeach
 							@else
-								<tr><td colspan="6">@lang('app.no_data')</td></tr>
+								<tr><td colspan="12">@lang('app.no_data')</td></tr>
 							@endif
 							</tbody>
 							<thead>
@@ -177,16 +176,15 @@
 								@endif
 								@permission('users.balance.manage')
 								<th>@lang('app.balance')</th>
-								{{-- <th>@lang('app.bonus')</th> --}}
+								<th>딜비수익</th>
+								<th>딜비</th>
+								<th>라이브딜비</th>
 								<th>@lang('app.total_in')</th>
 								<th>@lang('app.total_out')</th>
-								<th>@lang('app.wager')</th>
 								<th>@lang('app.status')</th>
 								<th>@lang('app.pay_in')</th>
 								<th>@lang('app.pay_out')</th>
-								{{-- @if(Auth::user()->hasRole('cashier'))
-								<th>보너스당첨</th>
-								@endif --}}
+								<th>딜비전환</th>
 								@endpermission
 
 							</tr>
@@ -197,6 +195,31 @@
 				</div>				
 			</div>
 	</section>
+
+	<div class="modal fade" id="openDealOutModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="#" method="GET" id="dealoutForm">
+				<input type="hidden" id="dealOutId" name="user_id">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">정산</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="OutSum">딜비전환</label>
+							<input type="text" class="form-control" id="DealOutSum" name="DealOutSum" placeholder="전환금액"   required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">@lang('app.close')</button>
+						<button type="button" class="btn btn-primary" onclick="convert_deal_balance();">확인</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<div class="modal fade" id="openAddModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
@@ -374,5 +397,42 @@
 			$('.users_show .btn-box-tool i').removeClass('fa-plus').addClass('fa-minus');
 		}
 		});
+
+		$('.dealoutPayment').click(function(event){
+			if( $(event.target).is('.newPayment') ){
+				var id = $(event.target).attr('data-id');
+				var value = $(event.target).attr('data-val');
+			}else{
+				var id = $(event.target).parents('.newPayment').attr('data-id');
+				var value = $(event.target).parents('.newPayment').attr('data-val');
+			}
+			$('#dealOutId').val(id);
+			$('#DealOutSum').val(value);
+		});
+
+		function convert_deal_balance() {
+            var _token = $('#_token').val();
+			var _dealsum = $('#DealOutSum').val();
+			var _dealid = $('#dealOutId').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/convert_deal_balance',
+                data: { _token: _token, summ: _dealsum, user_id : _dealid },
+                cache: false,
+                async: false,
+                success: function (data) {
+                    if (data.error) {
+                        alert(data.msg);
+                        return;
+                    }
+                    alert('수익금이 보유금으로 전환되었습니다.');
+                    location.reload(true);
+                },
+                error: function (err, xhr) {
+                    alert(err.responseText);
+                }
+            });
+        }
 	</script>
 @stop

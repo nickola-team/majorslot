@@ -841,6 +841,34 @@ namespace VanguardLTE
             $ggr_percent = 0;
 
             $deal_data = [];
+            $deal_percent = ($type==null || $type=='slot')?$this->deal_percent:$this->table_deal_percent;
+            if ($deal_percent > 0) //user can get deal percent
+            {
+                $deal_balance = $betMoney * $deal_percent  / 100;
+                $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
+                $deal_data[] = [
+                    'user_id' => $this->id, 
+                    'partner_id' => $this->id, //user's id
+                    'balance_before' => 0, 
+                    'balance_after' => 0, 
+                    'bet' => abs($betMoney), 
+                    'win' => abs($winMoney), 
+                    'deal_profit' => $deal_balance,
+                    'game' => $game,
+                    'shop_id' => $shop->id,
+                    'type' => 'partner',
+                    'deal_percent' => $deal_percent,
+                    'mileage' => $deal_mileage,
+                    'ggr_profit' => $ggr_profit,
+                    'ggr_mileage' => $ggr_mileage,
+                    'ggr_percent' => $ggr_percent,
+                    'date_time' => $date_time, 
+                    'category_id' => $category_id,
+                    'game_id' => $game_id,
+                ];
+                $deal_mileage = $deal_balance;
+            }
+
             $deal_percent = ($type==null || $type=='slot')?$shop->deal_percent:$shop->table_deal_percent;
             $ggr_percent = $shop->ggr_percent;
             $manager = $this->referral;

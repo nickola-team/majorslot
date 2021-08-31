@@ -28,7 +28,7 @@
         <input type="number" step="0.01" class="form-control" id="money_percent" name="money_percent" value="0">
     </div>
     @endif
-    @if($user->hasRole(['master','agent','distributor']) || (auth()->user()->hasRole('admin') && $user->hasRole('comaster')))
+    @if($user->hasRole(['master','agent','distributor','user']) || (auth()->user()->hasRole('admin') && $user->hasRole('comaster')))
         <div class="form-group">
             <label>딜비%</label>
             <input type="text" class="form-control" id="deal_percent" name="deal_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->deal_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
@@ -37,6 +37,7 @@
             <label>라이브딜비%</label>
             <input type="text" class="form-control" id="table_deal_percent" name="table_deal_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->table_deal_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
         </div>
+        @if (!$user->hasRole('user'))
         <div class="form-group">
             <label>죽장%</label>
             <input type="text" class="form-control" id="ggr_percent" name="ggr_percent" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->ggr_percent : '' }}" {{$user->id == auth()->user()->id?'disabled':''}}>
@@ -46,6 +47,7 @@
             {!! Form::select('reset_days', \VanguardLTE\User::$values['reset_days'], $edit ? $user->reset_days : '' ,
             ['class' => 'form-control', 'id' => 'reset_days', 'disabled' => ($user->hasRole(['master']) && $user->id != auth()->user()->id) ? false: true]) !!}
         </div>
+        @endif
     @endif
 
 
