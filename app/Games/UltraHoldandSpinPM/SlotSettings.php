@@ -1129,6 +1129,15 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
 
             /* 코인심볼 생성 */
             $limited_positions = [];
+            
+            if ($proposedCoinCount == 1) {
+                $limited_positions = [1];   // 코인갯수가 1개일때 중간위치 금지
+            }
+            else if ($proposedCoinCount == 2) {
+                $limited_positions = [0];   // 코인갯수가 2개일때 맨윗위치 금지
+            }
+            
+
             for ($i=0; $i < $proposedCoinCount; $i++) { 
                 while( in_array( ($rand_pos = random_int(0, $SYMBOLCOUNT - 1)), $limited_positions));
 
