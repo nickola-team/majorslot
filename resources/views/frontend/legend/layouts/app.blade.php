@@ -50,20 +50,23 @@
 	@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))	
 		<div class="loggedbox">
 			<div class="player-name">
-				<strong class="text-white">{{Auth::user()->username }}</strong>
-				<div class="envelop-dm" onclick="goMemo();">
-					<i class="fa fa-envelope"></i>
-					<span>0</span>
+				<div class="total-balance">
+					<strong class="text-uppercase">보너스 수익</strong>
+					<strong class="text-uppercase pull-right">&nbsp; 원</strong>
+					<strong class="text-uppercase pull-right" id="xideal">{{ number_format(Auth::user()->deal_balance,2) }}</strong>
+					
 				</div>
+				<div class="get-balance" onclick="goDealOut();"><i class="fa fa-at"></i></div>
 				<button class="btn-loginbox btn-yellow" onclick="goMypage();">내 계정</button>
 			</div>
 			<div class="player-money">
 				<div class="total-balance">
-					<strong class="text-uppercase ng-scope" translate="">전체 잔액</strong>
+					<strong class="text-uppercase">전체 잔액</strong>
 					<strong class="text-uppercase pull-right">&nbsp; 원</strong>
 					<strong class="text-uppercase pull-right" id="ximoney">{{ number_format(Auth::user()->balance,2) }}</strong>
 				</div>
-				 <div class="get-balance" onclick=";"><i class="fa fa-recycle"></i></div>
+				
+				 <div class="get-balance" onclick="getBalance();"><i class="fa fa-recycle"></i></div>
 				<button class="btn-loginbox btn-gray" onclick="goLogout();">로그아웃</button>
 			</div>
 		</div>
