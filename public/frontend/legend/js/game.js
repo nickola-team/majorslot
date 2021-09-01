@@ -133,7 +133,7 @@ function goSlot(title, category, isConst) {
                 }
                 strHtml += '</div></div></div>';
 
-// 	<link href="/frontend/legend/css/Style_sub.css?4590" rel="stylesheet" type="text/css" />
+// 	<link href="/frontend/goldenbat/css/Style_sub.css?4590" rel="stylesheet" type="text/css" />
 // 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 // 	<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 // 	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.js"></script>
@@ -144,8 +144,8 @@ function goSlot(title, category, isConst) {
 
                 TINY.box.show({
                     html: strHtml,
-                    width: 955,
-                    height: 600
+                    width: 1800,
+                    height: 800
                 });
             },
             error: function (err, xhr) {
