@@ -184,8 +184,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance,2);
+            $deal_balance = number_format(\Illuminate\Support\Facades\Auth::user()->deal_balance,2);
 
-            return response()->json(['error' => false, 'balance' => $balance]);
+            return response()->json(['error' => false, 'balance' => $balance, 'deal' => $deal_balance]);
         }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
@@ -414,8 +415,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
-
-            $user = \VanguardLTE\User::lockForUpdate()->where('id',\Auth::id())->first();
+            if ($request->user_id)
+            {
+                $user = \VanguardLTE\User::lockForUpdate()->where('id',$request->user_id)->first();
+            }
+            else{
+                $user = \VanguardLTE\User::lockForUpdate()->where('id',\Auth::id())->first();
+            }
             if (!$user)
             {
                 return response()->json([
@@ -425,13 +431,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
 
-            if($user->hasRole('user')){
+            /*if($user->hasRole('user')){
                 return response()->json([
                     'error' => true, 
                     'msg' => '딜비전환권한이 없습니다.',
                     'code' => '001'
                 ], 200);
-            }
+            }*/
 
             $summ = str_replace(',','',$request->summ);
            

@@ -660,9 +660,9 @@ namespace VanguardLTE\Console
                         if ($manager != null){
                             if($deal_percent > 0) {
                                 $deal_balance = $betMoney * $deal_percent  / 100;
-                                if ($manager->deal_balance > $deal_balance)
+                                if ($$shop->deal_balance > $deal_balance)
                                 {
-                                    $manager->decrement('deal_balance',  $deal_balance);
+                                    $$shop->decrement('deal_balance',  $deal_balance);
                                 }
                             }
                             $partner = $manager->referral;

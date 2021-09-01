@@ -487,6 +487,38 @@ function goMypage() {
     }
 }
 
+function goDealOut() {
+    TINY.box.show({
+        iframe: "/profile/dealout",
+        width: 955,
+        height: 500,
+    });
+}
+
+function dealout() {
+    var _token = $('#_token').val();
+    var _dealsum = $('#money').val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/convert_deal_balance',
+        data: { _token: _token, summ: _dealsum },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            alert('수익금이 보유금으로 전환되었습니다.');
+            location.reload(true);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        }
+    });
+}
+
 function goJoin() {
     TINY.box.show({
         iframe: "/user/join.asp",

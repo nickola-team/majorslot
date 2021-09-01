@@ -40,25 +40,27 @@
     </div>
 </div>
 @endif
-@if(auth()->user()->hasRole(['comaster','master','agent']))
+@if(auth()->user()->hasRole(['comaster','master','agent','manager']))
 <div class="col-md-6">
     <div class="form-group">
-    <label>딜비%</label>
+    <label>딜비%<span class="text-red">{{auth()->user()->hasRole('manager')?'(일반 회원들에게 딜비를 적용하려면 입력하세요.)':''}}</span></label>
     <input type="number" step="0.01" class="form-control" id="deal_percent" name="deal_percent" value="0">
     </div>
 </div>
 <div class="col-md-6">
     <div class="form-group">
-    <label>라이브딜비%</label>
+    <label>라이브딜비%<span class="text-red">{{auth()->user()->hasRole('manager')?'(일반 회원들에게 라이브딜비를 적용하려면 입력하세요.)':''}}</span></label>
     <input type="number" step="0.01" class="form-control" id="table_deal_percent" name="table_deal_percent" value="0">
     </div>
 </div>
+@if (!auth()->user()->hasRole('manager'))
 <div class="col-md-6">
     <div class="form-group">
     <label>죽장%</label>
     <input type="number" step="0.01" class="form-control" id="ggr_percent" name="ggr_percent" value="0">
     </div>
 </div>
+@endif
 @if(auth()->user()->hasRole(['comaster']))
 <div class="col-md-6">
     <div class="form-group">

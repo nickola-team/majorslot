@@ -59,7 +59,7 @@
 				$ggr_percent = auth()->user()->hasRole('manager')?$shop->ggr_percent:auth()->user()->ggr_percent;
 				$deal_percent = auth()->user()->hasRole('manager')?$shop->deal_percent:auth()->user()->deal_percent;
 				$table_percent = auth()->user()->hasRole('manager')?$shop->table_deal_percent:auth()->user()->table_deal_percent;
-				$deal_balance = auth()->user()->hasRole('manager')?$shop->deal_balance:(auth()->user()->deal_balance - auth()->user()->mileage);
+				$deal_balance = auth()->user()->hasRole('manager')?($shop->deal_balance-$shop->mileage):(auth()->user()->deal_balance - auth()->user()->mileage);
 				$ggr_balance =  auth()->user()->hasRole('manager')?($shop->ggr_balance - $shop->count_deal_balance):(auth()->user()->ggr_balance - auth()->user()->ggr_mileage - (auth()->user()->count_deal_balance - auth()->user()->count_mileage));
 				if (auth()->user()->hasRole('manager')){
 					$reset_time = $shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"));
