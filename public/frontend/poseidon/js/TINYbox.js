@@ -89,7 +89,7 @@ TINY.box = function() {
                     };
                     i.src = v.image
                 } else if (v.iframe) {
-                    this.psh('<iframe src="' + v.iframe + '" width="' + v.width + '" frameborder="0" height="' + v.height + '" allowTransparency="true"></iframe>', a, w, h)
+                    this.psh('<iframe src="' + v.iframe + '" width="' + v.width + '" frameborder="0" height="' + v.height + '" allowTransparency="true" scrolling="no"></iframe>', a, w, h)
                 } else {
                     var x = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
                     x.onreadystatechange = function() {
