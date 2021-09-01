@@ -566,11 +566,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     $parent = auth()->user()->shop;
                 }
-                if ($parent!=null &&  $parent->deal_percent < $data['deal_percent'])
+                if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
                 {
                     return redirect()->back()->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
                 }
-                if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+                if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
                 {
                     return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
                 }
