@@ -29,6 +29,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $statuses = \VanguardLTE\Support\Enum\UserStatus::lists();
             return view('frontend.user.profile', compact('user', 'edit', 'roles', 'statuses'));
         }
+        public function dealout(\Illuminate\Http\Request $request)
+        {
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $frontend = '';
+            if ($site)
+            {
+                $frontend = $site->frontend;
+            }
+            return view('frontend.'.$frontend.'.layouts.dealout');
+        }
+
         public function updateDetails(\VanguardLTE\Http\Requests\User\UpdateProfileDetailsRequest $request)
         {
             $this->users->update($this->theUser->id, $request->except('role_id', 'status'));

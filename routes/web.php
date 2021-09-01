@@ -111,88 +111,92 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.profile',
         'uses' => 'ProfileController@index'
     ]);
-    Route::get('profile/activity', [
-        'as' => 'frontend.profile.activity',
-        'uses' => 'ProfileController@activity'
+    Route::get('profile/dealout', [
+        'as' => 'frontend.profile.dealout',
+        'uses' => 'ProfileController@dealout'
     ]);
-	Route::get('profile/balance', [
-        'as' => 'frontend.profile.balance',
-        'uses' => 'ProfileController@balance'
-    ]);
-	Route::post('profile/balance', [
-        'as' => 'frontend.profile.balance.post',
-        'uses' => 'ProfileController@balanceAdd'
-    ]);
-	Route::get('profile/balance/success', [
-        'as' => 'frontend.profile.balance.success',
-        'uses' => 'ProfileController@success'
-    ]);
-	Route::get('profile/balance/fail', [
-        'as' => 'frontend.profile.balance.fail',
-        'uses' => 'ProfileController@fail'
-    ]);
-    Route::post('profile/details/update', [
-        'as' => 'frontend.profile.update.details',
-        'uses' => 'ProfileController@updateDetails'
-    ]);
-	Route::post('profile/password/update', [
-        'as' => 'frontend.profile.update.password',
-        'uses' => 'ProfileController@updatePassword'
-    ]);
-    Route::post('profile/avatar/update', [
-        'as' => 'frontend.profile.update.avatar',
-        'uses' => 'ProfileController@updateAvatar'
-    ]);
-    Route::post('profile/avatar/update/external', [
-        'as' => 'frontend.profile.update.avatar-external',
-        'uses' => 'ProfileController@updateAvatarExternal'
-    ]);
+    // Route::get('profile/activity', [
+    //     'as' => 'frontend.profile.activity',
+    //     'uses' => 'ProfileController@activity'
+    // ]);
+	// Route::get('profile/balance', [
+    //     'as' => 'frontend.profile.balance',
+    //     'uses' => 'ProfileController@balance'
+    // ]);
+	// Route::post('profile/balance', [
+    //     'as' => 'frontend.profile.balance.post',
+    //     'uses' => 'ProfileController@balanceAdd'
+    // ]);
+	// Route::get('profile/balance/success', [
+    //     'as' => 'frontend.profile.balance.success',
+    //     'uses' => 'ProfileController@success'
+    // ]);
+	// Route::get('profile/balance/fail', [
+    //     'as' => 'frontend.profile.balance.fail',
+    //     'uses' => 'ProfileController@fail'
+    // ]);
+    // Route::post('profile/details/update', [
+    //     'as' => 'frontend.profile.update.details',
+    //     'uses' => 'ProfileController@updateDetails'
+    // ]);
+	// Route::post('profile/password/update', [
+    //     'as' => 'frontend.profile.update.password',
+    //     'uses' => 'ProfileController@updatePassword'
+    // ]);
+    // Route::post('profile/avatar/update', [
+    //     'as' => 'frontend.profile.update.avatar',
+    //     'uses' => 'ProfileController@updateAvatar'
+    // ]);
+    // Route::post('profile/avatar/update/external', [
+    //     'as' => 'frontend.profile.update.avatar-external',
+    //     'uses' => 'ProfileController@updateAvatarExternal'
+    // ]);
 	
-	Route::post('profile/exchange', [
-        'as' => 'frontend.profile.exchange',
-        'uses' => 'ProfileController@exchange'
-    ]);
+	// Route::post('profile/exchange', [
+    //     'as' => 'frontend.profile.exchange',
+    //     'uses' => 'ProfileController@exchange'
+    // ]);
 	
-    Route::put('profile/login-details/update', [
-        'as' => 'frontend.profile.update.login-details',
-        'uses' => 'ProfileController@updateLoginDetails'
-    ]);
-    Route::post('profile/two-factor/enable', [
-        'as' => 'frontend.profile.two-factor.enable',
-        'uses' => 'ProfileController@enableTwoFactorAuth'
-    ]);
-    Route::post('profile/two-factor/disable', [
-        'as' => 'frontend.profile.two-factor.disable',
-        'uses' => 'ProfileController@disableTwoFactorAuth'
-    ]);
-    Route::get('profile/sessions', [
-        'as' => 'frontend.profile.sessions',
-        'uses' => 'ProfileController@sessions'
-    ]);
-    Route::delete('profile/sessions/{session}/invalidate', [
-        'as' => 'frontend.profile.sessions.invalidate',
-        'uses' => 'ProfileController@invalidateSession'
-    ]);
+    // Route::put('profile/login-details/update', [
+    //     'as' => 'frontend.profile.update.login-details',
+    //     'uses' => 'ProfileController@updateLoginDetails'
+    // ]);
+    // Route::post('profile/two-factor/enable', [
+    //     'as' => 'frontend.profile.two-factor.enable',
+    //     'uses' => 'ProfileController@enableTwoFactorAuth'
+    // ]);
+    // Route::post('profile/two-factor/disable', [
+    //     'as' => 'frontend.profile.two-factor.disable',
+    //     'uses' => 'ProfileController@disableTwoFactorAuth'
+    // ]);
+    // Route::get('profile/sessions', [
+    //     'as' => 'frontend.profile.sessions',
+    //     'uses' => 'ProfileController@sessions'
+    // ]);
+    // Route::delete('profile/sessions/{session}/invalidate', [
+    //     'as' => 'frontend.profile.sessions.invalidate',
+    //     'uses' => 'ProfileController@invalidateSession'
+    // ]);
 	
-	Route::get('profile/returns', [
-        'as' => 'frontend.profile.returns',
-        'uses' => 'ProfileController@returns'
-    ]);
+	// Route::get('profile/returns', [
+    //     'as' => 'frontend.profile.returns',
+    //     'uses' => 'ProfileController@returns'
+    // ]);
 
-    Route::get('profile/jackpots', [
-        'as' => 'frontend.profile.jackpots',
-        'uses' => 'ProfileController@jackpots'
-    ]);
+    // Route::get('profile/jackpots', [
+    //     'as' => 'frontend.profile.jackpots',
+    //     'uses' => 'ProfileController@jackpots'
+    // ]);
 
-    Route::get('profile/pincode', [
-        'as' => 'frontend.profile.pincode',
-        'uses' => 'ProfileController@pincode'
-    ]);
+    // Route::get('profile/pincode', [
+    //     'as' => 'frontend.profile.pincode',
+    //     'uses' => 'ProfileController@pincode'
+    // ]);
 
-    Route::get('setlang/{lang}', [
-        'as' => 'frontend.setlang',
-        'uses' => 'ProfileController@setlang'
-    ]);
+    // Route::get('setlang/{lang}', [
+    //     'as' => 'frontend.setlang',
+    //     'uses' => 'ProfileController@setlang'
+    // ]);
 			
 	
 	/**

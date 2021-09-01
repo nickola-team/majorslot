@@ -127,6 +127,26 @@ function selectGame() {
     getContentDocument().location.href = "/api/usermoney.asp";
 }
 
+function getBalance() {
+    $.ajax({
+    type: "POST",
+    url: "/api/balance",
+    data: null,
+    processData: false,
+    contentType: false,
+    cache: false,
+    async: false,
+    success: function (data) {
+        if (data.error) {
+            alert(data.msg);
+            return;
+        }
+        $("#ximoney").html(data['balance']);
+        $("#xideal").html(data['deal']);
+    }
+    });
+}
+
 
 
 $(document).ready(function() {

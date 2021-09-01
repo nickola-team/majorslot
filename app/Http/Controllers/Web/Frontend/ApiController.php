@@ -184,8 +184,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance,2);
+            $deal_balance = number_format(\Illuminate\Support\Facades\Auth::user()->deal_balance,2);
 
-            return response()->json(['error' => false, 'balance' => $balance]);
+            return response()->json(['error' => false, 'balance' => $balance, 'deal' => $deal_balance]);
         }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
