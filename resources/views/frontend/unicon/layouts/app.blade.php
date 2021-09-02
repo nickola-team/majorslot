@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>@yield('page-title')</title>
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" href="/frontend/Default/img/favicon.png" >
+    <link rel="icon" href="/frontend/unicon/img/logo_layer.png" >
 
 	<script type="text/javascript" src="/frontend/unicon/js/jquery-1.12.3.min.js"></script>
 	<script type="text/javascript" src="/frontend/unicon/js/jquery-ui.js"></script>
@@ -50,20 +50,23 @@
 	@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))	
 		<div class="loggedbox">
 			<div class="player-name">
-				<strong class="text-white">{{Auth::user()->username }}</strong>
-				<div class="envelop-dm" onclick="goMemo();">
-					<i class="fa fa-envelope"></i>
-					<span>0</span>
+				<div class="total-balance">
+					<strong class="text-uppercase">보너스 수익</strong>
+					<strong class="text-uppercase pull-right">&nbsp; 원</strong>
+					<strong class="text-uppercase pull-right" id="xideal">{{ number_format(Auth::user()->deal_balance,2) }}</strong>
+					
 				</div>
+				<div class="get-balance" onclick="goDealOut();"><i class="fa fa-at"></i></div>
 				<button class="btn-loginbox btn-yellow" onclick="goMypage();">내 계정</button>
 			</div>
 			<div class="player-money">
 				<div class="total-balance">
-					<strong class="text-uppercase ng-scope" translate="">전체 잔액</strong>
+					<strong class="text-uppercase">전체 잔액</strong>
 					<strong class="text-uppercase pull-right">&nbsp; 원</strong>
 					<strong class="text-uppercase pull-right" id="ximoney">{{ number_format(Auth::user()->balance,2) }}</strong>
 				</div>
-				 <div class="get-balance" onclick=";"><i class="fa fa-recycle"></i></div>
+				
+				 <div class="get-balance" onclick="getBalance();"><i class="fa fa-recycle"></i></div>
 				<button class="btn-loginbox btn-gray" onclick="goLogout();">로그아웃</button>
 			</div>
 		</div>
@@ -122,7 +125,7 @@
 			</li>
 		</ul>
 		<div><img src="/frontend/unicon/img/logo.png?5"/></div>
-		<font>Copyright® 유니콘 CASINO. ALL RIGHT RESERVED</font>
+		<font>Copyright® 유니콘. ALL RIGHT RESERVED</font>
 	</footer>
 
 @yield('popup')

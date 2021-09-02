@@ -144,7 +144,7 @@ function goSlot(title, category, isConst) {
 
                 TINY.box.show({
                     html: strHtml,
-                    width: 1200,
+                    width: 1800,
                     height: 800
                 });
             },
