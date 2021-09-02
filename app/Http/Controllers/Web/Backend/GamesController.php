@@ -644,6 +644,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_gamebank_type')]);
             }
+            $act = 'add';
+            if ($request->act)
+            {
+                $act = $request->act;
+            }
+
             
             if( auth()->user()->hasRole('admin') ) 
             {
@@ -672,13 +678,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             $name = $master->username;
                             $shop_id = 0;
                             $old = $bb->bank;
-                            $bb->increment('bank', abs($request->summ));
+                            if ($act == 'add')
+                            {
+                                $bb->increment('bank', abs($request->summ));
+                            }
+                            else
+                            {
+                                $bb->decrement('bank', abs($request->summ));
+                            }
                             $new = $bb->bank;
                             $type = 'bonus';
                             \VanguardLTE\BankStat::create([
                                 'name' => ucfirst($type) . "[$name]", 
                                 'user_id' => \Illuminate\Support\Facades\Auth::id(), 
-                                'type' => 'add', 
+                                'type' => $act, 
                                 'sum' => $request->summ, 
                                 'old' => $old, 
                                 'new' => $new, 
@@ -703,15 +716,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         $shop = $gb->shop;
                         $name = $shop->name;
                         $old = $gb->{$request->type};
-                        
-                        $gb->increment($request->type, abs($request->summ));
+                        if ($act == 'add')
+                        {
+                            $gb->increment($request->type, abs($request->summ));
+                        }
+                        else
+                        {
+                            $gb->decrement($request->type, abs($request->summ));
+                        }
                         $new = $gb->{$request->type};
                         $shop_id = $gb->shop_id;
                         $type = ($request->type == 'table_bank' ? 'table' : $request->type);
                         \VanguardLTE\BankStat::create([
                             'name' => ucfirst($type) . "[$name]", 
                             'user_id' => \Illuminate\Support\Facades\Auth::id(), 
-                            'type' => 'add', 
+                            'type' => $act, 
                             'sum' => $request->summ, 
                             'old' => $old, 
                             'new' => $new, 

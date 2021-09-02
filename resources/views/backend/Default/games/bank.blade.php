@@ -54,7 +54,6 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<form action="" method="POST" id="gamebank_add">
-
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span></button>
@@ -64,7 +63,7 @@
 						<div class="modal-body">
 							<div class="form-group">
 								<input type="text" class="form-control" id="AddSum" name="summ" placeholder="@lang('app.sum')" required>
-                                <input type="hidden" name="shopid" value="">
+                                <input type="hidden" id="act" name="act" value="">
 								<input type="hidden" name="_token" value="{{ csrf_token() }}">
 								<br>
 									<button type="button" class="btn btn-default changeAddSum" data-value="10000">10000</button>
@@ -78,8 +77,9 @@
 							</div>
 						</div>
 						<div class="modal-footer" style="text-align: left;">
-							<a href="" class="btn btn-warning openAddClear">환수금초기화</a>
-							<button type="submit" class="btn btn-submit">금액추가</a>
+							<button type="button" class="btn btn-success openAddButton">충전</button>
+							<button type="button" class="btn btn-danger openOutButton">환전</button>
+							<a href="" class="btn btn-warning openAddClear">모두환전</a>
 						</div>
 					</form>
 				</div>
@@ -95,6 +95,14 @@
             var shop = $(event.target).data('shop');
 			$('.openAddClear').attr('href', '{{ route('backend.game.gamebanks_clear') }}?type=' + type + '&shop=' + shop);
 			$('#gamebank_add').attr('action', '{{ route('backend.game.gamebanks_add') }}?type=' + type + '&shop=' + shop);
+		});
+		$('.openAddButton').click(function(event){
+			$('#act').val('add');
+			$('#gamebank_add').submit();
+		});
+		$('.openOutButton').click(function(event){
+			$('#act').val('out');
+			$('#gamebank_add').submit();
 		});
 		$('.changeAddSum').click(function(event){
 			$v = Number($('#AddSum').val());
