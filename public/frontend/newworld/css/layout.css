@@ -55,7 +55,7 @@
 }
 
 .my_a {
-    padding: 55px 0 0 0;
+    padding: 45px 0 0 0;
     font-family: 'nanumsquare', sans-serif;
     font-size: 18px;
     text-align: center
@@ -1445,7 +1445,7 @@
 /* 주황 */
 
 .font05 {
-    color: #00fcff;
+    color: #0008ff;
     font-weight: 600;
 }
 
@@ -1459,7 +1459,7 @@
 /* 회색 */
 
 .font07 {
-    color: #fedaa0;
+    color: #ff3131;
     font-weight: 600;
 }
 

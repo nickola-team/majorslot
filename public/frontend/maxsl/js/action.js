@@ -370,7 +370,122 @@ function showProfilePopup() {
 
     $("#popup").html(strHtml);
 }
+function convertDeal() {
 
+    var money = $("#bonusdeal #money").val();
+    if (money < 30000) {
+        alert("환전 최소금액은 30,000원 입니다.");
+        return;
+    }
+    if (money % 10000 > 0) {
+        alert("10,000원 단위로만 환전 가능합니다.");
+        return;
+    }
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/convert_deal_balance',
+        data: { summ: money },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            alert('수익금이 보유금으로 전환되었습니다.');
+            location.reload(true);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        }
+    });
+
+}
+function showDealOut()
+{
+    if (loginYN !== 'Y') {
+        showLoginAlert()
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/api/balance",
+        data: null,
+        processData: false,
+        contentType: false,
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            var strHtml = `
+                <div class="popup-overlay "
+                style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
+                <div class="popup-content "
+                    style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
+                    <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
+                        role="dialog"
+                        style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
+                        <div class="popup_wrap">
+                            <div class="close_box"><a href="#" class="fade_1_close" onclick="closePopup();"><img src="/frontend/maxsl/images/popup_close.png"></a>
+                            </div>
+                            <div class="popupbox">
+                                <div id="bonusdeal" class="popuptab_cont">
+                                    <div class="title1">보너스 전환</div>
+                                    <div class="contents_in">
+                                        <div class="con_box10">
+                                            <div class="info_wrap">
+                                                <div class="info2" style="text-align: center;"><span class="ww_font">보너스금액 <img
+                                                            src="/frontend/maxsl/images/ww_icon.png" height="30"><input
+                                                            class="input1 walletBalance" id="balance_offer" readonly="" value="${data['deal']}">
+                                                        원</span></div>
+                                            </div>
+                                        </div>
+                                        <table class="write_title_top" style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="write_title">전환금액</td>
+                                                    <td class="write_td"></td>
+                                                    <td class="write_basic">
+                                                        <input id="money" type="hidden" name="money" value="0">
+                                                        <input class="input1" id="money1" name="money1" placeholder="0" value="0" onchange="comma()">
+                                                        <a href="javascript:money_count('10000');" style="padding-left: 5px;"><span class="btn1_2">1만원</span></a>
+                                                        <a href="javascript:money_count('50000');" style="padding-left: 5px;"><span class="btn1_2">5만원</span></a>
+                                                        <a href="javascript:money_count('100000');" style="padding-left: 5px;"><span class="btn1_2">10만원</span></a>
+                                                        <a href="javascript:money_count('500000');" style="padding-left: 5px;"><span class="btn1_2">50만원</span></a>
+                                                        <a href="javascript:money_count('1000000');" style="padding-left: 5px;"><span class="btn1_2">100만원</span></a>
+                                                        <a href="javascript:money_count('5000000');" style="padding-left: 5px;"><span class="btn1_2">500만원</span></a>
+                                                        <a href="javascript:money_count_hand();" style="padding-left: 5px;"><span class="btn1_1">정정</span></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="con_box20">
+                                            <div class="btn_wrap_center">
+                                                <ul>
+                                                    <li><a onclick="convertDeal();"><span class="btn3_1">전환하기</span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            $("#popup").html(strHtml);
+            $("#myWallet").html(data['balance'] + ' 원');
+            $("#myBonus").html(data['deal'] + ' 원');
+        }
+    });
+    
+}
 function showProfileEditorPopup() {
     if (loginYN !== 'Y') {
         showLoginAlert()
@@ -778,20 +893,21 @@ function showContactPopup() {
 
 function getBalance() {
     $.ajax({
-    type: "POST",
-    url: "/api/balance",
-    data: null,
-    processData: false,
-    contentType: false,
-    cache: false,
-    async: false,
-    success: function (data) {
-        if (data.error) {
-            alert(data.msg);
-            return;
+        type: "POST",
+        url: "/api/balance",
+        data: null,
+        processData: false,
+        contentType: false,
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            $("#myWallet").html(data['balance'] + ' 원');
+            $("#myBonus").html(data['deal'] + ' 원');
         }
-        $("#myWallet").html(data['balance'] + '원');
-    }
     });
 }
 

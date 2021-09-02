@@ -10,6 +10,7 @@
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"
     />
     <meta name="theme-color" content="#000000" />
+    <!-- <meta name="description" content="룰루 SLOT" /> -->
     <!-- <link rel="apple-touch-icon" href="/frontend/sky/logo192.png" /> -->
     <!-- <link rel="manifest" href="https://www.sky33.com/manifest.json" /> -->
     <script src="/frontend/sky/js/jquery-1.12.3.min.js"></script>
@@ -231,7 +232,7 @@
                 <div class="util_right">
                 @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
                   <div class="my_a">
-                    <span style="margin: 0px 0px 10px; display: inline-block">
+                    <div style="margin: 0px 0px 10px; display: inline-block; float:right;">
                       <span style="
                           line-height: 15px;
                           display: table;
@@ -243,12 +244,18 @@
                       </span>
                       &nbsp;&nbsp;
                       <span class="font07">{{ Auth::user()->username }}</span>
-                      님&nbsp;&nbsp;지갑 :
+                      님&nbsp;&nbsp;잔고 :
                       <span class="font05" id="myWallet">{{ number_format(Auth::user()->balance,2) }} 원</span>
-                      <a onclick="getBalance();"><img src="/frontend/sky//images/icon_re.png" class="icon_re"></a>
-                      <span style="font-size: 14px; margin-left: 10px;">새로고침 해주세요.</span>
-                    </span>
+                      <a onclick="getBalance();"><img src="/frontend/sky/images/icon_re.png" class="icon_re"></a>
+                    </div>
                     <br />
+                    <div style="margin: 0px 0px 10px; display: inline-block;float:right;">
+                      보너스 :
+                      <span class="font05" id="myBonus">{{ number_format(Auth::user()->deal_balance,2) }} 원</span>
+                      <a onclick="showDealOut();"><img src="/frontend/sky/images/icon_bonus.png" class="icon_re"></a>
+                    </div>
+                    <br />
+                    <div style="margin: 0px 0px 10px; display: inline-block;float:right;">
                     <a class="fade_1_open" data-popup-ordinal="6" id="open_75076113" onclick="showProfilePopup();">
                       <img src="/frontend/sky/images/top_btn_003.png" />
                     </a>
@@ -256,6 +263,7 @@
                       <img src="/frontend/sky/images/top_btn_005.png" />
                     </a>
                     <a onclick="goLogout();"><img src="/frontend/sky/images/top_btn_004.png" /></a>
+                    </div>
                   </div>
                 @else
                   <div class="my">
