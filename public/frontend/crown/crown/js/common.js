@@ -137,6 +137,28 @@ function logoutProc() {
     location.href = "/logout";
 }
 
+function getBalance() {
+    $.ajax({
+        type: "POST",
+        url: "/api/balance",
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                if (data.code == "001") {
+                    location.reload(true);
+                }
+                return;
+            }
+            $("#cur_money").text(data.balance + ' 원');
+            $("#cur_deal").text(data.deal + ' 원');
+        },
+        error: function (err, xhr) {
+            //alert(err.responseText);
+        }
+    });
+}
 function openMenu(obj) {
     var tab = $("#menu_pop .popup_tab li." + obj);
     tab.siblings().removeClass("sk_tab_active_01");
@@ -146,49 +168,14 @@ function openMenu(obj) {
     $("#" + obj).removeClass("popup_none");
 
     if (obj == "myinfo") {
-        //My페이지
-        $.ajax({
-            type: "POST",
-            url: "/api/getgamelist",
-            data: { gid: gid },
-            cache: false,
-            async: false,
-            success: function (data) {
-                if (data.error) {
-                    alert(data.msg);
-                    if (data.code == "001") {
-                        location.reload(true);
-                    }
-                    return;
-                }
-
-                var strHtml = '';
-                if (data.gamelist.length > 0) {
-                    for (var i = 0; i < data.gamelist.length; i++) {
-                        strHtml += '<div style="width: 300px; height: 180px; margin: 10px; float:left; text-align:center;">';
-                        strHtml += '<a href="javascript:showPopup(\'' + data.gamelist[i].gameid + '\')">';
-                        strHtml += '<img src="' + data.gamelist[i].gameicon + '" style="width: 100%;" alt="HTML5">';
-                        strHtml += '</a>';
-                        strHtml += '<span style="margin-top:5px; display:inline-block; color: #fff; font-size:18px;">' + data.gamelist[i].gametitle + '</span>';
-                        strHtml += '</div>';
-                    }
-                } else {
-                    strHtml += '<div style="text-align: center;">';
-                    strHtml += '<img src="/Scripts/crown/images/coming_soon.png" style="margin-top: 150px;">';
-                    strHtml += '</div>';
-                }
-                $("#slot_pop .popup_content_wrap").html(strHtml);
-            },
-            error: function (err, xhr) {
-                alert(err.responseText);
-            }
-        });
+        
     }
     else if (obj == "moneyhistory") {
-        //입출금내역
+    }
+    else if (obj == "bonusdeal") {
         $.ajax({
             type: "POST",
-            url: "/api/getmoneyinoutlist",
+            url: "/api/balance",
             cache: false,
             async: false,
             success: function (data) {
@@ -199,41 +186,9 @@ function openMenu(obj) {
                     }
                     return;
                 }
-
-                var strHtml = '';
-                if (data.moneyinoutlist.length > 0) {
-                    for (var i = 0; i < data.moneyinoutlist.length; i++) {
-                        strHtml += '<tr>';
-                        if (data.moneyinoutlist[i].style == 1) {
-                            strHtml += '<td class="td_basic"><span style="color:red;">입금</span></td>';
-                        }
-                        else {
-                            strHtml += '<td class="td_basic"><span style="color:green;">출금</span></td>';
-                        }
-                        strHtml += '<td class="td_basic">' + data.moneyinoutlist[i].money + '</td>';
-
-                        if (data.moneyinoutlist[i].status == 0) {
-                            strHtml += '<td class="td_basic"><span>신청</span></td>';
-                        }
-                        else if (data.moneyinoutlist[i].status == 1) {
-                            strHtml += '<td class="td_basic"><span style="color:yellow;">대기</span></td>';
-                        }
-                        else if (data.moneyinoutlist[i].status == 2) {
-                            strHtml += '<td class="td_basic"><span style="color:green;">승인</span></td>';
-                        }
-                        else if (data.moneyinoutlist[i].status == 3) {
-                            strHtml += '<td class="td_basic"><span style="color:red;">취소</span></td>';
-                        }
-                        strHtml += '<td class="td_basic">' + data.moneyinoutlist[i].updatedate + '</td>';
-                        strHtml += '<td class="td_basic">' + data.moneyinoutlist[i].regdate + '</td>';
-                        strHtml += '</tr>';
-                    }
-                } else {
-                    strHtml += '<tr>';
-                    strHtml += '<td colspan="5" class="td_basic">입출금내역이 없습니다.</td>';
-                    strHtml += '</tr>';
-                }
-                $("#moneyhistory .list").html(strHtml);
+                $("#cur_money").text(data.balance + ' 원');
+                $("#cur_deal").text(data.deal + ' 원');
+                $('#bonusdeal.cur_deal').text(data.deal + ' 원');
             },
             error: function (err, xhr) {
                 //alert(err.responseText);
@@ -534,6 +489,39 @@ function deposit() {
     });
 }
 
+function convertDeal() {
+
+    var money = $('#bonusdeal .tmp_money').val();
+    if (money < 10000) {
+        alert('환전 최소금액은 10,000원 입니다.');
+        return;
+    }
+    if (money % 10000 > 0) {
+        alert("10,000원 단위로만 환전 가능합니다.");
+        return;
+    }
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/convert_deal_balance',
+        data: { summ: money },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            alert('수익금이 보유금으로 전환되었습니다.');
+            location.reload(true);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        }
+    });
+
+}
 function withdraw() {
     var refundpassword = $('#withdraw .refundpassword').val();
     if (refundpassword == '') {

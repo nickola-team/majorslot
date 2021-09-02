@@ -166,17 +166,16 @@
                 <i class="fa fa-user"></i>
                     <p>{{ Auth::user()->username }}</p>
                 </div>
-                <div onclick="openMenu('memo');" class="menu_pop_open">
-                    <i class="fa fa-envelope"></i>
-                    <p>0</p>
-                </div>
                 <div onclick="openMenu('moneyhistory');" class="menu_pop_open">
                     <i class="fas fa-won-sign"></i>
                     <p id="cur_money">{{ number_format(Auth::user()->balance,2) }} 원</p>
                 </div>
-                <div onclick="openMenu('question');" class="menu_pop_open">
-                    <i class="fa fa-comment"></i>
-                    <p>1:1문의</p>
+                <div onclick="openMenu('bonusdeal');" class="menu_pop_open">
+                    <i class="fas fa-won-sign"></i>
+                    <p id="cur_deal">{{ number_format(Auth::user()->deal_balance,2) }} 원</p>
+                </div>
+                <div onclick="getBalance();">
+                    <i class="fa fa-recycle"></i>
                 </div>
                 <div onclick="logoutProc();">
                     <i class="fa fa-ban"></i>
@@ -566,6 +565,7 @@
                         <li class="myinfo"><a href="javascript:;" onclick="openMenu('myinfo');"><span>My페이지</span></a></li>
                         <li class="deposit"><a href="javascript:;" onclick="openMenu('deposit');"><span>충전신청</span></a></li>
                         <li class="withdraw"><a href="javascript:;" onclick="openMenu('withdraw');"><span>환전신청</span></a></li>
+                        <li class="bonusdeal"><a href="javascript:;" onclick="openMenu('bonusdeal');"><span>보너스전환</span></a></li>
                         <li class="moneyhistory"><a href="javascript:;" onclick="openMenu('moneyhistory');"><span>충/환전내역</span></a></li>
                         <li class="memo"><a href="javascript:;" onclick="openMenu('memo');"><span>쪽지함</span></a></li>
                         <li class="question"><a href="javascript:;" onclick="openMenu('question');"><span>1:1문의</span></a></li>
@@ -738,6 +738,52 @@
                             <div class="btn_wrap_center">
                                 <ul>
                                     <li><button class="btn3_1" onclick="withdraw();">환전하기</button></li>
+                                    <li><button class="btn3_2 menu_pop_close">취소하기</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="bonusdeal" class="content popup_none">
+                        <div class="title1">
+                            보너스전환
+                        </div>
+                        <div class="con_box10">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="write_title_top">
+                                <tr>
+                                    <td class="write_title">보너스금액</td>
+                                    <td class="write_td"></td>
+                                    <td class="write_basic"><span class="cur_deal" id="cur_deal">{{auth()->user()->deal_balance}} 원</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="write_title">전환금액</td>
+                                    <td class="write_td"></td>
+                                    <td class="write_basic">
+                                        <input class="tmp_money" type="hidden" value="0" />
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <input class="money input1" type="text" value="0" placeholder="최소단위는 3만원이상입니다 (수표절대금지)" onKeyUp="changeMoney('bonusdeal');numChk(this);" onChange="numChk(this);" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button class="btn1_1" onclick="addMoney('bonusdeal', 10000);">1만원</button>
+                                                    <button class="btn1_1" onclick="addMoney('bonusdeal', 30000);">3만원</button>
+                                                    <button class="btn1_1" onclick="addMoney('bonusdeal', 50000);">5만원</button>
+                                                    <button class="btn1_1" onclick="addMoney('bonusdeal', 100000);">10만원</button>
+                                                    <button class="btn1_1" onclick="addMoney('bonusdeal', 500000);">50만원</button>
+                                                    <button class="btn1_1" onclick="resetMoney('bonusdeal');">정정하기</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="con_box10">
+                            <div class="btn_wrap_center">
+                                <ul>
+                                    <li><button class="btn3_1" onclick="convertDeal();">전환하기</button></li>
                                     <li><button class="btn3_2 menu_pop_close">취소하기</button></li>
                                 </ul>
                             </div>
