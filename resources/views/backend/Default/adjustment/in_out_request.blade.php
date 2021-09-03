@@ -326,7 +326,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/api/withdraw',
+                url: '/api/outbalance',
                 data: { money: money, _token: _token },
                 cache: false,
                 async: false,
@@ -359,7 +359,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/api/deposit',
+                url: '/api/addbalance',
                 data: { money: money, _token: _token },
                 cache: false,
                 async: false,

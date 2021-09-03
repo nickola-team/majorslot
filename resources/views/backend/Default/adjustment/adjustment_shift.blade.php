@@ -184,7 +184,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/api/withdraw',
+                url: '/api/outbalance',
                 data: { money: money, _token: _token },
                 cache: false,
                 async: false,
