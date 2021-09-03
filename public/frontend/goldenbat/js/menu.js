@@ -228,17 +228,27 @@ function goDeposit() {
 					<td class="line2">입금자명</td>
 					<td class="line3">
 						<div class="txt_area2">
-							<input type="text" name="name" id="name" style="width:80px; height:18px" value=""/>
+							<input type="text" name="name" id="name" style="width:80px; height:18px" value="${accountName}"/>
 						</div>
 						<div class="txt_area3">* 입금시 입금자명이 다르면 충전이 불가합니다</div>
 					</td>
 				</tr>
-				<tr>
-					<td class="line2">충전계좌요청</td>
+                <tr>
+					<td class="line2">은행계좌</td>
 					<td class="line3">
 						<div class="txt_area2">
-                            <div class="txt_area3"> ※ 충전계좌 문의는 1:1문의에서 신청</div>
+							<input type="text" name="bank" id="bank" style="width:80px; height:18px" value="${bankName}"/>
 						</div>
+                        <div class="txt_area3">* 예: 케이뱅크</div>
+					</td>
+				</tr>
+                <tr>
+					<td class="line2">계좌번호</td>
+					<td class="line3">
+						<div class="txt_area2">
+							<input type="text" name="accountno" id="accountno" style="width:80px; height:18px" value="${account_no}"/>
+						</div>
+                        <div class="txt_area3">* 예: 1234567890</div>
 					</td>
 				</tr>
 			</table>
@@ -300,11 +310,29 @@ function goWithdraw() {
 				</tr>
 
 				<tr>
-					<td width="120" class="line2">출금비밀번호</td>
+					<td class="line2">출금자명</td>
 					<td class="line3">
 						<div class="txt_area2">
-							<input type="password" name="password" id="password" style="width:110px; height:18px" />
+							<input type="text" name="name" id="name" style="width:80px; height:18px" value="${accountName}"/>
 						</div>
+					</td>
+				</tr>
+                <tr>
+					<td class="line2">은행계좌</td>
+					<td class="line3">
+						<div class="txt_area2">
+							<input type="text" name="bank" id="bank" style="width:80px; height:18px" value="${bankName}"/>
+						</div>
+                        <div class="txt_area3">* 예: 케이뱅크</div>
+					</td>
+				</tr>
+                <tr>
+					<td class="line2">계좌번호</td>
+					<td class="line3">
+						<div class="txt_area2">
+							<input type="text" name="accountno" id="accountno" style="width:80px; height:18px" value="${account_no}"/>
+						</div>
+                        <div class="txt_area3">* 예: 1234567890</div>
 					</td>
 				</tr>
 			
@@ -631,10 +659,12 @@ function showLoginAlert() {
 }
 
 function deposit() {
-    var refundname = $("#deposit #name").val();
+    var accountname = $("#deposit #name").val();
+    var bankname = $("#deposit #bank").val();
+    var accountno = $("#deposit #accountno").val();
     var money = $("#deposit #money").val();
 
-    if (refundname == "") {
+    if (accountname == "") {
         alert("입금자명을 입력해주세요.");
         $("#deposit #name").focus();
         return;
@@ -651,8 +681,8 @@ function deposit() {
 
     $.ajax({
         type: "POST",
-        url: "/api/deposit",
-        data: { refundname: refundname, money: money },
+        url: "/api/addbalance",
+        data: { accountName: accountname, bank:bankname, no:accountno, money: money },
         cache: false,
         async: false,
         success: function (data) {
@@ -676,13 +706,9 @@ function deposit() {
 }
 
 function withdraw() {
-    var refundpassword = $("#withdraw #password").val();
-    if (refundpassword == "") {
-        alert("출금비밀번호를 입력해주세요.");
-        $("#withdraw #password").focus();
-        return;
-    }
-
+    var accountname = $("#withdraw #name").val();
+    var bankname = $("#withdraw #bank").val();
+    var accountno = $("#withdraw #accountno").val();
     var money = $("#withdraw #money").val();
     if (money < 30000) {
         alert("환전 최소금액은 30,000원 입니다.");
@@ -695,24 +721,13 @@ function withdraw() {
 
     $.ajax({
         type: "POST",
-        url: "/api/withdraw",
-        data: { money: money, refundpassword: refundpassword },
+        url: "/api/outbalance",
+        data: { accountName: accountname, bank:bankname, no:accountno, money: money },
         cache: false,
         async: false,
         success: function (data) {
             if (data.error) {
                 alert(data.msg);
-                if (data.code == "001") {
-                    location.reload();
-                } else if (data.code == "002") {
-                    $("#withdraw #money1").focus();
-                } else if (data.code == "003") {
-                    $("#withdraw #money1").val("0");
-                } else if (data.code == "004") {
-                    $("#withdraw #password").focus();
-                } else if (data.code == "005") {
-                    $("#withdraw #password").val("");
-                }
                 return;
             }
 

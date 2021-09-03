@@ -5,7 +5,7 @@
 		if ($in_out_log->user){
 			$level = $in_out_log->user->level();
 			$parent = $in_out_log->user->referral;
-			for (;$level<Auth::user()->level();$level++)
+			for (;$level<Auth::user()->level()-1;$level++)
 			{
 				$role = \VanguardLTE\Role::find($parent->role_id);
 				$hierarchy = $hierarchy . ' > ' . $parent->username .'[' .$role->description. ']';

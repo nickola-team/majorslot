@@ -742,19 +742,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
-            if ($user->hasRole('user'))
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '개인충전은 지원하지 않습니다',
-                    'code' => '004'
-                ], 200);
-            }
-            if($user->bank_name == null || $user->bank_name == ''){
+
+            if($user->role_id > 1 && ($user->bank_name == null || $user->bank_name == '')){
                 return response()->json([
                     'error' => true, 
                     'msg' => '계좌정보를 입력해주세요',
                     'code' => '004'
+                ], 200);
+            }
+            if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '입금정보를 입력해주세요.',
                 ], 200);
             }
             if( !$request->money ) 
@@ -825,6 +825,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
             }
 
+            if ($user->hasRole('user'))
+            {
+                $user->update([
+                    'recommender' => $request->accountName,
+                    'bank_name' => $request->bank,
+                    'account_no' => $request->no
+                ]);
+            }
+
             return response()->json(['error' => false]);
         }
 
@@ -835,19 +844,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user = auth()->user();
-            if ($user->hasRole('user'))
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '개인환전은 지원하지 않습니다',
-                    'code' => '004'
-                ], 200);
-            }
-            if($user->bank_name == null || $user->bank_name == ''){
+
+            if($user->role_id > 1 && ($user->bank_name == null || $user->bank_name == '')){
                 return response()->json([
                     'error' => true, 
                     'msg' => '계좌정보를 입력해주세요',
                     'code' => '004'
+                ], 200);
+            }
+            if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '출금정보를 입력해주세요.',
                 ], 200);
             }
             if( !$request->money ) 
@@ -968,7 +977,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     $open_shift->increment('balance_out', $money);
                 }
-
+            }
+            if ($user->hasRole('user'))
+            {
+                $user->update([
+                    'recommender' => $request->accountName,
+                    'bank_name' => $request->bank,
+                    'account_no' => $request->no
+                ]);
             }
             return response()->json(['error' => false]);
         }
@@ -1148,6 +1164,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
             }
 
+            if ($requestuser->hasRole('user') && $requestuser->playing_game == 'pp')
+            {
+                if ($data['type'] == 'add')
+                {
+                    $summ = abs($summ);
+                }
+                else
+                {
+                    $summ = -abs($summ);
+                }
+                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($requestuser->id, $summ);
+            }
 
             return redirect()->route('backend.in_out_manage', $type)->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }

@@ -16,35 +16,26 @@
 	@endif
 	@endif
 	@if (auth()->user()->isInoutPartner())
-	@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-	<td>
-	@if ($in_out_log->user && $in_out_log->user->role_id == 3)
-	{{$in_out_log->user->referral->username}}
-	@endif
-	</td>
-	@endif
-	@if (auth()->user()->hasRole(['admin','comaster','master']))
-	<td>
-	@if ($in_out_log->user &&  $in_out_log->user->role_id == 3)
-	{{$in_out_log->user->referral->referral->username}}
-	@endif
-	@if ($in_out_log->user &&  $in_out_log->user->role_id == 4)
-	{{$in_out_log->user->referral->username}}
-	@endif
-	</td>
-	@endif
-	@if (auth()->user()->hasRole(['admin','comaster']))
-	<td>
-	@if ($in_out_log->user &&  $in_out_log->user->role_id == 3)
-	{{$in_out_log->user->referral->referral->referral->username}}
-	@endif
-	@if ($in_out_log->user &&  $in_out_log->user->role_id == 4)
-	{{$in_out_log->user->referral->referral->username}}
-	@endif
-	@if ($in_out_log->user &&  $in_out_log->user->role_id == 5)
-	{{$in_out_log->user->referral->username}}
-	@endif
-	</td>
+	@if ($in_out_log->user)
+	<?php
+		$end = auth()->user()->level();
+		$begin = $in_out_log->user->level();
+		$parent = $in_out_log->user->referral;
+		for ($l=3;$l<$end;$l++)
+		{
+			if ($l<=$begin)
+			{
+				echo "<td></td>";
+			}
+			else
+			{
+				echo "<td>".$parent->username."</td>";
+				$parent = $parent->referral;
+			}
+		}
+	?>
+	@else
+	<td></td>
 	@endif
 	@endif
 	@if($in_out_log->type == 'add' )

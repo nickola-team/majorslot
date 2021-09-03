@@ -17,10 +17,14 @@
 		var loginYN='Y';
 		var currentBalance = {{ Auth::user()->balance }};
 		var userName = "{{ Auth::user()->username }}";
+		var accountName = "{{ Auth::user()->recommender }}";
+		var bankName = "{{ Auth::user()->bank_name }}";
+		var account_no = "{{ Auth::user()->account_no }}";
 	@else
 		var loginYN='N';
 		var currentBalance = 0;
 		var userName = "";
+		var accountName = "";
 	@endif
 
 	var HTTP_HOST='poseidon777.com';

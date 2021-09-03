@@ -112,15 +112,14 @@
 					<tr>
 						<th>파트너이름</th>
 						@if (auth()->user()->isInoutPartner())
-						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
-						@endif
+						<?php
+							$level = auth()->user()->level();
+							echo "<th>매장(관리자)</th>";
+							for($l=4;$l<$level;$l++)
+							{
+								echo "<th>".\VanguardLTE\Role::where('level',$l)->first()->description."</th>";
+							}
+						?>
 						@endif
 						<th>충전금액</th>
 						<th>환전금액</th>
@@ -146,15 +145,14 @@
 					<tr>
 						<th>파트너이름</th>
 						@if (auth()->user()->isInoutPartner())
-						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
-						@endif
+						<?php
+							$level = auth()->user()->level();
+							echo "<th>매장(관리자)</th>";
+							for($l=4;$l<$level;$l++)
+							{
+								echo "<th>".\VanguardLTE\Role::where('level',$l)->first()->description."</th>";
+							}
+						?>
 						@endif
 						<th>충전금액</th>
 						<th>환전금액</th>
