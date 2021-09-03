@@ -778,6 +778,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'msg' => '충전금액을 입력해주세요'
                 ], 200);
             }
+            if ($user->hasRole('user'))
+            {
+                $user->update([
+                    'recommender' => $request->accountName,
+                    'bank_name' => $request->bank,
+                    'account_no' => $request->no
+                ]);
+                $user =  $user->fresh();
+            }
             $money = abs(str_replace(',','', $request->money));
             if($user->hasRole('manager')){
                 //send it to master.
@@ -839,14 +848,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
             }
 
-            if ($user->hasRole('user'))
-            {
-                $user->update([
-                    'recommender' => $request->accountName,
-                    'bank_name' => $request->bank,
-                    'account_no' => $request->no
-                ]);
-            }
+            
 
             return response()->json(['error' => false]);
         }
@@ -901,6 +903,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
+            }
+
+            if ($user->hasRole('user'))
+            {
+                $user->update([
+                    'recommender' => $request->accountName,
+                    'bank_name' => $request->bank,
+                    'account_no' => $request->no
+                ]);
+                $user =  $user->fresh();
             }
             
             
@@ -991,14 +1003,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     $open_shift->increment('balance_out', $money);
                 }
-            }
-            if ($user->hasRole('user'))
-            {
-                $user->update([
-                    'recommender' => $request->accountName,
-                    'bank_name' => $request->bank,
-                    'account_no' => $request->no
-                ]);
             }
             return response()->json(['error' => false]);
         }
