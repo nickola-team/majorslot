@@ -97,7 +97,7 @@
                         </a>
                     </li>
             @endif
-            @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+            @if ( auth()->check() && auth()->user()->hasRole('admin') )
             <li class="dropdown {{Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
@@ -108,45 +108,36 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                 @permission('categories.manage')
-                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                 <li class="{{ Request::is('backend/category') ? 'active' : ''  }}">
                     <a  href="{{ route('backend.category.list') }}">
                         <i class="fa fa-circle-o"></i>
-                        <span>게임카테고리관리</span>
+                        <span>게임제공사관리</span>
                     </a>
                 </li>              
-                @endif
                 @endpermission      
-                
                 @permission('jpgame.manage')
-                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                 <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
                     <a href="{{ route('backend.jpgame.list') }}">
                         <i class="fa  fa-circle-o"></i>
                         <span>잭팟관리</span>
                     </a>
                 </li>
-                @endif
                 @endpermission
                 @permission('games.manage')
-                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                 <li class="{{ (Request::is('backend/game') || Request::is('backend/game/*')) ? 'active' : ''  }}">
                     <a href="{{ route('backend.game.list') }}">
                         <i class="fa fa-circle-o"></i>
                         <span>게임관리</span>
                     </a>
                 </li>
-                @endif
                 @endpermission
 
-                @if ( auth()->check() && auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
                 <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
                     <a href="{{ route('backend.game.bank') }}">
                         <i class="fa fa-circle-o"></i>
                         <span>환수금관리</span>
                     </a>
                 </li>
-                @endif
                 </ul>
             </li>
             @endif

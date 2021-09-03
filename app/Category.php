@@ -12,7 +12,8 @@ namespace VanguardLTE
             'provider',
             'original_id', 
             'shop_id',
-            'site_id'
+            'site_id',
+            'view'
         ];
         public $timestamps = false;
         public static function boot()
@@ -35,6 +36,10 @@ namespace VanguardLTE
         public function games()
         {
             return $this->hasMany('VanguardLTE\GameCategory', 'category_id');
+        }
+        public function site()
+        {
+            return $this->hasOne('VanguardLTE\WebSite', 'id', 'site_id');
         }
         public function trans()
         {

@@ -6,28 +6,63 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function __construct()
         {
             $this->middleware('auth');
-            $this->middleware('permission:access.admin.panel');
-            $this->middleware('permission:categories.manage');
-            $this->middleware('shopzero');
         }
         public function index(\Illuminate\Http\Request $request)
         {
-/*            $checked = new \VanguardLTE\Lib\LicenseDK();
-            $license_notifications_array = $checked->aplVerifyLicenseDK(null, 0);
-            if( $license_notifications_array['notification_case'] != 'notification_license_ok' ) 
+            $excat = ['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan', 'habaneroplay'];
+            if (auth()->user()->hasRole('admin'))
             {
-                return redirect()->route('frontend.page.error_license');
+                $categories = \VanguardLTE\Category::where([
+                    'parent' => 0, 
+                    'shop_id' => 0,
+                ])->whereNotIn('href',$excat)->orderBy('site_id')->orderBy('position')->get();
             }
-            if( !$this->security() ) 
+            else
             {
-                return redirect()->route('frontend.page.error_license');
-            }*/
-            $categories = \VanguardLTE\Category::where([
-                'parent' => 0, 
-                'shop_id' => auth()->user()->shop_id
-            ])->orderBy('position')->get();
+                $excat[] = 'virtualtech';
+                $excat[] = 'skywind';
+                $siteIds = \VanguardLTE\WebSite::where('adminid', auth()->user()->id)->get()->pluck('id')->toArray();
+           
+                $categories = \VanguardLTE\Category::where([
+                    'parent' => 0, 
+                    'shop_id' => 0,
+                ])->whereIn('site_id', $siteIds)->whereNotIn('href',$excat)->orderBy('site_id')->orderBy('position')->get();
+                if (count($categories) == 0) // use default category
+                {
+                    $categories = \VanguardLTE\Category::where([
+                        'parent' => 0, 
+                        'shop_id' => 0,
+                        'site_id' => 0
+                    ])->whereNotIn('href',$excat)->orderBy('position')->get();
+                }
+            }
+            
+
             return view('backend.Default.categories.list', compact('categories'));
         }
+
+        public function view(\VanguardLTE\Category $category, \Illuminate\Http\Request $request)
+        {
+            $shops = auth()->user()->shops_array(true);
+            if (auth()->user()->hasRole('admin') || $category->site_id != 0)
+            {
+                $shops = array_merge([0], $shops);
+            }
+
+            if (count($shops) > 0)
+            {
+                $categories = \VanguardLTE\Category::where([
+                    'original_id' => $category->original_id,
+                    'site_id' => $category->site_id
+                    ]);
+                $categories = $categories->whereIn('shop_id', $shops);
+                $categories->update(['view' => $request->view]);
+            }
+            
+            return redirect()->back()->withSuccess('게임제공사상태를 변경하였습니다.');
+        }
+
+
         public function create()
         {
             $categories = \VanguardLTE\Category::where([

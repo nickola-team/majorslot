@@ -155,7 +155,7 @@
                 </a>
             </li>
             @endif
-            @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
+            @if ( auth()->check() && auth()->user()->hasRole('admin') )
             <li class="treeview {{  Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
@@ -169,11 +169,10 @@
                     <li class="{{ Request::is('backend/category') ? 'active' : ''  }}">
                         <a  href="{{ route('backend.category.list') }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>게임카테고리관리</span>
+                            <span>게임제공사관리</span>
                         </a>
                     </li>              
                     @endpermission      
-                    
                     @permission('jpgame.manage')
                     <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
                         <a href="{{ route('backend.jpgame.list') }}">

@@ -856,7 +856,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'CategoriesController@delete',
         'middleware' => 'permission:categories.delete'
     ]);
-	
+    Route::get('category/{category}/show', [
+        'as' => 'backend.category.show',		
+        'uses' => 'CategoriesController@view',
+    ]);	
 	/**
      * Categories routes
      */

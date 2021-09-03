@@ -48,7 +48,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors('총본사를 입력하세요.');
             }
-            \VanguardLTE\WebSite::create($data);
+            $site = \VanguardLTE\WebSite::create($data);
+            //create categories
+            $categories = \VanguardLTE\Category::where([
+                'shop_id' => 0, 
+                'parent' => 0,
+                'site_id' => 0,
+            ])->get();
+            if( count($categories) ) 
+            {
+                foreach( $categories as $category ) 
+                {
+                    $newCategory = $category->replicate();
+                    $newCategory->site_id = $site->id;
+                    $newCategory->save();
+                }
+            }
+
             return redirect()->route('backend.website.list')->withSuccess('도메인이 추가되었습니다');
         }
         public function edit($website)
@@ -95,27 +111,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             \VanguardLTE\WebSite::where('id', $website->id)->update($data);
             return redirect()->route('backend.website.list')->withSuccess('도메인이 업데이트되었습니다.');
         }
-        public function delete(\VanguardLTE\Notice $notice)
+        public function delete(\VanguardLTE\WebSite $website)
         {
-            \VanguardLTE\Notice::where('id', $notice->id)->delete();
-            return redirect()->route('backend.notice.list')->withSuccess('공지가 삭제되었습니다.');
+            \VanguardLTE\WebSite::where('id', $website->id)->delete();
+            //create categories
+            \VanguardLTE\Category::where([
+                'shop_id' => 0,
+                'parent' => 0,
+                'site_id' => $website->id,
+            ])->delete();
+            return redirect()->route('backend.website.list')->withSuccess('도메인이 삭제되었습니다.');
         }
-/*        public function security()
-        {
-            if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
-            {
-                return false;
-            }
-            if( md5_file(base_path() . '/app/Lib/LicenseDK.php') != '3c5aece202a4218a19ec8c209817a74e' ) 
-            {
-                return false;
-            }
-            if( md5_file(base_path() . '/config/LicenseDK.php') != '951a0e23768db0531ff539d246cb99cd' ) 
-            {
-                return false;
-            }
-            return true;
-        }*/
     }
 
 }

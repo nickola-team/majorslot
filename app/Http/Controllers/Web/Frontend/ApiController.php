@@ -351,19 +351,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => '존재하지 않는 카테고리입니다.', 'code' => '002']);
             }
 
-            $categories = [$cat1->id];
-            if ($cat1->provider != null)
+            if ($cat1->view == 0)
             {
-                $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
+                $selectedGames = [];
             }
-            else{
-                if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
+            else
+            {
+                $categories = [$cat1->id];
+                if ($cat1->provider != null)
                 {
-                    $selectedGames = [];
+                    $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
                 }
-                else
-                {
-                    $selectedGames = $this->gamelist($categories, false);
+                else{
+                    if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
+                    {
+                        $selectedGames = [];
+                    }
+                    else
+                    {
+                        $selectedGames = $this->gamelist($categories, false);
+                    }
                 }
             }
 
