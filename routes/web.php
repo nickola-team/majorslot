@@ -312,6 +312,14 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.change_bank_account',
         'uses' => 'ApiController@changeBankAccount',
     ]);
+    Route::post('api/deposit', [
+        'as' => 'frontend.api.olddeposit',
+        'uses' => 'ApiController@olddeposit',
+    ]);
+    Route::post('api/withdraw', [
+        'as' => 'frontend.api.oldwithdraw',
+        'uses' => 'ApiController@oldwithdraw',
+    ]);
     Route::post('api/addbalance', [
         'as' => 'frontend.api.deposit',
         'uses' => 'ApiController@deposit',

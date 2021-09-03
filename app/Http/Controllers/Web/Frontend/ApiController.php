@@ -735,6 +735,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             return response()->json(['error' => false]);
         }
+        public function olddeposit(\Illuminate\Http\Request $request){
+            return response()->json([
+                'error' => true, 
+                'msg' => '개인충전은 지원하지 않습니다.',
+                'code' => '004'
+            ], 200);
+        }
+        public function oldwithdraw(\Illuminate\Http\Request $request){
+            return response()->json([
+                'error' => true, 
+                'msg' => '개인환전은 지원하지 않습니다.',
+                'code' => '004'
+            ], 200);
+        }
 
         public function deposit(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
