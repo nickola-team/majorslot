@@ -978,6 +978,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $data = $response->json();
+            if (!isset($data['rounds']))
+            {
+                return null;
+            }
             $balance = 0;
             foreach ($data['rounds'] as $round)
             {
