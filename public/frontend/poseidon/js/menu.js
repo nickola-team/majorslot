@@ -251,6 +251,12 @@ function goDeposit() {
                         <div class="txt_area3">* 예: 1234567890</div>
 					</td>
 				</tr>
+                <tr>
+					<td class="line2">입금계좌</td>
+					<td class="line3">
+                        <div class="txt_area3">텔레그램문의 (아이디: <span class="txt_style02">${telegram_id}</span>)</div>
+					</td>
+				</tr>
 			</table>
 		</div>
 		<div class="btn"><a href="#" onClick="deposit();"><img src="/frontend/poseidon/img/in_btn.png" border="0" /></a></div>

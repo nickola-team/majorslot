@@ -20,6 +20,19 @@
 		var accountName = "{{ Auth::user()->recommender }}";
 		var bankName = "{{ Auth::user()->bank_name }}";
 		var account_no = "{{ Auth::user()->account_no }}";
+		<?php
+			$user = auth()->user();
+			while ($user && !$user->isInoutPartner())
+			{
+				$user = $user->referral;
+			}
+			$telegram = '';
+			if ($user)
+			{
+				$telegram = $user->address;
+			}
+		?>
+		var telegram_id = "{{$telegram}}";
 	@else
 		var loginYN='N';
 		var currentBalance = 0;
