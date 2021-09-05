@@ -1029,6 +1029,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             $in_out_id = $request->in_out_id;
             $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->get()->first();
+            if (!$transaction)
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
             $amount = $transaction->sum;
             $type = $transaction->type;
             $requestuser = \VanguardLTE\User::where('id', $transaction->user_id)->get()->first();
