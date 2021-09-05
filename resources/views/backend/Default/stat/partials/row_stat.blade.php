@@ -31,14 +31,17 @@
 	@endif
 
 </td>
+<td>
 @if ($partner==0)
-<td>{{number_format($stat->balance,0)}}</td>
+	@if ($stat->admin->role_id  <= auth()->user()->role_id)
+	{{number_format($stat->balance,0)}}
+	@endif
 @else
 @if (auth()->user()->isInoutPartner())
-<td>{{number_format($stat->balance,0)}}</td>
+	{{number_format($stat->balance,0)}}
 @endif
 @endif
-
+</td>
 <td>
 {{number_format($stat->old,0)}}
 </td>
