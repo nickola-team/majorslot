@@ -208,8 +208,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 /* 릴배치표 생성 */
                 if ($overtry) {
                     /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
-                    // $lastReels = $isTumble ? json_decode($LASTSPIN->g, true) : null;
-                    // $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $lastReels, 0);
+                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], 0, 0);
                 }
                 else {
                     $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $proposedCoinCount, $proposedWildCount);
@@ -233,6 +232,8 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 else if ( $try >= 1000 ) 
                 {
                     $winType = 'none';
+                    $proposedWildCount = 0;
+                    $proposedCoinCount = 0;
                 }
 
                 if ($winType == 'none') {
