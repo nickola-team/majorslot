@@ -1084,7 +1084,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     $summ = -abs($summ);
                 }
-                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($user->id, $summ);
+                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($user->id, $summ);
+                if ($data['error'] == -1) //밸런스 전송시 오류, 게임사게임 종료시킬것
+                {
+                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                    $user->update(['playing_game' => null]);
+                }
             }
             return redirect()->back()->withSuccess($result['message']);
         }
