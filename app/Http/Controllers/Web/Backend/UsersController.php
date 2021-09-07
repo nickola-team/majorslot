@@ -81,8 +81,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function join(\Illuminate\Http\Request $request)
         {
-            $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN);
-            $users = $users->paginate(20);
+            $partner_users = auth()->user()->availableUsers();
+            $users = null;
+            if (count($partner_users) > 0){
+                $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('id', $partner_users);
+                $users = $users->paginate(20);
+            }
             return view('backend.Default.user.join',compact('users'));
         }
         public function processJoin(\Illuminate\Http\Request $request)

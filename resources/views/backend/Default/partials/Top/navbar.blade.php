@@ -34,10 +34,10 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master','agent', 'distributor']) )
-            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*')  ? 'active' : '' }}">
+            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') || Request::is('backend/join*') ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
-                    <span>파트너리스트</span>
+                    <span>파트너리스트 <sup id="user_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -49,6 +49,14 @@
                             <span>매장리스트</span>
                         </a>
                     </li>
+                    @if (auth()->user()->isInoutPartner())
+                    <li class="{{ Request::is('backend/join') ? 'active' : ''  }}">
+                        <a  href="{{ route('backend.user.join') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>가입신청리스트<sup id="join_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
+                        </a>
+                    </li>
+                    @endif
                     <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
                         <a href="{{ route('backend.user.list') }}">
                             <i class="fa fa-users"></i>
