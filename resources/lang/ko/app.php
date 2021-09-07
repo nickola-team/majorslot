@@ -673,6 +673,9 @@ return [
     'activated' => '활성화 됨',
     'Active' => '활성',
     'Banned' => '차단',
+    'Deleted' => '삭제',
+    'Rejected' => '거부',
+    'Join' => '대기',
     'Unconfirmed' => '미승인',
 
     'user_created' => '회원/파트너가 생성되었습니다',

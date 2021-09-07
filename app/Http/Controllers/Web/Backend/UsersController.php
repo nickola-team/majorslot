@@ -4,7 +4,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
     class UsersController extends \VanguardLTE\Http\Controllers\Controller
     {
         private $users = null;
-        private $max_users = 10000000;
+        private $max_users = 10000;
         public function __construct(\VanguardLTE\Repositories\User\UserRepository $users)
         {
             $this->middleware('auth');
@@ -16,7 +16,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $statuses = ['' => trans('app.all')] + \VanguardLTE\Support\Enum\UserStatus::lists();
             $roles = \jeremykenedy\LaravelRoles\Models\Role::where('level', '<', \Illuminate\Support\Facades\Auth::user()->level())->pluck('name', 'id');
             $roles->prepend(trans('app.all'), '0');
-            $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', '<>', \VanguardLTE\Support\Enum\UserStatus::DELETED);
+            $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE);
             if($request->orderby)
             {
                 if ($request->orderby == 1)
@@ -78,6 +78,34 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->first();
 
             return view('backend.Default.user.list', compact('users', 'statuses', 'roles', 'role_id', 'happyhour', 'stat'));
+        }
+        public function join(\Illuminate\Http\Request $request)
+        {
+            $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN);
+            $users = $users->paginate(20);
+            return view('backend.Default.user.join',compact('users'));
+        }
+        public function processJoin(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['권한이 없습니다.']);
+            }
+
+            $user = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->where('id', $request->user_id)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['잘못된 요청입니다.']);
+            }
+            if ($request->type == 'allow')
+            {
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE]);
+            }
+            else
+            {
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::REJECTED]);
+            }
+            return redirect()->back()->withSuccess(['가입신청을 처리했습니다']);
         }
         public function createuserfromcsv(\Illuminate\Http\Request $request)
         {

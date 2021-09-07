@@ -45,15 +45,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $admin = $user;
-            while ($admin !=null && !$admin ->hasRole('comaster'))
+            while ($admin !=null && !$admin->isInoutPartner())
             {
                 if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
                 {
                     return response()->json(['error' => true, 'msg' => '삭제된 계정입니다.']);
                 }
-                if (!$admin->isActive())
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::BANNED)
                 {
                     return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::JOIN)
+                {
+                    return response()->json(['error' => true, 'msg' => '가입신청을 처리중입니다.']);
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::REJECTED)
+                {
+                    return response()->json(['error' => true, 'msg' => '가입신청이 거부되었습니다.']);
                 }
                 $admin = $admin->referral;
             }
@@ -176,6 +184,94 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             return response()->json(['error' => false, 'balance' => number_format($balance,0)]);
+        }
+        public function checkId(\Illuminate\Http\Request $request)
+        {
+            if ($request->id){
+                $user = \VanguardLTE\User::where('username',$request->id)->get();
+                if (count($user) > 0)
+                {
+                    return response()->json(['error' => false, 'ok' => 0]);
+                }
+                else{
+                    return response()->json(['error' => false, 'ok' => 1]);
+                }
+            }
+            return response()->json(['error' => true]);
+        }
+        public function postJoin(\Illuminate\Http\Request $request)
+        {
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $admin = null;
+            if ($site)
+            {
+                $admin = \VanguardLTE\User::where([
+                    'id' => $site->adminid, 
+                ])->first();
+            }
+
+            $friend = $request->friend;
+            $parent = \VanguardLTE\User::where([
+                'username' => $friend, 
+                'role_id' => 3
+            ])->first();
+            if (!$friend || !$parent)
+            {
+                return response()->json(['error' => true, 'msg' => '추천인아이디가 정확하지 않습니다.']);
+            }
+            $checkp = $parent->referral;
+            while ($checkp && !$checkp->isInoutPartner())
+            {
+                $checkp = $checkp->referral;
+            }
+
+            if (!$admin || !$checkp || $admin->id != $checkp->id)
+            {
+                return response()->json(['error' => true, 'msg' => '추천인아이디가 정확하지 않습니다']);
+            }
+
+            $count = \VanguardLTE\User::where([
+                'shop_id' => $parent->shop_id, 
+                'role_id' => 1
+            ])->count();
+            $max_users = 300;
+
+            if( $max_users <= $count) 
+            {
+                return response()->json(['error' => true, 'msg' => '최대 유저수를 초과했습니다.']);
+            }
+            $user = \VanguardLTE\User::where([
+                'username' => $request->username, 
+            ])->first();
+            if ($user)
+            {
+                return response()->json(['error' => true, 'msg' => '아이디가 이미 존재합니다.']);
+            }
+
+            $data = $request->only([
+                    'username',
+                    'password',
+                    'bank_name',
+                    'recommender',
+                    'account_no'
+                ]);
+            $data['status'] = \VanguardLTE\Support\Enum\UserStatus::JOIN;
+            $data['role_id'] = 1;
+            $data['shop_id'] = $parent->shop_id;
+            $data['parent_id'] = $parent->id;
+            $data['phone'] = $request->tel1 . '-' . $request->tel2 . '-' . $request->tel3;
+            
+            
+            $user = \VanguardLTE\User::create($data);
+            $user->detachAllRoles();
+            $user->attachRole(1);
+
+            \VanguardLTE\ShopUser::create([
+                'shop_id' => $user->shop_id, 
+                'user_id' => $user->id
+            ]);
+
+            return response()->json(['error' => false, 'msg' => '가입신청이 접수되었습니다.']);
         }
         public function getbalance(\Illuminate\Http\Request $request)
         {
@@ -324,8 +420,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'type' => 'out',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                 'payeer_id' => $request->id]);
+            $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN);
             $res['add'] = $transactions1->count();
             $res['out'] = $transactions2->count();
+            $res['join'] = $joinUsers->count();
             $res['rating'] = auth()->user()->rating;
             return response()->json($res);
         }

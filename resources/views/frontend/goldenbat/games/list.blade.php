@@ -52,7 +52,11 @@ $(document).ready(function(){
 		// updateMemo();
 		// gameJoin();
 		// chkLogin();
-	
+	@if (isset ($errors) && count($errors) > 0)
+		@foreach($errors->all() as $error)
+		alert("{{ $error }}");
+        @endforeach
+	@endif
 
 	$( "#password" ).on( "keyup",function( e ) {
 		if( e.keyCode==13 ) {

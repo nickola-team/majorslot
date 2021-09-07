@@ -8,7 +8,15 @@
 	<section class="content-header">
 		@include('backend.Default.partials.messages')
 	</section>
-
+	<?php  
+			$available_roles = Auth::user()->available_roles( true );
+			$available_roles_trans = [];
+			foreach ($available_roles as $key=>$role)
+			{
+				$role = \VanguardLTE\Role::find($key)->description;
+				$available_roles_trans[$key] = $role;
+			}
+	?>
 
 
 	<section class="content">
@@ -121,19 +129,12 @@
 						<thead>
 							<tr>
 								<th>이름(아이디)</th>
-								<th>매장이름</th>
-								@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-								<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
-								@endif
-								@if (auth()->user()->hasRole(['admin','comaster','master']))
-								<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
-								@endif
-								@if (auth()->user()->hasRole(['admin','comaster']))
-								<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
-								@endif
-								@if ( auth()->check() && auth()->user()->hasRole(['admin']) )
-								<th>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}</th>
-								@endif
+								<?php
+									for ($r=3;$r<auth()->user()->role_id;$r++)
+									{
+										echo '<th>'.$available_roles_trans[$r].'</th>';
+									}
+								?>
 								@permission('users.balance.manage')
 								<th>@lang('app.balance')</th>
 								<th>딜비수익</th>
@@ -161,20 +162,12 @@
 							<thead>
 							<tr>
 								<th>이름(아이디)</th>
-								<th>매장이름</th>
-								@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-								<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
-								@endif
-								@if (auth()->user()->hasRole(['admin','comaster','master']))
-								<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
-								@endif
-								@if (auth()->user()->hasRole(['admin','comaster']))
-								<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
-								@endif
-								@if ( auth()->check() && auth()->user()->hasRole(['admin']) )
-								<th>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}</th>
-								@endif
-								@permission('users.balance.manage')
+								<?php
+									for ($r=3;$r<auth()->user()->role_id;$r++)
+									{
+										echo '<th>'.$available_roles_trans[$r].'</th>';
+									}
+								?>
 								<th>@lang('app.balance')</th>
 								<th>딜비수익</th>
 								<th>딜비</th>
@@ -185,8 +178,6 @@
 								<th>@lang('app.pay_in')</th>
 								<th>@lang('app.pay_out')</th>
 								<th>딜비전환</th>
-								@endpermission
-
 							</tr>
 							</thead>
 						</table>
