@@ -33,6 +33,7 @@
 	<td>{{ $user->table_deal_percent }}</td>
 	<td>{{ number_format($user->total_in,0) }}</td>
 	<td>{{ number_format($user->total_out,0) }}</td>
+	<td>{{ $user->phone }}</td>
 	@if($user->status == 'Active')
 	<td>활성</td>
 	@elseif($user->status == 'Banned')

@@ -142,6 +142,7 @@
 								<th>라이브딜비</th>
 								<th>@lang('app.total_in')</th>
 								<th>@lang('app.total_out')</th>
+								<th>전화번호</th>
 								<th>@lang('app.status')</th>
 								<th>@lang('app.pay_in')</th>
 								<th>@lang('app.pay_out')</th>
@@ -174,6 +175,7 @@
 								<th>라이브딜비</th>
 								<th>@lang('app.total_in')</th>
 								<th>@lang('app.total_out')</th>
+								<th>전화번호</th>
 								<th>@lang('app.status')</th>
 								<th>@lang('app.pay_in')</th>
 								<th>@lang('app.pay_out')</th>
