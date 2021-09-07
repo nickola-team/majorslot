@@ -215,6 +215,17 @@
                                 $("#adj_newmark").show();
                                 $("#out_newmark").show();
                             }
+                            if (inouts['join'] > 0)
+                            {
+                                $("#user_newmark").show();
+                                $("#join_newmark").show();
+                            }
+                            else
+                            {
+                                $("#user_newmark").hide();
+                                $("#join_newmark").hide();
+                            }
+
                             if (inouts['add'] == 0 && inouts['out'] == 0)
                             {
                                 $("#adj_newmark").hide();
