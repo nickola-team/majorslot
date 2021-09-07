@@ -37,6 +37,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             }
             return $frontend;
         }
+        public function getJoin(\Illuminate\Http\Request $request)
+        {
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $frontend = '';
+            if ($site)
+            {
+                $frontend = $site->frontend;
+            }
+            return view('frontend.'.$frontend.'.layouts.join');
+        }
+
         public function getLogin()
         {
             $frontend = $this->getBasicTheme();

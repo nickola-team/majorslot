@@ -19,6 +19,12 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
 		'as' => 'frontend.auth.logout',
 		'uses' => 'Auth\AuthController@getLogout'
 	]);
+
+    Route::get('join', [
+        'as' => 'frontend.auth.join',
+        'uses' => 'Auth\AuthController@getJoin'
+    ]);   
+          
 	
 	// Allow registration routes only if registration is enabled.
     /*
@@ -115,6 +121,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.profile.dealout',
         'uses' => 'ProfileController@dealout'
     ]);
+ 
     // Route::get('profile/activity', [
     //     'as' => 'frontend.profile.activity',
     //     'uses' => 'ProfileController@activity'
@@ -336,6 +343,16 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.convert_deal_balance',
         'uses' => 'ApiController@convertDealBalance',
     ]);
+
+    Route::post('api/checkid', [
+        'as' => 'frontend.api.checkid',
+        'uses' => 'ApiController@checkId',
+    ]);
+
+    Route::post('api/join', [
+        'as' => 'frontend.api.join',
+        'uses' => 'ApiController@postJoin'
+    ]); 
 
     Route::get('/api/stat_game_balance', [
         'as' => 'backend.game_stat.balance',
@@ -615,6 +632,15 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@index',
         'middleware' => 'permission:users.manage'
     ]);
+    Route::get('join', [
+        'as' => 'backend.user.join',
+        'uses' => 'UsersController@join',
+        'middleware' => 'permission:users.manage'
+    ]);
+    Route::post('processjoin', [
+        'as' => 'backend.user.processjoin',
+        'uses' => 'UsersController@processJoin',
+    ]);
     Route::get('tree', [
         'as' => 'backend.user.tree',
         'uses' => 'UsersController@tree',
@@ -683,6 +709,7 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@store',
         'middleware' => 'permission:users.add'
     ]);
+
 	Route::get('user/{user}/stat', [
         'as' => 'backend.user.stat',
         'uses' => 'UsersController@statistics'
