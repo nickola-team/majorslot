@@ -48,7 +48,7 @@
 					</button>
 
 					@if( Auth::user()->hasRole('admin') )
-						<a href="{{ route('backend.activity.clear') }}"
+						<a href="{{ route($admurl.'.activity.clear') }}"
 						   class="btn btn-danger"
 						   data-method="DELETE"
 						   data-confirm-title="경고"
@@ -90,7 +90,7 @@
 											@if (isset($user))
 												{{ $activity->user->present()->username }}
 											@else
-												<a href="{{ route('backend.activity.user', $activity->user_id) }}">{{ $activity->userdata->username }}</a>
+												<a href="{{ route($admurl.'.activity.user', $activity->user_id) }}">{{ $activity->userdata->username }}</a>
 											@endif
 										</td>
 									@endif

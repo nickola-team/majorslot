@@ -73,7 +73,7 @@
 				<h3 class="box-title">@lang('app.pincode')</h3>
 				@permission('pincodes.add')
 				<div class="pull-right box-tools">
-					<a href="{{ route('backend.pincode.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+					<a href="{{ route($admurl.'.pincode.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 				</div>
 				@endpermission
 			</div>

@@ -1,5 +1,5 @@
 <tr>        
-    <td><a href="{{ route('backend.pincode.edit', $pincode->id) }}">{{ $pincode->code?:$pincode->id }}</a></td>
+    <td><a href="{{ route($admurl.'.pincode.edit', $pincode->id) }}">{{ $pincode->code?:$pincode->id }}</a></td>
 	<td>{{ $pincode->nominal }}</td>
 	<td>{{ $pincode->created_at }}</td>
     <td>

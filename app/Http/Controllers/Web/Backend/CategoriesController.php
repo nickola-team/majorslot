@@ -78,14 +78,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $data = $request->all();
             $data['shop_id'] = auth()->user()->shop_id;
             $category = \VanguardLTE\Category::create($data);
-            return redirect()->route('backend.category.list')->withSuccess(trans('app.category_created'));
+            return redirect()->route(config('app.admurl').'.category.list')->withSuccess(trans('app.category_created'));
         }
         public function edit($category)
         {
             $category = \VanguardLTE\Category::where('id', $category)->first();
             if( !in_array($category->shop_id, auth()->user()->availableShops()) ) 
             {
-                return redirect()->route('backend.category.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->route(config('app.admurl').'.category.list')->withErrors([trans('app.wrong_shop')]);
             }
             $categories = \VanguardLTE\Category::where([
                 'parent' => 0, 
@@ -99,7 +99,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             if( !in_array($category->shop_id, auth()->user()->availableShops()) ) 
             {
-                return redirect()->route('backend.category.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->route(config('app.admurl').'.category.list')->withErrors([trans('app.wrong_shop')]);
             }
             $data = $request->only([
                 'title', 
@@ -108,7 +108,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'href'
             ]);
             \VanguardLTE\Category::where('id', $category->id)->update($data);
-            return redirect()->route('backend.category.list')->withSuccess(trans('app.category_updated'));
+            return redirect()->route(config('app.admurl').'.category.list')->withSuccess(trans('app.category_updated'));
         }
         public function delete(\VanguardLTE\Category $category)
         {
@@ -118,7 +118,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             \VanguardLTE\GameCategory::where('category_id', $category->id)->delete();
             $category = \VanguardLTE\Category::where('id', $category->id)->delete();
-            return redirect()->route('backend.category.list')->withSuccess(trans('app.category_deleted'));
+            return redirect()->route(config('app.admurl').'.category.list')->withSuccess(trans('app.category_deleted'));
         }
 /*        public function security()
         {

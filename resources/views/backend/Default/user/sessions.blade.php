@@ -37,7 +37,7 @@
                                     <td>{{ $session->browser ?: trans('app.unknown') }}</td>
                                     <td>{{ $session->last_activity->format(config('app.date_time_format')) }}</td>
                                     <td class="text-center">
-                                        <a href="{{ isset($profile) ? route('backend.profile.sessions.invalidate', $session->id) : route('backend.user.sessions.invalidate', [$user->id, $session->id]) }}"
+                                        <a href="{{ isset($profile) ? route($admurl.'.profile.sessions.invalidate', $session->id) : route($admurl.'.user.sessions.invalidate', [$user->id, $session->id]) }}"
                                            class="btn btn-block btn-danger btn-xs"
                                            data-method="DELETE"
                                            data-confirm-title="@lang('app.please_confirm')"

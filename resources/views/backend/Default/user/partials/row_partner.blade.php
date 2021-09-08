@@ -2,7 +2,7 @@
 @if (Session::get('isCashier'))
 {{ $user->username }}
 @else
-<a href="{{ route('backend.user.edit', $user->id) }}">
+<a href="{{ route($admurl.'.user.edit', $user->id) }}">
 {{ $user->username }}
 </a>
 @endif
@@ -11,7 +11,7 @@
         $parent = $user->referral;
         for ($r=$role_id+1;$r<auth()->user()->role_id;$r++)
         {
-             echo '<td><a href="'.route('backend.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+             echo '<td><a href="'.route($admurl.'.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
             $parent = $parent->referral;
         }
 ?>

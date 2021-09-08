@@ -1,6 +1,6 @@
 <td>
 @if ( $user['role_id'] > 3 )
-<a href="{{ route('backend.user.tree') }}?parent={{$user['id']}}">
+<a href="{{ route($admurl.'.user.tree') }}?parent={{$user['id']}}">
 @endif
 {{ $user['name'] }}
 @if ( $user['role_id'] > 3 )
@@ -19,7 +19,7 @@
 <td>{{ $available_roles_trans[$user['role_id']] }}</td>
 @if ( isset($user['shop']) && empty(Request::get('search')) )
 <td>
-<a href="{{ route('backend.shop.edit', $user['shop_id']) }}">
+<a href="{{ route($admurl.'.shop.edit', $user['shop_id']) }}">
 {{ $user['shop'] }}
 </a>
 </td>
@@ -37,7 +37,7 @@
 @endif
 
 <td>
-<a href="{{ route('backend.user.edit', $user['id']) }}">
+<a href="{{ route($admurl.'.user.edit', $user['id']) }}">
 <button type="button" class="btn btn-block btn-primary btn-xs">편집</button>
 </a>
 </td>

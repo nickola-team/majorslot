@@ -14,7 +14,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">보너스</h3>
                 <div class="pull-right box-tools">
-                    <a href="{{ route('backend.bonus.bngadd') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+                    <a href="{{ route($admurl.'.bonus.bngadd') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
                 </div>
 			</div>
             <div class="box-body">
@@ -49,7 +49,7 @@
 								<td>{{ $bonus['end_date'] }} </td>
 								<td>{{$bonus['status'] }}</td>
 								<td>
-								<a href="{{ route('backend.bonus.bngcancel', $bonus['bonus_id']) }}"
+								<a href="{{ route($admurl.'.bonus.bngcancel', $bonus['bonus_id']) }}"
 									class="btn btn-danger btn-block"
 									data-method="DELETE"
 									data-confirm-title="보너스취소"
@@ -90,7 +90,7 @@
 	<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jpgame.balance') }}" method="POST">
+				<form action="{{ route($admurl.'.jpgame.balance') }}" method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -117,7 +117,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jpgame.balance') }}" method="POST" id="outForm">
+				<form action="{{ route($admurl.'.jpgame.balance') }}" method="POST" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

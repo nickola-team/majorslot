@@ -13,7 +13,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function index()
         {
-            return redirect()->route('backend.dashboard');
+            return redirect()->route(config('app.admurl').'.dashboard');
 /*            $checked = new \VanguardLTE\Lib\LicenseDK();
             $license_notifications_array = $checked->aplVerifyLicenseDK(null, 0);
             if( $license_notifications_array['notification_case'] != 'notification_license_ok' ) 
@@ -30,7 +30,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function create()
         {
             $edit = false;
-            return redirect()->route('backend.dashboard');
+            return redirect()->route(config('app.admurl').'.dashboard');
             return view('backend.Default.role.add-edit', compact('edit'));
         }
         public function store(\Illuminate\Http\Request $request)
@@ -40,12 +40,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'name' => 'required'
             ]);
             \jeremykenedy\LaravelRoles\Models\Role::create($request->all());
-            return redirect()->route('backend.role.index')->withSuccess(trans('app.role_created'));
+            return redirect()->route(config('app.admurl').'.role.index')->withSuccess(trans('app.role_created'));
         }
         public function edit(\jeremykenedy\LaravelRoles\Models\Role $role)
         {
             $edit = true;
-            return redirect()->route('backend.dashboard');
+            return redirect()->route(config('app.admurl').'.dashboard');
             return view('backend.Default.role.add-edit', compact('edit', 'role'));
         }
         public function update(\jeremykenedy\LaravelRoles\Models\Role $role, \Illuminate\Http\Request $request)
@@ -55,14 +55,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'name' => 'required'
             ]);
             $role->update($request->all());
-            return redirect()->route('backend.role.index')->withSuccess(trans('app.role_updated'));
+            return redirect()->route(config('app.admurl').'.role.index')->withSuccess(trans('app.role_updated'));
         }
         public function delete(\jeremykenedy\LaravelRoles\Models\Role $role)
         {
-            return redirect()->route('backend.dashboard');
+            return redirect()->route(config('app.admurl').'.dashboard');
             $role->detachAllPermissions();
             $role->delete();
-            return redirect()->route('backend.role.index')->withSuccess(trans('app.role_deleted'));
+            return redirect()->route(config('app.admurl').'.role.index')->withSuccess(trans('app.role_deleted'));
         }
 /*        public function security()
         {

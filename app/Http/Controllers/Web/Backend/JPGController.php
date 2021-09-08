@@ -38,7 +38,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $data['shop_id'] = auth()->user()->shop_id;
             $jackpot = \VanguardLTE\JPG::create($data);
-            return redirect()->route('backend.jpgame.list')->withSuccess(trans('app.jackpot_created'));
+            return redirect()->route(config('app.admurl').'.jpgame.list')->withSuccess(trans('app.jackpot_created'));
         }
         public function edit($jackpot)
         {
@@ -83,7 +83,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $jackpot->update($data);
             
-            return redirect()->route('backend.jpgame.list')->withSuccess(trans('app.jackpot_updated'));
+            return redirect()->route(config('app.admurl').'.jpgame.list')->withSuccess(trans('app.jackpot_updated'));
         }
         public function balance(\Illuminate\Http\Request $request)
         {

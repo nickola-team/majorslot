@@ -16,7 +16,7 @@
                 <h3 class="box-title">@lang('app.permissions')</h3>
                 @permission('permissions.add')
                 <div class="pull-right box-tools">
-                    <a href="{{ route('backend.permission.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+                    <a href="{{ route($admurl.'.permission.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
                 </div>
                 @endpermission
             </div>
@@ -37,7 +37,7 @@
                                 @if( !in_array($permission->id, [1,3,6,7,11,12,13,14,37]))
 
                                 <tr>
-                                    <td><a href="{{ route('backend.permission.edit', $permission->id) }}">{{ $permission->name ?: $permission->name }}</a></td>
+                                    <td><a href="{{ route($admurl.'.permission.edit', $permission->id) }}">{{ $permission->name ?: $permission->name }}</a></td>
 
                                     @foreach ($roles as $role)
                                         <td>

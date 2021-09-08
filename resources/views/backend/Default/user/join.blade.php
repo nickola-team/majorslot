@@ -79,7 +79,7 @@
 	<div class="modal fade" id="openAllowModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.processjoin') }}" method="POST" id="addForm">
+				<form action="{{ route($admurl.'.user.processjoin') }}" method="POST" id="addForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -105,7 +105,7 @@
 	<div class="modal fade" id="openRejectModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.processjoin') }}" method="POST" id="outForm">
+				<form action="{{ route($admurl.'.user.processjoin') }}" method="POST" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

@@ -28,7 +28,7 @@
             <button type="submit" class="btn btn-primary">
                 수정
             </button>
-            <a href="{{ route('backend.notice.delete', $notice->id) }}"
+            <a href="{{ route($admurl.'.notice.delete', $notice->id) }}"
             class="btn btn-danger"
             data-method="DELETE"
             data-confirm-title="@lang('app.please_confirm')"

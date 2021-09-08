@@ -39,7 +39,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function noticedel(\Illuminate\Http\Request $request)
         {
             \VanguardLTE\Notice::where('user_id', auth()->user()->id)->delete();
-            return redirect()->route('backend.settings.notice')->withSuccess('공지를 삭제하였습니다');
+            return redirect()->route(config('app.admurl').'.settings.notice')->withSuccess('공지를 삭제하였습니다');
         }
         public function noticeupdate(\Illuminate\Http\Request $request)
         {
@@ -175,7 +175,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.no_permission')]);
             }
             \VanguardLTE\Jobs\StartSync::dispatch();
-            return redirect()->route('backend.settings.general')->withSuccess(trans('app.games_sync_started'));
+            return redirect()->route(config('app.admurl').'.settings.general')->withSuccess(trans('app.games_sync_started'));
         }
         public function shop_block(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

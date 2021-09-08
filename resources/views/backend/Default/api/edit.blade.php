@@ -29,7 +29,7 @@
                 @lang('app.edit_api')
             </button>
             @permission('api.delete')
-        <a href="{{ route('backend.api.delete', $api->id) }}"
+        <a href="{{ route($admurl.'.api.delete', $api->id) }}"
            class="btn btn-danger"
            data-method="DELETE"
            data-confirm-title="@lang('app.please_confirm')"
@@ -49,7 +49,7 @@
         $(function() {
             $('#generateKey').click(function(){
                 $.ajax({
-                    url: "{{ route('backend.api.generate') }}",
+                    url: "{{ route($admurl.'.api.generate') }}",
                     dataType: 'json',
                     success: function(data){
                         $('#keygen').val( data.key );

@@ -181,7 +181,7 @@
     <div class="modal fade" id="openAddModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.balance.update') }}" method="POST" id="addForm">
+				<form action="{{ route($admurl.'.user.balance.update') }}" method="POST" id="addForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -217,7 +217,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.balance.update') }}" method="POST" id="outForm">
+				<form action="{{ route($admurl.'.user.balance.update') }}" method="POST" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -255,7 +255,7 @@
 	<div class="modal fade" id="openResetModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.partner.reset_ggr') }}" method="POST" id="resetForm">
+				<form action="{{ route($admurl.'.user.partner.reset_ggr') }}" method="POST" id="resetForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

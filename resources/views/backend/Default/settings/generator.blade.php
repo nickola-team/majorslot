@@ -111,7 +111,7 @@
 
             $.ajax({
 				dataType: "json",
-				url: "{{ route('backend.game.list.json') }}",
+				url: "{{ route($admurl.'.game.list.json') }}",
 				data: {view: view, categories: categories, device: device},
 				success: function(data){
 
@@ -137,7 +137,7 @@
 
 			$.ajax({
 				dataType: "json",
-				url: "{{ route('backend.api.json') }}",
+				url: "{{ route($admurl.'.api.json') }}",
 				data: {shop_id: shop_id},
 				success: function(data){
 

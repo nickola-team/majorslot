@@ -9,7 +9,7 @@
     <td>{{$notice->writer?$notice->writer->username:'알수없음'}}</td>
     @endif
     <td>
-    <a href="{{ route('backend.notice.edit', $notice->id) }}">
+    <a href="{{ route($admurl.'.notice.edit', $notice->id) }}">
         <button type="button" class="btn btn-block btn-success btn-xs">편집</button>
     </a>
     </td>

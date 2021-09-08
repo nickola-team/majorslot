@@ -36,7 +36,7 @@
 				<h3 class="box-title">@lang('app.api_keys')</h3>
 				<div class="pull-right box-tools">
 					@permission('api.add')
-					<a href="{{ route('backend.api.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+					<a href="{{ route($admurl.'.api.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 					@endpermission
 				</div>
 			</div>

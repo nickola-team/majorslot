@@ -5,7 +5,7 @@
 	<td >
 	<span class="{{$total?'text-red':'text-black'}}">
 	@if (!$total && auth()->user()->hasRole('admin') && Request::get('partner') == '' && Request::get('cat') == '')
-	<a href="{{route('backend.adjustment_game', ['cat'=>$cat['category_id'], 'date' => $cat['date'], 'type'=>$cat['type']] ) }}"> {{$cat['title'] }} </a>
+	<a href="{{route($admurl.'.adjustment_game', ['cat'=>$cat['category_id'], 'date' => $cat['date'], 'type'=>$cat['type']] ) }}"> {{$cat['title'] }} </a>
 	@else
 	{{$cat['title'] }}
 	@endif

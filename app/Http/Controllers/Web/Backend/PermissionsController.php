@@ -41,7 +41,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'name' => 'required'
             ]);
             \jeremykenedy\LaravelRoles\Models\Permission::create($request->all());
-            return redirect()->route('backend.permission.index')->withSuccess(trans('app.permission_created_successfully'));
+            return redirect()->route(config('app.admurl').'.permission.index')->withSuccess(trans('app.permission_created_successfully'));
         }
         public function edit(\jeremykenedy\LaravelRoles\Models\Permission $permission)
         {
@@ -55,12 +55,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'name' => 'required'
             ]);
             $permission->update($request->all());
-            return redirect()->route('backend.permission.index')->withSuccess(trans('app.permission_updated_successfully'));
+            return redirect()->route(config('app.admurl').'.permission.index')->withSuccess(trans('app.permission_updated_successfully'));
         }
         public function delete(\jeremykenedy\LaravelRoles\Models\Permission $permission)
         {
             $permission->delete();
-            return redirect()->route('backend.permission.index')->withSuccess(trans('app.permission_deleted_successfully'));
+            return redirect()->route(config('app.admurl').'.permission.index')->withSuccess(trans('app.permission_deleted_successfully'));
         }
         public function saveRolePermissions(\Illuminate\Http\Request $request)
         {
@@ -72,7 +72,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $role->syncPermissions($permissions);
             }
             event(new \VanguardLTE\Events\Role\PermissionsUpdated());
-            return redirect()->route('backend.permission.index')->withSuccess(trans('app.permissions_saved_successfully'));
+            return redirect()->route(config('app.admurl').'.permission.index')->withSuccess(trans('app.permissions_saved_successfully'));
         }
 /*        public function security()
         {

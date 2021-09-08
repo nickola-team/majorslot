@@ -11,10 +11,10 @@
 <td>
 @if ($stat->user)
 @if ($partner==0)
-	<a href="{{ route('backend.statistics', ['user' => $stat->user->username])  }}">
+	<a href="{{ route($admurl.'.statistics', ['user' => $stat->user->username])  }}">
 		{{ $stat->user->username }}
 @else
-	<a href="{{ route('backend.statistics_partner', ['user' => $stat->user->username])  }}">
+	<a href="{{ route($admurl.'.statistics_partner', ['user' => $stat->user->username])  }}">
 	{{ $stat->user->username }} [ {{$available_roles_trans[$stat->user->role_id]}} ]
 @endif
 </a>
@@ -87,7 +87,7 @@
 <td>{{ $stat->created_at->format(config('app.date_time_format')) }}</td>
 	@if(isset($show_shop) && $show_shop)
 		@if($stat->shop)
-			<td><a href="{{ route('backend.shop.edit', $stat->shop->id) }}">{{ $stat->shop->name }}</a></td>
+			<td><a href="{{ route($admurl.'.shop.edit', $stat->shop->id) }}">{{ $stat->shop->name }}</a></td>
 			@else
 			<td>@lang('app.no_shop')</td>
 		@endif

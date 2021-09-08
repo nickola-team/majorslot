@@ -64,13 +64,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return $this->handleAvatarUpdate($name);
             }
-            return redirect()->route('backend.profile')->withErrors(trans('app.avatar_not_changed'));
+            return redirect()->route(config('app.admurl').'.profile')->withErrors(trans('app.avatar_not_changed'));
         }
         private function handleAvatarUpdate($avatar)
         {
             $this->users->update($this->theUser->id, ['avatar' => $avatar]);
             event(new \VanguardLTE\Events\User\ChangedAvatar());
-            return redirect()->route('backend.profile')->withSuccess(trans('app.avatar_changed'));
+            return redirect()->route(config('app.admurl').'.profile')->withSuccess(trans('app.avatar_changed'));
         }
         public function updateAvatarExternal(\Illuminate\Http\Request $request, \VanguardLTE\Services\Upload\UserAvatarManager $avatarManager)
         {
@@ -86,7 +86,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 unset($data['password_confirmation']);
             }
             $this->users->update($this->theUser->id, $data);
-            return redirect()->route('backend.profile')->withSuccess(trans('app.login_updated'));
+            return redirect()->route(config('app.admurl').'.profile')->withSuccess(trans('app.login_updated'));
         }
         public function activity(\VanguardLTE\Repositories\Activity\ActivityRepository $activitiesRepo, \Illuminate\Http\Request $request)
         {
@@ -104,7 +104,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function invalidateSession($session, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
             $sessionRepository->invalidateSession($session->id);
-            return redirect()->route('backend.profile.sessions')->withSuccess(trans('app.session_invalidated'));
+            return redirect()->route(config('app.admurl').'.profile.sessions')->withSuccess(trans('app.session_invalidated'));
         }
         public function setshop(\VanguardLTE\Http\Requests\User\UpdateProfileDetailsRequest $request)
         {

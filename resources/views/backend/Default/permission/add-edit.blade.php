@@ -52,7 +52,7 @@
                     {{ $edit ? trans('app.edit_permission') : trans('app.add_permission') }}
                 </button>
                 @if ($edit && $permission->removable)
-                    <a href="{{ route('backend.permission.delete', $permission->id) }}"
+                    <a href="{{ route($admurl.'.permission.delete', $permission->id) }}"
                        class="btn btn-danger"
                        data-method="DELETE"
                        data-confirm-title="@lang('app.please_confirm')"

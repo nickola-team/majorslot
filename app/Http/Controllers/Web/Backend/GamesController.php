@@ -182,14 +182,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( !count($games) ) 
             {
-                return redirect()->route('backend.game.list')->withErrors([trans('app.games_not_selected')]);
+                return redirect()->route(config('app.admurl').'.game.list')->withErrors([trans('app.games_not_selected')]);
             }
             $games = array_unique($games);
             if( $request->action == 'change_category' ) 
             {
                 if( !$request->category || !count($request->category) ) 
                 {
-                    return redirect()->route('backend.game.list')->withErrors([trans('app.categories_not_selected')]);
+                    return redirect()->route(config('app.admurl').'.game.list')->withErrors([trans('app.categories_not_selected')]);
                 }
                 foreach( $games as $game_id ) 
                 {
@@ -207,7 +207,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 if( !$request->category || !count($request->category) ) 
                 {
-                    return redirect()->route('backend.game.list')->withErrors([trans('app.categories_not_selected')]);
+                    return redirect()->route(config('app.admurl').'.game.list')->withErrors([trans('app.categories_not_selected')]);
                 }
                 foreach( $games as $game_id ) 
                 {
@@ -243,7 +243,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     \VanguardLTE\StatGame::where('game', $game->name)->delete();
                     \VanguardLTE\Game::where('id', $game->id)->delete();
                 }
-                return redirect()->route('backend.game.list')->withSuccess(trans('app.games_deleted'));
+                return redirect()->route(config('app.admurl').'.game.list')->withSuccess(trans('app.games_deleted'));
             }
             if( $request->action == 'stay_games' && count($games) ) 
             {
@@ -264,7 +264,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         \VanguardLTE\Game::where('id', $game->id)->delete();
                     }
                 }
-                return redirect()->route('backend.game.list')->withSuccess(trans('app.games_deleted'));
+                return redirect()->route(config('app.admurl').'.game.list')->withSuccess(trans('app.games_deleted'));
             }
             if( $request->action == 'change_values' ) 
             {
@@ -391,7 +391,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $after = microtime(true);
-            return redirect()->route('backend.game.list')->withSuccess(trans('app.games_updated'));
+            return redirect()->route(config('app.admurl').'.game.list')->withSuccess(trans('app.games_updated'));
         }
         public function view(\VanguardLTE\Game $game, \Illuminate\Http\Request $request)
         {
@@ -415,7 +415,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
-            return redirect()->route('backend.game.list')->withSuccess(trans('app.game_created'));
+            return redirect()->route(config('app.admurl').'.game.list')->withSuccess(trans('app.game_created'));
         }
         public function edit($game)
         {
@@ -617,7 +617,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $categoryEdited = true;
             }
             event(new \VanguardLTE\Events\Game\GameEdited($gameData, $categoryEdited, $matchEdited));
-            return redirect()->route('backend.game.edit', $gameData->id)->withSuccess(trans('app.game_updated'));
+            return redirect()->route(config('app.admurl').'.game.edit', $gameData->id)->withSuccess(trans('app.game_updated'));
         }
         public function delete(\VanguardLTE\Game $game)
         {
@@ -631,7 +631,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             \VanguardLTE\StatGame::where('game', $game->name)->delete();
             \VanguardLTE\GameLog::where('game_id', $game->id)->delete();
             \VanguardLTE\Game::where('id', $game->id)->delete();
-            return redirect()->route('backend.game.list')->withSuccess(trans('app.game_deleted'));
+            return redirect()->route(config('app.admurl').'.game.list')->withSuccess(trans('app.game_deleted'));
         }
         public function gamebanks_add(\Illuminate\Http\Request $request)
         {

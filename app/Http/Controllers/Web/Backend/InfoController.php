@@ -60,17 +60,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                 }
             }
-            return redirect()->route('backend.info.list')->withSuccess(trans('app.info_created'));
+            return redirect()->route(config('app.admurl').'.info.list')->withSuccess(trans('app.info_created'));
         }
         public function edit(\VanguardLTE\Info $info)
         {
             if( !$info ) 
             {
-                return redirect()->route('backend.info.list')->withErrors([trans('app.wrong_link')]);
+                return redirect()->route(config('app.admurl').'.info.list')->withErrors([trans('app.wrong_link')]);
             }
             if( !auth()->user()->hasRole('admin') && $info->user_id != auth()->user()->id ) 
             {
-                return redirect()->route('backend.info.list')->withErrors([trans('app.wrong_link')]);
+                return redirect()->route(config('app.admurl').'.info.list')->withErrors([trans('app.wrong_link')]);
             }
             $roles = explode('|', $info->roles);
             return view('backend.Default.info.edit', compact('info', 'roles'));
@@ -103,12 +103,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                 }
             }
-            return redirect()->route('backend.info.list')->withSuccess(trans('app.info_updated'));
+            return redirect()->route(config('app.admurl').'.info.list')->withSuccess(trans('app.info_updated'));
         }
         public function delete(\VanguardLTE\Info $info)
         {
             \VanguardLTE\Info::where('id', $info->id)->delete();
-            return redirect()->route('backend.info.list')->withSuccess(trans('app.info_deleted'));
+            return redirect()->route(config('app.admurl').'.info.list')->withSuccess(trans('app.info_deleted'));
         }
 /*        public function security()
         {

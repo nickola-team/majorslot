@@ -28,7 +28,7 @@
                     확인
                 </button>
                 @if(!Auth::user()->hasRole('manager') )
-                <a href="{{ route('backend.shop.delete', $shop->id) }}"
+                <a href="{{ route($admurl.'.shop.delete', $shop->id) }}"
                    class="btn btn-danger"
                    data-method="DELETE"
                    data-confirm-title="@lang('app.please_confirm')"

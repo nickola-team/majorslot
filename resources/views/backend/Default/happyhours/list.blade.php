@@ -15,7 +15,7 @@
 				<h3 class="box-title">@lang('app.happyhours') - 현재 @lang('app.time') {{ \Carbon\Carbon::now()->format('H:i:s') }}</h3>
 				@permission('happyhours.add')
 				<div class="pull-right box-tools">
-					<a href="{{ route('backend.happyhour.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+					<a href="{{ route($admurl.'.happyhour.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 				</div>
 				@endpermission
 			</div>

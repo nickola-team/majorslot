@@ -45,7 +45,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $data['user_id'] = auth()->user()->id;
             }
             \VanguardLTE\Notice::create($data);
-            return redirect()->route('backend.notice.list')->withSuccess('공지가 추가되었습니다');
+            return redirect()->route(config('app.admurl').'.notice.list')->withSuccess('공지가 추가되었습니다');
         }
         public function massadd(\Illuminate\Http\Request $request)
         {
@@ -107,7 +107,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     \VanguardLTE\Pincode::create($data);
                 }
             }
-            return redirect()->route('backend.pincode.list')->withSuccess(trans('app.pincode_created'));
+            return redirect()->route(config('app.admurl').'.pincode.list')->withSuccess(trans('app.pincode_created'));
         }
         public function edit($notice)
         {
@@ -138,12 +138,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             \VanguardLTE\Notice::where('id', $notice->id)->update($data);
-            return redirect()->route('backend.notice.list')->withSuccess('공지가 업데이트되었습니다.');
+            return redirect()->route(config('app.admurl').'.notice.list')->withSuccess('공지가 업데이트되었습니다.');
         }
         public function delete(\VanguardLTE\Notice $notice)
         {
             \VanguardLTE\Notice::where('id', $notice->id)->delete();
-            return redirect()->route('backend.notice.list')->withSuccess('공지가 삭제되었습니다.');
+            return redirect()->route(config('app.admurl').'.notice.list')->withSuccess('공지가 삭제되었습니다.');
         }
 /*        public function security()
         {

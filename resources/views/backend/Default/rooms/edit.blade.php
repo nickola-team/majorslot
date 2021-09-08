@@ -31,7 +31,7 @@
                 </button>
 
                 @if( Auth::user()->hasRole('admin') )
-                    <a href="{{ route('backend.room.hard_delete', $room->id) }}"
+                    <a href="{{ route($admurl.'.room.hard_delete', $room->id) }}"
                        class="btn btn-danger"
                        data-method="DELETE"
                        data-confirm-title="@lang('app.please_confirm')"
@@ -42,7 +42,7 @@
                 @endif
 
                 @if( Auth::user()->hasRole('dealer') && count(Auth::user()->rooms()) > 1 )
-                <a href="{{ route('backend.room.delete', $room->id) }}"
+                <a href="{{ route($admurl.'.room.delete', $room->id) }}"
                    class="btn btn-danger"
                    data-method="DELETE"
                    data-confirm-title="@lang('app.please_confirm')"

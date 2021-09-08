@@ -15,7 +15,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">공지관리</h3>
 				<div class="pull-right box-tools">
-					<a href="{{ route('backend.notice.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+					<a href="{{ route($admurl.'.notice.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 				</div>
 			</div>
 			<div class="box-body">

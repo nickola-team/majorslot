@@ -1,6 +1,6 @@
 <tr>
     <td>
-        <a href="{{ route('backend.user.edit', $user->id) }}">
+        <a href="{{ route($admurl.'.user.edit', $user->id) }}">
             {{ $user->username ?: trans('app.n_a') }}
         </a>
     </td>
@@ -17,7 +17,7 @@
 		}
 		if ($parent)
 		{
-			echo '<td><a href="'.route('backend.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+			echo '<td><a href="'.route($admurl.'.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
 		}
 		else
 		{

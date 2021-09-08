@@ -181,7 +181,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             if( !auth()->user()->hasRole('distributor') ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.only_for_distributors')]);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors([trans('app.only_for_distributors')]);
             }
             $directories = [];
             foreach( glob(public_path() . '/frontend/*', GLOB_ONLYDIR) as $fileinfo ) 
@@ -232,11 +232,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             if( $this->max_shops <= \VanguardLTE\Shop::count() ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors([trans('max_shops', ['max' => config('limits.max_shops')])]);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors([trans('max_shops', ['max' => config('limits.max_shops')])]);
             }
             if( !auth()->user()->hasRole('distributor') ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.only_for_distributors')]);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors([trans('app.only_for_distributors')]);
             }
 
             $validatedData = $request->validate([
@@ -265,15 +265,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $parent = auth()->user();
             if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
             {
-                return redirect()->route('backend.shop.list')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
             }
             if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
             {
-                return redirect()->route('backend.shop.list')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
             } 
             if ($parent!=null && $parent->ggr_percent < $data['ggr_percent'])
             {
-                return redirect()->route('backend.shop.list')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
             } 
             $data['reset_days'] = auth()->user()->reset_days;
             $data['last_reset_at'] = date('Y-m-d');
@@ -336,13 +336,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             
             event(new \VanguardLTE\Events\Shop\ShopCreated($shop));
 
-            return redirect()->route('backend.shop.list')->withSuccess(trans('app.shop_created'));
+            return redirect()->route(config('app.admurl').'.shop.list')->withSuccess(trans('app.shop_created'));
         }
         public function admin_create()
         {
             if( !auth()->user()->hasRole('admin') ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.only_for_distributors')]);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors([trans('app.only_for_distributors')]);
             }
             $directories = [];
             foreach( glob(public_path() . '/frontend/*', GLOB_ONLYDIR) as $fileinfo ) 
@@ -379,7 +379,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function admin_store(\Illuminate\Http\Request $request)
         {
-            return redirect()->route('backend.shop.list')->withErrors(['Not implemented yet']);
+            return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['Not implemented yet']);
             $shop = $request->only([
                 'name', 
                 'percent', 
@@ -548,14 +548,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'action' => 'create', 
                 'item_id' => $shop->id
             ]);
-            return redirect()->route('backend.shop.list')->withSuccess(trans('app.shop_created'));
+            return redirect()->route(config('app.admurl').'.shop.list')->withSuccess(trans('app.shop_created'));
         }
         public function edit($shop)
         {
             $shop = \VanguardLTE\Shop::where('id', $shop)->first();
             if( !$shop ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors([trans('app.wrong_shop')]);
             }
             $categories = \VanguardLTE\Category::where([
                 'parent' => 0, 
@@ -572,7 +572,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $ids = \VanguardLTE\ShopUser::where('user_id', \Auth::id())->pluck('shop_id')->toArray();
                 if( !(count($ids) && in_array($shop->id, $ids)) ) 
                 {
-                    return redirect()->route('backend.shop.list')->withErrors([trans('app.wrong_shop')]);
+                    return redirect()->route(config('app.admurl').'.shop.list')->withErrors([trans('app.wrong_shop')]);
                 }
             }
             $directories = [];
@@ -606,7 +606,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $ids = \VanguardLTE\ShopUser::where('user_id', \Auth::id())->pluck('shop_id')->toArray();
                 if( !(count($ids) && in_array($shop->id, $ids)) ) 
                 {
-                    return redirect()->route('backend.shop.list')->withErrors([trans('app.wrong_shop')]);
+                    return redirect()->route(config('app.admurl').'.shop.list')->withErrors([trans('app.wrong_shop')]);
                 }
             }
             $data = $request->only([
@@ -630,20 +630,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $managers = $shop->getUsersByRole('manager');
             if (count($managers) == 0)
             {
-                return redirect()->route('backend.shop.list')->withErrors(['매장관리자를 찾을수 없습니다.']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['매장관리자를 찾을수 없습니다.']);
             }
             $parent = $managers->first()->referral;
             if ($parent!=null && $parent->deal_percent < $data['deal_percent'])
             {
-                return redirect()->route('backend.shop.list')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
             }
             if ($parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
             {
-                return redirect()->route('backend.shop.list')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
             }
             if ($parent!=null && $parent->ggr_percent < $data['ggr_percent'])
             {
-                return redirect()->route('backend.shop.list')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
             }
             $shop->update($data);
             //added by shev for random win
@@ -693,24 +693,24 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             event(new \VanguardLTE\Events\Shop\ShopEdited($shop));
-            return redirect()->route('backend.shop.list')->withSuccess(trans('app.shop_updated'));
+            return redirect()->route(config('app.admurl').'.shop.list')->withSuccess(trans('app.shop_updated'));
         }
         public function delete($shop)
         {
             $shop_ids = auth()->user()->availableShops();
             if (!in_array($shop, $shop_ids))
             {
-                return redirect()->route('backend.shop.list')->withErrors(['비정상적인 접근입니다.']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['비정상적인 접근입니다.']);
             }
             $shopInfo = \VanguardLTE\Shop::find($shop);
             if( $shopInfo && $shopInfo->balance > 0 ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors(['매장보유금이 0이 아닙니다.']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors(['매장보유금이 0이 아닙니다.']);
             }
             $usersWithBalance = \VanguardLTE\User::where('shop_id', $shop)->where('role_id', 1)->where('balance', '>', 0)->count();
             if( $usersWithBalance ) 
             {
-                return redirect()->route('backend.shop.list')->withErrors([$usersWithBalance . '명의 회원보유금이 0이 아닙니다.']);
+                return redirect()->route(config('app.admurl').'.shop.list')->withErrors([$usersWithBalance . '명의 회원보유금이 0이 아닙니다.']);
             }
            
             $shopInfo->update(['pending'=>2]);
@@ -727,7 +727,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 3
             ])->where('shop_id', $shop)->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
             event(new \VanguardLTE\Events\Shop\ShopDeleted($shopInfo));
-            return redirect()->route('backend.shop.list')->withSuccess(['매장을 삭제하였습니다.']);
+            return redirect()->route(config('app.admurl').'.shop.list')->withSuccess(['매장을 삭제하였습니다.']);
         }
         public function hard_delete($shop)
         {
@@ -750,7 +750,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $userDelete->delete();
                 }
             }
-            return redirect()->route('backend.shop.list')->withSuccess(trans('app.shop_deleted'));
+            return redirect()->route(config('app.admurl').'.shop.list')->withSuccess(trans('app.shop_deleted'));
         }
         public function balance(\Illuminate\Http\Request $request)
         {

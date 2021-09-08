@@ -26,7 +26,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }*/
             if( !\Auth::user()->hasRole('admin')) 
             {
-                return redirect()->route('backend.user.list');
+                return redirect()->route(config('app.admurl').'.user.list');
             }
             $ids = auth()->user()->availableUsers();
             $availableShops = auth()->user()->availableShops();
@@ -88,7 +88,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 foreach( $transactions as $transaction ) 
                 {
                     $system = ($transaction->admin ? $transaction->admin->username : $transaction->system);
-                    $sysdata = '<a href="' . route('backend.statistics', ['system_str' => $system]) . '">' . $system . '</a>';
+                    $sysdata = '<a href="' . route(config('app.admurl').'.statistics', ['system_str' => $system]) . '">' . $system . '</a>';
                     if( $transaction->value ) 
                     {
                         $sysdata .= $transaction->value;
@@ -101,7 +101,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     {
                         $sum = '<span class="text-red">' . number_format(abs($transaction->summ), 2) . '</span>';
                     }
-                    $usdata = '<a href="' . route('backend.statistics', ['user' => $transaction->user->username]) . '">' . $transaction->user->username . '</a>';
+                    $usdata = '<a href="' . route(config('app.admurl').'.statistics', ['user' => $transaction->user->username]) . '">' . $transaction->user->username . '</a>';
                     $statistics[] = [
                         'type' => 'PayStat', 
                         'Name' => '', 
@@ -223,7 +223,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->where('balance', '>', 0)->count();
             if( $users ) 
             {
-                return redirect()->route('backend.shift_stat')->withErrors([trans('users_with_balance', ['count' => $users])]);
+                return redirect()->route(config('app.admurl').'.shift_stat')->withErrors([trans('users_with_balance', ['count' => $users])]);
             }
             $count = \VanguardLTE\OpenShift::where([
                 'shop_id' => \Auth::user()->shop_id, 
@@ -245,7 +245,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $shop = \VanguardLTE\Shop::find(\Auth::user()->shop_id);
             if( !$shop ) 
             {
-                return redirect()->route('backend.shift_stat')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->route(config('app.admurl').'.shift_stat')->withErrors([trans('app.wrong_shop')]);
             }
             if( $count ) 
             {
@@ -266,7 +266,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     'shop_id' => \Auth::user()->shop_id
                 ]);
             }
-            return redirect()->route('backend.shift_stat')->withSuccess(trans('app.open_shift_started'));
+            return redirect()->route(config('app.admurl').'.shift_stat')->withSuccess(trans('app.open_shift_started'));
         }
         public function statistics(\Illuminate\Http\Request $request)
         {
@@ -1331,7 +1331,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'mileage' => 0,
                 'type' => $type
             ]);
-            return redirect()->route('backend.adjustment_shift')->withSuccess(trans('app.open_shift_started'));
+            return redirect()->route(config('app.admurl').'.adjustment_shift')->withSuccess(trans('app.open_shift_started'));
         }
 
         public function adjustment_shift_stat(\Illuminate\Http\Request $request)
@@ -1403,7 +1403,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'old_total' => $remain_balance,
                 'type' => $type
             ]);
-            return redirect()->route('backend.adjustment_shift')->withSuccess(trans('app.open_shift_started'));
+            return redirect()->route(config('app.admurl').'.adjustment_shift')->withSuccess(trans('app.open_shift_started'));
         }
 
         public function in_out_request(\Illuminate\Http\Request $request) 

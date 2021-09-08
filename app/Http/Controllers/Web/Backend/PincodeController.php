@@ -110,7 +110,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $data = $request->all();
             $data['shop_id'] = \Auth::user()->shop_id;
             \VanguardLTE\Pincode::create($data);
-            return redirect()->route('backend.pincode.list')->withSuccess(trans('app.pincode_created'));
+            return redirect()->route(config('app.admurl').'.pincode.list')->withSuccess(trans('app.pincode_created'));
         }
         public function massadd(\Illuminate\Http\Request $request)
         {
@@ -172,7 +172,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     \VanguardLTE\Pincode::create($data);
                 }
             }
-            return redirect()->route('backend.pincode.list')->withSuccess(trans('app.pincode_created'));
+            return redirect()->route(config('app.admurl').'.pincode.list')->withSuccess(trans('app.pincode_created'));
         }
         public function edit($pincode)
         {
@@ -194,7 +194,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
             \VanguardLTE\Pincode::where('id', $pincode->id)->update($data);
-            return redirect()->route('backend.pincode.list')->withSuccess(trans('app.pincode_updated'));
+            return redirect()->route(config('app.admurl').'.pincode.list')->withSuccess(trans('app.pincode_updated'));
         }
         public function delete(\VanguardLTE\Pincode $pincode)
         {
@@ -215,7 +215,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $open_shift->increment('balance_in', $pincode->nominal);
             $open_shift->increment('money_out', abs($pincode->nominal));
             \VanguardLTE\Pincode::where('id', $pincode->id)->delete();
-            return redirect()->route('backend.pincode.list')->withSuccess(trans('app.pincode_deleted'));
+            return redirect()->route(config('app.admurl').'.pincode.list')->withSuccess(trans('app.pincode_deleted'));
         }
 /*        public function security()
         {

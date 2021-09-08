@@ -31,7 +31,7 @@
                 </button>
 
                 @permission('pincodes.delete')
-                    <a href="{{ route('backend.pincode.delete', $pincode->id) }}"
+                    <a href="{{ route($admurl.'.pincode.delete', $pincode->id) }}"
                        class="btn btn-danger"
                        data-method="DELETE"
                        data-confirm-title="@lang('app.please_confirm')"

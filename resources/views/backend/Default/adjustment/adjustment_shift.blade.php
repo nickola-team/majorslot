@@ -15,7 +15,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">딜비정산</h3>
 				@if($user != null)
-					<a href="{{ route('backend.adjustment_shift', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
+					<a href="{{ route($admurl.'.adjustment_shift', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
 					</a>
 				@endif
@@ -110,7 +110,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.adjustment_shift_stat') }}" method="GET" id="outForm">
+				<form action="{{ route($admurl.'.adjustment_shift_stat') }}" method="GET" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

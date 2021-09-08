@@ -27,7 +27,7 @@
             @lang('app.edit_happyhour')
         </button>
 		@permission('happyhours.delete')
-        <a href="{{ route('backend.happyhour.delete', $happyhour->id) }}"
+        <a href="{{ route($admurl.'.happyhour.delete', $happyhour->id) }}"
            class="btn btn-danger"
            data-method="DELETE"
            data-confirm-title="@lang('app.please_confirm')"

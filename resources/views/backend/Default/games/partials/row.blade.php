@@ -1,7 +1,7 @@
 <tr>
     <td>
 		@permission('games.edit')
-		<a href="{{ route('backend.game.edit', $game->id) }}">
+		<a href="{{ route($admurl.'.game.edit', $game->id) }}">
 		@endpermission
 
 		{{ $game->title }}
@@ -34,10 +34,10 @@
 	</td>
 	<td>
 		@if($game->view == 1)
-			<a href="{{route('backend.game.show', $game->id) . '?view=0'}}">
+			<a href="{{route($admurl.'.game.show', $game->id) . '?view=0'}}">
 			<button type="button" class="btn btn-block btn-danger btn-xs">비활성</button>
 		@else
-		<a href="{{route('backend.game.show', $game->id) . '?view=1'}}">
+		<a href="{{route($admurl.'.game.show', $game->id) . '?view=1'}}">
 			<button type="button" class="btn btn-block btn-success btn-xs">활성</button>
 		@endif	
 			</a>

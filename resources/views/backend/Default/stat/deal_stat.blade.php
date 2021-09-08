@@ -71,7 +71,7 @@
 						@lang('app.filter')
 					</button>
 					@if( Auth::user()->hasRole('admin') )
-						<a href="{{ route('backend.game_stat.clear') }}"
+						<a href="{{ route($admurl.'.game_stat.clear') }}"
 						   class="btn btn-danger"
 						   data-method="DELETE"
 						   data-confirm-title="경고"

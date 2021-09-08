@@ -7,7 +7,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
             {
-                return redirect()->route('backend.dashboard');
+                return redirect()->route(config('app.admurl').'.dashboard');
             }
 
             $title = trans('app.games');
@@ -157,7 +157,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
             {
-                return redirect()->route('backend.dashboard');
+                return redirect()->route(config('app.admurl').'.dashboard');
             }
             if( !\Illuminate\Support\Facades\Auth::check() ) 
             {
@@ -200,7 +200,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
             {
-                return redirect()->route('backend.dashboard');
+                return redirect()->route(config('app.admurl').'.dashboard');
             }
             if( !\Illuminate\Support\Facades\Auth::check() ) 
             {

@@ -14,7 +14,7 @@
           @permission('dashboard')
             @if (auth()->user()->hasRole('admin') && !Session::get('isCashier'))
             <li class="{{ Request::is('backend') ? 'active' : ''  }}">
-                <a href="{{ route('backend.dashboard') }}">
+                <a href="{{ route($admurl.'.dashboard') }}">
                     <i class="fa fa-home"></i>
                     <span>@lang('app.dashboard')</span>
                 </a>
@@ -26,7 +26,7 @@
             @permission('users.tree')
             @if (auth()->user()->hasRole(['admin','comaster','master','agent']))
             <li class="{{ Request::is('backend/tree*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.user.tree') }}">
+                <a href="{{ route($admurl.'.user.tree') }}">
                     <i class="fa fa-users"></i>
                     <span>파트너생성</span>
                 </a>
@@ -44,28 +44,28 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="{{ Request::is('backend/shops') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.shop.list') }}">
+                        <a  href="{{ route($admurl.'.shop.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>매장리스트</span>
                         </a>
                     </li>
                     @if (auth()->user()->isInoutPartner())
                     <li class="{{ Request::is('backend/join') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.user.join') }}">
+                        <a  href="{{ route($admurl.'.user.join') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>가입신청리스트<sup id="join_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
                         </a>
                     </li>
                     @endif
                     <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
-                        <a href="{{ route('backend.user.list') }}">
+                        <a href="{{ route($admurl.'.user.list') }}">
                             <i class="fa fa-users"></i>
                             <span>{{\VanguardLTE\Role::where('slug','user')->first()->description}}리스트</span>
                         </a>
                     </li>
                     @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master','agent']) )
                     <li class="{{ Request::is('backend/partner/4') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.user.partner', 4) }}">
+                        <a  href="{{ route($admurl.'.user.partner', 4) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}리스트</span>
                         </a>
@@ -73,7 +73,7 @@
                     @endif
                     @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master']) )
                     <li class="{{ Request::is('backend/partner/5') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.user.partner', 5) }}">
+                        <a  href="{{ route($admurl.'.user.partner', 5) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}리스트</span>
                         </a>
@@ -81,7 +81,7 @@
                     @endif
                     @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster']) )
                     <li class="{{ Request::is('backend/partner/6') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.user.partner', 6) }}">
+                        <a  href="{{ route($admurl.'.user.partner', 6) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{\VanguardLTE\Role::where('slug','master')->first()->description}}리스트</span>
                         </a>
@@ -89,7 +89,7 @@
                     @endif
                     @if ( auth()->check() && auth()->user()->hasRole(['admin']) )
                     <li class="{{ Request::is('backend/partner/7') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.user.partner', 7) }}">
+                        <a  href="{{ route($admurl.'.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}리스트</span>
                         </a>
@@ -99,7 +99,7 @@
             </li>
             @else
             <li class="{{ Request::is('backend/user*') ? 'active' : ''  }}">
-                        <a href="{{ route('backend.user.list') }}">
+                        <a href="{{ route($admurl.'.user.list') }}">
                             <i class="fa fa-users"></i>
                             <span>회원리스트</span>
                         </a>
@@ -117,7 +117,7 @@
                 <ul class="dropdown-menu" role="menu">
                 @permission('categories.manage')
                 <li class="{{ Request::is('backend/category') ? 'active' : ''  }}">
-                    <a  href="{{ route('backend.category.list') }}">
+                    <a  href="{{ route($admurl.'.category.list') }}">
                         <i class="fa fa-circle-o"></i>
                         <span>게임제공사관리</span>
                     </a>
@@ -125,7 +125,7 @@
                 @endpermission      
                 @permission('jpgame.manage')
                 <li class="{{ Request::is('backend/jpgame*') ? 'active' : ''  }}">
-                    <a href="{{ route('backend.jpgame.list') }}">
+                    <a href="{{ route($admurl.'.jpgame.list') }}">
                         <i class="fa  fa-circle-o"></i>
                         <span>잭팟관리</span>
                     </a>
@@ -133,7 +133,7 @@
                 @endpermission
                 @permission('games.manage')
                 <li class="{{ (Request::is('backend/game') || Request::is('backend/game/*')) ? 'active' : ''  }}">
-                    <a href="{{ route('backend.game.list') }}">
+                    <a href="{{ route($admurl.'.game.list') }}">
                         <i class="fa fa-circle-o"></i>
                         <span>게임관리</span>
                     </a>
@@ -141,7 +141,7 @@
                 @endpermission
 
                 <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
-                    <a href="{{ route('backend.game.bank') }}">
+                    <a href="{{ route($admurl.'.game.bank') }}">
                         <i class="fa fa-circle-o"></i>
                         <span>환수금관리</span>
                     </a>
@@ -153,7 +153,7 @@
             @permission('happyhours.manage')
             @if( auth()->user()->hasRole('admin')  && !Session::get('isCashier'))
             <li class="{{ Request::is('backend/happyhours*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.happyhour.list') }}">
+                <a href="{{ route($admurl.'.happyhour.list') }}">
                     <i class="fa fa-server"></i>
                     <span>@lang('app.happyhours')</span>
                 </a>
@@ -172,13 +172,13 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="{{ Request::is('backend/bonus/pp*') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.bonus.pp') }}">
+                        <a  href="{{ route($admurl.'.bonus.pp') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>프라그메틱 보너스</span>
                         </a>
                     </li>
                     <li class="{{ Request::is('backend/bonus/bng*') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.bonus.bng') }}">
+                        <a  href="{{ route($admurl.'.bonus.bng') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>부웅고 보너스</span>
                         </a>
@@ -199,7 +199,7 @@
                     @else
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_request') }}">
+                        <a  href="{{ route($admurl.'.in_out_request') }}">
                             <i class="fa fa-circle-o"></i>
                             충환전신청
                         </a>
@@ -209,13 +209,13 @@
                     @if(auth()->user()->isInoutPartner() )
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_manage/add') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_manage','add') }}">
+                        <a  href="{{ route($admurl.'.in_out_manage','add') }}">
                             <i class="fa fa-circle-o"></i>
                             충전관리<sup id="in_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
                         </a>
                     </li>
                     <li class="{{ Request::is('backend/in_out_manage/out') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_manage','out') }}">
+                        <a  href="{{ route($admurl.'.in_out_manage','out') }}">
                             <i class="fa fa-circle-o"></i>
                             환전관리<sup id="out_newmark" style="background:red;font-size:12px;color:white;display: none;">&nbsp;N&nbsp;</sup>
                         </a>
@@ -223,7 +223,7 @@
                     @endpermission
                     @endif
                     <li class="{{ Request::is('backend/in_out_history') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.in_out_history') }}">
+                        <a  href="{{ route($admurl.'.in_out_history') }}">
                             <i class="fa fa-circle-o"></i>
                             충환전내역
                         </a>
@@ -246,7 +246,7 @@
                     @permission('stats.pay')
                     
                     <li class="{{ Request::is('backend/adjustment_partner') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.adjustment_partner') }}">
+                        <a  href="{{ route($admurl.'.adjustment_partner') }}">
                             <i class="fa fa-circle-o"></i>
                                 실시간정산
                         </a>
@@ -255,7 +255,7 @@
                     @endpermission
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/adjustment_game') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.adjustment_game') }}">
+                        <a  href="{{ route($admurl.'.adjustment_game') }}">
                             <i class="fa fa-circle-o"></i>
                             게임별정산
                         </a>
@@ -264,13 +264,13 @@
                     
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/adjustment_daily') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.adjustment_daily') }}"> 
+                        <a  href="{{ route($admurl.'.adjustment_daily') }}"> 
                             <i class="fa fa-circle-o"></i>
                             일별정산
                         </a>
                     </li>
                     <li class="{{ Request::is('backend/adjustment_monthly') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.adjustment_monthly') }}"> 
+                        <a  href="{{ route($admurl.'.adjustment_monthly') }}"> 
                             <i class="fa fa-circle-o"></i>
                             월별정산
                         </a>
@@ -282,7 +282,7 @@
 
             @permission('pincodes.manage')
             <li class="{{ Request::is('backend/pincodes*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.pincode.list') }}">
+                <a href="{{ route($admurl.'.pincode.list') }}">
                     <i class="fa fa-server"></i>
                     <span>@lang('app.pincodes')</span>
                 </a>
@@ -312,7 +312,7 @@
 
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/statistics*') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.statistics') }}">
+                        <a  href="{{ route($admurl.'.statistics') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.statistics') --}}
                             회원수동지급내역
@@ -322,7 +322,7 @@
                     @if(!auth()->user()->hasRole('manager'))
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/partner_statistics*') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.statistics_partner') }}">
+                        <a  href="{{ route($admurl.'.statistics_partner') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.statistics') --}}
                             파트너충환전내역
@@ -333,7 +333,7 @@
 
                     @permission('stats.game')
                     <li class="{{ Request::is('backend/stat_game') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.game_stat') }}">
+                        <a  href="{{ route($admurl.'.game_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             게임배팅내역
                         </a>
@@ -343,7 +343,7 @@
                     @permission('games.manage')
                     @if (auth()->user()->hasRole('admin') && !Session::get('isCashier'))
                     <li class="{{ Request::is('backend/bank_stat') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.bank_stat') }}">
+                        <a  href="{{ route($admurl.'.bank_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.bank_stats') --}}
                             게임뱅크충환전내역
@@ -354,7 +354,7 @@
 
                     @permission('stats.shop')
                     <li class="{{ Request::is('backend/shop_stat') ? 'active' : ''  }}">
-                        <a href="{{ route('backend.shop_stat') }}">
+                        <a href="{{ route($admurl.'.shop_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.shop_stats') --}}
                             매장충환전내역
@@ -364,7 +364,7 @@
 
                     @permission('stats.shop')
                     <li class="{{ Request::is('backend/deal_stat*') ? 'active' : ''  }}">
-                        <a  href="{{ route('backend.deal_stat') }}">
+                        <a  href="{{ route($admurl.'.deal_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             딜비적립내역
                         </a>
@@ -373,7 +373,7 @@
 
                     {{-- @permission('stats.shift')
                     <li class="{{ Request::is('backend/shift_stat') ? 'active' : ''  }}">
-                        <a href="{{ route('backend.shift_stat') }}">
+                        <a href="{{ route($admurl.'.shift_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             @lang('app.shift_stats')
                         </a>
@@ -385,7 +385,7 @@
             @endif
             @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('backend/notices*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.notice.list') }}">
+                <a href="{{ route($admurl.'.notice.list') }}">
                     <i class="fa fa-bell"></i>
                     <span>공지사항</span>
                 </a>
@@ -394,7 +394,7 @@
 
             @if (auth()->user()->hasRole('admin'))
             <li class="{{ Request::is('backend/websites*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.website.list') }}">
+                <a href="{{ route($admurl.'.website.list') }}">
                     <i class="fa fa-chrome"></i>
                     <span>도메인리스트</span>
                 </a>
@@ -403,7 +403,7 @@
 
             @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('backend/activity*') ? 'active' : ''  }}">
-                <a href="{{ route('backend.activity.index') }}">
+                <a href="{{ route($admurl.'.activity.index') }}">
                     <i class="fa fa-server"></i>
                     {{-- <span>@lang('app.activity_log')</span> --}}
                     <span>접속로그</span>
@@ -414,7 +414,7 @@
             @permission('settings.general')
             @if (auth()->user()->hasRole('admin'))
             <li class="{{ Request::is('backend/settings') ? 'active' : ''  }}">
-                <a href="{{ route('backend.settings.general') }}">
+                <a href="{{ route($admurl.'.settings.general') }}">
                     <i class="fa fa-circle-o"></i>
                     <span>@lang('app.settings')</span>
                 </a>
@@ -426,7 +426,7 @@
         <!-- /.navbar-collapse -->
         @if (auth()->user()->hasRole(['admin']))
         @else
-        <form action="{{ route('backend.user.update.address', auth()->user()->id) }}" method="post" class="navbar-form navbar-left">
+        <form action="{{ route($admurl.'.user.update.address', auth()->user()->id) }}" method="post" class="navbar-form navbar-left">
             <div class="input-group">
                 <span class="input-group-btn">
                     <button type="button"class="btn btn-flat" disabled style="cursor:default;">
@@ -510,10 +510,10 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
-                    <a href="{{ route('backend.user.edit', auth()->user()->present()->id) }}" class="btn btn-default btn-flat">@lang('app.my_profile')</a>
+                    <a href="{{ route($admurl.'.user.edit', auth()->user()->present()->id) }}" class="btn btn-default btn-flat">@lang('app.my_profile')</a>
                   </div>
                   <div class="pull-right">
-                    <a href="{{ route('backend.auth.logout') }}" class="btn btn-default btn-flat"> @lang('app.logout')</a>
+                    <a href="{{ route($admurl.'.auth.logout') }}" class="btn btn-default btn-flat"> @lang('app.logout')</a>
                   </div>
                 </li>
               </ul>

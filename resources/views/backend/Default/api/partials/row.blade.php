@@ -1,5 +1,5 @@
 <tr>        
-    <td><a href="{{ route('backend.api.edit', $api_item->id) }}">{{ $api_item->keygen }}</a></td>
+    <td><a href="{{ route($admurl.'.api.edit', $api_item->id) }}">{{ $api_item->keygen }}</a></td>
     <td>{{ $api_item->ip }}</td>
     <td>
         @if( $api_item->shop )

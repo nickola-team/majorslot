@@ -26,7 +26,7 @@
 
             @if( $user->id != Auth::id() )
                 @permission('users.delete')
-                <a href="{{ route('backend.user.delete', $user->id) }}"
+                <a href="{{ route($admurl.'.user.delete', $user->id) }}"
                    class="btn btn-danger btn-block"
                    data-method="DELETE"
                    data-confirm-title="회원 삭제"
@@ -36,7 +36,7 @@
                 @endpermission
 
                 @if(auth()->user()->hasRole('admin') )
-                    <a href="{{ route('backend.user.hard_delete', $user->id) }}"
+                    <a href="{{ route($admurl.'.user.hard_delete', $user->id) }}"
                         class="btn btn-danger btn-block"
                         data-method="DELETE"
                         data-confirm-title="어드민 삭제"

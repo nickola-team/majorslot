@@ -19,7 +19,7 @@
         <div class="box-body">
           <div class="row">
 
-                <form action="{{ route('backend.game.categories') }}" method="POST" class="pb-2 mb-3 border-bottom-light" id="massForm">
+                <form action="{{ route($admurl.'.game.categories') }}" method="POST" class="pb-2 mb-3 border-bottom-light" id="massForm">
 
                         <div class="col-md-12">
                                 <div class="form-group">						

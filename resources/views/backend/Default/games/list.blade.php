@@ -71,7 +71,7 @@
 			</div>
 		</form>
 
-		<form action="{{ route('backend.game.mass') }}" method="POST" class="pb-2 mb-3 border-bottom-light">
+		<form action="{{ route($admurl.'.game.mass') }}" method="POST" class="pb-2 mb-3 border-bottom-light">
 			<div class="box box-primary">
 				<div class="box-header with-border">
 					<h3 class="box-title">@lang('app.games')</h3>
@@ -133,8 +133,8 @@
 	<script>
 		$('.openAdd').click(function(event){
 			var type = $(event.target).data('type');
-			$('.openAddClear').attr('href', '{{ route('backend.game.gamebanks_clear') }}?type=' + type);
-			$('#gamebank_add').attr('action', '{{ route('backend.game.gamebanks_add') }}?type=' + type)
+			$('.openAddClear').attr('href', '{{ route($admurl.'.game.gamebanks_clear') }}?type=' + type);
+			$('#gamebank_add').attr('action', '{{ route($admurl.'.game.gamebanks_add') }}?type=' + type)
 		});
 		$('.changeAddSum').click(function(event){
 			$v = Number($('#AddSum').val());

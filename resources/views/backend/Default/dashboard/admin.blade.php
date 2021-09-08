@@ -23,7 +23,7 @@
                     <div class="icon">
                         <i class="fa fa-users"></i>
                     </div>
-                    <a href="{{ route('backend.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route($admurl.'.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -37,7 +37,7 @@
                     <div class="icon">
                         <i class="fa fa-user-plus"></i>
                     </div>
-                    <a href="{{ route('backend.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route($admurl.'.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -51,7 +51,7 @@
                     <div class="icon">
                         <i class="fa fa-ban"></i>
                     </div>
-                    <a href="{{ route('backend.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route($admurl.'.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -65,7 +65,7 @@
                     <div class="icon">
                         <i class="fa fa-desktop"></i>
                     </div>
-                    <a href="{{ route('backend.adjustment_partner') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route($admurl.'.adjustment_partner') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -102,7 +102,7 @@
                                     @foreach ($statistics as $stat)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('backend.statistics', ['system_str' => $stat->admin ? $stat->admin->username : $stat->system])  }}">
+                                                <a href="{{ route($admurl.'.statistics', ['system_str' => $stat->admin ? $stat->admin->username : $stat->system])  }}">
                                                     {{ $stat->admin ? $stat->admin->username : $stat->system }}
                                                 </a>
                                                 @if( $stat->value ) {{ $stat->value }}
@@ -117,7 +117,7 @@
                                             </td>
                                             </td>
                                             <td>
-                                                <a href="{{ route('backend.statistics', ['user' => $stat->user ? $stat->user->username : ''])  }}">
+                                                <a href="{{ route($admurl.'.statistics', ['user' => $stat->user ? $stat->user->username : ''])  }}">
                                                     {{ $stat->user ? $stat->user->username : '' }}
                                                 </a>
                                             </td>
@@ -165,12 +165,12 @@
                                     @foreach ($gamestat as $stat)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('backend.game_stat', ['game' => $stat->game])  }}">
+                                                <a href="{{ route($admurl.'.game_stat', ['game' => $stat->game])  }}">
                                                     {{ $stat->game }}
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="{{ route('backend.game_stat', ['user' => $stat->user ? $stat->user->username : ''])  }}">
+                                                <a href="{{ route($admurl.'.game_stat', ['user' => $stat->user ? $stat->user->username : ''])  }}">
                                                     {{ $stat->user ? $stat->user->username : '' }}
                                                 </a>
                                             </td>
@@ -231,7 +231,7 @@
                                     @foreach ($shops as $shop)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('backend.shop.edit', $shop->id)  }}">
+                                                <a href="{{ route($admurl.'.shop.edit', $shop->id)  }}">
                                                     {{ $shop->name }}
                                                 </a>
                                             </td>
@@ -293,7 +293,7 @@
                                     @foreach ($latestRegistrations as $user)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('backend.user.edit', $user->id) }}">
+                                                <a href="{{ route($admurl.'.user.edit', $user->id) }}">
                                                     {{ $user->username ?: trans('app.n_a') }}
                                                 </a>
                                             </td>

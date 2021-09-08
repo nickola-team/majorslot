@@ -108,7 +108,7 @@
 					}
 				?>
 					@if($user != null)
-					<a href="{{ route('backend.adjustment_partner', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
+					<a href="{{ route($admurl.'.adjustment_partner', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
 						[ {{$available_roles_trans[$user->role_id]}} ]
 					</a>

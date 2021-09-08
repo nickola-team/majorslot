@@ -1,18 +1,18 @@
 <tr>        
     <td>
-	<a href="{{ route('backend.shop.edit', $shop->id) }}">{{ $shop->name }}</a>
+	<a href="{{ route($admurl.'.shop.edit', $shop->id) }}">{{ $shop->name }}</a>
 	</td>
 	@if($shop->creator)
 		@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
 		<td>
-			<a href="{{ route('backend.user.edit', $shop->creator->id) }}" >{{ $shop->creator->username }}</a>
+			<a href="{{ route($admurl.'.user.edit', $shop->creator->id) }}" >{{ $shop->creator->username }}</a>
 		</td>
 		@endif
 	@endif
 	@if($shop->creator && $shop->creator->referral)
 		@if (auth()->user()->hasRole(['admin','comaster','master']))
 		<td>
-			<a href="{{ route('backend.user.edit', $shop->creator->referral->id) }}" >{{ $shop->creator->referral->username }}</a>
+			<a href="{{ route($admurl.'.user.edit', $shop->creator->referral->id) }}" >{{ $shop->creator->referral->username }}</a>
 		</td>
 		@endif
 	@endif
@@ -20,7 +20,7 @@
 	@if($shop->creator && $shop->creator->referral && $shop->creator->referral->referral)
 		@if (auth()->user()->hasRole(['admin','comaster']))
 		<td>
-			<a href="{{ route('backend.user.edit',  $shop->creator->referral->referral->id) }}" >{{  $shop->creator->referral->referral->username }}</a>
+			<a href="{{ route($admurl.'.user.edit',  $shop->creator->referral->referral->id) }}" >{{  $shop->creator->referral->referral->username }}</a>
 		</td>
 		@endif
 	@endif

@@ -48,7 +48,7 @@
                         </ul>
 
                         @permission('games.delete')
-                        <a href="{{ route('backend.game.delete', $game->id) }}" class="btn btn-danger btn-block"
+                        <a href="{{ route($admurl.'.game.delete', $game->id) }}" class="btn btn-danger btn-block"
                            data-method="DELETE"
                            data-confirm-title="@lang('app.please_confirm')"
                            data-confirm-text="@lang('app.are_you_sure_delete_game')"
@@ -75,7 +75,7 @@
                                 @foreach ($game_stat as $stat)
                                     <tr>
                                         <td>
-                                            <a href="{{ route('backend.game_stat', ['user' => $stat->user->username])  }}">
+                                            <a href="{{ route($admurl.'.game_stat', ['user' => $stat->user->username])  }}">
                                                 {{ $stat->user->username }}
                                             </a>
                                         </td>

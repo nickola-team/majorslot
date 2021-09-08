@@ -6,7 +6,7 @@
 
   <div class="login-box">
     <div class="login-logo">
-    <a href="{{ route('backend.dashboard') }}">
+    <a href="{{ route($admurl.'.dashboard') }}">
     @if (isset($site) && $layout == 'Top')
       <img src="{{ url('/back/img/' . $site->frontend . '_logo.png') }}" style="width:100%;"></img>
     @else
@@ -19,7 +19,7 @@
 
     <div class="login-box-body">
 
-      <form role="form" action="<?= route('backend.auth.login.post') ?>" method="POST" id="login-form" autocomplete="off">
+      <form role="form" action="<?= route($admurl.'.auth.login.post') ?>" method="POST" id="login-form" autocomplete="off">
 
         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 

@@ -40,7 +40,7 @@
         $(function() {
             $('#generateKey').click(function(){
                 $.ajax({
-                    url: "{{ route('backend.api.generate') }}",
+                    url: "{{ route($admurl.'.api.generate') }}",
                     dataType: 'json',
                     success: function(data){
                         $('#keygen').val( data.key );

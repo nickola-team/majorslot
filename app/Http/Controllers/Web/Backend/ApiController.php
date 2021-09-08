@@ -64,11 +64,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             if( !\VanguardLTE\Shop::count() ) 
             {
-                return redirect()->route('backend.shop.create');
+                return redirect()->route(config('app.admurl').'.shop.create');
             }
             if( !\VanguardLTE\Shop::find(auth()->user()->shop_id) ) 
             {
-                return redirect()->route('backend.shop.create');
+                return redirect()->route(config('app.admurl').'.shop.create');
             }
             $shops = auth()->user()->shops_array();
             return view('backend.Default.api.add', compact('shops'));
@@ -77,7 +77,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             if( !\VanguardLTE\Shop::count() ) 
             {
-                return redirect()->route('backend.shop.create');
+                return redirect()->route(config('app.admurl').'.shop.create');
             }
             $data = $request->only([
                 'keygen', 
@@ -91,7 +91,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
             \VanguardLTE\Api::create($data);
-            return redirect()->route('backend.api.list')->withSuccess(trans('app.api_created'));
+            return redirect()->route(config('app.admurl').'.api.list')->withSuccess(trans('app.api_created'));
         }
         public function edit($api)
         {
@@ -119,7 +119,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'status'
             ]);
             \VanguardLTE\Api::where('id', $api->id)->update($data);
-            return redirect()->route('backend.api.list')->withSuccess(trans('app.api_updated'));
+            return redirect()->route(config('app.admurl').'.api.list')->withSuccess(trans('app.api_updated'));
         }
         public function delete(\VanguardLTE\Api $api)
         {
@@ -128,7 +128,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
             \VanguardLTE\Api::where('id', $api->id)->delete();
-            return redirect()->route('backend.api.list')->withSuccess(trans('app.api_deleted'));
+            return redirect()->route(config('app.admurl').'.api.list')->withSuccess(trans('app.api_deleted'));
         }
         public function generate()
         {

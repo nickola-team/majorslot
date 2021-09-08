@@ -25,7 +25,7 @@
                     @lang('app.edit_category')
                 </button>
                 @permission('categories.delete')
-                <a href="{{ route('backend.category.delete', $category->id) }}"
+                <a href="{{ route($admurl.'.category.delete', $category->id) }}"
                    class="btn btn-danger"
                    data-method="DELETE"
                    data-confirm-title="@lang('app.please_confirm')"

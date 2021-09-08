@@ -14,7 +14,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">@lang('app.rooms')</h3>
 				<div class="pull-right box-tools">
-					<a href="{{ route('backend.room.create') }}" class="btn btn-block btn-primary btn-sm">ADD</a>
+					<a href="{{ route($admurl.'.room.create') }}" class="btn btn-block btn-primary btn-sm">ADD</a>
 				</div>
 			</div>
                     <div class="box-body">
@@ -70,7 +70,7 @@
 	<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.room.balance') }}" method="POST">
+				<form action="{{ route($admurl.'.room.balance') }}" method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -97,7 +97,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.room.balance') }}" method="POST">
+				<form action="{{ route($admurl.'.room.balance') }}" method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

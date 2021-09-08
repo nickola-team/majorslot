@@ -107,7 +107,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             if( !$user->hasRole('admin') && setting('siteisclosed') ) 
             {
                 \Auth::logout();
-                return redirect()->route('backend.auth.login')->withErrors(trans('app.site_is_turned_off'));
+                return redirect()->route(config('app.admurl').'.auth.login')->withErrors(trans('app.site_is_turned_off'));
             }
             if( $user->hasRole([
                 1, 
@@ -148,15 +148,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             }
             if( !\Auth::user()->hasPermission('dashboard') ) 
             {
-                return redirect()->route('backend.user.list');
+                return redirect()->route(config('app.admurl').'.user.list');
             }
-            return redirect()->route('backend.dashboard');
+            return redirect()->route(config('app.admurl').'.dashboard');
         }
         public function getLogout()
         {
             event(new \VanguardLTE\Events\User\LoggedOut());
             \Auth::logout();
-            return redirect('/backend/login');
+            return redirect(route(config('app.admurl').'.auth.login'));
         }
         public function loginUsername()
         {
@@ -178,7 +178,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
         protected function sendLockoutResponse(\Illuminate\Http\Request $request)
         {
             $seconds = app('Illuminate\Cache\RateLimiter')->availableIn($request->input($this->loginUsername()) . $request->ip());
-            return redirect('/backend/login')->withInput($request->only($this->loginUsername(), 'remember'))->withErrors([$this->loginUsername() => $this->getLockoutErrorMessage($seconds)]);
+            return redirect(route(config('app.admurl').'.auth.login'))->withInput($request->only($this->loginUsername(), 'remember'))->withErrors([$this->loginUsername() => $this->getLockoutErrorMessage($seconds)]);
         }
         protected function getLockoutErrorMessage($seconds)
         {
@@ -211,7 +211,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             $role = \jeremykenedy\LaravelRoles\Models\Role::where('name', '=', 'User')->first();
             $user->attachRole($role);
             event(new \VanguardLTE\Events\User\Registered($user));
-            return redirect('/backend/login')->with('success', trans('app.account_created_login'));
+            return redirect(route(config('app.admurl').'.auth.login'))->with('success', trans('app.account_created_login'));
         }
     }
 

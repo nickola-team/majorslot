@@ -14,7 +14,7 @@
     <div class="box-header with-border">
          <h3 class="box-title">@lang('app.roles')</h3>
 			<div class="pull-right box-tools">
-                <a href="{{ route('backend.role.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+                <a href="{{ route($admurl.'.role.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 			</div>
     </div>
                     <div class="box-body">
@@ -33,7 +33,7 @@
                             @foreach ($roles as $role)
                                 <tr>
                                     <td>{{ $role->slug }}</td>
-                                    <td><a href="{{ route('backend.role.edit', $role->id) }}">{{ $role->name }}</a></td>
+                                    <td><a href="{{ route($admurl.'.role.edit', $role->id) }}">{{ $role->name }}</a></td>
                                     <td>{{ $role->level }}</td>
                                     <td>{{ $role->users_count }}</td>
                                 </tr>

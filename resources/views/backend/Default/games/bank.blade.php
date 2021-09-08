@@ -93,8 +93,8 @@
 		$('.openAdd').click(function(event){
 			var type = $(event.target).data('type');
             var shop = $(event.target).data('shop');
-			$('.openAddClear').attr('href', '{{ route('backend.game.gamebanks_clear') }}?type=' + type + '&shop=' + shop);
-			$('#gamebank_add').attr('action', '{{ route('backend.game.gamebanks_add') }}?type=' + type + '&shop=' + shop);
+			$('.openAddClear').attr('href', '{{ route($admurl.'.game.gamebanks_clear') }}?type=' + type + '&shop=' + shop);
+			$('#gamebank_add').attr('action', '{{ route($admurl.'.game.gamebanks_add') }}?type=' + type + '&shop=' + shop);
 		});
 		$('.openAddButton').click(function(event){
 			$('#act').val('add');

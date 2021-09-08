@@ -95,7 +95,7 @@
 				<h3 class="box-title">매장목록</h3>
 				@if(auth()->user()->hasRole('distributor'))
 					<div class="pull-right box-tools">
-						<a href="{{ route('backend.shop.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+						<a href="{{ route($admurl.'.shop.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 					</div>
 				@endif
 			</div>
@@ -189,7 +189,7 @@
 	<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.shop.balance') }}" method="POST"  id="addForm">
+				<form action="{{ route($admurl.'.shop.balance') }}" method="POST"  id="addForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -225,7 +225,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.shop.balance') }}" method="POST" id="outForm">
+				<form action="{{ route($admurl.'.shop.balance') }}" method="POST" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

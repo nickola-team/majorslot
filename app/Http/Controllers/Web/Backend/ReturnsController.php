@@ -27,17 +27,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function create()
         {
-            return redirect()->route('backend.returns.list');
+            return redirect()->route(config('app.admurl').'.returns.list');
         }
         public function store(\Illuminate\Http\Request $request)
         {
-            return redirect()->route('backend.returns.list');
+            return redirect()->route(config('app.admurl').'.returns.list');
             $data = $request->all();
             $request->validate(['percent' => 'required|in:' . implode(',', \VanguardLTE\Returns::$values['percent'])]);
             $data['shop_id'] = auth()->user()->shop_id;
             $return = \VanguardLTE\Returns::create($data);
             event(new \VanguardLTE\Events\Returns\NewReturn($return));
-            return redirect()->route('backend.returns.list')->withSuccess(trans('app.return_created'));
+            return redirect()->route(config('app.admurl').'.returns.list')->withSuccess(trans('app.return_created'));
         }
         public function edit($returns)
         {
@@ -64,18 +64,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]);
             $return->update($data);
             event(new \VanguardLTE\Events\Returns\ReturnEdited($return));
-            return redirect()->route('backend.returns.list')->withSuccess(trans('app.return_updated'));
+            return redirect()->route(config('app.admurl').'.returns.list')->withSuccess(trans('app.return_updated'));
         }
         public function delete(\VanguardLTE\Returns $return)
         {
-            return redirect()->route('backend.returns.list');
+            return redirect()->route(config('app.admurl').'.returns.list');
             if( !in_array($return->shop_id, auth()->user()->availableShops()) ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             }
             event(new \VanguardLTE\Events\Returns\DeleteReturn($return));
             \VanguardLTE\Returns::where('id', $return->id)->delete();
-            return redirect()->route('backend.returns.list')->withSuccess(trans('app.return_deleted'));
+            return redirect()->route(config('app.admurl').'.returns.list')->withSuccess(trans('app.return_deleted'));
         }
 /*        public function security()
         {

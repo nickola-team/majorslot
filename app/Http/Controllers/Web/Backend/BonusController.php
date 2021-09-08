@@ -70,11 +70,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::cancelfrb($bonusCode);
             if ($res['error'] != '0')
             {
-                return redirect()->route('backend.bonus.pp')->withErrors($res['description']);
+                return redirect()->route(config('app.admurl').'.bonus.pp')->withErrors($res['description']);
             }
 
             \VanguardLTE\PPBonus::where('bonusCode', $bonusCode)->delete();
-            return redirect()->route('backend.bonus.pp')->withSuccess('보너스를 취소하였습니다');
+            return redirect()->route(config('app.admurl').'.bonus.pp')->withSuccess('보너스를 취소하였습니다');
         }
         public function pp_store(\Illuminate\Http\Request $request)
         {
@@ -93,10 +93,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $response = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::createfrb($data);
             if ($response['error'] != '0')
             {
-                return redirect()->route('backend.bonus.pp')->withErrors($response['description']);
+                return redirect()->route(config('app.admurl').'.bonus.pp')->withErrors($response['description']);
             }
             \VanguardLTE\PPBonus::create($data);
-            return redirect()->route('backend.bonus.pp')->withSuccess('보너스를 추가하였습니다');
+            return redirect()->route(config('app.admurl').'.bonus.pp')->withSuccess('보너스를 추가하였습니다');
         }
 
         /**
@@ -153,11 +153,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $res = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::bonuscancel($bonus_id);
             if ($res === null)
             {
-                return redirect()->route('backend.bonus.bng')->withErrors('보너스 취소오류');
+                return redirect()->route(config('app.admurl').'.bonus.bng')->withErrors('보너스 취소오류');
             }
 
             \VanguardLTE\BNGBonus::where('bonus_id', $bonus_id)->delete();
-            return redirect()->route('backend.bonus.bng')->withSuccess('보너스를 취소하였습니다');
+            return redirect()->route(config('app.admurl').'.bonus.bng')->withSuccess('보너스를 취소하였습니다');
         }
         public function bng_store(\Illuminate\Http\Request $request)
         {
@@ -175,11 +175,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $response = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::bonuscreate($data);
             if ($response == null || $response['status'] == 'FAILED')
             {
-                return redirect()->route('backend.bonus.bng')->withErrors('보너스추가시 오류');
+                return redirect()->route(config('app.admurl').'.bonus.bng')->withErrors('보너스추가시 오류');
             }
             $data['bonus_id'] = $response['bonus_id'];
             \VanguardLTE\BNGBonus::create($data);
-            return redirect()->route('backend.bonus.bng')->withSuccess('보너스를 추가하였습니다');
+            return redirect()->route(config('app.admurl').'.bonus.bng')->withSuccess('보너스를 추가하였습니다');
         }
         
 

@@ -1,7 +1,7 @@
 <tr>
 	<td>
 	@if($adjustment['role_id'] > 3)
-	<a href="{{ route('backend.adjustment_partner', 'parent='.$adjustment['user_id']) }}">{{ $adjustment['name'] }}	</a>
+	<a href="{{ route($admurl.'.adjustment_partner', 'parent='.$adjustment['user_id']) }}">{{ $adjustment['name'] }}	</a>
 	@else
 	{{ $adjustment['name'] }}
 	@endif

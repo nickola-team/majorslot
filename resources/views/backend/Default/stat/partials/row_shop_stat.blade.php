@@ -66,7 +66,7 @@
 	<td>{{ date(config('app.date_time_format'), strtotime($stat->date_time)) }}</td>
 	@if(isset($show_shop) && $show_shop)
 		@if($stat->shop)
-			<td><a href="{{ route('backend.shop.edit', $stat->shop->id) }}">{{ $stat->shop->name }}</a></td>
+			<td><a href="{{ route($admurl.'.shop.edit', $stat->shop->id) }}">{{ $stat->shop->name }}</a></td>
 		@endif
 	@endif
 </tr>

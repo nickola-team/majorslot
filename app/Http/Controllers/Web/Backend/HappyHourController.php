@@ -24,12 +24,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $username = $request->username;
             if (!$username)
             {
-                return redirect()->route('backend.happyhour.create')->withErrors('회원이름을 입력하세요');
+                return redirect()->route(config('app.admurl').'.happyhour.create')->withErrors('회원이름을 입력하세요');
             }
             $user = \VanguardLTE\User::where('username', $username)->first();
             if (!$user)
             {
-                return redirect()->route('backend.happyhour.create')->withErrors('회원이 없습니다.');
+                return redirect()->route(config('app.admurl').'.happyhour.create')->withErrors('회원이 없습니다.');
             }
             $uniq = \VanguardLTE\HappyHourUser::where([
                 'time' => $request->time, 
@@ -37,7 +37,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->count();
             if( $uniq ) 
             {
-                return redirect()->route('backend.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
+                return redirect()->route(config('app.admurl').'.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
             }
             $data = $request->only([
                 'total_bank', 
@@ -54,7 +54,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $data['admin_id'] = auth()->user()->id;
             $happyhour = \VanguardLTE\HappyHourUser::create($data);
-            return redirect()->route('backend.happyhour.list')->withSuccess(trans('app.happyhour_created'));
+            return redirect()->route(config('app.admurl').'.happyhour.list')->withSuccess(trans('app.happyhour_created'));
         }
         public function edit($happyhour)
         {
@@ -66,12 +66,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $username = $request->username;
             if (!$username)
             {
-                return redirect()->route('backend.happyhour.list')->withErrors('회원이름을 입력하세요');
+                return redirect()->route(config('app.admurl').'.happyhour.list')->withErrors('회원이름을 입력하세요');
             }
             $user = \VanguardLTE\User::where('username', $username)->first();
             if (!$user)
             {
-                return redirect()->route('backend.happyhour.list')->withErrors('회원이 없습니다.');
+                return redirect()->route(config('app.admurl').'.happyhour.list')->withErrors('회원이 없습니다.');
             }
             $data = $request->only([
                 'total_bank', 
@@ -85,7 +85,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->where('id', '!=', $happyhour->id)->count();
             if( $uniq ) 
             {
-                return redirect()->route('backend.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
+                return redirect()->route(config('app.admurl').'.happyhour.list')->withErrors(trans('validation.unique', ['attribute' => 'time']));
             }
             $data['current_bank'] = $data['total_bank'];
             $data['user_id'] = $user->id;
@@ -96,7 +96,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $data['admin_id'] = auth()->user()->id;
             $happyhour->update($data);
-            return redirect()->route('backend.happyhour.list')->withSuccess(trans('app.happyhour_updated'));
+            return redirect()->route(config('app.admurl').'.happyhour.list')->withSuccess(trans('app.happyhour_updated'));
         }
         public function delete(\VanguardLTE\HappyHourUser $happyhour)
         {
@@ -105,7 +105,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             } */
             \VanguardLTE\HappyHourUser::where('id', $happyhour->id)->delete();
-            return redirect()->route('backend.happyhour.list')->withSuccess(trans('app.happyhour_deleted'));
+            return redirect()->route(config('app.admurl').'.happyhour.list')->withSuccess(trans('app.happyhour_deleted'));
         }
 /*        public function security()
         {

@@ -463,7 +463,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
             if( \Illuminate\Support\Facades\Auth::user()->role_id < $user->role_id ) 
             {
-                return redirect()->route('backend.user.list');
+                return redirect()->route(config('app.admurl').'.user.list');
             }
             return view('backend.Default.user.view', compact('user', 'userActivities'));
         }
@@ -538,7 +538,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ])->count();
             if( $request->role_id <= 3 && !$request->shop_id ) 
             {
-                return redirect()->route('backend.user.list')->withErrors([trans('app.choose_shop')]);
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.choose_shop')]);
             }
             $data = $request->all() + ['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE];
             if( trim($data['username']) == '' ) 
@@ -547,7 +547,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( $this->max_users <= $count && $data['role_id'] == 1 ) 
             {
-                return redirect()->route('backend.user.list')->withErrors([trans('app.max_users', ['max' => $this->max_users])]);
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.max_users', ['max' => $this->max_users])]);
             }
             if( !$request->parent_id ) 
             {
@@ -588,7 +588,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'shop_id' => $request->shop_id
             ])->count() ) 
             {
-                return redirect()->route('backend.user.list')->withErrors([trans('app.only_1', ['type' => $role->slug])]);
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.only_1', ['type' => $role->slug])]);
             }
 
             if( $data['role_id'] == 1 || $data['role_id'] == 4 || $data['role_id'] == 5 || $data['role_id'] == 6) //user, distributor, agent, master
@@ -680,7 +680,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             if ($role_id<3) {
-                return redirect()->route('backend.user.list')->withSuccess(trans('app.user_created'));
+                return redirect()->route(config('app.admurl').'.user.list')->withSuccess(trans('app.user_created'));
             }
 
             //create shift for partners
@@ -696,7 +696,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'type' => $type
             ]);
 
-            return redirect()->route('backend.user.tree')->withSuccess(trans('app.user_created'));
+            return redirect()->route(config('app.admurl').'.user.tree')->withSuccess(trans('app.user_created'));
         }
         public function massadd(\Illuminate\Http\Request $request)
         {
@@ -709,7 +709,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 if( $this->max_users < ($count + $request->count) ) 
                 {
-                    return redirect()->route('backend.user.list')->withErrors([trans('max_users', ['max' => $this->max_users])]);
+                    return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('max_users', ['max' => $this->max_users])]);
                 }
                 if( $request->balance > 0 ) 
                 {
@@ -795,7 +795,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                 }
             }
-            return redirect()->route('backend.user.list')->withSuccess(trans('app.user_created'));
+            return redirect()->route(config('app.admurl').'.user.list')->withSuccess(trans('app.user_created'));
         }
         public function edit(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Activity\ActivityRepository $activitiesRepo, \VanguardLTE\User $user)
         {
@@ -807,11 +807,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $users = auth()->user()->availableUsers();
             if( count($users) && !in_array($user->id, $users) ) 
             {
-                return redirect()->route('backend.user.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.wrong_shop')]);
             }
             if( \Illuminate\Support\Facades\Auth::user()->role_id < $user->role_id ) 
             {
-                return redirect()->route('backend.user.list');
+                return redirect()->route(config('app.admurl').'.user.list');
             }
             if( $shopIds = $user->shops(true) ) 
             {
@@ -965,11 +965,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $users = auth()->user()->availableUsers();
             if( count($users) && !in_array($user->id, $users) ) 
             {
-                return redirect()->route('backend.user.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.wrong_shop')]);
             }
             if( \Illuminate\Support\Facades\Auth::user()->role_id < $user->role_id ) 
             {
-                return redirect()->route('backend.user.list');
+                return redirect()->route(config('app.admurl').'.user.list');
             }
             $request->validate([
                 'username' => 'required|unique:users,username,' . $user->id, 
@@ -990,7 +990,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if( isset($data['role_id']) && $user->role_id != $data['role_id'] && $data['role_id'] == 1 && $this->max_users <= ($count + 1) ) 
             {
-                return redirect()->route('backend.user.list')->withErrors([trans('max_users', ['max' => $this->max_users])]);
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('max_users', ['max' => $this->max_users])]);
             }
             unset($data['role_id']);
 
@@ -1077,7 +1077,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $user->save();
             
-            return redirect()->route('backend.user.list');
+            return redirect()->route(config('app.admurl').'.user.list');
         }
         public function updateBalance(\Illuminate\Http\Request $request)
         {
@@ -1142,9 +1142,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $this->users->update($user->id, ['avatar' => $name]);
                 event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
-                return redirect()->route('backend.user.edit', $user->id)->withSuccess(trans('app.avatar_changed'));
+                return redirect()->route(config('app.admurl').'.user.edit', $user->id)->withSuccess(trans('app.avatar_changed'));
             }
-            return redirect()->route('backend.user.edit', $user->id)->withErrors(trans('app.avatar_not_changed'));
+            return redirect()->route(config('app.admurl').'.user.edit', $user->id)->withErrors(trans('app.avatar_not_changed'));
         }
         public function updateAddress(\VanguardLTE\User $user, \VanguardLTE\Services\Upload\UserAvatarManager $avatarManager, \Illuminate\Http\Request $request)
         {
@@ -1156,7 +1156,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $avatarManager->deleteAvatarIfUploaded($user);
             $this->users->update($user->id, ['avatar' => $request->get('url')]);
             event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
-            return redirect()->route('backend.user.edit', $user->id)->withSuccess(trans('app.avatar_changed'));
+            return redirect()->route(config('app.admurl').'.user.edit', $user->id)->withSuccess(trans('app.avatar_changed'));
         }
         public function updateLoginDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateLoginDetailsRequest $request)
         {
@@ -1168,7 +1168,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $this->users->update($user->id, $data);
             event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
-            return redirect()->route('backend.user.edit', $user->id)->withSuccess(trans('app.login_updated'));
+            return redirect()->route(config('app.admurl').'.user.edit', $user->id)->withSuccess(trans('app.login_updated'));
         }
         public function delete(\VanguardLTE\User $user)
         {
@@ -1194,17 +1194,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             ]);
             
             event(new \VanguardLTE\Events\User\Deleted($user));
-            return redirect()->route('backend.user.list')->withSuccess(trans('app.user_deleted'));
+            return redirect()->route(config('app.admurl').'.user.list')->withSuccess(trans('app.user_deleted'));
         }
         public function hard_delete(\VanguardLTE\User $user)
         {
             if( $user->id == \Illuminate\Support\Facades\Auth::id() ) 
             {
-                return redirect()->route('backend.user.list')->withErrors(trans('app.you_cannot_delete_yourself'));
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors(trans('app.you_cannot_delete_yourself'));
             }
             if( auth()->user()->role_id <= $user->role_id ) 
             {
-                return redirect()->route('backend.user.list')->withErrors([trans('app.no_permission')]);
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.no_permission')]);
             }
             $agents = null;
             $distributors = null;
@@ -1281,9 +1281,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             if($bUser){
-                return redirect()->route('backend.user.tree')->withSuccess(trans('app.user_deleted'));
+                return redirect()->route(config('app.admurl').'.user.tree')->withSuccess(trans('app.user_deleted'));
             }
-            return redirect()->route('backend.user.list')->withSuccess('파트너가 성공적으로 삭제되었습니다.');
+            return redirect()->route(config('app.admurl').'.user.list')->withSuccess('파트너가 성공적으로 삭제되었습니다.');
             
         }
         public function hasActivities($user)
@@ -1331,7 +1331,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function invalidateSession(\VanguardLTE\User $user, $session, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
             $sessionRepository->invalidateSession($session->id);
-            return redirect()->route('backend.user.sessions', $user->id)->withSuccess(trans('app.session_invalidated'));
+            return redirect()->route(config('app.admurl').'.user.sessions', $user->id)->withSuccess(trans('app.session_invalidated'));
         }
         public function action($action)
         {

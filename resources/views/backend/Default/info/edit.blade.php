@@ -27,7 +27,7 @@
                 </button>
 
                 @permission('helpers.delete')
-                <a href="{{ route('backend.info.delete', $info->id) }}"
+                <a href="{{ route($admurl.'.info.delete', $info->id) }}"
                    class="btn btn-danger"
                    data-method="DELETE"
                    data-confirm-title="@lang('app.please_confirm')"

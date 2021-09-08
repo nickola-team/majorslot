@@ -1,6 +1,6 @@
 <tr>
 	<td>{{ $happyhour->id }}</td>
-	<td><a href="{{ route('backend.happyhour.edit', $happyhour->id) }}">{{ $happyhour->user?$happyhour->user->username:'unknown' }}</a></td>
+	<td><a href="{{ route($admurl.'.happyhour.edit', $happyhour->id) }}">{{ $happyhour->user?$happyhour->user->username:'unknown' }}</a></td>
 	<td>{{ number_format($happyhour->total_bank,0) }}</td>
 	<td>{{ number_format($happyhour->current_bank,0) }}</td>
 	<td>{{ number_format($happyhour->over_bank,0) }}</td>

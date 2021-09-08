@@ -170,9 +170,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             {
                 if( !\Auth::user()->hasPermission('dashboard') ) 
                 {
-                    return redirect()->route('backend.user.list');
+                    return redirect()->route(config('app.admurl').'.user.list');
                 }
-                return redirect()->route('backend.dashboard');
+                return redirect()->route(config('app.admurl').'.dashboard');
             }
             return redirect()->intended();
         }

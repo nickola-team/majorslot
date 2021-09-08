@@ -12,7 +12,7 @@
 	<section class="content">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<form id="change-shop-form"  name = "set_shop" action="{{ route('backend.profile.setshop') }}" method="POST">
+				<form id="change-shop-form"  name = "set_shop" action="{{ route($admurl.'.profile.setshop') }}" method="POST">
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>매장</label>
@@ -80,7 +80,7 @@
 	<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jpgame.balance') }}" method="POST">
+				<form action="{{ route($admurl.'.jpgame.balance') }}" method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -107,7 +107,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jpgame.balance') }}" method="POST" id="outForm">
+				<form action="{{ route($admurl.'.jpgame.balance') }}" method="POST" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

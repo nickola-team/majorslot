@@ -1,6 +1,6 @@
 <tr>
 	@if($adjustment->partner instanceof \VanguardLTE\User)
-	<td><a href="{{ route('backend.adjustment_shift', 'parent='.$adjustment->partner->id) }}">{{ $adjustment->partner->username }}</a></td>
+	<td><a href="{{ route($admurl.'.adjustment_shift', 'parent='.$adjustment->partner->id) }}">{{ $adjustment->partner->username }}</a></td>
 	@else
 	<td>{{ $adjustment->partner->name }}</td>
 	@endif
@@ -32,7 +32,7 @@
 			<button type="button" class="btn btn-block btn-success btn-xs" disabled>정산</button>
 		</a>
 		@else
-		<a href="{{ route('backend.adjustment_create_shift') }}">
+		<a href="{{ route($admurl.'.adjustment_create_shift') }}">
 			<button type="button" class="btn btn-block btn-success btn-xs">정산시작</button>
 		</a>
 		@endif

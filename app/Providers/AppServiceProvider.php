@@ -46,12 +46,19 @@ class AppServiceProvider extends ServiceProvider
                 });
         }
         $layout = 'Default';
+        $backendurl = 'backend';
         $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
         if ($site)
         {
             $layout = $site->backend;
+            if (strpos($layout, 'Dark') === 0)
+            {
+                $backendurl = 'slot';
+            }
         }
         \View::share('layout', $layout);
+        \View::share('admurl', $backendurl);
+        config(['app.admurl' => $backendurl]);
     }
 
     /**

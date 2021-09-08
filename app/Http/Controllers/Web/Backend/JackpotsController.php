@@ -39,14 +39,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $data['shop_id'] = \Auth::user()->shop_id;
             $jackpot = \VanguardLTE\Jackpot::create($data);
             event(new \VanguardLTE\Events\Jackpot\NewJackpot($jackpot));
-            return redirect()->route('backend.jackpot.list')->withSuccess(trans('app.jackpot_created'));
+            return redirect()->route(config('app.admurl').'.jackpot.list')->withSuccess(trans('app.jackpot_created'));
         }
         public function edit($jackpot)
         {
             $jackpot = \VanguardLTE\Jackpot::where('id', $jackpot)->first();
             if( $jackpot->shop_id != \Auth::user()->shop_id ) 
             {
-                return redirect()->route('backend.jackpot.list')->withErrors([trans('app.wrong_shop')]);
+                return redirect()->route(config('app.admurl').'.jackpot.list')->withErrors([trans('app.wrong_shop')]);
             }
             $jackpot_stat = $jackpot->statistics()->orderBy('id', 'DESC')->limit(8)->get();
             return view('backend.Default.jackpots.edit', compact('jackpot', 'jackpot_stat'));
@@ -68,17 +68,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             $jackpot->update($data);
             event(new \VanguardLTE\Events\Jackpot\JackpotEdited($jackpot));
-            return redirect()->route('backend.jackpot.list')->withSuccess(trans('app.jackpot_updated'));
+            return redirect()->route(config('app.admurl').'.jackpot.list')->withSuccess(trans('app.jackpot_updated'));
         }
         public function delete(\VanguardLTE\Jackpot $jackpot)
         {
             if( $jackpot->balance > 0 ) 
             {
-                return redirect()->route('backend.jackpot.list')->withErrors([trans('app.balance_not_zero')]);
+                return redirect()->route(config('app.admurl').'.jackpot.list')->withErrors([trans('app.balance_not_zero')]);
             }
             event(new \VanguardLTE\Events\Jackpot\DeleteJackpot($jackpot));
             \VanguardLTE\Jackpot::where('id', $jackpot->id)->delete();
-            return redirect()->route('backend.jackpot.list')->withSuccess(trans('app.jackpot_deleted'));
+            return redirect()->route(config('app.admurl').'.jackpot.list')->withSuccess(trans('app.jackpot_deleted'));
         }
         public function balance(\Illuminate\Http\Request $request)
         {

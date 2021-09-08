@@ -65,7 +65,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
 
-            return redirect()->route('backend.website.list')->withSuccess('도메인이 추가되었습니다');
+            return redirect()->route(config('app.admurl').'.website.list')->withSuccess('도메인이 추가되었습니다');
         }
         public function edit($website)
         {
@@ -109,7 +109,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
 
             \VanguardLTE\WebSite::where('id', $website->id)->update($data);
-            return redirect()->route('backend.website.list')->withSuccess('도메인이 업데이트되었습니다.');
+            return redirect()->route(config('app.admurl').'.website.list')->withSuccess('도메인이 업데이트되었습니다.');
         }
         public function delete(\VanguardLTE\WebSite $website)
         {
@@ -120,7 +120,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'parent' => 0,
                 'site_id' => $website->id,
             ])->delete();
-            return redirect()->route('backend.website.list')->withSuccess('도메인이 삭제되었습니다.');
+            return redirect()->route(config('app.admurl').'.website.list')->withSuccess('도메인이 삭제되었습니다.');
         }
     }
 

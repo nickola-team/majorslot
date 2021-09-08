@@ -18,22 +18,22 @@ namespace VanguardLTE\Http\Middleware
                 }
                 else if( !$request->is('api*') ) 
                 {
-                    if( $request->is('backend*') ) 
+                    if( $request->is(config('app.admurl') . '*') ) 
                     {
-                        return redirect()->guest('/backend/login');
+                        return redirect()->guest(route(config('app.admurl') . '.auth.login'));
                     }
                     return redirect()->guest('login');
                 }
             }
             else if( !$request->is('api*') ) 
             {
-                if( $request->is('backend*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
+                if( $request->is(config('app.admurl') . '*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
                 {
                     return redirect()->to('/');
                 }
-                if( !$request->is('backend*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
+                if( !$request->is(config('app.admurl') . '*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
                 {
-                    return redirect()->to('/backend/');
+                    return redirect()->to('/' . config('app.admurl'));
                 }
             }
             return $next($request);

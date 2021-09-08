@@ -15,7 +15,7 @@
 				<h3 class="box-title">Helper</h3>
 				@permission('helpers.add')
 				<div class="pull-right box-tools">
-					<a href="{{ route('backend.info.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+					<a href="{{ route($admurl.'.info.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 				</div>
 				@endpermission
 			</div>

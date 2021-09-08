@@ -1245,7 +1245,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $result = json_decode($result, true);
                     if ($result['status'] == 'error')
                     {
-                        return redirect()->route('backend.in_out_manage', $type)->withErrors($result['message']);
+                        return redirect()->route(config('app.admurl').'.in_out_manage', $type)->withErrors($result['message']);
                     }
                 }
                 else if($type == 'out'){
@@ -1302,7 +1302,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
 
-            return redirect()->route('backend.in_out_manage', $type)->withSuccess(['조작이 성공적으로 진행되었습니다.']);
+            return redirect()->route(config('app.admurl').'.in_out_manage', $type)->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }
 
         public function rejectInOut(\Illuminate\Http\Request $request){

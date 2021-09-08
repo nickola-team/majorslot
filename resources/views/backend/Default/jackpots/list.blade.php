@@ -15,7 +15,7 @@
 				<h3 class="box-title">@lang('app.jackpots')</h3>
 				@permission('jackpots.add')
 				<div class="pull-right box-tools">
-					<a href="{{ route('backend.jackpot.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+					<a href="{{ route($admurl.'.jackpot.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 				</div>
 				@endpermission
 			</div>
@@ -67,7 +67,7 @@
 	<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jackpot.balance') }}" method="POST">
+				<form action="{{ route($admurl.'.jackpot.balance') }}" method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -94,7 +94,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jackpot.balance') }}" method="POST">
+				<form action="{{ route($admurl.'.jackpot.balance') }}" method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

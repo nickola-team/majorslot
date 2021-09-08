@@ -16,10 +16,10 @@
 			<button type="button" class="btn btn-block btn-danger btn-xs" disabled>어드민에 요청</button>
 		@else
 			@if($category->view == 1)
-				<a href="{{route('backend.category.show', $category->id) . '?view=0'}}">
+				<a href="{{route($admurl.'.category.show', $category->id) . '?view=0'}}">
 				<button type="button" class="btn btn-block btn-danger btn-xs">점검</button>
 			@else
-			<a href="{{route('backend.category.show', $category->id) . '?view=1'}}">
+			<a href="{{route($admurl.'.category.show', $category->id) . '?view=1'}}">
 				<button type="button" class="btn btn-block btn-success btn-xs">활성</button>
 			@endif	
 		</a>

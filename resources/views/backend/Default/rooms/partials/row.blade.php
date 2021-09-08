@@ -1,5 +1,5 @@
 <tr>        
-    <td><a href="{{ route('backend.room.edit', $room->id) }}">{{ $room->name }}</a></td>
+    <td><a href="{{ route($admurl.'.room.edit', $room->id) }}">{{ $room->name }}</a></td>
 	<td><a href="{{ route('frontend.jpstv', $room->id) }}" target="_blank">{{ $room->id }}</a></td>
     <td>{{ $room->balance }}</td>
 	<td>{{ $room->percent }}</td>

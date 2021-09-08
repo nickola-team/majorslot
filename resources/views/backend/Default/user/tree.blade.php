@@ -47,7 +47,7 @@
 			?>
                 <h3 class="box-title">파트너목록</h3>
                 @if($user != null && !$user->hasRole('admin'))
-					<a href="{{ route('backend.user.tree', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
+					<a href="{{ route($admurl.'.user.tree', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
 						{{$user->username}}
 						[ {{$available_roles_trans[$user->role_id]}}]
 					</a>
@@ -56,10 +56,10 @@
 					
                     @permission('users.add')
 					@if (Auth::user()->hasRole('admin'))
-                    <a href="{{ route('backend.user.createpartnerfromcsv') }}" class="btn btn-danger btn-sm" style="margin-right:5px;">csv로 추가</a>
+                    <a href="{{ route($admurl.'.user.createpartnerfromcsv') }}" class="btn btn-danger btn-sm" style="margin-right:5px;">csv로 추가</a>
                     @endif
                     @if (Auth::user()->hasRole(['admin','comaster','master', 'agent','distributor']))
-                    <a href="{{ route('backend.user.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
+                    <a href="{{ route($admurl.'.user.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
                     @endif
                     @endpermission
                 </div>
@@ -135,7 +135,7 @@
     <div class="modal fade" id="openAddModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.balance.update') }}" method="POST" id="addForm">
+				<form action="{{ route($admurl.'.user.balance.update') }}" method="POST" id="addForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -171,7 +171,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="{{ route('backend.user.balance.update') }}" method="POST" id="outForm">
+				<form action="{{ route($admurl.'.user.balance.update') }}" method="POST" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>

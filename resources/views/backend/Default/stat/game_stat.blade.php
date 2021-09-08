@@ -96,7 +96,7 @@
 						@lang('app.filter')
 					</button>
 					@if( Auth::user()->hasRole('admin') )
-						<a href="{{ route('backend.game_stat.clear') }}"
+						<a href="{{ route($admurl.'.game_stat.clear') }}"
 						   class="btn btn-danger"
 						   data-method="DELETE"
 						   data-confirm-title="경고"
@@ -196,7 +196,7 @@
 				var id = item.attr('data-id');
 				$.ajax({
 					type: 'GET',
-					url: "{{route('backend.game_stat.balance')}}?id=" + id,
+					url: "{{route($admurl.'.game_stat.balance')}}?id=" + id,
 					cache: false,
 					async: false,
 					success: function (data) {

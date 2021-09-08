@@ -1,6 +1,6 @@
 <tr>
 	<td>{{ $jackpot->id }}</td>
-	<td><a href="{{ route('backend.jpgame.edit', $jackpot->id) }}">{{ $jackpot->name }}</a></td>
+	<td><a href="{{ route($admurl.'.jpgame.edit', $jackpot->id) }}">{{ $jackpot->name }}</a></td>
 	<td>{{ number_format($jackpot->balance,0) }}</td> 
 	<td>{{ number_format($jackpot->start_balance,0) }}</td>
 	<td>{{ number_format($jackpot->pay_sum,0) }}</td>

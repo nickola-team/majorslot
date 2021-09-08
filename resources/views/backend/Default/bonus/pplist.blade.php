@@ -14,7 +14,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">프리스핀 보너스</h3>
                 <div class="pull-right box-tools">
-                    <a href="{{ route('backend.bonus.ppadd') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+                    <a href="{{ route($admurl.'.bonus.ppadd') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
                 </div>
 			</div>
             <div class="box-body">
@@ -47,7 +47,7 @@
 								<td>{{ date(config('app.date_time_format'),intval($bonus['expirationDate'])) }} </td>
 								<td>{{ $bonus['status']?'활성':'비활성' }} </td>
 								<td>
-								<a href="{{ route('backend.bonus.ppcancel', $bonus['bonusCode']) }}"
+								<a href="{{ route($admurl.'.bonus.ppcancel', $bonus['bonusCode']) }}"
 									class="btn btn-danger btn-block"
 									data-method="DELETE"
 									data-confirm-title="보너스취소"
@@ -87,7 +87,7 @@
 	<div class="modal fade" id="openAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jpgame.balance') }}" method="POST">
+				<form action="{{ route($admurl.'.jpgame.balance') }}" method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
@@ -114,7 +114,7 @@
 	<div class="modal fade" id="openOutModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form action="{{ route('backend.jpgame.balance') }}" method="POST" id="outForm">
+				<form action="{{ route($admurl.'.jpgame.balance') }}" method="POST" id="outForm">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span></button>
