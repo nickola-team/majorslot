@@ -900,7 +900,7 @@ namespace VanguardLTE\Games\PandasFortunePM
         }
         public function GenerateFreeSpinCount(){
             $garantFSCount = $this->GetGameData($this->slotId . 'garantFSCount', 0);
-            $garantFSMax = $this->GetGameData($this->slotId . 'garantFSMax', 20);
+            $garantFSMax = $this->GetGameData($this->slotId . 'garantFSMax', rand(20, 40));
 
             $count = 3;
             if($garantFSCount <= $garantFSMax){
