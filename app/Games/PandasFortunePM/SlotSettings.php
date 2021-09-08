@@ -899,14 +899,24 @@ namespace VanguardLTE\Games\PandasFortunePM
             // return true;
         }
         public function GenerateFreeSpinCount(){
-            $sum = rand(0, 100);
-            if($sum <= 90){
-                return 3;
-            }else if($sum <= 100){
-                return 4;
-            }else{ //not appear 
-                return 5;
+            $garantFSCount = $this->GetGameData($this->slotId . 'garantFSCount', 0);
+            $garantFSMax = $this->GetGameData($this->slotId . 'garantFSMax', 20);
+
+            $count = 3;
+            if($garantFSCount <= $garantFSMax){
+                $garantFSCount = $garantFSCount + 1;
+                $count = 3;
+            }else { // if($sum <= 100){
+                $garantFSMax = rand(20, 40);
+                $garantFSCount = 0;
+                $count = 4;
+            // }else{ //not appear 
+            //     return 5;
             }
+            $this->SetGameData($this->slotId . 'garantFSCount', $garantFSCount);
+            $this->SetGameData($this->slotId . 'garantFSMax', $garantFSMax);
+            return $count;
+
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
