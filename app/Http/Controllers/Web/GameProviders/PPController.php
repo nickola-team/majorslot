@@ -741,7 +741,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         //유저의 밸런스를 업데이트
                         $user->update(['balance' => $data['balance']]);
                     }
-                    else //밸런스 초기화
+                    else if ($data['balance'] > 0) //밸런스 초기화
                     {
                         $data = PPController::transfer($user->id, -$data['balance']);
                         if ($data['error'] != 0)
