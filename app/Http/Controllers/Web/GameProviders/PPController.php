@@ -683,6 +683,35 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function makelink($gamecode, $userid)
         {
             $user = \VanguardLTE\User::where('id', $userid)->first();
+            
+            // check transfer status
+            // $tryCount = 0;
+            // $resdata['status'] = 'Not found';
+            // while ($tryCount < 5 && $resdata['status'] != 'success') {
+            //     $data = [
+            //         'secureLogin' => config('app.ppsecurelogin'),
+            //         'externalTransactionId' => $userid,
+            //     ];
+            //     $data['hash'] = PPController::calcHash($data);
+            //     $response = Http::withHeaders([
+            //         'Content-Type' => 'application/x-www-form-urlencoded'
+            //         ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/transfer/status/', $data);
+
+            //     if ($response->ok())
+            //     {
+            //         $resdata = $response->json();
+            //         if ($resdata == null)
+            //         {
+            //             $resdata['status'] = 'Not found';
+            //         }
+            //     }
+            //     $tryCount = $tryCount + 1;
+            // }
+            // if ($resdata['status'] != 'success')
+            // {
+            //     return null;
+            // }
+            
             $data = PPController::getBalance($userid);
             if ($data['error'] == -1) {
                 //연동오류
@@ -701,6 +730,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else if ($data['error'] == 0)
             {
+                if ($data['balance']==null)
+                {
+                    return null;
+                }
                 if ($data['balance'] >= 0) //이미 밸런스가 있다면
                 {
                     if ($user->playing_game == 'pp') //이전에 게임을 하고있었다면??
@@ -884,32 +917,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return $data;
 
-            //check transfer status
-            // $tryCount = 0;
-            // $resdata['status'] = 'Not found';
-            // while ($tryCount < 5 && $resdata['status'] != 'success') {
-            //     $data = [
-            //         'secureLogin' => config('app.ppsecurelogin'),
-            //         'externalTransactionId' => $transaction->id,
-            //     ];
-            //     $data['hash'] = PPController::calcHash($data);
-            //     $response = Http::withHeaders([
-            //         'Content-Type' => 'application/x-www-form-urlencoded'
-            //         ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/transfer/status/', $data);
-
-            //     if ($response->ok())
-            //     {
-            //         $resdata = $response->json();
-            //         if ($resdata == null)
-            //         {
-            //             $resdata['status'] = 'Not found';
-            //         }
-            //     }
-            //     $tryCount = $tryCount + 1;
-            //     sleep(1);
-            // }
-
-            // return $resdata;
         }
 
         public static function terminate($userId)
