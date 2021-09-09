@@ -1,9 +1,9 @@
 const { exec } = require("child_process");
 
 
-let balanceSync = 5000;
+let balanceSync = 3000;
 let betwinSync = 60000;
-let launchSync = 3000;
+let launchSync = 5000;
 console.log('======= Starting pragmatic play balance synchronization thread =============');
 console.log(' Balance Sync = %d seconds', balanceSync / 1000);
 console.log(' Bet/Win Sync = %d seconds', betwinSync / 1000);
