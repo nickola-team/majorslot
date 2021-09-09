@@ -730,10 +730,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else if ($data['error'] == 0)
             {
-                // if ($data['balance']==null)
-                // {
-                //     return null;
-                // }
+                if ($data['balance']==null)
+                {
+                    return null;
+                }
                 if ($data['balance'] >= 0) //이미 밸런스가 있다면
                 {
                     if ($user->playing_game == 'pp') //이전에 게임을 하고있었다면??
