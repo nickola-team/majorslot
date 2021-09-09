@@ -553,11 +553,12 @@ namespace VanguardLTE\Console
                             if ($debug == 1) {
                                 $this->info('sync id = ' . $user['id'] . ', old balance = ' . $user['balance'] .  ', pp balance = ' . $data['balance']);
                             }
-                            if ($data['balance']==null)
-                            {
-                                $this->info('null balance id = ' . $user['id'] . ', old balance = ' . $user['balance'] .  ', pp balance = ' . $data['balance']);
-                            }
-                            else if (floatval($user['balance']) !=  floatval($data['balance']) )
+                            // if ($data['balance']==null)
+                            // {
+                            //     $this->info('null balance id = ' . $user['id'] . ', old balance = ' . $user['balance'] .  ', pp balance = ' . $data['balance']);
+                            // }
+                            // else 
+                            if (floatval($user['balance']) !=  floatval($data['balance']) )
                             {
                                 \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['balance' => $data['balance'], 'played_at' => time()]);
                             }

@@ -4,13 +4,10 @@
             {{ $user->username ?: trans('app.n_a') }}
         </a>
     </td>
-	<td>
-        {{ $user->shop->name}}
-    </td>
 <?php
 	$parent = $user->referral;
 	$role_id = $parent->role_id;
-	for ($r=$role_id+1;$r<auth()->user()->role_id;$r++)
+	for ($r=3;$r<auth()->user()->role_id;$r++)
 	{
 		if ($parent){
 			$parent = $parent->referral;
