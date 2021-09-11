@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="/back/plugins/iCheck/all.css">
 
     <link rel="stylesheet" href="/back/dist/css/new.css">
-    <link rel="stylesheet" href="/frontend/Default/css/backend.css">
+    <link rel="stylesheet" href="/back/css/backend.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

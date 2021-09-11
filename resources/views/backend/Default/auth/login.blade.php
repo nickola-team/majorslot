@@ -3,7 +3,45 @@
 @section('page-title', trans('app.login'))
 
 @section('content')
+@if ($admurl=='slot')
+<div class="login-box lg_box on">
+    <div class="login-logo">
+    <a href="{{ route($admurl.'.dashboard') }}">
+    @if (isset($site))
+      <img src="{{ url('/back/img/' . $site->frontend . '_logo.png') }}"></img>
+    @endif
+    </a>
+    </div>
 
+        @include('backend.Default.partials.messages')
+
+    <div class="login">
+
+      <form role="form" action="<?= route($admurl.'.auth.login.post') ?>" method="POST" id="login-form" autocomplete="off">
+
+        <input type="hidden" value="<?= csrf_token() ?>" name="_token">
+
+        <div class="lg_id">
+          <input type="text" name="username" id="username" class="input_type" placeholder="@lang('app.username')">
+        </div>
+
+        <div class="lg_id">
+          <input type="password" name="password" id="password" class="input_type" placeholder="@lang('app.password')">
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="submit" class="lg_bt btlogin" id="btn-login">
+              @lang('app.log_in')
+            </button>
+          </div>
+        </div>
+        <div class="joinform-footer">Copyright® 2021 All Right Reserved</div>
+      </form>
+
+    </div>
+    
+@else
   <div class="login-box">
     <div class="login-logo">
     <a href="{{ route($admurl.'.dashboard') }}">
@@ -15,7 +53,7 @@
     </a>
     </div>
 
-              @include('backend.Default.partials.messages')
+        @include('backend.Default.partials.messages')
 
     <div class="login-box-body">
 
@@ -48,7 +86,9 @@
       </form>
 
     </div>
-    <div class="alert alert-warning" style="margin-top:10px;display:none;" id="browsercheck">
+    
+@endif
+<div class="alert alert-warning" style="margin-top:10px;display:none;" id="browsercheck">
         <h4>크롬브라우저 권장</h4>
         <p>크롬 브라우저가 아닌 브라우저를 이용하시는 경우 예기지 않은 문제가 발생할수 있습니다.</p>
     </div>

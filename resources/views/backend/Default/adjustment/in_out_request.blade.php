@@ -11,16 +11,16 @@
 
 	<section class="content">
 		
-		<div class="box">
+		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">충환전신청</h3>
 			</div>
+			<div class="box-body">
 
 			<input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
 
-			<li class="list-group-item">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-6" style="margin-top: 10px;">
 						<b>입금 은행계좌 : </b>
 						<button class="btn btn-primary" id="togglebankinfo">
 							보이기
@@ -31,10 +31,8 @@
 
 					</div>
 				</div>
-			</li>
 
-			<li class="list-group-item">
-				<div class="row">
+				<div class="row" style="margin-top: 10px;">
 					<div class="col-md-3">
 						<b>본인 은행계좌:</b> 
 							@php
@@ -43,54 +41,48 @@
 							{!! Form::select('bank_name', $banks, auth()->user()->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name']) !!}		
 					</div>
 				</div>
-			</li>
 
-			<li class="list-group-item">
-				<div class="row">
+				<div class="row" style="margin-top: 10px;">
 					<div class="col-md-3">
 						<b>계좌번호:</b> 
 						<input type="text" class="form-control" id="account_no" name="account_no" value="{{ auth()->user()->account_no ? auth()->user()->account_no : '' }}">
 					</div>
 				</div>
-			</li>
 
-			<li class="list-group-item">
-				<div class="row">
+				<div class="row" style="margin-top: 10px;">
 					<div class="col-md-3">
 						<b>예금주:</b> 
 						<input type="text" class="form-control" id="recommender" name="recommender" value="{{ auth()->user()->recommender ? auth()->user()->recommender : '' }}">
 					</div>
 				</div>
-			</li>
 
-			<div class="box-footer">
+			<div class="row" style="margin-top: 10px;">
+				<div class="col-md-3">
 				<button class="btn btn-primary" id="change-bank-account-btn" onclick="change_bank_account_info();">
 					계좌정보변경
 				</button>
+				</div>
 			</div>
 
 			<?php
 			$dealvalue = auth()->user()->hasRole('manager')?auth()->user()->shop->deal_balance:auth()->user()->deal_balance - auth()->user()->mileage;
 			$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balance:auth()->user()->balance;
 			?>
-			<li class="list-group-item">
-				<div class="row">
-					<div class="col-md-2">
+				<div class="row" style="margin-top: 10px;">
+					<div class="col-md-3">
 						<b>보유금:</b> <a class="pull-right">{{ number_format($balance,0) }}원</a>
 					</div>
 				</div>
-			</li>
 			@if(auth()->user()->hasRole(['agent','distributor','manager']) || (auth()->user()->hasRole('master') && settings('enable_master_deal')))
 			
-			<li class="list-group-item">
-				<div class="row">
-					<div class="col-md-2" style="line-height:2">
+				<div class="row" style="margin-top: 10px;">
+					<div class="col-md-3" style="line-height:2">
 						<b>딜비수익:</b> ({{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->deal_percent:auth()->user()->deal_percent,2)}}%,{{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->table_deal_percent:auth()->user()->table_deal_percent,2)}}%) <a class="pull-right">{{ 
 							number_format($dealvalue,0) 
 							}}원 </a>
 							
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-3">
 					<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal"  data-id="{{ (int)($dealvalue / 10000) * 10000 }}">
 							<button class="btn btn-success" id="convert-deal-balance-btn">
 							딜비전환
@@ -98,33 +90,17 @@
 						</a>
 					</div>
 				</div>
-			</li>
 			@endif
 
-			{{-- @if(auth()->user()->hasRole('agent'))
-				<div class="list-group-item">
-					<label>@lang('app.bank_account')</label>
-					<input type="text" class="form-control" id="bank_account" name="bank_account" value= "{{ $bank_account }}">
-				</div>
-				<div class="box-footer">
-					<button class="btn btn-primary" id="withdraw-balance-btn" onclick="change_bank_account();">
-						@lang('app.change_bank_account')
-					</button>
-				</div>
-			@elseif($user->hasRole('distributor') || $user->hasRole('manager'))
-				<li class="list-group-item">
-					<b>@lang('app.bank_account')</b> <a class="pull-right">{{ $bank_account }}</a>
-				</li>
-			@endif --}}
 
-			<div class="list-group-item">
-				<div class="row">
+				<div class="row" style="margin-top: 10px;">
 					<div class="col-md-3">
 						<label>충/환전금액:</label>
 						<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요." readonly>
 					</div>
 				</div>
 			</div>
+
 
 			<div class="box-footer">
 				<button class="btn btn-primary" id="money-50k" onclick="add_money(10000);">
@@ -153,6 +129,7 @@
 				</button>
 			</div>
 
+
 			<div class="box-footer">
 				<button class="btn btn-danger" id="withdraw-balance-btn" onclick="withdraw_balance();">
 					환전신청
@@ -164,45 +141,8 @@
 			</div>
 			
 
-				{{-- @if( $user->hasRole('user') )
-				<li class="list-group-item">
-					<b>@lang('app.in')</b> <a class="pull-right">{{ number_format($user->present()->total_in,0) }}</a>
-				</li>
-				<li class="list-group-item">
-					<b>@lang('app.out')</b> <a class="pull-right">{{ number_format($user->present()->total_out,0) }}</a>
-				</li>
-				<li class="list-group-item">
-					<b>@lang('app.total')</b> <a class="pull-right">{{ number_format($user->present()->total_in - $user->present()->total_out,0) }}</a>
-				</li>
-				@endif --}}
-		</div>
-		
-
-		{{-- <form action="" method="GET">
-			<div class="box box-danger collapsed-box pay_stat_show">
-				<div class="box-header with-border">
-					<h3 class="box-title">@lang('app.filter')</h3>
-					<div class="box-tools pull-right">
-						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-					</div>
-				</div>
-				<div class="box-body">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>기간</label>
-								<input type="text" class="form-control" name="dates" value="{{ Request::get('dates') }}">
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="box-footer">
-					<button type="submit" class="btn btn-primary">
-						@lang('app.filter')
-					</button>
-				</div>
 			</div>
-		</form>--}}
+		
 
 		<div class="box box-primary">
 			<div class="box-header with-border">

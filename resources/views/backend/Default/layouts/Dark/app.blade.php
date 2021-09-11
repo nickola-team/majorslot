@@ -8,6 +8,7 @@
     <title>@yield('page-title')</title>
 
     <!-- Tell the browser to be responsive to screen width -->
+    <link rel="icon" href="/back/img/admin.jpg" >
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="/back/bower_components/bootstrap/dist/css/bootstrap.min.css">
@@ -16,7 +17,7 @@
     <link rel="stylesheet" href="/back/dist/css/AdminLTE.min.css">
 
     <link rel="stylesheet" href="/back/dist/css/skins/_all-skins.min.css">
-    
+    <link rel="stylesheet" href="/back/dist/css/skins/skin-midnight.css">
 
     <link rel="stylesheet" href="/back/bower_components/morris.js/morris.css">
     <link rel="stylesheet" href="/back/bower_components/jvectormap/jquery-jvectormap.css">
@@ -40,31 +41,98 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+
+    <style>
+        .toolbar {
+            float: left;
+            width: 75%;
+        }
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            font-size : 16px;
+        }
+        .skin-midnight .table-striped > tbody > tr  {
+                background-color: transparent !important;
+        }
+        .skin-midnight .btn-primary {
+                color: #fff;
+                background-color: #3f6791;
+                border-color: #3f6791;
+                box-shadow: none;
+        }
+
+        .skin-midnight .page-item.active .page-link {
+                background-color: #3f6791;
+                color: #fff;
+        }
+        .skin-midnight .page-item.disabled .page-link{
+            background-color : #3a4047!important;
+            border-color : #6c757d!important;
+            color : #6c757d;
+        }
+
+        .skin-midnight .pagination>li>a, .pagination>li>span {
+            background-color : #343a40;
+            border-color : #6c757d;
+            color : #3f6791;
+        }
+
+        .skin-midnight .form-control {
+            color : #bec5cb;
+        }
+
+
+        .skin-midnight .dropdown-menu>li .menu>li>a {
+            border-bottom : 1px solid  #6c757d !important;
+        }
+
+        .skin-midnight .dropdown-menu>li.header {
+            background-color : #343a40 !important;
+            color : #fff !important;
+        }
+        .skin-midnight .dropdown-menu {
+            background-color : #343a40 !important;
+            color : #fff !important;
+        }
+
+        .skin-midnight .sidebar-menu>li>a>.fa {
+            width : 30px;
+            color : #489600;
+        }
+        .skin-midnight .ui-datarangepicker {
+            background: #333;
+            border: 1px solid #555;
+            color: #EEE;
+        }
+        .skin-midnight .daterangepicker .calendar-table {
+            background-color : transparent !important;
+        }
+
+        .skin-midnight .daterangepicker_input select{
+            background-color : #343a40 !important;
+        }
+
+    </style>
+
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <style>
-        .content-wrapper {
-            background-color: gray;!important
-        }
-    </style>
 </head>
-<body class="hold-transition skin-blue layout-top-nav ">
+<body class="hold-transition skin-midnight sidebar-mini  @if(isset($_COOKIE['sidebar-collapse']) && $_COOKIE['sidebar-collapse'] == 'true') sidebar-collapse @endif">
 <div class="wrapper">
 
-    @include('backend.Default.partials.Top.navbar')
+    @include('backend.Default.partials.Dark.navbar')
+    @include('backend.Default.partials.Dark.sidebar')
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         @yield('content')
     </div>
 
-    <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>ver.</b> 7.1
-        </div>
-        Multi Shop System
-    </footer>
+    
     <?php
         $user = auth()->user();
         $user_id = [];
@@ -80,9 +148,9 @@
         $notices = \VanguardLTE\Notice::where(['active' => 1, 'type' => 'partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
     ?>
     @if (count($notices)>0)
-    <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="background:transparent;">
+    <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="">
     <!-- Create the tabs -->
-        <div class="pop01_popup1 draggable02" style="top: 50px; display: none;" id="notification">
+        <div class="pop01_popup1 draggable02" style="display: none;" id="notification">
             <div class="pop01_popup_wrap">
                 <div class="pop01_popup_btn_wrap">
                     <ul>
@@ -91,7 +159,7 @@
                     </ul>
                 </div>
                 <div class="pop01_popup_box">
-                    <div class="pop01_popup_text">
+                    <div class="pop01_popup_text" style="padding: 30px;">
                     @foreach ($notices as $notice)
                     <span class="pop01_popup_font1" style="border-bottom: 2px solid rgb(255, 255, 255); margin-bottom: 15px;"></span>
                     <span class="pop01_popup_font2">
@@ -167,7 +235,6 @@
                 $("#notification").show();
             }
 
-
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";
             var timeout;
@@ -177,6 +244,8 @@
             $("#adj_newmark").hide();
             $("#in_newmark").hide();
             $("#out_newmark").hide();
+            $("#user_newmark").hide();
+            $("#join_newmark").hide();
             var updateInOutRequest = function (callback) {
                 if (true) {
                     $.ajax({
@@ -221,6 +290,7 @@
                                 $("#join_newmark").hide();
                             }
 
+
                             if (inouts['add'] == 0 && inouts['out'] == 0)
                             {
                                 $("#adj_newmark").hide();
@@ -241,7 +311,10 @@
             };
 
             timeout = setTimeout(updateInOutRequest, updateTime);
+
+            
         });
+
         function closeNotification(onlyOnce) {
             if (onlyOnce) {
                 
@@ -252,6 +325,7 @@
 
             $("#notification").hide();
         }
+
     </script>
 </body>
 </html>

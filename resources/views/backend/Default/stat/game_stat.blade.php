@@ -196,7 +196,7 @@
 				var id = item.attr('data-id');
 				$.ajax({
 					type: 'GET',
-					url: "{{route($admurl.'.game_stat.balance')}}?id=" + id,
+					url: "{{route('backend.game_stat.balance')}}?id=" + id,
 					cache: false,
 					async: false,
 					success: function (data) {

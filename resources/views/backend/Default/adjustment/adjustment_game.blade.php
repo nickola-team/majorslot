@@ -125,6 +125,7 @@
 			});
 			$('input[name="dates"]').data('daterangepicker').setStartDate("{{$start_date}}");
 			$('input[name="dates"]').data('daterangepicker').setEndDate("{{ $end_date }}");
+			
 			$('.btn-box-tool').click(function(event){
 				if( $('.pay_stat_show').hasClass('collapsed-box') ){
 					$.cookie('pay_stat_show', '1');
