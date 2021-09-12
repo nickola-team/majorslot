@@ -321,7 +321,7 @@ function isCheckOK1(strVal) {
                 strVal.charCodeAt(intTempIdx) > 57) ||
             (strVal.charCodeAt(intTempIdx) < 97 &&
                 strVal.charCodeAt(intTempIdx) > 90) ||
-            strVal.charCodeAt(i) == 12288
+            strVal.charCodeAt(intTempIdx) == 12288
         ) {
             return false;
         }

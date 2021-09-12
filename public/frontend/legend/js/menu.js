@@ -521,7 +521,7 @@ function dealout() {
 
 function goJoin() {
     TINY.box.show({
-        iframe: "/user/join.asp",
+        iframe: "/join",
         width: 955,
         height: 670,
     });
