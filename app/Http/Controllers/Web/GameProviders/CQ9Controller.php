@@ -2,6 +2,7 @@
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
     class CQ9Controller extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
@@ -1063,26 +1064,33 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => true, 'msg' => '로그인하세요'];
             }
             $detect = new \Detection\MobileDetect();
-            $response = Http::withHeaders([
-                'Authorization' => config('app.cq9token'),
-                'Content-Type' => 'application/x-www-form-urlencoded'
-            ])->asForm()->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
-                'account' => $user->id,
-                'gamehall' => 'cq9',
-                'gamecode' => $gamecode,
-                'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
-                'lang' => 'ko'
-            ]);
-            if (!$response->ok())
+            try{
+                $response = Http::withHeaders([
+                    'Authorization' => config('app.cq9token'),
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                ])->asForm()->post(config('app.cq9api') . '/gameboy/player/sw/gamelink', [
+                    'account' => $user->id,
+                    'gamehall' => 'cq9',
+                    'gamecode' => $gamecode,
+                    'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
+                    'lang' => 'ko'
+                ]);
+                if (!$response->ok())
+                {
+                    return ['error' => true, 'msg' => '요청이 잘못되었습니다.'];
+                }
+                $data = $response->json();
+                if ($data['status']['code'] == 0){
+                    return ['error' => false, 'data' => $data['data']];
+                }
+                else{
+                    return ['error' => true, 'msg' => '응답이 잘못되었습니다.', 'data' => json_encode($data)];
+                }
+            }
+            catch (\Exception $ex)
             {
-                return ['error' => true, 'msg' => '요청이 잘못되었습니다.'];
-            }
-            $data = $response->json();
-            if ($data['status']['code'] == 0){
-                return ['error' => false, 'data' => $data['data']];
-            }
-            else{
-                return ['error' => true, 'msg' => '응답이 잘못되었습니다.', 'data' => json_encode($data)];
+                Log::error($ex->getMessage());
+                return ['error' => true, 'msg' => '응답이 잘못되었습니다.'];
             }
         }
     }

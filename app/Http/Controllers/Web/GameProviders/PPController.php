@@ -2,6 +2,7 @@
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
     class PPController extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
@@ -901,21 +902,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'amount' => $amount,
             ];
             $data['hash'] = PPController::calcHash($data);
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/transfer/', $data);
-            if (!$response->ok())
-            {
-                $transaction->update(['refund' => 1]);
-                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            try{
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/transfer/', $data);
+                if (!$response->ok())
+                {
+                    $transaction->update(['refund' => 1]);
+                    return ['error' => '-1', 'description' => '제공사응답 오류'];
+                }
+                $data = $response->json();
+                if ($data['error'] != 0)
+                {
+                    $transaction->update(['refund' => 1]);
+                    return ['error' => '-1', 'description' => '밸런스 전송 오류'];
+                }
+                return $data;
             }
-            $data = $response->json();
-            if ($data['error'] != 0)
+            catch (\Exception $ex)
             {
-                $transaction->update(['refund' => 1]);
-                return ['error' => '-1', 'description' => '밸런스 전송 오류'];
+                Log::error($ex->getMessage());
+                return ['error' => -1];
             }
-            return $data;
 
         }
 
@@ -1083,15 +1091,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'externalPlayerId' => $userId,
             ];
             $data['hash'] = PPController::calcHash($data);
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/current/', $data);
-            if (!$response->ok())
-            {
-                return ['error' => '-1', 'description' => '제공사응답 오류'];
+            try {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post(config('app.ppapi') . '/http/CasinoGameAPI/balance/current/', $data);
+                if (!$response->ok())
+                {
+                    return ['error' => '-1', 'description' => '제공사응답 오류'];
+                }
+                $data = $response->json();
+                return $data;
             }
-            $data = $response->json();
-            return $data;
+            catch (\Exception $ex)
+            {
+                Log::error($ex->getMessage());
+                return ['error' => -1];
+            }
         }
 
         public static function getgamelink($gamecode)
