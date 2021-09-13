@@ -11,6 +11,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return response('허용되지 않은 접근입니다.', 401);
                 }
+                return $next($request);
             }
         );
         }
