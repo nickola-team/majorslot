@@ -8,6 +8,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $this->middleware('auth');
             //$this->middleware('permission:access.admin.panel');
             //$this->middleware('shopzero');
+            $this->middleware( function($request,$next) {
+                if (!auth()->user()->isInoutPartner())
+                {
+                    return response('허용되지 않은 접근입니다.', 401);
+                }
+                return $next($request);
+            }
+            );
         }
         public function general()
         {
