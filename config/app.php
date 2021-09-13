@@ -153,6 +153,7 @@ return [
     'evo_groupid_live' => env('EVO_GROUPID_LIVE', 'pn3fb7cbs3a2b3vr'),
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
+    'checkadmip' => env('CHECKADMIP', false),
 
     /*
     |--------------------------------------------------------------------------

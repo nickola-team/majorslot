@@ -141,7 +141,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             {
                 $this->clearLoginAttempts($request);
             }
-            if (auth()->user()->hasRole('admin'))
+            if (auth()->user()->hasRole('admin') && config('app.checkadmip'))
             {
                 //check ip address
                 $ip = $request->server('HTTP_CF_CONNECTING_IP')??$request->server('REMOTE_ADDR');
