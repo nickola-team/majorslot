@@ -10,7 +10,8 @@ return [
     'deleted_role' => '이름이 지정된 역할을 삭제했습니다. :name.',
     'updated_role_permissions' => '역할 권한이 업데이트되었습니다.',
 
-    'logged_in' => '로그인.',
+    'logged_in' => '로그인',
+    'irlogged_in' => '비정상 로그인',
     'logged_out' => '로그 아웃.',
     'created_account' => '계정을 만들었습니다.',
     'updated_avatar' => '프로필 아바타가 업데이트되었습니다.',
