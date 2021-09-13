@@ -6,6 +6,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function __construct()
         {
             $this->middleware('auth');
+            $this->middleware( function($request,$next) {
+                if (!auth()->user()->isInoutPartner())
+                {
+                    return response('허용되지 않은 접근입니다.', 401);
+                }
+                return $next($request);
+            }
+        );
         }
         public function index(\Illuminate\Http\Request $request)
         {

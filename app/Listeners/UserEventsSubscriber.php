@@ -9,6 +9,7 @@ use VanguardLTE\Events\User\ChangedAvatar;
 use VanguardLTE\Events\User\Created;
 use VanguardLTE\Events\User\Deleted;
 use VanguardLTE\Events\User\LoggedIn;
+use VanguardLTE\Events\User\IrLoggedIn;
 use VanguardLTE\Events\User\LoggedOut;
 use VanguardLTE\Events\User\Registered;
 use VanguardLTE\Events\User\UpdatedByAdmin;
@@ -31,6 +32,11 @@ class UserEventsSubscriber
     public function onLogin(LoggedIn $event)
     {
         $this->logger->log(trans('log.logged_in'));
+    }
+
+    public function onIrLogin(IrLoggedIn $event)
+    {
+        $this->logger->log(trans('log.irlogged_in'));
     }
 
     public function onLogout(LoggedOut $event)
@@ -110,6 +116,7 @@ class UserEventsSubscriber
         $class = 'VanguardLTE\Listeners\UserEventsSubscriber';
 
         $events->listen(LoggedIn::class, "{$class}@onLogin");
+        $events->listen(IrLoggedIn::class, "{$class}@onIrLogin");
         $events->listen(LoggedOut::class, "{$class}@onLogout");
         $events->listen(Registered::class, "{$class}@onRegister");
         $events->listen(Created::class, "{$class}@onCreate");

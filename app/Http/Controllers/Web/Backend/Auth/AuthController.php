@@ -141,6 +141,22 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             {
                 $this->clearLoginAttempts($request);
             }
+            if (auth()->user()->hasRole('admin') && config('app.checkadmip'))
+            {
+                //check ip address
+                $ip = $request->server('HTTP_CF_CONNECTING_IP')??$request->server('REMOTE_ADDR');
+                if (strpos($ip, ':') === false) // not mobile 
+                {
+                    $allowedIp = explode(',', config('app.admin_ip'));
+                    if (!in_array($ip, $allowedIp))
+                    {
+                        event(new \VanguardLTE\Events\User\IrLoggedIn());
+                        \Auth::logout();
+                        return redirect('/backend/login')->withErrors('허용되지 않은 기기에서의 접근입니다.');
+                    }
+                }
+
+            }
             event(new \VanguardLTE\Events\User\LoggedIn());
             if( $request->has('to') ) 
             {
