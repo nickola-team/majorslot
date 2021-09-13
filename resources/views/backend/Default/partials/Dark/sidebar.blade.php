@@ -3,10 +3,7 @@
     <section class="sidebar">
         <!-- Sidebar user panel -->
 
-        <div class="user-panel">
-            <div class="pull-left image">
-                <img src="/back/img/{{ auth()->user()->present()->role_id }}.png" class="img-circle">
-            </div>
+        <div class="user-panel" style="display: grid;">
             @if(auth()->user()->hasRole('admin'))
             @else
             <div class="pull-left info">
@@ -74,7 +71,7 @@
             <li class="{{ Request::is('slot') ? 'active' : ''  }}">
                 <a href="{{ route($admurl.'.dashboard') }}">
                     <i class="fa fa-home"></i>
-                    <span>@lang('app.dashboard')</span>
+                    <span>Home</span>
                 </a>
             </li>
             @endif
@@ -85,47 +82,48 @@
             <li class="{{ Request::is('slot/tree*') ? 'active' : ''  }}">
                 <a href="{{ route($admurl.'.user.tree') }}">
                     <i class="fa fa-users"></i>
-                    <span>파트너생성</span>
+                    <span>파트너추가</span>
                 </a>
             </li>
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent', 'distributor']) )
-            <li class="treeview {{ Request::is('slot/shops*') || Request::is('slot/partner*') || Request::is('slot/user*') || Request::is('slot/join*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('slot/shops*') || Request::is('slot/partner/*') || Request::is('slot/user*') || Request::is('slot/join*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
-                    <span>파트너관리 <sup id="user_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
+                    <span>파트너목록 <sup id="user_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
-                    <li class="{{ Request::is('slot/shops') ? 'active' : ''  }}">
-                        <a  href="{{ route($admurl.'.shop.list') }}">
-                            <i class="fa fa-circle-o"></i>
-                            <span>매장관리</span>
-                        </a>
-                    </li>
                     @if (auth()->user()->isInoutPartner())
                     <li class="{{ Request::is('slot/join') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.user.join') }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>가입신청관리<sup id="join_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
+                            <span>VIP회원<sup id="join_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
                         </a>
                     </li>
                     @endif
+                    
+                    
                     <li class="{{ Request::is('slot/user*') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.user.list') }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>{{\VanguardLTE\Role::where('slug','user')->first()->description}}관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','user')->first()->description}}</span>
                         </a>
                     </li>
-
+                    <li class="{{ Request::is('slot/shops') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.shop.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>매장</span>
+                        </a>
+                    </li>
                     @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent']) )
                     <li class="{{ Request::is('slot/partner/4') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.user.partner', 4) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</span>
                         </a>
                     </li>
                     @endif
@@ -133,7 +131,7 @@
                     <li class="{{ Request::is('slot/partner/5') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.user.partner', 5) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</span>
                         </a>
                     </li>
                     @endif
@@ -141,7 +139,7 @@
                     <li class="{{ Request::is('slot/partner/6') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.user.partner', 6) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>{{\VanguardLTE\Role::where('slug','master')->first()->description}}관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</span>
                         </a>
                     </li>
                     @endif
@@ -149,7 +147,7 @@
                     <li class="{{ Request::is('slot/partner/7') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}관리</span>
+                            <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}</span>
                         </a>
                     </li>
                     @endif
@@ -159,12 +157,12 @@
             <li class="{{ Request::is('slot/user*') ? 'active' : ''  }}">
                 <a  href="{{ route($admurl.'.user.list') }}">
                     <i class="fa fa-lg fa-user-circle-o"></i>
-                    <span>회원관리</span>
+                    <span>회원</span>
                 </a>
             </li>
             @endif
             @if ( auth()->check() && auth()->user()->hasRole('admin') )
-            <li class="treeview {{  Request::is('slot/category*') || Request::is('slot/jpgame*') || Request::is('slot/game*') ? 'active' : '' }}">
+            <li class="treeview {{  Request::is('slot/category*') || Request::is('slot/jpgame*') || Request::is('slot/game*') || Request::is('slot/happyhours*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>게임관리</span>
@@ -205,43 +203,17 @@
                         </a>
                     </li>
 
-                </ul>
-            </li>
-            @endif
-
-            @permission('happyhours.manage')
-            @if( auth()->user()->hasRole('admin') )
-            <li class="{{ Request::is('slot/happyhours*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.happyhour.list') }}">
-                    <i class="fa fa-server"></i>
-                    <span>@lang('app.happyhours')</span>
-                </a>
-            </li>
-            @endif
-            @endpermission
-
-            @if( auth()->user()->hasRole('admin') )
-            <li class="treeview {{ Request::is('slot/bonus*') ? 'active' : '' }}">
-                <a href="#">
-                    <i class="fa fa-gift"></i>
-                    <span>게임제공사 보너스</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class=" treeview-menu" id="stats-dropdown">
-                    <li class="{{ Request::is('slot/bonus/pp*') ? 'active' : ''  }}">
-                        <a  href="{{ route($admurl.'.bonus.pp') }}">
+                    @permission('happyhours.manage')
+                    @if( auth()->user()->hasRole('admin') )
+                    <li class="{{ Request::is('slot/happyhours*') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.happyhour.list') }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>프라그메틱 보너스</span>
+                            <span>@lang('app.happyhours')</span>
                         </a>
                     </li>
-                    <li class="{{ Request::is('slot/bonus/bng*') ? 'active' : ''  }}">
-                        <a  href="{{ route($admurl.'.bonus.bng') }}">
-                            <i class="fa fa-circle-o"></i>
-                            <span>부웅고 보너스</span>
-                        </a>
-                    </li>
+                    @endif
+                    @endpermission
+
                 </ul>
             </li>
             @endif
@@ -250,7 +222,7 @@
             <li class="treeview {{ Request::is('slot/in_out_request*')  || Request::is('slot/in_out_manage*') || Request::is('slot/in_out_history') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-btc fa-lg"></i>
-                    <span>충환전관리<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
+                    <span>충환전<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -262,7 +234,7 @@
                     <li class="{{ Request::is('slot/in_out_request') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.in_out_request') }}">
                             <i class="fa fa-circle-o"></i>
-                            충환전신청
+                            신청
                         </a>
                     </li>
                     @endpermission
@@ -272,13 +244,13 @@
                     <li class="{{ Request::is('slot/in_out_manage/add') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.in_out_manage','add') }}">
                             <i class="fa fa-circle-o"></i>
-                            충전관리<sup id="in_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
+                            충전<sup id="in_newmark" style="background:green;color:white;font-size:12px;display: none;">&nbsp;N&nbsp;</sup>
                         </a>
                     </li>
                     <li class="{{ Request::is('slot/in_out_manage/out') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.in_out_manage','out') }}">
                             <i class="fa fa-circle-o"></i>
-                            환전관리<sup id="out_newmark" style="background:red;font-size:12px;color:white;display: none;">&nbsp;N&nbsp;</sup>
+                            환전<sup id="out_newmark" style="background:red;font-size:12px;color:white;display: none;">&nbsp;N&nbsp;</sup>
                         </a>
                     </li>
                     @endpermission
@@ -286,7 +258,7 @@
                     <li class="{{ Request::is('slot/in_out_history') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.in_out_history') }}">
                             <i class="fa fa-circle-o"></i>
-                            충환전내역
+                            내역
                         </a>
                     </li>
                     
@@ -297,21 +269,18 @@
                 || Request::is('slot/adjustment_shift*') || Request::is('slot/adjustment*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-calendar fa-lg"></i>
-                    <span>정산관리</span>
+                    <span>정산</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
-
-                    
-
                     @permission('stats.pay')
                     
                     <li class="{{ Request::is('slot/adjustment_partner') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.adjustment_partner') }}">
                             <i class="fa fa-circle-o"></i>
-                                실시간정산
+                                오늘
                         </a>
                     </li>
                     
@@ -320,7 +289,7 @@
                     <li class="{{ Request::is('slot/adjustment_game') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.adjustment_game') }}">
                             <i class="fa fa-circle-o"></i>
-                            게임별정산
+                            게임별
                         </a>
                     </li>
                     @endpermission
@@ -329,13 +298,13 @@
                     <li class="{{ Request::is('slot/adjustment_daily') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.adjustment_daily') }}"> 
                             <i class="fa fa-circle-o"></i>
-                            일별정산
+                            일별
                         </a>
                     </li>
                     <li class="{{ Request::is('slot/adjustment_monthly') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.adjustment_monthly') }}"> 
                             <i class="fa fa-circle-o"></i>
-                            월별정산
+                            월별
                         </a>
                     </li>
                     @endpermission
@@ -352,44 +321,60 @@
                 Auth::user()->hasPermission('stats.shift')
             )
 
-            <li class="treeview {{ Request::is('slot/live*') || Request::is('slot/statistics*') || Request::is('slot/partner_statistics*') || Request::is('slot/stat_game*') || Request::is('slot/shop_stat') || Request::is('slot/shift_stat') || Request::is('slot/bank_stat') || Request::is('slot/deal_stat') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('slot/statistics*') || Request::is('slot/partner_statistics*') ||Request::is('slot/shop_stat') ||  Request::is('slot/bank_stat') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
-                    {{-- <span>Stats</span> --}}
-                    <span>통계내역</span>
+                    <span>머니이동내역</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
-
-
                     @permission('stats.pay')
                     <li class="{{ Request::is('slot/statistics*') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.statistics') }}">
                             <i class="fa fa-circle-o"></i>
-                            {{-- @lang('app.statistics') --}}
-                            회원수동지급내역
+                            회원
                         </a>
                     </li>
+                    @permission('stats.shop')
+                    <li class="{{ Request::is('slot/shop_stat') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.shop_stat') }}">
+                            <i class="fa fa-circle-o"></i>
+                            {{-- @lang('app.shop_stats') --}}
+                            매장
+                        </a>
+                    </li>
+                    @endpermission
                     @endpermission
                     @if(!auth()->user()->hasRole('manager'))
                     @permission('stats.pay')
                     <li class="{{ Request::is('slot/partner_statistics*') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.statistics_partner') }}">
                             <i class="fa fa-circle-o"></i>
-                            {{-- @lang('app.statistics') --}}
-                            파트너충환전내역
+                            파트너
                         </a>
                     </li>
                     @endpermission
                     @endif
+                </ul>
+            </li>
+
+            <li class="treeview {{ Request::is('slot/stat_game*') ||  Request::is('slot/bank_stat') || Request::is('slot/deal_stat') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-database"></i>
+                    <span>게임내역</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class=" treeview-menu" id="stats-dropdown">
 
                     @permission('stats.game')
                     <li class="{{ Request::is('slot/stat_game') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.game_stat') }}">
                             <i class="fa fa-circle-o"></i>
-                            게임배팅내역
+                            게임배팅
                         </a>
                     </li>
                     @endpermission
@@ -400,112 +385,68 @@
                         <a  href="{{ route($admurl.'.bank_stat') }}">
                             <i class="fa fa-circle-o"></i>
                             {{-- @lang('app.bank_stats') --}}
-                            게임뱅크충환전내역
+                            게임뱅크
                         </a>
                     </li>
                     @endif
                     @endpermission
 
                     @permission('stats.shop')
-                    <li class="{{ Request::is('slot/shop_stat') ? 'active' : ''  }}">
-                        <a href="{{ route($admurl.'.shop_stat') }}">
-                            <i class="fa fa-circle-o"></i>
-                            {{-- @lang('app.shop_stats') --}}
-                            매장충환전내역
-                        </a>
-                    </li>
-                    @endpermission
-
-                    @permission('stats.shop')
                     <li class="{{ Request::is('slot/deal_stat*') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.deal_stat') }}">
                             <i class="fa fa-circle-o"></i>
-                            딜비적립내역
+                            딜비적립
                         </a>
                     </li>
                     @endpermission
 
                 </ul>
             </li>
-
+            @endif
+            @if (auth()->user()->hasRole('admin'))
+            <li class="treeview {{ Request::is('slot/websites*') || Request::is('slot/settings*') 
+                || Request::is('slot/activity*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-calendar fa-lg"></i>
+                    <span>시스템설정</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class=" treeview-menu" id="stats-dropdown">
+                    
+                <li class="{{ Request::is('slot/websites*') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.website.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                                도메인관리
+                        </a>
+                    </li>
+                    
+                    <li class="{{ Request::is('slot/settings') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.settings.general') }}">
+                            <i class="fa fa-circle-o"></i>
+                            페이지설정
+                        </a>
+                    </li>
+                    
+                    <li class="{{ Request::is('slot/activity*') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.activity.index') }}">
+                            <i class="fa fa-circle-o"></i>
+                            접속로그
+                        </a>
+                    </li>
+                    
+                </ul>
+            </li>
             @endif
             @if (auth()->user()->isInoutPartner())
             <li class="{{ Request::is('slot/notices*') ? 'active' : ''  }}">
                 <a href="{{ route($admurl.'.notice.list') }}">
                     <i class="fa fa-bell"></i>
-                    <span>공지관리</span>
+                    <span>공지</span>
                 </a>
             </li>
             @endif
-            @if (auth()->user()->hasRole('admin'))
-            <li class="{{ Request::is('slot/websites*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.website.list') }}">
-                    <i class="fa fa-chrome"></i>
-                    <span>도메인관리</span>
-                </a>
-            </li>
-            @endif
-
-            @if (auth()->user()->isInoutPartner())
-            <li class="{{ Request::is('slot/activity*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.activity.index') }}">
-                    <i class="fa fa-server"></i>
-                    {{-- <span>@lang('app.activity_log')</span> --}}
-                    <span>접속로그</span>
-                </a>
-            </li>
-            @endif
-            
-            {{--
-            @permission('permissions.manage')
-            @if (auth()->user()->hasRole('admin') )
-            <li  class="{{ Request::is('slot/permission*') ? 'active' : '' }}">
-                <a href="{{ route($admurl.'.permission.index') }}">
-                    <i class="fa fa-circle-o"></i>
-                    <span>@lang('app.permissions')</span>
-                </a>
-            </li>
-            @endif
-            @endpermission
-            --}}
-            {{-- @permission('settings.generator')
-            <li class="{{ Request::is('slot/generator*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.settings.generator') }}">
-                    <i class="fa fa-server"></i>
-                    <span>@lang('app.api_generator')</span>
-                </a>
-            </li>
-            @endpermission
-
-            @permission('api.manage')
-            <li class="{{ Request::is('slot/api*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.api.list') }}">
-                    <i class="fa fa-circle-o"></i>
-                    <span>@lang('app.api_keys')</span>
-                </a>
-            </li>
-            @endpermission --}}
-
-            @permission('settings.general')
-            @if (auth()->user()->hasRole('admin') )
-            <li class="{{ Request::is('slot/settings') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.settings.general') }}">
-                    <i class="fa fa-circle-o"></i>
-                    <span>@lang('app.settings')</span>
-                </a>
-            </li>
-            @endif
-            @endpermission
-
-            {{-- @permission('helpers.manage')
-            <li class="{{ Request::is('slot/info*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.info.list') }}">
-                    <i class="fa fa-circle-o"></i>
-                    <span>@lang('app.info')</span>
-                </a>
-            </li>
-            @endpermission --}}
-
         </ul>
     </section>
 </aside>
