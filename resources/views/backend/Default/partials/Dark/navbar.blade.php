@@ -11,11 +11,8 @@
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
             <span class="sr-only">@lang('app.toggle_navigation')</span>
         </a>
-        <a href="#">
-                <span>충전신청</span>
-        </a>
+        
         <div class="navbar-custom-menu">
-            
             <ul class="nav navbar-nav">
                 <li class="dropdown tasks-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-off text-aqua"></i></a>

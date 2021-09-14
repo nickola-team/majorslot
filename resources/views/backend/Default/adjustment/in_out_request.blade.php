@@ -16,88 +16,216 @@
 				<h3 class="box-title">충환전신청</h3>
 			</div>
 			<div class="box-body">
+			<div class="row">
+				<div class="col-md-6">
+					<input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
 
-			<input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
-
-				<div class="row">
-					<div class="col-md-6" style="margin-top: 10px;">
-						<b>입금 은행계좌 : </b>
-						<button class="btn btn-primary" id="togglebankinfo">
-							보이기
-						</button>
-						<span class="text-red" id="bankinfo" style="display:none;">
-							{{$bankinfo}}
-						</span>
-
-					</div>
-				</div>
-
-				<div class="row" style="margin-top: 10px;">
-					<div class="col-md-3">
-						<b>본인 은행계좌:</b> 
-							@php
-								$banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
-							@endphp
-							{!! Form::select('bank_name', $banks, auth()->user()->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name']) !!}		
-					</div>
-				</div>
-
-				<div class="row" style="margin-top: 10px;">
-					<div class="col-md-3">
-						<b>계좌번호:</b> 
-						<input type="text" class="form-control" id="account_no" name="account_no" value="{{ auth()->user()->account_no ? auth()->user()->account_no : '' }}">
-					</div>
-				</div>
-
-				<div class="row" style="margin-top: 10px;">
-					<div class="col-md-3">
-						<b>예금주:</b> 
-						<input type="text" class="form-control" id="recommender" name="recommender" value="{{ auth()->user()->recommender ? auth()->user()->recommender : '' }}">
-					</div>
-				</div>
-
-			<div class="row" style="margin-top: 10px;">
-				<div class="col-md-3">
-				<button class="btn btn-primary" id="change-bank-account-btn" onclick="change_bank_account_info();">
-					계좌정보변경
-				</button>
-				</div>
-			</div>
-
-			<?php
-			$dealvalue = auth()->user()->hasRole('manager')?auth()->user()->shop->deal_balance:auth()->user()->deal_balance - auth()->user()->mileage;
-			$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balance:auth()->user()->balance;
-			?>
-				<div class="row" style="margin-top: 10px;">
-					<div class="col-md-3">
-						<b>보유금:</b> <a class="pull-right">{{ number_format($balance,0) }}원</a>
-					</div>
-				</div>
-			@if(auth()->user()->hasRole(['agent','distributor','manager']) || (auth()->user()->hasRole('master') && settings('enable_master_deal')))
-			
-				<div class="row" style="margin-top: 10px;">
-					<div class="col-md-3" style="line-height:2">
-						<b>딜비수익:</b> ({{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->deal_percent:auth()->user()->deal_percent,2)}}%,{{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->table_deal_percent:auth()->user()->table_deal_percent,2)}}%) <a class="pull-right">{{ 
-							number_format($dealvalue,0) 
-							}}원 </a>
-							
-					</div>
-					<div class="col-md-3">
-					<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal"  data-id="{{ (int)($dealvalue / 10000) * 10000 }}">
-							<button class="btn btn-success" id="convert-deal-balance-btn">
-							딜비전환
+					<div class="row">
+						<div class="col-md-12" style="margin-top: 10px;">
+							<b>입금 은행계좌 : </b>
+							<button class="btn btn-primary" id="togglebankinfo">
+								보이기
 							</button>
-						</a>
+							<span class="text-red" id="bankinfo" style="display:none;">
+								{{$bankinfo}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-md-6">
+							<b>본인 은행계좌:</b> 
+								@php
+									$banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
+								@endphp
+								{!! Form::select('bank_name', $banks, auth()->user()->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name']) !!}		
+						</div>
+					</div>
+
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-md-6">
+							<b>계좌번호:</b> 
+							<input type="text" class="form-control" id="account_no" name="account_no" value="{{ auth()->user()->account_no ? auth()->user()->account_no : '' }}">
+						</div>
+					</div>
+
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-md-6">
+							<b>예금주:</b> 
+							<input type="text" class="form-control" id="recommender" name="recommender" value="{{ auth()->user()->recommender ? auth()->user()->recommender : '' }}">
+						</div>
+					</div>
+
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-md-6">
+						<button class="btn btn-primary" id="change-bank-account-btn" onclick="change_bank_account_info();">
+							계좌정보변경
+						</button>
+						</div>
+					</div>
+
+				<?php
+				$dealvalue = auth()->user()->hasRole('manager')?auth()->user()->shop->deal_balance:auth()->user()->deal_balance - auth()->user()->mileage;
+				$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balance:auth()->user()->balance;
+				?>
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-md-6">
+							<b>보유금:</b> <a class="pull-right">{{ number_format($balance,0) }}원</a>
+						</div>
+					</div>
+				@if(auth()->user()->hasRole(['agent','distributor','manager']) || (auth()->user()->hasRole('master') && settings('enable_master_deal')))
+				
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-md-6" style="line-height:2">
+							<b>딜비수익:</b> ({{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->deal_percent:auth()->user()->deal_percent,2)}}%,{{number_format(auth()->user()->hasRole('manager')?auth()->user()->shop->table_deal_percent:auth()->user()->table_deal_percent,2)}}%) <a class="pull-right">{{ 
+								number_format($dealvalue,0) 
+								}}원 </a>
+								
+						</div>
+						<div class="col-md-6">
+						<a class="newPayment outPayment" href="#" data-toggle="modal" data-target="#openOutModal"  data-id="{{ (int)($dealvalue / 10000) * 10000 }}">
+								<button class="btn btn-success" id="convert-deal-balance-btn">
+								딜비전환
+								</button>
+							</a>
+						</div>
+					</div>
+				@endif
+
+
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-md-6">
+							<label>충/환전금액:</label>
+							<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요." readonly>
+						</div>
 					</div>
 				</div>
-			@endif
-
-
-				<div class="row" style="margin-top: 10px;">
-					<div class="col-md-3">
-						<label>충/환전금액:</label>
-						<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요." readonly>
-					</div>
+				<div class='col-md-6'>
+				<div class="banktable">
+                                <h3 class="banktable-meta">은행별 점검시간</h3>
+                                <ul class="banktable-data">
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/kb.png);">국민은행</div>
+                                                <div class="item-num">23:30 ~ 00:05</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/woori.png);">우리은행</div>
+                                                <div class="item-num">00:00 ~ 00:10</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/shinhan.png);">신한은행</div>
+                                                <div class="item-num">23:00 ~ 24:00</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/hana.png);">하나은행</div>
+                                                <div class="item-num">00:00 ~ 01:00</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/sc.png);">SC제일은행</div>
+                                                <div class="item-num">00:00 ~ 00:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/citi.png);">citibank</div>
+                                                <div class="item-num">23:40 ~ 00:05</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/keb.png);">KEB 외환은행</div>
+                                                <div class="item-num">23:55 ~ 00:05</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/dgb.png);">대구은행</div>
+                                                <div class="item-num">00:00 ~ 01:00</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/bs.png);">부산은행</div>
+                                                <div class="item-num">00:00 ~ 01:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/kj.png);">광주은행</div>
+                                                <div class="item-num">23:50 ~ 00:10</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/kn.png);">경남은행</div>
+                                                <div class="item-num">00:00 ~ 00:20</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/nh.png);">농협</div>
+                                                <div class="item-num">00:00 ~ 00:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/sh.png);">수협</div>
+                                                <div class="item-num">00:00 ~ 01:00</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/ibk.png);">기업은행</div>
+                                                <div class="item-num">00:00 ~ 00:10</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/cu.png);">신협</div>
+                                                <div class="item-num">23:50 ~ 00:05</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/everrich.png);">에버리치</div>
+                                                <div class="item-num">23:50 ~ 00:00</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/mg.png);">MG새마을금고</div>
+                                                <div class="item-num">23:50 ~ 00:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/sangho.png);">상호저축은행</div>
+                                                <div class="item-num">23:00 ~ 08:00</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/jeonbook.png);">전북은행</div>
+                                                <div class="item-num">23:50 ~ 00:10</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/jeju.png);">제주은행</div>
+                                                <div class="item-num">00:00 ~ 00:10</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/mirae.png);">미래에셋</div>
+                                                <div class="item-num">23:30 ~ 00:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/samsung.png);">삼성증권</div>
+                                                <div class="item-num">23:50 ~ 00:10</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/hyundai.png);">현대증권</div>
+                                                <div class="item-num">23:45 ~ 00:15</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/sk.png);">SK증권</div>
+                                                <div class="item-num">23:50 ~ 06:00</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/kakao.png);">카카오뱅크</div>
+                                                <div class="item-num">23:50 ~ 12:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/kbank.png);">케이뱅크</div>
+                                                <div class="item-num">23:50 ~ 12:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/postbank.png);">우체국</div>
+                                                <div class="item-num">23:50 ~ 00:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/kbstock.png);">KB증권</div>
+                                                <div class="item-num">23:50~ 00:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/kinvest.png);">한국투자증권</div>
+                                                <div class="item-num">23:50~ 00:30</div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="item-logo" style="background-image:url(/back/img/bank/sj.png);">산림조합은행</div>
+                                                <div class="item-num">23:50~ 00:30</div>
+                                            </li>
+                                </ul>
+                            </div>
 				</div>
 			</div>
 

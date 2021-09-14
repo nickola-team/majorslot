@@ -1,6 +1,6 @@
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
+    <section class="sidebar" style="padding:0px 5px;">
         <!-- Sidebar user panel -->
 
         <div class="user-panel" style="display: grid;">
