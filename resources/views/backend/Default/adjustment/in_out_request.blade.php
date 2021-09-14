@@ -165,10 +165,6 @@
                                                 <div class="item-num">23:50 ~ 00:05</div>
                                             </li>
                                             <li class="item">
-                                                <div class="item-logo" style="background-image:url(/back/img/bank/everrich.png);">에버리치</div>
-                                                <div class="item-num">23:50 ~ 00:00</div>
-                                            </li>
-                                            <li class="item">
                                                 <div class="item-logo" style="background-image:url(/back/img/bank/mg.png);">MG새마을금고</div>
                                                 <div class="item-num">23:50 ~ 00:30</div>
                                             </li>
@@ -201,10 +197,6 @@
                                                 <div class="item-num">23:50 ~ 06:00</div>
                                             </li>
                                             <li class="item">
-                                                <div class="item-logo" style="background-image:url(/back/img/bank/kakao.png);">카카오뱅크</div>
-                                                <div class="item-num">23:50 ~ 12:30</div>
-                                            </li>
-                                            <li class="item">
                                                 <div class="item-logo" style="background-image:url(/back/img/bank/kbank.png);">케이뱅크</div>
                                                 <div class="item-num">23:50 ~ 12:30</div>
                                             </li>
@@ -218,10 +210,6 @@
                                             </li>
                                             <li class="item">
                                                 <div class="item-logo" style="background-image:url(/back/img/bank/kinvest.png);">한국투자증권</div>
-                                                <div class="item-num">23:50~ 00:30</div>
-                                            </li>
-                                            <li class="item">
-                                                <div class="item-logo" style="background-image:url(/back/img/bank/sj.png);">산림조합은행</div>
                                                 <div class="item-num">23:50~ 00:30</div>
                                             </li>
                                 </ul>
