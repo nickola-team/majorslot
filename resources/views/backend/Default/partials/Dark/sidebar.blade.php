@@ -66,16 +66,12 @@
 				?>
             <li class="header" style="text-align: center; color:#b8c7ce;"><span style="color:red;">{{ Auth::user()->username }}</span>[ {{$available_roles_trans[auth()->user()->role_id]}} ]님 안녕하세요 </li> 
 
-            @permission('dashboard')
-            @if (auth()->user()->hasRole('admin'))
             <li class="{{ Request::is('slot') ? 'active' : ''  }}">
                 <a href="{{ route($admurl.'.dashboard') }}">
                     <i class="fa fa-home"></i>
                     <span>Home</span>
                 </a>
             </li>
-            @endif
-            @endpermission
 
             @permission('users.tree')
             @if (auth()->user()->hasRole(['admin','comaster', 'master','agent']))

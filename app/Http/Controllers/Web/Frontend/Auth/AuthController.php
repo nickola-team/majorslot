@@ -184,6 +184,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             }
             if( !$user->hasRole('user') ) 
             {
+                if (config('app.admurl') == 'slot')
+                {
+                    return redirect()->route(config('app.admurl').'.dashboard');
+                }
                 if( !\Auth::user()->hasPermission('dashboard') ) 
                 {
                     return redirect()->route(config('app.admurl').'.user.list');

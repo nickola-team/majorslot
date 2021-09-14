@@ -24,51 +24,49 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('frontend.page.error_license');
             }*/
-            if( !\Auth::user()->hasRole('admin')) 
-            {
-                return redirect()->route(config('app.admurl').'.user.list');
-            }
+            // if( !\Auth::user()->hasRole('admin')) 
+            // {
+            //     return redirect()->route(config('app.admurl').'.user.list');
+            // }
             $ids = auth()->user()->availableUsers();
             $availableShops = auth()->user()->availableShops();
 
             
-            $start_date = date("Y-m-01");
+            $start_date = date("Y-m-d", strtotime("-30 days"));
             $end_date = date("Y-m-d");
             $todayprofit = 0;
+            $todaybetwin = 0;
+            $online = 0;
+            $monthsummary = null;
             if (count($availableShops) > 0){
                 $monthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->get();
-                $todayprofit = $monthsummary->sum('totalbet') - $monthsummary->sum('totalwin');
-            } 
 
+                $todaysummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', $end_date)->first();
+                if ($todaysummary){
+                    $todaybetwin = $todaysummary->totalbet - $todaysummary->totalwin;
+                    $todayprofit = $todaysummary->totalin - $todaysummary->totalout;
+                }
 
-            $usersPerMonth = $this->users->countOfNewUsersPerMonth(\Carbon\Carbon::now()->subYear()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth(), $ids);
+                $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+                $query = 'SELECT count(*) as online FROM w_sessions WHERE user_id in (' . implode(',', $ids) . ') AND last_activity>=' . $validTimestamp;
+                $qresult = \DB::select($query);
+                $online = $qresult[0]->online;
+            }
             $stats = [
                 'total' => $this->users->count($ids), 
-                'new' => $this->users->newUsersCount($ids), 
-                'banned' => 0,//$this->users->countByStatus(\VanguardLTE\Support\Enum\UserStatus::BANNED, $ids), 
+                'online' => $online, 
                 'todayprofit' => $todayprofit,
-                'games' => 0,/*\VanguardLTE\Game::where([
-                    'shop_id' => \Auth::user()->shop_id, 
-                    'view' => 1
-                ])->count()*/
+                'todaybetwin' => $todaybetwin,
+                
             ];
-            $latestRegistrations = $this->users->latest(5, $ids);
             $user = \Auth::user();
+            $latestRegistrations = $this->users->latest(5, $ids);
             $shops = \VanguardLTE\Shop::orderBy('id', 'desc')->whereIn('id', $availableShops)->take(5)->get();
-            $summ = 0;/*\VanguardLTE\User::where([
-                'shop_id' => \Auth::user()->shop_id, 
-                'role_id' => 1
-            ])->sum('balance');*/
-            $open_shift = null;//\VanguardLTE\OpenShift::select('open_shift.*')->whereIn('open_shift.shop_id', $availableShops)->orderBy('open_shift.start_date', 'DESC')->take(5)->get();
             $statistics = \VanguardLTE\Transaction::whereIn('user_id', $ids)->orderBy('id', 'desc')->take(5)->get();
             $gamestat = \VanguardLTE\StatGame::whereIn('user_id', $ids)->orderBy('date_time', 'DESC')->take(5)->get();
             $bank_stat = \VanguardLTE\BankStat::whereIn('user_id', $ids)->orderBy('created_at', 'DESC')->take(5)->get();
             $shops_stat = \VanguardLTE\ShopStat::whereIn('user_id', $ids)->orderBy('date_time', 'DESC')->take(5)->get();
-
-
-
-
-            return view('backend.Default.dashboard.admin', compact('stats', 'latestRegistrations', 'usersPerMonth', 'user', 'statistics', 'gamestat', 'shops', 'open_shift', 'summ', 'bank_stat', 'shops_stat'));
+            return view('backend.Default.dashboard.admin', compact('stats', 'latestRegistrations', 'user', 'statistics', 'gamestat', 'shops',  'bank_stat', 'shops_stat', 'monthsummary'));
         }
         public function live_stat(\Illuminate\Http\Request $request)
         {

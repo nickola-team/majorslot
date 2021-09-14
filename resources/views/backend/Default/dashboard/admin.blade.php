@@ -18,12 +18,11 @@
                 <div class="small-box bg-light-blue">
                     <div class="inner">
                         <h3>{{ number_format($stats['total']) }}</h3>
-                        <p>@lang('app.total_users')</p>
+                        <p>전체사용자</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-users"></i>
                     </div>
-                    <a href="{{ route($admurl.'.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -31,13 +30,12 @@
                 <!-- small box -->
                 <div class="small-box  bg-light-blue">
                     <div class="inner">
-                        <h3>{{ number_format($stats['new']) }}</h3>
-                        <p>@lang('app.new_users_this_month')</p>
+                        <h3>{{ number_format($stats['online']) }}</h3>
+                        <p>온라인 사용자</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-user-plus"></i>
                     </div>
-                    <a href="{{ route($admurl.'.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -45,13 +43,12 @@
                 <!-- small box -->
                 <div class="small-box  bg-light-blue">
                     <div class="inner">
-                        <h3>{{ number_format($stats['banned']) }}</h3>
-                        <p>@lang('app.banned_users')</p>
+                        <h3>{{ number_format($stats['todaybetwin'], 0) }}</h3>
+                        <p>오늘 배팅수익</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-ban"></i>
                     </div>
-                    <a href="{{ route($admurl.'.user.list') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -60,23 +57,53 @@
                 <div class="small-box bg-light-blue">
                     <div class="inner">
                         <h3>{{ number_format($stats['todayprofit'],0) }}</h3>
-                        <p>이달 수익금</p>
+                        <p>오늘 충환수익</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-desktop"></i>
                     </div>
-                    <a href="{{ route($admurl.'.adjustment_partner') }}" class="small-box-footer">@lang('app.more_info') <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
         </div>
         <!-- /.row -->
 
-        <!-- Latest Pay Stats / Latest Game Stats -->
+        <script src="/back/js/Chart.min.js"></script>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                    <i class="fa fa-th"></i>
+
+                    <h3 class="box-title">일별배팅현황</h3>
+
+                    </div>
+                    <div class="box-body border-radius-none">
+                        <div class="chart">
+                        <canvas id="betwincanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-warning">
+                    <div class="box-header with-border">
+                    <i class="fa fa-th"></i>
+
+                    <h3 class="box-title">일별충환전현황</h3>
+
+                    </div>
+                    <div class="box-body border-radius-none">
+                        <div class="chart">
+                        <canvas id="inoutcanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
 
-            @permission('stats.pay')
             <div class="col-xs-6">
                 <div class="box box-success">
 
@@ -134,9 +161,7 @@
                     </div>
                 </div>
             </div>
-            @endpermission
 
-            @permission('stats.game')
             <div class="col-xs-6">
                 <div class="box box-warning">
                     <div class="box-header with-border">
@@ -193,16 +218,13 @@
 
                 </div>
             </div>
-            @endpermission
-
         </div>
 
         <!-- /Latest Pay Stats / Latest Game Stats -->
 
         <!-- Latest Shops / Latest Registrations -->
-
+        @if (auth()->user()->hasRole('admin'))
         <div class="row">
-
             @permission('shops.manage')
             <div class="col-xs-6">
                 <div class="box box-success">
@@ -433,150 +455,179 @@
             @endpermission
 
         </div>
-
-        <!-- Latest Shift Stat -->
-{{--
-        <div class="row">
-
-            @permission('stats.shift')
-            <div class="col-xs-12">
-                <div class="box box-success">
-
-                    <div class="box-header with-border">
-                        <h3 class="box-title">최근 @lang('app.shift_stats')</h3>
-                    </div>
-
-                    <div class="box-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    @if(!auth()->user()->hasRole('cashier'))
-                                        <th>@lang('app.shift')</th>
-                                    @endif
-                                    <th>@lang('app.user')</th>
-                                    <th>@lang('app.date_start')</th>
-                                    <th>@lang('app.date_end')</th>
-                                    @if(!auth()->user()->hasRole('cashier'))
-                                        <th>@lang('app.credit')</th>
-                                        <th>@lang('app.in')</th>
-                                        <th>@lang('app.out')</th>
-                                    @endif
-                                    <th>@lang('app.total')</th>
-                                    @permission('games.in_out')
-                                        <th>@lang('app.banks')</th>
-                                    @endpermission
-                                    <th>@lang('app.returns')</th>
-                                    <th>@lang('app.money')</th>
-                                    <th>@lang('app.in')</th>
-                                    <th>@lang('app.out')</th>
-                                    <th>@lang('app.total')</th>
-                                    @if(auth()->user()->hasRole('admin'))
-                                        <th>@lang('app.profit')</th>
-                                    @endif
-                                </tr>
-                                </thead>
-
-                                <tbody>
-
-                                @if (count($open_shift))
-                                    @foreach ($open_shift as $num=>$stat)
-                                        <tr>
-                                            @if(!auth()->user()->hasRole('cashier'))
-                                                <td>{{ $stat->id }}</td>
-                                            @endif
-                                            <td>{{ $stat->user ? $stat->user->username : '' }}</td>
-                                            <td>{{ date(config('app.date_format'), strtotime($stat->start_date)) }}</td>
-                                            <td>{{ $stat->end_date ? date(config('app.date_format'), strtotime($stat->end_date)) : '' }}</td>
-                                            @if(!auth()->user()->hasRole('cashier'))
-                                                <td>{{ $stat->balance }}</td>
-                                            <td>{{ $stat->balance_in }}</td>
-                                            <td>{{ $stat->balance_out }}</td>
-                                                @endif
-                                                    <td>{{ number_format ($stat->balance + $stat->balance_in - $stat->balance_out, 4, ".", "") }}</td>
-                                                @permission('games.in_out')
-                                                @php
-                                                $banks = !$stat->end_date ? $stat->banks() : $stat->last_banks;
-                                            @endphp
-                                            <td>{{ number_format ($banks, 4, ".", "") }}</td>
-                                                @endpermission
-                                            <td>
-                                                @if( !$stat->end_date )
-                                                    {{ $stat->returns() }}
-                                                @else
-                                                    {{ $stat->last_returns }}
-                                                @endif
-                                            </td>
-
-                                            @php
-                                                $money = $stat->users;
-                                                if($stat->end_date == NULL){
-                                                    $money = $summ;
-                                                }
-                                            @endphp
-
-                                            <td>{{ $money }}</td>
-                                            <td>{{ $stat->money_in }}</td>
-                                            <td>{{ $stat->money_out }}</td>
-
-                                            @php
-                                                $total = $stat->money_in - $stat->money_out;
-                                            @endphp
-
-                                            <td>{{ number_format ($total, 4, ".", "") }}</td>
-
-                                            @if(auth()->user()->hasRole('admin'))
-                                                <td>{{ number_format ($stat->profit(), 4, ".", "") }}</td>
-                                            @endif
-
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr><td colspan="15">@lang('app.no_data')</td></tr>
-                                @endif
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endpermission
-
-        </div>
---}}        
-        <!-- /Latest Shift Stat -->
-
+        @endif
     </section>
     <!-- /.content -->
 
 @stop
+@php
 
+    $date_start = date("m-d", strtotime('-30 days'));
+    $date_end = date("m-d");
+    $labels = [];
+    $wins = [];
+    $bets = [];
+    $totalin = [];
+    $totalout = [];
+
+    for($i=1; $i<=30; $i++){
+        $label = date("m-d", strtotime(-30 + $i . ' days'));
+        $labels[] = $label;
+        $wins[$label] = 0;
+        $bets[$label] = 0;
+        $totalin[$label] = 0;
+        $totalout[$label] = 0;
+    }
+
+    foreach($monthsummary AS $stat){
+        $label = date("m-d", strtotime($stat->date));
+        if( isset($wins[$label]) ){
+            $wins[$label] += $stat->totalwin;
+            $totalin[$label] += $stat->totalin;
+        }
+        if( isset($bets[$label]) ){
+            $bets[$label] += $stat->totalbet;
+            $totalout[$label] += $stat->totalout;
+        }
+    }
+@endphp
 @section('scripts')
     <script>
-        //$('.table').dataTable();
+        
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 203, 75)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
 
-                @php
-                    $data = [];
-                    foreach($usersPerMonth AS $key=>$value){
-                        $data[] = ['y' => $key, 'item1' => rand(100,1000)];
-                    }
-                @endphp
+        Chart.scaleService.updateScaleDefaults('linear', {
+            ticks: {
+                min: 0
+            }
+        });
 
-        var area = new Morris.Area({
-                element   : 'revenue-chart',
-                resize    : true,
-                data      : [
-                        @foreach($usersPerMonth AS $key=>$value)
-                    {y: "{{ $key }}", item1: {{ $value }} },
-                    @endforeach
-                ],
-                xkey      : 'y',
-                ykeys     : ['item1'],
-                labels    : ["{{ trans('app.new_sm') }}"],
-                lineColors: ['#a0d0e0'],
-                hideHover : 'auto'
-            });
+        var color = Chart.helpers.color;
+        var config = {
+            type: 'line',
+            data: {
+                labels: ["{!! implode('","', $labels) !!}"],
+                datasets: [{
+                    label: '당첨',
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.blue,
+                    fill: false,
+                    data: [@foreach($wins AS $win) {{ $win }}, @endforeach],
+                }, {
+                    label: '배팅',
+                    backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.red,
+                    fill: false,
+                    data: [@foreach($bets AS $bet) {{ $bet }}, @endforeach],
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: false,
+                    text: '@lang('app.line_chart')'
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'category',
+                        display: false,
+                        scaleLabel: {
+                            display: false,
+                            labelString: '날짜'
+                        },
+                        ticks: {
+                            major: {
+                                fontStyle: 'bold',
+                                fontColor: '#FF0000'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '배팅/당첨'
+                        }
+                    }]
+                }
+            }
+        };
+
+        var configbar = {
+            type: 'bar',
+            data: {
+                labels: ["{!! implode('","', $labels) !!}"],
+                datasets: [{
+                    label: '충전',
+                    backgroundColor: color(window.chartColors.green).rgbString(),
+                    borderColor: window.chartColors.green,
+                    fill: false,
+                    data: [@foreach($totalin AS $in) {{ $in }}, @endforeach],
+                }, {
+                    label: '환전',
+                    backgroundColor: color(window.chartColors.purple).rgbString(),
+                    borderColor: window.chartColors.purple,
+                    fill: false,
+                    data: [@foreach($totalout AS $out) {{ $out }}, @endforeach],
+                }]
+            },
+            options: {
+                scaleShowGridLines      : true,
+                scaleGridLineColor      : 'rgba(0,0,0,.05)',
+                scaleGridLineWidth      : 1,
+                //Boolean - Whether to show horizontal lines (except X axis)
+                scaleShowHorizontalLines: true,
+                //Boolean - Whether to show vertical lines (except Y axis)
+                scaleShowVerticalLines  : true,
+                //Boolean - If there is a stroke on each bar
+                barShowStroke           : true,
+                //Number - Pixel width of the bar stroke
+                barStrokeWidth          : 2,
+                responsive: true,
+                title: {
+                    display: false,
+                    text: '@lang('app.line_chart')'
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'category',
+                        display: false,
+                        scaleLabel: {
+                            display: false,
+                            labelString: '날짜'
+                        },
+                        ticks: {
+                            major: {
+                                fontStyle: 'bold',
+                                fontColor: '#FF0000'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '충/환전'
+                        }
+                    }]
+                }
+            }
+        };
+
+        window.onload = function() {
+            var ctx = document.getElementById('betwincanvas').getContext('2d');
+            window.myLine = new Chart(ctx, config);
+            var ctx1 = document.getElementById('inoutcanvas').getContext('2d');
+            window.myLine1 = new Chart(ctx1, configbar);
+        };
 
     </script>
     {!! HTML::script('/back/dist/js/pages/dashboard.js') !!}
