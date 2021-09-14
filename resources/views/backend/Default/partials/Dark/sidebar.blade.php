@@ -6,7 +6,7 @@
         <div class="user-panel" style="display: grid;">
             @if(auth()->user()->hasRole('admin'))
             @else
-            <div class="pull-left info">
+            <div class="pull-left info" style="left:20px;">
 			<p>보유금:
                     @if( Auth::user()->hasRole(['cashier', 'manager']) )
                         @php
