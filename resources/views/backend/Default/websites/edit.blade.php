@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-        {!! Form::open(['route' => array('backend.website.update', $website->id),  'id' => 'user-form']) !!}
+        {!! Form::open(['route' => array($admurl.'.website.update', $website->id),  'id' => 'user-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">도메인편집</h3>

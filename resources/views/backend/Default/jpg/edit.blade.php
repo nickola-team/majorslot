@@ -11,7 +11,7 @@
 
     <section class="content">
       <div class="box box-default">
-		{!! Form::open(['route' => array('backend.jpgame.update', $jackpot->id), 'files' => true, 'id' => 'user-form']) !!}
+		{!! Form::open(['route' => array($admurl.'.jpgame.update', $jackpot->id), 'files' => true, 'id' => 'user-form']) !!}
         <div class="box-header with-border">
           <h3 class="box-title">잭팟편집</h3>
         </div>

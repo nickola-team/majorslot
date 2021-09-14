@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-{!! Form::open(['route' => array('backend.api.update', $api->id), 'files' => true, 'id' => 'user-form']) !!}	
+{!! Form::open(['route' => array($admurl.'.api.update', $api->id), 'files' => true, 'id' => 'user-form']) !!}	
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">@lang('app.create_user')</h3>

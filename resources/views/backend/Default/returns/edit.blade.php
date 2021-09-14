@@ -11,7 +11,7 @@
 
   <section class="content">
     <div class="box box-default">
-      {!! Form::open(['route' => array('backend.returns.update', $return->id), 'files' => true, 'id' => 'return-form']) !!}
+      {!! Form::open(['route' => array($admurl.'.returns.update', $return->id), 'files' => true, 'id' => 'return-form']) !!}
       <div class="box-header with-border">
         <h3 class="box-title">@lang('app.edit_return')</h3>
       </div>

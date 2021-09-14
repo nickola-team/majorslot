@@ -11,7 +11,7 @@
 
     <section class="content">
         <div class="box box-danger">
-            {!! Form::open(['route' => array('backend.category.update', $category->id), 'files' => true, 'id' => 'user-form']) !!}
+            {!! Form::open(['route' => array($admurl.'.category.update', $category->id), 'files' => true, 'id' => 'user-form']) !!}
             <div class="box-header with-border">
                 <h3 class="box-title">@lang('app.edit_category')</h3>
             </div>

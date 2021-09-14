@@ -11,7 +11,7 @@
 
     <section class="content">
       <div class="box box-default">
-		{!! Form::open(['route' => array('backend.jackpot.update', $jackpot->id), 'files' => true, 'id' => 'user-form']) !!}
+		{!! Form::open(['route' => array($admurl.'.jackpot.update', $jackpot->id), 'files' => true, 'id' => 'user-form']) !!}
         <div class="box-header with-border">
           <h3 class="box-title">@lang('app.edit_jackpot')</h3>
         </div>

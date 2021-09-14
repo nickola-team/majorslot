@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-        {!! Form::open(['route' => array('backend.notice.update', $notice->id),  'id' => 'user-form']) !!}
+        {!! Form::open(['route' => array($admurl.'.notice.update', $notice->id),  'id' => 'user-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">공지편집</h3>
