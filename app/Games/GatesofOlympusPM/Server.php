@@ -588,7 +588,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                     $objRes['fsmul'] = 1;
                     $objRes['fsmax'] = $fsmax;
 
-                    $objRes['fs'] = $isTumble ? $fs : $fs + 1;      // 텀블스핀이면 프리스핀 소모없음
+                    $objRes['fs'] = ($winMoney > 0) ? $fs : $fs + 1;      // 텀블스핀이면 프리스핀 소모없음
     
                     /* 프리스핀 당첨금, 텀블스핀이면 이전값 유지, 텀블완료이면 텀블당첨금 추가 */
                     $objRes['fswin'] = $LASTSPIN->fswin;
