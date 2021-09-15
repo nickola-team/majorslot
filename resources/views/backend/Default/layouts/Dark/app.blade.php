@@ -141,6 +141,28 @@
             padding : 6px 6px;
             color : #fff;
         }
+
+        .skin-midnight .pop01_popup_box {
+            float: left;
+            background: #353c42;
+            border: 3px solid #3cbc55;
+            z-index: 1000000000;
+            border-radius : 10px;
+            box-shadow : 0 5px 5px rgb(0 0 0 / 50%), 0 1px 2px rgb(0 0 0 / 50%);
+        }
+
+        .skin-midnight .pop01_popup_btn {
+            background: #197507;
+            border-radius : 4px;
+        }
+
+        .skin-midnight .pop01_popup_btn_wrap {
+            margin-right : 10px;
+        }
+
+        .skin-midnight .pop01_popup_btn_wrap ul {
+            list-style:none;
+        }
         
 
     </style>
@@ -181,7 +203,7 @@
             <div class="pop01_popup_wrap">
                 <div class="pop01_popup_btn_wrap">
                     <ul>
-                        <li><a href="#" onclick="closeNotification(false);"><span class="pop01_popup_btn">8시간동안 창을 열지 않음</span></a></li>
+                        <li><a href="#" onclick="closeNotification(false);"><span class="pop01_popup_btn">오늘 하루 열지 않음</span></a></li>
                         <li><a href="#" onclick="closeNotification(true);"><span class="pop01_popup_btn">닫기 X</span></a></li>
                     </ul>
                 </div>
@@ -255,7 +277,7 @@
 <script>
         $( document ).ready(function() {
             var prevTime = localStorage.getItem("hide_notification");
-            if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+            if (prevTime && Date.now() - prevTime < 24 * 3600 * 1000) {
                 $("#notification").hide();
             }
             else{
