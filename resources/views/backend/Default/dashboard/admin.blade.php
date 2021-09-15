@@ -1,7 +1,7 @@
 @extends('backend.Default.layouts.'.$layout.'.app')
 
-@section('page-title', trans('app.dashboard'))
-@section('page-heading', trans('app.dashboard'))
+@section('page-title', trans('app.home'))
+@section('page-heading', trans('app.home'))
 
 @section('content')
 

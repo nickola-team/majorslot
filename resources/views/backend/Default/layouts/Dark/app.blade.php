@@ -163,7 +163,11 @@
         .skin-midnight .pop01_popup_btn_wrap ul {
             list-style:none;
         }
-        
+
+        .skin-midnight .navbar-nav li {
+            margin : 3px 5px;
+        }
+
 
     </style>
 
@@ -318,6 +322,7 @@
                                 }
                                 $("#adj_newmark").show();
                                 $("#in_newmark").show();
+                                $("#in_newmark_nav").show();
                             }
                             if (inouts['out'] > 0)
                             {
@@ -327,16 +332,19 @@
                                 }
                                 $("#adj_newmark").show();
                                 $("#out_newmark").show();
+                                $("#out_newmark_nav").show();
                             }
                             if (inouts['join'] > 0)
                             {
                                 $("#user_newmark").show();
                                 $("#join_newmark").show();
+                                $("#join_newmark_nav").show();
                             }
                             else
                             {
                                 $("#user_newmark").hide();
                                 $("#join_newmark").hide();
+                                $("#join_newmark_nav").hide();
                             }
 
 
@@ -344,7 +352,9 @@
                             {
                                 $("#adj_newmark").hide();
                                 $("#in_newmark").hide();
+                                $("#in_newmark_nav").hide();
                                 $("#out_newmark").hide();
+                                $("#out_newmark_nav").hide();
                             }
                             timeout = setTimeout(updateInOutRequest, updateTime);
                             if (callback != null) callback();
