@@ -116,6 +116,33 @@
             background-color : #343a40 !important;
         }
 
+        .skin-midnight .small-box {
+            border-radius : 10px;
+            box-shadow : 0 5px 5px rgb(0 0 0 / 50%), 0 1px 2px rgb(0 0 0 / 50%);
+        }
+
+        .skin-midnight .bg-light-blue {
+            background-color : #bc7a3c !important;
+        }
+
+        .skin-midnight .bg-red {
+            background-color : #923838 !important;
+        }
+
+        .skin-midnight .bg-green {
+            background-color : #017741 !important;
+        }
+        .skin-midnight .modal-content {
+            background-color : #353c42 !important;
+        }
+
+        .skin-midnight .modal-content .btn-default {
+            background-color : #353c42 !important;
+            padding : 6px 6px;
+            color : #fff;
+        }
+        
+
     </style>
 
     <!-- Google Font -->
