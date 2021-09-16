@@ -760,7 +760,7 @@ return [
     'pincodes_with_nominal' => ':공칭> 0으로 핀 코드 계산',
     'shop_balance' => '매장 잔액> 0',
     'distributors_with_balance' => ':잔액이 0보다 큰 총판 수',
-    'not_enough_money_in_the_shop' => '매장에 돈이 충분하지 않습니다. 만 : 균형',
+    'not_enough_money_in_the_shop' => '매장에 보유금이 충분하지 않습니다.',
     'not_enough_money_in_the_user_balance' => '사용자 잔액이 부족합니다. :',
     'admin' => '슈퍼어드민',
     'comaster' => '총본사',
