@@ -230,6 +230,10 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                     if ($winMoney >= $_winAvaliableMoney) {
                         continue;
                     }
+                    if ($slotSettings->happyhouruser && $allBet > $winMoney)
+                    {
+                        continue;
+                    }
 
                     break;
                 }
@@ -246,6 +250,10 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                     }, 0);
 
                     if ($winMoney >= $_winAvaliableMoney) {
+                            continue;
+                    }
+                    if ($slotSettings->happyhouruser && $allBet > $winMoney)
+                    {
                         continue;
                     }
 
