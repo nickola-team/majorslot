@@ -59,6 +59,8 @@ return [
         "Scarab Boost" => "스크랩 부스트",
         "Wukong" => "우콩",
         "3 Coins: Egypt" => "3 코인스:이집트",
+        "Ganesha Boost" => "가네사 부스트",
+        "Wolf Night" => "울프 나이트",
 
         /**
          * CQ9 Games
@@ -488,6 +490,10 @@ return [
         "Speed Baccarat 6" => "스피드 바카라 6",
         "Auto-Roulette 1" => "오토 룰렛 1",
         "Speed Roulette 1" => "스피드 룰렛 1",
+        "Starlight Princess" => "스타라이트 프린시스",
+        "Pyramid Bonanza" => "피라미드 보난자",
+        "Raging Bull" => "레이징 불",
+
 
 
         /**
@@ -578,6 +584,7 @@ return [
         "5 Fortunator" => "5 포츄네터",
         "Eagle Power: Hold and Win" => "이글 파워: 홀드 앤 윈",
         "Spirit of Egypt: Hold and Win" => "스피릿 오브 이짚트: 홀드 앤 윈",
+        "Royal Coins: Hold and Win" => "로얄 코인스: 홀드 앤 윈",
 
         /**
          * Habanero Games
@@ -706,5 +713,6 @@ return [
         "Candy Tower" => "캔디 타워",
         "Marvelous Furlongs" => "마블러스 퍼롱스",
         "Calaveras Explosivas" => "칼라베라스 익스프로시버스",
+        "Mystic Fortune Deluxe" => "미스틱 포츈 디럭스",
 
 ];
