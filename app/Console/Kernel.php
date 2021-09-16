@@ -517,6 +517,7 @@ namespace VanguardLTE\Console
                 foreach ($pp_users as $user) {
                     if ( time() - $user['played_at'] > 300) //5min
                     {
+                        $this->info('terminate human user id = ' . $user['id']);
                         PPController::terminate($user['id']);
                         \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['playing_game' => null]);
                     }
