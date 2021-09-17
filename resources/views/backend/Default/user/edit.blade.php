@@ -50,13 +50,13 @@
 
                     <div class="tab-content" id="nav-tabContent">
                         <div class="@if(!Request::get('date')) active @endif tab-pane" id="details">
-                            {!! Form::open(['route' => ['backend.user.update.details', $user->id], 'method' => 'PUT', 'id' => 'details-form']) !!}
+                            {!! Form::open(['route' => [$admurl.'.user.update.details', $user->id], 'method' => 'PUT', 'id' => 'details-form']) !!}
                             @include('backend.Default.user.partials.edit')
                             {!! Form::close() !!}
                         </div>
 
                         <div class="tab-pane" id="partner-move">
-                            {!! Form::open(['route' => ['backend.user.update.move', $user->id], 'method' => 'POST', 'id' => 'details-form']) !!}
+                            {!! Form::open(['route' => [$admurl.'.user.update.move', $user->id], 'method' => 'POST', 'id' => 'details-form']) !!}
                             @include('backend.Default.user.partials.move')
                             {!! Form::close() !!}
                         </div>

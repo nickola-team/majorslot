@@ -132,20 +132,20 @@
 
                     <div class="tab-content" id="nav-tabContent">
                         <div class="active tab-pane" id="details">
-                            {!! Form::open(['route' => ['backend.game.update', $game->id], 'method' => 'POST', 'id' => 'details-form']) !!}
+                            {!! Form::open(['route' => [$admurl.'.game.update', $game->id], 'method' => 'POST', 'id' => 'details-form']) !!}
                             @include('backend.Default.games.partials.base', ['profile' => false])
                             {!! Form::close() !!}
                         </div>
 
 
                         <div class="tab-pane" id="login-details">
-                            {!! Form::open(['route' => ['backend.game.update', $game->id], 'method' => 'POST', 'id' => 'login-details-form']) !!}
+                            {!! Form::open(['route' => [$admurl.'.game.update', $game->id], 'method' => 'POST', 'id' => 'login-details-form']) !!}
                             @include('backend.Default.games.partials.match')
                             {!! Form::close() !!}
                         </div>
 
                         <div class="tab-pane" id="bonus-details">
-                            {!! Form::open(['route' => ['backend.game.update', $game->id], 'method' => 'POST', 'id' => 'bonus-details-form']) !!}
+                            {!! Form::open(['route' => [$admurl.'.game.update', $game->id], 'method' => 'POST', 'id' => 'bonus-details-form']) !!}
                             @include('backend.Default.games.partials.bonus')
                             {!! Form::close() !!}
                         </div>

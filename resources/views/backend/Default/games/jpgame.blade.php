@@ -18,7 +18,7 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12" >
-                        {!! Form::open(['route' => ['backend.jpgame.update'], 'method' => 'POST']) !!}
+                        {!! Form::open(['route' => [$admurl.'.jpgame.update'], 'method' => 'POST']) !!}
                         @include('backend.Default.games.partials.jackpot')
                         {!! Form::close() !!}
                     </div>

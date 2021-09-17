@@ -11,7 +11,7 @@
 
     <section class="content">
         @if ($edit)
-            {!! Form::open(['route' => ['backend.permission.update', $permission->id], 'method' => 'PUT', 'id' => 'permission-form']) !!}
+            {!! Form::open(['route' => [$admurl.'.permission.update', $permission->id], 'method' => 'PUT', 'id' => 'permission-form']) !!}
         @else
             {!! Form::open(['route' => $admurl.'.permission.store', 'id' => 'permission-form']) !!}
         @endif
