@@ -35,7 +35,7 @@ document.location.href='../../';
 
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/{{ $game->name }}/index.html?mode=real&locale=ko&mobile=0&knu=1' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/{{ $game->name }}/index.html?mode=real&locale=ko&mobile=0&knu=1&playername={{auth()->user()->username}}' allowfullscreen>
 
 </iframe>
 
