@@ -25,7 +25,7 @@
             @endif
 
 
-            {!! Form::open(['route' => 'backend.user.massadd', 'files' => true, 'id' => 'mass-user-form']) !!}
+            {!! Form::open(['route' => $admurl.'.user.massadd', 'files' => true, 'id' => 'mass-user-form']) !!}
             <div class="box box-default">
                 <div class="box-header with-border">
                     @if( Auth::user()->hasRole('cashier') || Auth::user()->hasRole('manager'))
@@ -74,7 +74,7 @@
             {!! Form::close() !!}
         @endif
 
-        {!! Form::open(['route' => 'backend.user.store', 'files' => true, 'id' => 'user-form']) !!}
+        {!! Form::open(['route' => $admurl.'.user.store', 'files' => true, 'id' => 'user-form']) !!}
 
         <div class="box box-default">
             <div class="box-header with-border">

@@ -10,7 +10,7 @@
     </section>
 
     <section class="content">
-        {!! Form::open(['route' => 'backend.permission.save', 'class' => 'mb-4']) !!}
+        {!! Form::open(['route' => $admurl.'.permission.save', 'class' => 'mb-4']) !!}
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">@lang('app.permissions')</h3>

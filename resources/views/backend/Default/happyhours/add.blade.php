@@ -11,7 +11,7 @@
 
   <section class="content">
     <div class="box box-default">
-      {!! Form::open(['route' => 'backend.happyhour.store']) !!}
+      {!! Form::open(['route' => $admurl.'.happyhour.store']) !!}
       <div class="box-header with-border">
         <h3 class="box-title">@lang('app.add_happyhour')</h3>
       </div>

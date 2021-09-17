@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-    {!! Form::open(['route' => 'backend.settings.generator.post', 'id' => 'generator-form']) !!}
+    {!! Form::open(['route' => $admurl.'.settings.generator.post', 'id' => 'generator-form']) !!}
     <div class="box box-primary">
     <div class="box-header with-border">
     <h3 class="box-title">@lang('app.api_generator')</h3>

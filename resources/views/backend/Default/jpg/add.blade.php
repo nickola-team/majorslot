@@ -11,7 +11,7 @@
 
     <section class="content">
       <div class="box box-default">
-		{!! Form::open(['route' => 'backend.jpgame.store', 'files' => true, 'id' => 'user-form']) !!}
+		{!! Form::open(['route' => $admurl.'.jpgame.store', 'files' => true, 'id' => 'user-form']) !!}
         <div class="box-header with-border">
           <h3 class="box-title">Add JPG</h3>
         </div>

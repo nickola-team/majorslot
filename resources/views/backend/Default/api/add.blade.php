@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-    {!! Form::open(['route' => 'backend.api.store', 'files' => true, 'id' => 'api-form']) !!}
+    {!! Form::open(['route' => $admurl.'.api.store', 'files' => true, 'id' => 'api-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">@lang('app.add_api')</h3>

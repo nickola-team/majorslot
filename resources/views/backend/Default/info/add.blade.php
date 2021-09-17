@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-            {!! Form::open(['route' => 'backend.info.store', 'files' => true, 'id' => 'info-form']) !!}
+            {!! Form::open(['route' => $admurl.'.info.store', 'files' => true, 'id' => 'info-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">@lang('app.add_info')</h3>

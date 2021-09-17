@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-            {!! Form::open(['route' => 'backend.website.store', 'id' => 'user-form']) !!}
+            {!! Form::open(['route' => $admurl.'.website.store', 'id' => 'user-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">도메인추가</h3>

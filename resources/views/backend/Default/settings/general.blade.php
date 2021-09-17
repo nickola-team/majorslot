@@ -12,7 +12,7 @@
     <section class="content">
 
         <div class="box box-default">
-            {!! Form::open(['route' => 'backend.settings.general.update', 'id' => 'general-settings-form']) !!}
+            {!! Form::open(['route' => $admurl.'.settings.general.update', 'id' => 'general-settings-form']) !!}
             <div class="box-header with-border">
                 <h3 class="box-title">@lang('app.general_settings')</h3>
             </div>

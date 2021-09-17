@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-            {!! Form::open(['route' => 'backend.notice.store', 'id' => 'user-form']) !!}
+            {!! Form::open(['route' => $admurl.'.notice.store', 'id' => 'user-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">공지추가</h3>

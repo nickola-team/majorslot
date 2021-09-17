@@ -10,7 +10,7 @@
 </section>
 
     <section class="content">
-            {!! Form::open(['route' => 'backend.room.store', 'files' => true, 'id' => 'user-form']) !!}
+            {!! Form::open(['route' => $admurl.'.room.store', 'files' => true, 'id' => 'user-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">@lang('app.add_room')</h3>

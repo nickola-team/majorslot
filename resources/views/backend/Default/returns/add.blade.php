@@ -11,7 +11,7 @@
 
     <section class="content">
       <div class="box box-default">
-		{!! Form::open(['route' => 'backend.returns.store', 'files' => true, 'id' => 'return-form']) !!}
+		{!! Form::open(['route' => $admurl.'.returns.store', 'files' => true, 'id' => 'return-form']) !!}
         <div class="box-header with-border">
           <h3 class="box-title">@lang('app.add_return')</h3>
         </div>

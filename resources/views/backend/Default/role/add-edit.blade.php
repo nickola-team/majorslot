@@ -13,7 +13,7 @@
             @if ($edit)
             {!! Form::open(['route' => ['backend.role.update', $role->id], 'method' => 'PUT', 'id' => 'role-form']) !!}
             @else
-            {!! Form::open(['route' => 'backend.role.store', 'id' => 'role-form']) !!}
+            {!! Form::open(['route' => $admurl.'.role.store', 'id' => 'role-form']) !!}
              @endif
       <div class="box box-default">
         <div class="box-header with-border">

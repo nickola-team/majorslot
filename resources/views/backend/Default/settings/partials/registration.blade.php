@@ -1,4 +1,4 @@
-{!! Form::open(['route' => 'backend.settings.auth.update', 'id' => 'registration-settings-form']) !!}
+{!! Form::open(['route' => $admurl.'.settings.auth.update', 'id' => 'registration-settings-form']) !!}
 
 
 <div class="form-group">

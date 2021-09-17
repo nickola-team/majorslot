@@ -13,7 +13,7 @@
         @if ($edit)
             {!! Form::open(['route' => ['backend.permission.update', $permission->id], 'method' => 'PUT', 'id' => 'permission-form']) !!}
         @else
-            {!! Form::open(['route' => 'backend.permission.store', 'id' => 'permission-form']) !!}
+            {!! Form::open(['route' => $admurl.'.permission.store', 'id' => 'permission-form']) !!}
         @endif
         <div class="box box-default">
             <div class="box-header with-border">

@@ -11,7 +11,7 @@
 
     <section class="content">
 
-        {!! Form::open(['route' => 'backend.pincode.massadd', 'files' => true]) !!}
+        {!! Form::open(['route' => $admurl.'.pincode.massadd', 'files' => true]) !!}
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">ADD PIN</h3>
@@ -60,7 +60,7 @@
         {!! Form::close() !!}
 
 
-            {!! Form::open(['route' => 'backend.pincode.store', 'files' => true, 'id' => 'user-form']) !!}
+            {!! Form::open(['route' => $admurl.'.pincode.store', 'files' => true, 'id' => 'user-form']) !!}
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">ADD PIN</h3>

@@ -10,7 +10,7 @@
     </section>
 
     <section class="content">
-        {!! Form::open(['route' => 'backend.shop.admin_store', 'files' => true, 'id' => 'user-form']) !!}
+        {!! Form::open(['route' => $admurl.'.shop.admin_store', 'files' => true, 'id' => 'user-form']) !!}
 
         <div class="box box-default">
             <div class="box-header with-border">

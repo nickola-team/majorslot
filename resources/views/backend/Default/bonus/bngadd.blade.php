@@ -11,7 +11,7 @@
 
   <section class="content">
     <div class="box box-default">
-      {!! Form::open(['route' => 'backend.bonus.bngstore']) !!}
+      {!! Form::open(['route' => $admurl.'.bonus.bngstore']) !!}
       <div class="box-header with-border">
         <h3 class="box-title">보너스추가</h3>
       </div>

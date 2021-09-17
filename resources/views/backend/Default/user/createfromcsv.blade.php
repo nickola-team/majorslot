@@ -12,9 +12,9 @@
     <section class="content">
         <div class="box box-primary">
 		@if ($ispartner == 1)
-		{!! Form::open(['route' => 'backend.user.storepartnerfromcsv', 'id' => 'csv-upload-form', 'files' => true]) !!}
+		{!! Form::open(['route' => $admurl.'.user.storepartnerfromcsv', 'id' => 'csv-upload-form', 'files' => true]) !!}
 		@else
-		{!! Form::open(['route' => 'backend.user.storeuserfromcsv', 'id' => 'csv-upload-form', 'files' => true]) !!}
+		{!! Form::open(['route' => $admurl.'.user.storeuserfromcsv', 'id' => 'csv-upload-form', 'files' => true]) !!}
 		@endif
             <div class="box-header with-border">
                 <h3 class="box-title">CSV로 {{$ispartner==1?'파트너/매장':'회원' }} 생성</h3>
