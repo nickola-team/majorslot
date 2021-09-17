@@ -226,7 +226,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.providers.hbn.render',
         'uses' => 'RenderingController@habanerorender'
     ]);
-
+    Route::get('providers/cq9/{gamecode}', [
+        'as' => 'frontend.providers.cq9.render',
+        'uses' => 'RenderingController@cq9render'
+    ]);
     Route::get('providers/waiting/{provider}/{gamecode}', [
         'as' => 'frontend.providers.waiting',
         'uses' => 'RenderingController@waiting'

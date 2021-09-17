@@ -28,7 +28,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $code;
         }
 
-        public function gamecodetoname($code)
+        public static function gamecodetoname($code)
         {
             $gamelist = CQ9Controller::getgamelist('cq9');
             $gamename = $code;
@@ -191,7 +191,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => floatval($user->balance), 
                 'bet' => floatval($amount), 
                 'win' => 0, 
-                'game' => $this->gamecodetoname($gamecode) . '_' . $gamehall, 
+                'game' => CQ9Controller::gamecodetoname($gamecode) . '_' . $gamehall, 
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -352,7 +352,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => floatval($user->balance), 
                     'bet' => 0, 
                     'win' => floatval($totalamount), 
-                    'game' => $this->gamecodetoname($gamecode) .'_' . $gamehall, 
+                    'game' => CQ9Controller::gamecodetoname($gamecode) .'_' . $gamehall, 
                     'percent' => 0, 
                     'percent_jps' => 0, 
                     'percent_jpg' => 0, 
@@ -511,7 +511,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => floatval($user->balance), 
                 'bet' => floatval($amount), 
                 'win' => 0, 
-                'game' => $this->gamecodetoname($gamecode) . '_' . $gamehall . ' debit', 
+                'game' => CQ9Controller::gamecodetoname($gamecode) . '_' . $gamehall . ' debit', 
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -649,7 +649,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($amount), 
-                'game' => $this->gamecodetoname($gamecode) . '_' . $gamehall . ' credit', 
+                'game' => CQ9Controller::gamecodetoname($gamecode) . '_' . $gamehall . ' credit', 
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
@@ -1055,13 +1055,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return null;
 
         }
-
         public static function getgamelink($gamecode)
+        {
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.cq9.render', $gamecode)]];
+        }
+        public static function makegamelink($gamecode)
         {
             $user = auth()->user();
             if ($user == null)
             {
-                return ['error' => true, 'msg' => '로그인하세요'];
+                return null;
             }
             $detect = new \Detection\MobileDetect();
             try{
@@ -1077,20 +1080,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
                 if (!$response->ok())
                 {
-                    return ['error' => true, 'msg' => '요청이 잘못되었습니다.'];
+                    return null;
                 }
                 $data = $response->json();
                 if ($data['status']['code'] == 0){
-                    return ['error' => false, 'data' => $data['data']];
+                    return $data['data'];
                 }
                 else{
-                    return ['error' => true, 'msg' => '응답이 잘못되었습니다.', 'data' => json_encode($data)];
+                    return null;
                 }
             }
             catch (\Exception $ex)
             {
                 Log::error($ex->getMessage());
-                return ['error' => true, 'msg' => '응답이 잘못되었습니다.'];
+                return null;
             }
         }
     }
