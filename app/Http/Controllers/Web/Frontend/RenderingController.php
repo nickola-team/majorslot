@@ -208,7 +208,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             else {
                 //게임런칭
                 $url = \VanguardLTE\Http\Controllers\Web\GameProviders\CQ9Controller::makegamelink($gamecode);
-                if ($ur == null)
+                if ($url == null)
                 {
                     $data['msg'] = '게임링크 오류';
                 }
