@@ -57,6 +57,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
         public $doubleWildChance = null;
 
         public $happyhouruser = null;
+        public $happy_symbol_list = [3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,6,6,6,6,7,7,7,8,8,8,9,9,10,10,11,11];
 
         /* 프리스핀 관련 */
         public $reelPositionMap = [];
@@ -955,11 +956,40 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
                 foreach ($positionSet as $count) { 
                     if ($this->happyhouruser)
                     {
-                        $symbol_list = [3,3,3,4,4,4,5,5,5,6,6,6,7,7,8,8,9,10,11];
-                        $newSymbol = $symbol_list[array_rand($symbol_list)];
-                        while (in_array($newSymbol ,$uniqueSymbols)){
-                            $newSymbol = $symbol_list[array_rand($symbol_list)];
+                        $doneFlag = $this->GetGameData('HappySymbolFlag');
+                        if ($doneFlag == null)
+                        {
+                            $doneFlag = array_fill(0, count($this->happy_symbol_list) , 0);
                         }
+                        else
+                        {
+                            $doneFlag = explode(',', $doneFlag);
+                            if (count($doneFlag) <  count($this->happy_symbol_list))
+                            {
+                                $doneFlag = array_fill(0, count($this->happy_symbol_list) , 0);
+                            }
+                        }
+                        if (array_sum($doneFlag) == count($this->happy_symbol_list))
+                        {
+                            $doneFlag = array_fill(0, count($this->happy_symbol_list) , 0);
+                        }
+                        $symbIdx = array_rand($this->happy_symbol_list);
+                        $newSymbol = $this->happy_symbol_list[$symbIdx];
+                        $try = 0;
+                        while ((in_array($newSymbol ,$uniqueSymbols) || $doneFlag[$symbIdx] == 1) && $try < 200){
+                            $symbIdx = array_rand($this->happy_symbol_list);
+                            $newSymbol = $this->happy_symbol_list[$symbIdx];
+                            $try = $try + 1;
+                        }
+                        if ($try >= 200)
+                        {
+                            $doneFlag = array_fill(0, count($this->happy_symbol_list) , 0);
+                        }
+                        else
+                        {
+                            $doneFlag[$symbIdx] = 1;
+                        }
+                        $this->SetGameData('HappySymbolFlag', implode(',', $doneFlag));
                     }
                     else
                     {
