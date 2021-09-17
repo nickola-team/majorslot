@@ -201,7 +201,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $alonegame = 0;
             $url = null;
             $data = [];
-            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $hbn_games) {
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $cq9_games) {
                 $url = url('/game/' . $gamename);
                 $alonegame = 1;
             }
