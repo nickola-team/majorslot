@@ -1084,7 +1084,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $data = $response->json();
                 if ($data['status']['code'] == 0){
-                    return $data['data'];
+                    return $data['data']['url'];
                 }
                 else{
                     return null;

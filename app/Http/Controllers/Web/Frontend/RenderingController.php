@@ -213,7 +213,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $data['msg'] = '게임링크 오류';
                 }
             }
-            return view('frontend.Default.games.habanero', compact('url', 'alonegame', 'data'));
+            return view('frontend.Default.games.cq9', compact('url', 'alonegame', 'data'));
             
         }
     }
