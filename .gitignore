@@ -27,7 +27,6 @@ public/socket_live_config.json
 resources/lang/ko.zip
 public/frontend/Major.zip
 app/Games/Games.zip
-/PTWebSocket
 /PTWebSocket/node_modules
 bootstrap/cache/packages.php
 composer.lock
