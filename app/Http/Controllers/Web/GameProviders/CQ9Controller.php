@@ -1096,6 +1096,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
         }
+
+        public function clientInfo(\Illuminate\Http\Request $request)
+        {
+            $ip = $request->server('HTTP_CF_CONNECTING_IP')??$request->server('REMOTE_ADDR');
+            $data = [
+                "data" => [
+                    "ip" => $ip,
+                    "code" =>"",
+                    "datatime" => date(DATE_RFC3339_EXTENDED)
+                ]
+            ];
+            return response()->json($data);
+
+        }
     }
 
 }

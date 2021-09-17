@@ -1267,6 +1267,8 @@ Route::group(['middleware' => 'cq9', 'prefix' => 'cq9',], function () {
     Route::get('/player/check/{account}', 'GameProviders\CQ9Controller@checkplayer');
 });
 
+Route::get('clientinfo', 'GameProviders\CQ9Controller@clientInfo');
+
 /**
  * Pragmatic Play Game Provider
  */
