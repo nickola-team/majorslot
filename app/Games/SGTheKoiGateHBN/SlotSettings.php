@@ -695,16 +695,16 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
-            if ($this->happyhouruser)
-            {
-                $bonus_spin = rand(1, 10);
-                $spin_percent = 5;
-                if ($garantType == 'free')
-                {
-                    $spin_percent = 3;
-                }
-                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-            }
+            // if ($this->happyhouruser)
+            // {
+            //     $bonus_spin = rand(1, 10);
+            //     $spin_percent = 5;
+            //     if ($garantType == 'free')
+            //     {
+            //         $spin_percent = 3;
+            //     }
+            //     $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            // }
             if( $garantType != 'free' && $bonusWin == 1 && $this->slotBonus )   // 프리스핀중 보너스당첨 없음
             {
                 // $this->isBonusStart = true;
@@ -953,7 +953,18 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
 
                 /* 기본릴 생성 */
                 foreach ($positionSet as $count) { 
-                    while( in_array( ($newSymbol = random_int(3, 11)), $uniqueSymbols));
+                    if ($this->happyhouruser)
+                    {
+                        $symbol_list = [3,3,3,4,4,4,5,5,5,6,6,6,7,7,8,8,9,10,11];
+                        $newSymbol = $symbol_list[array_rand($symbol_list)];
+                        while (in_array($newSymbol ,$uniqueSymbols)){
+                            $newSymbol = $symbol_list[array_rand($symbol_list)];
+                        }
+                    }
+                    else
+                    {
+                        while( in_array( ($newSymbol = random_int(3, 11)), $uniqueSymbols));
+                    }
 
                     $newSymbols = array_fill($curPos, $count, $newSymbol);
                     $reels['symbols'][$reelId] = array_replace($reels['symbols'][$reelId], $newSymbols);
