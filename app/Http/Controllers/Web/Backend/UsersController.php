@@ -24,19 +24,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $users = \VanguardLTE\User::orderBy('balance', 'DESC');
                 }
             }
+            $users = $users->whereIn('id', auth()->user()->hierarchyUsersOnly());
             if($request->shopname != '')
             {
                 if (!$users)
                 {
                     return redirect()->back()->withErrors('알수 없는 오류');
                 }
-                $shop = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->first();
+                $shop = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->whereIn('id', auth()->user()->availableShops())->first();
                 if ($shop) {
                     $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
                 }
-            }
-            else {
-                $users = $users->whereIn('id', auth()->user()->hierarchyUsersOnly());
             }
             if (!$users)
             {
