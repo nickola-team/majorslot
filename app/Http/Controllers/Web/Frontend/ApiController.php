@@ -1286,7 +1286,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($requestuser->hasRole('user') && $requestuser->playing_game == 'pp')
             {
-                if ($data['type'] == 'add')
+                if ($type == 'add')
                 {
                     $summ = abs($summ);
                 }
