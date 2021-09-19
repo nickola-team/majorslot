@@ -3,7 +3,7 @@
 	<td>{{ $website->title }}</td>
     <td>{{ $website->frontend }}</td>
     <td>{{ $website->backend }}</td>
-    <td>{{ $website->admin->username }}</td>
+    <td>{{ $website->admin ?$website->admin->username :'알수없음' }}</td>
     <td>{{ $website->created_at }}</td>
     <td>
     <a href="{{ route('backend.website.edit', $website->id) }}">
