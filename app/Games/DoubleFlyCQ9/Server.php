@@ -360,7 +360,7 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                             }
 
-                            $result_val['GamePlaySerialNumber'] = 4104818005;
+                            $result_val['GamePlaySerialNumber'] = floor(microtime(true) / 4);
                             $result_val['RngData'] = $rngData;
                             $result_val['SymbolResult'] = [implode(',', $symbolResult[0]), implode(',', $symbolResult[1]), implode(',', $symbolResult[2])];
                             $result_val['EmulatorType'] = $emulatorType;
