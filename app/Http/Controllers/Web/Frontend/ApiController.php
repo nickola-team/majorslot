@@ -1288,11 +1288,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 if ($type == 'add')
                 {
-                    $summ = abs($summ);
+                    $summ = abs($amount);
                 }
                 else
                 {
-                    $summ = -abs($summ);
+                    $summ = -abs($amount);
                 }
                 $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($requestuser->id, $summ);
                 if ($data['error'] == -1) //밸런스 전송시 오류, 게임사게임 종료시킬것
