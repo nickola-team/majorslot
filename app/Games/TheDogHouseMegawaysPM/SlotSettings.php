@@ -1165,7 +1165,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
                 else if ($slotEvent === 'fsSticky' && count($lastWILDCollection) > 0) {
                     $minCount = 2;
-                    $maxCount = 4;
+                    
                     foreach ($lastWILDCollection as $pos => $multiplier) {
                         $wildReelId = $pos % $REELCOUNT + 1;
                         if ($reelId == $wildReelId) {
@@ -1174,7 +1174,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         }
                     }
                     
-                    $symbolCount = $this->GetSymbolCount($minCount, $maxCount);
+                    $symbolCount = $this->GetSymbolCount($minCount);
                 }
                 else {
                     $symbolCount = random_int(2, 4);
