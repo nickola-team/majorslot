@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="/back/dist/css/AdminLTE.min.css">
 
     <link rel="stylesheet" href="/back/dist/css/skins/_all-skins.min.css">
-    <link rel="stylesheet" href="/back/dist/css/skins/skin-midnight.css">
 
     <link rel="stylesheet" href="/back/bower_components/morris.js/morris.css">
     <link rel="stylesheet" href="/back/bower_components/jvectormap/jquery-jvectormap.css">
@@ -41,6 +40,7 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <link rel="stylesheet" href="/back/dist/css/skins/skin-midnight.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
