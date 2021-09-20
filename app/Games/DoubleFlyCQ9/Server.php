@@ -221,6 +221,7 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                                 $scattersCount = 0;  
                                 $scatterPositions = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]; 
                                 $scatterReelNumberCount = 0;
+                                $scattersReel = [0, 0, 0, 0, 0];
                                 for($r = 0; $r < 5; $r++){
                                     $isScatter = false;
                                     for( $k = 0; $k < 3; $k++ ) 
@@ -233,6 +234,7 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                                                 $isScatter = true;
                                             }
                                             $scatterPositions[$k][$r] = 1;
+                                            $scattersReel[$r]++;
                                         }
                                     }
                                 }
@@ -320,7 +322,11 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                             $result_val['Multiple'] = $bonusMul;
                             if($scatterReelNumberCount >= 3){
                                 if($scattersCount > 3 && $slotEvent['slotEvent'] != 'freespin'){
-                                    $bonusMul = $slotSettings->getBonusMul();
+                                    for($r = 0; $r < 5; $r++){
+                                        if($scattersReel[$r] > 0){
+                                            $bonusMul = $bonusMul * $scattersReel[$r];
+                                        }
+                                    }
                                 }
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', $bonusMul);
                                 $isTriggerFG = true;
