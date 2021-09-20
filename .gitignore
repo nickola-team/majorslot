@@ -34,3 +34,4 @@ bootstrap/cache/routes-v7.php
 bootstrap/cache/services.php
 /public/front/uploads
 bootstrap/cache/config.php
+public/socket_config_cq9.json
