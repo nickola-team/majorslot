@@ -218,31 +218,33 @@
 			</div>
 
 
-			<div class="box-footer">
-				<button class="btn btn-primary" id="money-50k" onclick="add_money(10000);">
-					+10,000
-				</button>
-				<button class="btn btn-primary" id="money-50k" onclick="add_money(50000);">
-					+50,000
-				</button>
-				<button class="btn btn-primary" id="money-100k" onclick="add_money(100000);">
-					+100,000
-				</button>
-				<button class="btn btn-primary" id="money-500k" onclick="add_money(500000);">
-					+500,000
-				</button>
-				<button class="btn btn-primary" id="money-1m" onclick="add_money(1000000);">
-					+1,000,000
-				</button>
-				<button class="btn btn-primary" id="money-3m" onclick="add_money(3000000);">
-					+3,000,000
-				</button>
-				<button class="btn btn-primary" id="money-5m" onclick="add_money(5000000);">
-					+5,000,000
-				</button>
-				<button class="btn btn-primary" id="reset" onclick="reset_money();">
-					초기화
-				</button>
+			<div class="row" style="margin: 20px 0px;">
+				<div class="col-md-6">
+					<button class="btn btn-primary" id="money-50k" onclick="add_money(10000);">
+						+10,000
+					</button>
+					<button class="btn btn-primary" id="money-50k" onclick="add_money(50000);">
+						+50,000
+					</button>
+					<button class="btn btn-primary" id="money-100k" onclick="add_money(100000);">
+						+100,000
+					</button>
+					<button class="btn btn-primary" id="money-500k" onclick="add_money(500000);">
+						+500,000
+					</button>
+					<button class="btn btn-primary" id="money-1m" onclick="add_money(1000000);">
+						+1,000,000
+					</button>
+					<button class="btn btn-primary" id="money-3m" onclick="add_money(3000000);">
+						+3,000,000
+					</button>
+					<button class="btn btn-primary" id="money-5m" onclick="add_money(5000000);">
+						+5,000,000
+					</button>
+					<button class="btn btn-primary" id="reset" onclick="reset_money();">
+						초기화
+					</button>
+				</div>
 			</div>
 
 
@@ -259,7 +261,7 @@
 
 			</div>
 		
-
+		</div>
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">충환전신청내역</h3>
