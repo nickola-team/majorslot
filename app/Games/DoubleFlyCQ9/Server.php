@@ -448,15 +448,34 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                 }else if($paramData['req'] == 1000){  // socket closed
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')){
                         // FreeSpin Balance add
-                        $totalWin = 100;
+                        $slotEvent['slotEvent'] = 'freespin';
+                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                        $count = 0;
+                        while(true){
+                                $_winAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                                $symbolCount = mt_rand(3,5);
+                                if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') >= 5){
+                                        $symbolIndex = mt_rand(11, 15);
+                                }else{
+                                        $symbolIndex = mt_rand(1, 5);
+                                }
+                                $totalWin = $slotSettings->Paytable[$symbolIndex][$symbolCount] * $betline;
+                                if($totalWin < $_winAvaliableMoney / 3){
+                                        break;
+                                }else if($count > 100){
+                                        $totalWin = 0;
+                                        break;
+                                }
+                                $count++;
+                        }
                         if($totalWin > 0){
                             $slotSettings->SetBalance($totalWin);
-                            $slotSettings->SetBank('freespin', -1 * $totalWin);
+                            $slotSettings->SetBank($slotEvent['slotEvent'], -1 * $totalWin);
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                             $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                             $_GameLog = '{"responseEvent":"spin","responseType":"freespin","serverResponse":{"BonusMpl":1,"lines":1,"bet":0,"Balance":' . $slotSettings->GetGameData($slotSettings->slotId . 'InitBalance') . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""';
 
-                            $slotSettings->SaveLogReport($_GameLog, 0, 1, $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin'), 'freespin');
+                            $slotSettings->SaveLogReport($_GameLog, 0, 1, $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin'), $slotEvent['slotEvent']);
                         }
                     }
                 }
