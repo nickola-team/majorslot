@@ -1130,6 +1130,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 //merge pragmatic and pragmatic play games if not admin
                 //merge habanero and habanero play games if not admin
+                //merge cq9 and cq9 play games if not admin
                 if ($categories){
                     foreach ($categories as $i => $cat)
                     {
@@ -1142,6 +1143,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         $hbn_play_adj = null; // owner's game
                         $hbn_index = 0;
                         $hbn_play_index = 0;
+
+                        $cq9_adj = null; // provider's game
+                        $cq9_play_adj = null; // owner's game
+                        $cq9_index = 0;
+                        $cq9_play_index = 0;
                         foreach ($cat['cat'] as $index => $game)
                         {
                             if ($game['name'] == 'Pragmatic Play')
@@ -1163,6 +1169,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             {
                                 $hbn_adj = $game;
                                 $hbn_index = $index;
+                            }
+
+                            if ($game['name'] == 'CQ9 Play')
+                            {
+                                $cq9_play_adj = $game;
+                                $cq9_play_index = $index;
+                            }
+                            if ($game['name'] == 'CQ9')
+                            {
+                                $cq9_adj = $game;
+                                $cq9_index = $index;
                             }
                         }
                         if ($pragmatic_adj)
@@ -1200,6 +1217,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             {
                                 $hbn_play_adj['title'] = '하바네로';
                                 $cat['cat'][$hbn_play_index] = $hbn_play_adj;
+                            }
+                            $categories[$i] = $cat;
+                        }
+
+                        if ($cq9_play_adj)
+                        {
+                            if ($cq9_adj)
+                            {
+                                $cq9_adj['totalwin'] = $cq9_adj['totalwin'] + $cq9_play_adj['totalwin'];
+                                $cq9_adj['totalbet'] = $cq9_adj['totalbet'] + $cq9_play_adj['totalbet'];
+                                $cq9_adj['totalcount'] = $cq9_adj['totalcount'] + $cq9_play_adj['totalcount'];
+                                $cq9_adj['total_deal'] = $cq9_adj['total_deal'] + $cq9_play_adj['total_deal'];
+                                $cq9_adj['total_mileage'] = $cq9_adj['total_mileage'] + $cq9_play_adj['total_mileage'];
+                                $cat['cat'][$cq9_index] = $cq9_adj;
+                                unset($cat['cat'][$cq9_play_index]);
+                            }
+                            else
+                            {
+                                $cq9_play_adj['title'] = '씨큐9';
+                                $cat['cat'][$cq9_play_index] = $cq9_play_adj;
                             }
                             $categories[$i] = $cat;
                         }
