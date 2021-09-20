@@ -291,13 +291,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             $provider = $request->provider;
             $gamecode = $request->gamecode;
+            $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
             //reset playing_game field to null for provider games.
             $user = auth()->user();
             if ($user)
             {
                 $user->update(['playing_game' => null]);
             }
-            $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
             return response()->json($res);
         }
 

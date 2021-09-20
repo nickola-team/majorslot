@@ -922,6 +922,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             catch (\Exception $ex)
             {
                 Log::error($ex->getMessage());
+                $transaction->update(['refund' => 1]);
                 return ['error' => -1];
             }
 
@@ -1111,6 +1112,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
+            $user = auth()->user();
+            if ($user->playing_game == 'pp') //already playing game.
+            {
+                PPController::terminate($user->id);
+                $data = PPController::getBalance($user->id);
+                if ($data['error'] == 0) {
+                    $user->update([
+                        'balance' => $data['balance'],
+                        'playing_game' => null,
+                        'played_at' => time()
+                    ]);
+                }
+            }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', ['pp', $gamecode])]];
         }
 
