@@ -7,7 +7,7 @@
         margin: 0;
         }
     </style>
-    <link rel="stylesheet" href="/frontend/Default/css/wait.css">
+    <link rel="stylesheet" href="/frontend/Default/css/wait/wait.css">
     <link rel="stylesheet" href="/frontend/Default/css/wait/normalize.css">
 	<link rel="stylesheet" href="/frontend/Default/css/wait/main.css">
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
