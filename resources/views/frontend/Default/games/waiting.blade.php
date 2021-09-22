@@ -8,34 +8,21 @@
         }
     </style>
     <link rel="stylesheet" href="/frontend/Default/css/wait.css">
+    <link rel="stylesheet" href="/frontend/Default/css/wait/normalize.css">
+	<link rel="stylesheet" href="/frontend/Default/css/wait/main.css">
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
-    
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     @if ($prompt)
     <body>
     <div class="box">
-    <div class="box__ghost">
-            <div class="symbol"></div>
-            <div class="symbol"></div>
-            <div class="symbol"></div>
-            <div class="symbol"></div>
-            <div class="symbol"></div>
-            <div class="symbol"></div>
-            
-            <div class="box__ghost-container">
-            <div class="box__ghost-eyes">
-                <div class="box__eye-left"></div>
-                <div class="box__eye-right"></div>
+        <div class="box__ghost">
+            <div id="loader-wrapper">
+                <div id="loader"></div>
             </div>
-            <div class="box__ghost-bottom">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            </div>
-            <div class="box__ghost-shadow"></div>
+        </div>
+        <div class="progress">
+            <div class="color"></div>
         </div>
         <div class="box__description">
             <div class="box__description-container">
