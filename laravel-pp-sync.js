@@ -21,14 +21,15 @@ setTimeout( function syncBalance()  {
           console.log(`stderr: \n${stderr}`);
           return;
       }
-      console.log(`stdout: \n${stdout}`);
   });
   child.on('close', (code, signal) => {
       console.log('exit syncBalance');
+      makeurl();
       setTimeout(syncBalance, balanceSync);
   });
   child.on('error', (code, signal) => {
     console.log('error syncBalance');
+    makeurl();
     setTimeout(syncBalance, balanceSync);
     });
 }, balanceSync);
@@ -46,7 +47,6 @@ setTimeout( function gameround()  {
           console.log(`stderr: \n${stderr}`);
           return;
       }
-      console.log(`stdout: \n${stdout}`);
   });
   child.on('close', (code, signal) => {
     console.log('exit gameround');
@@ -58,7 +58,7 @@ setTimeout( function gameround()  {
     });
 }, betwinSync);
 
-setTimeout(function makeurl() {
+function makeurl() {
     var datetime = new Date();
     console.log('making launch', datetime.toLocaleString());
   
@@ -71,15 +71,12 @@ setTimeout(function makeurl() {
             console.log(`stderr: \n${stderr}`);
             return;
         }
-        console.log(`stdout: \n${stdout}`);
     });
     
     child.on('close', (code, signal) => {
         console.log('exit launchSync');
-        setTimeout(makeurl, launchSync);
     });
     child.on('error', (code, signal) => {
         console.log('error launchSync');
-        setTimeout(makeurl, launchSync);
     })
-  }, launchSync);
+}
