@@ -811,7 +811,7 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
             }
             return $return;
         }
-        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'doSpin')
+        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $_obf_linecount = 10;
             switch( $lines ) 
@@ -842,7 +842,7 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                     $_obf_linecount = 10;
                     break;
             }
-            if( $garantType != 'doSpin' ) 
+            if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
             }
