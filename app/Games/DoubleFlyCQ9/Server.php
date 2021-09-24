@@ -89,7 +89,7 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                             $result_val['ExtendFeatureByGame2'] = null;
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
-                            $result_val['PlayerOrderURL'] = null;
+                            $result_val['PlayerOrderURL'] = 'http://127.0.0.1/platform/?gametoken=' . auth()->user()->api_token;
                             $result_val['PromotionData'] = false;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;

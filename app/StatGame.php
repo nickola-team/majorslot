@@ -78,7 +78,7 @@ namespace VanguardLTE
         }
         public function game_item()
         {
-            return $this->hasOne('VanguardLTE\Game', 'name', 'game');
+            return $this->hasOne('VanguardLTE\Game', 'id', 'game_id');
         }
         public function name_ico()
         {
