@@ -130,7 +130,10 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
-                                $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', '578' . floor(microtime(true) / 4));
+                                $roundstr = sprintf('%.4f', microtime(TRUE));
+                                $roundstr = str_replace('.', '', $roundstr);
+                                $roundstr = '578' . substr($roundstr, 3, 9);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 
                             $result_val['EmulatorType'] = $emulatorType;

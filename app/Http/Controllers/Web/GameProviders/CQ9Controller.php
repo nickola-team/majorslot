@@ -1225,13 +1225,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $token = $request->token;
             $roundid = $request->id;
             $gameid = $request->game_id;
+            $user = \VanguardLTE\User::where('api_token', $token)->first();
+            if (!$user)
+            {
+                $data = [
+                    "error_code" => 4096,
+                    "error_msg" => "GET CYPRESS AUTHORIZATION INVALID(4006)",
+                    "log_id" => $this->microtime_string(),
+                    "result" => [
+                    ]
+                ];
+                return response()->json($data);
+            }
             $data = [
                 "error_code" => 1,
                 "error_msg" => "SUCCESS",
                 "log_id" => "",
                 "result" => [
                     "data" => [
-                        "link" => url('/playerodh5/?token=' . $roundid),
+                        "link" => url('/playerodh5/?token=' . base64_encode($user->id .'-' .$roundid)),
                     ],
                     "status" => [
                         "code" => "0",
@@ -1247,8 +1259,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function wager(\Illuminate\Http\Request $request)
         {
-            $roundid = $request->token;
-            $gamelog = \VanguardLTE\GameLog::where('roundid', $roundid)->first();
+            $param = $request->token;
+            if (!$param)
+            {
+                $data = '{"data":{},"status":{"code":"1","message":"NoGame","datetime":"'.date(DATE_RFC3339_EXTENDED).'"}}';
+                return response($data, 200)->header('Content-Type', 'application/json');
+            }
+            $param = explode('-',base64_decode($param));
+            if (count($param) < 2)
+            {
+                $data = '{"data":{},"status":{"code":"1","message":"NoGame","datetime":"'.date(DATE_RFC3339_EXTENDED).'"}}';
+                return response($data, 200)->header('Content-Type', 'application/json');
+            }
+            $gamelog = \VanguardLTE\GameLog::where([
+                'user_id' => $param[0],
+                'roundid' => $param[1]])->first();
             if ($gamelog)
             {
                 $data = '{"data":' . $gamelog->str . ',"status":{"code":"0","message":"Success","datetime":"'.date(DATE_RFC3339_EXTENDED).'"}}';
