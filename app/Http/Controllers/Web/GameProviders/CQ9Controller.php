@@ -1193,7 +1193,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'name' => $game->game_item->title
                         ]
                     ],
-                    'roundid' => $game->id,
+                    'roundid' => $game->roundid,
                     'singlerowbet' => false,
                     'tabletype' => "",
                     'wins' => $game->win,
@@ -1223,7 +1223,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function detailLink(\Illuminate\Http\Request $request)
         {
             $token = $request->token;
-            $statid = $request->id;
+            $roundid = $request->id;
             $gameid = $request->game_id;
             $data = [
                 "error_code" => 1,
@@ -1231,7 +1231,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 "log_id" => "",
                 "result" => [
                     "data" => [
-                        "link" => url('/playerodh5/?token=' . $token),
+                        "link" => url('/playerodh5/?token=' . $roundid),
                     ],
                     "status" => [
                         "code" => "0",
@@ -1247,26 +1247,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function wager(\Illuminate\Http\Request $request)
         {
-            $data = [
-                "error_code" => 1,
-                "error_msg" => "SUCCESS",
-                "log_id" => "",
-                "result" => [
-                    "data" => [
-                        "link" => url('/playerodh5/?token=121212&gamecode=152'),
-                    ],
-                    "status" => [
-                        "code" => "0",
-                        "message" => "Success",
-                        "datetime" => date(DATE_RFC3339_EXTENDED),
-                        "traceCode" => $this->microtime_string()
-                    ]
-                ]
-            ];
-
-            $data = '{"data":{"account":"8533","parentacc":"major_prod","actionlist":[{"action":"bet","amount":750,"eventtime":"2021-09-20T09:32:11-04:00"},{"action":"win","amount":13200,"eventtime":"2021-09-20T09:33:16-04:00"}],"detail":{"wager":{"seq_no":"577883709373","order_time":"2021-09-20T09:33:16-04:00","end_time":"2021-09-20T09:33:16-04:00","user_id":"6126ecda414edc0001ae9aa7","game_id":"152","platform":"web","currency":"KRW","start_time":"2021-09-20T09:32:11-04:00","server_ip":"10.9.16.21","client_ip":"91.207.174.99","play_bet":"750","play_denom":"100","bet_multiple":"30","rng":[124,226,24,171,228],"multiple":"1","base_game_win":"0","win_over_limit_lock":0,"game_type":0,"win_type":2,"settle_type":0,"wager_type":0,"total_win":"13200","win_line_count":1,"bet_tid":"pro-bet-577883709373","win_tid":"pro-win-577883709373","proof":{"win_line_data":[{"line_extra_data":[0],"line_multiplier":1,"line_prize":0,"line_type":0,"symbol_id":"F","symbol_count":4,"num_of_kind":3,"win_line_no":999,"win_position":[[0,0,0,0,0],[0,1,0,0,0],[0,1,1,1,0]]}],"symbol_data":["14,15,2,5,2","1,F,12,14,12","15,F,F,F,4"],"symbol_data_after":[],"extra_data":[0],"lock_position":[],"reel_pos_chg":[0,0],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":8,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]},"sub":[{"sub_no":1,"game_type":50,"rng":[13,23,5,21,91],"multiple":"2","win":"7200","win_line_count":2,"win_type":1,"proof":{"win_line_data":[{"line_extra_data":[0],"line_multiplier":2,"line_prize":6000,"line_type":1,"symbol_id":"15","symbol_count":6,"num_of_kind":4,"win_line_no":0,"win_position":[[1,0,1,0,0],[0,2,1,0,0],[0,2,0,1,0]]},{"line_extra_data":[0],"line_multiplier":2,"line_prize":1200,"line_type":0,"symbol_id":"15","symbol_count":5,"num_of_kind":3,"win_line_no":1,"win_position":[[1,0,1,0,0],[0,2,1,0,0],[0,2,0,0,0]]}],"symbol_data":["15,11,15,12,3","2,W,15,5,3","2,W,12,13,15"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[1,0,1,0,0],[0,1,1,0,0],[0,1,0,0,1]],"reel_pos_chg":[5,4],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}},{"sub_no":2,"game_type":50,"rng":[23,97,76,3,86],"multiple":"2","win":"0","win_line_count":0,"win_type":0,"proof":{"win_line_data":[],"symbol_data":["14,F,3,14,3","13,11,12,3,3","5,11,5,11,3"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],"reel_pos_chg":[0,0],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}},{"sub_no":3,"game_type":50,"rng":[27,34,12,63,71],"multiple":"2","win":"0","win_line_count":0,"win_type":0,"proof":{"win_line_data":[],"symbol_data":["4,13,12,12,5","11,13,5,12,4","5,F,13,13,15"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],"reel_pos_chg":[0,0],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}},{"sub_no":4,"game_type":50,"rng":[85,28,142,92,33],"multiple":"2","win":"0","win_line_count":0,"win_type":0,"proof":{"win_line_data":[],"symbol_data":["14,5,15,3,3","1,14,1,15,12","13,3,1,3,4"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],"reel_pos_chg":[0,0],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}},{"sub_no":5,"game_type":50,"rng":[70,132,134,43,47],"multiple":"2","win":"0","win_line_count":0,"win_type":0,"proof":{"win_line_data":[],"symbol_data":["15,1,W,F,12","5,12,15,14,2","5,11,W,14,14"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],"reel_pos_chg":[0,0],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}},{"sub_no":6,"game_type":50,"rng":[17,151,31,79,55],"multiple":"2","win":"6000","win_line_count":1,"win_type":1,"proof":{"win_line_data":[{"line_extra_data":[0],"line_multiplier":2,"line_prize":6000,"line_type":1,"symbol_id":"4","symbol_count":4,"num_of_kind":4,"win_line_no":0,"win_position":[[0,1,2,0,0],[0,0,0,0,0],[1,0,0,1,0]]}],"symbol_data":["11,4,2,15,W","15,13,F,15,15","4,F,15,4,5"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[0,1,0,0,1],[0,0,0,0,0],[1,0,0,1,0]],"reel_pos_chg":[5,3],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}},{"sub_no":7,"game_type":50,"rng":[116,91,99,145,31],"multiple":"2","win":"0","win_line_count":0,"win_type":0,"proof":{"win_line_data":[],"symbol_data":["14,11,15,14,3","1,4,3,14,15","12,13,15,F,3"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],"reel_pos_chg":[0,0],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}},{"sub_no":8,"game_type":50,"rng":[8,100,147,33,132],"multiple":"2","win":"0","win_line_count":0,"win_type":0,"proof":{"win_line_data":[],"symbol_data":["15,1,5,15,11","4,15,13,12,1","13,12,13,5,4"],"symbol_data_after":[],"extra_data":[0],"lock_position":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],"reel_pos_chg":[0,0],"reel_len_change":[],"reel_pay":[],"respin_reels":[0,0,0,0,0],"bonus_type":0,"special_award":0,"special_symbol":0,"is_respin":false,"fg_times":0,"fg_rounds":0,"next_s_table":0,"extend_feature_by_game":[],"extend_feature_by_game2":[]}}],"pick":[]}}},"status":{"code":"0","message":"Success","datetime":"2021-09-20T09:35:48.898-04:00"}}';
-            
-            //return response()->json($data);
+            $roundid = $request->token;
+            $gamelog = \VanguardLTE\GameLog::where('roundid', $roundid)->first();
+            if ($gamelog)
+            {
+                $data = '{"data":' . $gamelog->str . ',"status":{"code":"0","message":"Success","datetime":"'.date(DATE_RFC3339_EXTENDED).'"}}';
+            }
+            else
+            {
+                $data = '{"data":{},"status":{"code":"1","message":"NoGame","datetime":"'.date(DATE_RFC3339_EXTENDED).'"}}';
+            }
             return response($data, 200)->header('Content-Type', 'application/json');
         }
     }

@@ -10,7 +10,8 @@ namespace VanguardLTE
             'user_id', 
             'ip', 
             'str', 
-            'shop_id'
+            'shop_id',
+            'roundid'
         ];
         public $timestamps = false;
         public static function boot()

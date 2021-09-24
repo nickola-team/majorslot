@@ -101,6 +101,7 @@ return [
     /*
     CQ9 Auth key
     */
+    'cq9history' => env('CQ9_HISTORY_URL', 'http://127.0.0.1/platform'),
     'cq9wtoken' => env('CQ9_WTOKEN', 'cq9KfvEKDmHTRcVMteiApFK'),
     'cq9api' => env('CQ9_API', 'https://apid.cqgame.cc'),
     'cq9token' => env('CQ9_AUTH', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2MDczYmFhYThjMDUyNTAwMDFlMDBmMDYiLCJhY2NvdW50IjoibWFqb3JfdGVzdCIsIm93bmVyIjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwicGFyZW50IjoiNjA3M2I4ODJjZDM3NmQwMDAxNWIzOTMyIiwiY3VycmVuY3kiOiJLUlciLCJqdGkiOiIzODYzNjY2OTAiLCJpYXQiOjE2MTgxOTcxNjIsImlzcyI6IkN5cHJlc3MiLCJzdWIiOiJTU1Rva2VuIn0.syESetcCYmfb8MOYguVGb3wp6KUgdUtqJWJqyX-YbYk'),

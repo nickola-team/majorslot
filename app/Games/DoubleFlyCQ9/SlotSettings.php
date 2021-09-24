@@ -652,7 +652,7 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
         }
-        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState)
+        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $roundid)
         {
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
@@ -688,7 +688,8 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                 'user_id' => $this->playerId, 
                 'ip' => $_SERVER['REMOTE_ADDR'], 
                 'str' => $spinSymbols, 
-                'shop_id' => $this->shop_id
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundid
             ]);
             \VanguardLTE\StatGame::create([
                 'user_id' => $this->playerId, 
@@ -701,7 +702,8 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                 'percent_jpg' => $this->toSlotJackBanks, 
                 'profit' => $this->betProfit, 
                 'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundid
             ]);
         }
 
