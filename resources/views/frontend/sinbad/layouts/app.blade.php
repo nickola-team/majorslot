@@ -18,7 +18,7 @@
     <script type="text/javascript" src="/frontend/sinbad/js/action.js"></script>
 
     <script src="/frontend/sinbad/js/TweenMax.min.js"></script>
-    <title>@yield('page-title')}}</title>
+    <title>@yield('page-title')</title>
     <script type="text/javascript">
       var filter = "win16|win32|win64|mac";
       function isMobile() {
