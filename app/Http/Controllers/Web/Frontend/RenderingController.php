@@ -44,7 +44,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $prompt = false;
             }
-            return view('frontend.Default.games.waiting', compact('requestId', 'prompt'));
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $frontend = 'Default';
+            if ($site)
+            {
+                $frontend = $site->frontend;
+                if (!\View::exists('frontend.'.$frontend.'.games.waiting'))
+                {
+                    $frontend = 'Default';
+                }
+            }
+            return view('frontend.'.$frontend.'.games.waiting', compact('requestId', 'prompt'));
         }
 
         public function launch($requestid, \Illuminate\Http\Request $request)
