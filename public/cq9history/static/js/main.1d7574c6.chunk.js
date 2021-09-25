@@ -2555,8 +2555,6 @@
                             }), 5e3)
                         };
                     return Object(r.useEffect)((function () {
-                        var e = !!~window.location.href.indexOf("detail.liulijing520.com") ? "GTM-WGTJ98C" : "GTM-K6TNGCX";
-                        document.getElementById("BODY_GA_NO_SCRIPT").innerHTML = '<iframe src="https://www.googletagmanager.com/ns.html?id='.concat(e, '"height="0" width="0" style="display:none;visibility:hidden"></iframe>')
                     }), []), Object(r.useEffect)((function () {
                         R({
                             props: {
