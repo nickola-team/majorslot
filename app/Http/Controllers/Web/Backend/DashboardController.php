@@ -24,10 +24,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route('frontend.page.error_license');
             }*/
-            // if( !\Auth::user()->hasRole('admin')) 
-            // {
-            //     return redirect()->route(config('app.admurl').'.user.list');
-            // }
+            if( config('app.admurl') != 'slot' && !\Auth::user()->hasRole('admin')) 
+            {
+                return redirect()->route(config('app.admurl').'.user.list');
+            }
             $ids = auth()->user()->availableUsers();
             $availableShops = auth()->user()->availableShops();
 
