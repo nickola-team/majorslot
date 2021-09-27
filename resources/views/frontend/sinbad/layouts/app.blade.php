@@ -238,6 +238,16 @@
                       <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->balance,0) }}원</p>
                     </div>
                   </div>
+                  <div class="al-cont point-info-btn" data-toggle="modal" data-target=".mypageModal">
+                    <div class="labels">
+                      <span class="inner">
+                        보너스 :
+                      </span>
+                    </div>
+                    <div class="info">
+                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->deal_balance,0) }}원</p>
+                    </div>
+                  </div>
                   <!-- <div class="al-cont point-info-btn" data-toggle="modal" data-target=".mypageModal">
                     <div class="labels">
                       <span class="inner">
@@ -255,7 +265,7 @@
                   <div class="al-cont btn-grp">
                     <button class="blue message message-btn" data-toggle="modal" data-target=".mypageModal">
                       <i class="fa fa-envelope"></i> 쪽지
-                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;">0</span>
+                      {{-- <span class="mess-count" style="animation: letter_anim 0s linear infinite;">0</span> --}}
                     </button>
                     <button class="logout-btn red" onclick="goLogout();"><i class="fa fa-sign-out-alt"></i> 로그아웃</button>
                   </div>
@@ -633,13 +643,7 @@
 						<div class="nav-btn">
 							<button class="mp">
 								<i class="icon icon-Medal"></i>
-								<p class="text">포인트</p>
-							</button>
-						</div>
-						<div class="nav-btn">
-							<button class="mp">
-								<i class="icon icon-Star"></i>
-								<p class="text">쿠폰정보</p>
+								<p class="text">보너스전환</p>
 							</button>
 						</div>
 						<div class="nav-btn">
@@ -736,14 +740,14 @@
 
 						   <div class="mp-tab">
 
-								<form id="pointFrm" action="javascript:usePoint();" method="POST" data-parsley-validate="" novalidate="">
+								<form id="pointFrm" action="javascript:bonusSubmit();" method="POST" data-parsley-validate="" novalidate="">
 								<div class="form-container">
 									<div class="form-group">
 										<div class="labels">
-											<p>보유포인트</p>
+											<p>보유보너스</p>
 										</div>
 										<div class="infos">
-											<p class="info player-point">0</p>
+											<p class="info player-point">{{Auth::check()?number_format(auth()->user()->deal_balance,0) : 0}}원</p>
 										</div>
 									</div>
 									<div class="form-group">
@@ -751,6 +755,7 @@
 											<p>전환금액</p>
 										</div>
 										<div class="infos">
+                      <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
 											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="30000" data-parsley-min-message="최소입금 30,000원 이상" placeholder="최소입금 30,000원 부터가능(만원단위입금)" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
 											<div class="btn-grp" style="margin-top: 25px;">
 												<button type="button" onclick="addAmount(4,1)">1만</button>
@@ -965,11 +970,11 @@
 									</div>
 									<div class="infos">
 										<label>
-											<select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="5166" value="{{auth()->user()->bank_name}}">
+											<select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="5166" value="">
 												<option value="">--은행 선택--</option>
                         @foreach(\VanguardLTE\User::$values["banks"] AS $val)
                           @if($val != "")
-                            <option value="{{$val}}" {{auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
+                            <option value="{{$val}}" {{Auth::check() && auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
                           @endif
                         @endforeach
 											</select><ul class="parsley-errors-list" id="parsley-id-5166"></ul>
@@ -981,7 +986,7 @@
 										<p>계좌번호</p>
 									</div>
 									<div class="infos">
-										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{auth()->user()->account_no}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()?auth()->user()->account_no:''}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
 									</div>
 								</div>
               <div class="form-group">
@@ -989,7 +994,7 @@
                   <p>입금자명</p>
                 </div>
                 <div class="infos">
-                  <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{auth()->user()->recommender}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+                  <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()?auth()->user()->recommender:''}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
                 </div>
               </div>
               <div class="form-group">
@@ -1072,7 +1077,7 @@
                   <option value="">--은행 선택--</option>
                   @foreach(\VanguardLTE\User::$values["banks"] AS $val)
                     @if($val != "")
-                    <option value="{{$val}}" {{auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
+                    <option value="{{$val}}" {{Auth::check() && auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
                     @endif
                   @endforeach
                 </select><ul class="parsley-errors-list" id="parsley-id-7298"></ul>
@@ -1084,7 +1089,7 @@
               <p>계좌번호</p>
             </div>
             <div class="infos">
-              <input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{auth()->user()->account_no}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+              <input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()? auth()->user()->account_no : ''}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
             </div>
           </div>
           <div class="form-group">
@@ -1092,7 +1097,7 @@
               <p>출금자명</p>
             </div>
             <div class="infos">
-              <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{auth()->user()->recommender}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+              <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()? auth()->user()->recommender:''}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
             </div>
           </div>
 
@@ -1586,6 +1591,29 @@ if ( getCookie( "divpopup03" ) == "check" ) {
         },
     });
   }
+
+  function bonusSubmit() {
+    var _token = $('#pointFrm _token').val();
+    var _dealsum = $('#pointFrm #pointAmount').val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/convert_deal_balance',
+        data: { _token: _token, summ: _dealsum },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert_error(data.msg);
+                return;
+            }
+            alert_ok_reload('수익금이 보유금으로 전환되었습니다.', '/');
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        }
+    });
+}
 
 
 
