@@ -794,53 +794,6 @@
 								</script>
 							</div>
 
-							<div class="mp-tab">
-								<div class="coupon-list">
-									<table class="bs-table coupon-tb">
-										<colgroup>
-											<col width="30%">
-											<col width="23%">
-											<col width="23%">
-											<col width="12%">
-											<col width="12%">
-										</colgroup>
-										<thead>
-										<tr>
-											<th>쿠폰</th>
-											<th>금액</th>
-											<th>유효일자</th>
-											<th>상태</th>
-											<th>사용하기</th>
-										</tr>
-										</thead>
-										<tbody>
-										<tr>
-											<td colspan="5">회원님께 발급된 쿠폰이 존재하지 않습니다.</td>
-										</tr>
-										</tbody>
-									</table>
-								</div>
-
-								<form id="couponFrm" action="javascript:useCoupon();" method="POST" data-parsley-validate="" novalidate="">
-								<div class="form-container">
-									<div class="form-group">
-										<div class="labels">
-											<p>쿠폰번호를 입력하세요.</p>
-										</div>
-										<div class="infos">
-											<input class="form-control" data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-maxlength="5" data-parsley-maxlength-message="5 자 이하로 입력하세요." placeholder="" name="couponnum" type="text" value="" data-parsley-id="4965"><ul class="parsley-errors-list" id="parsley-id-4965"></ul>
-										</div>
-									</div>
-									<div class="modal-btn-foot">
-										<div class="btn-cont">
-											<button type="submit" class="green">사용하기</button>
-											<button type="button" style="display: none;"></button>
-										</div>
-									</div>
-								</div>
-								</form>
-							</div>
-
 
 							<div class="mp-tab">
 								<form id="passwordChangeForm" action="javascript:goMypage();" method="POST" data-parsley-validate="" novalidate="">
