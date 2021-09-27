@@ -28,7 +28,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->route(config('app.admurl').'.user.list');
             }
-            $ids = auth()->user()->availableUsers();
+            $ids = auth()->user()->hierarchyUsersOnly();
             $availableShops = auth()->user()->availableShops();
 
             
