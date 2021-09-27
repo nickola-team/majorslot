@@ -176,7 +176,7 @@
 			$('input[name="dates"]').daterangepicker({
 				timePicker: true,
 				timePicker24Hour: true,
-				startDate: moment().format('YYYY-MM-DD 00:00'),
+				startDate: moment().subtract(1, 'hour'),
 				endDate: moment().add(0, 'day'),
 
 				locale: {
