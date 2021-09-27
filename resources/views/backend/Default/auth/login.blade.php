@@ -8,7 +8,7 @@
     <div class="login-logo">
     <a href="{{ route($admurl.'.dashboard') }}">
     @if (isset($site))
-      <img src="{{ url('/back/img/' . $site->frontend . '_logo.png') }}"></img>
+      <img src="{{ url('/back/img/' . $site->frontend . '_logo.png') }}" style="width:80%;"></img>
     @endif
     </a>
     </div>
