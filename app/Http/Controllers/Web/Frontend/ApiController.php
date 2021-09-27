@@ -259,8 +259,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $data['role_id'] = 1;
             $data['shop_id'] = $parent->shop_id;
             $data['parent_id'] = $parent->id;
-            $data['phone'] = $request->tel1 . '-' . $request->tel2 . '-' . $request->tel3;
-            
+            $data['phone'] = $request->tel1;
+            if ($request->tel2 != '') {
+                $data['phone'] = $data['phone'] . '-' . $request->tel2 ;
+            }
+            if ($request->tel3 != '') {
+                $data['phone'] = $data['phone'] . '-' . $request->tel3 ;
+            }
             
             $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();

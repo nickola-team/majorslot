@@ -167,7 +167,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">취소</button>
-						<button type="submit" class="btn btn-primary" id="btnAddSum">확인</button>
+						<button type="submit" class="btn btn-primary" id="btnAllow">확인</button>
 					</div>
 				</form>
 			</div>
@@ -193,7 +193,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">취소</button>
-						<button type="submit" class="btn btn-primary" id="btnOutSum">확인</button>
+						<button type="submit" class="btn btn-primary" id="btnReject">확인</button>
 					</div>
 				</form>
 			</div>
