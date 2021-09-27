@@ -40,16 +40,16 @@
 	@endif
 	@if($in_out_log->type == 'add' )
 	<td><span class="text-green">{{ number_format($in_out_log->sum,0) }}</span></td>
-	@if (Request::is('backend/in_out_history'))
+	@if (Request::is('*/in_out_history'))
 	<td></td>
 	@endif
 	@elseif($in_out_log->type == 'out' )
-	@if (Request::is('backend/in_out_history'))
+	@if (Request::is('*/in_out_history'))
 	<td></td>
 	@endif
 	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
 	@elseif($in_out_log->type == 'deal_out' )
-	@if (Request::is('backend/in_out_history'))
+	@if (Request::is('*/in_out_history'))
 	<td></td>
 	@endif
 	<td><span class="text-red">{{ number_format($in_out_log->sum,0) }}</span></td>
@@ -74,7 +74,7 @@
 	<td>{{ $in_out_log->recommender}}</td>
 	<td>{{ $in_out_log->created_at}}</td>
 	<td>{{ $in_out_log->updated_at}}</td>
-	@if (Request::is('backend/in_out_history'))
+	@if (Request::is('*/in_out_history'))
 	<td>
 		@if ($in_out_log->status==1)
 		<span class="text-green">승인</span>
