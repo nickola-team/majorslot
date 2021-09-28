@@ -315,36 +315,6 @@
                 </div>
               </div>
               <div class="container demo-2">
-                <div id="slider" class="sl-slider-wrapper">
-                  <div class="sl-slider" style="width: 100%; height: 392px">
-                    <div class="sl-slides-wrapper">
-                      <div
-                        class="sl-slide sl-slide-horizontal"
-                        data-orientation="horizontal"
-                        data-slice1-rotation="-25"
-                        data-slice2-rotation="-25"
-                        data-slice1-scale="2"
-                        data-slice2-scale="2"
-                        style="display: block"
-                      >
-                        <div
-                          class="sl-content-wrapper"
-                          style="width: 100%; height: 392px"
-                        >
-                          <div class="sl-content">
-                            <div class="sl-slide-inner">
-                              <div class="bg-img bg-img-1"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <nav id="nav-dots" class="nav-dots">
-                    <span class="nav-dot-current"></span><span></span
-                    ><span></span>
-                  </nav>
-                </div>
               </div>
             </div>
           </div>
@@ -438,7 +408,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/sky/images/partner.png" /><br /><br />Copyright ⓒ
-            2020~2021 스카이 슬롯 All rights reserved.
+            2020~2021 놀이터 슬롯 All rights reserved.
           </div>
          </div>
          <div>
