@@ -602,8 +602,26 @@ namespace VanguardLTE\Console
                     $this->error('Can not find original id of new category');
                     return;
                 }
-                $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
                 $data = $cat->toArray();
+
+                $sites = \VanguardLTE\WebSite::all()->pluck('id')->toArray();
+                foreach ($sites as $site)
+                {
+                    $sitecats = \VanguardLTE\Category::where('site_id', $site)->get();
+                    if (count($sitecats) > 0)
+                    {
+                        if (\VanguardLTE\Category::where(['shop_id'=>0,'original_id'=>$originalid,'site_id'=>$site])->first())
+                        {
+                            $this->info("Category already exist in " . $site . " site");
+                        }
+                        else
+                        {
+                            $data['site_id'] = $site;
+                            $site_cat = \VanguardLTE\Category::create($data);
+                        }
+                    }
+                }
+                $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
                 foreach ($shop_ids as $id)
                 {
                     if (\VanguardLTE\Category::where(['shop_id'=> $id, 'href' => $cat->href, 'provider' => $cat->provider])->first())
