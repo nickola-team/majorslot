@@ -323,7 +323,7 @@
         <div class="item">
           <div class="text-cont">
             <div class="inner">
-              <p class="title">황금섬에 오신것을</p>
+              <p class="title">황금성에 오신것을</p>
               <p class="sub">환영합니다.</p>
             </div>
           </div>
@@ -340,7 +340,7 @@
           <div class="text-cont">
             <div class="inner">
               <p class="title">매일매일 터지는 잭팟 !</p>
-              <p class="sub"> 황금섬과 함께하세요 !</p>
+              <p class="sub"> 황금성과 함께하세요 !</p>
             </div>
           </div>
         </div>
@@ -360,7 +360,7 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">황금섬 SLOT</span>
+      <span class="a_style">황금성 SLOT</span>
     </div>
 
     <div class="slot-container">
@@ -442,7 +442,7 @@
       </div>
     </div>
     <div class="copyright-cont">
-        <span>ⓒ COPYRIGHT  황금섬  2021 ALL RIGHTS RESERVED</span>
+        <span>ⓒ COPYRIGHT  황금성  2021 ALL RIGHTS RESERVED</span>
     </div>
 	</div>
 
