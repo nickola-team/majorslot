@@ -1325,9 +1325,16 @@ Route::group(['prefix' => 'png',], function () {
 });
 
 /**
- * Play'n Go Game Provider
+ * Evolution Game Provider
  */
 Route::group(['prefix' => 'evo',], function () {
 	Route::post('/rtne/{service}', 'GameProviders\EVOController@endpoint');
     Route::post('/live/{service}', 'GameProviders\EVOController@endpoint');
+});
+
+/**
+ * ATA Game Provider
+ */
+Route::group([ 'prefix' => 'ata',], function () {
+	Route::post('/api/{service}', 'GameProviders\ATAController@endpoint');
 });
