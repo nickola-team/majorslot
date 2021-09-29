@@ -48,9 +48,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
 
                 $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
-                $query = 'SELECT count(*) as online FROM w_sessions WHERE user_id in (' . implode(',', $ids) . ') AND last_activity>=' . $validTimestamp;
-                $qresult = \DB::select($query);
-                $online = $qresult[0]->online;
+                if (count($ids) > 0)
+                {
+                    $query = 'SELECT count(*) as online FROM w_sessions WHERE user_id in (' . implode(',', $ids) . ') AND last_activity>=' . $validTimestamp;
+                    $qresult = \DB::select($query);
+                    $online = $qresult[0]->online;
+                }
             }
             $stats = [
                 'total' => $this->users->count($ids), 
