@@ -67,7 +67,7 @@ namespace VanguardLTE\Console
             $schedule->call(function()
             {
                 $start_date = date("Y-m-d H:i:s",strtotime("-12 hours"));
-                //\VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->where('finished', 1)->delete();
+                \VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->where('finished', 1)->delete();
             })->hourly();
 
             $schedule->call(function()
