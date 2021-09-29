@@ -1149,6 +1149,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
             }
+            if ($requestuser->hasRole('user') && $requestuser->playing_game == 'pp')
+            {
+                return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
+            }
             if ($requestuser->hasRole('manager')) // for shops
             {
                 $shop = \VanguardLTE\Shop::lockforUpdate()->where('id', $transaction->shop_id)->get()->first();

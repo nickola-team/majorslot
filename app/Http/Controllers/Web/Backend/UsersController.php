@@ -1094,9 +1094,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
             }
 
-            if ($user->playing_game != null && $data['type'] != 'add')
+            if ($user->playing_game != null )
             {
-                return redirect()->back()->withErrors(['게임사 게임중에는 환전을 할수 없습니다.']);
+                return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
             }
 
             $summ = str_replace(',','',$request->summ);
