@@ -436,11 +436,28 @@
             </li>
             @endif
             @if (auth()->user()->isInoutPartner())
-            <li class="{{ Request::is('slot/notices*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.notice.list') }}">
-                    <i class="fa fa-bell"></i>
-                    <span>공지</span>
+            <li class="treeview {{ Request::is('slot/notices*') || Request::is('slot/messages*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-headphones fa-lg"></i>
+                    <span>고객센터</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
+                <ul class=" treeview-menu" id="stats-dropdown">
+                    <li class="{{ Request::is('slot/notices*') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.notice.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>공지</span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('slot/messages*') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.msg.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>쪽지함</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             @endif
         </ul>

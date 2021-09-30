@@ -961,35 +961,54 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
     ]);
 
 
-        /**
-         * notices routes
-         */
+    /**
+     * notices routes
+     */
 
-        Route::get('notices', [
-            'as' => 'backend.notice.list',
-            'uses' => 'NoticesController@index',
-        ]);
-        Route::get('notices/create', [
-            'as' => 'backend.notice.create',
-            'uses' => 'NoticesController@create',
-        ]);
-        Route::post('notices/create', [
-            'as' => 'backend.notice.store',
-            'uses' => 'NoticesController@store',
-        ]);
-        Route::get('notices/{notice}/edit', [
-            'as' => 'backend.notice.edit',
-            'uses' => 'NoticesController@edit',
-        ]);
-        Route::post('notices/{notice}/update', [
-            'as' => 'backend.notice.update',
-            'uses' => 'NoticesController@update',
-        ]);
-        Route::delete('notices/{notice}/delete', [
-            'as' => 'backend.notice.delete',
-            'uses' => 'NoticesController@delete',
-        ]);
+    Route::get('notices', [
+        'as' => 'backend.notice.list',
+        'uses' => 'NoticesController@index',
+    ]);
+    Route::get('notices/create', [
+        'as' => 'backend.notice.create',
+        'uses' => 'NoticesController@create',
+    ]);
+    Route::post('notices/create', [
+        'as' => 'backend.notice.store',
+        'uses' => 'NoticesController@store',
+    ]);
+    Route::get('notices/{notice}/edit', [
+        'as' => 'backend.notice.edit',
+        'uses' => 'NoticesController@edit',
+    ]);
+    Route::post('notices/{notice}/update', [
+        'as' => 'backend.notice.update',
+        'uses' => 'NoticesController@update',
+    ]);
+    Route::delete('notices/{notice}/delete', [
+        'as' => 'backend.notice.delete',
+        'uses' => 'NoticesController@delete',
+    ]);
+    /**
+     * messages routes
+     */
 
+    Route::get('messages', [
+        'as' => 'backend.msg.list',
+        'uses' => 'MessageController@index',
+    ]);
+    Route::get('messages/create', [
+        'as' => 'backend.msg.create',
+        'uses' => 'MessageController@create',
+    ]);
+    Route::post('messages/create', [
+        'as' => 'backend.msg.store',
+        'uses' => 'MessageController@store',
+    ]);
+    Route::delete('messages/{message}/delete', [
+        'as' => 'backend.msg.delete',
+        'uses' => 'MessageController@delete',
+    ]);
         /**
          * websites routes
          */

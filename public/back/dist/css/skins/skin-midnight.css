@@ -2,6 +2,18 @@
  * Skin: Midnight Dark theme
  * ------------
  */
+
+ .skin-midnight .swal2-popup{
+  background-color: #353c42 !important;
+}
+.skin-midnight .swal2-title {
+  color: #44def1 !important;
+}
+
+.skin-midnight .swal2-content {
+  color: #fff !important;
+}
+
  .skin-midnight .table-striped > tbody > tr  {
   background-color: transparent !important;
 }
@@ -9,6 +21,13 @@
   color: #fff;
   background-color: #3f6791;
   border-color: #3f6791;
+  box-shadow: none;
+}
+
+.skin-midnight .btn-secondary {
+  color: #fff;
+  background-color: #ecb368;
+  border-color: #f1c180;
   box-shadow: none;
 }
 

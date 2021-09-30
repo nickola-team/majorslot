@@ -605,6 +605,27 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         ]);
 
         /**
+     * messages routes
+     */
+
+    Route::get('messages', [
+        'as' => 'slot.msg.list',
+        'uses' => 'MessageController@index',
+    ]);
+    Route::get('messages/create', [
+        'as' => 'slot.msg.create',
+        'uses' => 'MessageController@create',
+    ]);
+    Route::post('messages/create', [
+        'as' => 'slot.msg.store',
+        'uses' => 'MessageController@store',
+    ]);
+    Route::delete('messages/{message}/delete', [
+        'as' => 'slot.msg.delete',
+        'uses' => 'MessageController@delete',
+    ]);
+
+        /**
          * websites routes
          */
 

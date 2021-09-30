@@ -384,11 +384,28 @@
 
             @endif
             @if (auth()->user()->isInoutPartner())
-            <li class="{{ Request::is('backend/notices*') ? 'active' : ''  }}">
-                <a href="{{ route($admurl.'.notice.list') }}">
-                    <i class="fa fa-bell"></i>
-                    <span>공지사항</span>
+            <li class="dropdown {{ Request::is('backend/notices*') || Request::is('backend/messages*') ? 'active' : '' }}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-headphones fa-lg"></i>
+                    <span>고객센터</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="{{ Request::is('backend/notices*') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.notice.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>공지사항</span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/messages*') ? 'active' : ''  }}">
+                        <a href="{{ route($admurl.'.msg.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>쪽지함</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             @endif
 
