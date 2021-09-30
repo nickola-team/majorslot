@@ -1387,6 +1387,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             ]);
            return redirect()->back()->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }
+        public function readMessage(\Illuminate\Http\Request $request)
+        {
+            $msg = \VanguardLTE\Message::where('id', $request->id)->first();
+            if ($msg && $msg->read_at == null)
+            {
+                $msg->update(['read_at' => \Carbon\Carbon::now()]);
+            }
+            return response()->json(['error' => 0]);
+        }
+        public function deleteMessage(\Illuminate\Http\Request $request)
+        {
+            $msg = \VanguardLTE\Message::where('id', $request->id)->first();
+            if ($msg && $msg->read_at != null)
+            {
+                $msg->delete();
+                return response()->json(['error' => 0]);
+            }
+            return response()->json(['error' => 1]);
+        }
+        
 
         public function sitegamelink(\Illuminate\Http\Request $request)
         {

@@ -338,6 +338,14 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.withdraw',
         'uses' => 'ApiController@withdraw',
     ]);
+    Route::post('api/readMsg', [
+        'as' => 'frontend.api.readmsg',
+        'uses' => 'ApiController@readMessage',
+    ]);
+    Route::post('api/deleteMsg', [
+        'as' => 'frontend.api.deletemsg',
+        'uses' => 'ApiController@deleteMessage',
+    ]);
     Route::post('api/deal_withdraw', [
         'as' => 'frontend.api.deal_withdraw',
         'uses' => 'ApiController@withdrawDealMoney',

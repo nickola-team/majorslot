@@ -137,13 +137,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
             $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
-
+            $msgs = null;
+            $unreadmsg = 0;
             if ($notice==null || $shop_id != 0) { //it is logged in
                 $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
+                $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
+                $unreadmsg = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->whereNull('read_at')->count();
             }
-
-
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice'));
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'msgs','unreadmsg'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {

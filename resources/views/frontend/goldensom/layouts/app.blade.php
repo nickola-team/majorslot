@@ -133,8 +133,13 @@
         <div class="link-main">
           <ul class="bs-ul">
             @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+            @if ($unreadmsg>0)
+            <li class="deposit-link ">
+               <a href="javascript:void(0);"  onclick="alert_error('쪽지를 확인하세요.');">
+            @else
             <li class="deposit-link subpg-link">
               <a href="javascript:void(0);">
+            @endif
             @else
             <li class="deposit-link ">
                <a href="javascript:void(0);"  onclick="alert_error('로그인이 필요합니다.');">
@@ -147,8 +152,13 @@
             </li>
            
             @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+            @if ($unreadmsg>0)
+            <li class="deposit-link ">
+               <a href="javascript:void(0);"  onclick="alert_error('쪽지를 확인하세요.');">
+            @else
             <li class="withdraw-link subpg-link">
               <a href="javascript:void(0);" >
+            @endif
             @else
             <li class="withdraw-link ">
                <a href="javascript:void(0);"  onclick="alert_error('로그인이 필요합니다.');">
@@ -265,7 +275,7 @@
                   <div class="al-cont btn-grp">
                     <button class="blue message message-btn" data-toggle="modal" data-target=".mypageModal">
                       <i class="fa fa-envelope"></i> 쪽지
-                      {{-- <span class="mess-count" style="animation: letter_anim 0s linear infinite;">0</span> --}}
+                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;">{{count($msgs)}}</span>
                     </button>
                     <button class="logout-btn red" onclick="goLogout();"><i class="fa fa-sign-out-alt"></i> 로그아웃</button>
                   </div>
@@ -371,7 +381,11 @@
 					&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
 
           @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-          <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+            @if ($unreadmsg>0)
+            <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('쪽지를 확인하세요.');">
+            @else
+            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+            @endif
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('로그인이 필요합니다');">
           @endif
@@ -723,17 +737,46 @@
 
 							<div class="mp-tab">
 								<table class="bs-table with-depth">
+                <colgroup>
+                  <col width="55%">
+                  <col width="25%">
+                  <col width="10%">
+                  <col width="10%">
+                </colgroup>
 									<thead>
 										<tr>
-											<th colspan="6"><i class="icon icon-Info"></i> 기본</th>
+											<th>제목</th>
+                      <th>작성일</th>
+                      <th>작성자</th>
+                      <th></th>
 										</tr>
 									</thead>
 									<tbody class="message-list">
-										<tr class="depth-click">
-											<td class="title-td" style="text-align: center; padding: 12px 0 12px 0;">
-												데이터가 없습니다.
-											</td>
-										</tr>
+                    @if (count($msgs) > 0)
+                    @foreach ($msgs as $msg)
+                      <tr  class="depth-click" onclick="readMessage('{{$msg->id}}')">
+                        <td>{{$msg->title}}</td>
+                        <td>{{$msg->created_at}}</td>
+                        <td>{{$msg->writer->hasRole('admin')?'어드민':'총본사'}}</td>
+                        <td>
+                        <button type="button" class="delete-btn" onclick="deleteMessage('{{$msg->id}}')" style="background:transparent;border:none;"><i class="icon icon-Delete"></i></button>
+                        </td>
+                      </tr>
+                      <tr class="dropdown">
+                      <td colspan="4">
+                        <div class="mess-cont" style="display: none;">
+                          <div class="inner">
+                            <?php echo $msg->content ?>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    @endforeach
+                    @else
+                      <tr class="depth-click">
+                      <td class="text-center" colspan="3">쪽지가 없습니다.</td>
+                      </tr>
+                    @endif
 									</tbody>
 								</table>
 							</div>
@@ -1575,9 +1618,7 @@ if ( getCookie( "divpopup03" ) == "check" ) {
     if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
       $("#notification").hide();
     }
-
-   
-  })
+  });
 
   
 <!--
