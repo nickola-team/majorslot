@@ -774,6 +774,16 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
+            if ($this->happyhouruser)
+            {
+                $bonus_spin = rand(1, 10);
+                $spin_percent = 5;
+                if ($garantType == 'freespin')
+                {
+                    $spin_percent = 3;
+                }
+                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;

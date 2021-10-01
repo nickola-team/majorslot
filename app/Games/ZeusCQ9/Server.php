@@ -5,7 +5,7 @@ namespace VanguardLTE\Games\ZeusCQ9
     class Server
     {
         public $winLines = [];
-        public function get($request, $game) // changed by game developer
+        public function get($request, $game, $userId) // changed by game developer
         {
             /*if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
             {
@@ -26,9 +26,14 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $response = '{"responseEvent":"error","responseType":"error","serverResponse":"Error LicenseDK"}';
                 exit( $response );
             }*/
+            
             $response = '';
             \DB::beginTransaction();
-            $userId = \Auth::id();// changed by game developer
+            if( $userId == null ) 
+            {
+            	$response = 'unlogged';
+                exit( $response );
+            }
             
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
