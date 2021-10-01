@@ -1075,6 +1075,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public static function getgamelink($gamecode)
         {
+            if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') )
+            {
+                $url = CQ9Controller::makegamelink($gamecode);
+                return ['error' => false, 'data' => ['url' => $url]];
+            }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.cq9.render', $gamecode)]];
         }
         public static function makegamelink($gamecode)
