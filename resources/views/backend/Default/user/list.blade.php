@@ -147,6 +147,9 @@
 								<th>@lang('app.pay_in')</th>
 								<th>@lang('app.pay_out')</th>
 								<th>딜비전환</th>
+								@if (auth()->user()->isInoutPartner())
+								<th>쪽지</th>
+								@endif
 								@endpermission
 
 							</tr>
@@ -180,6 +183,9 @@
 								<th>@lang('app.pay_in')</th>
 								<th>@lang('app.pay_out')</th>
 								<th>딜비전환</th>
+								@if (auth()->user()->isInoutPartner())
+								<th>쪽지</th>
+								@endif
 							</tr>
 							</thead>
 						</table>

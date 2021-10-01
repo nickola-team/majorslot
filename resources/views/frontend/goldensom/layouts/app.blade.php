@@ -275,7 +275,7 @@
                   <div class="al-cont btn-grp">
                     <button class="blue message message-btn" data-toggle="modal" data-target=".mypageModal">
                       <i class="fa fa-envelope"></i> 쪽지
-                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;">{{count($msgs)}}</span>
+                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;">{{$unreadmsg}}</span>
                     </button>
                     <button class="logout-btn red" onclick="goLogout();"><i class="fa fa-sign-out-alt"></i> 로그아웃</button>
                   </div>

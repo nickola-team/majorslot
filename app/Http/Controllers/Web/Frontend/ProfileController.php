@@ -40,6 +40,21 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return view('frontend.'.$frontend.'.layouts.dealout');
         }
 
+        public function mypage(\Illuminate\Http\Request $request)
+        {
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $frontend = '';
+            if ($site)
+            {
+                $frontend = $site->frontend;
+            }
+            $msgs = [];
+            $unreadmsg = 0;
+            $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
+            $unreadmsg = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->whereNull('read_at')->count();
+            return view('frontend.'.$frontend.'.layouts.mypage', compact('msgs','unreadmsg'));
+        }
+
         public function updateDetails(\VanguardLTE\Http\Requests\User\UpdateProfileDetailsRequest $request)
         {
             $this->users->update($this->theUser->id, $request->except('role_id', 'status'));

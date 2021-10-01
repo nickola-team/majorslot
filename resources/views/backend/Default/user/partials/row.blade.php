@@ -70,5 +70,10 @@
 		@endif
 	</td>
     @endpermission
+	@if (auth()->user()->isInoutPartner())
+	<td>
+	<a href="{{ route($admurl.'.msg.create') }}?to={{$user->username}}"><button type="button" class="btn btn-block btn-primary btn-xs">보내기</button></a>
+	</td>
+	@endif
 
 </tr>

@@ -1002,3 +1002,98 @@
 .subcontent .main-img {
     width: 185px;
 }
+
+/* -- BS Table -- */
+
+.bs-table {
+    width: 100%;
+    float: left;
+}
+
+.bs-table thead {
+    background-color: rgba(0, 0, 0, 0.5)
+}
+
+.bs-table thead th {
+    height: 40px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+}
+
+.bs-table thead th:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.bs-table thead th:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+.bs-table tr td {
+    height: 44px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    padding: 1px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.bs-table tr:hover td {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #29d6d6;
+}
+
+.bs-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.bs-table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 5px;
+}
+
+.bs-table tbody tr:last-child td:last-child {
+    border-radius: 0 0 5px 0;
+}
+
+.bs-table tr td.count {
+    width: 10%;
+}
+
+.bs-table tr td.title {
+    text-align: left;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.bs-table tr td.date {
+    width: 20%;
+    font-size: 14px;
+}
+
+.bs-table tr td.red {
+    color: #fea304;
+}
+
+.bs-table td .level-txt {
+    display: inline-block;
+    width: 45px;
+    text-align: left;
+}
+
+.bs-table tr td a {
+    color: #fff;
+    font-size: 14px;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.bs-table tr:hover td a {
+    color: #29d6d6;
+}
+
+.bs-table tr td .inner {
+    border : 1px solid rgba(16, 141, 213, 0.5);
+    width:calc(100% - 20px);
+}
+

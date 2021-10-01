@@ -121,6 +121,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.profile.dealout',
         'uses' => 'ProfileController@dealout'
     ]);
+    Route::get('profile/mypage', [
+        'as' => 'frontend.profile.mypage',
+        'uses' => 'ProfileController@mypage'
+    ]);
  
     // Route::get('profile/activity', [
     //     'as' => 'frontend.profile.activity',

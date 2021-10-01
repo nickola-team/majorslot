@@ -56,7 +56,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function delete(\VanguardLTE\Message $message)
         {
-            \VanguardLTE\Message::where('id', $message->id)->delete();
+            $msg = \VanguardLTE\Message::where('id', $message->id);
+            if ($msg && $msg->user_id != 0){
+                $msg->delete();
+            }
             return redirect()->route(config('app.admurl').'.msg.list')->withSuccess('쪽지가 삭제되었습니다.');
         }
     }
