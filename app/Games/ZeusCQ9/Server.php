@@ -527,7 +527,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = $result_val['Multiple'];
-                $wager['base_game_win']         = $result_val['BaseWin'];
+                $wager['base_game_win']         = $result_val['TotalWin'];
                 $wager['win_over_limit_lock']   = 0;
                 $wager['game_type']             = 0;
                 $wager['win_type']              = $result_val['WinType'];
