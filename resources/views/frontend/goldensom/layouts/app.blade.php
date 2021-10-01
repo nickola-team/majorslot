@@ -752,7 +752,7 @@
 										</tr>
 									</thead>
 									<tbody class="message-list">
-                    @if (count($msgs) > 0)
+                    @if ($msgs && count($msgs) > 0)
                     @foreach ($msgs as $msg)
                       <tr  class="depth-click" onclick="readMessage('{{$msg->id}}')">
                         <td>{{$msg->title}}</td>
