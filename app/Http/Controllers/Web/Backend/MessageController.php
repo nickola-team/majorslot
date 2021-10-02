@@ -56,7 +56,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function delete(\VanguardLTE\Message $message)
         {
-            $msg = \VanguardLTE\Message::where('id', $message->id);
+            $msg = \VanguardLTE\Message::where('id', $message->id)->first();
             if ($msg && $msg->user_id != 0){
                 $msg->delete();
             }
