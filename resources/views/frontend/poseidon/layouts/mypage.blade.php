@@ -34,7 +34,7 @@
 <div class="subcontent" id="deposit">
 	<div id="sub_box">
 		<div id="sub_title"><img src="/frontend/poseidon/img/mypage_title.png" /></div>
-<!--		<div id="data_box">
+		<div id="data_box">
 			<div class="txt text01"> 가입정보 안내</div>
 			<div class="dbox0">
 				<table class="table100" border="0" cellspacing="0" cellpadding="0">
@@ -42,25 +42,9 @@
 						<td width="130" class="line2">아이디</td>
 						<td class="line2">{{auth()->user()->username}}</td>
 					</tr>
-					<tr>
-						<td width="130" class="line2">현재비밀번호</td>
-						<td class="line4"><input type="password" name="cur_pwd" id="cur_pwd" style="width:120px; height:15px" />
-						* 현재 사용하고 계시는 비밀번호를 입력하세요.</td>
-					</tr>
-					<tr>
-						<td class="line2">새로운 비밀번호</td>
-						<td class="line4"><input type="password" name="new_pwd" id="new_pwd" style="width:120px; height:15px" />
-						* 새로운 비밀번호를 입력하세요.</td>
-					</tr>
-					<tr>
-						<td class="line2">새로운비밀번호 확인</td>
-						<td class="line4"><input type="password" name="new_pwd_confirm" id="new_pwd_confirm" style="width:120px; height:15px" />
-						* 새로운 비밀번호를 다시 한번 입력하세요.</td>
-					</tr>
 				</table>
 			</div>
-			<div class="btn"><a href="#" onclick="updateMyInfo();"><img src="/frontend/poseidon/img/infochange_btn.gif" border="0" /></a></div>
-		</div> -->
+		</div>
 
 		<div id="data_box">
 		<div class="txt text01"> 쪽지함</div>

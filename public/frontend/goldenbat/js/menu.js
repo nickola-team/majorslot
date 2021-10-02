@@ -475,46 +475,10 @@ function goIdSearch() {
 
 function goMypage() {
     if (loginYN == "Y") {
-        var strHtml = `
-        <div class="subcontent">
-
-	<div id="sub_box">
-		<div id="sub_title"><img src="/frontend/goldenbat/img/mypage_title.png" /></div>
-		<div id="data_box">
-			<div class="txt text01"> 가입정보 안내</div>
-			<div class="dbox0">
-				<table class="table100" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-						<td width="130" class="line2">아이디</td>
-						<td class="line2">${userName}</td>
-					</tr>
-					<tr>
-						<td width="130" class="line2">현재비밀번호</td>
-						<td class="line4"><input type="password" name="cur_pwd" id="cur_pwd" style="width:120px; height:15px" />
-						* 현재 사용하고 계시는 비밀번호를 입력하세요.</td>
-					</tr>
-					<tr>
-						<td class="line2">새로운 비밀번호</td>
-						<td class="line4"><input type="password" name="new_pwd" id="new_pwd" style="width:120px; height:15px" />
-						* 새로운 비밀번호를 입력하세요.</td>
-					</tr>
-					<tr>
-						<td class="line2">새로운비밀번호 확인</td>
-						<td class="line4"><input type="password" name="new_pwd_confirm" id="new_pwd_confirm" style="width:120px; height:15px" />
-						* 새로운 비밀번호를 다시 한번 입력하세요.</td>
-					</tr>
-				</table>
-			</div>
-			<div class="btn"><a href="#" onclick="updateMyInfo();"><img src="/frontend/goldenbat/img/infochange_btn.gif" border="0" /></a></div>
-		</div>
-
-	</div>
-</div>`;
-
         TINY.box.show({
-            html: strHtml,
+            iframe: "/profile/mypage",
             width: 955,
-            height: 570,
+            height: 500,
         });
     } else {
         showLoginAlert();
@@ -798,4 +762,43 @@ function updateMyInfo() {
             alert(err.responseText);
         },
     });
+}
+
+
+function readMessage(idx)
+{
+    if ($("#msgcontent"+idx).is(":visible"))
+    {
+        $("#msgcontent"+idx).hide();
+    }
+    else
+    {
+        $("#msgcontent"+idx).show();
+    }
+
+    $.ajax({
+        url: "/api/readMsg",
+        type: 'POST',
+        data: { id: idx },
+        dataType: 'html',
+        headers: {},
+        success: function(data) {},
+        error: function(xhr, status, error) {},
+        complete: function() {}
+    });
+}
+
+function deleteMessage(idx)
+{
+    if (confirm('쪽지를 삭제하시겠습니까?\n삭제후 복구불가합니다.') == true) {
+        $.ajax({
+            url: "/api/deleteMsg",
+            type: "POST",
+            data: { id: idx },
+            dataType: "html",
+            success: function(t) {
+                location.reload();
+            }
+        });
+    }
 }

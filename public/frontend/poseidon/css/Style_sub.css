@@ -488,7 +488,7 @@
 }
 
 .subcontent .text01 {
-    font-size: 14px;
+    font-size: 18px;
     /*color:#93dbff;*/
     color: #fff;
     font-weight: bold
@@ -1004,12 +1004,6 @@
 }
 
 /* -- BS Table -- */
-
-.bs-table {
-    width: 100%;
-    float: left;
-}
-
 .bs-table thead {
     background-color: rgba(0, 0, 0, 0.5)
 }
