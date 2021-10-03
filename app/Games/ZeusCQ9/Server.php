@@ -305,7 +305,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                 {
                     break;
                 }
-                if( $scatterReelNumberCount >= 3 && ($winType != 'bonus' || $scatterReelNumberCount != $defaultScatterCount || ($totalWin - $scatterWin) == 0)) 
+                if( $scatterReelNumberCount >= 3 && ($winType != 'bonus' || $scatterReelNumberCount != $defaultScatterCount) 
                 {
                 }
                 else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
