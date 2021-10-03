@@ -79,7 +79,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                             }
                             $result_val['DenomDefine'] = $denomDefine;
                             $result_val['BetButton'] = $betButtons;
-                            $result_val['DefaultDenomIdx'] = 5;
+                            $result_val['DefaultDenomIdx'] = 4;
                             $result_val['MaxBet'] = $slotSettings->Bet[count($slotSettings->Bet) - 1];
                             $result_val['MaxLine'] = 1;
                             $result_val['WinLimitLock'] = 3000000000;
