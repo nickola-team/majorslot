@@ -52,6 +52,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BaseWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ScatterWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
@@ -131,7 +132,8 @@ namespace VanguardLTE\Games\ZeusCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'ScatterWin', 0);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'ScatterWin', 0);                                
+                                $slotSettings->SetGameData($slotSettings->slotId . 'BaseWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
@@ -158,7 +160,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                             //     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin'));
                             // }
                             if($packet_id == 41){
-                                $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin'));
+                                $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin') - $slotSettings->GetGameData($slotSettings->slotId . 'BaseWin'));
                                 $result_val['PlayerBet'] = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                                 $result_val['AccumlateWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                                 $result_val['AccumlateJPAmt'] = 0;
@@ -174,7 +176,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                             }
                         }else if($packet_id == 43){
-                            $result_val['TotalWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                            $result_val['TotalWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $slotSettings->GetGameData($slotSettings->slotId . 'BaseWin');
                             $result_val['ScatterPayFromBaseGame'] = $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin');
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
@@ -303,7 +305,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                 {
                     break;
                 }
-                if( $scatterReelNumberCount >= 3 && ($winType != 'bonus' || $scatterReelNumberCount != $defaultScatterCount)) 
+                if( $scatterReelNumberCount >= 3 && ($winType != 'bonus' || $scatterReelNumberCount != $defaultScatterCount || ($totalWin - $scatterWin) == 0)) 
                 {
                 }
                 else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
@@ -433,7 +435,10 @@ namespace VanguardLTE\Games\ZeusCQ9
             }
 
             if($slotEvent != 'freespin' && $scatterReelNumberCount >= 3){
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+                // $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+                
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $scatterWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'BaseWin', $totalWin - $scatterWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
             }
             return $result_val;
