@@ -305,7 +305,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                 {
                     break;
                 }
-                if( $scatterReelNumberCount >= 3 && ($winType != 'bonus' || $scatterReelNumberCount != $defaultScatterCount) )
+                if( $scatterReelNumberCount >= 3 && ($winType != 'bonus' || $scatterReelNumberCount != $defaultScatterCount || $totalWin == $scatterWin) )
                 {
                 }
                 else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
@@ -431,7 +431,7 @@ namespace VanguardLTE\Games\ZeusCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isEnd == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $result_val['GamePlaySerialNumber']);
+                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $slotSettings->GetGameData($slotSettings->slotId . 'BaseWin') , $slotEvent, $result_val['GamePlaySerialNumber']);
             }
 
             if($slotEvent != 'freespin' && $scatterReelNumberCount >= 3){
@@ -480,12 +480,12 @@ namespace VanguardLTE\Games\ZeusCQ9
             }
             if($slotEvent == 'freespin'){
                 $log = $slotSettings->GetGameData($slotSettings->slotId . 'GameLog');
-                $log['actionlist'][1]['amount']     = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $log['actionlist'][1]['amount']     = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $slotSettings->GetGameData($slotSettings->slotId . 'BaseWin');
                 $log['actionlist'][1]['eventtime']  = $currentTime;
                 
                 $log['detail']['wager']['order_time']   = $currentTime;
                 $log['detail']['wager']['end_time']     = $currentTime;
-                $log['detail']['wager']['total_win']    = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $log['detail']['wager']['total_win']    = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $slotSettings->GetGameData($slotSettings->slotId . 'BaseWin');
 
                 $proof['lock_position']         = $result_val['LockPos'];
 
