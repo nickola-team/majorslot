@@ -491,7 +491,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $resultdata = null;
             try {
-                $response = Http::asForm()->post(config('app.ata_api') . '/launchClient.html', $data);
+                $response = Http::post(config('app.ata_api') . '/launchClient.html', $data);
                 if (!$response->ok())
                 {
                     return null;
@@ -506,7 +506,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if ($resultdata['code'] == 0)
                 {
-                    return $result['data']['launchurl'];
+                    return $resultdata['data']['launchurl'];
                 }
             }
             return null;
