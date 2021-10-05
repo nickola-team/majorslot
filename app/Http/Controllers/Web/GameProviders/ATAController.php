@@ -28,7 +28,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $microstr;
         }
 
-        public function sign()
+        public static function sign()
         {
             return md5(config('app.ata_toporg') . config('app.ata_org') . config('app.ata_key'));
         }
@@ -429,7 +429,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = [
                 'topOrg' => config('app.ata_toporg'),
                 'org' => config('app.ata_org'),
-                'sign' => $this->sign(),
+                'sign' => ATAController::sign(),
                 'type' => $href
             ];
             $resultdata = null;
