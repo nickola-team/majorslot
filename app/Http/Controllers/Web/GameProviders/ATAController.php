@@ -20,6 +20,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $code;
         }
 
+        public function getGameObj($cat4)
+        {
+            $categories = \VanguardLTE\Category::where(['provider' => 'ata', 'shop_id' => 0, 'site_id' => 0])->get();
+            $gamelist = [];
+            foreach ($categories as $category)
+            {
+                $gamelist = ATAController::getgamelist($category->href);
+                if (count($gamelist) > 0 )
+                {
+                    foreach($gamelist as $game)
+                    {
+                        if ($game['name'] == $cat4)
+                        {
+                            $game['cat_id'] = $category->original_id;
+                            return $game;
+                            break;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
 
         public function microtime_string()
         {
@@ -161,19 +184,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
             $user->save();
 
+            $gameObj = $this->getGameObj($cat4);
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => floatval($amount), 
                 'win' => 0, 
-                'game' => $cat4 . '_' . $cat1, 
+                'game' => $gameObj['name'] . '_' . $gameObj['href'], 
                 'type' => 'slot',
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => $gameObj['cat_id'],
+                'game_id' => $gameObj['gamecode'],
+                'roundid' => 0,
+
             ]);
 
             $req = $request->all();
@@ -225,20 +254,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
             $user->save();
 
+            $gameObj = $this->getGameObj($data->cat4);
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($amount), 
-                'game' => $data->cat4 . '_' . $data->cat1 . ' refund', 
+                'game' => $gameObj['name'] . '_' . $gameObj['href'] . ' refund', 
                 'type' => 'slot',
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => $gameObj['cat_id'],
+                'game_id' => $gameObj['gamecode'],
+                'roundid' => 0,
             ]);
 
             $record->update(['refund' => 1]);
@@ -279,19 +312,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
                 $user->save();
 
+                $gameObj = $this->getGameObj($cat4);
+
                 \VanguardLTE\StatGame::create([
                     'user_id' => $user->id, 
                     'balance' => floatval($user->balance), 
                     'bet' => 0, 
                     'win' => floatval($amount), 
-                    'game' => $cat4 . '_' . $cat1, 
+                    'game' => $gameObj['name'] . '_' . $gameObj['href'], 
                     'type' => 'slot',
                     'percent' => 0, 
                     'percent_jps' => 0, 
                     'percent_jpg' => 0, 
                     'profit' => 0, 
                     'denomination' => 0, 
-                    'shop_id' => $user->shop_id
+                    'shop_id' => $user->shop_id,
+                    'category_id' => $gameObj['cat_id'],
+                    'game_id' => $gameObj['gamecode'],
+                    'roundid' => 0,
                 ]);
             }
 
@@ -332,19 +370,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
                 $user->save();
 
+                $gameObj = $this->getGameObj($cat4);
+
                 \VanguardLTE\StatGame::create([
                     'user_id' => $user->id, 
                     'balance' => floatval($user->balance), 
                     'bet' => 0, 
                     'win' => floatval($amount), 
-                    'game' => $cat4 . '_' . $cat1, 
+                    'game' => $gameObj['name'] . '_' . $gameObj['href'], 
                     'type' => 'slot',
                     'percent' => 0, 
                     'percent_jps' => 0, 
                     'percent_jpg' => 0, 
                     'profit' => 0, 
                     'denomination' => 0, 
-                    'shop_id' => $user->shop_id
+                    'shop_id' => $user->shop_id,
+                    'category_id' => $gameObj['cat_id'],
+                    'game_id' => $gameObj['gamecode'],
+                    'roundid' => 0,
                 ]);
             }
             return [
@@ -384,19 +427,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
             $user->save();
 
+            $gameObj = $this->getGameObj($cat4);
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => floatval($amount), 
-                'game' => $cat4 . '_' . $cat1 . ' bonus', 
+                'game' => $gameObj['name'] . '_' . $gameObj['href'] . ' bonus', 
                 'type' => 'slot',
                 'percent' => 0, 
                 'percent_jps' => 0, 
                 'percent_jpg' => 0, 
                 'profit' => 0, 
                 'denomination' => 0, 
-                'shop_id' => $user->shop_id
+                'shop_id' => $user->shop_id,
+                'category_id' => $gameObj['cat_id'],
+                'game_id' => $gameObj['gamecode'],
+                'roundid' => 0,
             ]);
 
             return [
@@ -457,6 +505,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if (in_array($game['GameType'] , $slotgameString) && $game['GameStatus'] == 1){ // need to check the string
                         $gameList[] = [
                             'provider' => 'ata',
+                            'href' => $href,
                             'gamecode' => $game['GameId'],
                             'name' => $game['LogPara'],
                             'title' => __('gameprovider.'.$game['GameName']),
