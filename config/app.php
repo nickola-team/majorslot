@@ -159,7 +159,7 @@ return [
     'ata_api' => env('ATA_API', 'https://seamless-stage.248ka.com/restless'),
     'ata_toporg' => env('ATA_TOPORG', 'MajorGroup'),
     'ata_org' => env('ATA_ORG', 'major'),
-    'ata_sign' => env('ATA_SIGN', 'test'),
+    'ata_key' => env('ATA_KEY', 'test'),
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
