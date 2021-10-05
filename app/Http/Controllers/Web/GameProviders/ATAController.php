@@ -273,25 +273,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 1000,
                 ];
             }
-            
 
-            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
-            $user->save();
+            if ($amount > 0)
+            {
+                $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+                $user->save();
 
-            \VanguardLTE\StatGame::create([
-                'user_id' => $user->id, 
-                'balance' => floatval($user->balance), 
-                'bet' => 0, 
-                'win' => floatval($amount), 
-                'game' => $cat4 . '_' . $cat1, 
-                'type' => 'slot',
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
-                'shop_id' => $user->shop_id
-            ]);
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => floatval($user->balance), 
+                    'bet' => 0, 
+                    'win' => floatval($amount), 
+                    'game' => $cat4 . '_' . $cat1, 
+                    'type' => 'slot',
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id
+                ]);
+            }
 
             return [
                 'code' => 0,
@@ -325,26 +327,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 1000,
                 ];
             }
-            
+            if ($amount > 0)
+            {
+                $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+                $user->save();
 
-            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
-            $user->save();
-
-            \VanguardLTE\StatGame::create([
-                'user_id' => $user->id, 
-                'balance' => floatval($user->balance), 
-                'bet' => 0, 
-                'win' => floatval($amount), 
-                'game' => $cat4 . '_' . $cat1, 
-                'type' => 'slot',
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
-                'shop_id' => $user->shop_id
-            ]);
-
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => floatval($user->balance), 
+                    'bet' => 0, 
+                    'win' => floatval($amount), 
+                    'game' => $cat4 . '_' . $cat1, 
+                    'type' => 'slot',
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id
+                ]);
+            }
             return [
                 'code' => 0,
                 'data' => [
