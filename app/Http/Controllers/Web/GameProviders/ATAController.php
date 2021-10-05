@@ -477,7 +477,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $key = [
+            $data = [
                 'loginname' => $user->id,
                 'key' => $user->api_token,
                 'currency' => 'KRW',
