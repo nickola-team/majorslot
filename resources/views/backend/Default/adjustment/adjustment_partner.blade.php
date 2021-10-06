@@ -48,6 +48,9 @@
 			</div>
 		</form>
 
+		@if (auth()->user()->isInoutPartner())
+		@else
+
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">
@@ -76,6 +79,7 @@
 						<input type="text" class="form-control" value="{{ number_format($deal_balance,0) }}원" disabled>
 					</div>
 				</div>
+				
 				@if ($ggr_percent > 0)
 				<div class="col-md-3">
 					<div class="form-group">
@@ -92,6 +96,7 @@
 				@endif
             </div>			
 		</div>
+		@endif
 
 		<div class="box box-primary">
 			<div class="box-header with-border">
