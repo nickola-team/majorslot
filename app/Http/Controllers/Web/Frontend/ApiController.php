@@ -1005,7 +1005,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json([
                     'error' => false, 
-                    'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ]',
+                    'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender,
                 ], 200);
             }
         }
