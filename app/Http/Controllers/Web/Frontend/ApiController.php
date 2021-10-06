@@ -853,6 +853,154 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             ], 200);
         }
 
+        public function depositAccount(\Illuminate\Http\Request $request){
+            $amount = $request->money;
+            $account = $request->account;
+            $user = auth()->user();
+            if (!$user)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '로그인이 필요합니다.',
+                    'code' => '001'
+                ], 200);
+            }
+            if ($amount == 0)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '충전금액을 입력하세요',
+                    'code' => '002'
+                ], 200);
+            }
+
+            if ($account == '')
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '입금자명을 입력하세요',
+                    'code' => '003'
+                ], 200);
+            }
+            $master = $user->referral;
+            while ($master!=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            if (!$master)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '본사를 찾을수 없습니다.',
+                    'code' => '001'
+                ], 200);
+            }
+            if ($master->bank_name == 'PAYWIN') // 가상계좌
+            {
+                //상품조회
+                try {
+                    $data = [
+                        'sellerId' => "mir",
+                    ];
+                    $response = Http::withBody(json_encode($data), 'application/json')->post('http://api.paywin.co.kr/api/markerSellerInfo');
+                    if ($response->ok())
+                    {
+                        $data = $response->json();
+                        $product = null;
+                        if ($data['resultCode'] == '0000')
+                        {
+                            foreach ($data['productList'] as $p)
+                            {
+                                if ($p['p_price'] == $amount)
+                                {
+                                    $product = $p;
+                                    break;
+                                }
+                            }
+                            if ($product != null)
+                            {
+                                //계좌발급 요청
+                                $data = [
+                                    'm_id' => $user->id,
+                                    'm_name' => $account,
+                                    'p_seq' => $product['p_seq'],
+                                    'mid' => $master->account_no
+                                ];
+                                $response = Http::withBody(json_encode($data), 'application/json')->post('http://api.paywin.co.kr/api/markerBuyProduct');
+                                if ($response->ok())
+                                {
+                                    $data = $response->json();
+                                    if ($data['resultCode'] == '0000')
+                                    {
+                                        return response()->json([
+                                            'error' => false, 
+                                            'msg' => $data['orderVO']['o_sender_bank_name'] . ' [ ' .$data['orderVO']['o_virtual_account']. ' ]',
+                                        ], 200);
+                                    }
+                                    else //가상계좌 발급 실패
+                                    {
+                                        return response()->json([
+                                            'error' => true, 
+                                            'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                                            'code' => 001
+                                        ], 200);
+                                    }
+                                }
+                                else //가상계좌 발급 실패
+                                {
+                                    return response()->json([
+                                        'error' => true, 
+                                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                                        'code' => 001
+                                    ], 200);
+                                }
+
+                            }
+                            else //매칭되는 금액 상품 없음
+                            {
+                                return response()->json([
+                                    'error' => true, 
+                                    'msg' => '입금금액은 1만원단위로 최대 199만원까지 가능합니다.',
+                                    'code' => 002
+                                ], 200);
+                            }
+                        }
+                        else //상품조회 실패
+                        {
+                            return response()->json([
+                                'error' => true, 
+                                'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                                'code' => 001
+                            ], 200);
+                        }
+                    }
+                    else //상품조회 실패
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                            'code' => 001
+                        ], 200);
+                    }
+                }
+                catch (Exception $ex)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                        'code' => 001
+                    ], 200);
+                }
+            }
+            else
+            {
+                return response()->json([
+                    'error' => false, 
+                    'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ]',
+                ], 200);
+            }
+        }
+
         public function deposit(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);

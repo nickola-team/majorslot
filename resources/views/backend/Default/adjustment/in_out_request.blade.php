@@ -22,13 +22,12 @@
 
 					<div class="row">
 						<div class="col-md-12" style="margin-top: 10px;">
-							<b>입금 은행계좌 : </b>
-							<button class="btn btn-primary" id="togglebankinfo">
-								보이기
-							</button>
-							<span class="text-red" id="bankinfo" style="display:none;">
-								{{$bankinfo}}
-							</span>
+							<b class="text-red">주의사항</b>
+								<ul>
+								<li>입금계좌는 수시로 변경될수 있습니다. 입금하시기전에  입금계좌신청을 해주세요.</li>
+								<li>반드시 본인의 명의로 입금해야 정상적인 충전처리가 진행됩니다.</li>
+								<li>환전신청시 입금계좌요청은 안하셔도 됩니다.</li>
+								</ul>
 						</div>
 					</div>
 
@@ -68,11 +67,11 @@
 				$dealvalue = auth()->user()->hasRole('manager')?auth()->user()->shop->deal_balance:auth()->user()->deal_balance - auth()->user()->mileage;
 				$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balance:auth()->user()->balance;
 				?>
-					<div class="row" style="margin-top: 20px;">
-						<div class="col-md-6">
-							<b>보유금:</b> <a class="pull-right">{{ number_format($balance,0) }}원</a>
-						</div>
+				<div class="row" style="margin-top: 20px;">
+					<div class="col-md-6">
+						<b>보유금:</b> <a class="pull-right">{{ number_format($balance,0) }}원</a>
 					</div>
+				</div>
 				@if(auth()->user()->hasRole(['agent','distributor','manager']) || (auth()->user()->hasRole('master') && settings('enable_master_deal')))
 				
 					<div class="row" style="margin-top: 20px;">
@@ -246,7 +245,17 @@
 					</button>
 				</div>
 			</div>
-
+			<div class="row" style="margin: 20px 0px;">
+				<div class="col-md-6">
+					<label>입금계좌:</label>
+					<button class="btn btn-danger" id="togglebankinfo">
+						계좌요청
+					</button>
+					<span class="text-red" id="bankinfo" style="display:none;">
+						{{$bankinfo}}
+					</span>
+				</div>
+			</div>
 
 			<div class="box-footer">
 				<button class="btn btn-danger" id="withdraw-balance-btn" onclick="withdraw_balance();">
@@ -328,6 +337,7 @@
 
 @section('scripts')
 	<script>
+		var depositAccountRequested = false;
 		$('#stat-table').dataTable();
 		$(function() {
 			$('input[name="dates"]').daterangepicker({
@@ -354,15 +364,57 @@
 			}
 
 			$('#togglebankinfo').click(function() {
-				if($("#bankinfo").is(":visible")){
-					$("#bankinfo").hide();
-					$('#togglebankinfo').html('보이기');
+				if (depositAccountRequested)
+				{
+					if($("#bankinfo").is(":visible")){
+						$("#bankinfo").hide();
+						$('#togglebankinfo').html('보이기');
+					}
+					else
+					{
+						$("#bankinfo").show();
+						$('#togglebankinfo').html('숨기기');
+					}
 				}
 				else
 				{
-					$("#bankinfo").show();
-					$('#togglebankinfo').html('숨기기');
+					result = confirm('입금계좌요청은 충전시에만 필요합니다. 요청하시겠습니까?');
+					if (result){
+						var money = $('#withdraw_money').val();
+						var accountname = $('#recommender').val();
+						var _token = $('#_token').val();
+						$.ajax({
+							type: 'POST',
+							url: "{{route('frontend.api.depositAccount')}}",
+							data: { money: money, _token: _token, account:accountname },
+							cache: false,
+							async: false,
+							success: function (data) {
+								if (data.error) {
+									alert(data.msg);
+									if (data.code == '001') {
+										location.reload(true);
+									}
+									else if (data.code == '002') {
+										$('#withdraw_money').focus();
+									}
+									else if (data.code == '003') {
+										$('#recommender').focus();
+									}
+									return;
+								}
+								$("#bankinfo").html(data.msg);
+								$("#bankinfo").show();
+								$('#togglebankinfo').html('숨기기');
+								depositAccountRequested = true;
+							},
+							error: function (err, xhr) {
+								alert(err.responseText);
+							}
+						});
+					}
 				}
+				
 				
 			});
 
@@ -414,6 +466,12 @@
 		function deposit_balance() {
             var money = $('#withdraw_money').val();
             var _token = $('#_token').val();
+
+			if (!depositAccountRequested)
+			{
+				alert('입금계좌요청을 먼저 하세요');
+				return;
+			}
 
             $.ajax({
                 type: 'POST',
