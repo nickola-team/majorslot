@@ -541,7 +541,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = 10;
+                $_obf_bonus_percent = 20;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
