@@ -1381,7 +1381,7 @@
 </div>
 
 @if ($notice!=null)
-<div class="pop1" id="pop1" style="position:absolute; left:700px; top:200px; width:500px; z-index:9999; background-color:black; color:white; border:1px solid yellow;text-align:center;">
+<div class="pop1" id="pop1" >
     <p><br/></p>
     <?php echo $notice->content ?>
     <p><br/></p>
