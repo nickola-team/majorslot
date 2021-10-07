@@ -2,7 +2,7 @@
 /* CSS Document */
 
 /*  1920센터 정렬 완벽 구현 */
-.slideshow2_wrap {position:relative; height:415px; overflow:hidden; clear:both;} 
+.slideshow2_wrap {position:relative; height:285px; overflow:hidden; clear:both;} 
 .slideshow2_wrap_center {position:absolute; width:1078px; left:50%; margin-left:-539px;}
 
 /* 기본속성 */
