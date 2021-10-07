@@ -3170,7 +3170,6 @@ span {
     float: left;
     bottom: 0;
     left: 0;
-    position: absolute;
     z-index: 0;
     display: flex;
     align-items: center;

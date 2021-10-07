@@ -1003,10 +1003,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else
             {
-                return response()->json([
-                    'error' => false, 
-                    'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender,
-                ], 200);
+                if ($user->hasRole('user'))
+                {
+                    return response()->json([
+                        'error' => false, 
+                        'msg' => '텔레그램 문의',
+                    ], 200);
+                }
+                else
+                {
+                    return response()->json([
+                        'error' => false, 
+                        'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender,
+                    ], 200);
+                }
             }
         }
 

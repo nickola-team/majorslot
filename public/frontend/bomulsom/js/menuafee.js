@@ -65,19 +65,31 @@ function goDeposit() {
 }
 
 function askAccount() {
+    var money = $("#depoFrm #depositAmount").val();
+    var accountname = $("#depoFrm #recommender").val();
+    var _token = $('#_token').val();
     $.ajax({
         cache: false,
-        url: "/exchange/askaccount.asp",
-        type: "GET",
+        url: "/api/depositAccount",
+        type: "POST",
+        data: { money: money, _token: _token, account:accountname },
         success: function(data) {
             //console.log(data);
-
-            if (data != "success") {
-                $('.wrapper_loading').addClass('hidden');
-                alert_error(data);
-            } else {
-                alert_ok("계좌번호를 요청하였습니다. 요청하신 계좌는 쪽지로 확인하실수 있습니다.");
+            if (data.error) {
+                alert_error(data.msg);
+                if (data.code == '001') {
+                    location.reload(true);
+                }
+                else if (data.code == '002') {
+                    $('#depoFrm #depositAmount').focus();
+                }
+                else if (data.code == '003') {
+                    $('#depoFrm #recommender').focus();
+                }
+                return;
             }
+            depositAccountRequested = true;
+            $("#depoFrm #bankinfo").html(data.msg);
         }
     });
 }
@@ -196,9 +208,9 @@ function usePoint() {
 function readMessage(idx) {
     if (parseInt($('#is_sign_in').val())) {
         $.ajax({
-            url: "/memo/read.asp",
+            url: "/api/readMsg",
             type: 'POST',
-            data: { idx: idx },
+            data: { id: idx },
             dataType: 'html',
             headers: {},
             success: function(data) {},
@@ -212,9 +224,9 @@ function readMessage(idx) {
 function deleteMessage(idx) {
     if (parseInt($("#is_sign_in").val()) == 1) {
         $.ajax({
-            url: "/memo/delete.asp",
+            url: "/api/deleteMsg",
             type: "POST",
-            data: { idx: idx },
+            data: { id: idx },
             dataType: "html",
             success: function(t) {
 
@@ -311,42 +323,7 @@ function boardPopup(type, idx, num) {
 }
 
 function postAjax(page, type) {
-    $(".wrapper_loading").removeClass("hidden");
-    $.ajax({
-        url: "/user/info.asp",
-        type: "GET",
-        data: { page: page, target: type },
-        dataType: "html",
-        success: function(data) {
-            var obj;
-            switch (type) {
-                case "DP":
-                    obj = $(".deposit-list");
-                    break;
-                case "WT":
-                    obj = $(".withdraw-list");
-                    break;
-                case "BH":
-                    obj = $(".bonuses-list");
-                    break;
-                case "CP":
-                    obj = $(".coupon-list");
-                    break;
-                case "MM":
-                    obj = $(".message-list");
-                    break;
-                case "EV":
-                    obj = $(".event-section");
-                    break;
-                case "NT":
-                    obj = $(".notice-section");
-                    break;
-            }
-            obj.empty();
-            obj.append(data);
-        },
-        complete: function() { $(".wrapper_loading").addClass("hidden") }
-    });
+    
 }
 
 

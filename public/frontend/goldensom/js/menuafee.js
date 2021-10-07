@@ -65,19 +65,31 @@ function goDeposit() {
 }
 
 function askAccount() {
+    var money = $("#depoFrm #depositAmount").val();
+    var accountname = $("#depoFrm #recommender").val();
+    var _token = $('#_token').val();
     $.ajax({
         cache: false,
-        url: "/exchange/askaccount.asp",
-        type: "GET",
+        url: "/api/depositAccount",
+        type: "POST",
+        data: { money: money, _token: _token, account:accountname },
         success: function(data) {
             //console.log(data);
-
-            if (data != "success") {
-                $('.wrapper_loading').addClass('hidden');
-                alert_error(data);
-            } else {
-                alert_ok("계좌번호를 요청하였습니다. 요청하신 계좌는 쪽지로 확인하실수 있습니다.");
+            if (data.error) {
+                alert_error(data.msg);
+                if (data.code == '001') {
+                    location.reload(true);
+                }
+                else if (data.code == '002') {
+                    $('#depoFrm #depositAmount').focus();
+                }
+                else if (data.code == '003') {
+                    $('#depoFrm #recommender').focus();
+                }
+                return;
             }
+            depositAccountRequested = true;
+            $("#depoFrm #bankinfo").html(data.msg);
         }
     });
 }
