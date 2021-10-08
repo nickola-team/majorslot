@@ -5,6 +5,7 @@ return [
         /**
          * Booongo Games
          */
+        "Tiger Jungle" => "타이거 정글",
         "Lucky Xmas" => "럭키 크리스마스",
         "15 Golden Eggs" => "15 골든에그스",
         "12 Animals" => "12 애니멀스",
@@ -65,6 +66,10 @@ return [
         /**
          * CQ9 Games
          */
+        "Ganesha Jr." => "가네샤 Jr.",
+        "Floating Market" => "플로팅 마켓",
+        "Loy Krathong" => "로이 크라동",
+        "Coin Spinner" => "코인 스피너",
         "GuGuGu" => "구구구",
         "Gu Gu Gu 2" => "구구구2",
         "MuayThai" => "무에타이",
@@ -175,6 +180,8 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Cash Bonanza" => "캐시 보난자",
+        "Treasure Wild" => "트레져 와일드",
         "Aztec Gems" => "아즈텍 겜스",
         "Sweet Bonanza" => "스위트 보난사",
         "Joker's Jewels" => "조커스 즈웰",
@@ -589,6 +596,7 @@ return [
         /**
          * Habanero Games
          */
+        "Fly!" => "플라이!",
         "Before Time Runs Out" => "비포 타임 런스아웃",
         "Orbs of Atlantis" => "오르스 오브 아를란티스",
         "Christmas Gift Rush" => "크리스마스 기프트 러시",
