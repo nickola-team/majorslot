@@ -874,11 +874,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
 
-            if ($amount > 1900000)
+            if ($amount > 5000000)
             {
                 return response()->json([
                     'error' => true, 
-                    'msg' => '충전금액은 최대 190만원까지 가능합니다.',
+                    'msg' => '충전금액은 최대 500만원까지 가능합니다.',
                     'code' => '002'
                 ], 200);
             }
