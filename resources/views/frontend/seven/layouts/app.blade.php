@@ -20,6 +20,7 @@
     <script src="/frontend/seven/js/TweenMax.min.js"></script>
     <title>@yield('page-title')</title>
     <script type="text/javascript">
+      var depositAccountRequested = false;
       var filter = "win16|win32|win64|mac";
       function isMobile() {
         var e = navigator.userAgent;
@@ -53,34 +54,6 @@
               ease: Back.easeOut,
             });
         }
-        ((link = document.createElement("link")).id = cssId),
-          (link.rel = "stylesheet"),
-          (link.type = "text/css"),
-          (link.href = "/frontend/seven/css/style7d93.css"),
-          (link.media = "all"),
-          head.appendChild(link),
-          ((link = document.createElement("link")).id = cssId),
-          (link.rel = "stylesheet"),
-          (link.type = "text/css"),
-          (link.href = "/frontend/seven/css/galaxy5358.css"),
-          (link.media = "all"),
-          head.appendChild(link),
-          ((link = document.createElement("link")).id = cssId),
-          (link.rel = "stylesheet"),
-          (link.type = "text/css"),
-          (link.href = "/frontend/seven/css/font-icon.css"),
-          (link.media = "all"),
-          head.appendChild(link),
-          ((link = document.createElement("link")).id = cssId),
-          (link.rel = "stylesheet"),
-          (link.type = "text/css"),
-          (link.href = "/frontend/seven/css/themes/default.min.css"),
-          (link.media = "all"),
-          head.appendChild(link),
-          
-          setInterval(function () {
-            repeat();
-          }, 5e3);
         var browser = navigator.userAgent.toLowerCase();
         (("Netscape" == navigator.appName &&
           -1 != navigator.userAgent.search("Trident")) ||
@@ -966,6 +939,13 @@
                   </div>
                 </div>
               </div>
+              <div class="deposit-ask">
+                <button type="button" onclick="askAccount();">
+                  <i class="icon icon-Info"></i>
+                  <span>입금계좌문의</span>
+                </button>
+                <p id="bankinfo">* 입금시 꼭 계좌문의를 하세요!</p>
+              </div>
             </div>
             <div class="modal-btn-foot">
               <div class="btn-cont">
@@ -975,13 +955,6 @@
             </div>
           </form>
 
-          <div class="deposit-ask">
-            <button type="button" onclick="askAccount();">
-              <i class="icon icon-Info"></i>
-              <span>입금계좌문의</span>
-            </button>
-            <p>* 입금시 꼭 계좌문의를 하세요!</p>
-          </div>
         </div>
 
     <script>
@@ -1484,6 +1457,11 @@ if ( getCookie( "divpopup03" ) == "check" ) {
 			});
   }
   function depositSubmit() {
+    if (!depositAccountRequested)
+    {
+      alert_error('입금계좌요청을 먼저 하세요');
+      return;
+    }
     $.ajax({
         type: "POST",
         url: "/api/addbalance",
