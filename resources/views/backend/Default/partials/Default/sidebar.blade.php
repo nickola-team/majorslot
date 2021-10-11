@@ -256,7 +256,7 @@
                     </span>
                 </a>
                 <ul class=" treeview-menu" id="stats-dropdown">
-                    @if(auth()->user()->hasRole('admin'))
+                    @if(auth()->user()->isInoutPartner())
                     @else
                     @permission('stats.pay')
                     <li class="{{ Request::is('backend/in_out_request') ? 'active' : ''  }}">
