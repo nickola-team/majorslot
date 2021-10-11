@@ -20,7 +20,7 @@
 				</div>
 				@endif
 			</div>
-			@if (auth()->user()->hasRole('admin'))
+			@if (auth()->user()->isInoutPartner() && $type=='add')
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-3">
