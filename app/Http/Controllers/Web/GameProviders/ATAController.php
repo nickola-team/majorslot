@@ -143,7 +143,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
                     'country' => 'ko',
-                    'balance' => $user->balance,
+                    'balance' => floatval($user->balance),
                     'bonus' => 0,
                 ],
             ];
@@ -161,19 +161,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $cat3 = $request->cat3;
             $cat4 = $request->cat4;
             $cat5 = $request->cat5;
-            $record = $this->checkreference($reference);
-            if ($record)
-            {
-                return [
-                    'code' => 1000,
-                ];
-            }
             $user = \VanguardLTE\User::lockForUpdate()->find($playerid);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'code' => 1000,
                 ];
             }
+            $record = $this->checkreference($reference);
+            if ($record)
+            {
+                return [
+                    'code' => 0,
+                    'data' => [
+                        'gender' => 'M',
+                        'playerId' => $user->id,
+                        'organization' => config('app.ata_org'),
+                        'balance' => floatval($user->balance),
+                        'currency' => 'KRW',
+                        'applicableBonus' => 0,
+                        'homeCurrency' => 'KRW',
+                        'country' => 'ko',
+                    ],
+                ];
+            }
+            
             if ($user->balance < $amount)
             {
                 return [
@@ -234,22 +245,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $org = $request->org;
             $playerid = $request->playerid;
             $reference = $request->reference;
-            $record = $this->checkreference($reference);
-            if ($record == null || $record->refund == 1)
-            {
-                return [
-                    'code' => 1000,
-                ];
-            }
-            $data = json_decode($record->data);
-            $amount = $data->amount;
-
             $user = \VanguardLTE\User::lockForUpdate()->find($playerid);
             if (!$user || !$user->hasRole('user')){
                 return [
                     'code' => 1000,
                 ];
             }
+
+            $record = $this->checkreference($reference);
+            if ($record == null || $record->refund == 1)
+            {
+                return [
+                    'code' => 0,
+                    'data' => [
+                        'playerId' => $user->id,
+                        'organization' => config('app.ata_org'),
+                        'balance' => floatval($user->balance),
+                        'currency' => 'KRW',
+                        'bonus' => 0,
+                    ],
+                ];
+            }
+            $data = json_decode($record->data);
+            $amount = $data->amount;
 
             $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
             $user->save();
