@@ -54,7 +54,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $categories = \VanguardLTE\Category::where([
                 'parent' => 0, 
                 'provider' => null,
-                'shop_id' => $shop_id
+                'shop_id' => $shop_id,
+                'site_id' => 0
             ])->get();
             
             $games = \VanguardLTE\Game::select('games.*')->where('shop_id', $shop_id)->orderBy('name', 'ASC');
