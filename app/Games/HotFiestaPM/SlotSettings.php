@@ -986,8 +986,8 @@ namespace VanguardLTE\Games\HotFiestaPM
         public function GenerateWildCount($winType) {
             if ($winType == 'win') {
                 $probabilityMap = [
-                    0 => 30,
-                    1 => 50,
+                    0 => 50,
+                    1 => 30,
                     2 => 20
                 ];
             }

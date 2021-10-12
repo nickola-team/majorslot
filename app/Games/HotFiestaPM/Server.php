@@ -481,6 +481,12 @@ namespace VanguardLTE\Games\HotFiestaPM
                     $offsetID = array_rand($stickySet['available_offset']);
                     $startPos = $stickySet['available_offset'][$offsetID];
 
+                    /* 랜덤 시작위치 0일경우 확율조정 */
+                    if ($startPos == 0 && random_int(1, 8) > 3) {
+                        $offsetID = $offsetID + 1;
+                        $startPos = $stickySet['available_offset'][$offsetID];
+                    }
+
                     $limitedIndices = [];
                     $stickyTrans = [];
                     foreach ($wildSymbols as $pos => $multiplier) {
