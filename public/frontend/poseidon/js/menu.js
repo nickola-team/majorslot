@@ -254,7 +254,9 @@ function goDeposit() {
                 <tr>
 					<td class="line2">입금계좌</td>
 					<td class="line3">
-                        <div class="txt_area3">텔레그램문의 (아이디: <span class="txt_style02">${telegram_id}</span>)</div>
+                        <span id="depositAccount" class="txt_area3">
+                        <a id="btn_ask" href="#" onclick="askAccount();"><img src="/frontend/poseidon/img/request_btn.png" border="0" /></a>
+                        </span>
 					</td>
 				</tr>
 			</table>
@@ -627,7 +629,39 @@ function showLoginAlert() {
     alert("로그인 후 이용가능합니다.");
     $("#userid").focus();
 }
+function askAccount() {
+    var accountname = $("#deposit #name").val();
+    var money = $("#deposit #money").val();
+    var _token = $('#_token').val();
 
+    $("#deposit #btn_ask").hide();
+
+    $.ajax({
+        cache: false,
+        url: "/api/depositAccount",
+        type: "POST",
+        data: { money: money, _token: _token, account:accountname },
+        success: function(data) {
+            //console.log(data);
+            if (data.error) {
+                $("#deposit #btn_ask").show();
+                alert(data.msg);
+                if (data.code == '001') {
+                    location.reload(true);
+                }
+                else if (data.code == '002') {
+                    $("#deposit #money").focus();
+                }
+                else if (data.code == '003') {
+                    $("#deposit #name").focus();
+                }
+                return;
+            }
+            depositAccountRequested = true;
+            $("#deposit #depositAccount").html(data.msg);
+        }
+    });
+}
 function deposit() {
     var accountname = $("#deposit #name").val();
     var bankname = $("#deposit #bank").val();

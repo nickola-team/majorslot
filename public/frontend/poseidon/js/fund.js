@@ -45,7 +45,3 @@ function getContentDocument() {
         ? objFrame.contentDocument
         : objFrame.contentWindow.document;
 }
-
-function askAccount() {
-    getContentDocument().location.href = "/exchange/askAccount.asp";
-}
