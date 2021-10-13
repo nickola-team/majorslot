@@ -121,6 +121,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
             {
                 return redirect()->to('backend/login' . $to)->withErrors(trans('app.your_account_is_banned'));
             }
+            // block Internet Explorer
+            $ua = $request->header('User-Agent');
+            if (str_contains($ua,'Trident') )
+            {
+                return redirect()->to('backend/login' . $to)->withErrors(['크롬브라우저를 이용하세요']);
+            }
+            
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
             if( settings('reset_authentication') && count($sessionRepository->getUserSessions(\Auth::id())) ) 
             {
