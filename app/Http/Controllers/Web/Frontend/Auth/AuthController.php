@@ -110,6 +110,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             {
                 return redirect()->to('login' . $to)->withErrors(trans('app.your_account_is_banned'));
             }
+            // block Internet Explorer
+            $ua = $request->header('User-Agent');
+            if (str_contains($ua,'Trident') )
+            {
+                return redirect()->to('login' . $to)->withErrors(['크롬브라우저를 이용하세요']);
+            }
             if( $request->lang ) 
             {
                 $user->update(['language' => $request->lang]);
