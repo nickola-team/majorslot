@@ -180,6 +180,10 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Live - Andar Bahar" => "라이브 - 앤더 바하",
+        "Live - Roulette 8 - Indian" => "라이브 - 룰렛 8",
+        "Piggy Bank Bills" => "피기 뱅크 빌",
+        "Mystic Chief" => "미스틱 치프",
         "Cash Bonanza" => "캐시 보난자",
         "Treasure Wild" => "트레져 와일드",
         "Aztec Gems" => "아즈텍 겜스",
