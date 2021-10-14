@@ -48,9 +48,6 @@ namespace VanguardLTE\Games\HotFiestaPM
                 /* 라운드 등록 */
                 $this->submitRound($slotSettings, $LASTSPIN, $objRes);
             }
-            else if( $slotEvent['slotEvent'] == 'doBonus') {
-                $objRes = $this->doBonus($slotEvent, $LASTSPIN);
-            }
             else if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 $objRes = [
