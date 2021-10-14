@@ -1253,7 +1253,7 @@ namespace VanguardLTE\Games\HotFiestaPM
         public function isValidReels($reels) {
             /* 캐릭터심볼 4개이상 포함하지 않도록  */
             $highLevelSymbolCount = array_reduce($reels['flatSymbols'], function($carry, $symbol) {
-                if ($symbol <= 4) {
+                if ($symbol == 3 || $symbol == 4) {
                     $carry += 1;
                 }
 

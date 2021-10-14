@@ -247,7 +247,10 @@ namespace VanguardLTE\Games\HotFiestaPM
             $defaultScatterCount = $slotSettings->GenerateScatterCount($winType, $slotEvent['slotEvent']);  // 생성되어야할 Scatter갯수 결정;
 
             /* WILD 생성갯수 */
-            if ($slotEvent['slotEvent'] == 'freespin') {
+            if ($slotEvent['slotEvent'] == 'buy_freespin') {
+                $defaultWildCount = 0;
+            }
+            else if ($slotEvent['slotEvent'] == 'freespin') {
                 if (isset($fsStickyGen[$fs - 1]) && $fsStickyGen[$fs - 1] > 0) {
                     $defaultWildCount = 1;
                 }
