@@ -332,44 +332,38 @@
 
   <div class="page-content">
           
-    <div style="margin-top:25px;height:50px;">
-      <span class="a_style">팡팡 SLOT</span>
+    <div style="margin-top:25px;height:100px;">
+      <img src="/frontend/pangpang/img/slot-icon2/Pragmatic Play_lg.png">
     </div>
 
     <div class="slot-container">
 
-    @if ($categories && count($categories))
-				@foreach($categories AS $index=>$category)
-					@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-					&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
+    @if ($ppgames && count($ppgames))
+				@foreach($ppgames AS $index=>$game)
 
           @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-          <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+          <a href="javascript:void(0);" class="slot-btn" onclick="startGameByProvider('{{ $game['provider'] }}', '{{ $game['gamecode'] }}')">
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('로그인이 필요합니다');">
           @endif
             <div class="sb-inner">
               <div class="main-cont">
                 <div class="inner">
-                  <img class="main-img" src="/frontend/pangpang/img/slot/{{ $category->title.'.jpg' }}">
+                  <img class="main-img" src="{{ $game['icon'] }}">
                   <button class="start-text">게임시작</button>
                 </div>
               </div>
               <button class="name-btn">
-              @if ($category->trans)
-                {{ $category->trans->trans_title }}
+              @if (str_contains($game['title'], 'gameprovider'))
+              {{ \Illuminate\Support\Str::limit($game['name'],13) }}
               @else
-                {{ $category->title }}
+                {{ \Illuminate\Support\Str::limit($game['title'],20) }}
               @endif
               </button>
               <img class="plate" src="/frontend/pangpang/img/bg/slot-plate.png">
             </div>
-            <div class="icon-cont">
-              <img src="/frontend/pangpang/img/slot-icon2/{{ $category->title }}.png" />
-            </div>
-          </a>     
 
-					@endif
+          </a>     
 				@endforeach
 			@endif
 

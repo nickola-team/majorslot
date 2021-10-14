@@ -147,7 +147,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
                 $unreadmsg = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->whereNull('read_at')->count();
             }
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'msgs','unreadmsg'));
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'msgs','unreadmsg', 'ppgames'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {
