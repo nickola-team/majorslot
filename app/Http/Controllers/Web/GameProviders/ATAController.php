@@ -311,7 +311,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $org = $request->org;
             $playerid = $request->playerid;
             $amount = $request->amount;
-            $reference = $request->reference;
+            $reference = $request->reference . '/' . $request->subreference;
             $cat1 = $request->cat1;
             $cat2 = $request->cat2;
             $cat3 = $request->cat3;
@@ -322,6 +322,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$user || !$user->hasRole('user')){
                 return [
                     'code' => 1000,
+                ];
+            }
+            $record = $this->checkreference($reference);
+            if ($record)
+            {
+                return [
+                    'code' => 0,
+                    'data' => [
+                        'playerId' => $user->id,
+                        'organization' => config('app.ata_org'),
+                        'balance' => floatval($user->balance),
+                        'currency' => 'KRW',
+                        'applicableBonus' => 0,
+                        'bonus' => 0,
+                        'homeCurrency' => 'KRW',
+                    ],
                 ];
             }
 
@@ -350,6 +366,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'roundid' => 0,
                 ]);
             }
+
+            $req = $request->all();
+
+            $transaction = \VanguardLTE\ATATransaction::create([
+                'reference' => $reference, 
+                'timestamp' => $this->microtime_string(),
+                'data' => json_encode($req),
+                'refund' => 0
+            ]);
 
             return [
                 'code' => 0,
@@ -370,7 +395,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $org = $request->org;
             $playerid = $request->playerid;
             $amount = $request->amount;
-            $reference = $request->reference;
+            $reference = $request->reference . '/' . $request->subreference;
             $cat1 = $request->cat1;
             $cat2 = $request->cat2;
             $cat3 = $request->cat3;
@@ -381,6 +406,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$user || !$user->hasRole('user')){
                 return [
                     'code' => 1000,
+                ];
+            }
+            $record = $this->checkreference($reference);
+            if ($record)
+            {
+                return [
+                    'code' => 0,
+                    'data' => [
+                        'playerId' => $user->id,
+                        'organization' => config('app.ata_org'),
+                        'balance' => floatval($user->balance),
+                        'currency' => 'KRW',
+                        'applicableBonus' => 0,
+                        'homeCurrency' => 'KRW',
+                        'bonus' => 0,
+                    ],
                 ];
             }
             if ($amount > 0)
@@ -408,6 +449,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'roundid' => 0,
                 ]);
             }
+            $req = $request->all();
+
+            $transaction = \VanguardLTE\ATATransaction::create([
+                'reference' => $reference, 
+                'timestamp' => $this->microtime_string(),
+                'data' => json_encode($req),
+                'refund' => 0
+            ]);
+            
             return [
                 'code' => 0,
                 'data' => [
@@ -416,7 +466,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
-                    'balance' => $user->balance,
+                    'balance' => floatval($user->balance),
                     'bonus' => 0,
                 ],
             ];
