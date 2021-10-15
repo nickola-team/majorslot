@@ -51,22 +51,26 @@
 		<div class="loggedbox">
 			<div class="player-name">
 				<div class="total-balance">
-					<strong class="text-uppercase">보너스 수익</strong>
-					<strong class="text-uppercase pull-right">&nbsp; 원</strong>
-					<strong class="text-uppercase pull-right" id="xideal">{{ number_format(Auth::user()->deal_balance,2) }}</strong>
-					
-				</div>
-				<div class="get-balance" onclick="goDealOut();"><i class="fa fa-at"></i></div>
-				<button class="btn-loginbox btn-yellow" onclick="goMypage();">내 계정</button>
-			</div>
-			<div class="player-money">
-				<div class="total-balance">
 					<strong class="text-uppercase">전체 잔액</strong>
 					<strong class="text-uppercase pull-right">&nbsp; 원</strong>
 					<strong class="text-uppercase pull-right" id="ximoney">{{ number_format(Auth::user()->balance,2) }}</strong>
 				</div>
 				
 				 <div class="get-balance" onclick="getBalance();"><i class="fa fa-recycle"></i></div>
+				
+				<button class="btn-loginbox btn-yellow" onclick="goMypage();">
+						내 계정
+                      <sup class="mess-count" style="animation: letter_anim 0s linear infinite;">{{$unreadmsg}}</sup>
+				</button>
+			</div>
+			<div class="player-money">
+				<div class="total-balance">
+					<strong class="text-uppercase">보너스 수익</strong>
+					<strong class="text-uppercase pull-right">&nbsp; 원</strong>
+					<strong class="text-uppercase pull-right" id="xideal">{{ number_format(Auth::user()->deal_balance,2) }}</strong>
+					
+				</div>
+				<div class="get-balance" onclick="goDealOut();"><i class="fa fa-at"></i></div>
 				<button class="btn-loginbox btn-gray" onclick="goLogout();">로그아웃</button>
 			</div>
 		</div>
@@ -125,7 +129,7 @@
 			</li>
 		</ul>
 		<div><img src="/frontend/legend/img/logo.png?5"/></div>
-		<font>Copyright® 레젼드 ALL RIGHT RESERVED</font>
+		<font>Copyright® 황금박쥐. ALL RIGHT RESERVED</font>
 	</footer>
 
 @yield('popup')

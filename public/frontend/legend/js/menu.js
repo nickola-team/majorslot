@@ -228,17 +228,35 @@ function goDeposit() {
 					<td class="line2">입금자명</td>
 					<td class="line3">
 						<div class="txt_area2">
-							<input type="text" name="name" id="name" style="width:80px; height:18px" value=""/>
+							<input type="text" name="name" id="name" style="width:80px; height:18px" value="${accountName}"/>
 						</div>
 						<div class="txt_area3">* 입금시 입금자명이 다르면 충전이 불가합니다</div>
 					</td>
 				</tr>
-				<tr>
-					<td class="line2">충전계좌요청</td>
+                <tr>
+					<td class="line2">은행계좌</td>
 					<td class="line3">
 						<div class="txt_area2">
-                            <div class="txt_area3"> ※ 충전계좌 문의는 1:1문의에서 신청</div>
+							<input type="text" name="bank" id="bank" style="width:80px; height:18px" value="${bankName}"/>
 						</div>
+                        <div class="txt_area3">* 예: 케이뱅크</div>
+					</td>
+				</tr>
+                <tr>
+					<td class="line2">계좌번호</td>
+					<td class="line3">
+						<div class="txt_area2">
+							<input type="text" name="accountno" id="accountno" style="width:80px; height:18px" value="${account_no}"/>
+						</div>
+                        <div class="txt_area3">* 예: 1234567890</div>
+					</td>
+				</tr>
+                <tr>
+					<td class="line2">입금계좌</td>
+					<td class="line3">
+                        <span id="depositAccount" class="txt_area3">
+                        <a id="btn_ask" href="#" onclick="askAccount();"><img src="/frontend/legend/img/request_btn.png" border="0" /></a>
+                        </span>
 					</td>
 				</tr>
 			</table>
@@ -300,11 +318,29 @@ function goWithdraw() {
 				</tr>
 
 				<tr>
-					<td width="120" class="line2">출금비밀번호</td>
+					<td class="line2">출금자명</td>
 					<td class="line3">
 						<div class="txt_area2">
-							<input type="password" name="password" id="password" style="width:110px; height:18px" />
+							<input type="text" name="name" id="name" style="width:80px; height:18px" value="${accountName}"/>
 						</div>
+					</td>
+				</tr>
+                <tr>
+					<td class="line2">은행계좌</td>
+					<td class="line3">
+						<div class="txt_area2">
+							<input type="text" name="bank" id="bank" style="width:80px; height:18px" value="${bankName}"/>
+						</div>
+                        <div class="txt_area3">* 예: 케이뱅크</div>
+					</td>
+				</tr>
+                <tr>
+					<td class="line2">계좌번호</td>
+					<td class="line3">
+						<div class="txt_area2">
+							<input type="text" name="accountno" id="accountno" style="width:80px; height:18px" value="${account_no}"/>
+						</div>
+                        <div class="txt_area3">* 예: 1234567890</div>
 					</td>
 				</tr>
 			
@@ -441,46 +477,10 @@ function goIdSearch() {
 
 function goMypage() {
     if (loginYN == "Y") {
-        var strHtml = `
-        <div class="subcontent">
-
-	<div id="sub_box">
-		<div id="sub_title"><img src="/frontend/legend/img/mypage_title.png" /></div>
-		<div id="data_box">
-			<div class="txt text01"> 가입정보 안내</div>
-			<div class="dbox0">
-				<table class="table100" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-						<td width="130" class="line2">아이디</td>
-						<td class="line2">${userName}</td>
-					</tr>
-					<tr>
-						<td width="130" class="line2">현재비밀번호</td>
-						<td class="line4"><input type="password" name="cur_pwd" id="cur_pwd" style="width:120px; height:15px" />
-						* 현재 사용하고 계시는 비밀번호를 입력하세요.</td>
-					</tr>
-					<tr>
-						<td class="line2">새로운 비밀번호</td>
-						<td class="line4"><input type="password" name="new_pwd" id="new_pwd" style="width:120px; height:15px" />
-						* 새로운 비밀번호를 입력하세요.</td>
-					</tr>
-					<tr>
-						<td class="line2">새로운비밀번호 확인</td>
-						<td class="line4"><input type="password" name="new_pwd_confirm" id="new_pwd_confirm" style="width:120px; height:15px" />
-						* 새로운 비밀번호를 다시 한번 입력하세요.</td>
-					</tr>
-				</table>
-			</div>
-			<div class="btn"><a href="#" onclick="updateMyInfo();"><img src="/frontend/legend/img/infochange_btn.gif" border="0" /></a></div>
-		</div>
-
-	</div>
-</div>`;
-
         TINY.box.show({
-            html: strHtml,
+            iframe: "/profile/mypage",
             width: 955,
-            height: 570,
+            height: 500,
         });
     } else {
         showLoginAlert();
@@ -629,12 +629,47 @@ function showLoginAlert() {
     alert("로그인 후 이용가능합니다.");
     $("#userid").focus();
 }
+function askAccount() {
+    var accountname = $("#deposit #name").val();
+    var money = $("#deposit #money").val();
+    var _token = $('#_token').val();
+
+    $("#deposit #btn_ask").hide();
+
+    $.ajax({
+        cache: false,
+        url: "/api/depositAccount",
+        type: "POST",
+        data: { money: money, _token: _token, account:accountname },
+        success: function(data) {
+            //console.log(data);
+            if (data.error) {
+                $("#deposit #btn_ask").show();
+                alert(data.msg);
+                if (data.code == '001') {
+                    location.reload(true);
+                }
+                else if (data.code == '002') {
+                    $("#deposit #money").focus();
+                }
+                else if (data.code == '003') {
+                    $("#deposit #name").focus();
+                }
+                return;
+            }
+            depositAccountRequested = true;
+            $("#deposit #depositAccount").html(data.msg);
+        }
+    });
+}
 
 function deposit() {
-    var refundname = $("#deposit #name").val();
+    var accountname = $("#deposit #name").val();
+    var bankname = $("#deposit #bank").val();
+    var accountno = $("#deposit #accountno").val();
     var money = $("#deposit #money").val();
 
-    if (refundname == "") {
+    if (accountname == "") {
         alert("입금자명을 입력해주세요.");
         $("#deposit #name").focus();
         return;
@@ -651,8 +686,8 @@ function deposit() {
 
     $.ajax({
         type: "POST",
-        url: "/api/deposit",
-        data: { refundname: refundname, money: money },
+        url: "/api/addbalance",
+        data: { accountName: accountname, bank:bankname, no:accountno, money: money },
         cache: false,
         async: false,
         success: function (data) {
@@ -676,13 +711,9 @@ function deposit() {
 }
 
 function withdraw() {
-    var refundpassword = $("#withdraw #password").val();
-    if (refundpassword == "") {
-        alert("출금비밀번호를 입력해주세요.");
-        $("#withdraw #password").focus();
-        return;
-    }
-
+    var accountname = $("#withdraw #name").val();
+    var bankname = $("#withdraw #bank").val();
+    var accountno = $("#withdraw #accountno").val();
     var money = $("#withdraw #money").val();
     if (money < 30000) {
         alert("환전 최소금액은 30,000원 입니다.");
@@ -695,24 +726,13 @@ function withdraw() {
 
     $.ajax({
         type: "POST",
-        url: "/api/withdraw",
-        data: { money: money, refundpassword: refundpassword },
+        url: "/api/outbalance",
+        data: { accountName: accountname, bank:bankname, no:accountno, money: money },
         cache: false,
         async: false,
         success: function (data) {
             if (data.error) {
                 alert(data.msg);
-                if (data.code == "001") {
-                    location.reload();
-                } else if (data.code == "002") {
-                    $("#withdraw #money1").focus();
-                } else if (data.code == "003") {
-                    $("#withdraw #money1").val("0");
-                } else if (data.code == "004") {
-                    $("#withdraw #password").focus();
-                } else if (data.code == "005") {
-                    $("#withdraw #password").val("");
-                }
                 return;
             }
 
@@ -777,4 +797,43 @@ function updateMyInfo() {
             alert(err.responseText);
         },
     });
+}
+
+
+function readMessage(idx)
+{
+    if ($("#msgcontent"+idx).is(":visible"))
+    {
+        $("#msgcontent"+idx).hide();
+    }
+    else
+    {
+        $("#msgcontent"+idx).show();
+    }
+
+    $.ajax({
+        url: "/api/readMsg",
+        type: 'POST',
+        data: { id: idx },
+        dataType: 'html',
+        headers: {},
+        success: function(data) {},
+        error: function(xhr, status, error) {},
+        complete: function() {}
+    });
+}
+
+function deleteMessage(idx)
+{
+    if (confirm('쪽지를 삭제하시겠습니까?\n삭제후 복구불가합니다.') == true) {
+        $.ajax({
+            url: "/api/deleteMsg",
+            type: "POST",
+            data: { id: idx },
+            dataType: "html",
+            success: function(t) {
+                location.reload();
+            }
+        });
+    }
 }
