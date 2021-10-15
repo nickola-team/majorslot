@@ -453,7 +453,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $BALANCE);
 
                 /* WILD 멀티플라이어 배열 생성 */
-                $fsStickyGen = $slotSettings->GenerateFSSticky($fsmax);
+                $fsStickyGen = $slotSettings->GenerateFSSticky($fsmax, $slotEvent['slotEvent'] === 'buy_freespin');
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyGen', $fsStickyGen);
             }
 
@@ -482,7 +482,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                     $startPos = $stickySet['available_offset'][$offsetID];
 
                     /* 랜덤 시작위치 0일경우 확율조정 */
-                    if ($startPos == 0 && random_int(1, 8) > 3) {
+                    if ($startPos == 0 && random_int(1, 10) <= 2) {
                         $offsetID = $offsetID + 1;
                         $startPos = $stickySet['available_offset'][$offsetID];
                     }

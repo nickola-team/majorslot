@@ -942,13 +942,24 @@ namespace VanguardLTE\Games\HotFiestaPM
             return 0;  
         }
 
-        public function GenerateFSWildCount() {
-            $probabilityMap = [
-                1 => 10,
-                2 => 40,
-                3 => 40,
-                4 => 10
-            ];
+        public function GenerateFSWildCount($isBuy) {
+            if ($isBuy == true) {
+                $probabilityMap = [
+                    1 => 0,
+                    2 => 20,
+                    3 => 60,
+                    4 => 20
+                ];
+            }
+            else {
+                $probabilityMap = [
+                    1 => 10,
+                    2 => 40,
+                    3 => 40,
+                    4 => 10
+                ];
+            }
+            
 
             $sum = array_sum(array_values($probabilityMap));
             $randNum = random_int(1, $sum);
@@ -964,8 +975,8 @@ namespace VanguardLTE\Games\HotFiestaPM
             return 2; 
         }
 
-        public function GenerateFSSticky($spinCount) {
-            $stickyCount = $this->GenerateFSWildCount();
+        public function GenerateFSSticky($spinCount, $isBuy) {
+            $stickyCount = $this->GenerateFSWildCount($isBuy);
 
             $sticky = array_fill(0, $spinCount, 0);
             $step = intdiv($spinCount, $stickyCount);
@@ -1048,13 +1059,15 @@ namespace VanguardLTE\Games\HotFiestaPM
             $probabilityMap = [
                 10 => 0,
                 11 => 10,
-                12 => 70,
-                13 => 10,
-                14 => 5,
+                12 => 30,
+                13 => 20,
+                14 => 20,
+                15 => 10,
                 16 => 5,
+                17 => 5,
                 18 => 0,
             ];
-            
+
             $sum = array_sum(array_values($probabilityMap));
             $randNum = random_int(1, $sum);
 
@@ -1171,6 +1184,12 @@ namespace VanguardLTE\Games\HotFiestaPM
                     /* 스티키셋에서 이미 WILD가 생성된 위치는 뺀다 */
                     $availablePositions = array_diff($stickySet, $limitedPos);
                 }
+
+                /* 와일드갯수가 1개인 경우 1,5번릴 제외 */
+                if (empty($lastStickyTrans) && $proposedWildCount == 1) {
+                    $availablePositions = array_diff($availablePositions, [0, 5, 10, 4, 9, 14]);
+                }
+
 
                 /* 프리스핀시 WILD 심볼 생성 */
                 $limits = [];
