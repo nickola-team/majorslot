@@ -1411,7 +1411,45 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             
         }
+        public function ppHistory(\Illuminate\Http\Request $request)
+        {
+            return view('frontend.Default.games.pp.history');
+        }
+
+        public function general(\Illuminate\Http\Request $request)
+        {
+            return response()->json([
+                "language" => "en",
+                "jurisdiction" =>"99",
+                "jurisdictionRequirements" => [],
+                "brandRequirements" =>[]
+            ]);
+        }
+
+        public function last_items(\Illuminate\Http\Request $request)
+        {
+            return response()->json([ [
+                "roundId"=> 2752193170,
+                "dateTime"=> 1633355928000,
+                "bet"=> "250.00",
+                "win"=> "0.00",
+                "balance"=> "857,900.00",
+                "roundDetails"=> null,
+                "currency"=> "KRW",
+                "currencySymbol"=> "₩",
+                "hash"=> "8df8f32a51b7fbd3ea4c8b2dd20435d6"
+            ]]);
+        }
+
+        public function children(\Illuminate\Http\Request $request)
+        {
+            $data = '[{"roundId":2752193138,"request":{"symbol":"vs25pandatemple","c":"10","repeat":"0","action":"doSpin","index":"674","counter":"1347","l":"25"},"response":{"tw":"350.00","l0":"5~50.00~5~1~2","rw":"250.0","l1":"7~50.00~0~1~7","stime":"1633355914398","sa":"7,2,6,10,9","sb":"10,12,9,4,3","balance":"858,950.00","bw":"1","sh":"3","wp":"1","end":"1","coef":"250.0","c":"10.00","sver":"5","index":"674","balance_cash":"858,950.00","counter":"1348","l":"25","reel_set":"1","balance_bonus":"0.00","na":"c","s":"13,2,9,7,3,9,3,13,12,8,5,7,4,8,13","w":"100.00","gsf":"13~7","gsf_a":"13~1"},"currency":"KRW","currencySymbol":"₩","configHash":"8dea16ee64f6907400eb8e93e92142fc"},{"roundId":2752193138,"request":{"symbol":"vs25pandatemple","repeat":"0","action":"doCollect","index":"675","counter":"1349"},"response":{"balance_bonus":"0.00","na":"s","balance":"859,300.00","sver":"5","index":"675","balance_cash":"859,300.00","stime":"1633355914961","counter":"1350"},"currency":"KRW","currencySymbol":"₩","configHash":"8dea16ee64f6907400eb8e93e92142fc"}]';
+            return response($data, 200)->header('Content-Type', 'application/json');
+            
+        }
 
     }
+
+    
 
 }
