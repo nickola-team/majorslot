@@ -816,6 +816,7 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'GamesController@bank',
         'middleware' => 'permission:games.manage'
     ]);	
+
 	Route::get('games.json', [
         'as' => 'backend.game.list.json',
         'uses' => 'GamesController@index_json'
@@ -871,6 +872,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
        'as' => 'backend.game.gamebanks_add',
         'uses' => 'GamesController@gamebanks_add',
     ]);
+    Route::post('gamebanks_setting', [
+        'as' => 'backend.game.gamebanks_setting',
+         'uses' => 'GamesController@gamebanks_setting',
+     ]);    
     Route::get('gamebanks_clear', [
         'as' => 'backend.game.gamebanks_clear',
         'uses' => 'GamesController@gamebanks_clear',

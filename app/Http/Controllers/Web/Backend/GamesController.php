@@ -123,7 +123,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $shops = auth()->user()->availableShops();
             $query = 'SELECT a.*, e.name as shopname, e.percent as percent, d.bank as master_bonus, d.master_id as master_id from w_game_bank as a join w_shops_user as b on b.shop_id=a.shop_id join w_users as c on b.user_id=c.id join w_bonus_bank as d on d.master_id=c.id join w_shops as e on e.id=a.shop_id where c.role_id=6 and a.shop_id in (' .implode(',', $shops). ')';
             $gamebank = \DB::select($query);
-            return view('backend.Default.games.bank', compact('gamebank'));
+            $minslot = \VanguardLTE\Settings::where('key', 'minslot')->first();
+            $maxslot = \VanguardLTE\Settings::where('key', 'maxslot')->first();
+            $minbonus = \VanguardLTE\Settings::where('key', 'minbonus')->first();
+            $maxbonus = \VanguardLTE\Settings::where('key', 'maxbonus')->first();
+            $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
+            return view('backend.Default.games.bank', compact('gamebank','minslot','maxslot','minbonus','maxbonus','reset_bank'));
+        }
+        public function gamebanks_setting(\Illuminate\Http\Request $request)
+        {
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot'], ['value' => $request->minslot]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot'], ['value' => $request->maxslot]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus'], ['value' => $request->minbonus]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus'], ['value' => $request->maxbonus]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'reset_bank'], ['value' => $request->reset_bank]);
+            return redirect()->back()->withSuccess('환수금 설정이 업데이트되었습니다.');
         }
         public function index_json(\Illuminate\Http\Request $request)
         {

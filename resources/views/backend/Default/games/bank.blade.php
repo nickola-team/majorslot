@@ -10,6 +10,51 @@
     </section>
 
     <section class="content">
+		<form action="{{ route($admurl.'.game.gamebanks_setting') }}" id="games-form" method="POST">
+		<div class="box box-danger">
+			<div class="box-header with-border">
+				<h3 class="box-title">설정</h3>
+			</div>
+			<div class="box-body">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>최소 슬롯환수금</label>
+							<input type="text" class="form-control" name="minslot" value="{{ $minslot?$minslot->value:'' }}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>최대 슬롯환수금</label>
+							<input type="text" class="form-control" name="maxslot" value="{{ $maxslot?$maxslot->value:'' }}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>최소 보너스환수금</label>
+							<input type="text" class="form-control" name="minbonus" value="{{ $minbonus?$minbonus->value:'' }}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>최대 보너스환수금</label>
+							<input type="text" class="form-control" name="maxbonus" value="{{ $maxbonus?$maxbonus->value:'' }}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>리셋주기</label>
+							{!! Form::select('reset_bank',
+								['1시간','2시간','6시간','12시간','매일'], $reset_bank?$reset_bank->value:0, ['class' => 'form-control', 'style' => 'width: 100%;', 'id' => 'reset_bank']) !!}
+						</div>
+					</div>
+			</div>
+			<div class="box-footer">
+				<button type="submit" class="btn btn-primary">
+					설정
+				</button>
+			</div>
+		</div>
+		</form>
 
         <div class="box box-primary">
             <div class="box-header with-border">

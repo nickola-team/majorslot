@@ -469,6 +469,10 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
        'as' => 'slot.game.gamebanks_add',
         'uses' => 'GamesController@gamebanks_add',
     ]);
+    Route::post('gamebanks_setting', [
+        'as' => 'slot.game.gamebanks_setting',
+         'uses' => 'GamesController@gamebanks_setting',
+     ]); 
     Route::get('gamebanks_clear', [
         'as' => 'slot.game.gamebanks_clear',
         'uses' => 'GamesController@gamebanks_clear',
