@@ -1413,9 +1413,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function ppHistory(\Illuminate\Http\Request $request)
         {
-            return view('frontend.Default.games.pp.history');
+            $user = \Auth()->user();
+            if (!$user)
+            {
+                return redirect()->back();
+            }
+            $usertoken = $user->api_token;
+            $hash = $user->generateCode(8);
+            return view('frontend.Default.games.pp.history', compact('usertoken','hash'));
         }
+        public function historymaincss($file, $hash, \Illuminate\Http\Request $request)
+        {
+            $css = file_get_contents(public_path('pphistory/'.$file.'.min.css'), true);
+            $css = preg_replace('/f2e3afd2/', $hash, $css);
+            return response($css, 200)->header('Content-Type', 'text/css');
 
+        }
+        public function historymainjs($file, $hash, \Illuminate\Http\Request $request)
+        {
+            $js = file_get_contents(public_path('pphistory/'.$file.'.min.js'), true);
+            $js = preg_replace('/f2e3afd2/', $hash, $js);
+            return response($js, 200)->header('Content-Type', 'application/javascript');
+        }
         public function general(\Illuminate\Http\Request $request)
         {
             return response()->json([
@@ -1428,22 +1447,49 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function last_items(\Illuminate\Http\Request $request)
         {
-            return response()->json([ [
-                "roundId"=> 2752193170,
-                "dateTime"=> 1633355928000,
-                "bet"=> "250.00",
-                "win"=> "0.00",
-                "balance"=> "857,900.00",
-                "roundDetails"=> null,
-                "currency"=> "KRW",
-                "currencySymbol"=> "₩",
-                "hash"=> "8df8f32a51b7fbd3ea4c8b2dd20435d6"
-            ]]);
+            $symbol = $request->symbol;
+            $token = $request->token;
+            $user = \VanguardLTE\User::where('api_token', $token)->first();
+            if (!$user )
+            {
+                return response()->json([ ]);
+            }
+            $gamename = PPController::gamecodetoname($symbol)[0];
+            $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
+            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+            $shop_id = $user->shop_id;
+            $pm_games = \VanguardLTE\Game::where([
+                'shop_id' => $shop_id,
+                'name' => $gamename,
+                ]
+            )->first();
+            $data = [];
+            if ($pm_games)
+            {
+                $stat_games = \VanguardLTE\StatGame::where(['user_id'=>$user->id, 'game_id'=>$pm_games->original_id])->orderby('date_time', 'desc')->take(100)->get();
+                foreach ($stat_games as $stat)
+                {
+                    $data[] = 
+                        [
+                            "roundId"=> $stat->roundid,
+                            "dateTime"=> strtotime($stat->date_time) * 1000,
+                            "bet"=> $stat->bet,
+                            "win"=> $stat->win,
+                            "balance"=> $stat->balance,
+                            "roundDetails"=> null,
+                            "currency"=> "KRW",
+                            "currencySymbol"=> "₩",
+                            "hash"=> "8df8f32a51b7fbd3ea4c8b2dd20435d6"
+                        ];
+                }
+            }
+
+            return response()->json($data);
         }
 
         public function children(\Illuminate\Http\Request $request)
         {
-            $data = '[{"roundId":2752193138,"request":{"symbol":"vs25pandatemple","c":"10","repeat":"0","action":"doSpin","index":"674","counter":"1347","l":"25"},"response":{"tw":"350.00","l0":"5~50.00~5~1~2","rw":"250.0","l1":"7~50.00~0~1~7","stime":"1633355914398","sa":"7,2,6,10,9","sb":"10,12,9,4,3","balance":"858,950.00","bw":"1","sh":"3","wp":"1","end":"1","coef":"250.0","c":"10.00","sver":"5","index":"674","balance_cash":"858,950.00","counter":"1348","l":"25","reel_set":"1","balance_bonus":"0.00","na":"c","s":"13,2,9,7,3,9,3,13,12,8,5,7,4,8,13","w":"100.00","gsf":"13~7","gsf_a":"13~1"},"currency":"KRW","currencySymbol":"₩","configHash":"8dea16ee64f6907400eb8e93e92142fc"},{"roundId":2752193138,"request":{"symbol":"vs25pandatemple","repeat":"0","action":"doCollect","index":"675","counter":"1349"},"response":{"balance_bonus":"0.00","na":"s","balance":"859,300.00","sver":"5","index":"675","balance_cash":"859,300.00","stime":"1633355914961","counter":"1350"},"currency":"KRW","currencySymbol":"₩","configHash":"8dea16ee64f6907400eb8e93e92142fc"}]';
+            $data = '[{"roundId":2753568256,"request":{"symbol":"vs20hburnhs","c":"100","repeat":"0","action":"doSpin","index":"4","counter":"7","l":"20"},"response":{"mo":"0,0,0,20,20,0,0,0,0,20,0,0,0,0,0","tw":"0.00","c":"100.00","mo_t":"r,r,r,v,v,r,r,r,r,v,r,r,r,r,r","sver":"5","index":"4","balance_cash":"48,778,643.00","stime":"1634565943531","counter":"8","l":"20","reel_set":"0","sa":"10,10,1,11,8","sb":"8,11,10,10,9","balance_bonus":"0.00","na":"s","s":"10,3,9,13,13,4,4,9,10,13,8,8,9,10,1","balance":"48,778,643.00","sh":"3","w":"0.00"},"currency":"KRW","currencySymbol":"₩","configHash":"02344a56ed9f75a6ddaab07eb01abc54"}]';
             return response($data, 200)->header('Content-Type', 'application/json');
             
         }

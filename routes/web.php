@@ -1340,12 +1340,14 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('/promo/tournament/v2/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
     Route::get('/minilobby/games.json', 'GameProviders\PPController@minilobby_games_json');
     Route::get('/minilobby/start', 'GameProviders\PPController@minilobby_start');
+    Route::get('lastGameHistory.do', 'GameProviders\PPController@ppHistory');
+    Route::get('api/history/v2/settings/general', 'GameProviders\PPController@general');
+    Route::get('api/history/v2/play-session/last-items', 'GameProviders\PPController@last_items');
+    Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');    
 });
 
-Route::get('lastGameHistory.do', 'GameProviders\PPController@ppHistory');
-Route::get('api/history/v2/settings/general', 'GameProviders\PPController@general');
-Route::get('api/history/v2/play-session/last-items', 'GameProviders\PPController@last_items');
-Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');
+Route::get('pphistory/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
+Route::get('pphistory/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
 
 
 /**
