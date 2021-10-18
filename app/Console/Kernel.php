@@ -782,7 +782,7 @@ namespace VanguardLTE\Console
                         {
                             $bank->bank = $maxbonus->value;
                         }
-                        if ($old != $bank->slots){
+                        if ($old != $bank->bank){
                             $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
                             if ($master)
                             {
