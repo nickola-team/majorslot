@@ -64,6 +64,28 @@ namespace VanguardLTE\Console
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
             }
 
+            $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
+            if ($reset_bank){
+                switch ($reset_bank->value)
+                {
+                    case 0:
+                        $schedule->command('hourly:reset_bank')->cron('0 * * * *'); //every hour
+                        break;
+                    case 1:
+                        $schedule->command('hourly:reset_bank')->cron('0 * / 2 * * *'); //every 2 hour
+                        break;
+                    case 2:
+                        $schedule->command('hourly:reset_bank')->cron('0 * / 6 * * *'); //every 6 hour
+                        break;
+                    case 3:
+                        $schedule->command('hourly:reset_bank')->cron('0 * / 12 * * *'); //every 12 hour
+                        break;
+                    case 4:
+                        $schedule->command('hourly:reset_bank')->cron('0 0 * * *'); //every day, 0hour
+                        break;
+                }
+            }
+
             $schedule->call(function()
             {
                 $start_date = date("Y-m-d H:i:s",strtotime("-12 hours"));
@@ -349,8 +371,6 @@ namespace VanguardLTE\Console
                     }
                 }
             })->everyMinute();
-
-            
         }
         protected function commands()
         {
@@ -704,6 +724,88 @@ namespace VanguardLTE\Console
                     
                 }
                 $this->info('End deal calculation');
+            });
+            \Artisan::command('hourly:reset_bank {masterid=0}', function ($masterid) {
+                $this->info('Begin reset game bank');
+                $minslot = \VanguardLTE\Settings::where('key', 'minslot')->first();
+                $maxslot = \VanguardLTE\Settings::where('key', 'maxslot')->first();
+                $minbonus = \VanguardLTE\Settings::where('key', 'minbonus')->first();
+                $maxbonus = \VanguardLTE\Settings::where('key', 'maxbonus')->first();
+                // $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
+                $gamebanks = \VanguardLTE\GameBank::all();
+                foreach ($gamebanks as $bank)
+                {
+                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    try {
+                        $old = $bank->slots;
+                        if ($minslot && $bank->slots < $minslot->value)
+                        {
+                            $bank->slots = $minslot->value;
+                        }
+                        if ($maxslot && $bank->slots > $maxslot->value)
+                        {
+                            $bank->slots = $maxslot->value;
+                        }
+                        if ($old != $bank->slots){
+                            $shop = \VanguardLTE\Shop::where('id', $bank->shop_id)->first();
+                            if ($shop){
+                                $name = $shop->name;
+                                $bank->save();
+                                \VanguardLTE\BankStat::create([
+                                    'name' => 'Slot' . "[$name]", 
+                                    'user_id' => $admin->id, 
+                                    'type' => ($old<$bank->slots)?'add':'out', 
+                                    'sum' => abs($old - $bank->slots), 
+                                    'old' => $old, 
+                                    'new' => $bank->slots, 
+                                    'shop_id' => $bank->shop_id
+                                ]);
+                            }
+                        }
+                    }
+                    catch (Exception $ex)
+                    {
+
+                    }
+                }
+
+                $bonusbanks = \VanguardLTE\BonusBank::all();
+                foreach ($bonusbanks as $bank)
+                {
+                    try {
+                        $old = $bank->bank;
+                        if ($minbonus && $bank->bank < $minbonus->value)
+                        {
+                            $bank->bank = $minbonus->value;
+                        }
+                        if ($maxbonus && $bank->bank > $maxbonus->value)
+                        {
+                            $bank->bank = $maxbonus->value;
+                        }
+                        if ($old != $bank->slots){
+                            $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
+                            if ($master)
+                            {
+                                $name = $master->username;
+                                $bank->save();
+                                \VanguardLTE\BankStat::create([
+                                    'name' => 'Bonus' . "[$name]", 
+                                    'user_id' => $admin->id, 
+                                    'type' => ($old<$bank->bank)?'add':'out', 
+                                    'sum' => abs($old - $bank->bank), 
+                                    'old' => $old, 
+                                    'new' => $bank->bank, 
+                                    'shop_id' => 0
+                                ]);
+                            }
+                        }
+                    }
+                    catch (Exception $ex)
+                    {
+
+                    }
+                }
+                $this->info('End reset game bank');
             });
             \Artisan::command('daily:reset_ggr {masterid=0}', function ($masterid) {
                 $this->info('Begin reset calculation');
