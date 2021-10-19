@@ -255,7 +255,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'WheelIndex', -1);     
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '275' . substr($roundstr, 3, 7);
+                    $roundstr = '275' . substr($roundstr, 4, 7);
                     $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                 }
                 $Balance = $slotSettings->GetBalance();
