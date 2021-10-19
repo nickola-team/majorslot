@@ -45,7 +45,8 @@
     "extra": "Extra",
     "extraDrop": "Extra Drop",
     "allWins": "All Wins",
-    "wins": "Wins"
+    "wins": "Wins",
+    "jackpotAwarded": "Jackpot Bonus Awarded"
   },
   "winLines": {
     "title": "Win Lines",
@@ -140,7 +141,8 @@
   "feature": {
     "title": "Feature",
     "pending": "Pending Features",
-    "winningSrf": "Winning Symbol Replacement Feature"
+    "winningSrf": "Winning Symbol Replacement Feature",
+    "superSpin": "Super Spin"
   },
   "mysteryScatter": {
     "title": "Mystery Scatter",
@@ -1009,5 +1011,48 @@
       "bazooka": "Bazooka",
       "dynamite": "Dynamite"
     }
+  },
+  "vswayshive": {
+    "game": "Star Bounty"
+  },
+  "vs20tweethouse": {
+    "game": "The Tweety house"
+  },
+  "vs20candvil": {
+    "game": "Candy Village"
+  },
+  "vs25wolfjpt": {
+    "game": "Wolf Gold Jackpot",
+    "bonus": {
+      "11": {
+        "extraWin": "Extra Win"
+      }
+    }
+  },
+  "vs25wolfsolbet": {
+    "game": "Solbet Wolf Gold",
+    "bonus": {
+      "11": {
+        "extraWin": "Extra Win"
+      }
+    }
+  },
+  "vs20santawonder": {
+    "game": "Santa's Wonderland"
+  },
+  "vs10bookfallen": {
+    "game": "Book of Fallen"
+  },
+  "vs20superx": {
+    "game": "Super X"
+  },
+  "vs20olympnova88": {
+    "game": "Nova88 Olympus"
+  },
+  "vs10bxmasbnza": {
+    "game": "Christmas Big Bass Bonanza"
+  },
+  "vs20smugcove": {
+    "game": "Smugglers Cove"
   }
 }

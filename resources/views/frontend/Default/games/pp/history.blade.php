@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <base href="{{Request::root()}}/pphistory/">
+    <base href="{{Request::root()}}/pphistory/{{$symbol}}/">
     <script>
         window.token = "{{$usertoken}}";
         window.language = "ko"

@@ -1413,6 +1413,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function ppHistory(\Illuminate\Http\Request $request)
         {
+            $symbol = $request->symbol;
             $user = \Auth()->user();
             if (!$user)
             {
@@ -1420,18 +1421,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $usertoken = $user->api_token;
             $hash = $user->generateCode(8);
-            return view('frontend.Default.games.pp.history', compact('usertoken','hash'));
+            return view('frontend.Default.games.pp.history', compact('usertoken','hash', 'symbol'));
         }
-        public function historymaincss($file, $hash, \Illuminate\Http\Request $request)
+        public function historymaincss($symbol, $file, $hash, \Illuminate\Http\Request $request)
         {
-            $css = file_get_contents(public_path('pphistory/'.$file.'.min.css'), true);
+            $css = file_get_contents(public_path('pphistory/'. $symbol . '/' . $file.'.min.css'), true);
             $css = preg_replace('/f2e3afd2/', $hash, $css);
             return response($css, 200)->header('Content-Type', 'text/css');
-
         }
-        public function historymainjs($file, $hash, \Illuminate\Http\Request $request)
+        public function historymainjs($symbol, $file, $hash, \Illuminate\Http\Request $request)
         {
-            $js = file_get_contents(public_path('pphistory/'.$file.'.min.js'), true);
+            $js = file_get_contents(public_path('pphistory/'. $symbol . '/'. $file.'.min.js'), true);
             $js = preg_replace('/f2e3afd2/', $hash, $js);
             return response($js, 200)->header('Content-Type', 'application/javascript');
         }
@@ -1489,8 +1489,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function children(\Illuminate\Http\Request $request)
         {
-            $data = '[{"roundId":2753568256,"request":{"symbol":"vs20hburnhs","c":"100","repeat":"0","action":"doSpin","index":"4","counter":"7","l":"20"},"response":{"mo":"0,0,0,20,20,0,0,0,0,20,0,0,0,0,0","tw":"0.00","c":"100.00","mo_t":"r,r,r,v,v,r,r,r,r,v,r,r,r,r,r","sver":"5","index":"4","balance_cash":"48,778,643.00","stime":"1634565943531","counter":"8","l":"20","reel_set":"0","sa":"10,10,1,11,8","sb":"8,11,10,10,9","balance_bonus":"0.00","na":"s","s":"10,3,9,13,13,4,4,9,10,13,8,8,9,10,1","balance":"48,778,643.00","sh":"3","w":"0.00"},"currency":"KRW","currencySymbol":"₩","configHash":"02344a56ed9f75a6ddaab07eb01abc54"}]';
-            return response($data, 200)->header('Content-Type', 'application/json');
+            $id = $request->id;
+            $token = $request->token;
+            $symbol = $request->symbol;
+            $token = $request->token;
+            $user = \VanguardLTE\User::where('api_token', $token)->first();
+            if (!$user )
+            {
+                return response()->json([ ]);
+            }
+
+            $logdata = \VanguardLTE\PPGameLog::where(['roundid'=>$id, 'user_id'=>$user->id])->get();
+            if (!$logdata)
+            {
+                return response()->json([ ]);
+            }
+            $data = [];
+            foreach ($logdata as $log)
+            {
+                $data[] = json_decode($log->str);
+            }
+
+            // $data = '[{"roundId":2753568256,"request":{"symbol":"vs20hburnhs","c":"100","repeat":"0","action":"doSpin","index":"4","counter":"7","l":"20"},"response":{"mo":"0,0,0,20,20,0,0,0,0,20,0,0,0,0,0","tw":"0.00","c":"100.00","mo_t":"r,r,r,v,v,r,r,r,r,v,r,r,r,r,r","sver":"5","index":"4","balance_cash":"48,778,643.00","stime":"1634565943531","counter":"8","l":"20","reel_set":"0","sa":"10,10,1,11,8","sb":"8,11,10,10,9","balance_bonus":"0.00","na":"s","s":"10,3,9,13,13,4,4,9,10,13,8,8,9,10,1","balance":"48,778,643.00","sh":"3","w":"0.00"},"currency":"KRW","currencySymbol":"₩","configHash":"02344a56ed9f75a6ddaab07eb01abc54"}]';
+            // return response($data, 200)->header('Content-Type', 'application/json');
+            return response()->json($data);
             
         }
 

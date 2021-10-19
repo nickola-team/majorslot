@@ -1346,8 +1346,8 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');    
 });
 
-Route::get('pphistory/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
-Route::get('pphistory/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
+Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
+Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
 
 
 /**

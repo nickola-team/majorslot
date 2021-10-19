@@ -703,7 +703,13 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             }
         }
         public function saveGameLog($strLog, $roundID){
-            
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
+                'user_id' => $this->playerId, 
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
+            ]);
         }
         public function GetWildCount(){
             $wildCounts = [
