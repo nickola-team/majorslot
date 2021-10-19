@@ -34,6 +34,7 @@ namespace VanguardLTE\Console
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
+                \VanguardLTE\PPGameLog::where('time', '<', $start_date)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
