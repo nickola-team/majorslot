@@ -707,9 +707,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         $dates[0] = date("Y-m-d H:i",strtotime("-30 days"));
                     }
                 }
-                $statistics = $statistics->where('shops_stat.date_time', '>=', $dates[0]);
-                $statistics = $statistics->where('shops_stat.date_time', '<=', $dates[1]);
             }
+            else
+            {
+                $dates = [
+                    date('Y-m-d 00:00'),
+                    date('Y-m-d H:i')
+                ];
+            }
+            $statistics = $statistics->where('shops_stat.date_time', '>=', $dates[0]);
+            $statistics = $statistics->where('shops_stat.date_time', '<=', $dates[1]);
+
+
             if( $request->shifts != '' ) 
             {
                 $shift = \VanguardLTE\OpenShift::find($request->shifts);
