@@ -466,6 +466,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $start_date = $dates[0];
                 $end_date = $dates[1];
             }
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $d = strtotime($start_date);
+                if ($d < strtotime("-30 days"))
+                {
+                    $start_date = date("Y-m-d H:i:s",strtotime("-30 days"));
+                }
+            }
 
             $statistics = $statistics->where('stat_game.date_time', '>=', $start_date);
             $statistics = $statistics->where('stat_game.date_time', '<=', $end_date);
@@ -691,6 +699,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);
+                if (!auth()->user()->hasRole('admin'))
+                {
+                    $d = strtotime($dates[0]);
+                    if ($d < strtotime("-30 days"))
+                    {
+                        $dates[0] = date("Y-m-d H:i",strtotime("-30 days"));
+                    }
+                }
                 $statistics = $statistics->where('shops_stat.date_time', '>=', $dates[0]);
                 $statistics = $statistics->where('shops_stat.date_time', '<=', $dates[1]);
             }
@@ -860,6 +876,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $start_date = $dates_tmp[0];
                 $end_date = $dates_tmp[1];
                 $request->session()->put('dates', $dates);
+            }
+
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $d = strtotime($start_date);
+                if ($d < strtotime("-30 days"))
+                {
+                    $start_date = date("Y-m-d",strtotime("-30 days"));
+                }
             }
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
@@ -1507,6 +1532,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if( $request->dates != '' ) 
             {
                 $dates = explode(' - ', $request->dates);
+                if (!auth()->user()->hasRole('admin'))
+                {
+                    $d = strtotime($dates[0]);
+                    if ($d < strtotime("-30 days"))
+                    {
+                        $dates[0] = date("Y-m-d H:i",strtotime("-30 days"));
+                    }
+                }
             }
             else
             {
