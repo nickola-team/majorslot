@@ -73,13 +73,13 @@ namespace VanguardLTE\Console
                         $schedule->command('hourly:reset_bank')->cron('0 * * * *'); //every hour
                         break;
                     case 1:
-                        $schedule->command('hourly:reset_bank')->cron('0 * / 2 * * *'); //every 2 hour
+                        $schedule->command('hourly:reset_bank')->cron('0 */2 * * *'); //every 2 hour
                         break;
                     case 2:
-                        $schedule->command('hourly:reset_bank')->cron('0 * / 6 * * *'); //every 6 hour
+                        $schedule->command('hourly:reset_bank')->cron('0 */6 * * *'); //every 6 hour
                         break;
                     case 3:
-                        $schedule->command('hourly:reset_bank')->cron('0 * / 12 * * *'); //every 12 hour
+                        $schedule->command('hourly:reset_bank')->cron('0 */12 * * *'); //every 12 hour
                         break;
                     case 4:
                         $schedule->command('hourly:reset_bank')->cron('0 0 * * *'); //every day, 0hour
