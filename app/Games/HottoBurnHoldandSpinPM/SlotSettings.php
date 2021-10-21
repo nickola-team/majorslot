@@ -728,7 +728,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
         }
         public function GetFinalMoneyCount(){
             $moneyCounts = [
-                [10,20,69,1],
+                [10,20,20,50],
                 [12,13,14,15]
             ];
             $percent = rand(0, 100);
