@@ -113,9 +113,9 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             $this->bonus_spins_in_base = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
             $this->bonus_spins_in_bonus = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
             $this->money_respin = [
-                [10, 10, 10, 10, 10, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15],
-                [20,40,60,80,100,120,140,160,180,200,220,240,260,280,300,320,340,360,380,400,2000,4000,6000,8000,10000,20000]
+                [50, 45, 4, 1, 10, 5, 5, 5, 5,   90, 9, 1, 2, 2, 2, 2, 1, 1, 1, 1,   95, 5, 1, 1, 1, 1],
+                [13,13,13,13,13,13,13,13,13,  14,14,14,14,14,14,14,14,14,14,14,  15,15,15,15,15,15],
+                [20,40,60,80,100,120,140,160,180,  200,220,240,260,280,300,320,340,360,380,400,  2000,4000,6000,8000,10000,20000]
             ];
             $this->base_money_chance = 14;
 
@@ -241,7 +241,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 24,
                 25
             ];
-            $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00,6000.00,7000.00,8000.00,9000.00,10000.00,12000.00]; 
             $this->Balance = $user->balance;
             $this->SymbolGame = [
                 '1', 
@@ -713,8 +713,8 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
         }
         public function GetWildCount(){
             $wildCounts = [
-                [20, 30, 30, 10, 10],
-                [1, 2, 3, 4, 5]
+                [30, 40, 30],
+                [3, 4, 5]
             ];
             $percent = rand(0, 95);
             $sum = $wildCounts[0][0];
@@ -726,10 +726,42 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             }
             return $wildCounts[1][0];
         }
-        public function GetMoneyIndex(){
-            $percent = rand(0, 95);
-            $sum = $this->money_respin[0][0];
-            for($i = 1; $i < count($this->money_respin[0]); $i++){
+        public function GetFinalMoneyCount(){
+            $moneyCounts = [
+                [10,20,69,1],
+                [12,13,14,15]
+            ];
+            $percent = rand(0, 100);
+            $sum = $moneyCounts[0][0];
+            for($i = 1; $i < count($moneyCounts[0]); $i++){
+                if($sum > $percent){
+                    return $moneyCounts[1][$i - 1];
+                }
+                $sum = $sum + $moneyCounts[0][$i];
+            }
+            if($percent == 100){
+                return 15;
+            }else{
+                return $moneyCounts[1][0];
+            }
+        }
+        public function GetMoneyIndex($slotEvent){
+            if($slotEvent != 'bet'){
+                $moneyTypePercent = mt_rand(0, 100);
+            }else{                
+                $moneyTypePercent = mt_rand(0, 98);
+            }
+
+            $startIndex = 0;
+            if($moneyTypePercent == 100){
+                $startIndex = 20;
+            }else if($moneyTypePercent >= 90){
+                $startIndex = 9;
+            }
+
+            $percent = rand(0, 100);
+            $sum = $this->money_respin[0][$startIndex];
+            for($i = $startIndex + 1; $i < count($this->money_respin[0]); $i++){
                 if($sum > $percent){
                     return $i - 1;
                 }
@@ -819,16 +851,16 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
-            if ($this->happyhouruser)
-            {
-                $bonus_spin = rand(1, 10);
-                $spin_percent = 5;
-                if ($garantType == 'freespin')
-                {
-                    $spin_percent = 3;
-                }
-                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-            }
+            // if ($this->happyhouruser)
+            // {
+            //     $bonus_spin = rand(1, 10);
+            //     $spin_percent = 5;
+            //     if ($garantType == 'freespin')
+            //     {
+            //         $spin_percent = 3;
+            //     }
+            //     $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            // }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
