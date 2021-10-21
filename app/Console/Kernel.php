@@ -506,6 +506,7 @@ namespace VanguardLTE\Console
                         $this->info('skipping userid=' . $request->user_id . ', id=' . $request->id);
                         continue;
                     }
+                    $processed_users[] = $request->user_id;
                     if ($request->provider == 'pp')
                     {
                         $url = PPController::makelink($request->gamecode, $request->user_id);
@@ -515,7 +516,6 @@ namespace VanguardLTE\Console
                                 'launchUrl' => $url,
                                 'finished' => 1,
                             ]);
-                            $processed_users[] = $request->user_id;
                         }
                     }
                 }
