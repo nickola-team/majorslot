@@ -31,7 +31,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return redirect()->back()->withErrors('알수 없는 오류');
                 }
-                $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->whereIn('id', auth()->user()->availableShops());
+                $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->whereIn('id', auth()->user()->availableShops())->get();
                 if (count($shops) > 0) {
                     $shopUsers = [];
                     foreach ($shops as $shop)
