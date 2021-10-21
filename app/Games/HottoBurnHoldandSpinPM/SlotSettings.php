@@ -727,6 +727,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             return $wildCounts[1][0];
         }
         public function GetFinalMoneyCount(){
+            return 15;
             $moneyCounts = [
                 [10,20,20,50],
                 [12,13,14,15]
