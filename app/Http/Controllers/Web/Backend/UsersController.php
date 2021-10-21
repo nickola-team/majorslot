@@ -31,9 +31,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     return redirect()->back()->withErrors('알수 없는 오류');
                 }
-                $shop = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->whereIn('id', auth()->user()->availableShops())->first();
-                if ($shop) {
-                    $users = $users->whereIn('id', $shop->users->pluck('user_id')->toArray());
+                $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shopname.'%')->whereIn('id', auth()->user()->availableShops());
+                if (count($shops) > 0) {
+                    $shopUsers = [];
+                    foreach ($shops as $shop)
+                    {
+                        $shopUsers = array_merge_recursive($shopUsers, $shop->users->pluck('user_id')->toArray());
+                    }
+                    $users = $users->whereIn('id', $shopUsers);
                 }
             }
             if (!$users)
