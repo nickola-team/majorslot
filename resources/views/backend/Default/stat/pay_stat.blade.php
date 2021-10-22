@@ -33,6 +33,7 @@
 									<option value="" @if (Request::get('type') == '') selected @endif>@lang('app.all')</option>
 									<option value="add" @if (Request::get('type') == 'add') selected @endif>충전</option>
 									<option value="out" @if (Request::get('type') == 'out') selected @endif>환전</option>
+									<option value="deal_out" @if (Request::get('type') == 'deal_out') selected @endif>딜비전환</option>
 								</select>
 							</div>
 						</div>
