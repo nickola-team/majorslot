@@ -113,7 +113,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             $this->bonus_spins_in_base = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
             $this->bonus_spins_in_bonus = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
             $this->money_respin = [
-                [50, 45, 4, 1, 10, 5, 5, 5, 5,   90, 9, 1, 2, 2, 2, 2, 1, 1, 1, 1,   95, 5, 1, 1, 1, 1],
+                [40, 40, 10, 8, 1, 1, 5, 5, 5,   80, 15, 5, 2, 2, 2, 2, 1, 1, 1, 1,   95, 5, 1, 1, 1, 1],
                 [13,13,13,13,13,13,13,13,13,  14,14,14,14,14,14,14,14,14,14,14,  15,15,15,15,15,15],
                 [20,40,60,80,100,120,140,160,180,  200,220,240,260,280,300,320,340,360,380,400,  2000,4000,6000,8000,10000,20000]
             ];
@@ -712,24 +712,43 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             ]);
         }
         public function GetWildCount(){
-            $wildCounts = [
-                [30, 40, 30],
-                [3, 4, 5]
-            ];
-            $percent = rand(0, 95);
-            $sum = $wildCounts[0][0];
-            for($i = 1; $i < count($wildCounts[0]); $i++){
-                if($sum > $percent){
-                    return $wildCounts[1][$i - 1];
+            $wildMaskCounts = $this->GetGameData($this->slotId . 'WildMaskCounts');
+            $wildCounts = [3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,6,7];
+            $count = 0;
+            for($i = 0; $i < 20; $i++){
+                if($wildMaskCounts[$i] == 1){
+                    $count++;
                 }
-                $sum = $sum + $wildCounts[0][$i];
             }
-            return $wildCounts[1][0];
+            if($count == 20){
+                $wildMaskCounts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $count = 0;
+            }
+
+            $wildcount = 0;
+            if($count > 18){
+                for($i = 0; $i < 20; $i++){
+                    if($wildMaskCounts[$i] == 0){
+                        $wildMaskCounts[$i] = 1;
+                        $wildcount = $wildCounts[$i];
+                    }
+                }
+            }else{
+                while(true){
+                    $count_index = mt_rand(0, 19);
+                    if($wildMaskCounts[$count_index] == 0){
+                        $wildMaskCounts[$count_index] = 1;
+                        $wildcount = $wildCounts[$count_index];
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'WildMaskCounts', $wildMaskCounts);
+            return $wildcount;
         }
         public function GetFinalMoneyCount(){
-            return 15;
             $moneyCounts = [
-                [10,20,20,50],
+                [10,20,69,1],
                 [12,13,14,15]
             ];
             $percent = rand(0, 100);
@@ -746,20 +765,52 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 return $moneyCounts[1][0];
             }
         }
-        public function GetMoneyIndex($slotEvent){
+        public function GetMoneyIndex($slotEvent){            
             if($slotEvent != 'bet'){
-                $moneyTypePercent = mt_rand(0, 100);
+                $lastIndex = 19;
             }else{                
-                $moneyTypePercent = mt_rand(0, 98);
+                $lastIndex = 18;
+            }
+            $moneyMaskIndexes = $this->GetGameData($this->slotId . 'MoneyMaskIndexes');
+            $moneyIndexes = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,3];
+
+            $count = 0;
+            for($i = 0; $i < 20; $i++){
+                if($moneyMaskIndexes[$i] == 1){
+                    $count++;
+                }
+            }
+            if($count == 20){
+                $moneyMaskIndexes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $count = 0;
+            }
+
+            $moneyIndex = 0;
+            if($count > $lastIndex - 2){
+                for($i = 0; $i < 20; $i++){
+                    if($moneyMaskIndexes[$i] == 0){
+                        $moneyMaskIndexes[$i] = 1;
+                        $moneyIndex = $moneyIndexes[$i];
+                    }
+                }
+            }else{
+                while(true){
+                    $count_index = mt_rand(0, $lastIndex);
+                    if($moneyMaskIndexes[$count_index] == 0){
+                        $moneyMaskIndexes[$count_index] = 1;
+                        $moneyIndex = $moneyIndexes[$count_index];
+                        break;
+                    }
+                }
             }
 
             $startIndex = 0;
-            if($moneyTypePercent == 100){
+            if($moneyIndex  == 3){
                 $startIndex = 20;
-            }else if($moneyTypePercent >= 90){
+            }else if($moneyIndex == 2){
                 $startIndex = 9;
             }
-
+            $this->SetGameData($this->slotId . 'MoneyMaskIndexes', $moneyMaskIndexes);
             $percent = rand(0, 100);
             $sum = $this->money_respin[0][$startIndex];
             for($i = $startIndex + 1; $i < count($this->money_respin[0]); $i++){

@@ -79,8 +79,10 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'OldWheelValue', [0]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'WheelIndex', -1);     
                 $slotSettings->SetGameData($slotSettings->slotId . 'FinalMoneyCount', 12);     
-                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [9,10,3,7,5,7,10,6,3,9,5,4,6,9,7]);
-                $slotSettings->setGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', [9,10,3,7,5,7,10,6,3,9,5,4,6,9,7]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'WildMaskCounts', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'MoneyMaskIndexes', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -92,7 +94,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);          
                     $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', $lastEvent->serverResponse->Bgt);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
                     if($lastEvent->serverResponse->Bgt == 50){
                         $slotSettings->SetGameData($slotSettings->slotId . 'WheelLevel', $lastEvent->serverResponse->WheelLevel);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWheelValue', $lastEvent->serverResponse->TotalWheelValue);                    
@@ -259,7 +261,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);   // Round ID Generation
                 }
                 $Balance = $slotSettings->GetBalance();
                 if( $slotEvent['slotEvent'] == 'bet' ) 
@@ -268,7 +270,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 }
                 $isWild = false;
 
-                if(mt_rand(0, 100) < 10 && $winType != 'bonus'){
+                if(mt_rand(0, 100) < 5 && $winType != 'bonus'){
                     $isWild = true;
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
