@@ -64,7 +64,7 @@
 					</div>
 
 				<?php
-				$dealvalue = auth()->user()->hasRole('manager')?auth()->user()->shop->deal_balance:auth()->user()->deal_balance - auth()->user()->mileage;
+				$dealvalue = auth()->user()->hasRole('manager')?(auth()->user()->shop->deal_balance - auth()->user()->shop->mileage):(auth()->user()->deal_balance - auth()->user()->mileage);
 				$balance = auth()->user()->hasRole('manager')?auth()->user()->shop->balance:auth()->user()->balance;
 				?>
 				<div class="row" style="margin-top: 20px;">

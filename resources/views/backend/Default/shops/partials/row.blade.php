@@ -30,9 +30,9 @@
 	@if(auth()->user()->hasRole('admin'))
 	<td>{{ $shop->percent }}</td>
 	@endif
-	<td>{{ number_format($shop->deal_balance,0) }}</td>
+	<td>{{ number_format($shop->deal_balance - $shop->mileage,0) }}</td>
 	@if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
-	<td>{{ number_format($shop->ggr_balance-$shop->count_deal_balance,0) }}</td>
+	<td>{{ number_format($shop->ggr_balance - $shop->ggr_mileage - ($shop->count_deal_balance - $shop->count_mileage),0) }}</td>
 	@endif
 	<td>{{ $shop->deal_percent }}</td>
 	<td>{{ $shop->table_deal_percent }}</td>
