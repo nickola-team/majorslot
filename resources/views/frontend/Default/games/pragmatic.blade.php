@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/frontend/Default/css/wait/wait.css">
     <script src="https://client.pragmaticplaylive.net/desktop/assets/api/fullscreenApi.js" ></script>
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
+    <script src='/frontend/Default/js/dev_tools.js'>
     <script>
         window.onload = function () {
             document.documentElement.style.width = "100%";
