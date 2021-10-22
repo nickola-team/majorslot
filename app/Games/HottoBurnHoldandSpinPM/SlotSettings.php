@@ -780,14 +780,14 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $count++;
                 }
             }
-            if($count == 20){
+            if($count == $lastIndex + 1){
                 $moneyMaskIndexes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                 $count = 0;
             }
 
             $moneyIndex = 0;
             if($count > $lastIndex - 2){
-                for($i = 0; $i < 20; $i++){
+                for($i = 0; $i < $lastIndex + 1; $i++){
                     if($moneyMaskIndexes[$i] == 0){
                         $moneyMaskIndexes[$i] = 1;
                         $moneyIndex = $moneyIndexes[$i];
