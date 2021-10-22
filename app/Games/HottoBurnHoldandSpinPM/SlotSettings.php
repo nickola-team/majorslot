@@ -772,7 +772,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 $lastIndex = 18;
             }
             $moneyMaskIndexes = $this->GetGameData($this->slotId . 'MoneyMaskIndexes');
-            $moneyIndexes = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,3];
+            $moneyIndexes = $this->GetGameData($this->slotId . 'MoneyIndexes');
 
             $count = 0;
             for($i = 0; $i < 20; $i++){
@@ -780,14 +780,23 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $count++;
                 }
             }
-            if($count == $lastIndex + 1){
+            if($count == 20){
                 $moneyMaskIndexes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $loopCount = $this->GetGameData($this->slotId . 'MoneyLoopCount');         
+                $loopCount++;
+                if($loopCount >= 15){
+                    $this->SetGameData($this->slotId . 'MoneyLoopCount', 0);         
+                    $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2]);  
+                }else{
+                    $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
+                    $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2]);          
+                }
                 $count = 0;
             }
 
             $moneyIndex = 0;
             if($count > $lastIndex - 2){
-                for($i = 0; $i < $lastIndex + 1; $i++){
+                for($i = 0; $i < 20; $i++){
                     if($moneyMaskIndexes[$i] == 0){
                         $moneyMaskIndexes[$i] = 1;
                         $moneyIndex = $moneyIndexes[$i];
