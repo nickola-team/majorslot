@@ -803,14 +803,39 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
             return $symbols[0][0];
         }
         public function GenerateFreeSpinCount(){
-            $sum = rand(0, 100);
-            if($sum <= 80){
-                return 3;
-            }else if($sum < 96){
-                return 4;
-            }else{
-                return 5;
+            $scatterCounts = [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4];
+            $scatterMaskCounts = $this->GetGameData($this->slotId . 'ScatterMaskCounts');
+            $count = 0;
+            for($i = 0; $i < 20; $i++){
+                if($scatterMaskCounts[$i] == 1){
+                    $count++;
+                }
             }
+            if($count == 20){
+                $scatterMaskCounts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $count = 0;
+            }
+
+            $scattercount = 0;
+            if($count > 18){
+                for($i = 0; $i < 20; $i++){
+                    if($scatterMaskCounts[$i] == 0){
+                        $scatterMaskCounts[$i] = 1;
+                        $scattercount = $scatterCounts[$i];
+                    }
+                }
+            }else{
+                while(true){
+                    $count_index = mt_rand(0, 19);
+                    if($scatterMaskCounts[$count_index] == 0){
+                        $scatterMaskCounts[$count_index] = 1;
+                        $scattercount = $scatterCounts[$count_index];
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'ScatterMaskCounts', $scatterMaskCounts);
+            return $scattercount;
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {

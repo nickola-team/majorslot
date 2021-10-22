@@ -74,6 +74,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusSymbol', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                 $slotSettings->setGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ScatterMaskCounts', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
