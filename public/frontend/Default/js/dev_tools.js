@@ -6,9 +6,9 @@ firstTest,
 inter;
 
 
-// window.addEventListener('load', function() {
-//     setTimeout(init, 1000);
-// })
+window.addEventListener('load', function() {
+    setTimeout(init, 1000);
+})
 
 function init() {
 

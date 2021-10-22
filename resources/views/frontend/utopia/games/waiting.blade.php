@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/frontend/utopia/css/wait.css">
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>
-    <script src='/frontend/Default/js/dev_tools.js'>
+    <script src='/frontend/Default/js/dev_tools.js'></script>
     <script>
         $( document ).ready(function() {
             var bar=$('#progress_bar');
