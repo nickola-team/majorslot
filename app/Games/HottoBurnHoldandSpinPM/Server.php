@@ -263,7 +263,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                 }
                 $Balance = $slotSettings->GetBalance();
                 if( $slotEvent['slotEvent'] == 'bet' ) 
