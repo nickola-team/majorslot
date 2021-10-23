@@ -8,32 +8,31 @@ console.log('======= Starting pragmatic play balance synchronization thread ====
 console.log(' Balance Sync = %d seconds', balanceSync / 1000);
 console.log(' Bet/Win Sync = %d seconds', betwinSync / 1000);
 let i = 0;
-setTimeout( function syncBalance()  {
-  var datetime = new Date();
-  console.log('Syncing balance ', datetime.toLocaleString());
-
-  var child = exec("php artisan pp:syncbalance 1", (error, stdout, stderr) => {
-      if (error) {
-          console.log(`error: \n${error.message}`);
-          return;
-      }
-      if (stderr) {
-          console.log(`stderr: \n${stderr}`);
-          return;
-      }
-      console.log(`sync result: \n${stdout}`);
-  });
-  child.on('close', (code, signal) => {
-      console.log('exit syncBalance');
-      makeurl();
-      setTimeout(syncBalance, balanceSync);
-  });
-  child.on('error', (code, signal) => {
-    console.log('error syncBalance');
-    makeurl();
-    setTimeout(syncBalance, balanceSync);
+function syncBalance()  {
+    var datetime = new Date();
+    console.log('Syncing balance ', datetime.toLocaleString());
+  
+    var child = exec("php artisan pp:syncbalance 1", (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: \n${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: \n${stderr}`);
+            return;
+        }
+        console.log(`sync result: \n${stdout}`);
     });
-}, balanceSync);
+    child.on('close', (code, signal) => {
+        console.log('exit syncBalance');
+        makeurl();
+    });
+    child.on('error', (code, signal) => {
+      console.log('error syncBalance');
+      makeurl();
+      });
+  };
+setTimeout(syncBalance , balanceSync);
 
 setTimeout( function gameround()  {
   var datetime = new Date();
@@ -76,8 +75,10 @@ function makeurl() {
     
     child.on('close', (code, signal) => {
         console.log('exit launchSync');
+        setTimeout(syncBalance, balanceSync);
     });
     child.on('error', (code, signal) => {
         console.log('error launchSync');
+        setTimeout(syncBalance, balanceSync);
     })
 }
