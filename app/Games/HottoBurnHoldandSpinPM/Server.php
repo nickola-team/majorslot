@@ -271,9 +271,12 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $slotSettings->UpdateJackpots($betline * $lines);
                 }
                 $isWild = false;
-
-                if(mt_rand(0, 100) < 5 && $winType != 'bonus'){
+                if(mt_rand(0, 100) < 2 && $winType != 'bonus'){
                     $isWild = true;
+                }
+                $initMoneyCounts = 0;
+                if($winType == 'bonus'){
+                    $initMoneyCounts = $slotSettings->GetMoneyCount();
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
@@ -288,11 +291,14 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $strWinLine = '';
                     $winSymbols = [];
                     $reels = [];
-                    $initreels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    $initreels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $initMoneyCounts);
                     for($k = 1; $k <= 5; $k++){
                         for($j = 0; $j < 3; $j++){
                             if($initreels['reel' . $k][$j] == 11){
                                 $moneyIndex = $slotSettings->GetMoneyIndex($slotEvent['slotEvent']);
+                                if($slotSettings->GetGameData($slotSettings->slotId . 'MoneyLoopCount') % 10 > 0 && $moneyIndex >= 9){
+                                    $moneyIndex = mt_rand(0, 8);
+                                }
                                 $initreels['reel' . $k][$j] = $slotSettings->money_respin[1][$moneyIndex];
                                 $_moneyValue[$k - 1 + $j * 5] = $slotSettings->money_respin[2][$moneyIndex];
                             }
@@ -418,7 +424,10 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     }
                     if($isWild == true && $moneyCount > 0){
 
-                    }else if($highMoneyCount > 1){
+                    }else if($winType == 'bonus' && $moneyCount != $initMoneyCounts){
+
+                    }
+                    else if($highMoneyCount > 1){
 
                     }else if( $moneyCount >= 5 && ($winType != 'bonus' || $isWild == true )) 
                     {
@@ -804,7 +813,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"Bgt":' . $slotSettings->GetGameData($slotSettings->slotId . 'Bgt')  . ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"WheelIndex":' . $slotSettings->GetGameData($slotSettings->slotId . 'WheelIndex'). ',"WheelLevel":' . $slotSettings->GetGameData($slotSettings->slotId . 'WheelLevel'). ',"TotalWheelValue":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWheelValue') . ',"winLines":[],"Jackpots":""' . ',"OldWheelValue":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'OldWheelValue'))  . ',"NewWheelValue":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'NewWheelValue')) . ',"MoneyValues":'.json_encode($_moneyValue).',"LastReel":'.json_encode($lastReel).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $totalWin, $slotEvent['slotEvent'], $isState);
+                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
 
             }
             if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
