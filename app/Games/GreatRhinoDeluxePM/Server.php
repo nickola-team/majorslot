@@ -426,13 +426,10 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                         $bonusType = 1;
                     }else{
                         $bonusType = 2;
-                        if(rand(0, 100) < 98){
-                            $defaultRespinCount = 2;
-                        }else{
-                            $defaultRespinCount = 3;
-                        }
+                        $defaultRespinCount = 2;
                     }
                 }
+                $bonusType = 2;
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -558,7 +555,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
                         }
-                        else if( $respinCount >= 2 && ($winType != 'bonus' || $slotEvent['slotEvent'] == 'freespin' || $respinCount != $defaultRespinCount)) 
+                        else if( $respinCount >= 2 && ($winType != 'bonus' || $slotEvent['slotEvent'] == 'freespin' || $respinCount != $defaultRespinCount || $acc_count > 10)) 
                         {
                         }
                         else if($acc_count > 10 && $slotEvent['slotEvent'] == 'freespin'){
