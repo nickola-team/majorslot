@@ -259,7 +259,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'NewWheelValue', [0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'OldWheelValue', [0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'WheelIndex', -1); 
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FinalMoneyCount', 12);         
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FinalMoneyCount', 12);       
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
@@ -271,9 +271,10 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $slotSettings->UpdateJackpots($betline * $lines);
                 }
                 $isWild = false;
-                if(mt_rand(0, 100) < 2 && $winType != 'bonus'){
+                if(mt_rand(0, 100) < 10 && $winType == 'win'){
                     $isWild = true;
                 }
+
                 $initMoneyCounts = 0;
                 if($winType == 'bonus'){
                     $initMoneyCounts = $slotSettings->GetMoneyCount();
@@ -307,11 +308,26 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $wildPoses = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
                     if($isWild){
                         $wildCount = $slotSettings->GetWildCount();
-                        while($wildCount > 0){
-                            $symbolIndex = mt_rand(0, 14);
-                            if($wildPoses[$symbolIndex] == -1){
-                                $wildPoses[$symbolIndex] = $initreels['reel' . ($symbolIndex % 5 + 1)][floor($symbolIndex / 5)];
-                                $wildCount--;
+                        $extendWildCount = 0;
+                        if($wildCount > 4){
+                            $extendWildCount = $wildCount - 4;
+                            $wildCount = 4;
+                        }
+                        $wildReels = $slotSettings->GetRandomNumber(1, 5, $wildCount);
+                        for($k = 0; $k < $wildCount; $k++){
+                            $column = $wildReels[$k];
+                            $wildRows = [];
+                            if($extendWildCount == 1){
+                                $extendWildCount = $extendWildCount - 1;
+                                $wildRows = $slotSettings->GetRandomNumber(1, 3, 2);
+                            }else if($extendWildCount >= 2){
+                                $extendWildCount = $extendWildCount - 2;
+                                $wildRows = $slotSettings->GetRandomNumber(1, 3, 3);
+                            }else{
+                                array_push($wildRows, mt_rand(1, 3));
+                            }
+                            for($r = 0; $r < count($wildRows); $r++){
+                                $wildPoses[($wildRows[$r] - 1) * 5 + $column - 1] = $initreels['reel' . $column][$wildRows[$r] - 1];
                             }
                         }
                     }
@@ -706,14 +722,26 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                         $moneyCount = 0;
                         $diamondCount = 0;
                         $lastReel = $slotSettings->GetGameData($slotSettings->slotId . 'LastReel');
+                        $initMoneyCount = 0;
+                        for($k = 0; $k < count($lastReel); $k++){
+                            if($lastReel[$k] >= $moneysymbol){
+                                $initMoneyCount++;
+                            }
+                        }
                         $_moneyValue = $slotSettings->GetGameData($slotSettings->slotId . 'MoneyValue');
+                        $limitCount = mt_rand(2, 5);
                         for($k = 0; $k < count($lastReel); $k++){
                             if($lastReel[$k] < $moneysymbol){
-                                if(rand(0, 100) < $slotSettings->base_money_chance && $_obf_winType == 1){
+                                $money_Chance = $slotSettings->base_money_chance;
+                                if($finalMoneyCount - $initMoneyCount > mt_rand(2, 3)){
+                                    $money_Chance = 50;
+                                }
+                                if(mt_rand(0, 100) < $money_Chance && $_obf_winType == 1 && $limitCount > 0){
                                     $moneyIndex = $slotSettings->GetMoneyIndex($slotEvent['slotEvent']);
                                     $lastReel[$k] = $slotSettings->money_respin[1][$moneyIndex];
                                     $_moneyValue[$k] = $slotSettings->money_respin[2][$moneyIndex];
                                     $moneyChangedWin = true;
+                                    $limitCount--;
                                 }
                             }
                             if($lastReel[$k] == 15){
