@@ -73,8 +73,9 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [5,8,7,9,8,8,7,3,4,4,11,6,8,11,10]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusSymbol', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
-                $slotSettings->setGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ScatterMaskCounts', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'ExtendWinCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -86,7 +87,10 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusSymbol', $lastEvent->serverResponse->BonusSymbol);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $lastEvent->serverResponse->BuyFreeSpin);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    if(isset($lastEvent->serverResponse->ExtendWinCount)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ExtendWinCount', $lastEvent->serverResponse->ExtendWinCount);
+                    }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
                     $bet = $lastEvent->serverResponse->bet;
                 }
                 else
@@ -259,10 +263,11 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusSymbol', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ExtendWinCount', 0);
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $roundstr); 
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr); 
                 }
                 
                 $Balance = $slotSettings->GetBalance();
@@ -275,9 +280,11 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 // }
                 $n_reel_set = 0;
                 $bonusSymbol = 0;
+                $leftFreeSpin = 0;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $bonusSymbol = $slotSettings->GetGameData($slotSettings->slotId . 'BonusSymbol');
                     $n_reel_set = $bonusSymbol - 2;
+                    $leftFreeSpin = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');
                 }
                 $initScatterCount = 0;
                 if($winType == 'bonus'){
@@ -293,7 +300,8 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                     $_obf_winCount = 0;
                     $strWinLine = '';
                     $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $n_reel_set, $initScatterCount);
-                    
+                    $isExtend = false;
+                    $extendWinCount = $slotSettings->GetGameData($slotSettings->slotId . 'ExtendWinCount');
                     $_obf_scatterposes = [];
                     $scattersCount = 0;
                     $scattersWin = 0;
@@ -382,6 +390,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                                     }
                                 }
                             }
+                            $isExtend = true;
                         }
                     }
                     if($scattersCount >= 3 && $slotEvent['slotEvent'] != 'freespin'){
@@ -408,12 +417,21 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                             // exit( $response );
                             break;
                         }
-                        if( $scattersCount >= 3 && ($winType != 'bonus' || $scattersCount != $initScatterCount) ) 
+                        if($slotEvent['slotEvent'] == 'freespin' && $leftFreeSpin == -1 && $extendWinCount == 0){
+                            if($isExtend == true && $me_bonusCount == 3){
+                                break;
+                            }else{
+
+                            }
+                        }else if( $scattersCount >= 3 && ($winType != 'bonus' || $scattersCount != $initScatterCount) ) 
                         {
+                        }
+                        else if($slotEvent['slotEvent'] == 'freespin' && $scattersCount == 2 && mt_rand(0, 100) < 90 && $winType != 'bonus'){
+
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
+                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
                             if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
                             {
                                 $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;
@@ -472,7 +490,9 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 $strLastReel = implode(',', $lastReel);
                 $strReelSa = $reels['reel1'][3].','.$reels['reel2'][3].','.$reels['reel3'][3].','.$reels['reel4'][3].','.$reels['reel5'][3];
                 $strReelSb = $reels['reel1'][-1].','.$reels['reel2'][-1].','.$reels['reel3'][-1].','.$reels['reel4'][-1].','.$reels['reel5'][-1];
-               
+                if($isExtend == true){                    
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ExtendWinCount', $slotSettings->GetGameData($slotSettings->slotId . 'ExtendWinCount') + 1);
+                }
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 $strOtherResponse = '';
                 $isEnd = false;
@@ -529,7 +549,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse . '&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&reel_set='.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&s='.$strLastReel;
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"BonusSymbol":'.$slotSettings->GetGameData($slotSettings->slotId . 'BonusSymbol') . ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . 
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"BonusSymbol":'.$slotSettings->GetGameData($slotSettings->slotId . 'BonusSymbol') . ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"ExtendWinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'ExtendWinCount') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';
                 $isState = false;
                 if(($scattersCount < 3 && $slotEvent['slotEvent'] != 'freespin') || ($slotEvent['slotEvent'] == 'freespin' && $isEnd == true)){
