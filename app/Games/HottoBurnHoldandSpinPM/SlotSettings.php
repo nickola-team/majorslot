@@ -797,10 +797,14 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 $loopCount++;
                 if($loopCount >= 20){
                     $this->SetGameData($this->slotId . 'MoneyLoopCount', 0);         
-                    $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2]);  
+                    $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3]);  
                 }else{
                     $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
-                    $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2]);          
+                    if($loopCount % 5 == 0){
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
+                    }else{
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);          
+                    }
                 }
                 $count = 0;
             }
@@ -842,19 +846,19 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             return 0; 
         }
         public function GetWheelValue(){
-            $wheel_values = [
+            $init_wheel_values = [
                 [35, 30, 20, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [10,20,30,40,50,60,70,80,90,100,200,300,400,500,600,700,800,900,1000,2000,5000]
             ];
-            $percent = mt_rand(0, 100);
-            $sum = 0;
-            for($i = 0; $i < count($wheel_values[0]); $i++){
-                $sum = $sum + $wheel_values[0][$i];
-                if($sum >= $percent){
-                    return $wheel_values[1][$i];
+
+            $wheel_indexes = $this->GetRandomNumber(1, 5, 5);
+            $wheel_values = [];
+            for($i = 0; $i < 2; $i++){
+                for($k = 0; $k < 5; $k++){
+                    array_push($wheel_values, $init_wheel_values[1][$wheel_indexes[$k] - 1]);
                 }
             }
-            return $wheel_values[1][0];
+            return $wheel_values;
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
