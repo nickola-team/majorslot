@@ -417,7 +417,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                             // exit( $response );
                             break;
                         }
-                        if($slotEvent['slotEvent'] == 'freespin' && $leftFreeSpin == -1 && $extendWinCount == 0){
+                        if($slotEvent['slotEvent'] == 'freespin' && (($leftFreeSpin < mt_rand(5, 8) && $extendWinCount == 0) || ($leftFreeSpin < mt_rand(0, 3) && $extendWinCount == 1))){
                             if($isExtend == true && $me_bonusCount == 3){
                                 break;
                             }else{
@@ -426,7 +426,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                         }else if( $scattersCount >= 3 && ($winType != 'bonus' || $scattersCount != $initScatterCount) ) 
                         {
                         }
-                        else if($slotEvent['slotEvent'] == 'freespin' && $scattersCount == 2 && mt_rand(0, 100) < 90 && $winType != 'bonus'){
+                        else if($scattersCount == 2 && mt_rand(0, 100) < 90 && $winType != 'bonus'){
 
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
