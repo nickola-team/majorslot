@@ -151,53 +151,53 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                     3
                 ];
                 $linesId[3] = [
+                    2, 
                     1, 
-                    2, 
-                    3, 
-                    2, 
-                    1
+                    1, 
+                    1, 
+                    2
                 ];
                 $linesId[4] = [
+                    2, 
                     3, 
-                    2, 
-                    1, 
-                    2, 
-                    3
+                    3, 
+                    3, 
+                    2
                 ];
                 $linesId[5] = [
+                    3, 
                     2, 
                     1, 
-                    1, 
-                    1, 
-                    2
-                ];
-                $linesId[6] = [
                     2, 
-                    3, 
-                    3, 
-                    3, 
-                    2
-                ];
-                $linesId[7] = [
-                    1, 
-                    1, 
-                    2, 
-                    3, 
                     3
                 ];
-                $linesId[8] = [
+                $linesId[6] = [
+                    1, 
+                    2, 
+                    3, 
+                    2, 
+                    1
+                ];
+                $linesId[7] = [
                     3, 
                     3, 
                     2, 
                     1, 
                     1
                 ];
-                $linesId[9] = [
+                $linesId[8] = [
+                    1, 
+                    1, 
                     2, 
                     3, 
+                    3
+                ];
+                $linesId[9] = [
+                    3, 
                     2, 
-                    1, 
-                    2
+                    2, 
+                    2, 
+                    1
                 ];
                 $slotEvent['slotBet'] = $slotEvent['c'];
                 $slotEvent['slotLines'] = 10;
