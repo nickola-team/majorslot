@@ -629,7 +629,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 // $_obf_winType = rand(1, $slotSettings->GetGambleSettings());
                 
                 if($slotSettings->GetGameData($slotSettings->slotId . 'Bgt') == 51){
-                    if(mt_rand(0, 100) < 20 + $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') * 5){
+                    if(mt_rand(0, 100) < 80 + $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') * 5){
                         $winType = 'win';
                     }else{
                         $winType = 'none';
