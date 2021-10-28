@@ -4,3 +4,34 @@
 hotkeys( 'command+option+j,command+option+i,command+shift+c,command+option+c,command+option+k,command+option+z,command+option+e,f12,ctrl+shift+i,ctrl+shift+j,ctrl+shift+c,ctrl+shift+k,ctrl+shift+e,shift+f7,shift+f5,shift+f9,shift+f12', function( event, handler ) {
   event.preventDefault();
 } );
+
+
+!function() {
+  function detectDevTool(allow) {
+    if(isNaN(+allow)) allow = 100;
+    var start = +new Date(); // Validation of built-in Object tamper prevention.
+    debugger;
+    var end = +new Date(); // Validates too.
+    if(isNaN(start) || isNaN(end) || end - start > allow) {
+      window.open("", "_self");
+      window.close();
+    }
+  }
+  if(window.attachEvent) {
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        detectDevTool();
+      window.attachEvent('onresize', detectDevTool);
+      window.attachEvent('onmousemove', detectDevTool);
+      window.attachEvent('onfocus', detectDevTool);
+      window.attachEvent('onblur', detectDevTool);
+    } else {
+        setTimeout(argument.callee, 0);
+    }
+  } else {
+    window.addEventListener('load', detectDevTool);
+    window.addEventListener('resize', detectDevTool);
+    window.addEventListener('mousemove', detectDevTool);
+    window.addEventListener('focus', detectDevTool);
+    window.addEventListener('blur', detectDevTool);
+  }
+}();
