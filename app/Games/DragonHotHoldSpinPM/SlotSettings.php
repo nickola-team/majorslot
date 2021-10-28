@@ -113,18 +113,9 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             $this->bonus_spins_in_base = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
             $this->bonus_spins_in_bonus = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
             $this->money_respin = [
-                [
-                    [40,40,30,12,10,8,6,4,2],
-                    [5,10,15,20,25,30,35,40,45]
-                ],
-                [
-                    [95,5,20,15,10,5,5,5,5,5,5],
-                    [50,55,60,65,70,75,80,85,90,95,100]
-                ],                
-                [
-                    [100,25,20,15,10,5],
-                    [500,1000,1500,2000,2500,5000]
-                ],
+                [40, 40, 10, 8, 1, 1, 5, 5, 5,   80, 15, 5, 2, 2, 2, 2, 1, 1, 1, 1,   95, 5, 1, 1, 1, 1],
+                [13,13,13,13,13,13,13,13,13,  14,14,14,14,14,14,14,14,14,14,14,  15,15,15,15,15,15],
+                [5,10,15,20,25,30,35,40,45,  50,55,60,65,70,75,80,85,90,95,100,  500,1000,1500,2000,2500,5000]
             ];
             $this->base_money_chance = 14;
 
@@ -721,46 +712,158 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             ]);
         }
         public function GetWildCount(){
-            $wildCounts = [
-                [40, 40, 10, 10],
-                [3, 4, 5, 6]
-            ];
-            $percent = rand(0, 95);
-            $sum = $wildCounts[0][0];
-            for($i = 1; $i < count($wildCounts[0]); $i++){
-                if($sum > $percent){
-                    return $wildCounts[1][$i - 1];
+            $wildMaskCounts = $this->GetGameData($this->slotId . 'WildMaskCounts');
+            $wildCounts = [3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,6,7];
+            $count = 0;
+            for($i = 0; $i < 20; $i++){
+                if($wildMaskCounts[$i] == 1){
+                    $count++;
                 }
-                $sum = $sum + $wildCounts[0][$i];
             }
-            return $wildCounts[1][0];
+            if($count == 20){
+                $wildMaskCounts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $count = 0;
+            }
+
+            $wildcount = 0;
+            if($count > 18){
+                for($i = 0; $i < 20; $i++){
+                    if($wildMaskCounts[$i] == 0){
+                        $wildMaskCounts[$i] = 1;
+                        $wildcount = $wildCounts[$i];
+                    }
+                }
+            }else{
+                while(true){
+                    $count_index = mt_rand(0, 19);
+                    if($wildMaskCounts[$count_index] == 0){
+                        $wildMaskCounts[$count_index] = 1;
+                        $wildcount = $wildCounts[$count_index];
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'WildMaskCounts', $wildMaskCounts);
+            return $wildcount;
         }
-        public function GetMoneyValue($symbolIndex){
+        public function GetMoneyCount(){
+            $moneyCounts = [
+                [50,45,5],
+                [5,6,7]
+            ];
             $percent = rand(0, 100);
-            $money_respin = $this->money_respin[$symbolIndex - 13];
-            $sum = $money_respin[0][0];
-            for($i = 1; $i < count($money_respin[0]); $i++){
-                if($sum > $percent){
-                    return $money_respin[1][$i -  1];
+            $sum = 0;
+            for($i = 0; $i < count($moneyCounts[0]); $i++){
+                $sum = $sum + $moneyCounts[0][$i];
+                if($sum >= $percent){
+                    return $moneyCounts[1][$i];
                 }
-                $sum = $sum + $money_respin[0][$i];
             }
-            return $money_respin[1][0];
+            return $moneyCounts[1][0];
+        }
+        public function GetFinalMoneyCount(){
+            $moneyCounts = [
+                [10,20,40,30],
+                [12,13,14,15]
+            ];
+            $percent = rand(0, 100);
+            $sum = 0;
+            for($i = 0; $i < count($moneyCounts[0]); $i++){
+                $sum = $sum + $moneyCounts[0][$i];
+                if($sum >= $percent){
+                    return $moneyCounts[1][$i];
+                }
+            }
+            return $moneyCounts[1][0];
+        }
+        public function GetMoneyIndex($slotEvent){
+            if($slotEvent != 'bet'){
+                $lastIndex = 19;
+            }else{                
+                $lastIndex = 18;
+            }
+            $moneyMaskIndexes = $this->GetGameData($this->slotId . 'MoneyMaskIndexes');
+            $moneyIndexes = $this->GetGameData($this->slotId . 'MoneyIndexes');
+
+            $count = 0;
+            for($i = 0; $i < 20; $i++){
+                if($moneyMaskIndexes[$i] == 1){
+                    $count++;
+                }
+            }
+            if($count == 20){
+                $moneyMaskIndexes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $loopCount = $this->GetGameData($this->slotId . 'MoneyLoopCount');         
+                $loopCount++;
+                if($loopCount >= 20){
+                    $this->SetGameData($this->slotId . 'MoneyLoopCount', 0);         
+                    $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3]);  
+                }else{
+                    $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
+                    if($loopCount % 5 == 0){
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
+                    }else{
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);          
+                    }
+                }
+                $count = 0;
+            }
+
+            $moneyIndex = 0;
+            if($count > $lastIndex - 2){
+                for($i = 0; $i < 20; $i++){
+                    if($moneyMaskIndexes[$i] == 0){
+                        $moneyMaskIndexes[$i] = 1;
+                        $moneyIndex = $moneyIndexes[$i];
+                    }
+                }
+            }else{
+                while(true){
+                    $count_index = mt_rand(0, $lastIndex);
+                    if($moneyMaskIndexes[$count_index] == 0){
+                        $moneyMaskIndexes[$count_index] = 1;
+                        $moneyIndex = $moneyIndexes[$count_index];
+                        break;
+                    }
+                }
+            }
+
+            $this->SetGameData($this->slotId . 'MoneyMaskIndexes', $moneyMaskIndexes);
+
+            $startIndex = 0;
+            if($moneyIndex  == 3){
+                $startIndex = 20;
+            }else if($moneyIndex == 2){
+                $startIndex = 9;
+            }
+            $this->SetGameData($this->slotId . 'MoneyMaskIndexes', $moneyMaskIndexes);
+            $percent = rand(0, 100);
+            $sum = 0;
+            for($i = $startIndex; $i < count($this->money_respin[0]); $i++){
+                $sum = $sum + $this->money_respin[0][$i];
+                if($sum >= $percent){
+                    return $i;
+                }
+            }
+            return 0; 
         }
         public function GetWheelValue(){
-            $wheel_values = [
+            $init_wheel_values = [
                 [35, 30, 20, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [10,20,30,40,50,60,70,80,90,100,200,300,400,500,600,700,800,900,1000,2000,5000]
             ];
-            $percent = mt_rand(0, 100);
-            $sum = $wheel_values[0][0];
-            for($i = 1; $i < count($wheel_values[0]); $i++){
-                if($sum > $percent){
-                    return $wheel_values[1][$i -  1];
-                }
-                $sum = $sum + $wheel_values[0][$i];
+            $diff = 0;
+            if(mt_rand(0, 100) < 40){
+                $diff = mt_rand(1, 2);
             }
-            return $wheel_values[1][0];
+            $wheel_indexes = $this->GetRandomNumber(1 + $diff, 5 + $diff, 5);
+            $wheel_values = [];
+            for($i = 0; $i < 2; $i++){
+                for($k = 0; $k < 5; $k++){
+                    array_push($wheel_values, $init_wheel_values[1][$wheel_indexes[$k] - 1]);
+                }
+            }
+            return $wheel_values;
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
@@ -928,48 +1031,18 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        public function GetRandomScatterPos($rp)
+        public function GetRandomScatterPos($rp, $scatterCount)
         {
             $_obf_scatterposes = [];
-            for( $i = 0; $i < count($rp); $i++ ) 
+            for( $i = 0; $i < count($rp) - 3; $i++ ) 
             {
-                if( $rp[$i] >= 13 ) 
+                if($scatterCount == 3 && $rp[$i] == '13' && $rp[$i + 1] == '13' && $rp[$i + 2] == '13') 
                 {
-                    // array_push($_obf_scatterposes, $i);
-                    if( $this->slotReelsConfig[0][2] == 4 ) 
-                    {
-                        if( isset($rp[$i + 1]) && isset($rp[$i + 2]) && isset($rp[$i + 3]) ) 
-                        {
-                            array_push($_obf_scatterposes, $i);
-                        }
-                        if( isset($rp[$i - 1]) && isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                        {
-                            array_push($_obf_scatterposes, $i - 1);
-                        }
-                        if( isset($rp[$i - 2]) && isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                        {
-                            array_push($_obf_scatterposes, $i - 2);
-                        }
-                        if( isset($rp[$i - 3]) && isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                        {
-                            array_push($_obf_scatterposes, $i - 3);
-                        }
-                    }
-                    else
-                    {
-                        if( isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                        {
-                            array_push($_obf_scatterposes, $i);
-                        }
-                        if( isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                        {
-                            array_push($_obf_scatterposes, $i - 1);
-                        }
-                        if( isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                        {
-                            array_push($_obf_scatterposes, $i - 2);
-                        }
-                    }
+                    array_push($_obf_scatterposes, $i);
+                }else if($scatterCount == 2 && (($rp[$i] == '13' && $rp[$i + 1] == '13' && $rp[$i + 2] != '13') || ($rp[$i] != '13' && $rp[$i + 1] == '13' && $rp[$i + 2] == '13'))){
+                    array_push($_obf_scatterposes, $i);
+                }else if($scatterCount == 1 && (($rp[$i] == '13' && $rp[$i + 1] != '13' && $rp[$i + 2] != '13') || ($rp[$i] != '13' && $rp[$i + 1] == '13' && $rp[$i + 2] != '13') || ($rp[$i] != '13' && $rp[$i + 1] != '13' && $rp[$i + 2] == '13'))){
+                    array_push($_obf_scatterposes, $i);
                 }
             }
             shuffle($_obf_scatterposes);
@@ -984,7 +1057,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetReelStrips($winType, $slotEvent)
+        public function GetReelStrips($winType, $slotEvent, $defaultMoneySymbols)
         {
             if($slotEvent == 'respin'){
                 foreach( [
@@ -1022,18 +1095,31 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 }
                 else
                 {
-                    $_obf_reelStripNumber = [
-                        1, 
-                        2, 
-                        3, 
-                        4, 
-                        5
-                    ];
+                    $_obf_reelStripNumber = $this->GetRandomNumber(1, 5, 5);
+                    // $_obf_reelStripNumber = [
+                    //     1, 
+                    //     2, 
+                    //     3, 
+                    //     4, 
+                    //     5
+                    // ];
+                    shuffle($_obf_reelStripNumber);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
-                        if( mt_rand(0, 100) < 50 ) 
+                        if( $defaultMoneySymbols > 0 ) 
                         {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
+                            $moneySymbolCount = 1;
+                            $percent = mt_rand(0, 100);
+                            if($percent > 80){
+                                $moneySymbolCount = 2;
+                            }else if($percent > 95){
+                                $moneySymbolCount = 3;
+                            }
+                            if($defaultMoneySymbols < $moneySymbolCount){
+                                $moneySymbolCount = $defaultMoneySymbols;
+                            }
+                            $defaultMoneySymbols = $defaultMoneySymbols - $moneySymbolCount;
+                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]}, $moneySymbolCount);
                         }
                         else
                         {
@@ -1063,6 +1149,31 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 $reel['rp'][] = $value;
             }
             return $reel;
+        }
+        public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=4){
+            $random = [];
+            $tmp_random = [];
+            $ino = 0;
+            for($i=$num_first;$i<=$num_last;$i++) {
+                $tmp_random[$ino] = $i;
+                $ino++;
+            }
+            $tmp_cnt = count($tmp_random);
+            $tmp_last = $tmp_cnt - 1;
+            for($i=0;$i<$get_cnt;$i++) {
+                $tmp_no=mt_rand(0,$tmp_last);
+                $random[$i] = $tmp_random[$tmp_no];
+                $tno = 0;
+                for($j=0;$j<$tmp_cnt;$j++) {
+                    if($random[$i] != $tmp_random[$j]) {
+                        $tmp_random[$tno] = $tmp_random[$j];               
+                        $tno++;
+                    }
+                }
+                $tmp_cnt = $tno;
+                $tmp_last = $tmp_cnt - 1;
+            }
+            return $random;
         }
     }
 
