@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="/frontend/Default/css/wait/wait.css">
     <script src="https://client.pragmaticplaylive.net/desktop/assets/api/fullscreenApi.js" ></script>
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
-    <script src='/frontend/Default/js/dev_tools.js'></script>
     <script>
+        function injectJS() {
+            var iFrameHead = window.frames["embedgameIframe"].document.getElementsByTagName("head")[0];         
+            var myscript = document.createElement('script');
+            myscript.type = 'text/javascript';
+            myscript.src = '/frontend/Default/js/dev_tools.js';
+            iFrameHead.appendChild(myscript);
+        }
         window.onload = function () {
             document.documentElement.style.width = "100%";
             document.documentElement.style.height = "100%";
@@ -114,7 +120,7 @@
     @if (isset($url))
     <div style="position:relative; width:100%; height:100%;">
         <iframe id="embedgameIframe" style="margin:0; padding:0; white-space: nowrap; border: 0; width:100%;height:100%;" frameborder="0" border="0" cellspacing="0"
-        src=" {{ $url }}" allowfullscreen></iframe>
+        src=" {{ $url }}" onLoad="injectJS()" allowfullscreen></iframe>
     </div>
     @else
     <div class="box">
