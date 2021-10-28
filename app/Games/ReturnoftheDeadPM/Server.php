@@ -426,7 +426,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                         }else if( $scattersCount >= 3 && ($winType != 'bonus' || $scattersCount != $initScatterCount) ) 
                         {
                         }
-                        else if($scattersCount == 2 && mt_rand(0, 100) < 90 && $winType != 'bonus'){
+                        else if($scattersCount == 2 && mt_rand(0, 100) < 98 && $winType != 'bonus'){
 
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
