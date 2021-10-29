@@ -800,7 +800,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3]);  
                 }else{
                     $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
-                    if($loopCount % 5 == 0){
+                    if($loopCount % 4 == 0){
                         $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
                     }else{
                         $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);          
@@ -852,11 +852,16 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 [35, 30, 20, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [10,20,30,40,50,60,70,80,90,100,200,300,400,500,600,700,800,900,1000,2000,5000]
             ];
-            $diff = 0;
-            if(mt_rand(0, 100) < 40){
-                $diff = mt_rand(1, 2);
+            $lastWheelIndex = 5;
+            $percent = mt_rand(0, 100);
+            if($percent >= 95){                
+                $lastWheelIndex = 8;
+            }else if($percent >= 90){
+                $lastWheelIndex = 7;
+            }else if($percent >= 70){
+                $lastWheelIndex = 6;
             }
-            $wheel_indexes = $this->GetRandomNumber(1 + $diff, 5 + $diff, 5);
+            $wheel_indexes = $this->GetRandomNumber(1, $lastWheelIndex, 5);
             $wheel_values = [];
             for($i = 0; $i < 2; $i++){
                 for($k = 0; $k < 5; $k++){

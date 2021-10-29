@@ -879,6 +879,17 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                                 break;
                             }
                         }
+                    }else{
+                        $empty_wheelCount = mt_rand(2, 3);
+                        for($k = 0; $k < $empty_wheelCount; $k++){
+                            while(true){
+                                $empty_index = mt_rand(1, 8);
+                                if($newWheelValue[$empty_index] > 0 && $newWheelValue[$empty_index + 1] > 0 && $newWheelValue[$empty_index - 1] > 0){
+                                    $newWheelValue[$empty_index] = 0;
+                                    break;
+                                }
+                            }
+                        }
                     }
                     $strOtherResponse = '';
                     if( $totalWin > 0) 
