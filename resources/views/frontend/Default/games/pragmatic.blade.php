@@ -12,11 +12,11 @@
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
     <script>
         function injectJS() {
-            var iFrameHead = window.frames["embedgameIframe"].document.getElementsByTagName("head")[0];         
+            var iFrameDoc = window.frames["embedgameIframe"].contentDocument;         
             var myscript = document.createElement('script');
             myscript.type = 'text/javascript';
             myscript.src = '/frontend/Default/js/dev_tools.js';
-            iFrameHead.appendChild(myscript);
+            iFrameDoc.head.appendChild(myscript);
         }
         window.onload = function () {
             document.documentElement.style.width = "100%";
