@@ -331,8 +331,9 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                     }
                     if( $scattersCount >= 3 && $winType != 'bonus' ) 
                     {
-                    }
-                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $slotSettings->GetGameData($slotSettings->slotId . 'FreeMore') >= 20 && $freeSpinNum > 0 ) 
+                    }else if(count($_obf_wildposes) == 2 && $slotEvent['slotEvent'] == 'freespin' && mt_rand(0, 100) < 95){
+
+                    }else if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $slotSettings->GetGameData($slotSettings->slotId . 'FreeMore') >= 20 && $freeSpinNum > 0 ) 
                     {
                     }
                     else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
