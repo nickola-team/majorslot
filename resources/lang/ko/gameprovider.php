@@ -5,6 +5,8 @@ return [
         /**
          * Booongo Games
          */
+        "Book of Wizard" => "북 오브 위자드",
+        "Lord Fortune 2" => "로드 포츈 2",
         "Tiger Jungle" => "타이거 정글",
         "Lucky Xmas" => "럭키 크리스마스",
         "15 Golden Eggs" => "15 골든에그스",
@@ -180,6 +182,17 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Super X" => "슈퍼 X",
+        "The Tweety House" => "더 트위티 하우스",
+        "Santa's Wonderland" => "산타스 원더랜드",
+        "Star Pirates Code" => "스타 파이럿 코드",
+        "Big Juan" => "빅 잔",
+        "Big Bass Bonanza Megaways" => "빅 배스 보난자 메가웨이",
+        "Book of Fallen" => "북 오브 팔런",
+        "Bounty Gold" => "바운티 골드",
+        "Candy Village" => "캔디 빌러지",
+        "Day of Dead" => "데이 오브 데드",
+        "Bermuda Riches" => "버무다 리치스",
         "Live - Andar Bahar" => "라이브 - 앤더 바하",
         "Live - Roulette 8 - Indian" => "라이브 - 룰렛 8",
         "Piggy Bank Bills" => "피기 뱅크 빌",
@@ -511,6 +524,7 @@ return [
          * Booongo - Playson Play Games
          */
 
+        "Burning Wins x2" => "버닝 윈스 x2",
         "Divine Dragon: Hold and Win" => "다빈치 드레곤:홀드 앤 윈",
         "Burning Wins" => "버닝 윈스",
         "Rise of Egypt" => "라이즈 오프 이집트",
@@ -600,6 +614,7 @@ return [
         /**
          * Habanero Games
          */
+        "Nine Tails" => "나인 테일스",
         "Fly!" => "플라이!",
         "Before Time Runs Out" => "비포 타임 런스아웃",
         "Orbs of Atlantis" => "오르스 오브 아를란티스",
