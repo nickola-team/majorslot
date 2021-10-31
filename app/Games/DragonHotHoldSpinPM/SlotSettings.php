@@ -800,8 +800,12 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3]);  
                 }else{
                     $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
-                    if($loopCount % 4 == 0){
-                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
+                    $diffCount = 4;
+                    if($slotEvent != 'bet'){
+                        $diffCount = 5;
+                    }
+                    if($loopCount % $diffCount == 0){
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2]);          
                     }else{
                         $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);          
                     }
@@ -1113,13 +1117,13 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     {
                         if( $defaultMoneySymbols > 0 ) 
                         {
-                            $moneySymbolCount = 1;
-                            $percent = mt_rand(0, 100);
-                            if($percent > 80){
-                                $moneySymbolCount = 2;
-                            }else if($percent > 95){
-                                $moneySymbolCount = 3;
-                            }
+                            $moneySymbolCount = 3;
+                            // $percent = mt_rand(0, 100);
+                            // if($percent > 80){
+                            //     $moneySymbolCount = 2;
+                            // }else if($percent > 95){
+                            //     $moneySymbolCount = 3;
+                            // }
                             if($defaultMoneySymbols < $moneySymbolCount){
                                 $moneySymbolCount = $defaultMoneySymbols;
                             }
