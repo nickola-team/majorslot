@@ -805,7 +805,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                         $diffCount = 5;
                     }
                     if($loopCount % $diffCount == 0){
-                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2]);          
                     }else{
                         $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);          
                     }
@@ -1099,13 +1099,13 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 {
                     if( $defaultMoneySymbols > 0 ) 
                     {
-                        $moneySymbolCount = 1;
-                        $percent = mt_rand(0, 100);
-                        if($percent > 80){
-                            $moneySymbolCount = 2;
-                        }else if($percent > 95){
-                            $moneySymbolCount = 3;
-                        }
+                        $moneySymbolCount = 3;
+                        // $percent = mt_rand(0, 100);
+                        // if($percent > 80){
+                        //     $moneySymbolCount = 2;
+                        // }else if($percent > 95){
+                        //     $moneySymbolCount = 3;
+                        // }
                         if($defaultMoneySymbols < $moneySymbolCount){
                             $moneySymbolCount = $defaultMoneySymbols;
                         }

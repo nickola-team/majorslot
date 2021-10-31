@@ -52,9 +52,9 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             $slotEvent['slotEvent'] = $slotEvent['action'];
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
-                $Balance = $slotSettings->GetBalance();
-                if(($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') <= $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0) || $slotSettings->GetGameData($slotSettings->slotId . 'Bgt') == 50){
-                    $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+                $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+                if(!isset($Balance)){
+                    $Balance = $slotSettings->GetBalance();
                 }
                 $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
                 exit( $response );
@@ -168,6 +168,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
                 $Balance = $slotSettings->GetBalance();
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);    
                 $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
@@ -272,7 +273,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $slotSettings->UpdateJackpots($betline * $lines);
                 }
                 $isWild = false;
-                if(mt_rand(0, 100) < 10 && $winType == 'win'){
+                if(mt_rand(0, 100) < 2 && $winType == 'win'){
                     $isWild = true;
                 }
 
@@ -624,7 +625,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                             }
                             if($_obf_winType == 1){
                                 $wheel_index = $wheel_win_poses[mt_rand(0, count($wheel_win_poses) - 1)];
-                                $empty_wheelCount = mt_rand(2, 4);
+                                $empty_wheelCount = mt_rand(2, 3);
                                 for($k = 0; $k < $empty_wheelCount; $k++){
                                     while(true){
                                         $empty_index = mt_rand(1, 8);
