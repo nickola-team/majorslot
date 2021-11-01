@@ -10,6 +10,7 @@
 		</a>
 		@endpermission
 	</td>
+{{--
 	@permission('games.in_out')
 	<td>{{ number_format($game->stat_in,0) }}</td>
 	<td>{{ number_format($game->stat_out,0) }}</td>
@@ -24,6 +25,7 @@
 	</td>
 	@endpermission
 	<td>{{ number_format($game->bids) }}</td>
+--}}
 	<td>
 		@if($game->view == 1)
 			<span class="text-green"> 활성
