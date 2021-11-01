@@ -800,12 +800,12 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                     $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3]);  
                 }else{
                     $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
-                    $diffCount = 4;
-                    if($slotEvent != 'bet'){
-                        $diffCount = 5;
-                    }
+                    $diffCount = 5;
+                    // if($slotEvent != 'bet'){
+                    //     $diffCount = 5;
+                    // }
                     if($loopCount % $diffCount == 0){
-                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2]);          
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
                     }else{
                         $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);          
                     }

@@ -299,9 +299,9 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                         for($j = 0; $j < 3; $j++){
                             if($initreels['reel' . $k][$j] == 11){
                                 $moneyIndex = $slotSettings->GetMoneyIndex($slotEvent['slotEvent']);
-                                if($slotSettings->GetGameData($slotSettings->slotId . 'MoneyLoopCount') % 10 > 0 && $moneyIndex >= 9){
-                                    $moneyIndex = mt_rand(0, 8);
-                                }
+                                // if($slotSettings->GetGameData($slotSettings->slotId . 'MoneyLoopCount') % 10 > 0 && $moneyIndex >= 9){
+                                //     $moneyIndex = mt_rand(0, 8);
+                                // }
                                 $initreels['reel' . $k][$j] = $slotSettings->money_respin[1][$moneyIndex];
                                 $_moneyValue[$k - 1 + $j * 5] = $slotSettings->money_respin[2][$moneyIndex];
                             }
