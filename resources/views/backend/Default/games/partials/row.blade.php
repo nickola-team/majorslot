@@ -34,10 +34,10 @@
 	</td>
 	<td>
 		@if($game->view == 1)
-			<a href="{{route($admurl.'.game.show', $game->id) . '?view=0'}}">
+			<a href="{{route($admurl.'.game.show', $game->id) . '?view=0&comaster='. Request::get('comaster')}}">
 			<button type="button" class="btn btn-block btn-danger btn-xs">비활성</button>
 		@else
-		<a href="{{route($admurl.'.game.show', $game->id) . '?view=1'}}">
+		<a href="{{route($admurl.'.game.show', $game->id) . '?view=1&comaster='. Request::get('comaster')}}">
 			<button type="button" class="btn btn-block btn-success btn-xs">활성</button>
 		@endif	
 			</a>

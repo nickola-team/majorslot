@@ -41,11 +41,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
         public function view(\VanguardLTE\Category $category, \Illuminate\Http\Request $request)
         {
-            $shops = auth()->user()->shops_array(true);
-            if (auth()->user()->hasRole('admin') || $category->site_id != 0)
+            // $shops = auth()->user()->shops_array(true);
+            /*if (auth()->user()->hasRole('admin') || $category->site_id != 0)
             {
                 $shops = array_merge([0], $shops);
-            }
+            } */
 
             if (count($shops) > 0)
             {
@@ -53,7 +53,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     'original_id' => $category->original_id,
                     'site_id' => $category->site_id
                     ]);
-                $categories = $categories->whereIn('shop_id', $shops);
+                // $categories = $categories->whereIn('shop_id', $shops);
                 $categories->update(['view' => $request->view]);
             }
             

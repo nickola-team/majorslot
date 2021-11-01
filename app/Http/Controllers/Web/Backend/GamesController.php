@@ -32,33 +32,30 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 '0' => '모바일', 
                 '1' => '데스크탑'
             ];
-            $shop_id = $request->shop_id;
-            if ($request->shop == '')
-            {
-                $shop_id = 0;
-            }
-            else
-            {
-                $shop = \VanguardLTE\Shop::where('name', 'like', $request->shop)->first();
-                if ($shop)
-                {
-                    $shop_id = $shop->id;
-                }
-                else
-                {
-                    return redirect()->back()->withErrors(['매장을 찾을수 없습니다.']);
-                }
-                
-            }
-            
+            $comasters = \VanguardLTE\User::where('role_id', 7)->pluck('username','id')->toArray();
             $categories = \VanguardLTE\Category::where([
                 'parent' => 0, 
                 'provider' => null,
-                'shop_id' => $shop_id,
+                'shop_id' => 0,
                 'site_id' => 0
             ])->get();
+
+            $shops = auth()->user()->availableShops();
+            if ($request->comaster == '' || $request->comaster == '0')
+            {
+
+            }
+            else
+            {
+                $user = \VanguardLTE\User::where('id', $request->comaster)->first();
+                if (!$user)
+                {   
+                    return redirect()->back()->withErrors(['총본사를 찾을수 없습니다.']);
+                }
+                $shops = $user->shops_array(true);
+            }
             
-            $games = \VanguardLTE\Game::select('games.*')->where('shop_id', $shop_id)->orderBy('name', 'ASC');
+            $games = \VanguardLTE\Game::select('games.*')->whereIn('shop_id', $shops)->orderBy('name', 'ASC');
             
             $savedCategory = ($request->session()->exists('games_category') ? explode(',', $request->session()->get('games_category')) : []);
             if( (count($request->all()) || isset($request->category)) && $request->session()->get('games_category') != $request->category ) 
@@ -98,25 +95,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $games = $games->where('device', 2); //mobile + desktop
             }
-            if( $request->gamebank != '' ) 
+            if( $savedCategory )
             {
-                $games = $games->where('gamebank', $request->gamebank);
-            }
-            if( $request->label != '' ) 
-            {
-                $games = $games->where('label', $request->label);
-            }
-            if( $request->jpg != '' ) 
-            {
-                $games = $games->where('jpg_id', $request->jpg);
-            }
-            if( $savedCategory ) 
-            {
+                $allshop_cat = \VanguardLTE\Category::whereIn('original_id',$savedCategory)->whereIn('shop_id', $shops)->pluck('id')->toArray();
                 $games = $games->join('game_categories', 'game_categories.game_id', '=', 'games.id');
-                $games = $games->whereIn('game_categories.category_id', $savedCategory);
+                $games = $games->whereIn('game_categories.category_id', $allshop_cat);
             }
+            $games = $games->groupBy('original_id');
             $games = $games->paginate(50);
-            return view('backend.Default.games.list', compact('games', 'views',  'devices', 'categories', 'savedCategory'));
+            return view('backend.Default.games.list', compact('games', 'views',  'devices', 'categories', 'savedCategory', 'comasters'));
         }
         public function bank(\Illuminate\Http\Request $request)
         {
@@ -410,7 +397,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function view(\VanguardLTE\Game $game, \Illuminate\Http\Request $request)
         {
-            $games = \VanguardLTE\Game::where('original_id', $game->original_id);
+            $shops = auth()->user()->availableShops();
+            if ($request->comaster == '' || $request->comaster == '0')
+            {
+            }
+            else
+            {
+                $user = \VanguardLTE\User::where('id', $request->comaster)->first();
+                if (!$user)
+                {   
+                    return redirect()->back()->withErrors(['총본사를 찾을수 없습니다.']);
+                }
+                $shops = $user->shops_array(true);
+            }
+            $games = \VanguardLTE\Game::where('original_id', $game->original_id)->whereIn('shop_id', $shops);
             $games->update(['view' => $request->view]);
             return redirect()->back()->withSuccess('게임상태를 변경하였습니다.');
         }

@@ -21,6 +21,12 @@
 				<div class="box-body">
 						<div class="col-md-6">
 							<div class="form-group">
+								<label>총본사</label>
+								{!! Form::select('comaster', ['0'=>'전체']+$comasters, Request::get('comaster'), ['id' => 'comaster', 'class' => 'form-control']) !!}
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
 								<label>이름</label>
 								<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="게임이름">
 							</div>
@@ -31,27 +37,16 @@
 								{!! Form::select('view', $views, Request::get('view'), ['id' => 'view', 'class' => 'form-control']) !!}
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>@lang('app.device')</label>
-								{!! Form::select('device', $devices, Request::get('device'), ['id' => 'device', 'class' => 'form-control']) !!}
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>매장</label>
-								<input type="text" class="form-control" name="shop" value="{{ Request::get('shop') }}" placeholder="매장이름">
-							</div>
-						</div>
+					
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>@lang('app.category')</label>
 								<select class="form-control select2" name="category[]" id="category" multiple="multiple" style="width: 100%;" data-placeholder="">
 									<option value=""></option>
 									@foreach ($categories as $key=>$category)
-										<option value="{{ $category->id }}" {{ (count($savedCategory) && in_array($category->id, $savedCategory))? 'selected="selected"' : '' }}>{{ $category->title }}</option>
+										<option value="{{ $category->id }}" {{ (count($savedCategory) && in_array($category->id, $savedCategory))? 'selected="selected"' : '' }}>{{ $category->trans->trans_title }}</option>
 										@foreach ($category->inner as $inner)
-											<option value="{{ $inner->id }}" {{ (count($savedCategory) && in_array($inner->id, $savedCategory))? 'selected="selected"' : '' }}>&nbsp;&nbsp;&nbsp;{{ $inner->title }}</option>
+											<option value="{{ $inner->id }}" {{ (count($savedCategory) && in_array($inner->id, $savedCategory))? 'selected="selected"' : '' }}>&nbsp;&nbsp;&nbsp;{{ $inner->trans->trans_title}}</option>
 										@endforeach
 									@endforeach
 								</select>
