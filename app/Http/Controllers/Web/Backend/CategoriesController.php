@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function index(\Illuminate\Http\Request $request)
         {
-            $excat = ['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan', 'habaneroplay'];
+            $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan'];
             if (auth()->user()->hasRole('admin'))
             {
                 $categories = \VanguardLTE\Category::where([
@@ -36,8 +36,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     ])->whereNotIn('href',$excat)->orderBy('position')->get();
                 }
             }
-            
-
             return view('backend.Default.categories.list', compact('categories'));
         }
 

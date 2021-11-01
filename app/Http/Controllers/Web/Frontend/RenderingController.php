@@ -112,6 +112,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
             $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
             $shop_id = \Auth::user()->shop_id;
+            $cat = \VanguardLTE\Category::where([
+                'shop_id' => $shop_id,
+                'href' => 'pragmatic',
+                'view' => 1
+            ])->first();
             $pm_games = \VanguardLTE\Game::where([
                 'shop_id' => $shop_id,
                 'name' => $gamename,
@@ -123,7 +128,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $alonegame = 0;
             $url = null;
             $data = [];
-            if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games) {
+            if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
                 $url = url('/game/' . $gamename);
                 $alonegame = 1;
             }
@@ -167,6 +172,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
             $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
             $shop_id = \Auth::user()->shop_id;
+            $cat = \VanguardLTE\Category::where([
+                'shop_id' => $shop_id,
+                'href' => 'habaneroplay',
+                'view' => 1
+            ])->first();
             $hbn_games = \VanguardLTE\Game::where([
                 'shop_id' => $shop_id,
                 'name' => $gamename,
@@ -177,7 +187,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $alonegame = 0;
             $url = null;
             $data = [];
-            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $hbn_games) {
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $hbn_games && $cat) {
                 $url = url('/game/' . $gamename);
                 $alonegame = 1;
             }
@@ -201,6 +211,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'CQ9';
             $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
             $shop_id = \Auth::user()->shop_id;
+            $cat = \VanguardLTE\Category::where([
+                'shop_id' => $shop_id,
+                'href' => 'cq9play',
+                'view' => 1
+            ])->first();
             $cq9_games = \VanguardLTE\Game::where([
                 'shop_id' => $shop_id,
                 'name' => $gamename,
@@ -211,7 +226,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $alonegame = 0;
             $url = null;
             $data = [];
-            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $cq9_games) {
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $cq9_games && $cat) {
                 $url = url('/game/' . $gamename);
                 $alonegame = 1;
             }
