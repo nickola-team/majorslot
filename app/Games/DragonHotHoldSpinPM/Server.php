@@ -89,6 +89,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'WildMaskCounts', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'MoneyMaskIndexes', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);  
+                $slotSettings->SetGameData($slotSettings->slotId . 'DefaultMaskMoneyCount', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);    
                 $slotSettings->SetGameData($slotSettings->slotId . 'MoneyLoopCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
@@ -314,9 +315,13 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 if(mt_rand(0, 100) < 2 && $winType == 'win'){
                     $isWild = true;
                 }
-                $initMoneyCounts = 0;
+                $initMoneyCounts = [];
+                $defaultMoneyCount = 0;
                 if($winType == 'bonus'){
                     $initMoneyCounts = $slotSettings->GetMoneyCount();
+                    for($i = 0; $i < count($initMoneyCounts); $i++){
+                        $defaultMoneyCount = $defaultMoneyCount + $initMoneyCounts[$i];
+                    }
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
@@ -383,7 +388,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                         }
                     }
 
-
+                    $isGoldWin = false;
                     for( $k = 0; $k < $lines; $k++ ) 
                     {
                         $_lineWin = '';
@@ -402,6 +407,9 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                                     $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
                                     if($lineWins[$k] > 0){
                                         array_push($winSymbols, $firstEle);
+                                        if($firstEle == 3){
+                                            $isGoldWin = true;
+                                        }
                                         $totalWin += $lineWins[$k];
                                         $_obf_winCount++;
                                         $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$k.'~'.$lineWins[$k];
@@ -417,6 +425,9 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                                         array_push($winSymbols, $firstEle);
                                         $totalWin += $lineWins[$k];
                                         $_obf_winCount++;
+                                        if($firstEle == 3){
+                                            $isGoldWin = true;
+                                        }
                                         $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$k.'~'.$lineWins[$k];
                                         for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
                                             $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 5 + $kk);
@@ -479,14 +490,14 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     }
                     if($isWild == true && $moneyCount > 0){
 
-                    }else if($winType == 'bonus' && $moneyCount != $initMoneyCounts){
+                    }else if($winType == 'bonus' && $moneyCount != $defaultMoneyCount){
+
+                    }else if($isGoldWin == true && mt_rand(0, 100) < 70){
 
                     }
                     else if($highMoneyCount > 1){
 
                     }else if( $moneyCount >= 5 && ($winType != 'bonus' || $isWild == true )) 
-                    {
-                    }else if( $winType == 'bonus' && $moneyCount < 5 ) 
                     {
                     }else if( $winType == 'bonus' && $moneyCount < 5 ) 
                     {

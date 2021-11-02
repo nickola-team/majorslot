@@ -541,7 +541,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = 10;
+                $_obf_bonus_percent = 20;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -748,18 +748,42 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
         }
         public function GetMoneyCount(){
             $moneyCounts = [
-                [50,45,5],
-                [5,6,7]
+                [3,2],[3,2],[3,2],[3,2],[3,2],[3,2],[3,2],[3,2],[3,2],[3,1,1],
+                [3,3],[3,3],[3,3],[3,3],[3,3],[3,3],[3,3],[3,3],[3,3],[3,2,1],
+                [3,3,1],[3,3,1],[3,3,1],[3,2,2],[3,2,2],[3,3,1],[3,3,1],[3,3,1],[3,2,2],[3,2,2]
             ];
-            $percent = rand(0, 100);
-            $sum = 0;
-            for($i = 0; $i < count($moneyCounts[0]); $i++){
-                $sum = $sum + $moneyCounts[0][$i];
-                if($sum >= $percent){
-                    return $moneyCounts[1][$i];
+            $moneyMaskCounts = $this->GetGameData($this->slotId . 'DefaultMaskMoneyCount');
+            $count = 0;
+            for($i = 0; $i < 30; $i++){
+                if($moneyMaskCounts[$i] == 1){
+                    $count++;
                 }
             }
-            return $moneyCounts[1][0];
+            if($count == 30){
+                $this->SetGameData($this->slotId . 'DefaultMaskMoneyCount', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);    
+                $moneyMaskCounts = $this->GetGameData($this->slotId . 'DefaultMaskMoneyCount');
+                $count = 0;
+            }
+            
+            $moneyIndex = 0;
+            if($count >= 28){
+                for($i = 0; $i < 30; $i++){
+                    if($moneyMaskCounts[$i] == 0){
+                        $moneyMaskCounts[$i] = 1;
+                        $moneyIndex = $i;
+                    }
+                }
+            }else{
+                while(true){
+                    $moneyIndex = mt_rand(0, 29);
+                    if($moneyMaskCounts[$moneyIndex] == 0){
+                        $moneyMaskCounts[$moneyIndex] = 1;
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'DefaultMaskMoneyCount', $moneyMaskCounts);
+            return $moneyCounts[$moneyIndex];
         }
         public function GetFinalMoneyCount(){
             $moneyCounts = [
@@ -1066,7 +1090,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetReelStrips($winType, $slotEvent, $defaultMoneySymbols)
+        public function GetReelStrips($winType, $slotEvent, $defaultMoneyCounts)
         {
             if($slotEvent == 'respin'){
                 foreach( [
@@ -1115,20 +1139,9 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     shuffle($_obf_reelStripNumber);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
-                        if( $defaultMoneySymbols > 0 ) 
+                        if( $i < count($defaultMoneyCounts) ) 
                         {
-                            $moneySymbolCount = 3;
-                            // $percent = mt_rand(0, 100);
-                            // if($percent > 80){
-                            //     $moneySymbolCount = 2;
-                            // }else if($percent > 95){
-                            //     $moneySymbolCount = 3;
-                            // }
-                            if($defaultMoneySymbols < $moneySymbolCount){
-                                $moneySymbolCount = $defaultMoneySymbols;
-                            }
-                            $defaultMoneySymbols = $defaultMoneySymbols - $moneySymbolCount;
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]}, $moneySymbolCount);
+                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]}, $defaultMoneyCounts[$i]);
                         }
                         else
                         {
