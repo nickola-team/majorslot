@@ -518,7 +518,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = 10;
+                $_obf_bonus_percent = 20;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -705,6 +705,42 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                 }
             }
             return $this->money_respin[1][0];
+        }
+
+        public function GetFreeWildCount(){
+            $wildCounts = [2,2,2,3,3,3,3,6,7,7];
+            $wildMaskCounts = $this->GetGameData($this->slotId . 'DefaultWildMaskCounts');
+            $count = 0;
+            for($i = 0; $i < 10; $i++){
+                if($wildMaskCounts[$i] == 1){
+                    $count++;
+                }
+            }
+            if($count == 10){
+                $this->SetGameData($this->slotId . 'DefaultWildMaskCounts', [0,0,0,0,0,0,0,0,0,0]);    
+                $wildMaskCounts = $this->GetGameData($this->slotId . 'DefaultWildMaskCounts');
+                $count = 0;
+            }
+
+            $wildIndex = 0;
+            if($count >= 8){
+                for($i = 0; $i < 10; $i++){
+                    if($wildMaskCounts[$i] == 0){
+                        $wildMaskCounts[$i] = 1;
+                        $wildIndex = $i;
+                    }
+                }
+            }else{
+                while(true){
+                    $wildIndex = mt_rand(0, 9);
+                    if($wildMaskCounts[$wildIndex] == 0){
+                        $wildMaskCounts[$wildIndex] = 1;
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'DefaultWildMaskCounts', $wildMaskCounts);
+            return $wildCounts[$wildIndex];
         }
         
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
