@@ -128,7 +128,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $alonegame = 0;
             $url = null;
             $data = [];
-            if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
+            $ppiplist = ['195.69.223.146', '176.112.120.11', '185.8.155.162', '5.2.130.103', '84.1.113.218', '81.196.86.120'];
+            $ip = $request->server('HTTP_CF_CONNECTING_IP')??$request->server('REMOTE_ADDR');
+            $blocked = in_array($ip, $ppiplist);
+            if ($enhancedgames==1 && !str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat && !$blocked) {
                 $url = url('/game/' . $gamename);
                 $alonegame = 1;
             }
