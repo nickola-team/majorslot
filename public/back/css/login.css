@@ -30,7 +30,7 @@ a:link, a:visited, a:hover, a:active {text-decoration:none;}
     font-weight: 700 !important;
     box-shadow: 3px 3px 10px #000;
 }
-.lg_box {display: none;position: relative;padding: 20px 20px 10px 20px;background:url(../img/userform-bg.png);border-radius: 3px;-webkit-border-radius: 30px;box-shadow:3px 3px 10px #000;border: 1px solid rgba(255, 255, 255, 0.2);}
+.lg_box {display: none;position: relative;padding: 20px 20px 10px 20px;background:url(../img/userform-bg.png);border-radius: 3px;-webkit-border-radius: 10px;box-shadow:1px 1px 3px #000;border: 1px solid rgba(255, 255, 255, 0.2);background-repeat: round;}
 .lg_box.on {display: block;}
 .lg_box .login {display: block;}
 .lg_box .login .lg_id {position: relative; line-height: 46px;height: 46px; margin-bottom: 10px; border: 1px solid #777; background-color: #eee; border-radius: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) inset;}
