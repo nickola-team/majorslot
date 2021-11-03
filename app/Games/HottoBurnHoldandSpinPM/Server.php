@@ -631,9 +631,10 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                             if($_obf_winType == 1){
                                 $wheel_index = $wheel_win_poses[mt_rand(0, count($wheel_win_poses) - 1)];
                                 $empty_wheelCount = mt_rand(2, 3);
+                                $emptyReel = $slotSettings->GetRandomNumber(1, 8, 8);
                                 for($k = 0; $k < $empty_wheelCount; $k++){
-                                    while(true){
-                                        $empty_index = mt_rand(1, 8);
+                                    for($j = 0; $j < 8; $j++){
+                                        $empty_index = $emptyReel[$j];
                                         if($newWheelValue[$empty_index] > 0 && $newWheelValue[$empty_index + 1] > 0 && $newWheelValue[$empty_index - 1] > 0){
                                             $newWheelValue[$empty_index] = 0;
                                             break;
@@ -657,9 +658,10 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                         }
                     }else{
                         $empty_wheelCount = mt_rand(2, 3);
+                        $emptyReel = $slotSettings->GetRandomNumber(1, 8, 8);
                         for($k = 0; $k < $empty_wheelCount; $k++){
-                            while(true){
-                                $empty_index = mt_rand(1, 8);
+                            for($j = 0; $j < 8; $j++){
+                                $empty_index = $emptyReel[$j];
                                 if($newWheelValue[$empty_index] > 0 && $newWheelValue[$empty_index + 1] > 0 && $newWheelValue[$empty_index - 1] > 0){
                                     $newWheelValue[$empty_index] = 0;
                                     break;

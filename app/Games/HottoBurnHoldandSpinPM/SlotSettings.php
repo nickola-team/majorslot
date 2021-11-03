@@ -334,21 +334,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
         }
         public function CheckBonusWin()
         {
-            $ratioCount = 0;
-            $totalPayRatio = 0;
-            foreach( $this->Paytable as $vl ) 
-            {
-                foreach( $vl as $payRatio ) 
-                {
-                    if( $payRatio > 0 ) 
-                    {
-                        $ratioCount++;
-                        $totalPayRatio += $payRatio;
-                        break;
-                    }
-                }
-            }
-            return $totalPayRatio / $ratioCount;
+            return 0;
         }
         public function HasGameData($key)
         {
