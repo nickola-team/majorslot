@@ -800,6 +800,25 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             }
             return $moneyCounts[1][0];
         }
+        public function GetFinalMoneyReels($lastReels, $finalCount){
+            $finalMoneyReels = [];
+            $emptyPoses = [];
+            for($k = 0; $k < 15; $k++){
+                if($lastReels[$k] >= 13){
+                    array_push($finalMoneyReels, 1);
+                    $finalCount--;
+                }else{
+                    array_push($finalMoneyReels, 0);
+                    array_push($emptyPoses, $k);
+                }
+            }
+
+            shuffle($emptyPoses);
+            for($k = 0; $k < $finalCount; $k++){
+                $finalMoneyReels[$emptyPoses[$k]] = 1;
+            }
+            return $finalMoneyReels;
+        }
         public function GetMoneyIndex($slotEvent){
             if($slotEvent != 'bet'){
                 $lastIndex = 19;
@@ -824,12 +843,9 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3]);  
                 }else{
                     $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
-                    $diffCount = 4;
-                    if($slotEvent != 'bet'){
-                        $diffCount = 5;
-                    }
+                    $diffCount = 5;
                     if($loopCount % $diffCount == 0){
-                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2]);          
+                        $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
                     }else{
                         $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);          
                     }
