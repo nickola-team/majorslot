@@ -103,11 +103,11 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
             $this->playerId = $playerId;
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
-            // $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
-            //     'user_id' => $user->id, 
-            //     'status' => 1,
-            //     'time' => date('G')
-            // ])->first();
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                'time' => date('G')
+            ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
@@ -514,17 +514,17 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
             {
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
-                    // if ($this->happyhouruser){
-                    //     $this->happyhouruser->increment('over_bank', abs($diffMoney));
-                    // }
-                    // else {
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {
                         $normalbank = $game->get_gamebank('');
                         if ($normalbank + $diffMoney < 0)
                         {
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
-                    // }
+                    }
                     $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
@@ -573,13 +573,13 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
             {
                 $this->toGameBanks = $sum;
             }
-            // if ($this->happyhouruser)
-            // {
-            //     $this->happyhouruser->increment('current_bank', $sum);
-            //     $this->happyhouruser->save();
-            // }
-            // else
-            // {
+            if ($this->happyhouruser)
+            {
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
+            }
+            else
+            {
                 if( $_obf_bonus_systemmoney > 0 ) 
                 {
                     $sum -= $_obf_bonus_systemmoney;
@@ -587,7 +587,7 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
                 }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
-            // }
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -712,13 +712,13 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
             }
         }
         public function saveGameLog($strLog, $roundID){
-            // \VanguardLTE\PPGameLog::create([
-            //     'game_id' => $this->slotDBId, 
-            //     'user_id' => $this->playerId, 
-            //     'str' => $strLog, 
-            //     'shop_id' => $this->shop_id,
-            //     'roundid' => $roundID
-            // ]);
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
+                'user_id' => $this->playerId, 
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
+            ]);
         }
         public function CheckMultiWild(){
             $percent = rand(0, 100);

@@ -162,16 +162,16 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
                     $current_replayLog["sr"] = $response;
                     array_push($replayLog, $current_replayLog);
 
-                    // \VanguardLTE\Jobs\UpdateReplay::dispatch([
-                    //     'user_id' => $userId,
-                    //     'game_id' => $slotSettings->game->original_id,
-                    //     'bet' => $allbet,
-                    //     'brand_id' => config('app.stylename'),
-                    //     'base_bet' => $allbet,
-                    //     'win' => $totalWin,
-                    //     'rtp' => $totalWin / $allbet,
-                    //     'game_logs' => urlencode(json_encode($replayLog))
-                    // ]);
+                    \VanguardLTE\Jobs\UpdateReplay::dispatch([
+                        'user_id' => $userId,
+                        'game_id' => $slotSettings->game->original_id,
+                        'bet' => $allbet,
+                        'brand_id' => config('app.stylename'),
+                        'base_bet' => $allbet,
+                        'win' => $totalWin,
+                        'rtp' => $totalWin / $allbet,
+                        'game_logs' => urlencode(json_encode($replayLog))
+                    ]);
                 }
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []);
                 //------------ *** ---------------
