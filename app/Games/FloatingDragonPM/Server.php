@@ -578,6 +578,30 @@ namespace VanguardLTE\Games\FloatingDragonPM
                     $strMoneySymbolResponse = $strMoneySymbolResponse . '&mo_t=' . implode(',', $CurrentMoneyText);
                     if($moneyTotalWin > 0){
                         $strMoneySymbolResponse = $strMoneySymbolResponse . '&mo_tv=' . ($moneyTotalWin / $betline) . '&mo_c=1&mo_tw=' . $moneyTotalWin;
+                        $percent = mt_rand(0, 100);
+                        $changeSymbol = 0;
+                        if($percent >= 99){
+                            $changeSymbol = 8;
+                        }else if($percent == 101){
+                            $changeSymbol = 2;
+                        }
+                        if($changeSymbol > 0){
+                            $initReel = [];
+                            $srfs = [];
+                            for($k = 0; $k < 15; $k++){
+                                if($lastReel[$k] == $changeSymbol){
+                                    $rand_symbol = mt_rand(3, 12);
+                                    if($rand_symbol == $moneysymbol){
+                                        $rand_symbol = mt_rand(8, 12);
+                                    }
+                                    $initReel[$k] = $rand_symbol;
+                                    array_push($srfs, $rand_symbol . '~' . $changeSymbol . '~' . $k);
+                                }else{
+                                    $initReel[$k] = $lastReel[$k];
+                                }
+                            }
+                            $strMoneySymbolResponse = $strMoneySymbolResponse . '&is=' . implode(',', $initReel) . '&srf=' . implode(';', $srfs);
+                        }
                     }
                 }
                 $isState = true;
