@@ -529,7 +529,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $user = \VanguardLTE\User::lockForUpdate()->where('id',$request->user_id)->first();
             }
-            else{
+            else
+            {
                 $user = \VanguardLTE\User::lockForUpdate()->where('id',\Auth::id())->first();
             }
             if (!$user)
@@ -541,18 +542,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
 
-            /*if($user->hasRole('user')){
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '딜비전환권한이 없습니다.',
-                    'code' => '001'
-                ], 200);
-            }*/
-
             $summ = str_replace(',','',$request->summ);
            
             if($user->hasRole('manager')){
-                
                 $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$user->shop_id)->first();
                 if (!$shop)
                 {
@@ -563,191 +555,29 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ], 200);
                 }
                 $real_deal_balance = $shop->deal_balance - $shop->mileage;
-                if ($summ )
-                {
-                    $summ = abs($summ);
-                    if ($real_deal_balance < $summ)
-                    {
-                        return response()->json([
-                            'error' => true, 
-                            'msg' => '딜비수익이 부족합니다.',
-                            'code' => '000'
-                        ], 200);
-                    }
-                }
-                else
-                {
-                    $summ = $real_deal_balance;
-                }
-                if ($summ > 0) {
-                    //out balance from master
-                    $master = $user->referral;
-                    while ($master!=null && !$master->isInoutPartner())
-                    {
-                        $master = $master->referral;
-                    }
-                    if ($master == null)
-                    {
-                        return response()->json([
-                            'error' => true, 
-                            'msg' => '본사를 찾을수 없습니다.',
-                            'code' => '001'
-                        ], 200);
-                    }
-                    
-                    if ($master->balance < $summ)
-                    {
-                        return response()->json([
-                            'error' => true, 
-                            'msg' => '본사보유금이 부족합니다',
-                            'code' => '001'
-                        ], 200);
-                    }
-                    $master->update(
-                        ['balance' => $master->balance - $summ ]
-                    );
-                    $master = $master->fresh();
-                    $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => $master->id, 
-                        'type' => 'partner',
-                        'end_date' => null
-                    ])->first();
-                    if( $open_shift ) 
-                    {
-                        $open_shift->increment('money_in', $summ );
-                    }
-
-                    $old = $shop->balance;
-                    $shop->balance = $shop->balance + $summ;
-                    $open_shift = \VanguardLTE\OpenShift::where([
-                        'shop_id' => $shop->id, 
-                        'type' => 'shop',
-                        'end_date' => null
-                    ])->first();
-                    if( $open_shift ) 
-                    {
-                        $open_shift->increment('convert_deal', $summ);
-                    }
-
-                    $shop->deal_balance = $real_deal_balance - $summ;
-                    $shop->mileage = 0;
-                    $shop->save();
-                    $shop = $shop->fresh();
-                    \VanguardLTE\ShopStat::create([
-                        'user_id' => $master->id,
-                        'type' => 'deal_out',
-                        'sum' => $summ,
-                        'old' => $old,
-                        'new' => $shop->balance,
-                        'balance' => $master->balance,
-                        'shop_id' => $shop->id,
-                        'date_time' => \Carbon\Carbon::now()
-                    ]);
-                   
-                }
-                else{
-                    return response()->json([
-                        'error' => true, 
-                        'msg' => '딜비수익이 없습니다.',
-                        'code' => '000'
-                    ], 200);
-                }
             }
             else {
                 $real_deal_balance = $user->deal_balance - $user->mileage;
-                if ($summ )
+            }
+
+            if ($summ )
+            {
+                $summ = abs($summ);
+                if ($real_deal_balance < $summ)
                 {
-                    $summ = abs($summ);
-                    if ($real_deal_balance < $summ)
-                    {
-                        return response()->json([
-                            'error' => true, 
-                            'msg' => '딜비수익이 부족합니다.',
-                            'code' => '000'
-                        ], 200);
-                    }
-                }
-                else
-                {
-                    $summ = $real_deal_balance;
-                }
-                if ($summ > 0) {
-                    //out balance from master
-                    $master = $user->referral;
-                    while ($master!=null && !$master->isInoutPartner())
-                    {
-                        $master = $master->referral;
-                    }
-
-                    if ($master == null)
-                    {
-                        return response()->json([
-                            'error' => true, 
-                            'msg' => '본사를 찾을수 없습니다.',
-                            'code' => '001'
-                        ], 200);
-                    }
-                    
-                    if ($master->balance < $summ )
-                    {
-                        return response()->json([
-                            'error' => true, 
-                            'msg' => '본사보유금이 부족합니다',
-                            'code' => '001'
-                        ], 200);
-                    }
-                    $master->update(
-                        ['balance' => $master->balance - $summ]
-                    );
-                    $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => $master->id, 
-                        'type' => 'partner',
-                        'end_date' => null
-                    ])->first();
-                    if( $open_shift ) 
-                    {
-                        $open_shift->increment('money_in', $summ);
-                    }
-                    $old = $user->balance;
-
-                    $user->balance = $user->balance + $summ;
-                    $open_shift = \VanguardLTE\OpenShift::where([
-                        'user_id' => $user->id, 
-                        'end_date' => null,
-                        'type' => 'partner'
-                    ])->first();
-                    if( $open_shift ) 
-                    {
-                        $open_shift->increment('convert_deal', $summ);
-                    }
-
-                    $user->deal_balance = $real_deal_balance - $summ;
-                    $user->mileage = 0;
-                    $user->save();
-                    $user = $user->fresh();
-
-                    $master = $master->fresh();
-
-                    \VanguardLTE\Transaction::create([
-                        'user_id' => $user->id,
-                        'payeer_id' => $master->id,
-                        'system' => $user->username,
-                        'type' => 'deal_out',
-                        'summ' => $summ,
-                        'old' => $old,
-                        'new' => $user->balance,
-                        'balance' => $master->balance,
-                        'shop_id' => 0
-                    ]);
-                }
-                else{
                     return response()->json([
                         'error' => true, 
-                        'msg' => '딜비수익이 없습니다.',
+                        'msg' => '딜비수익이 부족합니다.',
                         'code' => '000'
                     ], 200);
                 }
             }
+            else
+            {
+                $summ = $real_deal_balance;
+            }
+
+            \VanguardLTE\Jobs\OutDeal::dispatch(['user_id' => $user->id, 'sum' => abs($summ)])->onQueue('deal');
             
             return response()->json(['error' => false]);
         }
