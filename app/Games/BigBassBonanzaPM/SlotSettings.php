@@ -706,7 +706,6 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
             }
             return $this->money_respin[1][0];
         }
-
         public function GetFreeWildCount(){
             $wildCounts = [2,2,2,3,3,3,3,6,7,7];
             $wildMaskCounts = $this->GetGameData($this->slotId . 'DefaultWildMaskCounts');
@@ -742,7 +741,6 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
             $this->SetGameData($this->slotId . 'DefaultWildMaskCounts', $wildMaskCounts);
             return $wildCounts[$wildIndex];
         }
-        
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
             $_obf_linecount = 10;
@@ -979,7 +977,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
             }
             return $freeSpins[1][0];
         }
-        public function GetReelStrips($winType, $slotEvent)
+        public function GetReelStrips($winType, $slotEvent, $defalultScatterCount = 0)
         {
             if($slotEvent=='freespin'){
                 $_obf_reelStripCounts = [];
@@ -1018,8 +1016,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                 }
                 else
                 {
-                    $scattercount = $this->GenerateFreeSpinCount($slotEvent);
-                    $scatterStripReelNumber = $this->GetRandomNumber(0, 5, $scattercount);
+                    $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $defalultScatterCount);
 
                     $_obf_reelStripNumber = [
                         1, 
@@ -1031,7 +1028,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
                         $issame = false;
-                        for($j = 0; $j < $scattercount; $j++){
+                        for($j = 0; $j < $defalultScatterCount; $j++){
                             if($i == $scatterStripReelNumber[$j]){
                                 $issame = true;
                                 break;

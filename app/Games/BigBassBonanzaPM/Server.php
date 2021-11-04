@@ -214,6 +214,14 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                 //     $winType = 'win';
                 //     $_winAvaliableMoney = $slotSettings->GetBank('');
                 // }
+                $defalultScatterCount = 0;
+                if($winType == 'bonus'){
+                    if($slotEvent['slotEvent'] == 'bet'){
+                        $defalultScatterCount = $slotSettings->GenerateFreeSpinCount($slotEvent['slotEvent']);
+                    }else{
+                        $winType = 'win';
+                    }
+                }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -224,7 +232,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                     $moneysymbol = '7';
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $defalultScatterCount);
                     
                     $_lineWinNumber = 1;
                     for( $k = 0; $k < $lines; $k++ ) 
@@ -335,7 +343,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
                         exit( $response );
                     }
-                    if( $scattersCount >= 3 && $winType != 'bonus' ) 
+                    if( $scattersCount >= 3 && ($winType != 'bonus' || $defalultScatterCount != $scattersCount)) 
                     {
                     }else if($slotEvent['slotEvent'] == 'freespin' && (count($_obf_wildposes) > 2 || (count($_obf_wildposes) == 2 && mt_rand(0, 100) < 95) || $freeWildCount > $slotSettings->GetGameData($slotSettings->slotId . 'FinalWildCount'))){
 
@@ -363,6 +371,9 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                         {
                             break;
                         }
+                    }
+                    else if($slotEvent['slotEvent'] == 'freespin' && $winType == 'win' && $totalWin > 0 && $totalWin > $_winAvaliableMoney && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) < $betline * $lines * 30){
+                        break;
                     }
                     else if( $totalWin == 0 && $winType == 'none' ) 
                     {
@@ -463,7 +474,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                         $strMoneySymbolResponse = $strMoneySymbolResponse . '&mo_tv=' . ($moneyTotalWin / $betline) . '&mo_c=1&mo_tw=' . $moneyTotalWin;
                         $percent = mt_rand(0, 100);
                         $changeSymbol = 0;
-                        if($percent >= 99){
+                        if($percent >= 80){
                             $changeSymbol = 7;
                         }else if($percent == 101){
                             $changeSymbol = 2;
