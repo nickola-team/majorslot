@@ -278,10 +278,22 @@ namespace VanguardLTE\Games\FloatingDragonPM
                 //     $winType = 'win';
                 //     $_winAvaliableMoney = $slotSettings->GetBank('');
                 // }
+                if($winType == 'bonus'){
+                    if($slotEvent['slotEvent'] == 'bet'){
+                        
+                    }else{
+                        $winType = 'win';
+                    }
+                }
                 $isGenerateRespinSpin = false;
+                $defalultScatterCount = 0;
                 if($winType == 'bonus'){
                     if($slotEvent['slotEvent'] != 'freespin' && mt_rand(0, 100) < 50){
                         $isGenerateRespinSpin = true;
+                    }else if($slotEvent['slotEvent'] == 'freespin'){
+                        $winType = 'win';
+                    }else{
+                        $defalultScatterCount = $slotSettings->GenerateFreeSpinCount($slotEvent['slotEvent']);
                     }
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
@@ -297,7 +309,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
                     $holdMoneysymbol = '0';
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $isGenerateRespinSpin);
+                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $isGenerateRespinSpin, $defalultScatterCount);
                     
                     $_lineWinNumber = 1;
                     for( $k = 0; $k < $lines; $k++ ) 
@@ -426,16 +438,16 @@ namespace VanguardLTE\Games\FloatingDragonPM
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
                         exit( $response );
                     }
-                    if( ($scattersCount >= 3 || $holdMoneyCount >= 3) && $winType != 'bonus' ) 
+                    if( $scattersCount >= 3  && ($winType != 'bonus' || $scattersCount != $defalultScatterCount)) 
                     {
                     }
                     else if($scattersCount >= 3 && $holdMoneyCount >= 3){
 
                     }
-                    else if($holdMoneyCount >= 3 && $slotEvent['slotEvent'] == 'freespin'){
+                    else if($holdMoneyCount >= 3 && ($winType != 'bonus' || $slotEvent['slotEvent'] == 'freespin')){
 
                     }
-                    else if($slotEvent['slotEvent'] == 'freespin' && (count($_obf_wildposes) > 2 || (count($_obf_wildposes) == 2 && mt_rand(0, 100) < 95) || $freeWildCount > $slotSettings->GetGameData($slotSettings->slotId . 'FinalWildCount'))){
+                    else if($slotEvent['slotEvent'] == 'freespin' && (count($_obf_wildposes) > 2 || (count($_obf_wildposes) == 2 && mt_rand(0, 100) < 95) || $freeWildCount > $slotSettings->GetGameData($slotSettings->slotId . 'FinalWildCount') || $scattersCount > 0)){
 
                     }
                     else if( $totalWin + $holdMoneyTotalWin * 3 <= $_winAvaliableMoney && $winType == 'bonus' ) 
@@ -580,7 +592,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
                         $strMoneySymbolResponse = $strMoneySymbolResponse . '&mo_tv=' . ($moneyTotalWin / $betline) . '&mo_c=1&mo_tw=' . $moneyTotalWin;
                         $percent = mt_rand(0, 100);
                         $changeSymbol = 0;
-                        if($percent >= 99){
+                        if($percent >= 80){
                             $changeSymbol = 8;
                         }else if($percent == 101){
                             $changeSymbol = 2;

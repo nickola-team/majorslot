@@ -114,7 +114,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
                 [20,50,100,150,200,250,300,350,450,500,650,750,850]
             ];
             $this->hold_money_respin = [
-                [15, 15, 15, 10, 10, 5, 5, 5, 3, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [5, 5, 5, 15, 15, 15, 10, 10, 10, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [10,20,30,40,50,60,70,80,90,100,110,120,140,160,180,200,1000,2000,3000,4000,49930]
             ];
             $this->base_money_chance = 14;
@@ -715,7 +715,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
             return $this->money_respin[1][0];
         }
         public function GetHoldMoneyWin(){
-            $percent = rand(0, 84);
+            $percent = rand(0, 95);
             $sum = 0;
             for($i = 0; $i < count($this->hold_money_respin[0]); $i++){
                 $sum = $sum + $this->hold_money_respin[0][$i];
@@ -760,7 +760,6 @@ namespace VanguardLTE\Games\FloatingDragonPM
             $this->SetGameData($this->slotId . 'DefaultWildMaskCounts', $wildMaskCounts);
             return $wildCounts[$wildIndex];
         }
-        
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
             $_obf_linecount = 10;
@@ -997,7 +996,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
             }
             return $freeSpins[1][0];
         }
-        public function GetReelStrips($winType, $slotEvent, $isGenerateRespinSpin)
+        public function GetReelStrips($winType, $slotEvent, $isGenerateRespinSpin,$defalultScatterCount = 0)
         {
             if($slotEvent=='freespin'){
                 $_obf_reelStripCounts = [];
@@ -1037,8 +1036,8 @@ namespace VanguardLTE\Games\FloatingDragonPM
                 else
                 {
                     if($isGenerateRespinSpin == false){
-                        $scattercount = $this->GenerateFreeSpinCount($slotEvent);
-                        $scatterStripReelNumber = $this->GetRandomNumber(0, 5, $scattercount);
+                        $scattercount = $defalultScatterCount;
+                        $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
                         $_obf_reelStripNumber = [
                             1, 
                             2, 
