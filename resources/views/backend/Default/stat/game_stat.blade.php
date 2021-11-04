@@ -10,6 +10,35 @@
 	</section>
 
 	<section class="content">
+		<div class="row">
+			<div class="col-lg-6 col-xs-6">
+				<!-- small box -->
+				<div class="small-box bg-green">
+					<div class="inner">
+						<h3>{{ number_format($totalbet) }}</h3>
+						<p>총 배팅금</p>
+					</div>
+					<div class="icon">
+						<i class="fa fa-refresh"></i>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-6 col-xs-6">
+				<!-- small box -->
+				<div class="small-box bg-red">
+					<div class="inner">
+						<h3>{{ number_format($totalwin) }}</h3>
+						<p>총 당첨금</p>
+					</div>
+					<div class="icon">
+						<i class="fa fa-line-chart"></i>
+					</div>
+				</div>
+			</div>
+			<!-- ./col -->
+
+		</div>
 		<form action="" method="GET">
 			<div class="box box-danger collapsed-box game_stat_show">
 				<div class="box-header with-border">

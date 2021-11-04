@@ -490,8 +490,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     }
                 }
             }
+            $totalbet= $statistics->sum('bet');
+            $totalwin= $statistics->sum('win');
             $game_stat = $statistics->paginate(20);
-            return view('backend.Default.stat.game_stat', compact('game_stat'));
+            return view('backend.Default.stat.game_stat', compact('game_stat','totalbet', 'totalwin'));
         }
 
         public function deal_stat(\Illuminate\Http\Request $request)
