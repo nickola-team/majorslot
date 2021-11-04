@@ -843,7 +843,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3]);  
                 }else{
                     $this->SetGameData($this->slotId . 'MoneyLoopCount', $loopCount); 
-                    $diffCount = 5;
+                    $diffCount = 4;
                     if($loopCount % $diffCount == 0){
                         $this->SetGameData($this->slotId . 'MoneyIndexes', [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]);          
                     }else{

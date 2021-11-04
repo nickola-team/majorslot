@@ -59,7 +59,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 exit( $response );
             }
             if($slotEvent['slotEvent'] == 'doSpin'){
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') < $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0 ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') < $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0 ) 
                 {
                     $slotEvent['slotEvent'] = 'doBonus';
                 }
@@ -140,7 +140,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 }
                 $strMoneyText = implode(',', $CurrentMoneyText);
                 $_obf_StrResponse = '';
-                if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') < $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0){
+                if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') < $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0){
                     $currentReelSet = 2;
                     $spinType = 's';
                     for($r = 0; $r < count($moneyPoses); $r++){
@@ -241,7 +241,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 $linesId[3] = [1,2,3,2,1];
                 $linesId[4] = [3,2,1,2,3];
                 
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') < $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0 ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') < $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0 ) 
                 {
                     $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bonus state"}';
                     exit( $response );
@@ -693,7 +693,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'RespinLevel', $slotSettings->GetGameData($slotSettings->slotId . 'RespinLevel') + 1);
                     $finalMoneyCount = $slotSettings->GetGameData($slotSettings->slotId . 'FinalMoneyCount');
                     $finalMoneyReels = $slotSettings->GetGameData($slotSettings->slotId . 'FinalMoneyReels');
-                    $leftRespin = $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame');
+                    $leftRespin = $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') + 1;
                     $isOverMoney = false;
                     for($i = 0; $i < 2000; $i++){
                         $moneyTotalWin = 0;
@@ -774,7 +774,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     if($moneyCount == 15){
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', 4);
                     }
-                    if($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames')<= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0){
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') + 1<= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0){
                         $isEndRespin = true;
                         $totalWin = $moneyTotalWin;
                         $moneyTotalWin = 0;
