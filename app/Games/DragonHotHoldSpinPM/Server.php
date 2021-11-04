@@ -772,7 +772,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', 1);
                     }
                     if($moneyCount == 15){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', 4);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', 5);
                     }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') + 1<= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0){
                         $isEndRespin = true;
