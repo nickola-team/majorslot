@@ -541,7 +541,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = 20;
+                $_obf_bonus_percent = 10;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -786,19 +786,39 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             return $moneyCounts[$moneyIndex];
         }
         public function GetFinalMoneyCount(){
-            $moneyCounts = [
-                [10,20,40,30],
-                [12,13,14,15]
-            ];
-            $percent = rand(0, 100);
-            $sum = 0;
-            for($i = 0; $i < count($moneyCounts[0]); $i++){
-                $sum = $sum + $moneyCounts[0][$i];
-                if($sum >= $percent){
-                    return $moneyCounts[1][$i];
+            $moneyCounts = [12,12,12,13,13,14,14,15,15,15];
+            $moneyMaskCounts = $this->GetGameData($this->slotId . 'MaskFinalMoneyCounts');
+            $count = 0;
+            for($i = 0; $i < 10; $i++){
+                if($moneyMaskCounts[$i] == 1){
+                    $count++;
                 }
             }
-            return $moneyCounts[1][0];
+            if($count == 10){
+                $this->SetGameData($this->slotId . 'MaskFinalMoneyCounts', [0,0,0,0,0,0,0,0,0,0]);    
+                $moneyMaskCounts = $this->GetGameData($this->slotId . 'MaskFinalMoneyCounts');
+                $count = 0;
+            }
+            
+            $moneyIndex = 0;
+            if($count > 8){
+                for($i = 0; $i < 10; $i++){
+                    if($moneyMaskCounts[$i] == 0){
+                        $moneyMaskCounts[$i] = 1;
+                        $moneyIndex = $i;
+                    }
+                }
+            }else{
+                while(true){
+                    $moneyIndex = mt_rand(0, 9);
+                    if($moneyMaskCounts[$moneyIndex] == 0){
+                        $moneyMaskCounts[$moneyIndex] = 1;
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'MaskFinalMoneyCounts', $moneyMaskCounts);
+            return $moneyCounts[$moneyIndex];
         }
         public function GetFinalMoneyReels($lastReels, $finalCount){
             $finalMoneyReels = [];

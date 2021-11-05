@@ -92,6 +92,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'DefaultMaskMoneyCount', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);    
                 $slotSettings->SetGameData($slotSettings->slotId . 'MoneyLoopCount', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FinalMoneyCount', 12);   
+                $slotSettings->SetGameData($slotSettings->slotId . 'MaskFinalMoneyCounts', [0,0,0,0,0,0,0,0,0,0]);  
                 $slotSettings->SetGameData($slotSettings->slotId . 'FinalMoneyReels', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]); 
                 if( $lastEvent != 'NULL' ) 
                 {
@@ -901,17 +902,17 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                             }
                         }
                     }else{
-                        $empty_wheelCount = mt_rand(2, 3);
-                        $emptyReel = $slotSettings->GetRandomNumber(1, 8, 8);
-                        for($k = 0; $k < $empty_wheelCount; $k++){
-                            for($j = 0; $j < 8; $j++){
-                                $empty_index = $emptyReel[$j];
-                                if($newWheelValue[$empty_index] > 0 && $newWheelValue[$empty_index + 1] > 0 && $newWheelValue[$empty_index - 1] > 0){
-                                    $newWheelValue[$empty_index] = 0;
-                                    break;
-                                }
-                            }
-                        }
+                        // $empty_wheelCount = mt_rand(2, 3);
+                        // $emptyReel = $slotSettings->GetRandomNumber(1, 8, 8);
+                        // for($k = 0; $k < $empty_wheelCount; $k++){
+                        //     for($j = 0; $j < 8; $j++){
+                        //         $empty_index = $emptyReel[$j];
+                        //         if($newWheelValue[$empty_index] > 0 && $newWheelValue[$empty_index + 1] > 0 && $newWheelValue[$empty_index - 1] > 0){
+                        //             $newWheelValue[$empty_index] = 0;
+                        //             break;
+                        //         }
+                        //     }
+                        // }
                     }
                     $strOtherResponse = '';
                     if( $totalWin > 0) 
