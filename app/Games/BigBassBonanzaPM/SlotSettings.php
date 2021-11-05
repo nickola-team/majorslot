@@ -741,6 +741,42 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
             $this->SetGameData($this->slotId . 'DefaultWildMaskCounts', $wildMaskCounts);
             return $wildCounts[$wildIndex];
         }
+        public function IsBombCheck(){
+            $isBombs = [1,1,1,0,0,0,0,0,0,0];
+            $freeBombMasks = $this->GetGameData($this->slotId . 'FreeBombMask');
+            $count = 0;
+            for($i = 0; $i < 10; $i++){
+                if($freeBombMasks[$i] == 1){
+                    $count++;
+                }
+            }
+            if($count == 10){
+                $this->SetGameData($this->slotId . 'FreeBombMask', [0,0,0,0,0,0,0,0,0,0]);    
+                $freeBombMasks = $this->GetGameData($this->slotId . 'FreeBombMask');
+                $count = 0;
+            }
+
+            $isBomb = 0;
+            if($count >= 9){
+                for($i = 0; $i < 10; $i++){
+                    if($freeBombMasks[$i] == 0){
+                        $freeBombMasks[$i] = 1;
+                        $isBomb = $isBombs[$i];
+                    }
+                }
+            }else{
+                while(true){
+                    $Index = mt_rand(0, 9);
+                    if($freeBombMasks[$Index] == 0){
+                        $freeBombMasks[$Index] = 1;
+                        $isBomb = $isBombs[$Index];
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'FreeBombMask', $freeBombMasks);
+            return $isBomb;
+        }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
             $_obf_linecount = 10;

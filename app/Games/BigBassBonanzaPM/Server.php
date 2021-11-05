@@ -71,6 +71,8 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', [5,6,9,6,6,8,11,8,9,9,6,9,12,6,6]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FinalWildCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'IsFreeBomb', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeBombMask', [0,0,0,0,0,0,0,0,0,0]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'DefaultWildMaskCounts', [0,0,0,0,0,0,0,0,0,0]);
                 $_moneyValue = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                 if( $lastEvent != 'NULL' ) 
@@ -372,9 +374,9 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                             break;
                         }
                     }
-                    else if($slotEvent['slotEvent'] == 'freespin' && $winType == 'win' && $totalWin > 0 && $totalWin > $_winAvaliableMoney && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) < $betline * $lines * 30){
-                        break;
-                    }
+                    // else if($slotEvent['slotEvent'] == 'freespin' && $winType == 'win' && $totalWin > 0 && $totalWin > $_winAvaliableMoney && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) < $betline * $lines * 30){
+                    //     break;
+                    // }
                     else if( $totalWin == 0 && $winType == 'none' ) 
                     {
                         break;
@@ -401,6 +403,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FinalWildCount', $slotSettings->GetFreeWildCount());
+                        $slotSettings->SetGameData($slotSettings->slotId . 'IsFreeBomb', $slotSettings->IsBombCheck());
                     }
                     else
                     {
@@ -474,7 +477,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                         $strMoneySymbolResponse = $strMoneySymbolResponse . '&mo_tv=' . ($moneyTotalWin / $betline) . '&mo_c=1&mo_tw=' . $moneyTotalWin;
                         $percent = mt_rand(0, 100);
                         $changeSymbol = 0;
-                        if($percent >= 80){
+                        if($percent <= 90 && $slotSettings->GetGameData($slotSettings->slotId . 'IsFreeBomb') == 1){
                             $changeSymbol = 7;
                         }else if($percent == 101){
                             $changeSymbol = 2;
@@ -495,6 +498,7 @@ namespace VanguardLTE\Games\BigBassBonanzaPM
                                 }
                             }
                             $strMoneySymbolResponse = $strMoneySymbolResponse . '&is=' . implode(',', $initReel) . '&srf=' . implode(';', $srfs);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'IsFreeBomb', 0);
                         }
                     }
                 }
