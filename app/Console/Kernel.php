@@ -582,7 +582,15 @@ namespace VanguardLTE\Console
                             // else 
                             if (floatval($user['balance']) !=  floatval($data['balance']) )
                             {
-                                \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['balance' => $data['balance'], 'played_at' => time()]);
+                                $userdata = \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->first();
+                                if ($userdata && $userdata->playing_game == 'pp')
+                                {
+                                    $userdata->update(['balance' => $data['balance'], 'played_at' => time()]);
+                                }
+                                else
+                                {
+                                    $this->info('ID ' . $user['id'] . ' alreay exist game');
+                                }
                             }
                             $synccount = $synccount + 1;
                         }
