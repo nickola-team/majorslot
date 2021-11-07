@@ -1007,6 +1007,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($user->hasRole('user'))
             {
+                if ($user->playing_game != null)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '게임중에 환전신청을 할수 없습니다.',
+                        'code' => '002'
+                    ], 200);
+                }
                 $user->update([
                     'recommender' => $request->accountName,
                     'bank_name' => $request->bank,
@@ -1014,8 +1022,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
                 $user =  $user->fresh();
             }
-            
-            
+
 
             if($user->hasRole('manager')){
                 //send it to master.
@@ -1146,7 +1153,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
             }
-            if ($requestuser->hasRole('user') && $requestuser->playing_game == 'pp')
+            if ($requestuser->hasRole('user') && $requestuser->playing_game != null)
             {
                 return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
             }
