@@ -859,6 +859,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'old' => $old,
                 'new' => $shop->balance,
                 'balance' => $user->balance,
+                'reason' => $request->reason,
             ]);
             if( $user->balance == 0 ) 
             {

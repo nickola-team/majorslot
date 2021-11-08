@@ -203,6 +203,9 @@
 							<button type="button" class="btn btn-default changeAddSum" data-value="200000">200000</button>
 							<button type="button" class="btn btn-default changeAddSum" data-value="300000">300000</button>
 							<button type="button" class="btn btn-primary changeAddSum" data-value="0">초기화</button>
+							<p></p>
+							<label for="OutSum">충전사유</label>
+							<input type="text" class="form-control" id="reason" name="reason" placeholder="충전사유를 입력해주세요">
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -240,6 +243,9 @@
 							<button type="button" class="btn btn-default changeOutSum" data-value="200000">200000</button>
 							<button type="button" class="btn btn-default changeOutSum" data-value="300000">300000</button>
 							<button type="button" class="btn btn-primary changeOutSum" data-value="0">초기화</button>
+							<p></p>
+							<label for="OutSum">환전사유</label>
+							<input type="text" class="form-control" id="reason" name="reason" placeholder="환전사유를 입력해주세요">
 						</div>
 					</div>
 					<div class="modal-footer">

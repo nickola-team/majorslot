@@ -15,7 +15,8 @@ namespace VanguardLTE
             'new',
             'balance',
             'request_id', 
-            'shop_id'
+            'shop_id',
+            'reason'
         ];
         public static function boot()
         {

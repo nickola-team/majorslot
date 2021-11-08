@@ -13,7 +13,8 @@ namespace VanguardLTE
             'new',
             'balance',
             'date_time',
-            'request_id'
+            'request_id',
+            'reason'
         ];
         public $timestamps = false;
         public function shop()
