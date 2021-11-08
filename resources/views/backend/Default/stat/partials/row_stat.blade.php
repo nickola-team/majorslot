@@ -50,12 +50,20 @@
 </td>
 <td>
 @if ($stat->type == 'add')
-	<span class="text-green">{{ number_format(abs($stat->summ),0) }}</span>
+	<span class="text-green">{{ number_format(abs($stat->summ),0) }} 
+	@if ($stat->reason != null)
+		({{ $stat->reason }})
+	@endif
+	</span>
 @endif
 </td>
 <td>
 	@if ($stat->type == 'out')
-		<span class="text-red">{{ number_format(abs($stat->summ),0) }}</span>
+		<span class="text-red">{{ number_format(abs($stat->summ),0) }}
+		@if ($stat->reason != null)
+			({{ $stat->reason }})
+		@endif
+		</span>
 	@endif
 </td>
 <td>

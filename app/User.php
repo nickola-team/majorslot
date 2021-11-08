@@ -551,7 +551,7 @@ namespace VanguardLTE
             $token = app('VanguardLTE\Services\Auth\Api\TokenFactory')->forUser($this);
             return ['jti' => $token->id];
         }
-        public function addBalance($type, $summ, $payeer = false, $return = 0, $request_id = null)
+        public function addBalance($type, $summ, $payeer = false, $return = 0, $request_id = null, $reason = null)
         {
             if( !in_array($type, [
                 'add', 
@@ -784,7 +784,8 @@ namespace VanguardLTE
                 'new' => $this->balance,
                 'balance' => $payer_balance,
                 'request_id' => $request_id,
-                'shop_id' => ($this->hasRole('user') ? $this->shop_id : 0)
+                'shop_id' => ($this->hasRole('user') ? $this->shop_id : 0),
+                'reason' => $reason
             ]);
             if( $this->balance == 0 ) 
             {

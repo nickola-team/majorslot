@@ -1110,7 +1110,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $summ = $user->balance;
             }
-            $result = $user->addBalance($data['type'], abs($summ));
+            $result = $user->addBalance($data['type'], abs($summ), false, 0, null, $data['reason']);
             $result = json_decode($result, true);
 
 
