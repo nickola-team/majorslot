@@ -319,6 +319,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
         }
         public function CheckBonusWin()
         {
+            return 0;
             $ratioCount = 0;
             $totalPayRatio = 0;
             foreach( $this->Paytable as $vl ) 

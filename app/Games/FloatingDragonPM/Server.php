@@ -476,7 +476,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
                             break;
                         }
                     }
-                    else if($slotEvent['slotEvent'] == 'freespin' && $winType == 'win' && $totalWin > 0 && $totalWin > $_winAvaliableMoney && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) < $betline * $lines * 30){
+                    else if($slotEvent['slotEvent'] == 'freespin' && $winType == 'win' && $totalWin > 0 && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) > $_winAvaliableMoney && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) < $betline * $lines * 30){
                         break;
                     }
                     else if( $totalWin == 0 && $winType == 'none' ) 
