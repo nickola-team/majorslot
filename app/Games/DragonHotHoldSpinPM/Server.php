@@ -530,6 +530,9 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                             break;
                         }
                     }
+                    else if($slotEvent['slotEvent'] == 'freespin' && $winType == 'win' && $moneyTotalWin + $totalWin > 0 && $moneyTotalWin + $totalWin > $_winAvaliableMoney && ($moneyTotalWin + $totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) < $betline * $lines * 30){
+                        break;
+                    }
                     else if( $totalWin == 0 && $winType == 'none' ) 
                     {
                         break;

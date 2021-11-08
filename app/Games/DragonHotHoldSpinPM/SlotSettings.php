@@ -918,7 +918,11 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
             ];
             $lastWheelIndex = 5;
             $percent = mt_rand(0, 100);
-            if($percent >= 95){                
+            if($percent >= 99){
+                $lastIndex = 11;
+            }else if($percent >= 97){
+                $lastIndex = 10;
+            }else if($percent >= 95){                
                 $lastWheelIndex = 8;
             }else if($percent >= 90){
                 $lastWheelIndex = 7;
