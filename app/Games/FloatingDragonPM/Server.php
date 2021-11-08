@@ -476,6 +476,9 @@ namespace VanguardLTE\Games\FloatingDragonPM
                             break;
                         }
                     }
+                    else if($slotEvent['slotEvent'] == 'freespin' && $winType == 'win' && $totalWin > 0 && $totalWin > $_winAvaliableMoney && ($totalWin + $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')) < $betline * $lines * 30){
+                        break;
+                    }
                     else if( $totalWin == 0 && $winType == 'none' ) 
                     {
                         break;
@@ -732,7 +735,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
                     else if($slotSettings->GetGameData($slotSettings->slotId . 'RespinLevel') > 10 && $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : '')) < $moneyTotalWin && $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $moneyTotalWin <= $betline * $lines * 40){
                         break;
                     }
-                    else if( $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : '')) > $moneyTotalWin && $moneyCount < 7 ) 
+                    else if( $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : '')) > $moneyTotalWin) 
                     {
                         break;
                     }
