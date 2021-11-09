@@ -574,11 +574,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $gameList[] = [
                             'provider' => 'ata',
                             'href' => $href,
-                            'gamecode' => $game['GameId'],
+                            'gamecode' => $game['DCGameID'],
                             'name' => $game['LogPara'],
                             'title' => __('gameprovider.'.$game['GameName']),
                             // 'icon' => $game['GameIcon'],
-                            'icon' => '/frontend/Default/ico/ata/'.$href.'/'. $game['GameId'] . '.png',
+                            'icon' => '/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png',
                         ];
                     }
                 }
