@@ -35,7 +35,7 @@ document.location.href='../../';
 
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/FloatingDragonPM/index.html?lang=en&cur=@if( auth()->user() != null && auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs10floatdrg&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}&roundID={{isset($round_id)?$round_id:0}}' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/FloatingDragonPM/openGame.do??lang=en&cur=@if( auth()->user() != null && auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs10floatdrg&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}&roundID={{isset($round_id)?$round_id:0}}' allowfullscreen>
 
 
 </iframe>

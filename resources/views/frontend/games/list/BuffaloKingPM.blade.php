@@ -35,7 +35,7 @@ document.location.href='../../';
 
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/BuffaloKingPM/index.html?gamelang=en&cur=@if( auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs4096bufking8&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/BuffaloKingPM/openGame.do??gamelang=en&cur=@if( auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs4096bufking8&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}' allowfullscreen>
 
 
 </iframe>

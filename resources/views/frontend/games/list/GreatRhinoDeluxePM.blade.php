@@ -35,7 +35,7 @@ document.location.href='../../';
 
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/GreatRhinoDeluxePM/index.html?lang=en&cur=CAD&gameSymbol=vs20rhinoluxe&websiteUrl=&lobbyURL=' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/GreatRhinoDeluxePM/openGame.do??lang=en&cur=CAD&gameSymbol=vs20rhinoluxe&websiteUrl=&lobbyURL=' allowfullscreen>
 
 
 </iframe>
