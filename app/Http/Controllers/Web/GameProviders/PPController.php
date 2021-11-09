@@ -1069,7 +1069,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 for ($i=2;$i<count($parts);$i++)
                 {
                     $round = explode(",", $parts[$i]);
-                    if (count($round) < 2)
+                    if (count($round) < 8)
                     {
                         continue;
                     }
