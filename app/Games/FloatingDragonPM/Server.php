@@ -380,6 +380,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
                             }
                         }
                     }
+                    $moneyCount = 0;
                     for($r = 0; $r <= 2; $r++){
                         for( $k = 0; $k < 5; $k++ ) 
                         {
@@ -387,6 +388,7 @@ namespace VanguardLTE\Games\FloatingDragonPM
                             {
                                 $_moneyValue[$r * 5 + $k] = $slotSettings->GetMoneyWin();
                                 $isMoney = true;
+                                $moneyCount++;
                             }else{
                                 if($slotEvent['slotEvent'] == 'freespin' && $reels['reel' . ($k+1)][$r] == $wild){
                                     $_moneyValue[$r * 5 + $k] = $bonusMpl;
@@ -445,6 +447,8 @@ namespace VanguardLTE\Games\FloatingDragonPM
                     }
                     else if($scattersCount >= 3 && $holdMoneyCount >= 3){
 
+                    }else if($scattersCount == 2 && ($moneyCount > 0 || $holdMoneyCount > 0)){
+                        
                     }
                     else if($holdMoneyCount >= 3 && ($winType != 'bonus' || $slotEvent['slotEvent'] == 'freespin')){
 
