@@ -327,6 +327,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $amount = $user->balance;
+            if ($amount == 0)
+            {
+                $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+                $transaction['status']['status'] = 'failed';
+                $transaction['status']['message'] = 'failed';
+                \VanguardLTE\CQ9Transaction::create([
+                    'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
+                    'data' => json_encode($transaction)
+                ]);
+                \DB::commit();
+
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1005',
+                        'message' => 'insufficient balance',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
             $transaction['event'][0]['amount'] = $amount;
             $transaction['before'] = floatval($user->balance);
             
@@ -518,14 +539,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
 
             \DB::commit();
-            return response()->json([
-                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
+            $resjson = json_encode([
+                'data' => ['balance' => number_format($user->balance,4,'.',''), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
                     'datetime' => date(DATE_RFC3339_EXTENDED)
                 ]
             ]);
+            $pattern = '/("balance":)"([.\d]+)"/x';
+            $replacement = '${1}${2}';
+            return response(preg_replace($pattern, $replacement, $resjson), 200)->header('Content-Type', 'application/json');
         }
         public function rollin(\Illuminate\Http\Request $request)
         {
@@ -536,8 +560,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $roundid = $request->roundid;
             $amount = $request->amount;
             $mtcode = $request->mtcode;
+            $bet = $request->bet;
+            $win = $request->win;
+            $createTime = $request->creatTime;  
+            $gameType = $request->gameType;
+            $rake = $request->rake;
 
-            if (!$account || !$eventTime || !$gamehall || !$gamecode || !$roundid || !$amount || !$mtcode || $amount<0){
+            if (!$account || !$eventTime || !$gamehall || !$gamecode || !$roundid || !$amount || !$mtcode || !$bet || !$win || !$createTime || !$gameType || !$rake ||$amount<0){
                 return response()->json([
                     'data' => null,
                     'status' => [
@@ -1216,14 +1245,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             \DB::commit();
 
-            return response()->json([
-                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
+
+            $resjson = json_encode([
+                'data' => ['balance' => number_format ($user->balance,4,'.',''), 'currency' => 'KRW'],
                 'status' => [
                     'code' => '0',
                     'message' => 'Success',
                     'datetime' => date(DATE_RFC3339_EXTENDED)
                 ]
             ]);
+            $pattern = '/("balance":)"([.\d]+)"/x';
+            $replacement = '${1}${2}';
+            
+            return response(preg_replace($pattern, $replacement, $resjson), 200)->header('Content-Type', 'application/json');
         }
 
         public function payoff(\Illuminate\Http\Request $request)
