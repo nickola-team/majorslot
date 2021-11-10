@@ -278,6 +278,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
 
             $transaction = [
                 '_id' => $this->generateCode(24),
@@ -298,14 +299,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'event' => [
                     [
                         'mtcode' => $mtcode,
-                        'amount' => floatval($amount),
+                        'amount' => 0,
                         'eventtime' => $eventTime,
                     ]
                 ]
             ];
 
 
-            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
             if (!$user || !$user->hasRole('user')){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
@@ -327,6 +327,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $amount = $user->balance;
+            $transaction['event']['amount'] = $amount;
             $transaction['before'] = floatval($user->balance);
             
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
