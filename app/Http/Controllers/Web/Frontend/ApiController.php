@@ -312,11 +312,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist', $href);
             //exclude if view=0
             $filtergames = [];
-            foreach ($games as $game)
+            if ($games != null && count($games) > 0)
             {
-                if (!isset($game['view']) || $game['view'] == 1)
+                foreach ($games as $game)
                 {
-                    $filtergames[] = $game;
+                    if (!isset($game['view']) || $game['view'] == 1)
+                    {
+                        $filtergames[] = $game;
+                    }
                 }
             }
             return $filtergames;
