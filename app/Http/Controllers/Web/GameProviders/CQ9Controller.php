@@ -8,7 +8,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         /*
         * UTILITY FUNCTION
         */
-        public $LIVECODE = 'CA01';
+        public static $LIVECODE = 'CA01';
         function validRFC3339Date($date) {
             if (preg_match('/^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$/', $date)) {
                 return true;
@@ -54,7 +54,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gamelist = CQ9Controller::getgamelist('cq9');
             $gamelive = CQ9Controller::getgamelist('cqlive');
             $gamelist = array_merge_recursive($gamelist, $gamelive);
-            
+
             $gamecode = $name = preg_replace('/\s+/', '', $name);
             if ($gamelist)
             {
@@ -1542,7 +1542,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     else
                     {
-                        if ($game['gamecode'] == $this->LIVECODE)
+                        if ($game['gamecode'] == CQ9Controller::LIVECODE)
                         {
                             $gameList[] = [
                                 'provider' => 'cq9',
@@ -1585,7 +1585,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'gamehall' => 'cq9',
                     'gamecode' => $gamecode,
                     'gameplat' => ($detect->isMobile() || $detect->isTablet())?'MOBILE':'WEB',
-                    'lang' => $gamecode==$this->LIVECODE?'en':'ko'
+                    'lang' => $gamecode==CQ9Controller::LIVECODE?'en':'ko'
                 ]);
                 if (!$response->ok())
                 {
