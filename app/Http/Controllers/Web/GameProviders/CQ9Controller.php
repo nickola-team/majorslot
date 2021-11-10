@@ -1042,7 +1042,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['data'] as $game)
                 {
-                    if (/*$game['gametype'] == "slot" && */$game['status'] && $game['gameplat'] == $plat)
+                    if (/*$game['gametype'] == "slot" && */$game['status'] && str_contains($game['gameplat'], $plat))
                     {
                         $selLan = 'ko';
                         if (!in_array($selLan, $game['lang']))
