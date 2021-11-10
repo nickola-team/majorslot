@@ -68,6 +68,7 @@ return [
         /**
          * CQ9 Games
          */
+        "cq9live" => "야씽 라이브",
         "Ganesha Jr." => "가네샤 Jr.",
         "Floating Market" => "플로팅 마켓",
         "Loy Krathong" => "로이 크라동",
