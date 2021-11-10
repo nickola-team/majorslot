@@ -327,7 +327,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $amount = $user->balance;
-            $transaction['event']['amount'] = $amount;
+            $transaction['event'][0]['amount'] = $amount;
             $transaction['before'] = floatval($user->balance);
             
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
