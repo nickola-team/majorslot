@@ -1296,6 +1296,9 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
  * CQ9 Game Provider
  */
 Route::group(['middleware' => 'cq9', 'prefix' => 'cq9',], function () {
+    Route::post('/transaction/game/rollout', 'GameProviders\CQ9Controller@rollout');
+    Route::post('/transaction/game/takeall', 'GameProviders\CQ9Controller@takeall');
+    Route::post('/transaction/game/rollin', 'GameProviders\CQ9Controller@rollin');
 	Route::post('/transaction/game/bet', 'GameProviders\CQ9Controller@bet');
 	Route::post('/transaction/game/endround', 'GameProviders\CQ9Controller@endround');
     Route::post('/transaction/game/debit', 'GameProviders\CQ9Controller@debit');

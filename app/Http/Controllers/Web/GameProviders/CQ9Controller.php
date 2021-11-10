@@ -231,6 +231,437 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]
             ]);
         }
+
+        public function takeall(\Illuminate\Http\Request $request)
+        {
+            $account = $request->account;
+            $eventTime = $request->eventTime;
+            $gamehall = $request->gamehall;
+            $gamecode = $request->gamecode;
+            $roundid = $request->roundid;
+            $mtcode = $request->mtcode;
+            $session = $request->session;
+
+            if (!$account || !$eventTime || !$gamehall || !$gamecode || !$roundid || !$mtcode){
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1003',
+                        'message' => 'incorrect parameter',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
+            if (!$this->validRFC3339Date($eventTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            \DB::beginTransaction();
+
+            if ($this->checkmtcode($mtcode))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '2009',
+                        'message' => 'Duplicate MTCode.',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
+
+            $transaction = [
+                '_id' => $this->generateCode(24),
+                'action' => 'takeall',
+                'target' => [
+                    'account' => $account,
+                ],
+                'status' => [
+                    'createtime' => date(DATE_RFC3339_EXTENDED),
+                    'endtime' => date(DATE_RFC3339_EXTENDED),
+                    'status' => 'success',
+                    'message' => 'success'
+                ],
+                'before' => 0,
+                'balance' => 0,
+                'currency' => 'KRW',
+
+                'event' => [
+                    [
+                        'mtcode' => $mtcode,
+                        'amount' => floatval($amount),
+                        'eventtime' => $eventTime,
+                    ]
+                ]
+            ];
+
+
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
+            if (!$user || !$user->hasRole('user')){
+                $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+                $transaction['status']['status'] = 'failed';
+                $transaction['status']['message'] = 'failed';
+                \VanguardLTE\CQ9Transaction::create([
+                    'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
+                    'data' => json_encode($transaction)
+                ]);
+                \DB::commit();
+
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1006',
+                        'message' => 'player not found',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            $amount = $user->balance;
+            $transaction['before'] = floatval($user->balance);
+            
+            $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
+            $user->save();
+
+            $transaction['balance'] = floatval($user->balance);
+            $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+            \VanguardLTE\CQ9Transaction::create([
+                'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
+                'data' => json_encode($transaction)
+            ]);
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => floatval($amount), 
+                'win' => 0, 
+                'game' => CQ9Controller::gamecodetoname($gamecode) . '_' . $gamehall, 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gamecode,
+                'roundid' => 0,
+            ]);
+
+            \DB::commit();
+            return response()->json([
+                'data' => ['amount'=>floatval($amount), 'balance' => floatval($user->balance), 'currency' => 'KRW'],
+                'status' => [
+                    'code' => '0',
+                    'message' => 'Success',
+                    'datetime' => date(DATE_RFC3339_EXTENDED)
+                ]
+            ]);
+        }
+
+        public function rollout(\Illuminate\Http\Request $request)
+        {
+            $account = $request->account;
+            $eventTime = $request->eventTime;
+            $gamehall = $request->gamehall;
+            $gamecode = $request->gamecode;
+            $roundid = $request->roundid;
+            $amount = $request->amount;
+            $mtcode = $request->mtcode;
+            $session = $request->session;
+
+            if (!$account || !$eventTime || !$gamehall || !$gamecode || !$roundid || !$amount || !$mtcode || $amount<0){
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1003',
+                        'message' => 'incorrect parameter',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
+            if (!$this->validRFC3339Date($eventTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            \DB::beginTransaction();
+
+            if ($this->checkmtcode($mtcode))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '2009',
+                        'message' => 'Duplicate MTCode.',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
+
+            $transaction = [
+                '_id' => $this->generateCode(24),
+                'action' => 'rollout',
+                'target' => [
+                    'account' => $account,
+                ],
+                'status' => [
+                    'createtime' => date(DATE_RFC3339_EXTENDED),
+                    'endtime' => date(DATE_RFC3339_EXTENDED),
+                    'status' => 'success',
+                    'message' => 'success'
+                ],
+                'before' => 0,
+                'balance' => 0,
+                'currency' => 'KRW',
+
+                'event' => [
+                    [
+                        'mtcode' => $mtcode,
+                        'amount' => floatval($amount),
+                        'eventtime' => $eventTime,
+                    ]
+                ]
+            ];
+
+
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
+            if (!$user || !$user->hasRole('user')){
+                $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+                $transaction['status']['status'] = 'failed';
+                $transaction['status']['message'] = 'failed';
+                \VanguardLTE\CQ9Transaction::create([
+                    'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
+                    'data' => json_encode($transaction)
+                ]);
+                \DB::commit();
+
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1006',
+                        'message' => 'player not found',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            if ($user->balance < $amount)
+            {
+                $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+                $transaction['status']['status'] = 'failed';
+                $transaction['status']['message'] = 'failed';
+                \VanguardLTE\CQ9Transaction::create([
+                    'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
+                    'data' => json_encode($transaction)
+                ]);
+                \DB::commit();
+
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1005',
+                        'message' => 'insufficient balance',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            $transaction['before'] = floatval($user->balance);
+            
+            $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
+            $user->save();
+
+            $transaction['balance'] = floatval($user->balance);
+            $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+            \VanguardLTE\CQ9Transaction::create([
+                'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
+                'data' => json_encode($transaction)
+            ]);
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => floatval($amount), 
+                'win' => 0, 
+                'game' => CQ9Controller::gamecodetoname($gamecode) . '_' . $gamehall, 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gamecode,
+                'roundid' => 0,
+            ]);
+
+            \DB::commit();
+            return response()->json([
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
+                'status' => [
+                    'code' => '0',
+                    'message' => 'Success',
+                    'datetime' => date(DATE_RFC3339_EXTENDED)
+                ]
+            ]);
+        }
+        public function rollin(\Illuminate\Http\Request $request)
+        {
+            $account = $request->account;
+            $eventTime = $request->eventTime;
+            $gamehall = $request->gamehall;
+            $gamecode = $request->gamecode;
+            $roundid = $request->roundid;
+            $amount = $request->amount;
+            $mtcode = $request->mtcode;
+
+            if (!$account || !$eventTime || !$gamehall || !$gamecode || !$roundid || !$amount || !$mtcode || $amount<0){
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1003',
+                        'message' => 'incorrect parameter',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
+            if (!$this->validRFC3339Date($eventTime))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1004',
+                        'message' => 'wrong time format',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            \DB::beginTransaction();
+
+            if ($this->checkmtcode($mtcode))
+            {
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '2009',
+                        'message' => 'Duplicate MTCode.',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+
+
+            $transaction = [
+                '_id' => $this->generateCode(24),
+                'action' => 'rollin',
+                'target' => [
+                    'account' => $account,
+                ],
+                'status' => [
+                    'createtime' => date(DATE_RFC3339_EXTENDED),
+                    'endtime' => date(DATE_RFC3339_EXTENDED),
+                    'status' => 'success',
+                    'message' => 'success'
+                ],
+                'before' => 0,
+                'balance' => 0,
+                'currency' => 'KRW',
+
+                'event' => [
+                    [
+                        'mtcode' => $mtcode,
+                        'amount' => floatval($amount),
+                        'eventtime' => $eventTime,
+                    ]
+                ]
+            ];
+
+
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
+            if (!$user || !$user->hasRole('user')){
+                $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+                $transaction['status']['status'] = 'failed';
+                $transaction['status']['message'] = 'failed';
+                \VanguardLTE\CQ9Transaction::create([
+                    'mtcode' => $mtcode, 
+                    'timestamp' => $this->microtime_string(),
+                    'data' => json_encode($transaction)
+                ]);
+                \DB::commit();
+
+                return response()->json([
+                    'data' => null,
+                    'status' => [
+                        'code' => '1006',
+                        'message' => 'player not found',
+                        'datetime' => date(DATE_RFC3339_EXTENDED)
+                    ]
+                ]);
+            }
+            
+            $transaction['before'] = floatval($user->balance);
+            
+            $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($amount)));
+            $user->save();
+
+            $transaction['balance'] = floatval($user->balance);
+            $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
+            \VanguardLTE\CQ9Transaction::create([
+                'mtcode' => $mtcode, 
+                'timestamp' => $this->microtime_string(),
+                'data' => json_encode($transaction)
+            ]);
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
+
+            \VanguardLTE\StatGame::create([
+                'user_id' => $user->id, 
+                'balance' => floatval($user->balance), 
+                'bet' => 0, 
+                'win' => floatval($amount), 
+                'game' => CQ9Controller::gamecodetoname($gamecode) . '_' . $gamehall, 
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'shop_id' => $user->shop_id,
+                'category_id' => isset($category)?$category->id:0,
+                'game_id' => $gamecode,
+                'roundid' => 0,
+            ]);
+
+            \DB::commit();
+            return response()->json([
+                'data' => ['balance' => floatval($user->balance), 'currency' => 'KRW'],
+                'status' => [
+                    'code' => '0',
+                    'message' => 'Success',
+                    'datetime' => date(DATE_RFC3339_EXTENDED)
+                ]
+            ]);
+        }
         public function endround(\Illuminate\Http\Request $request)
         {
             $account = $request->account;
@@ -1012,7 +1443,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist($href)
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get('cq9list');
+            $gameList = \Illuminate\Support\Facades\Redis::get($href.'list');
             if ($gameList)
             {
                 $games = json_decode($gameList, true);
@@ -1042,32 +1473,46 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['data'] as $game)
                 {
-                    if (/*$game['gametype'] == "slot" && */$game['status'] && str_contains($game['gameplat'], $plat))
-                    {
-                        $selLan = 'ko';
-                        if (!in_array($selLan, $game['lang']))
+                    if ($href=='cq9') {
+                        if ($game['gametype'] == "slot" && $game['status'] && str_contains($game['gameplat'], $plat))
                         {
-                            $selLan = 'en';
+                            $selLan = 'ko';
                             if (!in_array($selLan, $game['lang']))
                             {
-                                continue;
+                                $selLan = 'en';
+                                if (!in_array($selLan, $game['lang']))
+                                {
+                                    continue;
+                                }
                             }
-                        }
-                        foreach ($game['nameset'] as $title)
-                        {
-                            if ($title['lang'] == $selLan)
+                            foreach ($game['nameset'] as $title)
                             {
-                                $gameList[] = [
-                                    'provider' => 'cq9',
-                                    'gamecode' => $game['gamecode'],
-                                    'name' => preg_replace('/\s+/', '', $game['gamename']),
-                                    'title' => $selLan=='en'?__('gameprovider.'.$title['name']) : $title['name'],
-                                ];
+                                if ($title['lang'] == $selLan)
+                                {
+                                    $gameList[] = [
+                                        'provider' => 'cq9',
+                                        'gamecode' => $game['gamecode'],
+                                        'name' => preg_replace('/\s+/', '', $game['gamename']),
+                                        'title' => $selLan=='en'?__('gameprovider.'.$title['name']) : $title['name'],
+                                    ];
+                                }
                             }
                         }
                     }
+                    else
+                    {
+                        if ($game['gamecode'] == "CA01")
+                        {
+                            $gameList[] = [
+                                'provider' => 'cq9',
+                                'gamecode' => $game['gamecode'],
+                                'name' => preg_replace('/\s+/', '', $game['gamename']),
+                                'title' => $selLan=='en'?__('gameprovider.'.$title['name']) : $title['name'],
+                            ];
+                        }
+                    }
                 }
-                \Illuminate\Support\Facades\Redis::set('cq9list', json_encode($gameList));
+                \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
                 return $gameList;
             }
             return null;
