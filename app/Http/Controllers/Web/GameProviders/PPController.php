@@ -1077,13 +1077,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $time = strtotime($round[6].' UTC');
                         $dateInLocal = date("Y-m-d H:i:s", $time);
                         $shop = \VanguardLTE\ShopUser::where('user_id', $round[1])->first();
+                        $gameObj =  PPController::gamecodetoname($round[2]);
                         \VanguardLTE\StatGame::create([
                             'user_id' => $round[1], 
                             'balance' => floatval(-1), 
                             'bet' => $round[9], 
                             'win' => $round[10], 
-                            'game' => PPController::gamecodetoname($round[2])[0] . '_pp', 
-                            'type' => ($dataType=='RNG')?'slot':'table',
+                            'game' =>$gameObj[0] . '_pp', 
+                            'type' => $gameObj[1],//($dataType=='RNG')?'slot':'table',
                             'percent' => 0, 
                             'percent_jps' => 0, 
                             'percent_jpg' => 0, 
