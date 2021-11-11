@@ -354,7 +354,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            $transaction['event'][0]['amount'] = $amount;
+            $transaction['event'][0]['amount'] = floatval($amount);
             $transaction['before'] = floatval($user->balance);
             
             $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($amount)));
@@ -570,10 +570,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $bet = $request->bet;
             $win = $request->win;
             $createTime = $request->creatTime;  
-            $gameType = $request->gameType;
+            $gametype = $request->gametype;
             $rake = $request->rake;
 
-            if (!$account || !$eventTime || !$gamehall || !$gamecode || !$roundid || !$amount || !$mtcode || !$bet || !$win || !$createTime || !$gameType || !$rake ||$amount<0){
+            if (!$account || !$eventTime || !$gamehall || !$gamecode || !$roundid || !$amount || !$mtcode || !$bet || !$win || !$createTime || !$gametype || !$rake ||$amount<0){
                 return response()->json([
                     'data' => null,
                     'status' => [
@@ -584,7 +584,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
-            if (!$this->validRFC3339Date($eventTime))
+            if (!$this->validRFC3339Date($eventTime) || !$this->validRFC3339Date($createTime))
             {
                 return response()->json([
                     'data' => null,
