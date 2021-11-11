@@ -569,7 +569,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $mtcode = $request->mtcode;
             $bet = $request->bet;
             $win = $request->win;
-            $createTime = $request->creatTime;  
+            $createTime = $request->createTime;  
             $gametype = $request->gametype;
             $rake = $request->rake;
 
