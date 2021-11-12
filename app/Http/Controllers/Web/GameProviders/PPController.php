@@ -644,21 +644,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $bExclude = ($href == 'live')  ^ ($game['gameTypeID'] == 'lg');
                         if ($bExclude == false){
-                            if ($game['gameID'] == 'vswayswest') //exclusive games
-                            {
-                                array_push($gameList, [
-                                    'provider' => 'pp',
-                                    'gamecode' => $game['gameID'],
-                                    'enname' => $game['gameName'],
-                                    'name' => preg_replace('/\s+/', '', $game['gameName']),
-                                    'title' => __('gameprovider.'.$game['gameName']),
-                                    'icon' => '/frontend/Default/ico/pp/'. $game['gameID'] . '/' . $game['gameID'] . '.png',
-                                    'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
-                                    'gameType' => $game['gameTypeID'],
-                                ]);
-                            }
-                            else
-                            {
+                            // if ($game['gameID'] == 'vswayswest') //exclusive games
+                            // {
+                            //     array_push($gameList, [
+                            //         'provider' => 'pp',
+                            //         'gamecode' => $game['gameID'],
+                            //         'enname' => $game['gameName'],
+                            //         'name' => preg_replace('/\s+/', '', $game['gameName']),
+                            //         'title' => __('gameprovider.'.$game['gameName']),
+                            //         'icon' => '/frontend/Default/ico/pp/'. $game['gameID'] . '/' . $game['gameID'] . '.png',
+                            //         'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
+                            //         'gameType' => $game['gameTypeID'],
+                            //     ]);
+                            // }
+                            // else
+                            // {
                                 array_push($gameList, [
                                     'provider' => 'pp',
                                     'gamecode' => $game['gameID'],
@@ -669,7 +669,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc")?'slot':'table',
                                     'gameType' => $game['gameTypeID'],
                                 ]);
-                            }
+                            // }
                             
                             
                         }
