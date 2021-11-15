@@ -1500,7 +1500,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response()->json([ ]);
             }
 
-            $logdata = \VanguardLTE\PPGameLog::where(['roundid'=>$id, 'user_id'=>$user->id])->get();
+            $logdata = \VanguardLTE\PPGameLog::where(['roundid'=>$id, 'user_id'=>$user->id])->orderBy('time')->get();
             if (!$logdata)
             {
                 return response()->json([ ]);
