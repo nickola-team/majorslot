@@ -33,7 +33,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist = CQ9Controller::getgamelist('cq9');
             $gamelive = CQ9Controller::getgamelist('cqlive');
-            $gamelist = array_merge_recursive($gamelist, $gamelive);
+            if ($gamelive){
+                $gamelist = array_merge_recursive($gamelist, $gamelive);
+            }
             $gamename = $code;
             if ($gamelist)
             {
@@ -53,7 +55,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamelist = CQ9Controller::getgamelist('cq9');
             $gamelive = CQ9Controller::getgamelist('cqlive');
-            $gamelist = array_merge_recursive($gamelist, $gamelive);
+            if ($gamelive){
+                $gamelist = array_merge_recursive($gamelist, $gamelive);
+            }
 
             $gamecode = $name = preg_replace('/\s+/', '', $name);
             if ($gamelist)
