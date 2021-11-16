@@ -64,7 +64,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'WildValues', []);
-                $slotSettings->SetGameData($slotSettings->slotId . 'WildPos', []);
+                $slotSettings->SetGameData($slotSettings->slotId . 'WildPos', [2, 12]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'WildReelValues', [3,3,3]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
