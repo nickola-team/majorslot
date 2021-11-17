@@ -664,7 +664,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
             {
-                $_obf_slotstate = $this->slotId . ' FG';
+                $_obf_slotstate = $this->slotId . ' Free';
             }
             else if( $slotState == 'bet' ) 
             {
