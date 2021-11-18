@@ -529,7 +529,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
-            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cqlive'])->first();
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
@@ -674,7 +674,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($transaction)
             ]);
-            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cq9'])->first();
+            $category = \VanguardLTE\Category::where(['provider' => 'cq9', 'shop_id' => 0, 'href' => 'cqlive'])->first();
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
