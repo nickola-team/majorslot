@@ -354,12 +354,12 @@
 								&& $category->title != "Skywind" && $category->title != "VirtualTech")
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->title }}', '{{ $category->href }}', 0)">
+									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
 									
 									@else
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
 									@endif										
-										<img src="/frontend/di1001/tutu/images/slot-icon/{{ $category->title.'.jpg' }}" style="width: 252px;height: 230px;border-radius:30px">
+										<img src="/frontend/di1001/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 252px;height: 230px;border-radius:30px">
 										<img src="/frontend/di1001/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
 									</a>     
 								</li>
@@ -416,12 +416,12 @@
 							&& $category->title != "Skywind" && $category->title != "VirtualTech")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->title }}', '{{ $category->href }}', 0)">`;
+								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
 								
 								@else
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 								@endif										
-								data += `<img src="/frontend/di1001/tutu/images/slot/{{ $category->href.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								data += `<img src="/frontend/di1001/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
 								data += `<img src="/frontend/di1001/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
 								data += `</a>`;     
 								data += `</li>`;

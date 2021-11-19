@@ -228,14 +228,86 @@ function tabActionPopView(obj, pid, idx) {
         $(".sk_tab_con_01").html("");
     }
     if( pid == "letterView" ){
-
+              
     }
     else if( pid == "chatView" ){
-
+            data = `<div class="title1">
+                        문의
+                    </div>
+                        <div class="contents_in">
+                                <div class="con_box10">             
+                                        <table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+                                            <tr>
+                                                <td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">상태</span> 답변완료</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="color: greenyellow">문의</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">문의제목 : 계좌문의</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">문의내용 : 
+                                                    입금계좌번호 문의합니다.
+                                                </td>
+                                            </tr> 
+                                            <tr>
+                                                <td class="view1 write_title_top" style="color: greenyellow">응답</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">응답제목 : 입금 계좌문의</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">응답내용 : 
+                                                    <p>안녕하세요 계좌안내 입니다.</p><p><br></p><p>【은행명 : 전북은행】 - 【예금주 : 정호영】 - 【계좌번호 : 1021-01-6610476】</p><p><br></p><p>계좌번호는 수시로 변경될 수 있습니다.</p><p>입금전 반드시 계좌문의를 통하여 계좌번호를 확인후.</p><p>입금해주시기 바랍니다 감사합니다.</p>
+                                                </td>
+                                            </tr>
+                                    </table> 
+                            </div>
+                            <div class="con_box20">
+                                <div class="btn_wrap_center">
+                                    <ul>
+                                        <li><a href="#" onclick="tabActionProc('tab5','chatList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+                                    </ul>
+                                </div>
+                            </div>
+                    </div>`;
     }
     else if(pid == "noticeView"){
-
+            data= `<div class="title1">
+                                    공지사항
+                            </div>
+                            <div class="contents_in">
+                                    <div class="con_box10">             
+                                            <table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+                                                    <tr>
+                                                            <td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> 2021-11-09 17:10:38      </td>
+                                                    </tr>
+                                                    <tr>
+                                                            <td class="view1 write_title_top">★공지사항★</td>
+                                                    </tr>
+                                                    <tr>
+                                                            <td class="view2">
+                                                                    <?xml encoding="utf-8" ?><?xml encoding="utf-8" ?><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><h2><span style='font-family: "Arial Black";'><b>입금계좌는 수시로 변경됩니다.</b></span></h2><h2><span style='font-family: "Arial Black";'><b><br></b></span><b style="color: inherit; font-family: inherit;">반드시 입금전 계좌문의후 입금해주시기 바랍니다.</b></h2><h2><b style="color: inherit; font-family: inherit;"><br></b><b style="color: inherit; font-family: inherit;">전계좌로 입금시 확인이 불가능합니다.</b></h2>
+                            
+                                                            </td>
+                                                    </tr>
+                                            </table>
+                                    </div>
+                                    <div class="con_box20">
+                                            <div class="btn_wrap_center">
+                                                    <ul>
+                                                            <li><a href="#" onclick="tabActionProc('tab6','noticeList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+                                                    </ul>
+                                            </div>
+                                    </div>                                                         
+                            </div>
+                            <script>
+                                    getUserMoney();
+                            </script>`;
     }
+
+    $(".sk_tab_con_01").html(data);
     
 }
 
@@ -269,6 +341,29 @@ function startGame(gamename) {
         gamename,
         "width=1280, height=742, left=100, top=50"
     );
+}
+
+function startGameByProvider(provider, gamecode) {
+    var formData = new FormData();
+    formData.append("provider", provider);
+    formData.append("gamecode", gamecode);
+    $.ajax({
+    type: "POST",
+    url: "/api/getgamelink",
+    data: formData,
+    processData: false,
+    contentType: false,
+    cache: false,
+    async: false,
+    success: function (data) {
+        if (data.error) {
+            alert(data.msg + data.data);
+            return;
+        }
+        window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+    }
+    });
+    
 }
 function getSlotGames(title, category) {
     
@@ -310,31 +405,53 @@ function getSlotGames(title, category) {
                     {
                         strHtml += `<tr><td height="20">&nbsp;</td></tr>
                                     <tr>
-                                    <td>
+                                    <td  width="100%">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tbody>
                                                 <tr>`;
                     }
-                    strHtml += `<td>
+                    strHtml += `<td >
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td >
-                                                <div align="center">
-                                                    <a style="cursor:pointer" onclick="startGame('${data.games[i].name}');">
+                                            <td>
+                                                <div align="center">`;
+                    if (data.games[i].provider)
+                    {
+                        strHtml +='<a style="cursor:pointer" onclick="startGameByProvider(\'' + data.games[i].provider + '\',\'' + data.games[i].gamecode + '\');">';
+                        if (data.games[i].icon)
+                            {
+                                strHtml += `<img src="${data.games[i].icon}" id="xImag" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>`;
+                            }
+                            else {
+                                strHtml += `<img src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg" id="xImag" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>`;
+                            }
+                    }
+                    else
+                    {
+                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].gamecode}');">
                                                         <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="xImag" />
                                                     </a>
                                                 </div>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td height="30px">
-                                                <div style="text-align:center;position:absolute;width:203px;margin: auto; ">
-                                                    <span class="slot_txt_style">${data.games[i].name}</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>`;
+                                        </tr>`;
+                    }
+                    strHtml += `<tr>
+                                <td height="30px">
+                                    <div style="text-align:center;position:absolute;width:203px;margin: auto; ">
+                                        <span class="slot_txt_style">${data.games[i].title}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>`;
 
                     if( i % 6  == 5 )
                     {
