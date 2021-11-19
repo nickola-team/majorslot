@@ -689,6 +689,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function depositAccount(\Illuminate\Http\Request $request){
             $amount = $request->money;
             $account = $request->account;
+            $force = $request->force;
             $user = auth()->user();
             if (!$user)
             {
@@ -836,7 +837,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else
             {
-                if ($user->hasRole('user'))
+                if ($force==0 && $user->hasRole('user'))
                 {
                     return response()->json([
                         'error' => false, 
