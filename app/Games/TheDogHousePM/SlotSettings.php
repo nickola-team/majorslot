@@ -93,7 +93,6 @@ namespace VanguardLTE\Games\TheDogHousePM
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,
-                'time' => date('G')
             ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
@@ -152,7 +151,9 @@ namespace VanguardLTE\Games\TheDogHousePM
                 [5, 4, 8],
                 [10, 12, 13]
             ];
+            
             $reel = new GameReel();
+
             foreach( [
                 'reelStrip1', 
                 'reelStrip2', 
@@ -249,7 +250,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 19,
                 20
             ];
-            $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->SymbolGame = [
                 '1', 
@@ -292,6 +293,13 @@ namespace VanguardLTE\Games\TheDogHousePM
                     }
                 }
             }
+            
+        }
+
+        public function genfree()
+        {
+            $reel = new GameReel();
+            $reel->generationFreeStacks($this, $this->game->original_id);
         }
         public function SetGameData($key, $value)
         {
@@ -657,7 +665,7 @@ namespace VanguardLTE\Games\TheDogHousePM
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
         }
-        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState)
+        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $isState = true)
         {
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
@@ -695,18 +703,31 @@ namespace VanguardLTE\Games\TheDogHousePM
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
-            \VanguardLTE\StatGame::create([
+            if($isState == true){
+                $roundstr = $this->GetGameData($this->slotId . 'RoundID');
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $this->playerId, 
+                    'balance' => $this->Balance * $this->CurrentDenom, 
+                    'bet' => $bet * $this->CurrentDenom, 
+                    'win' => $win * $this->CurrentDenom, 
+                    'game' => $_obf_slotstate, 
+                    'percent' => $this->toGameBanks, 
+                    'percent_jps' => $this->toSysJackBanks, 
+                    'percent_jpg' => $this->toSlotJackBanks, 
+                    'profit' => $this->betProfit, 
+                    'denomination' => $this->CurrentDenom, 
+                    'shop_id' => $this->shop_id,
+                    'roundid' => $roundstr,
+                ]);
+            }
+        }
+        public function saveGameLog($strLog, $roundID){
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
                 'user_id' => $this->playerId, 
-                'balance' => $this->Balance * $this->CurrentDenom, 
-                'bet' => $bet * $this->CurrentDenom, 
-                'win' => $win * $this->CurrentDenom, 
-                'game' => $_obf_slotstate, 
-                'percent' => $this->toGameBanks, 
-                'percent_jps' => $this->toSysJackBanks, 
-                'percent_jpg' => $this->toSlotJackBanks, 
-                'profit' => $this->betProfit, 
-                'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
             ]);
         }
         public function CheckMultiWild(){
@@ -749,6 +770,23 @@ namespace VanguardLTE\Games\TheDogHousePM
             $freeSpinNums = $r[$idx];
             shuffle($freeSpinNums);
             return $freeSpinNums;
+        }
+        public function GetFreeStack($betLine, $freespinCount)
+        {
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = floor($winAvaliableMoney / $betLine);
+            $freeStacks = \VanguardLTE\PPGameFreeStack::where([
+                'game_id' => $this->game->original_id,
+                'free_spin_count' => $freespinCount
+                ])->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(20)->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+                return json_decode($freeStack->free_spin_stack, true);
+            }
+            else
+            {
+                return [];
+            }
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
@@ -817,16 +855,16 @@ namespace VanguardLTE\Games\TheDogHousePM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
-            if ($this->happyhouruser)
-            {
-                $bonus_spin = rand(1, 10);
-                $spin_percent = 5;
-                if ($garantType == 'freespin')
-                {
-                    $spin_percent = 3;
-                }
-                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-            }
+            // if ($this->happyhouruser)
+            // {
+            //     $bonus_spin = rand(1, 10);
+            //     $spin_percent = 5;
+            //     if ($garantType == 'freespin')
+            //     {
+            //         $spin_percent = 3;
+            //     }
+            //     $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            // }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;

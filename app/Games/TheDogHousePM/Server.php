@@ -63,7 +63,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
-                $slotSettings->SetGameData($slotSettings->slotId . 'WildValues', [3, 3]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'WildValues', []);
                 $slotSettings->SetGameData($slotSettings->slotId . 'WildPos', [2, 12]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'WildReelValues', [3,3,3]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
@@ -72,6 +72,8 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 25);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [9,3,2,3,9,10,4,1,4,10,9,3,2,3,9]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
+                $slotSettings->setGameData($slotSettings->slotId . 'RoundID', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -84,8 +86,12 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
+                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
+                    if (isset($lastEvent->serverResponse->FreeStacks)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
                     }
                     $bet = $lastEvent->serverResponse->bet;
                 }
@@ -372,12 +378,22 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
+                $freeStacks = []; // free stacks
+                $isGeneratedFreeStack = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                     $_wildValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildValues');
                     $_wildPos = $slotSettings->GetGameData($slotSettings->slotId . 'WildPos');
-                    $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
+                    $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'); 
+                    
+                    // free stacks
+                    if($slotSettings->happyhouruser){
+                        $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
+                        if(count($freeStacks) == $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
+                            $isGeneratedFreeStack = true;
+                        }
+                    }
                 }
                 else
                 {
@@ -394,7 +410,13 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '275' . substr($roundstr, 4, 7);
+                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
+
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
                 }
                 
                 $Balance = $slotSettings->GetBalance();
@@ -415,34 +437,67 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $scatter = '1';
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    if ($mustNotWin)
-                    {
-                        $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
-                    }
-                    else
-                    {
-                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
-                    }
                     $tempReels = [];
                     $tempWildReels = [];
-                    $_wildReelValue = $slotSettings->CheckMultiWild();
-                    for($r = 0; $r < 5; $r++){
-                        $tempWildReels[$r] = [];
-                        $tempReels['reel' . ($r+1)] = [];
-                        for( $k = 0; $k < 3; $k++ ) 
+                    // freeStack
+                    if($isGeneratedFreeStack == true){
+                        $freeStack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 2];
+                        for($r = 0; $r < 5; $r++){
+                            $tempWildReels[$r] = [];
+                            $tempReels['reel' . ($r+1)] = [];
+                            $reels['reel' . ($r+1)] = [];
+                            for( $k = 0; $k < 3; $k++ ) 
+                            {
+                                $reels['reel' . ($r+1)][$k] = $freeStack['Reel'][$r][$k];
+                                $tempReels['reel' . ($r+1)][$k] = $freeStack['initReel'][$r][$k];
+                                $tempWildReels[$r][$k] = 0;  
+                            }
+                            $reels['reel' . ($r+1)][-1] = mt_rand(7, 13);
+                            $reels['reel' . ($r+1)][3] = mt_rand(6, 13);
+                        }
+                        $_wildValue = $freeStack['WildValue'];
+                        $_wildPos = $freeStack['WildPos'];
+                        for($r = 0; $r < count($_wildPos); $r++){
+                            $col = $_wildPos[$r] % 5;
+                            $row = floor($_wildPos[$r] / 5);
+                            $reels['reel'.($col + 1)][$row] = $wild;
+                            $tempWildReels[$col][$row] = $_wildValue[$r];
+                        }
+                        $_wildReelValue = $freeStack['SubWilds'];
+                    }else{
+                        if ($mustNotWin)
                         {
-                            if( $reels['reel' . ($r+1)][$k] == $wild) 
-                            {                                
-                                if($slotEvent['slotEvent'] == 'freespin'){
-                                    if(($r == 2 && rand(0, 100) < 70) || $winType == 'none'){
-                                        while(true){
-                                            $newSymbol = rand(4, 10);
-                                            if($reels['reel' . ($r+1)][0] != $newSymbol && $reels['reel' . ($r+1)][1] != $newSymbol && $reels['reel' . ($r+1)][2] != $newSymbol){
-                                                    $reels['reel' . ($r+1)][$k] = $newSymbol;
-                                                    break;
+                            $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
+                        }
+                        else
+                        {
+                            $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                        }
+                        $_wildReelValue = $slotSettings->CheckMultiWild();
+                        for($r = 0; $r < 5; $r++){
+                            $tempWildReels[$r] = [];
+                            $tempReels['reel' . ($r+1)] = [];
+                            for( $k = 0; $k < 3; $k++ ) 
+                            {
+                                if( $reels['reel' . ($r+1)][$k] == $wild) 
+                                {                                
+                                    if($slotEvent['slotEvent'] == 'freespin'){
+                                        if(($r == 2 && rand(0, 100) < 70) || $winType == 'none'){
+                                            while(true){
+                                                $newSymbol = rand(4, 10);
+                                                if($reels['reel' . ($r+1)][0] != $newSymbol && $reels['reel' . ($r+1)][1] != $newSymbol && $reels['reel' . ($r+1)][2] != $newSymbol){
+                                                        $reels['reel' . ($r+1)][$k] = $newSymbol;
+                                                        break;
+                                                }
+                                            }
+                                            $tempWildReels[$r][$k] = 0;    
+                                        }else{
+                                            if($r > 0 && $r < 4){
+                                                $tempWildReels[$r][$k] = $_wildReelValue[$r - 1];
+                                            }else{
+                                                $tempWildReels[$r][$k] = 0;    
                                             }
                                         }
-                                        $tempWildReels[$r][$k] = 0;    
                                     }else{
                                         if($r > 0 && $r < 4){
                                             $tempWildReels[$r][$k] = $_wildReelValue[$r - 1];
@@ -451,26 +506,21 @@ namespace VanguardLTE\Games\TheDogHousePM
                                         }
                                     }
                                 }else{
-                                    if($r > 0 && $r < 4){
-                                        $tempWildReels[$r][$k] = $_wildReelValue[$r - 1];
-                                    }else{
-                                        $tempWildReels[$r][$k] = 0;    
-                                    }
+                                    $tempWildReels[$r][$k] = 0;
                                 }
-                            }else{
-                                $tempWildReels[$r][$k] = 0;
+                                $tempReels['reel' . ($r+1)][$k] = $reels['reel' . ($r+1)][$k];
                             }
-                            $tempReels['reel' . ($r+1)][$k] = $reels['reel' . ($r+1)][$k];
+                        }
+                        if($slotEvent['slotEvent'] == 'freespin'){
+                            for($r = 0; $r < count($_wildPos); $r++){
+                                $col = $_wildPos[$r] % 5;
+                                $row = floor($_wildPos[$r] / 5);
+                                $reels['reel'.($col + 1)][$row] = $wild;
+                                $tempWildReels[$col][$row] = $_wildValue[$r];
+                            }
                         }
                     }
-                    if($slotEvent['slotEvent'] == 'freespin'){
-                        for($r = 0; $r < count($_wildPos); $r++){
-                            $col = $_wildPos[$r] % 5;
-                            $row = floor($_wildPos[$r] / 5);
-                            $reels['reel'.($col + 1)][$row] = $wild;
-                            $tempWildReels[$col][$row] = $_wildValue[$r];
-                        }
-                    }
+                    
 
                     $_lineWinNumber = 1;
                     for( $k = 0; $k < $lines; $k++ ) 
@@ -582,6 +632,8 @@ namespace VanguardLTE\Games\TheDogHousePM
                         }
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
+                        }else if($isGeneratedFreeStack == true){
+                            break;  //freestack
                         }
                         else if($scattersCount == 2 && mt_rand(0, 100) < 50){
 
@@ -686,6 +738,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 if(count($_wildPos) > 0 && count($_wildValue)){
                     $strWildResponse = '&mbv='. implode(',', $_wildValue) . '&mbp=' . implode(',', $_wildPos);
                 }
+                $isState = true;
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
@@ -700,6 +753,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     }
                     else
                     {
+                        $isState = false;
                         $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=1';
                     }
 
@@ -732,6 +786,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
                     $n_reel_set = '0';
                     if($scattersCount >=3 ){
+                        $isState = false;
                         $spinType = 'b';
                         $n_reel_set = '0&bgid=0&win_fs=0&wins=0,0,0,0,0,0,0,0,0&bgt=32&bw=1&sh=3&wins_mask=h,h,h,h,h,h,h,h,h&end=0&psym=1~' . $scattersWin.'~' . $_obf_scatterposes[0] .',' . $_obf_scatterposes[1] .',' . $_obf_scatterposes[2];
                     }
@@ -763,17 +818,18 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
                     ',"Balance":' . $Balance . ',"wildValues":'.json_encode($_wildValue) . ',"wildPos":'.json_encode($_wildPos).',"wildReelValues":'.json_encode($_wildReelValue) . ',"ReplayGameLogs":'.json_encode($replayLog).
-                    ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
-                    ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                    ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . 
+                    ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
+                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 
-                if( $scattersCount >= 3) 
+                if( $scattersCount >= 3 && $slotEvent['slotEvent'] != 'freespin') 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 }
+
             }
             else if( $slotEvent['slotEvent'] == 'doBonus' ){
                 $lastEvent = $slotSettings->GetHistory();
@@ -790,7 +846,10 @@ namespace VanguardLTE\Games\TheDogHousePM
                     '&wins='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeSpinWins').'&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&index='.$slotEvent['index'].
                     '&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
                     '&bgt=32&wins_mask=nff,nff,nff,nff,nff,nff,nff,nff,nff&end=1&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&sver=5&n_reel_set=1&counter='. ((int)$slotEvent['counter'] + 1);
-
+                // FreeStack
+                if($slotSettings->happyhouruser){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($betline * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')));
+                }
                     //------------ ReplayLog ---------------
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
                 if (!$replayLog) $replayLog = [];
@@ -800,13 +859,43 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
                 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"wildValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildValues')) . ',"wildPos":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildPos')).',"wildReelValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues')) . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":0,"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';  //ReplayLog
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, 0, $slotEvent['slotEvent']);
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"wildValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildValues')) . ',"wildPos":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildPos')).',"wildReelValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues')) . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":0,"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';  //ReplayLog, FreeStack
+                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, 0, $slotEvent['slotEvent'], false);
                 //------------ *** ---------------
+            }
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
             }
             $slotSettings->SaveGameData();
             \DB::commit();
             return $response;
+        }
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
         }
     }
 

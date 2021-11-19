@@ -1064,6 +1064,15 @@ namespace VanguardLTE\Console
                 
                 $this->info('End reset calculation');
             });
+            \Artisan::command('game:genfreestack {gameid}', function ($gameid) {
+                $this->info('Gen freestack');
+                $game = \VanguardLTE\Game::where('id', $gameid)->first();
+                $slotsetting = '\VanguardLTE\Games\\' . $game->name . '\SlotSettings';
+                $userId = 1;
+                $slot = new $slotsetting($game->name, $userId);
+                $slot->genfree();
+                $this->info('End freestack');
+            });
 
             
         }
