@@ -56,7 +56,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $livegames = [];
             if (\VanguardLTE\Category::where('shop_id' , $shop_id)->where('href','live')->first())
             {
-                $livegames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('live');
+                $pplivegames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('live');
+                $gameid = [413,201,101,104,518,513,512,224];
+                foreach ($pplivegames as $l)
+                {
+                    if (in_array($l['gamecode'], $gameid))
+                    {
+                        $livegames[] = $l;
+                    }
+                }
             }
 
             if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
