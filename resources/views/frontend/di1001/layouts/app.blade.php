@@ -8,7 +8,7 @@
 <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		
-		<title>웨스턴</title>
+		<title>@yield('page-title')</title>
 		<meta name="viewport" content="width=1600,minimum-scale=0,maximum-scale=5,target-densitydpi=device-dpi">
 		<link rel="shortcut icon" href="/frontend/di1001/images/favicon/favicon.html" type="image/x-icon">
 
