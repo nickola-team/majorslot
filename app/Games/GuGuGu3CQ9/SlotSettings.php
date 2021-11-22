@@ -215,7 +215,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                 24,
                 25
             ];
-            $this->Bet = explode(',', $game->bet); //[30,50,70,125,250,500,2,3,5,10]; 
+            $this->Bet = explode(',', $game->bet); //[30,50,80,125,250,500,2,3,5,10]; 
             $this->Balance = $user->balance;
             $this->SymbolGame = [
                 '0',
@@ -1024,7 +1024,12 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                         4, 
                         5
                     ];
-                    $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $defaultScatterCount);
+                    $scatterStripReelNumber = $this->GetRandomNumber(0, 3, $defaultScatterCount);
+                    for($i = 0; $i < $defaultScatterCount; $i++){
+                        if($scatterStripReelNumber[$i] == 3){
+                            $scatterStripReelNumber[$i] = 4;
+                        }
+                    }
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
                         $issame = false;
