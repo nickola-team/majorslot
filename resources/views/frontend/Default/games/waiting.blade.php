@@ -27,11 +27,9 @@
         </div>
         <div class="box__description">
             <div class="box__description-container">
-            <div class="box__description-text">머니 이동중입니다.</div>
+            <div class="box__description-text">즐거운 하루 되세요</div>
             </div>
-           
         </div>
-        
         </div>
     </body>
     @else
