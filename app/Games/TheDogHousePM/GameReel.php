@@ -223,11 +223,11 @@ namespace VanguardLTE\Games\TheDogHousePM
                         $item['WildPos'] = $wildReelPos;
                         array_push($totalReel, $item);
                     }
-                    if ($totalWin > 10 &&  $totalWin < 300) {
+                    if ($totalWin > 30 &&  $totalWin < 150) {
                         $this->SaveReel($game_id, $freespinType, $totalReel, $totalWin, $freespinCount);
                     }
                     $count = \VanguardLTE\PPGameFreeStack::where('game_id', $game_id)->count();
-                    if ($count > 5000)
+                    if ($count > 10000)
                     {
                         $bfinish = true;
                         break;
