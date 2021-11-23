@@ -625,7 +625,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                             }
                             else
                             {
-                                if(($totalWin < $betline * $lines * 15 && $slotEvent['slotEvent'] == 'bet') || $slotEvent['slotEvent'] == 'freespin'){
+                                if(($totalWin < $betline * $lines * 25 && $slotEvent['slotEvent'] == 'bet') || $slotEvent['slotEvent'] == 'freespin'){
                                     break;
                                 }
                             }
