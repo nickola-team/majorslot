@@ -197,8 +197,6 @@ body {
 .box .box__description {
   position: absolute;
   bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 .box .box__description .box__description-container {
   color: #fff;
@@ -209,6 +207,13 @@ body {
 .box .box__description .box__description-container .box__description-title {
   font-size: 24px;
   letter-spacing: 0.5px;
+}
+
+.box .box__description .box__description-container .box__description-title_neon {
+  font-size: 24px;
+  letter-spacing: 0.5px;
+  color: #fff; 
+  text-shadow:  0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, /* Green glow */ 0 0 42px #0fa, 0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
 }
 .box .box__description .box__description-container .box__description-text {
   color: #8c8aa7;
