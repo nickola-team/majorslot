@@ -269,17 +269,16 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
-            // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
+            $winType = 'win';
+            $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             $defaultScatterCount = 0;
             if($winType == 'bonus'){
                 $defaultScatterCount = $slotSettings->getScatterCount($slotEvent);
             }
             $multiples = [0, 1, 1, 1, 1, 1];
-            if($slotEvent == 'freespin'){
-                for($i = 2; $i < 5; $i++){
-                    $multiples[$i] = $slotSettings->getMultiple($slotEvent, $i - 1);
-                }
+            $subMul = $slotSettings->getMultiple($slotEvent);
+            for($i = 0; $i < 3; $i++){
+                $multiples[$i + 2] = $subMul[$i];
             }
             for( $i = 0; $i <= 2000; $i++ ) 
             {
