@@ -82,21 +82,23 @@ div#progress_percentage::after { /* the actual little arrow in the baloon */
     border-left:5px solid transparent;
 }
 div#text_container {
-    color:#757575;
     font-weight:bold; 
-    font-size:22px;
+    font-size:30px;
+    color : #fff;
+    text-shadow:-1px -0.5px 0 rgb(226, 124, 7), -1px -0.5px 0 red, -1px -0.5px 0 red, -1px 0px 0 red, -1px 1px 0 red, -1px 1px 0 red, -1px 1px 0 red, -0.5px -1px 0 red, -0.5px -0.5px 0 red, -0.5px -0.5px 0 red, -0.5px 0px 0 red, -0.5px 1px 0 red, -0.5px 1px 0 red, -0.5px 1px 0 red, -0.5px -1px 0 red, -0.5px -0.5px 0 red, -0.5px -0.5px 0 red, -0.5px 0px 0 red, -0.5px 1px 0 red, -0.5px 1px 0 red, -0.5px 1px 0 red, 0px -1px 0 red, 0px -0.5px 0 red, 0px -0.5px 0 red, 0px 0px 0 red, 0px 1px 0 red, 0px 1px 0 red, 0px 1px 0 red, 1px -1px 0 red, 1px -0.5px 0 red, 1px -0.5px 0 red, 1px 0px 0 red, 1px 1px 0 red, 1px 1px 0 red, 1px 1px 0 red, 1px -1px 0 red, 1px -0.5px 0 red, 1px -0.5px 0 red, 1px 0px 0 red, 1px 1px 0 red, 1px 1px 0 red, 1px 1px 0 red, 1px -1px 0 red, 1px -0.5px 0 red, 1px -0.5px 0 red, 1px 0px 0 red, 1px 1px 0 red, 1px 1px 0 red, 1px 1px 0 red
 }
 div#text_container span {
     display:block;
     font-weight:normal;
-    font-size:11px;
+    font-size:14px;
     margin-top:6px;
+    text-shadow : none;
 }
 body{
     background:#111;
     color:#ddd;
     font-weight:300;
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: 'nanumsquare', sans-serif;
 }
 body > .container{
     position:relative;

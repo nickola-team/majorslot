@@ -404,13 +404,12 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 }
                 
                 $Balance = $slotSettings->GetBalance();
-                if( $slotEvent['slotEvent'] != 'bet' ) 
+                if( $slotEvent['slotEvent'] == 'bet' ) 
                 {
                     $slotSettings->UpdateJackpots($betline * $lines);
                 }
-                // if($winType == 'win'){
-                //     $test = 1;
-                // }
+                // $winType = 'win';
+                // $_winAvaliableMoney = $slotSettings->GetBank('');
                 $mustNotWin = false;
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
@@ -617,7 +616,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                                 }
                             }
                         }
-                        else if( $totalWin > 0 && $totalWin <= $_winAvaliableMoney && $winType == 'win' ) 
+                        else if( $totalWin > 0 && $totalWin <= $_winAvaliableMoney && $winType == 'win') 
                         {
                             $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
                             if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
@@ -626,7 +625,9 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                             }
                             else
                             {
-                                break;
+                                if(($totalWin < $betline * $lines * 25 && $slotEvent['slotEvent'] == 'bet') || $slotEvent['slotEvent'] == 'freespin'){
+                                    break;
+                                }
                             }
                         }
                         else if( $totalWin == 0 && $winType == 'none' ) 
@@ -772,7 +773,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
                     ',"Balance":' . $Balance . ',"wildValues":'.json_encode($_wildValue) . ',"wildPos":'.json_encode($_wildPos).',"wildReelValues":'.json_encode($_wildReelValue) . ',"ReplayGameLogs":'.json_encode($replayLog).
-                    ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . 
+                    ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 
@@ -810,7 +811,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
                 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"wildValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildValues')) . ',"wildPos":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildPos')).',"wildReelValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues')) . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":0,"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';  //ReplayLog
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"wildValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildValues')) . ',"wildPos":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildPos')).',"wildReelValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues')) . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';  //ReplayLog
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, 0, $slotEvent['slotEvent'], false);
                 //------------ *** ---------------
             }

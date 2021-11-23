@@ -3,7 +3,7 @@ const { exec } = require("child_process");
 
 let balanceSync = 3000;
 let betwinSync = 60000;
-let launchSync = 5000;
+let launchSync = 2000;
 console.log('======= Starting pragmatic play balance synchronization thread =============');
 console.log(' Balance Sync = %d seconds', balanceSync / 1000);
 console.log(' Bet/Win Sync = %d seconds', betwinSync / 1000);
@@ -25,38 +25,38 @@ function syncBalance()  {
     });
     child.on('close', (code, signal) => {
         console.log('exit syncBalance');
-        makeurl();
+        setTimeout(syncBalance, balanceSync);
+        // makeurl();
     });
     child.on('error', (code, signal) => {
       console.log('error syncBalance');
-      makeurl();
+    //   makeurl();
+        setTimeout(syncBalance, balanceSync);
       });
   };
-setTimeout(syncBalance , balanceSync);
-
-setTimeout( function gameround()  {
-  var datetime = new Date();
-  console.log('Syncing bet/win ', datetime.toLocaleString());
-
-  var child = exec("php artisan pp:gameround 1", (error, stdout, stderr) => {
-      if (error) {
-          console.log(`error: \n${error.message}`);
-          return;
-      }
-      if (stderr) {
-          console.log(`stderr: \n${stderr}`);
-          return;
-      }
-  });
-  child.on('close', (code, signal) => {
-    console.log('exit gameround');
-    setTimeout(gameround, betwinSync);
+function gameround()  {
+    var datetime = new Date();
+    console.log('Syncing bet/win ', datetime.toLocaleString());
+  
+    var child = exec("php artisan pp:gameround 1", (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: \n${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: \n${stderr}`);
+            return;
+        }
     });
-    child.on('error', (code, signal) => {
-    console.log('error gameround');
-    setTimeout(gameround, betwinSync);
-    });
-}, betwinSync);
+    child.on('close', (code, signal) => {
+      console.log('exit gameround');
+      setTimeout(gameround, betwinSync);
+      });
+      child.on('error', (code, signal) => {
+      console.log('error gameround');
+      setTimeout(gameround, betwinSync);
+      });
+  }
 
 function makeurl() {
     var datetime = new Date();
@@ -75,10 +75,15 @@ function makeurl() {
     
     child.on('close', (code, signal) => {
         console.log('exit launchSync');
-        setTimeout(syncBalance, balanceSync);
+        setTimeout(makeurl, launchSync);
+        
     });
     child.on('error', (code, signal) => {
         console.log('error launchSync');
-        setTimeout(syncBalance, balanceSync);
+        setTimeout(makeurl, launchSync);
     })
 }
+
+setTimeout(syncBalance , balanceSync);
+setTimeout( gameround, betwinSync);
+setTimeout(makeurl, launchSync);

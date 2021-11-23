@@ -90,11 +90,11 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
             //------- Happy User -------//
-            // $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
-            //     'user_id' => $user->id, 
-            //     'status' => 1,
-            //     'time' => date('G')
-            // ])->first();
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                'time' => date('G')
+            ])->first();
             //------- *** -------//
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
@@ -215,7 +215,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                 24,
                 25
             ];
-            $this->Bet = explode(',', $game->bet); //[30,50,70,125,250,500,2,3,5,10]; 
+            $this->Bet = explode(',', $game->bet); //[30,50,80,125,250,500,2,3,5,10]; 
             $this->Balance = $user->balance;
             $this->SymbolGame = [
                 '0',
@@ -460,11 +460,11 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
         public function GetBank($slotState = '')
         {
             //------- Happy User -------//
-            // if ($this->happyhouruser)
-            // {
-            //     $this->Bank = $this->happyhouruser->current_bank;
-            //     return $this->Bank / $this->CurrentDenom;
-            // }
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
             //------- *** -------//
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -523,10 +523,10 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
-                    // if ($this->happyhouruser){
-                    //     $this->happyhouruser->increment('over_bank', abs($diffMoney));
-                    // }
-                    // else {
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {
                     //------- *** -------//
                         $normalbank = $game->get_gamebank('');
                         if ($normalbank + $diffMoney < 0)
@@ -534,7 +534,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
-                    //  }
+                     }
                     $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
@@ -586,13 +586,13 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                 $this->toGameBanks = $sum;
             }
             //------- Happy User -------//
-            // if ($this->happyhouruser)
-            // {
-            //     $this->happyhouruser->increment('current_bank', $sum);
-            //     $this->happyhouruser->save();
-            // }
-            // else
-            // {
+            if ($this->happyhouruser)
+            {
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
+            }
+            else
+            {
             //------- *** -------//
                 if( $_obf_bonus_systemmoney > 0 ) 
                 {
@@ -601,7 +601,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                 }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
-            // }
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -902,31 +902,38 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             }
             return $scatters[1][0];
         }
-        public function getMultiple($slotEvent, $reelNo){
+        public function getMultiple($slotEvent){
             if($slotEvent == 'freespin'){
                 $muls = [
-                    [80, 15, 5],
-                    [2, 3, 5],
-                    [2, 3, 5],
-                    [3, 5, 8],
+                    [30, [2, 2, 3]],
+                    [25, [2, 3, 3]],
+                    [10, [3, 3, 3]],
+                    [10, [3, 3, 5]],
+                    [10, [3, 5, 5]],
+                    [10, [5, 5, 5]],
+                    [5,  [5, 5, 8]],
                 ];
             }else{
                 $muls = [
-                    [80, 20],
-                    [1, 2, 3],
-                    [1, 1, 1],
-                    [2, 3, 5],
+                    [30,[1, 1, 2]],
+                    [20,[1, 1, 3]],
+                    [10,[1, 1, 5]],
+                    [10,[2, 1, 2]],
+                    [10,[2, 1, 3]],
+                    [10,[2, 1, 5]],
+                    [5, [3, 1, 3]],
+                    [5, [3, 1, 5]],
                 ];
             }
             $percent = rand(0, 100);
             $sum = 0;
-            for($i = 0; $i < count($muls[0]); $i++){
-                $sum = $sum + $muls[0][$i];
+            for($i = 0; $i < count($muls); $i++){
+                $sum = $sum + $muls[$i][0];
                 if($percent <= $sum){
-                    return $muls[$reelNo][$i];
+                    return $muls[$i][1];
                 }
             }
-            return $muls[$reelNo][0];
+            return $muls[0][1];
         }
         public function GetGambleSettings()
         {
@@ -1024,7 +1031,12 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                         4, 
                         5
                     ];
-                    $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $defaultScatterCount);
+                    $scatterStripReelNumber = $this->GetRandomNumber(0, 3, $defaultScatterCount);
+                    for($i = 0; $i < $defaultScatterCount; $i++){
+                        if($scatterStripReelNumber[$i] == 3){
+                            $scatterStripReelNumber[$i] = 4;
+                        }
+                    }
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
                         $issame = false;

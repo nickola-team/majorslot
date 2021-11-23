@@ -177,7 +177,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'denomination' => 0, 
                     'shop_id' => $user->shop_id,
                     'category_id' => isset($category)?$category->id:0,
-                    'game_id' => $game['gamecode'],
+                    'game_id' => $tableid,
                     'roundid' => $roundid,
                 ]);
             }
@@ -244,7 +244,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id,
                 'category_id' => isset($category)?$category->id:0,
-                'game_id' => $game['gamecode'],
+                'game_id' => $tableid,
                 'roundid' => $roundid,
             ]);
 
@@ -311,7 +311,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id,
                 'category_id' => isset($category)?$category->id:0,
-                'game_id' => $game['gamecode'],
+                'game_id' => $tableid,
                 'roundid' => $roundid,
             ]);
 

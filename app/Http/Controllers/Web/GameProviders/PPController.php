@@ -636,11 +636,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
                 {
-                    if ($game['gameID'] == '106' || $game['gameID'] == '110' || $game['gameID'] == '111' || $game['gameID'] == '535' || $game['gameID'] == '536')
+                    /*if ($game['gameID'] == '106' || $game['gameID'] == '110' || $game['gameID'] == '111' || $game['gameID'] == '535' || $game['gameID'] == '536' )
                     {
 
                     }
-                    else if (str_contains($game['platform'], 'WEB'))
+                    else */if (str_contains($game['platform'], 'WEB'))
                     {
                         $bExclude = ($href == 'live')  ^ ($game['gameTypeID'] == 'lg');
                         if ($bExclude == false){

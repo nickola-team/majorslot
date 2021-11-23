@@ -43,8 +43,8 @@
         </div><!--of #bar_container-->
         
         <div id="text_container">
-            머니를 이동하는 중입니다.
-            <span>잠시만 기다려주세요...</span>
+            즐거운 하루 되세요
+            <span>무료스핀 구매 한도는 50만원 입니다.</span>
         </div><!--of #text_container-->
         
     </div><!--of #loader_container-->
