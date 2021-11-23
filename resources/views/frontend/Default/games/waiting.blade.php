@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="/frontend/Default/css/wait/main.css">
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
-    <script src='/frontend/Default/js/dev_tools.js'></script>
+    <!-- <script src='/frontend/Default/js/dev_tools.js'></script> -->
     </head>
     @if ($prompt)
     <body>
@@ -27,7 +27,12 @@
         </div>
         <div class="box__description">
             <div class="box__description-container">
-            <div class="box__description-text">즐거운 하루 되세요</div>
+            <div class="box__description-title_neon">
+                즐거운 하루 되세요
+            </div>
+            <div class="box__description-text">
+            무료스핀 구매 한도는 50만원 입니다.
+            </div>
             </div>
         </div>
         </div>
