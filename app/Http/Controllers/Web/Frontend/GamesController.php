@@ -227,6 +227,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $user->update(['playing_game' => null]);
             }
+            if (!$game)
+            {
+                return redirect()->route('frontend.auth.login');
+            }
             $object = '\VanguardLTE\Games\\' . $game . '\SlotSettings';
             $slot = new $object($game, $userId);
             $game = \VanguardLTE\Game::where([
