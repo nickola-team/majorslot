@@ -25,13 +25,13 @@ function syncBalance()  {
     });
     child.on('close', (code, signal) => {
         console.log('exit syncBalance');
-        setTimeout(syncBalance, balanceSync);
-        // makeurl();
+        // setTimeout(syncBalance, balanceSync);
+        makeurl();
     });
     child.on('error', (code, signal) => {
       console.log('error syncBalance');
-    //   makeurl();
-        setTimeout(syncBalance, balanceSync);
+        makeurl();
+        // setTimeout(syncBalance, balanceSync);
       });
   };
 function gameround()  {
@@ -75,15 +75,17 @@ function makeurl() {
     
     child.on('close', (code, signal) => {
         console.log('exit launchSync');
-        setTimeout(makeurl, launchSync);
+        // setTimeout(makeurl, launchSync);
+         setTimeout(syncBalance, balanceSync);
         
     });
     child.on('error', (code, signal) => {
         console.log('error launchSync');
-        setTimeout(makeurl, launchSync);
+        //setTimeout(makeurl, launchSync);
+         setTimeout(syncBalance, balanceSync);
     })
 }
 
 setTimeout(syncBalance , balanceSync);
 setTimeout( gameround, betwinSync);
-setTimeout(makeurl, launchSync);
+// setTimeout(makeurl, launchSync);
