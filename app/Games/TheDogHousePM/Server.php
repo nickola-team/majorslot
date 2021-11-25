@@ -73,7 +73,8 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [9,3,2,3,9,10,4,1,4,10,9,3,2,3,9]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
-                $slotSettings->setGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -86,7 +87,9 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    if (isset($lastEvent->serverResponse->RoundID)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    }
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
@@ -380,6 +383,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $_winAvaliableMoney = $_spinSettings[1];
                 $freeStacks = []; // free stacks
                 $isGeneratedFreeStack = false;
+                $isForceWin = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
@@ -393,6 +397,11 @@ namespace VanguardLTE\Games\TheDogHousePM
                         if(count($freeStacks) == $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
                             $isGeneratedFreeStack = true;
                         }
+                    }
+                    if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') == 0){
+                        $winType = 'win';
+                        $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
+                        $isForceWin = true;
                     }
                 }
                 else
@@ -413,10 +422,11 @@ namespace VanguardLTE\Games\TheDogHousePM
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
                 }
                 
                 $Balance = $slotSettings->GetBalance();
@@ -638,10 +648,16 @@ namespace VanguardLTE\Games\TheDogHousePM
                         else if($scattersCount == 2 && mt_rand(0, 100) < 50){
 
                         }
+                        else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
+                            break;   // win by force when winmoney is 0 in freespin
+                        }
                         else if($slotEvent['slotEvent'] == 'freespin'&& $i > 1000){
                             if($totalWin * $leftFreeGames < $_winAvaliableMoney){
                                 break;
                             }
+                        }
+                        else if($winType == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
+                            break;  // give freespin per 450spins over
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
@@ -672,7 +688,9 @@ namespace VanguardLTE\Games\TheDogHousePM
                             }
                             else
                             {
-                                break;
+                                if(($slotEvent['slotEvent'] != 'freespin' && $totalWin < $betline * $lines * 10) || $slotEvent['slotEvent'] == 'freespin'){  // Max Win
+                                    break;
+                                }
                             }
                         }
                         else if( $totalWin == 0 && $winType == 'none' ) 
@@ -704,6 +722,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $freeSpinNum);
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeSpinWins', implode(',', $freeSpinNums));
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 }
                 $lastTempReel = [];
                 for($k = 0; $k < 3; $k++){
@@ -847,7 +866,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                     '&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
                     '&bgt=32&wins_mask=nff,nff,nff,nff,nff,nff,nff,nff,nff&end=1&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&sver=5&n_reel_set=1&counter='. ((int)$slotEvent['counter'] + 1);
                 // FreeStack
-                if($slotSettings->happyhouruser){
+                if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($betline * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')));
                 }
                     //------------ ReplayLog ---------------
