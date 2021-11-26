@@ -698,10 +698,13 @@ namespace VanguardLTE
             {
                 return null;
             }
-            $bank = \VanguardLTE\BonusBank::lockforUpdate()->where('master_id', $master->id)->first();
+            $bank = \VanguardLTE\BonusBank::lockforUpdate()->where(['master_id' => $master->id, 'game_id' => $this->original_id])->first();
             if (!$bank)
             {
-                $bank = \VanguardLTE\BonusBank::create(['master_id' => $master->id]);
+                $bank = \VanguardLTE\BonusBank::lockforUpdate()->where(['master_id' => $master->id, 'game_id' => 0])->first();
+                if (!$bank){
+                    $bank = \VanguardLTE\BonusBank::create(['master_id' => $master->id, 'game_id' => $this->original_id]);
+                }
             }
             return $bank;
         }
@@ -750,7 +753,13 @@ namespace VanguardLTE
                     }
                     if( $type == 'inc' ) 
                     {
-                        $bank->increment('bank', $balance);
+                        if ($bank->max_bank!=0 && $bank->bank + $balance > $bank->max_bank)
+                        {
+                            $bank->update(['bank' => $bank->max_bank]);
+                        }
+                        else {
+                            $bank->increment('bank', $balance);
+                        }
                     }
                     if( $type == 'dec' ) 
                     {
@@ -758,6 +767,10 @@ namespace VanguardLTE
                     }
                     if( $type == 'update' ) 
                     {
+                        if ($bank->max_bank!=0 &&  $balance > $bank->max_bank)
+                        {
+                            $balance = $bank->max_bank;
+                        }
                         $bank->update(['bank' => $balance]);
                     }
                     return;

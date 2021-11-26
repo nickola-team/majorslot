@@ -7,7 +7,8 @@ namespace VanguardLTE
         protected $fillable = [
             'master_id', 
             'bank', 
-            
+            'game_id',
+            'max_bank'
         ];
         public static function boot()
         {
