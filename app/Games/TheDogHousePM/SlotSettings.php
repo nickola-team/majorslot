@@ -774,8 +774,8 @@ namespace VanguardLTE\Games\TheDogHousePM
         {
             $winAvaliableMoney = $this->GetBank('bonus');
             $limitOdd = floor($winAvaliableMoney / $betLine / 3);
-            if($limitOdd < 30){
-                $limitOdd = 30;
+            if($limitOdd < 35){
+                $limitOdd = 35;
             }else if($limitOdd > 100){
                 $limitOdd = 100;
             }
@@ -785,6 +785,7 @@ namespace VanguardLTE\Games\TheDogHousePM
                 $limitOdd,
                 $this->playerId
             ])->get();
+            $freeStack = null;
             if(count($freeStacks) > 0){
                 $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
             }else{
@@ -798,7 +799,9 @@ namespace VanguardLTE\Games\TheDogHousePM
                         $limitOdd,
                         $this->playerId
                     ])->get();
-                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+                    if(count($freeStacks) > 0){
+                        $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+                    }
             }
             if($freeStack){
                 \VanguardLTE\PPGameFreeStackLog::create([
