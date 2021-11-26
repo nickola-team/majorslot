@@ -875,6 +875,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'msg' => '입금정보를 입력해주세요.',
                 ], 200);
             }
+            $oldrequest = \VanguardLTE\WithdrawDeposit::where(['user_id' => $user->id])->whereIn('status', [\VanguardLTE\WithdrawDeposit::REQUEST,\VanguardLTE\WithdrawDeposit::WAIT])->get();
+            if (count($oldrequest) > 0)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '이미 신청중이니 기다려주세요',
+                    'code' => '001'
+                ], 200);
+            }
             if( !$request->money ) 
             {
                 return response()->json([
@@ -984,6 +993,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json([
                     'error' => true, 
                     'msg' => '환전금액을 입력해주세요',
+                    'code' => '001'
+                ], 200);
+            }
+            $oldrequest = \VanguardLTE\WithdrawDeposit::where(['user_id' => $user->id])->whereIn('status', [\VanguardLTE\WithdrawDeposit::REQUEST,\VanguardLTE\WithdrawDeposit::WAIT])->get();
+            if (count($oldrequest) > 0)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '이미 신청중이니 기다려주세요',
                     'code' => '001'
                 ], 200);
             }

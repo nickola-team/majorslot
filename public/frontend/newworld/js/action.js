@@ -1,933 +1,352 @@
-function showLoginPopup() {
-    if (loginYN === 'Y') {
-        alert("로그아웃후 이용가능합니다.");
+var nCheckLetter = 0;
+
+var nLetterCnt = 0;
+var nMainLetterCnt = 0;
+
+var wndGame;
+var bChkSession = true;
+
+var alarm = new Audio('/frontend/newworld/snd/msg_recv_alarm.mp3');
+alarm.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
+
+function onGoUrl(strUrl) {
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
         return;
     }
-
-    var strHtml = `
-        <div class="popup-overlay " style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-            <div class="popup-content " style="position: relative; background: none; margin: auto; border: none; padding: 5px; z-index: 97;">
-                <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false" role="dialog" aria-labelledby="open_63141101" style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto;">
-                    <div class="login_wrap">
-                        <div class="login_close_box">
-                            <a class="fade_2_close" onclick="closePopup();"><img src="/frontend/newworld/images/popup_close.png"></a>
-                        </div>
-                        <div class="login_box_wrap">
-                            <div class="login_tit">
-                                <img src="/frontend/newworld/images/in_login_logo.png">
-                            </div>
-                            <div class="login">
-                                <form name="mainLogin_form" id="mainLogin_form" method="post">
-                                    <table class="login_table">
-                                        <tbody>
-                                            <tr>
-                                                <td class="login_td1">
-                                                    <input name="userid" id="userid" type="text" class="input_login" placeholder="아이디">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="login_td2">
-                                                    <input type="password" name="password" id="password" class="input_login" placeholder="비밀번호">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="login_td3" onclick="loginSubmit(mainLogin_form);">
-                                                    <a><img src="/frontend/newworld/images/login_btn.png"></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </form>
-                            </div>
-                        </div>
-                    </div></div></div></div>`;
-
-    $("#popup").html(strHtml);
+    
+    document.location.href = strUrl;
 }
 
-function showRegisterPopup() {
-    if (loginYN === 'Y') {
-        alert("로그아웃후 이용가능합니다.");
+function onTransAll() {
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
         return;
     }
 
-    var strHtml = ``;
-
-    $("#popup").html(strHtml);
-}
-
-function showGamesPopup(title, category) {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
-        return;
-    }
-
-    var formData = new FormData();
-    formData.append("_token", $("#_token").val());
-    formData.append("category", category);
-
-    $.ajax({
-        type: "POST",
-        url: "/api/getgamelist",
-        data: formData,
-        processData: false,
-        contentType: false,
+    if(confirm('게임머니를 전부 보유머니로 회수하시겠습니까?')) {
+        $.ajax({
+        type: "GET",
+        url: "/onTrasferAllToUser",
         cache: false,
-        async: false,
-        success: function (data) {
-            if (data.error) {
-                alert(data.msg);
-                if (data.code == "001") {
-                    location.reload();
-                }
-                return;
-            }
-
-            var strHtml = `
-                <div style="
-                opacity: 1;
-                visibility: visible;
-                position: fixed;
-                overflow: auto;
-                z-index: 100001;
-                transition: all 0.3s ease 0s;
-                width: 100%;
-                height: 100%;
-                top: 0px;
-                left: 0px;
-                text-align: center;
-                background-color: rgb(0, 0, 0);
-                display: block;"
-            >
-            <div id="fade_3"
-                class="expandOpen popup_none popup_content"
-                data-popup-initialized="true"
-                aria-hidden="false"
-                role="dialog"
-                aria-labelledby="open_55563334"
-                style="
-                opacity: 1;
-                visibility: visible;
-                display: inline-block;
-                outline: none;
-                transition: all 0.3s ease 0s;
-                text-align: left;
-                position: relative;
-                vertical-align: middle;
-                "
-            >
-                <div class="popup_wrap">
-                <div class="close_box">
-                    <a class="fade_3_close" onclick="closePopup();"><img src="/frontend/newworld/images/popup_close.png" /></a>
-                </div>
-                <div class="popupbox_ajax">
-                    <div>
-                    <div class="title1">&nbsp;&nbsp;&nbsp;${title}</div>
-                    <div style="width: 100%; margin-top: -5px">
-                        <table>
-                        <tbody>
-                            <tr>
-                            <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <table>
-                                <tbody>
-                                    <tr>
-                                    <td>
-                                        <table>
-                                        <tbody>
-                                            <tr>`;
-
-            if (data.games.length > 0) {
-                for (var i = 0; i < data.games.length; i++) {
-                    if (i != 0 && i % 6 == 0) {
-                        strHtml += `</tr><tr>`;
-                    }
-                    if (data.games[i].provider)
-                    {
-                        strHtml += `<td style="width: 220px; padding-bottom: 20px" onClick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');">
-                                                <table>
-                                                <tbody>
-                                                    <tr>
-                                                    <td>
-                                                        <div>
-                                                        <a style="cursor: pointer">`;
-                        if (data.games[i].icon)
-                        {
-                            strHtml += `<img
-                                    src="${data.games[i].icon}"
-                                    id="xImag"
-                                    width="170"
-                                    height="130"
-                                    />`;
-                        }
-                        else
-                        {
-                            strHtml += `<img
-                                    src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg"
-                                    id="xImag"
-                                    width="170"
-                                    height="130"
-                                    />`;
-                        }
-                        strHtml += `</a>
-                                        </div>
-                                    </td>
-                                    </tr>
-                                    <tr>
-                                    <td>
-                                        <div style="
-                                            text-align: center;
-                                            position: absolute;
-                                            width: 170px;">
-                                        <span class="slot_txt_style">${data.games[i].title}</span>
-                                        </div>
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                </table>
-                            </td>`;
-                    }
-                    else
-                    {
-                        strHtml += `<td style="width: 220px; padding-bottom: 20px" onClick="startGame('${data.games[i].name}');">
-                                                <table>
-                                                <tbody>
-                                                    <tr>
-                                                    <td>
-                                                        <div>
-                                                        <a style="cursor: pointer"
-                                                            ><img
-                                                            src="/frontend/Default/ico/${data.games[i].name}.jpg"
-                                                            id="xImag"
-                                                            width="170"
-                                                            height="130"
-                                                        /></a>
-                                                        </div>
-                                                    </td>
-                                                    </tr>
-                                                    <tr>
-                                                    <td>
-                                                        <div style="
-                                                            text-align: center;
-                                                            position: absolute;
-                                                            width: 170px;">
-                                                        <span class="slot_txt_style">${data.games[i].title}</span>
-                                                        </div>
-                                                    </td>
-                                                    </tr>
-                                                </tbody>
-                                                </table>
-                                            </td>`;
-                    }
-                    
-                }
-            }
-
-            strHtml += `</tr>
-                                        </tbody>
-                                        </table>
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                </table>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                        <div class="con_box20">
-                        <div class="btn_wrap_center">
-                            <ul>
-                            <li>
-                                <a onclick="closePopup();"><span class="btn3_1">목록으로</span></a>
-                            </li>
-                            </ul>
-                        </div>
-                        </div>
-                        <div class="con_box20"><div class="btn_wrap_center"></div></div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            </div>`;
-
-            // if (data.games.length > 0) {
-            //     for (var i = 0; i < data.games.length; i++) {
-            //         strHtml += `
-            //             <div class="gamelist" onClick="startGame('${data.games[i].name}');">
-            //                 <img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg" alt="thumbnail">
-            //                 <div class="foot">
-            //                     <p style="word-break: break-all;font-size:18px;">${data.games[i].title}</p>
-            //                 </div>
-            //             </div>`;
-            //     }
-            // } else {
-            //     strHtml += '<div style="text-align: center;">';
-            //     strHtml +=
-            //         '<img src="/frontend/Major/major/images/coming_soon.png" style="margin-top: 150px;">';
-            //     strHtml += "</div>";
-            // }
-            // strHtml += "</div></div></div>";
-
-            $("#popup").html(strHtml);
-        },
-        error: function (err, xhr) {
-            alert(err.responseText);
-        },
-    });
-
-    // } else {
-    //     showLoginAlert();
-    // }
-}
-
-function showProfilePopup() {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
-        return;
-    }
-
-    var strHtml = `
-        <div class="popup-overlay" style="
-        position: fixed;
-        inset: 0px;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        z-index: 999;
-    ">
-    <div class="popup-content" style="
-        position: relative;
-        background: rgb(0, 0, 0);
-        margin: auto;
-        border: none;
-        padding: 5px;
-        z-index: 99;
-        ">
-        <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-        role="dialog" style="
-            opacity: 1;
-            visibility: visible;
-            display: inline-block;
-            outline: none;
-            transition: all 0.3s ease 0s;
-            text-align: left;
-            position: relative;
-            vertical-align: middle;
-        ">
-        <div class="popup_wrap">
-            <div class="close_box">
-            <a href="#" class="fade_1_close" onclick="closePopup();"><img src="/frontend/newworld/images/popup_close.png" /></a>
-            </div>
-            <div class="popupbox">
-            <div class="popup_tab_wrap">
-                <ul class="popup_tab">
-                <li class="tab1" data-target="#popuptab_cont1">
-                    <a onclick="showDepositPopup();"><span><img src="/frontend/newworld/images/gnb01.png" /> 입금신청</span></a>
-                </li>
-                <li class="tab2" data-target="#popuptab_cont2">
-                    <a onclick="showWithdrawPopup();"><span><img src="/frontend/newworld/images/gnb02.png" /> 출금신청</span></a>
-                </li>
-                <li class="tab7" data-target="#popuptab_cont7">
-                    <a onclick="showNotificationPopup();"><span><img src="/frontend/newworld/images/gnb07.png" /> 공지사항</span></a>
-                </li>
-                <li class="tab8" data-target="#popuptab_cont8">
-                    <a><span><img src="/frontend/newworld/images/gnb08.png" /> 마이페이지</span></a>
-                </li>
-                <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                    <a onclick="showContactPopup();"><span><img src="/frontend/newworld/images/gnb05.png" /> 고객센터</span></a>
-                </li>
-                <li class="tab10" data-target="#popuptab_cont10"></li>
-                </ul>
-            </div>
-            <div id="popuptab_cont4" class="popuptab_cont">
-                <div class="title1">마이페이지</div>
-                <div class="contents_in">
-                <table class="write_title_top" style="width: 100%">
-                    <tbody>
-                    <tr>
-                        <td class="write_title">회원아이디</td>
-                        <td class="write_basic">
-                        <input class="input1" readonly="" value="${userName}" style="width: 200px" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="write_title">보유게임 총머니</td>
-                        <td class="write_basic">
-                        <input class="input1" readonly="" value="${currentBalance}" style="width: 200px" />
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                </div>
-            </div>
-            </div>
-        </div>
-        </div>
-    </div>
-    </div>`;
-
-    $("#popup").html(strHtml);
-}
-function convertDeal() {
-
-    var money = $("#bonusdeal #money").val();
-    if (money < 30000) {
-        alert("환전 최소금액은 30,000원 입니다.");
-        return;
-    }
-    if (money % 10000 > 0) {
-        alert("10,000원 단위로만 환전 가능합니다.");
-        return;
-    }
-
-
-    $.ajax({
-        type: 'POST',
-        url: '/api/convert_deal_balance',
-        data: { summ: money },
-        cache: false,
-        async: false,
-        success: function (data) {
-            if (data.error) {
-                alert(data.msg);
-                return;
-            }
-            alert('수익금이 보유금으로 전환되었습니다.');
-            location.reload(true);
-        },
-        error: function (err, xhr) {
-            alert(err.responseText);
+        async : false,
+        success: function(data){
+            // alert(data.message);
         }
     });
-
+    }
 }
-function showDealOut()
-{
-    if (loginYN !== 'Y') {
-        showLoginAlert()
+
+function onPopup(url, width, height, wid, gameid) {
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
         return;
     }
+    
+    if(!confirm(gameid + ' 게임을 실행하시겠습니까?')) return;
+    
+    var leftPosition, topPosition;
+    leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+    topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+    wndGame = window.open(url, wid,
+    "status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+    + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+    + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+}
+
+function addDeposit(money){
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+    
+    var amount = $("#deposit_amount").val();
+    if(amount == '') amount = 0;
+
+    if(money == 0) $("#deposit_amount").val('');
+    else $("#deposit_amount").val(comma(parseInt(uncomma(amount)) + parseInt(money)));
+}
+
+function onAskAccount(){
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+
+    var data = { nType: 0, strQueContent: "입금계좌번호 문의합니다." }
+    
+    $.ajax({
+        type: "GET",
+        url: "/onChatCreate",
+        data: data,
+        cache: false,
+        async: true,
+        beforeSend: function(){ },
+        success: function(response, status){
+            if(response.success == -1){
+                if(wndGame != null) wndGame.close();
+                document.location.href = '/login';
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function(err, xhr){ }
+    });
+}
+
+function DepositProc(){
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+
+    var amount = uncomma($("#deposit_amount").val());
+
+    if (amount == '' || amount == 0) { 
+        alert("입금하실 금액을 입력하여 주세요");
+        $("#deposit_amount").focus();  
+        return; 
+    }
+
+    if(!confirm("입금신청 하시겠습니까?")) return;
+
+    var data = { accountName: $(".userName").val(), bank:$(".userBankName").val(), no:$(".accountNo").val(), money: amount };
     $.ajax({
         type: "POST",
-        url: "/api/balance",
-        data: null,
-        processData: false,
-        contentType: false,
+        url: "/api/addbalance",
+        data: data,
         cache: false,
-        async: false,
-        success: function (data) {
-            if (data.error) {
-                alert(data.msg);
+        async: true,
+        beforeSend: function(){ },
+        success: function(response, status){
+            if (response.error) {
+                alert(response.msg);
+                if (response.code == "001") {
+                    location.reload();
+                } else if (response.code == "002") {
+                }
                 return;
             }
-            var strHtml = `
-                <div class="popup-overlay "
-                style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-                <div class="popup-content "
-                    style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
-                    <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-                        role="dialog"
-                        style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
-                        <div class="popup_wrap">
-                            <div class="close_box"><a href="#" class="fade_1_close" onclick="closePopup();"><img src="/frontend/newworld/images/popup_close.png"></a>
+
+            alert("충전 신청이 완료되었습니다.");
+        },
+        error: function(err, xhr){ }
+    });
+}
+
+function onAsk(){
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+
+    var data = { nType: $('#nType').val(), strQueContent: $('#strQueContent').val() }
+    $.ajax({
+        type: "GET",
+        url: "/onChatCreate",
+        data: data,
+        cache: false,
+        async: true,
+        beforeSend: function(){ },
+        success: function(response, status){
+            if(response.success == -1){
+                if(wndGame != null) wndGame.close();
+                document.location.href = '/login';
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function(err, xhr){ }
+    });
+}
+
+function addWithdraw(money) {
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+
+    var amount = $("#withdraw_amount").val();
+    if(amount == '') amount = 0;
+    if(money == 0) $("#withdraw_amount").val('');
+    else $("#withdraw_amount").val(comma(parseInt(uncomma(amount)) + parseInt(money)));
+}
+
+function WithdrawProc() {
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+
+    var amount = uncomma($("#withdraw_amount").val());
+    if (amount == '' || amount == 0) { alert("입금하실 금액을 입력하여 주세요"); $("#withdraw_amount").focus();  return false; }
+    if (confirm("출금신청 하시겠습니까?")){
+        var data = { accountName: $(".userName").val(), bank:$(".userBankName").val(), no:$(".accountNo").val(), money: amount };
+        $.ajax({
+            type: "POST",
+            url: "/api/outbalance",
+            data: data,
+            cache: false,
+            async: true,
+            beforeSend: function(){ },
+            success: function(response, status){
+                if (response.error) {
+                    alert(response.msg);
+                    if (response.code == "001") {
+                        location.reload();
+                    } else if (response.code == "002") {
+                    }
+                    return;
+                }
+    
+                alert("환전 신청이 완료되었습니다.");
+            },
+            error: function(err, xhr){ }
+        });
+    }
+}
+
+function tabActionPopView(obj, pid, idx) {
+    if(nCheckLetter == 1&& !pid.includes('letter')) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+    
+    if(obj) {
+        var tab = $(".popup_tab1 li." + obj).closest(".popup_tab1 > li");
+        tab.siblings().removeClass("sk_tab_active_01");
+        tab.addClass("sk_tab_active_01");
+
+        var target = $(tab.attr("data-target")+".sk_tab_con_01");
+        $(".sk_tab_con_01").addClass("sk_tab_hidden_01");
+        target.removeClass("sk_tab_hidden_01");
+        target.html("");
+    } else {
+        $(".sk_tab_con_01").html("");
+    }
+    if( pid == "letterView" ){
+              
+    }
+    else if( pid == "chatView" ){
+            data = `<div class="title1">
+                        문의
+                    </div>
+                        <div class="contents_in">
+                                <div class="con_box10">             
+                                        <table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+                                            <tr>
+                                                <td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">상태</span> 답변완료</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="color: greenyellow">문의</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">문의제목 : 계좌문의</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">문의내용 : 
+                                                    입금계좌번호 문의합니다.
+                                                </td>
+                                            </tr> 
+                                            <tr>
+                                                <td class="view1 write_title_top" style="color: greenyellow">응답</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">응답제목 : 입금 계좌문의</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="view1 write_title_top" style="padding-left: 100px;">응답내용 : 
+                                                    <p>안녕하세요 계좌안내 입니다.</p><p><br></p><p>【은행명 : 전북은행】 - 【예금주 : 정호영】 - 【계좌번호 : 1021-01-6610476】</p><p><br></p><p>계좌번호는 수시로 변경될 수 있습니다.</p><p>입금전 반드시 계좌문의를 통하여 계좌번호를 확인후.</p><p>입금해주시기 바랍니다 감사합니다.</p>
+                                                </td>
+                                            </tr>
+                                    </table> 
                             </div>
-                            <div class="popupbox">
-                                <div id="bonusdeal" class="popuptab_cont">
-                                    <div class="title1">보너스 전환</div>
-                                    <div class="contents_in">
-                                        <div class="con_box10">
-                                            <div class="info_wrap">
-                                                <div class="info2" style="text-align: center;"><span class="ww_font">보너스금액 <img
-                                                            src="/frontend/newworld/images/ww_icon.png" height="30"><input
-                                                            class="input1 walletBalance" id="balance_offer" readonly="" value="${data['deal']}">
-                                                        원</span></div>
-                                            </div>
-                                        </div>
-                                        <table class="write_title_top" style="width: 100%;">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="write_title">전환금액</td>
-                                                    <td class="write_td"></td>
-                                                    <td class="write_basic">
-                                                        <input id="money" type="hidden" name="money" value="0">
-                                                        <input class="input1" id="money1" name="money1" placeholder="0" value="0" onchange="comma()">
-                                                        <a href="javascript:money_count('10000');" style="padding-left: 5px;"><span class="btn1_2">1만원</span></a>
-                                                        <a href="javascript:money_count('50000');" style="padding-left: 5px;"><span class="btn1_2">5만원</span></a>
-                                                        <a href="javascript:money_count('100000');" style="padding-left: 5px;"><span class="btn1_2">10만원</span></a>
-                                                        <a href="javascript:money_count('500000');" style="padding-left: 5px;"><span class="btn1_2">50만원</span></a>
-                                                        <a href="javascript:money_count('1000000');" style="padding-left: 5px;"><span class="btn1_2">100만원</span></a>
-                                                        <a href="javascript:money_count('5000000');" style="padding-left: 5px;"><span class="btn1_2">500만원</span></a>
-                                                        <a href="javascript:money_count_hand();" style="padding-left: 5px;"><span class="btn1_1">정정</span></a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                            <div class="con_box20">
+                                <div class="btn_wrap_center">
+                                    <ul>
+                                        <li><a href="#" onclick="tabActionProc('tab5','chatList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+                                    </ul>
+                                </div>
+                            </div>
+                    </div>`;
+    }
+    else if(pid == "noticeView"){
+            data= `<div class="title1">
+                                    공지사항
+                            </div>
+                            <div class="contents_in">
+                                    <div class="con_box10">             
+                                            <table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+                                                    <tr>
+                                                            <td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> 2021-11-09 17:10:38      </td>
+                                                    </tr>
+                                                    <tr>
+                                                            <td class="view1 write_title_top">★공지사항★</td>
+                                                    </tr>
+                                                    <tr>
+                                                            <td class="view2">
+                                                                    <?xml encoding="utf-8" ?><?xml encoding="utf-8" ?><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><h2><span style='font-family: "Arial Black";'><b>입금계좌는 수시로 변경됩니다.</b></span></h2><h2><span style='font-family: "Arial Black";'><b><br></b></span><b style="color: inherit; font-family: inherit;">반드시 입금전 계좌문의후 입금해주시기 바랍니다.</b></h2><h2><b style="color: inherit; font-family: inherit;"><br></b><b style="color: inherit; font-family: inherit;">전계좌로 입금시 확인이 불가능합니다.</b></h2>
+                            
+                                                            </td>
+                                                    </tr>
+                                            </table>
                                     </div>
                                     <div class="con_box20">
                                             <div class="btn_wrap_center">
-                                                <ul>
-                                                    <li><a onclick="convertDeal();"><span class="btn3_1">전환하기</span></a></li>
-                                                </ul>
+                                                    <ul>
+                                                            <li><a href="#" onclick="tabActionProc('tab6','noticeList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+                                                    </ul>
                                             </div>
-                                        </div>
-                                </div>
+                                    </div>                                                         
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
+                            <script>
+                                    getUserMoney();
+                            </script>`;
+    }
 
-            $("#popup").html(strHtml);
-            $("#myWallet").html(data['balance'] + ' 원');
-            $("#myBonus").html(data['deal'] + ' 원');
-        }
-    });
+    $(".sk_tab_con_01").html(data);
     
 }
-function showProfileEditorPopup() {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
+
+function tabActionSlot(plat, pid, platcode, platidx) {
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
         return;
     }
-
-    var strHtml = `
-        <div class="popup-overlay "
-        style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-        <div class="popup-content "
-            style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
-            <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-                role="dialog"
-                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
-                <div class="popup_wrap">
-                    <div class="close_box"><a href="#" class="fade_1_close" onclick="closePopup();"><img src="/frontend/newworld/images/popup_close.png"></a>
-                    </div>
-                    <div class="popupbox">
-                        <div id="popuptab_cont4" class="popuptab_cont">
-                            <div class="title1">마이페이지</div>
-                            <div class="contents_in">
-                                <table class="write_title_top" style="width: 100%;">
-                                    <tbody>
-                                        <tr>
-                                            <td class="write_title">회원아이디 </td>
-                                            <td class="write_basic"><input class="input1" readonly="" value="${userName}"
-                                                    style="width: 200px;"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="write_title">비밀번호</td>
-                                            <td class="write_basic">* 비밀번호 변경시 고객센터에 문의 바랍니다.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-
-    $("#popup").html(strHtml);
-}
-
-function showDepositPopup() {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
-        return;
-    }
-
-    var strHtml = `
-        <div class="popup-overlay "
-        style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-        <div class="popup-content "
-            style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
-            <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-                role="dialog"
-                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
-                <div class="popup_wrap">
-                    <div class="close_box" onclick="closePopup();"><a href="#" class="fade_1_close"><img src="/frontend/newworld/images/popup_close.png"></a>
-                    </div>
-                    <div class="popupbox">
-                        <div class="popup_tab_wrap">
-                            <ul class="popup_tab">
-                            <li class="tab1" data-target="#popuptab_cont1">
-                                <a><span><img src="/frontend/newworld/images/gnb01.png" /> 입금신청</span></a>
-                            </li>
-                            <li class="tab2" data-target="#popuptab_cont2">
-                                <a onclick="showWithdrawPopup();"><span><img src="/frontend/newworld/images/gnb02.png" /> 출금신청</span></a>
-                            </li>
-                            <li class="tab7" data-target="#popuptab_cont7">
-                                <a onclick="showNotificationPopup();"><span><img src="/frontend/newworld/images/gnb07.png" /> 공지사항</span></a>
-                            </li>
-                            <li class="tab8" data-target="#popuptab_cont8">
-                                <a onclick="showProfilePopup();"><span><img src="/frontend/newworld/images/gnb08.png" /> 마이페이지</span></a>
-                            </li>
-                            <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                                <a onclick="showContactPopup();"><span><img src="/frontend/newworld/images/gnb05.png" /> 고객센터</span></a>
-                            </li>
-                            <li class="tab10" data-target="#popuptab_cont10"></li>
-                            </ul>
-                        </div>
-                        <div id="popuptab_cont2" class="popuptab_cont">
-                            <div class="title1">입금신청</div>
-                            <div class="contents_in">
-                                <div class="con_box00">
-                                    <div class="info_wrap">
-                                        <div class="info2">주의사항</div>
-                                        <div class="info3">- 입금 최소 1만원부터 가능하며 입금전 꼭! 본사의 충전계좌 확인 후 입금바랍니다.<br>- 수표 및 토스입금시
-                                            충전처리가 불가합니다.</div>
-                                    </div>
-                                </div>
-                                <div class="con_box10">
-                                    <div class="info_wrap">
-                                        <div class="info2" style="text-align: center;"><span class="ww_font">내 지갑 <img
-                                                    src="/frontend/newworld/images/ww_icon.png" height="30"><input
-                                                    class="input1 walletBalance" id="balance_offer" readonly="" value="${currentBalance}">
-                                                원</span></div>
-                                    </div>
-                                </div>
-                                <div class="con_box10" id="deposit">
-                                <form method="post" id="fundFrm" name="fundFrm">
-                                    <table class="write_title_top">
-                                        <tbody>
-                                            <tr>
-                                                <td class="write_title">ID</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1 userID" readonly=""
-                                                        value="${userName}"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="height: 5px;"></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">입금자명</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1 userName" id="name" value=""></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="height: 5px;"></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">입금금액</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic">
-                                                    <input id="money" type="hidden" name="money" value="0">
-                                                    <input class="input1" id="money1" name="money1" placeholder="0" value="0" onchange="comma()">
-                                                    <a href="javascript:money_count('10000');" style="padding-left: 5px;"><span class="btn1_2">1만원</span></a>
-                                                    <a href="javascript:money_count('50000');" style="padding-left: 5px;"><span class="btn1_2">5만원</span></a>
-                                                    <a href="javascript:money_count('100000');" style="padding-left: 5px;"><span class="btn1_2">10만원</span></a>
-                                                    <a href="javascript:money_count('500000');" style="padding-left: 5px;"><span class="btn1_2">50만원</span></a>
-                                                    <a href="javascript:money_count('1000000');" style="padding-left: 5px;"><span class="btn1_2">100만원</span></a>
-                                                    <a href="javascript:money_count('5000000');" style="padding-left: 5px;"><span class="btn1_2">500만원</span></a>
-                                                    <a href="javascript:money_count_hand();" style="padding-left: 5px;"><span class="btn1_1">정정</span></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    </form>
-                                </div>
-                                <div class="con_box20">
-                                    <div class="btn_wrap_center">
-                                        <ul>
-                                            <li><a onclick="deposit();"><span class="btn3_1">입금신청하기</span></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-
-    $("#popup").html(strHtml);
-}
-
-function showWithdrawPopup() {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
-        return;
-    }
-
-    var strHtml = `
-        <div class="popup-overlay "
-        style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-        <div class="popup-content "
-            style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
-            <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-                role="dialog"
-                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
-                <div class="popup_wrap">
-                    <div class="close_box" onclick="closePopup();"><a href="#" class="fade_1_close"><img src="/frontend/newworld/images/popup_close.png"></a>
-                    </div>
-                    <div class="popupbox">
-                        <div class="popup_tab_wrap">
-                            <ul class="popup_tab">
-                            <li class="tab1" data-target="#popuptab_cont1">
-                                <a onclick="showDepositPopup();"><span><img src="/frontend/newworld/images/gnb01.png" /> 입금신청</span></a>
-                            </li>
-                            <li class="tab2" data-target="#popuptab_cont2">
-                                <a><span><img src="/frontend/newworld/images/gnb02.png" /> 출금신청</span></a>
-                            </li>
-                            <li class="tab7" data-target="#popuptab_cont7">
-                                <a onclick="showNotificationPopup();"><span><img src="/frontend/newworld/images/gnb07.png" /> 공지사항</span></a>
-                            </li>
-                            <li class="tab8" data-target="#popuptab_cont8">
-                                <a onclick="showProfilePopup();"><span><img src="/frontend/newworld/images/gnb08.png" /> 마이페이지</span></a>
-                            </li>
-                            <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                                <a onclick="showContactPopup();"><span><img src="/frontend/newworld/images/gnb05.png" /> 고객센터</span></a>
-                            </li>
-                            <li class="tab10" data-target="#popuptab_cont10"></li>
-                            </ul>
-                        </div>
-                        <div id="popuptab_cont2" class="popuptab_cont">
-                            <div class="title1">출금신청</div>
-                            <div class="contents_in">
-                                <div class="con_box00">
-                                    <div class="info_wrap">
-                                        <div class="info2">주의사항</div>
-                                        <div class="info3">
-                                            - 출금 최소 3만원부터 만원단위로 출금 가능하십니다.
-                                            <br>
-                                            - 출금은 가입하신 동일 예금주로만 가능합니다.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="con_box10">
-                                    <div class="info_wrap">
-                                        <div class="info2" style="text-align: center;"><span class="ww_font">내 지갑 <img
-                                                    src="/frontend/newworld/images/ww_icon.png" height="30"><input
-                                                    class="input1 walletBalance" id="balance_offer" readonly="" value="${currentBalance}">
-                                                원</span></div>
-                                    </div>
-                                </div>
-                                <div class="con_box10" id="withdraw">
-                                <form method="post" id="fundFrm" name="fundFrm">
-                                    <table class="write_title_top">
-                                        <tbody>
-                                            <tr>
-                                                <td class="write_title">ID</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1 userID" readonly=""
-                                                        value="${userName}"></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">출금금액</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic">
-                                                    <input id="money" type="hidden" name="money" value="0">
-                                                    <input class="input1" id="money1" name="money1" placeholder="0" value="0" onchange="comma()">
-                                                    <a href="javascript:money_count('10000');" style="padding-left: 5px;"><span class="btn1_2">1만원</span></a>
-                                                    <a href="javascript:money_count('50000');" style="padding-left: 5px;"><span class="btn1_2">5만원</span></a>
-                                                    <a href="javascript:money_count('100000');" style="padding-left: 5px;"><span class="btn1_2">10만원</span></a>
-                                                    <a href="javascript:money_count('500000');" style="padding-left: 5px;"><span class="btn1_2">50만원</span></a>
-                                                    <a href="javascript:money_count('1000000');" style="padding-left: 5px;"><span class="btn1_2">100만원</span></a>
-                                                    <a href="javascript:money_count('5000000');" style="padding-left: 5px;"><span class="btn1_2">500만원</span></a>
-                                                    <a href="javascript:money_count_hand();" style="padding-left: 5px;"><span class="btn1_1">정정</span></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">출금비밀번호</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic">
-                                                    <input type="password" class="input1" id="password" name="password" >
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    </form>
-                                </div>
-                                <div class="con_box20">
-                                    <div class="btn_wrap_center">
-                                        <ul>
-                                            <li><a onclick="withdraw();"><span class="btn3_1">출금신청하기</span></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-
-    $("#popup").html(strHtml);
-}
-
-function showNotificationPopup() {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
-        return;
-    }
-
-    var strHtml = `
-    <div class="popup-overlay "
-    style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-    <div class="popup-content "
-        style="position: relative; background: none; margin: auto; border: none; padding: 5px; z-index: 99999;">
-        <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-            role="dialog"
-            style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
-            <div class="popup_wrap">
-                <div class="close_box"><a class="fade_1_close" onclick="closePopup();"><img src="/frontend/newworld/images/popup_close.png"></a></div>
-                <div class="popupbox">
-                    <div class="popup_tab_wrap">
-                            <ul class="popup_tab">
-                            <li class="tab1" data-target="#popuptab_cont1">
-                                <a onclick="showDepositPopup();"><span><img src="/frontend/newworld/images/gnb01.png" /> 입금신청</span></a>
-                            </li>
-                            <li class="tab2" data-target="#popuptab_cont2">
-                                <a onclick="showWithdrawPopup();"><span><img src="/frontend/newworld/images/gnb02.png" /> 출금신청</span></a>
-                            </li>
-                            <li class="tab7" data-target="#popuptab_cont7">
-                                <a><span><img src="/frontend/newworld/images/gnb07.png" /> 공지사항</span></a>
-                            </li>
-                            <li class="tab8" data-target="#popuptab_cont8">
-                                <a onclick="showProfilePopup();"><span><img src="/frontend/newworld/images/gnb08.png" /> 마이페이지</span></a>
-                            </li>
-                            <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                                <a onclick="showContactPopup();"><span><img src="/frontend/newworld/images/gnb05.png" /> 고객센터</span></a>
-                            </li>
-                            <li class="tab10" data-target="#popuptab_cont10"></li>
-                            </ul>
-                        </div>
-                    <div id="popuptab_cont8" class="popuptab_cont popupvis_hidden">
-                        <div class="title1">공지사항</div>
-                    </div>
-                    <div id="popuptab_cont9" class="popuptab_cont">
-                        <div class="title1">공지사항</div>
-                        <div class="contents_in">
-                            <div class="con_box00">
-                                <table style="width: 100%;">
-                                    <tbody>
-                                        <tr>
-                                            <td class="list_title1" style="width: 10%;">번호</td>
-                                            <td class="list_title1">제목</td>
-                                            <td class="list_title1" style="width: 10%;">작성일</td>
-                                            <td class="list_title1" style="width: 10%;">상태</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>`;
-
-    $("#popup").html(strHtml);
-
-}
-
-
-function showContactPopup() {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
-        return;
-    }
-
-    var strHtml = `
-    <div class="popup-overlay "
-    style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-    <div class="popup-content "
-        style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
-        <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-            role="dialog"
-            style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
-            <div class="popup_wrap">
-                <div class="close_box"><a class="fade_1_close" onclick="closePopup();"><img src="/frontend/newworld/images/popup_close.png"></a></div>
-                <div class="popupbox">
-                     <div class="popup_tab_wrap">
-                            <ul class="popup_tab">
-                            <li class="tab1" data-target="#popuptab_cont1">
-                                <a onclick="showDepositPopup();"><span><img src="/frontend/newworld/images/gnb01.png" /> 입금신청</span></a>
-                            </li>
-                            <li class="tab2" data-target="#popuptab_cont2">
-                                <a onclick="showWithdrawPopup();"><span><img src="/frontend/newworld/images/gnb02.png" /> 출금신청</span></a>
-                            </li>
-                            <li class="tab7" data-target="#popuptab_cont7">
-                                <a onclick="showNotificationPopup();"><span><img src="/frontend/newworld/images/gnb07.png" /> 공지사항</span></a>
-                            </li>
-                            <li class="tab8" data-target="#popuptab_cont8">
-                                <a onclick="showProfilePopup();"><span><img src="/frontend/newworld/images/gnb08.png" /> 마이페이지</span></a>
-                            </li>
-                            <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                                <a><span><img src="/frontend/newworld/images/gnb05.png" /> 고객센터</span></a>
-                            </li>
-                            <li class="tab10" data-target="#popuptab_cont10"></li>
-                            </ul>
-                        </div>
-                    <div id="popuptab_cont8" class="popuptab_cont popupvis_hidden">
-                        <div class="title1">공지사항</div>
-                    </div>
-                    <div id="popuptab_cont9" class="popuptab_cont">
-                        <div class="title1">고객센터</div>
-                        <div class="contents_in">
-                            <div class="con_box00">
-                                <table style="width: 100%;">
-                                    <tbody>
-                                        <tr>
-                                            <td class="list_title1">제목</td>
-                                            <td class="list_title1" style="width: 10%;">작성일</td>
-                                            <td class="list_title1" style="width: 10%;">상태</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>`;
-
-    $("#popup").html(strHtml);
-}
-
-function getBalance() {
+    
     $.ajax({
-        type: "POST",
-        url: "/api/balance",
-        data: null,
-        processData: false,
-        contentType: false,
+        type: "GET",
+        url: "/slotList",
         cache: false,
-        async: false,
-        success: function (data) {
-            if (data.error) {
-                alert(data.msg);
-                return;
+        async : false,
+        data: "nGameTypeCode=" + platcode,
+        success: function(data){
+            if(data == "") {
+                swal('점검중입니다.');
+            } else {
+                $("#popupbox_ajax").html(data);
             }
-            $("#myWallet").html(data['balance'] + ' 원');
-            $("#myBonus").html(data['deal'] + ' 원');
+        },
+        error: function(err, xhr){
+            alert(err.responseText);
         }
     });
 }
-
-function startGame(gamename) {
-    if (loginYN !== 'Y') {
-        showLoginAlert()
-        return;
-    }
-    
+function startGame(gamename) {   
     window.open(
         "/game/" + gamename,
         gamename,
         "width=1280, height=742, left=100, top=50"
     );
 }
+
 function startGameByProvider(provider, gamecode) {
     var formData = new FormData();
     formData.append("provider", provider);
     formData.append("gamecode", gamecode);
-    formData.append("_token", $("#_token").val());
     $.ajax({
     type: "POST",
     url: "/api/getgamelink",
@@ -938,7 +357,7 @@ function startGameByProvider(provider, gamecode) {
     async: false,
     success: function (data) {
         if (data.error) {
-            alert(data.msg);
+            alert(data.msg + data.data);
             return;
         }
         window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
@@ -946,154 +365,298 @@ function startGameByProvider(provider, gamecode) {
     });
     
 }
-
-function loginSubmit(frm) {
-    event.preventDefault();
-
-    if (frm.userid.value == "아이디" || frm.userid.value == "") {
-        alert("로그인 아이디를 입력해 주세요");
-        frm.userid.focus();
-        return;
-    }
-    if (frm.password.value == "******" || frm.password.value == "") {
-        alert("비밀번호를 입력해 주세요");
-        frm.password.focus();
-        return;
-    }
-
-    // frm.action = "/login/login.asp";
-    // frm.submit();
-    var username = frm.userid.value;
-    var password = frm.password.value;
-
+function getSlotGames(title, category) {
+    
     var formData = new FormData();
     formData.append("_token", $("#_token").val());
-    formData.append("username", username);
-    formData.append("password", password);
-
+    formData.append("category", category);
+   
     $.ajax({
         type: "POST",
-        url: "/api/login",
+        url: "/api/getgamelist",
         data: formData,
         processData: false,
         contentType: false,
         cache: false,
         async: false,
-        success: function (data, status) {
+        success: function(data) {
+
             if (data.error) {
                 alert(data.msg);
+                if (data.code == "001") {
+                    location.reload();
+                }
+                return;
             }
 
-            location.reload();
+            $(".tp-name").text(title);
+            var strHtml = "";
+            if (data.games.length > 0) {
+                strHtml = `<div class="con_box10">
+                                <div class="title1"> `+ title +` <span style="float:right; padding:0 10px 0 10px;margin-top:-5px;"></span>
+                                </div>
+                            </div>
+                            <div style="width:100%;margin-top:-5px">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tbody>`;
+                for (var i = 0; i < data.games.length; i++) {
+
+                    if( i % 6  == 0 )
+                    {
+                        strHtml += `<tr><td height="20">&nbsp;</td></tr>
+                                    <tr>
+                                    <td  width="100%">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tbody>
+                                                <tr>`;
+                    }
+                    strHtml += `<td >
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td>
+                                                <div align="center">`;
+                    if (data.games[i].provider)
+                    {
+                        strHtml +='<a style="cursor:pointer" onclick="startGameByProvider(\'' + data.games[i].provider + '\',\'' + data.games[i].gamecode + '\');">';
+                        if (data.games[i].icon)
+                            {
+                                strHtml += `<img src="${data.games[i].icon}" id="xImag" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>`;
+                            }
+                            else {
+                                strHtml += `<img src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg" id="xImag" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>`;
+                            }
+                    }
+                    else
+                    {
+                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].gamecode}');">
+                                                        <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="xImag" />
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>`;
+                    }
+                    strHtml += `<tr>
+                                <td height="30px">
+                                    <div style="text-align:center;position:absolute;width:203px;margin: auto; ">
+                                        <span class="slot_txt_style">${data.games[i].title}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>`;
+
+                    if( i % 6  == 5 )
+                    {
+                        strHtml += `</tr> </tbody></table></td> </tr>`;
+                    }
+                }
+
+                for (var i = 0; i < 6- data.games.length % 6; i++) {
+                    strHtml += `<td style="width: 203px;"></td>`;
+                }
+                strHtml +=`</tbody></table><div class="con_box20">
+                                <div class="btn_wrap_center">
+                                <ul>
+                                    <li>
+                                    <a href="#" onclick="tabActClose();">
+                                        <span class="btn3_1">닫기</span>
+                                    </a>
+                                    </li>
+                                </ul>
+                                </div>
+                            </div>
+                            <div class="con_box20">
+                                <div class="btn_wrap_center"></div>
+                            </div>
+                        </div>`;
+                $("#popupbox_ajax").html(strHtml);
+                $('#casino_1').popup('show');
+            }
+
         },
-        error: function (err, xhr) {
+        complete: function() {
+            $(".wrapper_loading").addClass("hidden");
+        }
+    });
+
+}
+
+
+function tabActClose() {
+    $('#casino_1').popup('hide');
+}
+
+function digit_check(evt){
+    var code = evt.which?evt.which:event.keyCode;
+    if(code < 48 || code> 57) {
+        return false;
+    }
+}
+function CheckHangul(name) {
+    strarr = new Array(name.value.length);
+    schar = new Array('/','.','>','<',',','?','}','{',' ','\\','|','(',')','+','=','!','@','#','$','%','^','&','*','~','[',']','-','_');
+    for (i=0; i <name.value.length; i++) {
+        for (j=0; j <schar.length; j++) {
+            if (schar[j]==name.value.charAt(i)){
+                alert("이름은 한글입력만 가능합니다.");
+                document.frm_join.membername.value="" ;
+                document.frm_join.membername.focus();
+                return false;
+            }
+            else
+                continue;
+        }
+        strarr[i]=name.value.charAt(i)
+        if ((strarr[i]>=0) && (strarr[i] <=9)){
+            alert("이름에 숫자가 있습니다. 이름은 한글입력만 가능합니다.");
+            document.frm_join.membername.value="" ;
+            document.frm_join.membername.focus();
+            return false;}
+        else if ((strarr[i]>='a') && (strarr[i] <='z')){
+            alert("이름에 알파벳이 있습니다. 이름은 한글입력만 가능합니다.");
+            document.frm_join.membername.value="" ;
+            document.frm_join.membername.focus();
+            return false;
+        }
+        else if ((strarr[i]>='A') && (strarr[i] <='Z')) {
+            alert("이름에 알파벳이 있습니다. 이름은 한글입력만 가능합니다.");
+            document.frm_join.membername.value="" ;
+            document.frm_join.membername.focus();
+            return false;
+            }
+        else if ((escape(strarr[i])> '%60') && (escape(strarr[i]) <'%80') ){
+            alert("이름에 특수문자가 있습니다. 이름은 한글입력만 가능합니다.");
+            document.frm_join.membername.value="" ;
+            document.frm_join.membername.focus();
+            return false;
+        }
+        else{
+            continue;
+        }
+    }
+    return true;
+}
+//아이디 숫자 영문 체크
+function CheckId(strValue) {
+    var f=document.frm_join;
+    strValue=f.memberid.value;
+    if (strValue.match(/[^a-zA-Z0-9]/) !=null){
+        alert('영문 + 숫자 조합해서 3자리이상된 아이디로 가입해주세요.');
+        f.memberid.value="" ;
+        f.memberid.focus();
+        return;
+    }
+}
+
+function onDel(nCode){
+    if(nCheckLetter == 1) {
+        alert('먼저 중요 쪽지를 확인해주세요.');
+        return;
+    }
+    
+    if(!confirm('삭제하시겠습니까?')) return;
+
+    $.ajax({
+        type: "GET",
+        url: "/onChatDel?nCode=" + nCode,
+        cache: false,
+        async: true,
+        dataType: "json",
+        success: function(response, status){
+            alert(response.message);
+            tabActionProc('tab5','chatList');
+        },
+        error: function(err, xhr){
+            
         }
     });
 }
 
-function deposit() {
-    var refundname = $("#deposit #name").val();
-    var money = $("#deposit #money").val();
-
-    if (refundname == "") {
-        alert("입금자명을 입력해주세요.");
-        $("#deposit #name").focus();
+function onRegister() {
+    var strMark=document.getElementById("strMark").value;
+    var strID=document.getElementById("strID").value;
+    var strPW=document.getElementById("strPW").value; 
+    var strPhone=document.getElementById("strPhone").value; 
+    var strBankUser=document.getElementById("strBankUser").value; 
+    var strBankNum=document.getElementById("strBankNum").value; 
+    var strBankName=document.getElementById("strBankName").value; 
+    if(strMark=="" ) {
+        alert("추천인 코드 입력하세요.");
+        return; 
+    } 
+    if(strBankName=="직접입력" ) { 
+        strBankName=document.getElementById("strDirBankName").value; 
+    } 
+    if(strID=="" ) { 
+        alert("아이디 입력하세요."); 
         return;
-    }
-
-    if (money < 30000) {
-        alert("충전 최소금액은 30,000원 입니다.");
-        return;
-    }
-    if (money % 10000 > 0) {
-        alert("10,000원 단위로만 충전 가능합니다.");
-        return;
-    }
-
-    $.ajax({
-        type: "POST",
-        url: "/api/deposit",
-        data: { refundname: refundname, money: money },
-        cache: false,
-        async: false,
-        success: function (data) {
-            if (data.error) {
-                alert(data.msg);
-                if (data.code == "001") {
-                    location.reload();
-                } else if (data.code == "002") {
-                    $("#deposit #name").focus();
-                }
+    } 
+    if(strID.length < 3 || strID.length> 10) { 
+        alert("아이디는 3 ~ 10글자 이여야 합니다."); 
+        return; 
+    } 
+    if(strPhone=="" ){ 
+        alert("전화번호 입력하세요."); 
+        return; 
+    } 
+    if(strPW=="" ){ 
+        alert("비밀번호 입력하세요."); 
+        return; 
+    } 
+    if(strBankUser=="" ){
+        alert("예금주 입력하세요."); 
+        return; 
+    } 
+    if(strBankName=="" ){ 
+        alert("은행명 입력하세요."); return; } 
+    if(strBankNum=="" ){ alert("계좌번호 입력하세요."); return; } 
+    var data = {	username: strID,
+        password: strPW,
+        tel1: strPhone,
+        tel2: '',
+        tel3: '',
+        bank_name: strBankName,
+        recommender: strBankUser,
+        account_no: strBankNum,
+        friend: strMark};
+    $.ajax({ 	
+        type: "POST" , 
+        url: "/api/join" , 
+        data: data, 
+        cache: false, 
+        async: true, 
+        beforeSend: function(){ },
+        success: function(response, status){ 
+            if (response.error) {
+                alert(response.msg);
                 return;
             }
-
-            alert("충전 신청이 완료되었습니다.");
-            // $("#deposit .btn3_2").click();
-        },
-        error: function (err, xhr) {
-            alert(err.responseText);
-        },
+            else{
+                alert(response.msg);
+                document.location.href='/login'; 
+            }
+        }, 
+        error: function(err, xhr){ } 
     });
 }
 
-function withdraw() {
-    var refundpassword = $("#withdraw #password").val();
-    if (refundpassword == "") {
-        alert("출금비밀번호를 입력해주세요.");
-        $("#withdraw #password").focus();
-        return;
+function directBankName(val){
+    var f=document.frm_join;
+    strValue=f.banknm.value;
+    
+    if(val.value=="직접입력" ) {
+        f.banknm.value="" ;
+        document.getElementById('banknmId').style.display="" ;
+    } else {
+        f.banknm.value="" ;
+        document.getElementById('banknmId').style.display="none" ;
     }
-
-    var money = $("#withdraw #money").val();
-    if (money < 30000) {
-        alert("환전 최소금액은 30,000원 입니다.");
-        return;
-    }
-    if (money % 10000 > 0) {
-        alert("10,000원 단위로만 환전 가능합니다.");
-        return;
-    }
-
-    $.ajax({
-        type: "POST",
-        url: "/api/withdraw",
-        data: { money: money, refundpassword: refundpassword },
-        cache: false,
-        async: false,
-        success: function (data) {
-            if (data.error) {
-                alert(data.msg);
-                if (data.code == "001") {
-                    location.reload();
-                } else if (data.code == "002") {
-                    $("#withdraw #money1").focus();
-                } else if (data.code == "003") {
-                    $("#withdraw #money1").val("0");
-                } else if (data.code == "004") {
-                    $("#withdraw #password").focus();
-                } else if (data.code == "005") {
-                    $("#withdraw #password").val("");
-                }
-                return;
-            }
-
-            alert("환전 신청이 완료되었습니다.");
-            // location.reload();
-        },
-        error: function (err, xhr) {
-            alert(err.responseText);
-        },
-    });
-}
-
-function goLogout() {
-    location.href = "/logout";
-}
-
-function closePopup() {
-    $("#popup").html("");
-}
-
-function showLoginAlert() {
-    alert("로그인 후 이용가능합니다.");
 }

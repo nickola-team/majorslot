@@ -26,7 +26,7 @@
                 else {
                     stopProgress();
                 }
-            },100);
+            },200);
         });
     </script>
     </head>

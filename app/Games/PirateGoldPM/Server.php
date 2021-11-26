@@ -433,6 +433,7 @@ namespace VanguardLTE\Games\PirateGoldPM
 
                 /* 리트리거에 의한 럭키스핀인가 */
                 $isRetriggered = false;
+                $isBonusEnded = false;
 
                 /* 리트리거에 의한 새 럭키스핀 */
                 if ($respinCount >= 3 && $retriggerCount >= 1) {
@@ -554,6 +555,8 @@ namespace VanguardLTE\Games\PirateGoldPM
                         if ($retriggerCount == 1) {
                             $objRes['na'] = 'b';
                         }
+
+                        $isBonusEnded = true;
                     }
                 }
 
@@ -567,7 +570,13 @@ namespace VanguardLTE\Games\PirateGoldPM
                 $isFirstDoBonus = isset($LASTSPIN->bw);     // 럭키스핀 첫스핀
 
                 $_GameLog = json_encode(array_merge($objRes, ['start_with' => $isFirstDoBonus ? $LASTSPIN : $LASTSPIN->start_with]));
-                $slotSettings->SaveLogReport($_GameLog, /* $allBet, $slotEvent['l'], $winMoney,*/ 0, 0, 0, $slotEvent['slotEvent']);
+                if ($isBonusEnded) {
+                    /* 럭키스핀완료이면 당첨금 계산 */
+                    $slotSettings->SaveLogReport($_GameLog, 0, 0, $objRes['tw'], $slotEvent['slotEvent']);
+                }
+                else {
+                    $slotSettings->SaveLogReport($_GameLog, 0, 0, 0, $slotEvent['slotEvent']);
+                }
             }
             else if( $slotEvent['slotEvent'] == 'doCollectBonus') {     // Luck Treasure spin collect
                 $objRes = [
