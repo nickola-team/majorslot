@@ -269,8 +269,8 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            $winType = 'win';
-            $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
+            // $winType = 'win';
+            // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             $defaultScatterCount = 0;
             if($winType == 'bonus'){
                 $defaultScatterCount = $slotSettings->getScatterCount($slotEvent);
