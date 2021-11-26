@@ -276,10 +276,9 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                 $defaultScatterCount = $slotSettings->getScatterCount($slotEvent);
             }
             $multiples = [0, 1, 1, 1, 1, 1];
-            if($slotEvent == 'freespin'){
-                for($i = 2; $i < 5; $i++){
-                    $multiples[$i] = $slotSettings->getMultiple($slotEvent, $i - 1);
-                }
+            $subMul = $slotSettings->getMultiple($slotEvent);
+            for($i = 0; $i < 3; $i++){
+                $multiples[$i + 2] = $subMul[$i];
             }
             for( $i = 0; $i <= 2000; $i++ ) 
             {
@@ -722,12 +721,16 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                     
                     $winSymbolPoses = explode('~', $winLine['StrWinLine']);
                     for($k = 0; $k < count($winSymbolPoses); $k++){
-                        $OutputWinLines[$winLine['FirstSymbol']]['WinPosition'][floor($winSymbolPoses[$k] / 5)][$winSymbolPoses[$k] % 5] = 1;
+                        $val = 1;
+                        if($reels['reel' . ($winSymbolPoses[$k] % 5 + 1)][floor($winSymbolPoses[$k] / 5)] == 'W'){
+                            $val = 2;
+                        }
+                        $OutputWinLines[$winLine['FirstSymbol']]['WinPosition'][floor($winSymbolPoses[$k] / 5)][$winSymbolPoses[$k] % 5] = $val;
                     }
                     $symbolCount = 0;
                     for($k = 0; $k < 3; $k++){
                         for($j = 0; $j < 5; $j++){
-                            if($OutputWinLines[$winLine['FirstSymbol']]['WinPosition'][$k][$j] == 1){
+                            if($OutputWinLines[$winLine['FirstSymbol']]['WinPosition'][$k][$j] >= 1){
                                 $symbolCount++;
                             }
                         }
