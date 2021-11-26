@@ -5,6 +5,8 @@ return [
         /**
          * Booongo Games
          */
+        "Candy Boom" => "캔디 붐",
+        "Gold Express" => "골드 익스프레스",
         "Book of Wizard" => "북 오브 위자드",
         "Lord Fortune 2" => "로드 포츈 2",
         "Tiger Jungle" => "타이거 정글",
@@ -68,6 +70,7 @@ return [
         /**
          * CQ9 Games
          */
+        "Boots Of Luck" => "부츠 오브 럭",
         "cq9live" => "야씽 라이브",
         "Ganesha Jr." => "가네샤 Jr.",
         "Floating Market" => "플로팅 마켓",
@@ -183,6 +186,12 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Live - Sweet Bonanza CandyLand" => "스위트 보난자 캔디랜드",
+        "Live - ONE Blackjack 2- Indigo" => "원 블랙잭2- 인디고",
+        "Live - The Club Blackjack 1" => "더 클럽 블랙잭1",
+        "Live - The Club Blackjack 2" => "더 클럽 블랙잭2",
+        "Live - The Club Blackjack 3" => "더 클럽 블랙잭3",
+        "Live - The Club Blackjack 4" => "더 클럽 블랙잭4",
         "Super X" => "슈퍼 X",
         "The Tweety House" => "더 트위티 하우스",
         "Santa's Wonderland" => "산타스 원더랜드",
@@ -525,6 +534,7 @@ return [
          * Booongo - Playson Play Games
          */
 
+        "Buffalo Power: Christmas" => "버팔로 파워: 크라스마스",
         "Burning Wins x2" => "버닝 윈스 x2",
         "Divine Dragon: Hold and Win" => "다빈치 드레곤:홀드 앤 윈",
         "Burning Wins" => "버닝 윈스",
