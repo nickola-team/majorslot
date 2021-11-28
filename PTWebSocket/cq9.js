@@ -98,7 +98,7 @@ wss.on('connection', function connection(ws) {
 			headers: {
 				'Connection': 'keep-alive',
 				"Content-Type": "application/json",
-				'Content-Length': paramStr.length,
+				// 'Content-Length': paramStr.length,
 				'Cookie': ck
 			}
 		}
