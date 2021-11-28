@@ -1009,7 +1009,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $money = abs(str_replace(',','', $request->money));
 
             if($user->hasRole('manager')){
-                if($request->money > $user->shop->balance) {
+                if($money > $user->shop->balance) {
                     return response()->json([
                         'error' => true, 
                         'msg' => '환전금액은 보유금액을 초과할수 없습니다',
@@ -1018,7 +1018,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             else {
-                if($request->money > $user->balance) {
+                if($money > $user->balance) {
                     return response()->json([
                         'error' => true, 
                         'msg' => '환전금액은 보유금액을 초과할수 없습니다',
