@@ -190,7 +190,7 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
                 }
                 $isdoublechance = $slotEvent['bl'];
                 $slotSettings->SetGameData($slotSettings->slotId . 'DoubleChance', $isdoublechance);
-                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $isbuyfreespin);
+                
                 if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1  && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                 {
                     $slotEvent['slotEvent'] = 'freespin';
@@ -223,7 +223,9 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
                         }
                     }
                 }
-                
+                if($slotEvent['slotEvent'] != 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') == 0 ){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $isbuyfreespin);
+                }
                 $reelSet_Num = 0;
                 $allBet = $betline * $lines;
                 if($isdoublechance == 1){
@@ -589,6 +591,9 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
                 //------------ *** ---------------
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"TumbState":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .   ',"freeBalance":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance') .  ',"ReplayGameLogs":'.json_encode($replayLog).',"tumbWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . ',"winLines":[],"Jackpots":""' . ',"BonusMul":'.json_encode($bonusMuls).  ',"BonusMulPos":'.json_encode($bonusMulPoses). ',"DoubleChance":'.$slotSettings->GetGameData($slotSettings->slotId . 'DoubleChance').  ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'). ',"strTmb":"'.$strtmp.  '","LastReel":'.json_encode($lastReel). ',"BinaryReel":'.json_encode($binaryReel).'}}';
+                if($slotEvent['slotEvent'] == 'freespin' && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                    $allBet = $betline * 2000;
+                }
                 $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin'), $slotEvent['slotEvent'], $isState);
             }
             if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
