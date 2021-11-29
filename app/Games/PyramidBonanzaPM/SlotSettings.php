@@ -650,7 +650,7 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
             {
-                $_obf_slotstate = $this->slotId . ' FG';
+                $_obf_slotstate = $this->slotId . ' Free';
             }
             else if( $slotState == 'bet' ) 
             {
