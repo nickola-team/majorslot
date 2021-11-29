@@ -186,6 +186,16 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Blue Ocean" => "블루 오씬",
+        "Fortune Fishing" => "포츈 피싱",
+        "Fishing King" => "피싱 킹",
+        "Pirate Fishing" => "파이럿 피싱",
+        "Fishing games lobby" => "피싱게임 로비",
+        "Christmas Big Bass Bonanza" => "크리스마스 빅배스보난자",
+        "Bubble Pop" => "버블 펍",
+        "Crystal Caverns Megaways" => "크리스털 칸번스 메가웨이",
+        "Rock Vegas Mega Hold & Spin" => "록 베가스 메가 홀드앤스핀",
+        "Smugglers Cove" => "스머글러 커브",
         "Live - Sweet Bonanza CandyLand" => "스위트 보난자 캔디랜드",
         "Live - ONE Blackjack 2- Indigo" => "원 블랙잭2- 인디고",
         "Live - The Club Blackjack 1" => "더 클럽 블랙잭1",

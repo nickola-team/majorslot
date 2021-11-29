@@ -530,6 +530,9 @@ namespace VanguardLTE\Console
                 $data = PPController::processGameRound('LC');
                 $this->info('saved ' . $data[0] . ' LC bet/win record.');
                 $this->info('new LC timepoint = ' . $data[1]);
+                $data = PPController::processGameRound('R2');
+                $this->info('saved ' . $data[0] . ' R2 bet/win record.');
+                $this->info('new R2 timepoint = ' . $data[1]);
             });
 
             \Artisan::command('pp:syncbalance {debug=1}', function ($debug) {
