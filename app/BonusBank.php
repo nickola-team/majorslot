@@ -14,6 +14,15 @@ namespace VanguardLTE
         {
             parent::boot();
         }
+
+        public function master()
+        {
+            return $this->belongsTo('VanguardLTE\User', 'master_id');
+        }
+        public function game()
+        {
+            return $this->belongsTo('VanguardLTE\Game', 'game_id');
+        }
     }
 
 }

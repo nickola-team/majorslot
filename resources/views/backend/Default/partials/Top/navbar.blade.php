@@ -106,7 +106,7 @@
                     </li>
             @endif
             @if ( auth()->check() && auth()->user()->hasRole('admin') )
-            <li class="dropdown {{Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') ? 'active' : '' }}">
+            <li class="dropdown {{Request::is('backend/category*') || Request::is('backend/jpgame*') || Request::is('backend/game*') || Request::is('backend/bonusbank*') ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
                     <span>게임리스트</span>
@@ -140,7 +140,7 @@
                 </li>
                 @endpermission
 
-                <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*')) ? 'active' : ''  }}">
+                <li class="{{ (Request::is('backend/gamebank') || Request::is('backend/gamebank/*') || Request::is('backend/bonusbank*')) ? 'active' : ''  }}">
                     <a href="{{ route($admurl.'.game.bank') }}">
                         <i class="fa fa-circle-o"></i>
                         <span>환수금관리</span>

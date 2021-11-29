@@ -108,14 +108,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function bank(\Illuminate\Http\Request $request)
         {
             $shops = auth()->user()->availableShops();
-            $query = 'SELECT a.*, e.name as shopname, e.percent as percent, d.bank as master_bonus, d.master_id as master_id from w_game_bank as a join w_shops_user as b on b.shop_id=a.shop_id join w_users as c on b.user_id=c.id join w_bonus_bank as d on d.master_id=c.id join w_shops as e on e.id=a.shop_id where c.role_id=6 and a.shop_id in (' .implode(',', $shops). ')';
-            $gamebank = \DB::select($query);
+            $gamebank = \VanguardLTE\GameBank::whereIn('shop_id', $shops)->get();
+            $masters = \VanguardLTE\User::where('role_id', 6)->pluck('id')->toArray();
+            $bonusbank = \VanguardLTE\BonusBank::whereIn('master_id', $masters)
+                            ->selectRaw('master_id, SUM(bank) as totalBank,count(master_id) as games')
+                            ->groupby('master_id')->get();
+
             $minslot = \VanguardLTE\Settings::where('key', 'minslot')->first();
             $maxslot = \VanguardLTE\Settings::where('key', 'maxslot')->first();
             $minbonus = \VanguardLTE\Settings::where('key', 'minbonus')->first();
             $maxbonus = \VanguardLTE\Settings::where('key', 'maxbonus')->first();
             $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
-            return view('backend.Default.games.bank', compact('gamebank','minslot','maxslot','minbonus','maxbonus','reset_bank'));
+            return view('backend.Default.games.bank', compact('gamebank','bonusbank', 'minslot','maxslot','minbonus','maxbonus','reset_bank'));
+        }
+
+        public function bonusbank(\Illuminate\Http\Request $request)
+        {
+            $master_id = $request->id;
+            $master = \VanguardLTE\User::where('id', $master_id)->first();
+            $bonusbank = \VanguardLTE\BonusBank::where('master_id', $master_id)->get();
+            
+            return view('backend.Default.games.bonusbank', compact('master','bonusbank'));
         }
         public function gamebanks_setting(\Illuminate\Http\Request $request)
         {
@@ -655,7 +668,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
             }
-            if( !$request->type || !in_array($request->type, \VanguardLTE\Game::$values['gamebank']) ) 
+            if( !$request->type ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_gamebank_type')]);
             }
@@ -677,13 +690,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 } */
                 if ($request->type=='bonus')
                 {
-                    if ($request->shop==0)
+                    if ($request->id==0)
                     {
-                        $bonus_bank = \VanguardLTE\BonusBank::all();
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->master)->get();
                     }
                     else
                     {
-                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->shop)->get();
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $request->id)->get();
                     }
 
                     foreach ($bonus_bank as $bb){
@@ -703,8 +716,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             }
                             $new = $bb->bank;
                             $type = 'bonus';
+                            $game = ' General';
+                            if ($bb->game_id!=0)
+                            {
+                                $game = $bb->game->title;
+                            }
                             \VanguardLTE\BankStat::create([
-                                'name' => ucfirst($type) . "[$name]", 
+                                'name' => ucfirst($type) . "[$name]" . "-$game", 
                                 'user_id' => \Illuminate\Support\Facades\Auth::id(), 
                                 'type' => $act, 
                                 'sum' => $request->summ, 
@@ -714,6 +732,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             ]);
                         }
                         
+                    }
+                }
+                elseif ($request->type=='bonusmax')
+                {
+                    if ($request->id==0)
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->master)->get();
+                    }
+                    else
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $request->id)->get();
+                    }
+
+                    foreach ($bonus_bank as $bb){
+                        if ($act == 'add')
+                        {
+                            $bb->increment('max_bank', abs($request->summ));
+                        }
+                        else
+                        {
+                            $bb->decrement('max_bank', abs($request->summ));
+                        }                        
                     }
                 }
                 else
@@ -767,13 +807,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 if ($request->type=='bonus')
                 {
-                    if ($request->shop==0)
+                    if ($request->id==0)
                     {
-                        $bonus_bank = \VanguardLTE\BonusBank::all();
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->master)->get();
                     }
                     else
                     {
-                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->shop)->get();
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $request->id)->get();
                     }
 
                     foreach ($bonus_bank as $bb){
@@ -785,8 +825,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             $old = $bb->bank;
                             $bb->update(['bank' => 0]);
                             $type = 'bonus';
+                            $game = ' General';
+                            if ($bb->game_id!=0)
+                            {
+                                $game = $bb->game->title;
+                            }
                             \VanguardLTE\BankStat::create([
-                                'name' => ucfirst($type) . "[$name]", 
+                                'name' => ucfirst($type) . "[$name]-$game", 
                                 'user_id' => \Illuminate\Support\Facades\Auth::id(), 
                                 'type' =>  ($old<0)?'add':'out', 
                                 'sum' => abs($old), 
@@ -796,6 +841,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             ]);
                         }
                         
+                    }
+                }
+                elseif ($request->type=='bonusmax')
+                {
+                    if ($request->id==0)
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->master)->get();
+                    }
+                    else
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $request->id)->get();
+                    }
+
+                    foreach ($bonus_bank as $bb){
+                        $bb->update(['max_bank' => 0]);
                     }
                 }
                 else

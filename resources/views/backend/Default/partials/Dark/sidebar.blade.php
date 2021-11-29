@@ -158,7 +158,7 @@
             </li>
             @endif
             @if ( auth()->check() && auth()->user()->hasRole('admin') )
-            <li class="treeview {{  Request::is('slot/category*') || Request::is('slot/jpgame*') || Request::is('slot/game*') || Request::is('slot/happyhours*')? 'active' : '' }}">
+            <li class="treeview {{  Request::is('slot/category*') || Request::is('slot/jpgame*') || Request::is('slot/game*') || Request::is('slot/happyhours*') || Request::is('slot/bonusbank*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>게임관리</span>
@@ -192,7 +192,7 @@
                     </li>
                     @endpermission
 
-                    <li class="{{ (Request::is('slot/gamebank') || Request::is('slot/gamebank/*')) ? 'active' : ''  }}">
+                    <li class="{{ (Request::is('slot/gamebank') || Request::is('slot/gamebank/*') || Request::is('slot/bonusbank*')) ? 'active' : ''  }}">
                         <a href="{{ route($admurl.'.game.bank') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>환수금관리</span>

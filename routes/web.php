@@ -817,6 +817,12 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'middleware' => 'permission:games.manage'
     ]);	
 
+    Route::get('bonusbank', [
+        'as' => 'backend.game.bonusbank',
+        'uses' => 'GamesController@bonusbank',
+        'middleware' => 'permission:games.manage'
+    ]);	
+
 	Route::get('games.json', [
         'as' => 'backend.game.list.json',
         'uses' => 'GamesController@index_json'

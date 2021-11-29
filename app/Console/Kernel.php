@@ -800,8 +800,13 @@ namespace VanguardLTE\Console
                             {
                                 $name = $master->username;
                                 $bank->save();
+                                $game = 'General';
+                                if ($bank->game_id!=0)
+                                {
+                                    $game = $bank->game->title;
+                                }
                                 \VanguardLTE\BankStat::create([
-                                    'name' => 'Bonus' . "[$name]", 
+                                    'name' => 'Bonus' . "[$name]-$game", 
                                     'user_id' => $admin->id, 
                                     'type' => ($old<$bank->bank)?'add':'out', 
                                     'sum' => abs($old - $bank->bank), 
