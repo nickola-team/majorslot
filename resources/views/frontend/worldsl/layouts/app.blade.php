@@ -307,7 +307,7 @@
 						controls: false,
 						transitions: ['explode', 'tiles3d', 'bars3d', 'cube', 'turn'],// (터지는, 타일, 바3D, 큐브, 턴)
 						// transitions: ['turn', 'turn', 'turn', 'turn', 'turn'],
-						delay:7000,
+						delay:4000,
 						autoplay: true //ysk 자동재생
 					});		
 				});
