@@ -727,7 +727,7 @@ function showDepositPopup() {
             style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
             <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
                 role="dialog"
-                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
+                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 800px;">
                 <div class="popup_wrap">
                     <div class="close_box" onclick="closePopup();"><a href="#" class="fade_1_close"><img src="/frontend/kingdom/images/popup_close.png"></a>
                     </div>
@@ -784,9 +784,19 @@ function showDepositPopup() {
                                                 <td style="height: 5px;"></td>
                                             </tr>
                                             <tr>
+                                                <td class="write_title">은행이름</td>
+                                                <td class="write_td"></td>
+                                                <td class="write_basic"><input class="input1" id="bankname" value="${bankname}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="write_title">계좌번호</td>
+                                                <td class="write_td"></td>
+                                                <td class="write_basic"><input class="input1" id="accountno" value="${accountno}"></td>
+                                            </tr>
+                                            <tr>
                                                 <td class="write_title">입금자명</td>
                                                 <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1 userName" id="name" value=""></td>
+                                                <td class="write_basic"><input class="input1 userName" id="name" value="${recommender}"></td>
                                             </tr>
                                             <tr>
                                                 <td style="height: 5px;"></td>
@@ -841,7 +851,7 @@ function showWithdrawPopup() {
             style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
             <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
                 role="dialog"
-                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
+                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 900px;">
                 <div class="popup_wrap">
                     <div class="close_box" onclick="closePopup();"><a href="#" class="fade_1_close"><img src="/frontend/kingdom/images/popup_close.png"></a>
                     </div>
@@ -898,6 +908,21 @@ function showWithdrawPopup() {
                                                         value="${userName}"></td>
                                             </tr>
                                             <tr>
+                                                <td class="write_title">은행이름</td>
+                                                <td class="write_td"></td>
+                                                <td class="write_basic"><input class="input1" id="bankname" value="${bankname}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="write_title">계좌번호</td>
+                                                <td class="write_td"></td>
+                                                <td class="write_basic"><input class="input1" id="accountno" value="${accountno}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="write_title">입금자명</td>
+                                                <td class="write_td"></td>
+                                                <td class="write_basic"><input class="input1 userName" id="name" value="${recommender}"></td>
+                                            </tr>
+                                            <tr>
                                                 <td class="write_title">출금금액</td>
                                                 <td class="write_td"></td>
                                                 <td class="write_basic">
@@ -910,13 +935,6 @@ function showWithdrawPopup() {
                                                     <a href="javascript:money_count('1000000');" style="padding-left: 5px;"><span class="btn1_2">100만원</span></a>
                                                     <a href="javascript:money_count('5000000');" style="padding-left: 5px;"><span class="btn1_2">500만원</span></a>
                                                     <a href="javascript:money_count_hand();" style="padding-left: 5px;"><span class="btn1_1">정정</span></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">출금비밀번호</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic">
-                                                    <input type="password" class="input1" id="password" name="password" >
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -1177,6 +1195,8 @@ function loginSubmit(frm) {
 function deposit() {
     var refundname = $("#deposit #name").val();
     var money = $("#deposit #money").val();
+    var bank = $("#deposit #bankname").val();
+    var accno = $("#deposit #accountno").val();
 
     if (refundname == "") {
         alert("입금자명을 입력해주세요.");
@@ -1195,8 +1215,8 @@ function deposit() {
 
     $.ajax({
         type: "POST",
-        url: "/api/deposit",
-        data: { refundname: refundname, money: money },
+        url: "/api/addbalance",
+        data: { accountName: refundname, bank:bank, no:accno, money: money },
         cache: false,
         async: false,
         success: function (data) {
@@ -1220,14 +1240,17 @@ function deposit() {
 }
 
 function withdraw() {
-    var refundpassword = $("#withdraw #password").val();
-    if (refundpassword == "") {
-        alert("출금비밀번호를 입력해주세요.");
-        $("#withdraw #password").focus();
-        return;
-    }
+    // var refundpassword = $("#withdraw #password").val();
+    // if (refundpassword == "") {
+    //     alert("출금비밀번호를 입력해주세요.");
+    //     $("#withdraw #password").focus();
+    //     return;
+    // }
 
     var money = $("#withdraw #money").val();
+    var refundname = $("#withdraw #name").val();
+    var bank = $("#withdraw #bankname").val();
+    var accno = $("#withdraw #accountno").val();
     if (money < 30000) {
         alert("환전 최소금액은 30,000원 입니다.");
         return;
@@ -1239,8 +1262,8 @@ function withdraw() {
 
     $.ajax({
         type: "POST",
-        url: "/api/withdraw",
-        data: { money: money, refundpassword: refundpassword },
+        url: "/api/outbalance",
+        data: { accountName: refundname, bank:bank, no:accno, money: money  },
         cache: false,
         async: false,
         success: function (data) {
