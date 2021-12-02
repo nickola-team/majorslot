@@ -115,7 +115,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
-                    'country' => 'ko',
+                    'country' => 'KR',
                 ],
             ];
         }
@@ -142,7 +142,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
-                    'country' => 'ko',
+                    'country' => 'KR',
                     'balance' => floatval($user->balance),
                     'bonus' => 0,
                 ],
@@ -180,7 +180,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'currency' => 'KRW',
                         'applicableBonus' => 0,
                         'homeCurrency' => 'KRW',
-                        'country' => 'ko',
+                        'country' => 'KR',
                     ],
                 ];
             }
@@ -235,7 +235,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
-                    'country' => 'ko',
+                    'country' => 'KR',
                 ],
             ];
         }
@@ -606,7 +606,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'loginname' => $user->id,
                 'key' => $user->api_token,
                 'currency' => 'KRW',
-                'lang' => 'ko',
+                'lang' => 'KR',
                 'gameid' => $gamecode,
                 'org' => config('app.ata_org'),
                 'home' => url('/'),
