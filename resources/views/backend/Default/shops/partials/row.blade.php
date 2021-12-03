@@ -6,8 +6,14 @@
         $parent = $shop->getUsersByRole('manager')->first();
         for ($r=3;$r<auth()->user()->role_id;$r++)
         {
-             echo '<td><a href="'.route($admurl.'.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
-            $parent = $parent->referral;
+			if ($parent){
+				echo '<td><a href="'.route($admurl.'.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+				$parent = $parent->referral;
+			}
+			else
+			{
+				echo '<td></td>';
+			}
         }
 	?>
 	
