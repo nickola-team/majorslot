@@ -527,7 +527,55 @@ namespace VanguardLTE\Console
 
             \Artisan::command('pp:getround {timepoint} {dataType}', function ($timepoint, $dataType) {
                 $data = PPController::gamerounds($timepoint, $dataType);
-                $this->info($data);
+                // $this->info($data);
+                $count = 0;
+                if ($data)
+                {
+                    $parts = explode("\n", $data);
+                    $updatetime = explode("=",$parts[0]);
+                    if (count($updatetime) > 1) {
+                        $timepoint = $updatetime[1];
+                    }
+                    //ignore $parts[2]
+                    for ($i=2;$i<count($parts);$i++)
+                    {
+                        $round = explode(",", $parts[$i]);
+                        if (count($round) < 8)
+                        {
+                            continue;
+                        }
+                        if ($round[7] == "C") {
+                            $time = strtotime($round[6].' UTC');
+                            $dateInLocal = date("Y-m-d H:i:s", $time);
+                            $shop = \VanguardLTE\ShopUser::where('user_id', $round[1])->first();
+                            $gameObj =  PPController::gamecodetoname($round[2]);
+                            $stat = \VanguardLTE\StatGame::where(['roundid'=> $round[3], 'game_id'=>$round[2]])->get();
+                            if (count($stat) == 0){
+                                \VanguardLTE\StatGame::create([
+                                    'user_id' => $round[1], 
+                                    'balance' => floatval(-1), 
+                                    'bet' => $round[9], 
+                                    'win' => $round[10], 
+                                    'game' =>$gameObj[0] . '_pp', 
+                                    'type' => $gameObj[1],//($dataType=='RNG')?'slot':'table',
+                                    'percent' => 0, 
+                                    'percent_jps' => 0, 
+                                    'percent_jpg' => 0, 
+                                    'profit' => 0, 
+                                    'denomination' => 0, 
+                                    'date_time' => $dateInLocal,
+                                    'shop_id' => $shop->shop_id,
+                                    'category_id' => isset($category)?$category->id:0,
+                                    'game_id' => $round[2],
+                                    'roundid' => $round[3],
+                                ]);
+                                $count = $count + 1;
+                            }
+                        }
+                    }
+                }
+                $this->info('new timepoint = ' . $timepoint . ', Added ' . $count . ' records');
+
             });
             
             \Artisan::command('pp:gameround {debug=0}', function ($debug) {
