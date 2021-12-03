@@ -525,7 +525,11 @@ namespace VanguardLTE\Console
 
             });
 
-
+            \Artisan::command('pp:getround {timepoint} {dataType}', function ($timepoint, $dataType) {
+                $data = PPController::gamerounds($timepoint, $dataType);
+                $this->info($data);
+            });
+            
             \Artisan::command('pp:gameround {debug=0}', function ($debug) {
                 $data = PPController::processGameRound('RNG');
                 $this->info('saved ' . $data[0] . ' RNG bet/win record.');

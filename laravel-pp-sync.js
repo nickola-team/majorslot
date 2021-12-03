@@ -47,6 +47,7 @@ function gameround()  {
             console.log(`stderr: \n${stderr}`);
             return;
         }
+        console.log(`sync result: \n${stdout}`);
     });
     child.on('close', (code, signal) => {
       console.log('exit gameround');
