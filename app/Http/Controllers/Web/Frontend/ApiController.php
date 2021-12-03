@@ -428,10 +428,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'type' => 'out',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                 'payeer_id' => $request->id]);
-            $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN);
+            $res['join'] = 0;
+            if (auth()->user()->isInOutPartner()) {
+                $shops = auth()->user()->availableShops();
+                $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('shop_id', $shops);
+                $res['join'] = $joinUsers->count();
+            }
             $res['add'] = $transactions1->count();
             $res['out'] = $transactions2->count();
-            $res['join'] = $joinUsers->count();
+            
             $res['rating'] = auth()->user()->rating;
             return response()->json($res);
         }
