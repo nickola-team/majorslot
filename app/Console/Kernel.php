@@ -549,7 +549,7 @@ namespace VanguardLTE\Console
                             $dateInLocal = date("Y-m-d H:i:s", $time);
                             $shop = \VanguardLTE\ShopUser::where('user_id', $round[1])->first();
                             $gameObj =  PPController::gamecodetoname($round[2]);
-                            $stat = \VanguardLTE\StatGame::where(['roundid'=> $round[3], 'game_id'=>$round[2]])->get();
+                            $stat = \VanguardLTE\StatGame::where(['roundid'=> $round[3], 'game_id'=>$round[2], 'user_id'=>$round[1]])->where('date_time', '>=', $date_time)->get();
                             if (count($stat) == 0){
                                 \VanguardLTE\StatGame::create([
                                     'user_id' => $round[1], 
