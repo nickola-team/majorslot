@@ -441,6 +441,32 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return response()->json($res);
         }
 
+        public function bo_getgamelist(\Illuminate\Http\Request $request){
+
+            $category = $request->href;
+            if( $category == '' ) 
+            {
+                return response()->json(['error' => true, 'msg' => '카테고리ID 에러', 'code' => '002']);
+            }
+
+            $cat1 = \VanguardLTE\Category::where([
+                'href' => $category, 
+                'shop_id' => 0
+            ])->first();
+            if( !$cat1) 
+            {
+                return response()->json(['error' => true, 'msg' => '존재하지 않는 카테고리입니다.', 'code' => '002']);
+            }
+
+            $selectedGames = [];
+            if ($cat1->provider != null)
+            {
+                $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
+            }
+
+            return response()->json(['error' => false, 'games' => $selectedGames]);
+        }
+
         public function getgamelist(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
