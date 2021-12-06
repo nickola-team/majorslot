@@ -306,6 +306,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@getgamelist',
     ]);
 
+    Route::post('bo/getgamelist', [
+        'as' => 'frontend.api.bogetgamelist',
+        'uses' => 'ApiController@bo_getgamelist',
+    ]);
     Route::post('api/getgamelink', [
         'as' => 'frontend.api.getgamelink',
         'uses' => 'ApiController@getgamelink',

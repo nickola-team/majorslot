@@ -2,28 +2,20 @@
     <td>
 	<a href="{{ route($admurl.'.shop.edit', $shop->id) }}">{{ $shop->name }}</a>
 	</td>
-	@if($shop->creator)
-		@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-		<td>
-			<a href="{{ route($admurl.'.user.edit', $shop->creator->id) }}" >{{ $shop->creator->username }}</a>
-		</td>
-		@endif
-	@endif
-	@if($shop->creator && $shop->creator->referral)
-		@if (auth()->user()->hasRole(['admin','comaster','master']))
-		<td>
-			<a href="{{ route($admurl.'.user.edit', $shop->creator->referral->id) }}" >{{ $shop->creator->referral->username }}</a>
-		</td>
-		@endif
-	@endif
-
-	@if($shop->creator && $shop->creator->referral && $shop->creator->referral->referral)
-		@if (auth()->user()->hasRole(['admin','comaster']))
-		<td>
-			<a href="{{ route($admurl.'.user.edit',  $shop->creator->referral->referral->id) }}" >{{  $shop->creator->referral->referral->username }}</a>
-		</td>
-		@endif
-	@endif
+	<?php
+        $parent = $shop->getUsersByRole('manager')->first();
+        for ($r=3;$r<auth()->user()->role_id;$r++)
+        {
+			if ($parent){
+				echo '<td><a href="'.route($admurl.'.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+				$parent = $parent->referral;
+			}
+			else
+			{
+				echo '<td></td>';
+			}
+        }
+	?>
 	
 	{{-- <td><a href="{{ route('frontend.jpstv', $shop->shop_id) }}" target="_blank">{{ $shop->shop_id }}</a></td> --}}
     <td>{{ number_format($shop->balance,0) }}</td>

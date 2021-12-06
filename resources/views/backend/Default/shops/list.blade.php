@@ -2,7 +2,15 @@
 
 @section('page-title', '매장관리')
 @section('page-heading', '매장관리')
-
+<?php  
+			$available_roles = Auth::user()->available_roles( true );
+			$available_roles_trans = [];
+			foreach ($available_roles as $key=>$role)
+			{
+				$role = \VanguardLTE\Role::find($key)->description;
+				$available_roles_trans[$key] = $role;
+			}
+?>
 @section('content')
 
 	<section class="content-header">
@@ -105,15 +113,12 @@
 					<thead>
 					<tr>
 						<th>@lang('app.name')</th>
-						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
-						@endif
+						<?php
+							for ($r=3;$r<auth()->user()->role_id;$r++)
+							{
+								echo '<th>'.$available_roles_trans[$r].'</th>';
+							}
+						?>
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin'))
 						<th>@lang('app.percent')%</th>
@@ -146,15 +151,12 @@
 					<thead>
 					<tr>
 						<th>@lang('app.name')</th>
-						@if (auth()->user()->hasRole(['admin','comaster','master','agent']))
-						<th>{{\VanguardLTE\Role::where('slug','distributor')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster','master']))
-						<th>{{\VanguardLTE\Role::where('slug','agent')->first()->description}}</th>
-						@endif
-						@if (auth()->user()->hasRole(['admin','comaster']))
-						<th>{{\VanguardLTE\Role::where('slug','master')->first()->description}}</th>
-						@endif
+						<?php
+							for ($r=3;$r<auth()->user()->role_id;$r++)
+							{
+								echo '<th>'.$available_roles_trans[$r].'</th>';
+							}
+						?>
 						{{-- <th>@lang('app.id')</th> --}}
 						<th>@lang('app.credit')</th>
 						@if(auth()->user()->hasRole('admin'))
