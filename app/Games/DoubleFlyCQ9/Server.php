@@ -290,9 +290,10 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                                     }
                                 }
                                 $winChgResults = $this->winLineCalc($slotSettings, $newChgReels, $bonusMul, $betline, 1);
-                                $OutputWinChgLines = $winChgResults['OutputWinLines'];
-                                $totalWin = $totalWin + $winChgResults['totalWin'];
-                                break;
+                                if($totalWin < $winChgResults['totalWin']){
+                                    $OutputWinChgLines = $winChgResults['OutputWinLines'];
+                                    $totalWin = $winChgResults['totalWin'];
+                                }
                             }
                         }
                     }
