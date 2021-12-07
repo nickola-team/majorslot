@@ -577,15 +577,31 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
 
                     if (in_array($game['GameType'] , $slotgameString) && $game['GameStatus'] == 1){ // need to check the string
-                        $gameList[] = [
-                            'provider' => 'ata',
-                            'href' => $href,
-                            'gamecode' => $game['DCGameID'],
-                            'name' => $game['LogPara'],
-                            'title' => __('gameprovider.'.$game['GameName']),
-                            // 'icon' => $game['GameIcon'],
-                            'icon' => '/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png',
-                        ];
+                        if ($href=='png')
+                        {
+                            $icon_name = str_replace(' ', '_', $game['GameName']);
+                            $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                            $gameList[] = [
+                                'provider' => 'ata',
+                                'href' => $href,
+                                'gamecode' => $game['DCGameID'],
+                                'name' => preg_replace('/\s+/', '', $game['GameName']),
+                                'title' => __('gameprovider.'.$game['GameName']),
+                                'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
+                            ];
+                        }
+                        else
+                        {
+                            $gameList[] = [
+                                'provider' => 'ata',
+                                'href' => $href,
+                                'gamecode' => $game['DCGameID'],
+                                'name' => $game['LogPara'],
+                                'title' => __('gameprovider.'.$game['GameName']),
+                                // 'icon' => $game['GameIcon'],
+                                'icon' => '/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png',
+                            ];
+                        }
                     }
                 }
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
