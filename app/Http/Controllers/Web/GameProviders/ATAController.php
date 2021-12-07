@@ -33,6 +33,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         if ($game['name'] == $cat4)
                         {
+                            if (isset($game['game']))
+                            {
+                                $game['name'] = $game['game'];
+                            }
                             $game['cat_id'] = $category->original_id;
                             return $game;
                             break;
@@ -585,7 +589,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'provider' => 'ata',
                                 'href' => $href,
                                 'gamecode' => $game['DCGameID'],
-                                'name' => preg_replace('/\s+/', '', $game['GameName']),
+                                'name' => $game['LogPara'],
+                                'game' => preg_replace('/\s+/', '', $game['GameName']),
                                 'title' => __('gameprovider.'.$game['GameName']),
                                 'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
                             ];
