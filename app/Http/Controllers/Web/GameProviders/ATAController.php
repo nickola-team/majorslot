@@ -584,6 +584,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         if ($href=='png')
                         {
                             $icon_name = str_replace(' ', '_', $game['GameName']);
+                            $icon_name = str_replace(':', '_', $icon_name);
+                            $icon_name = str_replace('\'', '_', $icon_name);
                             $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
                             $gameList[] = [
                                 'provider' => 'ata',
