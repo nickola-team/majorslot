@@ -949,18 +949,29 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else
             {
+                $master = $user->referral;
+                $telegramId = '';
+                while ($master && !$master->isInOutPartner())
+                {
+                    $master = $master->referral;
+                }
+                if ($master)
+                {
+                    $telegramId = $master->address;
+                }
                 if ($force==0 && $user->hasRole('user'))
                 {
+                    
                     return response()->json([
                         'error' => false, 
-                        'msg' => '텔레그램 문의',
+                        'msg' => '텔레그램 문의, 아이디 ' . $telegramId,
                     ], 200);
                 }
                 else
                 {
                     return response()->json([
                         'error' => false, 
-                        'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender,
+                        'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender . ', 텔레그램아이디 ' . $telegramId,
                     ], 200);
                 }
             }
