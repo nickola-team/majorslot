@@ -1093,5 +1093,6 @@ return [
         "Muerto en Mictlán" => "무어토 미틀랜",
         "Sparky & Shortz" => "스파키&쇼츠",
         "Tales of Asgard: Loki's Fortune" => "테일즈오브아스가르드",
-        "The Last Sundown" => "마지막 일몰"
+        "The Last Sundown" => "마지막 일몰",
+        "Prism of Gems" => "보석프리즘",
 ];
