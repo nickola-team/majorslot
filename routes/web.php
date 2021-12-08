@@ -1376,6 +1376,7 @@ Route::group(['middleware' => 'bng', 'prefix' => 'bng',], function () {
 Route::group(['middleware' => 'hbn', 'prefix' => 'hbn',], function () {
 	Route::post('/endpoint', 'GameProviders\HBNController@endpoint');
 });
+Route::post('hbn/history/{requestname}', 'GameProviders\HBNController@history');
 
 /**
  * Play'n Go Game Provider

@@ -587,8 +587,66 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 )
             );
         }
+
+        // History
+
+        public function history($requestname, \Illuminate\Http\Request $request)
+        {
+            if ($requestname == 'GetHistory'){
+                // $data = '{"d":[{"IsTestSite":false,"DateToShow":1638502175400,"DtCompleted":"\/Date(1638473375400)\/","FriendlyId":53645806817,"GameInstanceId":"1ee2b838-e953-ec11-94f6-00155db8a3c7","RealPayout":0.0000,"RealStake":1800.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0},{"IsTestSite":false,"DateToShow":1638502172817,"DtCompleted":"\/Date(1638473372817)\/","FriendlyId":53645805569,"GameInstanceId":"dedcb838-e953-ec11-94f6-00155db8a3c7","RealPayout":0.0000,"RealStake":1800.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0},{"IsTestSite":false,"DateToShow":1638502163820,"DtCompleted":"\/Date(1638473363820)\/","FriendlyId":53645801289,"GameInstanceId":"989cc032-e953-ec11-94f6-00155db8a3c7","RealPayout":120.0000,"RealStake":180.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0},{"IsTestSite":false,"DateToShow":1638502121327,"DtCompleted":"\/Date(1638473321327)\/","FriendlyId":53645780900,"GameInstanceId":"028adf1a-e953-ec11-94f6-00155db8a3c7","RealPayout":0.0000,"RealStake":180.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0}]}';
+                $data = '{"d":[]}';
+                return response($data, 200)->header('Content-Type', 'application/json; charset=utf-8');
+            }
+            elseif ($requestname == 'GetGameDetails')
+            {
+                $report = [
+                    "numcoins"=> 0,
+                    "bettype"=> "Lines",
+                    "paylinecount"=> 18,
+                    "coindenomination"=> 100.0,
+                    "linebet"=> 100.0,
+                    "betlevel"=> 1,
+                    "totalbet"=> 1800.0,
+                    "wincash"=> 0.0,
+                    "winfreegames"=> 0,
+                    "events"=> [[
+                        "dt"=> 637740989754015341,
+                        "type"=> "spin",
+                        "gamemode"=> "MAIN",
+                        "wincash"=> 0.0,
+                        "winfreegames"=> 0.0,
+                        "winmultiplier"=> 0,
+                        "reels"=> [
+                            ["idWave", "idLeaves", "idLeaves"],
+                            ["idBamboo", "idBamboo", "idBamboo"],
+                            ["idK", "idLeaves", "idLeaves"],
+                            ["idK", "idK", "idQ"],
+                            ["idWave", "idWave", "idWave"]
+                        ]
+                    ]]
+                ];
+                $d = [
+                    "GameType"=> 11,
+                    "GameState"=> "GameState_3",
+                    "GameKeyName"=> "SGTheKoiGate",
+                    "CurrencyCode"=> "KRW",
+                    "FriendlyId"=> "53645806817",
+                    "DtStarted"=> 1638502175397.0,
+                    "DtCompleted"=> 1638502175400.0,
+                    "RealStake"=> 1800.0000,
+                    "RealPayout"=> 0.0000,
+                    "BonusStake"=> 0.0,
+                    "BonusPayout"=> 0.0,
+                    "BonusToReal"=> 0.0,
+                    "VideoSlotGameDetails"=> [
+                        "ReportInfo"=> json_encode($report)
+                    ],
+                    "CurrencyExponent"=> 0,
+                    "BalanceAfter"=> 996160.0000,
+                    "IsCheat"=> false
+                ];
+            }
+            return response(['d' => json_encode($d)], 200)->header('Content-Type', 'application/json; charset=utf-8');
+        }
     }
-
-
-
 }

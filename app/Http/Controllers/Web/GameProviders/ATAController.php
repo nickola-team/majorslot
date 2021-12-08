@@ -33,6 +33,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         if ($game['name'] == $cat4)
                         {
+                            if (isset($game['game']))
+                            {
+                                $game['name'] = $game['game'];
+                            }
                             $game['cat_id'] = $category->original_id;
                             return $game;
                             break;
@@ -565,7 +569,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $gameList = [];
-            $slotgameString = ['Slot game', 'Video Slot'];
+            $slotgameString = ['Slot game', 'Video Slot','3-Reel Slot Machine', '5-Reel Slot Machine'];
             $exceptGames = [ 150328,150331,150332,150325,150319,150320,150316,150312,150298,150295,150294,150268,150267,150266,150265,150264,150251,150250,150249,150244,150237,150236,150235,150232,150233,150212,150207,150196,150174,150209,150206,150200,150181,150202,150215,150211,150010,150205,150012];
             if ($resultdata['code'] == 0){
 
@@ -577,15 +581,34 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
 
                     if (in_array($game['GameType'] , $slotgameString) && $game['GameStatus'] == 1){ // need to check the string
-                        $gameList[] = [
-                            'provider' => 'ata',
-                            'href' => $href,
-                            'gamecode' => $game['DCGameID'],
-                            'name' => $game['LogPara'],
-                            'title' => __('gameprovider.'.$game['GameName']),
-                            // 'icon' => $game['GameIcon'],
-                            'icon' => '/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png',
-                        ];
+                        if ($href=='png')
+                        {
+                            $icon_name = str_replace(' ', '_', $game['GameName']);
+                            $icon_name = str_replace(':', '_', $icon_name);
+                            // $icon_name = str_replace('\'', '_', $icon_name);
+                            $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                            $gameList[] = [
+                                'provider' => 'ata',
+                                'href' => $href,
+                                'gamecode' => $game['DCGameID'],
+                                'name' => $game['LogPara'],
+                                'game' => preg_replace('/\s+/', '', $game['GameName']),
+                                'title' => __('gameprovider.'.$game['GameName']),
+                                'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
+                            ];
+                        }
+                        else
+                        {
+                            $gameList[] = [
+                                'provider' => 'ata',
+                                'href' => $href,
+                                'gamecode' => $game['DCGameID'],
+                                'name' => $game['LogPara'],
+                                'title' => __('gameprovider.'.$game['GameName']),
+                                // 'icon' => $game['GameIcon'],
+                                'icon' => '/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png',
+                            ];
+                        }
                     }
                 }
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
