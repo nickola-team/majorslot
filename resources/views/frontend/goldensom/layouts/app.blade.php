@@ -1591,7 +1591,15 @@ if ( getCookie( "divpopup03" ) == "check" ) {
     });
 }
 
-
+@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+		var loginYN='Y';
+		var currentBalance = {{ Auth::user()->balance }};
+		var userName = "{{ Auth::user()->username }}";
+	@else
+		var loginYN='N';
+		var currentBalance = 0;
+		var userName = "";
+	@endif
 
   $(document).ready(function() {
     var prevTime = localStorage.getItem("hide_notification");
