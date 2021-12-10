@@ -684,7 +684,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     "IsCheat"=> false
                 ];
             }
-            return response(['d' => json_encode($d)], 200)->header('Content-Type', 'application/json; charset=utf-8');
+            return response(['d' => json_encode([])], 200)->header('Content-Type', 'application/json; charset=utf-8');
         }
     }
 }
