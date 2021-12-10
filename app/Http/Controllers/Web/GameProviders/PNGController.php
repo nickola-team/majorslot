@@ -23,7 +23,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function gameIdtoname($code)
         {
-            $gamelist = PNGController::getgamelist('png');
+            $gamelist = PNGController::getgamelist('playngo');
             $gamename = $code;
             $gamecode = $code;
             $type = 'table';
