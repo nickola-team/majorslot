@@ -589,13 +589,51 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         // History
-
+        public function historyIndex(\Illuminate\Http\Request $request)
+        {
+            return view('frontend.Default.games.hbn.history');
+        }
         public function history($requestname, \Illuminate\Http\Request $request)
         {
+            $paramData = preg_replace('/\s+/', '',(file_get_contents('php://input')));
+            $paramData = preg_replace('/\'/','"', $paramData);
+            $param = json_decode($paramData);
             if ($requestname == 'GetHistory'){
-                // $data = '{"d":[{"IsTestSite":false,"DateToShow":1638502175400,"DtCompleted":"\/Date(1638473375400)\/","FriendlyId":53645806817,"GameInstanceId":"1ee2b838-e953-ec11-94f6-00155db8a3c7","RealPayout":0.0000,"RealStake":1800.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0},{"IsTestSite":false,"DateToShow":1638502172817,"DtCompleted":"\/Date(1638473372817)\/","FriendlyId":53645805569,"GameInstanceId":"dedcb838-e953-ec11-94f6-00155db8a3c7","RealPayout":0.0000,"RealStake":1800.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0},{"IsTestSite":false,"DateToShow":1638502163820,"DtCompleted":"\/Date(1638473363820)\/","FriendlyId":53645801289,"GameInstanceId":"989cc032-e953-ec11-94f6-00155db8a3c7","RealPayout":120.0000,"RealStake":180.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0},{"IsTestSite":false,"DateToShow":1638502121327,"DtCompleted":"\/Date(1638473321327)\/","FriendlyId":53645780900,"GameInstanceId":"028adf1a-e953-ec11-94f6-00155db8a3c7","RealPayout":0.0000,"RealStake":180.0000,"CurrencyCode":"KRW","GameStateId":3,"GameKeyName":"SGTheKoiGate","ExtRoundId":null,"Exponent":0}]}';
-                $data = '{"d":[]}';
-                return response($data, 200)->header('Content-Type', 'application/json; charset=utf-8');
+                $d = [];
+                $user = \VanguardLTE\User::where('api_token', $param->pid)->first();
+                if ($user)
+                {
+                    $starttimeUTC = substr($param->dtStartUtc,0,4) . '-' . substr($param->dtStartUtc,4,2) . '-' .substr($param->dtStartUtc,6,2) . ' ' . substr($param->dtStartUtc,8,2) . ':' . substr($param->dtStartUtc,10,2) . ':00';
+                    $date = new \DateTime($starttimeUTC, new \DateTimeZone('UTC'));
+                    $timezoneName = timezone_name_from_abbr("", +9*3600, false);
+                    $date->setTimezone(new \DateTimeZone($timezoneName));
+                    $starttime= $date->format('Y-m-d H:i:s');
+                    
+                    $endtimeUTC = substr($param->dtEndUtc,0,4) . '-' . substr($param->dtEndUtc,4,2) . '-' .substr($param->dtEndUtc,6,2) . ' ' . substr($param->dtEndUtc,8,2) . ':' . substr($param->dtEndUtc,10,2) . ':00';
+                    $date = new \DateTime($endtimeUTC, new \DateTimeZone('UTC'));
+                    $date->setTimezone(new \DateTimeZone($timezoneName));
+                    $endtime= $date->format('Y-m-d H:i:s');
+
+                    $stat_games = \VanguardLTE\StatGame::where(['user_id'=>$user->id, 'game_id'=>$param->bid])->orderby('date_time', 'desc')->where('date_time', '>=', $starttime)->where('date_time', '<=', $endtime)->take(100)->get();
+                    foreach ($stat_games as $stat)
+                    {
+                        $d[] = [
+                            "IsTestSite"=> false,
+                            "DateToShow"=> strtotime($stat->date_time) * 1000,
+                            "DtCompleted"=> "\/Date(".(strtotime($stat->date_time) * 1000).")\/",
+                            "FriendlyId"=> 53645 . $stat->id,
+                            "GameInstanceId"=> strval($stat->id),
+                            "RealPayout"=> $stat->win,
+                            "RealStake"=> $stat->bet,
+                            "CurrencyCode"=> "KRW",
+                            "GameStateId"=> 3,
+                            "GameKeyName"=> "SGTheKoiGate",
+                            "ExtRoundId"=> null,
+                            "Exponent"=> 0
+                        ];
+                    }
+                }
+                return response()->json(['d' => $d]);
             }
             elseif ($requestname == 'GetGameDetails')
             {

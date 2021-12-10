@@ -416,7 +416,7 @@
 
 
     <form method="post"
-        action="./?brandid=9fa04080-569b-eb11-b566-0050f2388fc0&amp;token=ps-818905927468a638d15644e19947169b1a373d452q7v1&amp;locale=ko"
+        action="./?brandid={{Request::get('brandid')}}&token={{Request::get('token')}}&locale=ko"
         id="form1">
         <div class="aspNetHidden">
             <input type="hidden" name="rsm_TSM" id="rsm_TSM" value="" />
@@ -1070,10 +1070,10 @@
 
 
                 </div>
-                <input type="hidden" name="bid" id="bid" value="9fa04080-569b-eb11-b566-0050f2388fc0" />
+                <input type="hidden" name="bid" id="bid" value="{{Request::get('brandid')}}" />
                 <input type="hidden" name="gid" id="gid" />
                 <input type="hidden" name="ext" id="ext" />
-                <input type="hidden" name="pid" id="pid" value="0c02b1ae-d653-ec11-94f6-00155db8a3c7" />
+                <input type="hidden" name="pid" id="pid" value="{{Request::get('token')}}" />
                 <input type="hidden" name="bsu" id="bsu" value="0" />
                 <input type="hidden" name="useHbGameInfo" id="useHbGameInfo" value="0" />
 
