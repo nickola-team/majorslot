@@ -430,6 +430,9 @@
 		var loginYN='Y';
 		var currentBalance = {{ Auth::user()->balance }};
 		var userName = "{{ Auth::user()->username }}";
+    var bankname = "{{Auth::user()->bank_name}}";
+    var accountno = "{{Auth::user()->account_no}}";
+    var recommender = "{{Auth::user()->recommender}}";
 	@else
 		var loginYN='N';
 		var currentBalance = 0;
