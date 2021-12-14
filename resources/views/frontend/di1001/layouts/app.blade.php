@@ -347,6 +347,7 @@
 					</span></div>
 					<div class="game_list_wrap">
 						<ul>
+						<?php $catcount = 0; ?>
 						@if ($categories && count($categories))
 							@foreach($categories AS $index=>$category)
 								@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
@@ -363,8 +364,20 @@
 										<img src="/frontend/di1001/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
 									</a>     
 								</li>
+								<?php $catcount = $catcount +1; ?>
 								@endif
 							@endforeach
+							<?php
+								$comingSoon = (intval(($catcount-1)/5) + 1 ) * 5 - $catcount;
+							?>
+							@for ($i=0;$i<$comingSoon;$i++)
+							<li>
+								<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
+									<img src="/frontend/j9sl/tutu/images/slot-icon/coming_soon.png" style="width: 252px;height: 230px;border-radius:30px">
+									<img src="/frontend/j9sl/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
+								</a>
+							</li>
+							@endfor
 						@endif
 
 						</ul> 
