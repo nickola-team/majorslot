@@ -256,6 +256,9 @@ namespace VanguardLTE\Games\MysticChiefPM
                         $isChangedWild = true;
                     }else{
                         $initReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $currentReelSet);
+                        if(mt_rand(0, 100) <= 95){
+                            $initReels = $slotSettings->CheckDuplicationSymbol($initReels);
+                        }
                         $reels = [];
                         if($winType == 'bonus'){
                             $wildReels = [];

@@ -807,11 +807,11 @@ namespace VanguardLTE\Games\MysticChiefPM
                         $limitOdd,
                         $this->playerId
                     ])->get();
-                if (count($freeStacks) > 0) {
-                    $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
-                }else{
-                    $freeStack = null;
-                }
+                    if (count($freeStacks) > 0) {
+                        $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
+                    }else{
+                        $freeStack = null;
+                    }
             }
             if($freeStack){
                 \VanguardLTE\PPGameFreeStackLog::create([
@@ -1159,6 +1159,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                 if($index == 1 || $index == 5){
                     $reel['reel' . $index][0] = 13;
                 }
+
                 $reel['reel' . $index][4] = rand(3, 10);
                 $reel['rp'][$index] = $value - $scatterPos;
             }
@@ -1189,6 +1190,26 @@ namespace VanguardLTE\Games\MysticChiefPM
                 $tmp_last = $tmp_cnt - 1;
             }
             return $random;
+        }
+
+        public function CheckDuplicationSymbol($reels){
+            for($i = 1; $i <= 5; $i++){
+                if($reels['reel' . $i][3] == $reels['reel' . $i][1] || $reels['reel' . $i][3] == $reels['reel' . $i][0]){
+                    $reels['reel' . $i][3] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][1], $reels['reel' . $i][2]);
+                }
+                if($reels['reel' . $i][2] == $reels['reel' . $i][0]){
+                    $reels['reel' . $i][2] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][1], $reels['reel' . $i][3]);
+                }
+            }
+            return $reels;
+        }
+        public function GetNoDuplicationSymbol($first, $second, $third){
+            while(true){
+                $sym = rand(4, 12);
+                if($sym != $first && $sym != $second && $sym != $third){
+                    return $sym;
+                }
+            }
         }
     }
 }
