@@ -70,6 +70,8 @@ return [
         /**
          * CQ9 Games
          */
+        "Hot DJ" => "핫 DJ",
+
         "Boots Of Luck" => "부츠 오브 럭",
         "cq9live" => "야씽 라이브",
         "Ganesha Jr." => "가네샤 Jr.",
@@ -186,6 +188,9 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Wild Depths" => "와일드 뎁스",
+        "Hockey Attack" => "하키 어택",
+        "Magician's Secrets" => "매직컨스 시크릿",
         "Blue Ocean" => "블루 오씬",
         "Fortune Fishing" => "포츈 피싱",
         "Fishing King" => "피싱 킹",
@@ -543,7 +548,9 @@ return [
         /**
          * Booongo - Playson Play Games
          */
-
+        "Diamond Fortunator" => "다이아몬드 포츄네터",
+        "Golden Dancing Lion" => "골든 댄싱 라이온",
+        "Black Wolf" => "블랙 울프",
         "Buffalo Power: Christmas" => "버팔로 파워: 크라스마스",
         "Burning Wins x2" => "버닝 윈스 x2",
         "Divine Dragon: Hold and Win" => "다빈치 드레곤:홀드 앤 윈",
@@ -635,6 +642,8 @@ return [
         /**
          * Habanero Games
          */
+        "Prost!" => "프로스트!",
+        "New Years Bash" => "새해 배쉬",
         "Nine Tails" => "나인 테일스",
         "Fly!" => "플라이!",
         "Before Time Runs Out" => "비포 타임 런스아웃",
@@ -766,6 +775,7 @@ return [
         /**
          * Relax Gaming
          */
+        "Dead Man's Trail" => "죽은자의 자국",
         "Erik the Red" => "에릭 더 레드",
         "Zombie Circus" => "좀비 서커스",
         "Epic Joker" => "에픽 조커",
