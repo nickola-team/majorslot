@@ -282,6 +282,7 @@
                         <li data-target="#sk_tab_con_01_1"><a href="#" onclick="tabActionProc('tab4','letterList');" class="sub_pop2_open"></a>&nbsp;&nbsp;&nbsp;</li>                
                         <li style="color:#222"><img src="/frontend/worldsl/tutu/images/5UNZI____.png" width="20">&nbsp;{{ Auth::user()->username }}님 환영합니다.</li>
                         <li style="color:#222"><img src="/frontend/worldsl/tutu/images/coin.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->balance) }}</span> 원</li>
+						<li style="color:#222"><img src="/frontend/worldsl/tutu/images/coin_bonus.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->deal_balance) }}</span> 원</li>
 						<li><a href="/logout"><span class="login_btn2">로그아웃</span></a></li>
                     </ul>
 				@else
@@ -506,7 +507,9 @@
 									<div class="money">
 										<ul>`
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>`;
+											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>`;
 										@endif	
 										data+= `</ul>
 									</div>
@@ -579,7 +582,9 @@
 									<div class="money">
 										<ul>`;
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>`;
+											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>  `;
 										@endif
 										data+=`</ul>
 									</div>

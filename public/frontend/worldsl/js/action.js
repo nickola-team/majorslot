@@ -97,6 +97,33 @@ function onAskAccount(){
     });
 }
 
+function convertDeal(money) {
+
+    if (money < 30000) {
+        alert("전환 최소금액은 30,000원 입니다.");
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/convert_deal_balance',
+        data: { summ: money },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            alert('보너스금이 보유금으로 전환되었습니다.');
+            location.reload(true);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        }
+    });
+
+}
 function DepositProc(){
     if(nCheckLetter == 1) {
         alert('먼저 중요 쪽지를 확인해주세요.');
