@@ -182,7 +182,12 @@ function WithdrawProc() {
     }
 
     var amount = uncomma($("#withdraw_amount").val());
-    if (amount == '' || amount == 0) { alert("입금하실 금액을 입력하여 주세요"); $("#withdraw_amount").focus();  return false; }
+    if (amount == '' || amount == 0) { 
+        alert("출금하실 금액을 입력하여 주세요"); $("#withdraw_amount").focus();  return false; 
+    }
+    if (amount < 30000) { 
+        alert("출금은 3만원 이상부터 가능합니다"); $("#withdraw_amount").focus();  return false; 
+    }
     if (confirm("출금신청 하시겠습니까?")){
         var data = { accountName: $(".userName").val(), bank:$(".userBankName").val(), no:$(".accountNo").val(), money: amount };
         $.ajax({

@@ -266,6 +266,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($request->tel3 != '') {
                 $data['phone'] = $data['phone'] . '-' . $request->tel3 ;
             }
+
+            $onlineShop = \VanguardLTE\OnlineShop::where('shop_id', $parent->shop_id)->first();
+
+            if ($onlineShop) //it is online users
+            {
+                $data['deal_percent'] = $parent->shop->deal_percent;
+                $data['table_deal_percent'] = $parent->shop->table_deal_percent;
+            }
             
             $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();
