@@ -51,7 +51,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
                 \VanguardLTE\WithdrawDeposit::where('created_at', '<', $start_date)->delete();
 
-                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
+                // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
             })->dailyAt('08:00');
 
@@ -62,6 +62,7 @@ namespace VanguardLTE\Console
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+            $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
