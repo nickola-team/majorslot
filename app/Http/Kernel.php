@@ -48,6 +48,7 @@ namespace VanguardLTE\Http
             'pp' => 'VanguardLTE\Http\Middleware\PPMiddleware', 
             'bng' => 'VanguardLTE\Http\Middleware\BNGMiddleware', 
             'hbn' => 'VanguardLTE\Http\Middleware\HBNMiddleware',
+            'simultaneous' => 'VanguardLTE\Http\Middleware\ThrottleSimultaneousRequests',
         ];
     }
 

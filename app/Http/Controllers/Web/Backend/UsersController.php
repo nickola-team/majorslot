@@ -111,6 +111,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             if ($request->type == 'allow')
             {
                 $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE]);
+                $onlineShop = \VanguardLTE\OnlineShop::where('shop_id', $user->shop_id)->first();
+
+                if ($onlineShop) //it is online users
+                {
+                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $user->addBalance('add',$onlineShop->join_bonus, $admin);
+                }
             }
             else
             {

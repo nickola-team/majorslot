@@ -282,6 +282,7 @@
                         <li data-target="#sk_tab_con_01_1"><a href="#" onclick="tabActionProc('tab4','letterList');" class="sub_pop2_open"></a>&nbsp;&nbsp;&nbsp;</li>                
                         <li style="color:#222"><img src="/frontend/worldsl/tutu/images/5UNZI____.png" width="20">&nbsp;{{ Auth::user()->username }}님 환영합니다.</li>
                         <li style="color:#222"><img src="/frontend/worldsl/tutu/images/coin.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->balance) }}</span> 원</li>
+						<li style="color:#222"><img src="/frontend/worldsl/tutu/images/coin_bonus.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->deal_balance) }}</span> 원</li>
 						<li><a href="/logout"><span class="login_btn2">로그아웃</span></a></li>
                     </ul>
 				@else
@@ -410,7 +411,7 @@
 										</tr>
 										<tr><td class="write_title">은행선택</td><td class="write_td"></td>\r\n<td class="write_basic">   
 											<select class="input1" name="bankname" id="strBankName" onchange="directBankName(this);"></select>    <span id="banknmId" style="display: none;">
-											<input class="input1" name="banknm" type="text" id="strDirBankName" maxlength="20" placeholder="은행명직접입력"></span></td></tr> <tr><td class="write_title">예금주</td><td class="write_td"></td><td class="write_basic">    <input class="input1" type="text" id="strBankUser" onblur="CheckHangul(this);"><span>&nbsp;&nbsp;( 입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다 )</span></td></tr><tr><td class="write_title">계좌번호</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="accountnumber" type="text" id="strBankNum" onkeypress="return digit_check(event)" placeholder="계좌번호를 입력하세요">    <span>&nbsp;&nbsp;( 띄어쓰기와 - 없이 숫자로만 기입하여 주시기 바랍니다 )</span></td></tr>   <tr><td class="write_title">핸드폰</td><td class="write_td"></td><td class="write_basic"><input class="input1" type="tel" id="strPhone" maxlength="16"></td></tr>     <tr><td class="write_title">추천코드</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="recomcode_id" type="text" id="strMark"></td></tr>\r\n            </table>\r\n        </div>\r\n        <div class="con_box10">\r\n            <div class="btn_wrap_center"><ul><li><a href="#none" onclick="onRegister();return false;"><span class="btn3_1">회원가입완료</span></a></li></ul>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</form>
+											<input class="input1" name="banknm" type="text" id="strDirBankName" maxlength="20" placeholder="은행명직접입력"></span></td></tr> <tr><td class="write_title">예금주</td><td class="write_td"></td><td class="write_basic">    <input class="input1" type="text" id="strBankUser" onblur="CheckHangul(this);"><span>&nbsp;&nbsp;( 입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다 )</span></td></tr><tr><td class="write_title">계좌번호</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="accountnumber" type="text" id="strBankNum" onkeypress="return digit_check(event)" placeholder="계좌번호를 입력하세요">    <span>&nbsp;&nbsp;( 띄어쓰기와 - 없이 숫자로만 기입하여 주시기 바랍니다 )</span></td></tr>   <tr><td class="write_title">핸드폰</td><td class="write_td"></td><td class="write_basic"><input class="input1" type="tel" id="strPhone" maxlength="16"></td></tr>     <tr style="display:none;"><td class="write_title">추천코드</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="recomcode_id" type="text" id="strMark" value="worldshop123"></td></tr>\r\n            </table>\r\n        </div>\r\n        <div class="con_box10">\r\n            <div class="btn_wrap_center"><ul><li><a href="#none" onclick="onRegister();return false;"><span class="btn3_1">회원가입완료</span></a></li></ul>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</form>
 						`;
 
 					$("#popupbox_ajax").html(data);
@@ -506,7 +507,9 @@
 									<div class="money">
 										<ul>`
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>`;
+											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>`;
 										@endif	
 										data+= `</ul>
 									</div>
@@ -579,7 +582,9 @@
 									<div class="money">
 										<ul>`;
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>`;
+											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/worldsl/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>  `;
 										@endif
 										data+=`</ul>
 									</div>

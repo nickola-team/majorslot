@@ -696,7 +696,7 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@updateBalance',
 		'as' => 'backend.user.balance.update',
 		'middleware' => 'permission:users.balance.manage'
-    ]);
+    ])->middleware('simultaneous:1');
     Route::get('profile/balance/setbonus/{userid}', [
         'uses' => 'UsersController@setBonusSetting',
 		'as' => 'backend.user.balance.bonus',
