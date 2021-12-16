@@ -52,6 +52,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'WildReels', []);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
@@ -205,6 +206,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'WildReels', []);
                     $leftFreeGames = 0;
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
@@ -230,6 +232,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                     $bonus = '15';
                     $_obf_winCount = 0;
                     $strWinLine = '';
+                    $isSameWildReel = false;
                     // freeStack
                     if($isGeneratedFreeStack == true){
                         $rw_poses = [];
@@ -351,7 +354,15 @@ namespace VanguardLTE\Games\MysticChiefPM
                         $strWinLine = $strWinLine . '&l'. $r.'='.$r.'~'.$winLineMoney . $winLine['StrLineWin'];
                         $totalWin += $winLineMoney;
                     }
-                
+                    $oldWildReels = $slotSettings->GetGameData($slotSettings->slotId . 'WildReels');
+                    if($slotEvent['slotEvent'] == 'freespin' && count($oldWildReels) == 1){
+                        for($r = 0; $r < count($wildReels); $r++){
+                            if($wildReels[$r] = $oldWildReels[0]){
+                                $isSameWildReel = true;
+                                break;
+                            }
+                        }
+                    }
                     $scattersCount = 0;
                     for( $r = 1; $r <= 5; $r++ ) 
                     {
@@ -398,6 +409,9 @@ namespace VanguardLTE\Games\MysticChiefPM
                     }
                     else if($winType == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
                         break;  // give freespin per 450spins over
+                    }
+                    else if($isSameWildReel == true && mt_rand(0, 100) < 95){
+                        
                     }
                     else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                     {
@@ -478,6 +492,8 @@ namespace VanguardLTE\Games\MysticChiefPM
                     }
                     $strOtherResponse = '&trail='. implode(';', $trails) . '&wmt=pr&wmv=' . $totalMul.'&gwm=' . $totalMul;
                 }
+                
+                $slotSettings->SetGameData($slotSettings->slotId . 'WildReels', $wildReels);
                 if(count($rw_poses) > 0){
                     $strOtherResponse = $strOtherResponse . '&stf=rw:' . implode(';', $rw_poses);
                 }

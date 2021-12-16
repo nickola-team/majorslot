@@ -109,6 +109,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                     $totalWin = 0;
                     $totalReel = [];
                     $freespinCount = 8;
+                    $oldWildReels = [];
                     for($k = 0; $k < $freespinCount; $k++){                        
                         $lines = 20;
                         $betline = 1;
@@ -175,7 +176,18 @@ namespace VanguardLTE\Games\MysticChiefPM
                                 $winLineMoney = $slotSettings->Paytable[$winLine['FirstSymbol']][$winLine['RepeatCount']] * $betline * $bonusMpl;
                                 $subtotalWin += $winLineMoney;
                             }
+                            $isSameWildReel = false;
+                            if(count($oldWildReels) == 1){
+                                for($r = 0; $r < count($wildReels); $r++){
+                                    if($wildReels[$r] = $oldWildReels[0]){
+                                        $isSameWildReel = true;
+                                        break;
+                                    }
+                                }
+                            }
                             if($bonusCount >= 2){
+
+                            }else if($isSameWildReel == true && mt_rand(0, 100) < 70){
 
                             }else if($winType == 'win' && $subtotalWin > 0){
                                 break;
@@ -189,6 +201,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                         if($bonusCount == 1){
                             $freespinCount += 1;
                         }
+                        $oldWildReels = $wildReels;
                         $totalWin = $totalWin + $subtotalWin / $lines;
                         $item = [];
                         $item['initReel'] = $initReels;
