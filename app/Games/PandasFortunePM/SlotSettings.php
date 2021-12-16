@@ -475,7 +475,7 @@ namespace VanguardLTE\Games\PandasFortunePM
             ];
             // $reel->generationFreeStacks($this, $game->original_id);
         }
-
+        
         public function genfree()
         {
             $reel = new GameReel();
@@ -941,24 +941,29 @@ namespace VanguardLTE\Games\PandasFortunePM
         public function GetFreeStack($betLine, $freespinCount)
         {
             $winAvaliableMoney = $this->GetBank('bonus');
-            $limitOdd = floor($winAvaliableMoney / $betLine / 3);
             $limitOdd = 35;
+            $freespinType = 0;
+
             if ($this->happyhouruser)
             {
                 $limitOdd = floor($winAvaliableMoney / $betLine);
+                $freespinType = $this->happyhouruser->jackpot;
             }
             else
             {
                 $limitOdd = floor($winAvaliableMoney / $betLine / 3);
                 if($limitOdd < 35){
                     $limitOdd = 35;
-                }else if($limitOdd > 100){
-                    $limitOdd = 100;
+                }else if($limitOdd > 150){
+                    $limitOdd = 150;
                 }
             }
-            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+
+           
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
                 $this->game->original_id, 
                 $freespinCount,
+                $freespinType,
                 $limitOdd,
                 $this->playerId
             ])->get();
@@ -970,9 +975,10 @@ namespace VanguardLTE\Games\PandasFortunePM
                     'free_spin_count' => $freespinCount,
                     'game_id' => $this->game->original_id
                     ])->where('odd', '<=', $limitOdd)->delete();
-                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
                         $this->game->original_id, 
                         $freespinCount,
+                        $freespinType,
                         $limitOdd,
                         $this->playerId
                     ])->get();

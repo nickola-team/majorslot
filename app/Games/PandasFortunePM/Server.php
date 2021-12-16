@@ -386,18 +386,21 @@ namespace VanguardLTE\Games\PandasFortunePM
                     if(count($arrJackpotPos) > 0){
                         $strJackpotPos = '&gsf=' . implode(';', $arrJackpotPos);
                     }
-
+                    $bw_type = 0;
                     for($k = 0; $k < count($jackpotWinLines); $k++){
                         $pos = $jackpotWinLines[$k]['pos'];
                         if($isJackpots[$pos] == true){
                             if($jackpotWinLines[$k]['isWild'] == true){
                                 $jackpotWin = $jackpotWin + $betline * $lines * $slotSettings->jackpotMulti[0];
                                 array_push($arrJackpotWin, $lastReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[0]);
+                                $bw_type = 1;
                             }else{
                                 if($lastReels['reel5'][$pos] >= 3 && $lastReels['reel5'][$pos] <= 7 ){
+                                    $bw_type = 3;
                                     $jackpotWin = $jackpotWin + $betline * $lines * $slotSettings->jackpotMulti[2];
                                     array_push($arrJackpotWin, $lastReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[2]);
                                 }else if($lastReels['reel5'][$pos] > 7){
+                                    $bw_type = 2;
                                     $jackpotWin = $jackpotWin + $betline * $lines * $slotSettings->jackpotMulti[1];
                                     array_push($arrJackpotWin, $lastReels['reel5'][$pos] . '~' . $slotSettings->jackpotMulti[1]);
                                 }
@@ -405,7 +408,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                         }
                     }
                     if(count($arrJackpotWin) > 0){
-                        $strJackpotWin = '&coef='. ($betline * $lines) .'&bw=1&end=1&gsf_a=' . implode(';', $arrJackpotWin). '&rw=' . $jackpotWin;
+                        $strJackpotWin = '&coef='. ($betline * $lines) .'&bw='.$bw_type.'&end=1&gsf_a=' . implode(';', $arrJackpotWin). '&rw=' . $jackpotWin . '&wp=' . ($jackpotWin / ($betline * $lines));
                     }
                     $totalWin = $totalWin + $scattersWin + $jackpotWin;
                     
