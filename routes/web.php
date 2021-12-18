@@ -365,7 +365,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
     Route::post('api/convert_deal_balance', [
         'as' => 'frontend.api.convert_deal_balance',
         'uses' => 'ApiController@convertDealBalance',
-    ]);
+    ])->middleware('simultaneous:1');
 
     Route::post('api/checkid', [
         'as' => 'frontend.api.checkid',
