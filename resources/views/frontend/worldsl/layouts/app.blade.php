@@ -279,7 +279,6 @@
 				<div class="login">
 				@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 					<ul>
-                        <li data-target="#sk_tab_con_01_1"><a href="#" onclick="tabActionProc('tab4','letterList');" class="sub_pop2_open"></a>&nbsp;&nbsp;&nbsp;</li>                
                         <li style="color:#222"><img src="/frontend/worldsl/tutu/images/5UNZI____.png" width="20">&nbsp;{{ Auth::user()->username }}님 환영합니다.</li>
                         <li style="color:#222"><img src="/frontend/worldsl/tutu/images/coin.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->balance) }}</span> 원</li>
 						<li style="color:#222"><img src="/frontend/worldsl/tutu/images/coin_bonus.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->deal_balance) }}</span> 원</li>
@@ -344,11 +343,10 @@
 					</div>
 				</div>
 			</div>
-						<div class="main_best_wrap">
-				<div class="main_best_box">
-					<div class="main_best_title"><span class="main_best_title_jackpot"><img src="/frontend/worldsl/tutu/images/jackpot.png"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<iframe src="/frontend/worldsl/common/jackpot.html" frameborder="0" width="900px" height="80" scrolling="auto" style="position:absolute;margin-left:-900px;margin-top:-33px"></iframe>
-					</span></div>
+				<div class="main_best_wrap">
+					<div class="main_best_box">
+					<div class="main_best_title">
+					</div>
 					<div class="game_list_wrap">
 						<ul>
 						<?php
