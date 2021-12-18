@@ -357,7 +357,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                     $oldWildReels = $slotSettings->GetGameData($slotSettings->slotId . 'WildReels');
                     if($slotEvent['slotEvent'] == 'freespin' && count($oldWildReels) == 1){
                         for($r = 0; $r < count($wildReels); $r++){
-                            if($wildReels[$r] = $oldWildReels[0]){
+                            if($wildReels[$r] == $oldWildReels[0]){
                                 $isSameWildReel = true;
                                 break;
                             }
