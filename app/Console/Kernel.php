@@ -1135,8 +1135,8 @@ namespace VanguardLTE\Console
                 $this->info('Gen freestack');
                 $game = \VanguardLTE\Game::where('id', $gameid)->first();
                 $slotsetting = '\VanguardLTE\Games\\' . $game->name . '\SlotSettings';
-                $userId = 1;
-                $slot = new $slotsetting($game->name, $userId);
+                $user = \VanguardLTE\User::where('role_id',1)->first();
+                $slot = new $slotsetting($game->name, $user->id);
                 $slot->genfree();
                 $this->info('End freestack');
             });
