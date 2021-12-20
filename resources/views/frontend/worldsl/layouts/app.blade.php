@@ -881,6 +881,24 @@
 			#xImag {width:150px;height:120px}
 			.slot_txt_style {color:#fff;text-align:center;}
         </style>
+@if (Auth::check())		
+	<!--Start of Tawk.to Script-->
+	<script type="text/javascript">
+	var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+	Tawk_API.visitor = {
+		name : "{{auth()->user()->username}}",
+	};
+	(function(){
+	var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+	s1.async=true;
+	s1.src='https://embed.tawk.to/61c081e7c82c976b71c2548f/1fnbvmsvm';
+	s1.charset='UTF-8';
+	s1.setAttribute('crossorigin','*');
+	s0.parentNode.insertBefore(s1,s0);
+	})();
+	</script>
+	<!--End of Tawk.to Script-->
+@endif
 	</body>
 
 <!-- Mirrored from di-1010.com/login by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Nov 2021 02:01:42 GMT -->
