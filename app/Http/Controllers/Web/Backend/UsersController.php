@@ -1106,6 +1106,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
             }
 
+            if (!in_array($user->id, auth()->user()->availableUsers()))
+            {
+                return redirect()->back()->withErrors(['회원/파트너를 찾을수 없습니다.']);
+            }
+
             if ($user->playing_game != null )
             {
                 return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
