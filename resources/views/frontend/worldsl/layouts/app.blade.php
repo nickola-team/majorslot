@@ -469,6 +469,103 @@
                     $("#divpopup2").show();
                 }
             });
+			function tabActionPopView(obj, pid, idx) {
+				if(nCheckLetter == 1&& !pid.includes('letter')) {
+					alert('먼저 중요 쪽지를 확인해주세요.');
+					return;
+				}
+				
+				if(obj) {
+					var tab = $(".popup_tab1 li." + obj).closest(".popup_tab1 > li");
+					tab.siblings().removeClass("sk_tab_active_01");
+					tab.addClass("sk_tab_active_01");
+
+					var target = $(tab.attr("data-target")+".sk_tab_con_01");
+					$(".sk_tab_con_01").addClass("sk_tab_hidden_01");
+					target.removeClass("sk_tab_hidden_01");
+					target.html("");
+				} else {
+					$(".sk_tab_con_01").html("");
+				}
+				if( pid == "letterView" ){
+						
+				}
+				else if( pid == "chatView" ){
+						data = `<div class="title1">
+									문의
+								</div>
+									<div class="contents_in">
+											<div class="con_box10">             
+													<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+														<tr>
+															<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">상태</span> 답변완료</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="color: greenyellow">문의</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">문의제목 : 계좌문의</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">문의내용 : 
+																입금계좌번호 문의합니다.
+															</td>
+														</tr> 
+														<tr>
+															<td class="view1 write_title_top" style="color: greenyellow">응답</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">응답제목 : 입금 계좌문의</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">응답내용 : 
+																<p>안녕하세요 계좌안내 입니다.</p><p><br></p><p>【은행명 : 전북은행】 - 【예금주 : 정호영】 - 【계좌번호 : 1021-01-6610476】</p><p><br></p><p>계좌번호는 수시로 변경될 수 있습니다.</p><p>입금전 반드시 계좌문의를 통하여 계좌번호를 확인후.</p><p>입금해주시기 바랍니다 감사합니다.</p>
+															</td>
+														</tr>
+												</table> 
+										</div>
+										<div class="con_box20">
+											<div class="btn_wrap_center">
+												<ul>
+													<li><a href="#" onclick="tabActionProc('tab5','chatList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+												</ul>
+											</div>
+										</div>
+								</div>`;
+				}
+				else if(pid == "noticeView"){
+						data= `<div class="title1">
+												공지사항
+										</div>
+										<div class="contents_in">
+												<div class="con_box10">             
+														<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+																<tr>
+																		<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> <?php if ($notice!=null) {echo $notice->date_time;} ?>      </td>
+																</tr>
+																<tr>
+																		<td class="view1 write_title_top">★공지사항★</td>
+																</tr>
+																<tr>
+																		<td class="view2">
+																				<?php if ($notice!=null) {echo $notice->content;} ?>
+																		</td>
+																</tr>
+														</table>
+												</div>
+												<div class="con_box20">
+														<div class="btn_wrap_center">
+																<ul>
+																		<li><a href="#" onclick="tabActionProc('tab6','noticeList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+																</ul>
+														</div>
+												</div>                                                         
+										</div>`;
+				}
+
+				$(".sk_tab_con_01").html(data);
+				
+			}
 
 			function tabActionProc(obj, pid) {
 				if(nCheckLetter == 1&& !pid.includes('letter')) {
@@ -704,8 +801,16 @@
 											<td width="10%" class="list_title1"></td>
 											<td class="list_title1">제목</td>
 											<td width="20%" class="list_title1">작성일</td>
-										</tr>
-									
+										</tr>`;
+										@if ($notice != null)
+										data += `
+										<tr onclick="tabActionPopView('','noticeView','2');" style="cursor: pointer">
+											<td class="list_notice1"><img src="/frontend/di1001/tutu/images/icon_notice.png"></td>
+											<td class="list_notice2"><a href="#">★공지사항★</a></td>
+											<td class="list_notice2" style="text-align: center"><a href="#">{{$notice->date_time}}</a></td>
+										</tr>`;
+										@endif
+					data += `
 									</table>
 								</div>
 								
