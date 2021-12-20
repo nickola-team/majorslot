@@ -784,6 +784,22 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors([trans('app.only_for_distributors')]);
             }
+
+            if( !\Auth::user()->hasRole([
+                'master', 
+                'agent', 
+                'distributor', 
+                'manager'
+            ]) && $data['type'] == 'out') 
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+            }
+
+            if (!in_array($shop->id, $user->availableShops()))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+            }
+
             if( !$request->summ || $request->summ==0 ) 
             {
                 return redirect()->back()->withErrors([trans('app.wrong_sum')]);
