@@ -13,7 +13,8 @@ namespace VanguardLTE
             'original_id', 
             'shop_id',
             'site_id',
-            'view'
+            'view',
+            'type'
         ];
         public $timestamps = false;
         public static function boot()

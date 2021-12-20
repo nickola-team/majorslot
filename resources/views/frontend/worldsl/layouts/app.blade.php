@@ -333,7 +333,7 @@
 							@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 							
 							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/worldsl/tutu/images/main_game1.png" style="display: inline;"><img src="/frontend/worldsl/tutu/images/main_game1.png" class="mouseover1" style="display: none;"></a></li>
-                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="javascript:swal('준비중입니다.');return false;"><img src="/frontend/worldsl/tutu/images/main_game2.png" style="display: inline;"><img src="/frontend/worldsl/tutu/images/main_game2.png" class="mouseover1" style="display: none;"></a></li>                
+                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subLive');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/worldsl/tutu/images/main_game2.png" style="display: inline;"><img src="/frontend/worldsl/tutu/images/main_game2.png" class="mouseover1" style="display: none;"></a></li>                
                                                                              
 							@else
 							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/worldsl/tutu/images/main_game1.png"><img src="/frontend/worldsl/tutu/images/main_game1.png" class="mouseover1" style="display:none;"></a></li>
@@ -430,7 +430,33 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" && $category->title != "VirtualTech")
+							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "slot")
+							data += `<li>`;
+								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
+								
+								@else
+								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
+								@endif										
+								data += `<img src="/frontend/worldsl/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								data += `<img src="/frontend/worldsl/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
+								data += `</a>`;     
+								data += `</li>`;
+							@endif
+						@endforeach
+					@endif
+
+					data +="</ul></div>";
+
+					$("#popupbox_ajax").html(data);
+				}
+				else if(pid == "subLive"){
+					data =`<div class="game_tit"><img src="/frontend/worldsl/tutu/images/casino_title2.png"></div><div class="game_list_wrap"><ul>`;
+					@if ($categories && count($categories))
+						@foreach($categories AS $index=>$category)
+							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
+							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
+							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "live")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
