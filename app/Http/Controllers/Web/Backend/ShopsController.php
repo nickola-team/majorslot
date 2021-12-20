@@ -797,7 +797,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             if (!in_array($shop->id, $user->availableShops()))
             {
-                return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+                return redirect()->back()->withErrors(['하위 매장이 아닙니다.']);
             }
 
             if( !$request->summ || $request->summ==0 ) 
