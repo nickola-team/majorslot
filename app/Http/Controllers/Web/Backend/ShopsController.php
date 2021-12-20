@@ -785,7 +785,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([trans('app.only_for_distributors')]);
             }
 
-            if( !\Auth::user()->hasRole([
+            if( \Auth::user()->hasRole([
                 'master', 
                 'agent', 
                 'distributor', 
