@@ -334,8 +334,10 @@ namespace VanguardLTE\Games\MysticChiefPM
                             for($r = 0; $r < count($poses); $r++){
                                 $col = $poses[$r] % 3;
                                 $row = floor($poses[$r] / 3);
-                                $reels['reel'.(($col + 2))][$row] = 2;
-                                array_push($rw_poses, $initReels['reel'.(($col + 2))][$row] . '~2~' . ($row * 5 + $col + 1));
+                                if($reels['reel'.(($col + 2))][$row] != $scatter){
+                                    $reels['reel'.(($col + 2))][$row] = 2;
+                                    array_push($rw_poses, $initReels['reel'.(($col + 2))][$row] . '~2~' . ($row * 5 + $col + 1));
+                                }
                             }
                         }
                     }
@@ -411,6 +413,9 @@ namespace VanguardLTE\Games\MysticChiefPM
                         break;  // give freespin per 450spins over
                     }
                     else if($isSameWildReel == true && mt_rand(0, 100) < 95){
+                        
+                    }
+                    else if(count($wildReels) > 0 && $scattersCount > 0){
                         
                     }
                     else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
