@@ -406,6 +406,9 @@ namespace VanguardLTE\Games\MysticChiefPM
                     else if($bonusCount >= 2 && $slotEvent['slotEvent'] == 'freespin'){
 
                     }
+                    else if(count($wildReels) > 0 && $scattersCount > 0){
+                        
+                    }
                     else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
                         break;   // win by force when winmoney is 0 in freespin
                     }
@@ -413,9 +416,6 @@ namespace VanguardLTE\Games\MysticChiefPM
                         break;  // give freespin per 450spins over
                     }
                     else if($isSameWildReel == true && mt_rand(0, 100) < 95){
-                        
-                    }
-                    else if(count($wildReels) > 0 && $scattersCount > 0){
                         
                     }
                     else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
