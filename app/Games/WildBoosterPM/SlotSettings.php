@@ -868,7 +868,6 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
         }
         public function IsAvailableFreeStack(){
-            return true;
             $linecount = 5; // line num for free stack
             $game = $this->game;
             $grantfree_count = $game->{'garant_win' . $linecount};
@@ -1075,6 +1074,21 @@ namespace VanguardLTE\Games\WildBoosterPM
             ];
             return $wildMuls[$spinType];
         }
+        public function GetNormalWildMul(){
+            $wildMuls = [
+                [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 25, 50, 100],
+                [80, 10, 5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+            ];
+            $percent = mt_rand(0, 98);
+            $sum = 0;
+            for($i = 0; $i < 13; $i++){
+                $sum = $sum + $wildMuls[1][$i];
+                if($sum > $percent){
+                    return $wildMuls[0][$i];
+                }
+            }
+            return $wildMuls[0][0];
+        }
         public function GetGambleSettings()
         {
             $spinWin = rand(1, $this->WinGamble);
@@ -1188,6 +1202,29 @@ namespace VanguardLTE\Games\WildBoosterPM
                 $tmp_last = $tmp_cnt - 1;
             }
             return $random;
+        }
+
+        public function CheckDuplicationSymbol($reels){
+            for($i = 1; $i <= 5; $i++){
+                if($reels['reel' . $i][1] == $reels['reel' . $i][0]){
+                    $reels['reel' . $i][1] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][2]);
+                }
+                if($reels['reel' . $i][2] == $reels['reel' . $i][0]){
+                    $reels['reel' . $i][2] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][1]);
+                }
+                if($reels['reel' . $i][2] == $reels['reel' . $i][1]){
+                    $reels['reel' . $i][2] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][1]);
+                }
+            }
+            return $reels;
+        }
+        public function GetNoDuplicationSymbol($first, $second){
+            while(true){
+                $sym = rand(3, 11);
+                if($sym != $first && $sym != $second){
+                    return $sym;
+                }
+            }
         }
     }
 
