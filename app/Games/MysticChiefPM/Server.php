@@ -365,7 +365,9 @@ namespace VanguardLTE\Games\MysticChiefPM
                             }
                         }
                     }
+
                     $scattersCount = 0;
+                    $initScattersCount = 0;
                     for( $r = 1; $r <= 5; $r++ ) 
                     {
                         for( $k = 0; $k <= 3; $k++ ) 
@@ -373,6 +375,10 @@ namespace VanguardLTE\Games\MysticChiefPM
                             if( $reels['reel' . $r][$k] == $scatter ) 
                             {
                                 $scattersCount++;
+                            }
+                            if( $initReels['reel' . $r][$k] == $scatter ) 
+                            {
+                                $initScattersCount++;
                             }
                         }
                     }
@@ -406,7 +412,10 @@ namespace VanguardLTE\Games\MysticChiefPM
                     else if($bonusCount >= 2 && $slotEvent['slotEvent'] == 'freespin'){
 
                     }
-                    else if(count($wildReels) > 0 && $scattersCount > 0){
+                    else if(count($wildReels) > 0 && $initScattersCount > 0){
+                        
+                    }
+                    else if(count($wildReels) == 2 && $wildMuls[$wildReels[0]] == $wildMuls[$wildReels[1]]){
                         
                     }
                     else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
