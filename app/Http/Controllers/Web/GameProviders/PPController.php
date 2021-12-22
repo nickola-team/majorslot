@@ -638,7 +638,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     if ($game['gameTypeID'] == 'r2') //exclude fishing game
                     {
-
+                        continue;
                     }
                     else if (str_contains($game['platform'], 'WEB'))
                     {
