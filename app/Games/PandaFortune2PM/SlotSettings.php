@@ -93,7 +93,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,
-                'time' => date('G')
+                // 'time' => date('G')
             ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
@@ -481,7 +481,14 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 1, 
                 3
             ];
+            // $reel->generationFreeStacks($this, $game->original_id);
         }
+        public function genfree()
+        {
+            $reel = new GameReel();
+            $reel->generationFreeStacks($this, $this->game->original_id);
+        }
+        
         public function SetGameData($key, $value)
         {
             $diffIndex = 86400;
@@ -532,6 +539,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
         }
         public function CheckBonusWin()
         {
+            return 0;
             $ratioCount = 0;
             $totalPayRatio = 0;
             foreach( $this->Paytable as $vl ) 
@@ -722,14 +730,14 @@ namespace VanguardLTE\Games\PandaFortune2PM
                         {
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
-                        $game->set_gamebank($diffMoney, 'inc', '');
+                    $game->set_gamebank($diffMoney, 'inc', '');
                     }
                     $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0) {
-                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
-                    }
+                    $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                 }
+            }
             }
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet') 
@@ -779,13 +787,13 @@ namespace VanguardLTE\Games\PandaFortune2PM
             }
             else
             {
-                if( $_obf_bonus_systemmoney > 0 ) 
-                {
-                    $sum -= $_obf_bonus_systemmoney;
-                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }
-                $game->set_gamebank($sum, 'inc', $slotState);
-                $game->save();
+            if( $_obf_bonus_systemmoney > 0 ) 
+            {
+                $sum -= $_obf_bonus_systemmoney;
+                $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+            }
+            $game->set_gamebank($sum, 'inc', $slotState);
+            $game->save();
             }
             return $game;
         }
@@ -845,12 +853,12 @@ namespace VanguardLTE\Games\PandaFortune2PM
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
         }
-        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState)
+        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $isState = true)
         {
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
             {
-                $_obf_slotstate = $this->slotId . ' FG';
+                $_obf_slotstate = $this->slotId . ' Free';
             }
             else if( $slotState == 'bet' ) 
             {
@@ -883,19 +891,111 @@ namespace VanguardLTE\Games\PandaFortune2PM
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
-            \VanguardLTE\StatGame::create([
+            if($isState == true){
+                $roundstr = $this->GetGameData($this->slotId . 'RoundID');
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $this->playerId, 
+                    'balance' => $this->Balance * $this->CurrentDenom, 
+                    'bet' => $bet * $this->CurrentDenom, 
+                    'win' => $win * $this->CurrentDenom, 
+                    'game' => $_obf_slotstate, 
+                    'percent' => $this->toGameBanks, 
+                    'percent_jps' => $this->toSysJackBanks, 
+                    'percent_jpg' => $this->toSlotJackBanks, 
+                    'profit' => $this->betProfit, 
+                    'denomination' => $this->CurrentDenom, 
+                    'shop_id' => $this->shop_id,
+                    'roundid' => $roundstr,
+                ]);
+            }
+        }
+        public function saveGameLog($strLog, $roundID){
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
                 'user_id' => $this->playerId, 
-                'balance' => $this->Balance * $this->CurrentDenom, 
-                'bet' => $bet * $this->CurrentDenom, 
-                'win' => $win * $this->CurrentDenom, 
-                'game' => $_obf_slotstate, 
-                'percent' => $this->toGameBanks, 
-                'percent_jps' => $this->toSysJackBanks, 
-                'percent_jpg' => $this->toSlotJackBanks, 
-                'profit' => $this->betProfit, 
-                'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
             ]);
+        }
+        public function GetFreeStack($betLine, $freespinCount)
+        {
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = 35;
+            $freespinType = 0;
+
+            if ($this->happyhouruser)
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine);
+                $freespinType = $this->happyhouruser->jackpot;
+            }
+            else
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+                if($limitOdd < 35){
+                    $limitOdd = 35;
+                }else if($limitOdd > 150){
+                    $limitOdd = 150;
+                }
+            }
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $this->game->original_id, 
+                $freespinCount,
+                $freespinType,
+                $limitOdd,
+                $this->playerId
+            ])->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+            }else{
+                \VanguardLTE\PPGameFreeStackLog::where([
+                    'user_id' => $this->playerId,
+                    'free_spin_count' => $freespinCount,
+                    'game_id' => $this->game->original_id
+                    ])->where('odd', '<=', $limitOdd)->delete();
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                        $this->game->original_id, 
+                        $freespinCount,
+                        $freespinType,
+                        $limitOdd,
+                        $this->playerId
+                    ])->get();
+                if(count($freeStacks) > 0){
+                    $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];       
+                }else{
+                    $freeStack = null;
+                }
+            }
+            if($freeStack){
+                \VanguardLTE\PPGameFreeStackLog::create([
+                    'game_id' => $this->game->original_id, 
+                    'user_id' => $this->playerId, 
+                    'freestack_id' => $freeStack->id, 
+                    'odd' => $freeStack->odd, 
+                    'free_spin_count' => $freespinCount
+                ]);
+                return json_decode($freeStack->free_spin_stack, true);
+            }else{
+                return [];
+            }
+            
+        }
+        public function IsAvailableFreeStack(){
+            $linecount = 5; // line num for free stack
+            $game = $this->game;
+            $grantfree_count = $game->{'garant_win' . $linecount};
+            $free_count = $game->{'winline' . $linecount};
+            $grantfree_count++;
+            $isFreeStack = false;
+            if( $free_count <= $grantfree_count ) 
+            {
+                $grantfree_count = 0;
+                $isFreeStack = true;
+                $game->{'winline' . $linecount} = $this->getNewSpin($game, 0, 1, $linecount, 'doSpin');
+            }
+            $game->{'garant_win' . $linecount} = $grantfree_count;
+            $game->save();
+            return $isFreeStack;
         }
         public function CheckGoldenSymbol(){
             if(rand(0, 100) < $this->goldenSymbolChance){
@@ -905,7 +1005,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
             }
             // return true;
         }
-        public function GetGoldenMul($symbol, $winLineNum, $isjackpot = false){
+        public function GetGoldenMul($symbol, $winLineNum, $isjackpot = false, $jackpotType = 0){
             if($winLineNum < 5){
                 if($symbol == 2){
                     return 3;
@@ -927,6 +1027,11 @@ namespace VanguardLTE\Games\PandaFortune2PM
                             return $this->FiveGoldenMuls[0][13];
                         }
                     }
+                    if($jackpotType == 1){
+                        return $this->FiveGoldenMuls[0][12];
+                    }else if($jackpotType == 2){
+                        return $this->FiveGoldenMuls[0][13];
+                    }
                     return 1;
                     // if(rand(0, 100) < 80){
 
@@ -935,14 +1040,14 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     //     return $this->FiveGoldenMuls[0][13];
                     // }
                 }else{
-                $percent = rand(0, 90);
-                $sum = 0;
-                for($i = 0; $i < 15; $i++){
-                    $sum = $sum + $this->FiveGoldenMuls[1][$i];
-                    if($percent <= $sum){
-                        return $this->FiveGoldenMuls[0][$i];
+                    $percent = rand(0, 90);
+                    $sum = 0;
+                    for($i = 0; $i < 15; $i++){
+                        $sum = $sum + $this->FiveGoldenMuls[1][$i];
+                        if($percent <= $sum){
+                            return $this->FiveGoldenMuls[0][$i];
+                        }
                     }
-                }
                     return $this->FiveGoldenMuls[0][0];
                 }
             }
@@ -1047,7 +1152,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     'bonus', 
                     $_obf_currentbank
                 ];
-                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
+                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet)  && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 
@@ -1144,9 +1249,9 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     $a = $this->GetNoDuplicationSymbol(2, -1, 3, 13);
                     $b = $this->GetNoDuplicationSymbol(2, $a, 3, 13);
                 }else{
-                $reel['reel' . $index][$lid] = $sym;
-                $a = $this->GetNoDuplicationSymbol($sym, -1, 3, 13);
-                $b = $this->GetNoDuplicationSymbol($sym, $a, 3, 13);
+                    $reel['reel' . $index][$lid] = $sym;
+                    $a = $this->GetNoDuplicationSymbol($sym, -1, 3, 13);
+                    $b = $this->GetNoDuplicationSymbol($sym, $a, 3, 13);
                 }
                 if ($lid == 0)
                 {
