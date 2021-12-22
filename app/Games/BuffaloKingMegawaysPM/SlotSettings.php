@@ -766,7 +766,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             $_obf_winbonus_count = $game->{'winbonus' . $_obf_granttype . $_obf_linecount};
             $_obf_winline_count = $game->{'winline' . $_obf_granttype . $_obf_linecount};
             if($isdoublechance == 1){
-                $_obf_grantwin_count+=2; // 더블기능일때 2증가
+                $_obf_grantwin_count++;
                 $_obf_grantbonus_count+=2;
             }else{
                 $_obf_grantwin_count++;
