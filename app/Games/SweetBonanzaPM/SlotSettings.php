@@ -521,18 +521,18 @@ namespace VanguardLTE\Games\SweetBonanzaPM
                 $_obf_bonus_percent = $_obf_currentpercent / 3;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
-                if( $count_balance < $_allBets && $count_balance > 0 ) 
-                {
-                    $_subCountBalance = $count_balance;
-                    $_obf_diff_money = $_allBets - $_subCountBalance;
-                    $_obf_subavaliable_balance = $_subCountBalance / 100 * $this->GetPercent();
-                    $sum = $_obf_subavaliable_balance + $_obf_diff_money;
-                    $_obf_bonus_systemmoney = $_subCountBalance / 100 * $_obf_bonus_percent;
-                }
-                else if( $count_balance > 0 ) 
-                {
+                // if( $count_balance < $_allBets && $count_balance > 0 ) 
+                // {
+                //     $_subCountBalance = $count_balance;
+                //     $_obf_diff_money = $_allBets - $_subCountBalance;
+                //     $_obf_subavaliable_balance = $_subCountBalance / 100 * $this->GetPercent();
+                //     $sum = $_obf_subavaliable_balance + $_obf_diff_money;
+                //     $_obf_bonus_systemmoney = $_subCountBalance / 100 * $_obf_bonus_percent;
+                // }
+                // else if( $count_balance > 0 ) 
+                // {
                     $_obf_bonus_systemmoney = $_allBets / 100 * $_obf_bonus_percent;
-                }
+                // }
                 for( $i = 0; $i < count($this->jpgs); $i++ ) 
                 {
                     if( $count_balance < $_allBets && $count_balance > 0 ) 
