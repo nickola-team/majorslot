@@ -93,7 +93,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,
-                'time' => date('G')
+                // 'time' => date('G')
             ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
@@ -292,7 +292,16 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                     }
                 }
             }
+            
+            // $reel->generationFreeStacks($this, $game->original_id);
         }
+
+        public function genfree()
+        {
+            $reel = new GameReel();
+            $reel->generationFreeStacks($this, $this->game->original_id);
+        }
+        
         public function SetGameData($key, $value)
         {
             $diffIndex = 86400;
@@ -343,6 +352,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
         }
         public function CheckBonusWin()
         {
+            return 0;
             $ratioCount = 0;
             $totalPayRatio = 0;
             foreach( $this->Paytable as $vl ) 
@@ -763,6 +773,80 @@ namespace VanguardLTE\Games\TheTweetyHousePM
             shuffle($freeSpinNums);
             return $freeSpinNums;
         }
+        public function GetFreeStack($betLine, $freespinCount)
+        {
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = 35;
+            if ($this->happyhouruser)
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine);
+            }
+            else
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+                if($limitOdd < 35){
+                    $limitOdd = 35;
+                }else if($limitOdd > 100){
+                    $limitOdd = 100;
+                }
+            }
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $this->game->original_id, 
+                $freespinCount,
+                $limitOdd,
+                $this->playerId
+            ])->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+            }else{
+                \VanguardLTE\PPGameFreeStackLog::where([
+                    'user_id' => $this->playerId,
+                    'free_spin_count' => $freespinCount,
+                    'game_id' => $this->game->original_id
+                    ])->where('odd', '<=', $limitOdd)->delete();
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_count=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                        $this->game->original_id, 
+                        $freespinCount,
+                        $limitOdd,
+                        $this->playerId
+                    ])->get();
+                if(count($freeStacks) > 0){
+                    $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
+                }else{
+                    $freeStack = null;
+                }
+            }
+            if($freeStack){
+                \VanguardLTE\PPGameFreeStackLog::create([
+                    'game_id' => $this->game->original_id, 
+                    'user_id' => $this->playerId, 
+                    'freestack_id' => $freeStack->id, 
+                    'odd' => $freeStack->odd, 
+                    'free_spin_count' => $freespinCount
+                ]);
+                return json_decode($freeStack->free_spin_stack, true);
+            }else{
+                return [];
+            }
+            
+        }
+        public function IsAvailableFreeStack(){
+            $linecount = 5; // line num for free stack
+            $game = $this->game;
+            $grantfree_count = $game->{'garant_win' . $linecount};
+            $free_count = $game->{'winline' . $linecount};
+            $grantfree_count++;
+            $isFreeStack = false;
+            if( $free_count <= $grantfree_count ) 
+            {
+                $grantfree_count = 0;
+                $isFreeStack = true;
+                $game->{'winline' . $linecount} = $this->getNewSpin($game, 0, 1, $linecount, 'doSpin');
+            }
+            $game->{'garant_win' . $linecount} = $grantfree_count;
+            $game->save();
+            return $isFreeStack;
+        }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
             $_obf_linecount = 10;
@@ -849,7 +933,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                     'bonus', 
                     $_obf_currentbank
                 ];
-                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
+                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 

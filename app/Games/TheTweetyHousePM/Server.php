@@ -72,7 +72,9 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 25);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [9,3,2,3,9,10,4,1,4,10,9,3,2,3,9]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
-                $slotSettings->setGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -85,9 +87,12 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
+                    if (isset($lastEvent->serverResponse->FreeStacks)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
                     }
                     $bet = $lastEvent->serverResponse->bet;
                 }
@@ -374,12 +379,28 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
+                $freeStacks = []; // free stacks
+                $isGeneratedFreeStack = false;
+                $isForceWin = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                     $_wildValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildValues');
                     $_wildPos = $slotSettings->GetGameData($slotSettings->slotId . 'WildPos');
                     $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
+                    
+                    // free stacks
+                    if($slotSettings->happyhouruser){
+                        $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
+                        if(count($freeStacks) == $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
+                            $isGeneratedFreeStack = true;
+                        }
+                    }
+                    if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') == 0){
+                        $winType = 'win';
+                        $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
+                        $isForceWin = true;
+                    }
                 }
                 else
                 {
@@ -399,8 +420,11 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
-                    $slotSettings->setGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
+
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
                 }
                 
                 $Balance = $slotSettings->GetBalance();
@@ -420,6 +444,34 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                     $scatter = '1';
                     $_obf_winCount = 0;
                     $strWinLine = '';
+                    $tempReels = [];
+                    $tempWildReels = [];
+                    // freeStack
+                    if($isGeneratedFreeStack == true){
+                        $freeStack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 2];
+                        for($r = 0; $r < 5; $r++){
+                            $tempWildReels[$r] = [];
+                            $tempReels['reel' . ($r+1)] = [];
+                            $reels['reel' . ($r+1)] = [];
+                            for( $k = 0; $k < 3; $k++ ) 
+                            {
+                                $reels['reel' . ($r+1)][$k] = $freeStack['Reel'][$r][$k];
+                                $tempReels['reel' . ($r+1)][$k] = $freeStack['initReel'][$r][$k];
+                                $tempWildReels[$r][$k] = 0;  
+                            }
+                            $reels['reel' . ($r+1)][-1] = mt_rand(7, 13);
+                            $reels['reel' . ($r+1)][3] = mt_rand(6, 13);
+                        }
+                        $_wildValue = $freeStack['WildValue'];
+                        $_wildPos = $freeStack['WildPos'];
+                        for($r = 0; $r < count($_wildPos); $r++){
+                            $col = $_wildPos[$r] % 5;
+                            $row = floor($_wildPos[$r] / 5);
+                            $reels['reel'.($col + 1)][$row] = $wild;
+                            $tempWildReels[$col][$row] = $_wildValue[$r];
+                        }
+                        $_wildReelValue = $freeStack['SubWilds'];
+                    }else{
                     if ($mustNotWin)
                     {
                         $reels = $slotSettings->GetNoneWinReels($winType, $slotEvent['slotEvent']);
@@ -428,8 +480,6 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                     {
                         $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
                     }
-                    $tempReels = [];
-                    $tempWildReels = [];
                     $_wildReelValue = $slotSettings->CheckMultiWild();
                     for($r = 0; $r < 5; $r++){
                         $tempWildReels[$r] = [];
@@ -476,6 +526,8 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                             $tempWildReels[$col][$row] = $_wildValue[$r];
                         }
                     }
+                    }
+                    
 
                     $_lineWinNumber = 1;
                     for( $k = 0; $k < $lines; $k++ ) 
@@ -587,14 +639,22 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                         }
                         if( $scattersCount >= 3 && $winType != 'bonus' ) 
                         {
+                        }else if($isGeneratedFreeStack == true){
+                            break;  //freestack
                         }
                         else if($scattersCount == 2 && mt_rand(0, 100) < 50){
 
+                        }
+                        else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
+                            break;   // win by force when winmoney is 0 in freespin
                         }
                         else if($slotEvent['slotEvent'] == 'freespin'&& $i > 1000){
                             if($totalWin * $leftFreeGames < $_winAvaliableMoney){
                                 break;
                             }
+                        }
+                        else if($winType == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
+                            break;  // give freespin per 450spins over
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
@@ -616,7 +676,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                                 }
                             }
                         }
-                        else if( $totalWin > 0 && $totalWin <= $_winAvaliableMoney && $winType == 'win') 
+                        else if( $totalWin > 0 && $totalWin <= $_winAvaliableMoney && $winType == 'win' ) 
                         {
                             $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
                             if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
@@ -625,7 +685,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                             }
                             else
                             {
-                                if(($totalWin < $betline * $lines * 25 && $slotEvent['slotEvent'] == 'bet') || $slotEvent['slotEvent'] == 'freespin'){
+                                if(($slotEvent['slotEvent'] != 'freespin' && $totalWin < $betline * $lines * 10) || $slotEvent['slotEvent'] == 'freespin'){  // Max Win
                                     break;
                                 }
                             }
@@ -659,6 +719,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $freeSpinNum);
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeSpinWins', implode(',', $freeSpinNums));
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 }
                 $lastTempReel = [];
                 for($k = 0; $k < 3; $k++){
@@ -773,8 +834,8 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
                     ',"Balance":' . $Balance . ',"wildValues":'.json_encode($_wildValue) . ',"wildPos":'.json_encode($_wildPos).',"wildReelValues":'.json_encode($_wildReelValue) . ',"ReplayGameLogs":'.json_encode($replayLog).
-                    ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . 
-                    ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog
+                    ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . 
+                    ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 
                 if( $scattersCount >= 3 && $slotEvent['slotEvent'] != 'freespin') 
@@ -801,7 +862,10 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                     '&wins='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeSpinWins').'&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&index='.$slotEvent['index'].
                     '&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
                     '&bgt=32&wins_mask=nff,nff,nff,nff,nff,nff,nff,nff,nff&end=1&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&sver=5&n_reel_set=1&counter='. ((int)$slotEvent['counter'] + 1);
-
+                // FreeStack
+                if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($betline * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')));
+                }
                     //------------ ReplayLog ---------------
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
                 if (!$replayLog) $replayLog = [];
@@ -811,7 +875,7 @@ namespace VanguardLTE\Games\TheTweetyHousePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
                 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"wildValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildValues')) . ',"wildPos":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildPos')).',"wildReelValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues')) . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';  //ReplayLog
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"wildValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildValues')) . ',"wildPos":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildPos')).',"wildReelValues":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'WildReelValues')) . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';  //ReplayLog, FreeStack
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, 0, $slotEvent['slotEvent'], false);
                 //------------ *** ---------------
             }
