@@ -322,6 +322,7 @@ namespace VanguardLTE\Games\SweetBonanzaPM
         }
         public function CheckBonusWin()
         {
+            return 10;
             $ratioCount = 0;
             $totalPayRatio = 0;
             foreach( $this->Paytable as $vl ) 
@@ -517,7 +518,7 @@ namespace VanguardLTE\Games\SweetBonanzaPM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = 10;
+                $_obf_bonus_percent = $_obf_currentpercent / 3;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 if( $count_balance < $_allBets && $count_balance > 0 ) 
