@@ -56,7 +56,7 @@ namespace VanguardLTE\Games\PandaFortune2PM
             $linesId = $slotSettings->winLines;
             $freeSpins = [12];
             $repeatCounts = [8000, 1000, 1000]; // normal, minor, major
-            for($ii = 1; $ii < 3; $ii++){
+            for($ii = 0; $ii < 3; $ii++){
                 $bfinish = false;
                 while($bfinish == false){
                     for($i = 0; $i < 1; $i++){
