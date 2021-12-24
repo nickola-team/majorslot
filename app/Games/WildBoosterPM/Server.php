@@ -392,7 +392,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                     $slotSettings->SetBalance(-1 * ($allBet), $slotEvent['slotEvent']);
                     $_sum = ($allBet) / 100 * $slotSettings->GetPercent();
                     $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
-                    $bonusMpl = 1;
+                    $bonusMpl = $slotSettings->GetNormalWildMul();
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
@@ -453,6 +453,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                         $bonusMpl = $freeStack['BonusMpl'];
                     }else{
                         $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $currentReelSet, $defaultScatterCount);
+                        $reels = $slotSettings->CheckDuplicationSymbol($reels);
                     }
                     
                     $_lineWinNumber = 1;
@@ -676,6 +677,9 @@ namespace VanguardLTE\Games\WildBoosterPM
                             $otherResponse = $otherResponse . '&puri=0&purtr=1';
                         }
                         $isState = false;
+                    }
+                    if($totalWin > 0 && $bonusMpl > 1 && count($winLineNumbers) > 0){
+                        $otherResponse = $otherResponse . '&lm_v='. implode(';', $winLineNumbers) .'&lm_m=l~m';
                     }
                     $response = 'tw='.$totalWin.'&ls=0&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&reel_set='. $currentReelSet .'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5'.$otherResponse.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='.$strLastReel.'&w='.$totalWin;
                 }
