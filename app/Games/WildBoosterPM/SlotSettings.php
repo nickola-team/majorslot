@@ -1092,7 +1092,6 @@ namespace VanguardLTE\Games\WildBoosterPM
         public function GetGambleSettings()
         {
             $spinWin = rand(1, $this->WinGamble);
-            
             return $spinWin;
         }
         public function GetReelStrips($winType, $slotEvent, $slotReelId, $scattercount)
