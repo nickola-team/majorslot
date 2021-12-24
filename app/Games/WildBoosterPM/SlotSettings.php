@@ -1203,9 +1203,32 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             return $random;
         }
-
+        
         public function CheckDuplicationSymbol($reels){
-            for($i = 1; $i <= 5; $i++){
+            for($i = 1; $i <= 5; $i++){                
+                $scatterPos = -1;
+                $wildPos = -1;
+                for($j = 0; $j < 3; $j++){
+                    if($reels['reel' . $i][$j] == 1){
+                        $scatterPos = $j;
+                    }else if($reels['reel' . $i][$j] == 2){
+                        $wildPos = $j;
+                    }
+                }
+                if($scatterPos >= 0 && $wildPos >= 0){
+                    $reels['reel' . $i][$wildPos] = $this->GetNoDuplicationSymbol($reels['reel' . $i][$scatterPos], $reels['reel' . $i][$wildPos]);
+                    $wildPos = -1;
+                }
+                if($scatterPos >= 0 || $wildPos >= 0){
+                    if($scatterPos == 0 || $wildPos == 0){
+                        $reels['reel' . $i][1] = mt_rand(8, 11);
+                    }else if($scatterPos == 1 || $wildPos == 1){
+                        $reels['reel' . $i][2] = mt_rand(8, 11);
+                        $reels['reel' . $i][0] = $this->GetNoDuplicationSymbol($reels['reel' . $i][$scatterPos], $reels['reel' . $i][2]);
+                    }else if($scatterPos == 2 || $wildPos == 2){
+                        $reels['reel' . $i][1] = mt_rand(8, 11);
+                    }
+                }
                 if($reels['reel' . $i][1] == $reels['reel' . $i][0]){
                     $reels['reel' . $i][1] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][2]);
                 }
@@ -1220,12 +1243,11 @@ namespace VanguardLTE\Games\WildBoosterPM
         }
         public function GetNoDuplicationSymbol($first, $second){
             while(true){
-                $sym = rand(3, 11);
+                $sym = rand(8, 11);
                 if($sym != $first && $sym != $second){
                     return $sym;
                 }
             }
         }
     }
-
 }

@@ -104,7 +104,8 @@ namespace VanguardLTE\Games\MysticChiefPM
             $wild = '14';
             $bonus = '15';
             for($i = 0; $i < 1; $i++){
-                for($j = 0; $j < 3; $j++){
+                $bfinish = false;
+                while($bfinish == false){
                     $freespinType = 1;
                     $totalWin = 0;
                     $totalReel = [];
@@ -119,6 +120,9 @@ namespace VanguardLTE\Games\MysticChiefPM
                             $this->winLines = [];
                             $subtotalWin = 0;
                             $initReels = $slotSettings->GetReelStrips($winType, 'freespin', 4);
+                            if(mt_rand(0, 100) <= 95){
+                                $initReels = $slotSettings->CheckDuplicationSymbol($initReels);
+                            }
                             $wildReels = $slotSettings->GetWildReels('freespin');
                             $bonusCount = 0;
                             for($r = 1; $r <= 5; $r++){
@@ -179,7 +183,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                             $isSameWildReel = false;
                             if(count($oldWildReels) == 1){
                                 for($r = 0; $r < count($wildReels); $r++){
-                                    if($wildReels[$r] = $oldWildReels[0]){
+                                    if($wildReels[$r] == $oldWildReels[0]){
                                         $isSameWildReel = true;
                                         break;
                                     }
@@ -187,8 +191,10 @@ namespace VanguardLTE\Games\MysticChiefPM
                             }
                             if($bonusCount >= 2){
 
-                            }else if($isSameWildReel == true && mt_rand(0, 100) < 70){
+                            }else if($isSameWildReel == true && mt_rand(0, 100) < 95){
 
+                            }else if(count($wildReels) == 2 && $wildMuls[$wildReels[0]] == $wildMuls[$wildReels[1]]){
+                        
                             }else if($winType == 'win' && $subtotalWin > 0){
                                 break;
                             }else if($winType == 'none' && $subtotalWin == 0){
@@ -211,7 +217,18 @@ namespace VanguardLTE\Games\MysticChiefPM
                         $item['Str_ep'] = $str_ep;
                         array_push($totalReel, $item);
                     }
-                    $this->SaveReel($game_id, $freespinType, $totalReel, $totalWin, $freespinCount);
+                    if ($totalWin > 30 &&  $totalWin < 150) {
+                        $this->SaveReel($game_id, $freespinType, $totalReel, $totalWin, $freespinCount);
+                    }
+                    $count = \VanguardLTE\PPGameFreeStack::where([
+                        'game_id' => $game_id, 
+                        'free_spin_type' => $freespinType, 
+                    ])->count();
+                    if ($count > 10000)
+                    {
+                        $bfinish = true;
+                        break;
+                    }
                 }
             }
             $theEnd = false;
