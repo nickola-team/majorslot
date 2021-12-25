@@ -784,7 +784,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             $_obf_grantbonus_count++;
 
             if ($isDouble) {
-                $_obf_grantwin_count++;
+                // $_obf_grantwin_count++;
                 $_obf_grantbonus_count++;
             }
             
