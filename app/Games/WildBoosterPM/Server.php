@@ -83,6 +83,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'scatterUpDownSameMaskCounts', [0,0,0,0,0,0,0,0,0,0]);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -568,6 +569,9 @@ namespace VanguardLTE\Games\WildBoosterPM
                             break;  // give freespin per 450spins over
                         }
                         else if($totalScatters >= 15 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 15){
+
+                        }
+                        else if($scattersCount == 2 && mt_rand(0, 100) < 70){
 
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 

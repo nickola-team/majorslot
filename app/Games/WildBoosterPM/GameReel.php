@@ -107,7 +107,7 @@ namespace VanguardLTE\Games\WildBoosterPM
             $this->linesId[17] = [1,1,3,1,1];
             $this->linesId[18] = [3,3,1,3,3];
             $this->linesId[19] = [1,3,3,3,1];
-
+            $slotSettings->SetGameData($slotSettings->slotId . 'scatterUpDownSameMaskCounts', [0,0,0,0,0,0,0,0,0,0]);
             $wild = '2';
             $scatter = '1';
             $scatterCounts = [3, 4, 5, 3, 4, 5];
