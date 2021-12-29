@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\WildBoosterPM
+namespace VanguardLTE\Games\FruitPartyPM
 {
     class SlotSettings
     {
@@ -11,60 +11,36 @@ namespace VanguardLTE\Games\WildBoosterPM
         public $reelStrip1_4 = null;
         public $reelStrip1_5 = null;
         public $reelStrip1_6 = null;
+        public $reelStrip1_7 = null;
         public $reelStrip2_1 = null;
         public $reelStrip2_2 = null;
         public $reelStrip2_3 = null;
         public $reelStrip2_4 = null;
         public $reelStrip2_5 = null;
         public $reelStrip2_6 = null;
+        public $reelStrip2_7 = null;
         public $reelStrip3_1 = null;
         public $reelStrip3_2 = null;
         public $reelStrip3_3 = null;
         public $reelStrip3_4 = null;
         public $reelStrip3_5 = null;
         public $reelStrip3_6 = null;
+        public $reelStrip3_7 = null;
         public $reelStrip4_1 = null;
         public $reelStrip4_2 = null;
         public $reelStrip4_3 = null;
         public $reelStrip4_4 = null;
         public $reelStrip4_5 = null;
         public $reelStrip4_6 = null;
+        public $reelStrip4_7 = null;
         public $reelStrip5_1 = null;
         public $reelStrip5_2 = null;
         public $reelStrip5_3 = null;
         public $reelStrip5_4 = null;
         public $reelStrip5_5 = null;
         public $reelStrip5_6 = null;
-        public $reelStrip6_1 = null;
-        public $reelStrip6_2 = null;
-        public $reelStrip6_3 = null;
-        public $reelStrip6_4 = null;
-        public $reelStrip6_5 = null;
-        public $reelStrip6_6 = null;
-        public $reelStrip7_1 = null;
-        public $reelStrip7_2 = null;
-        public $reelStrip7_3 = null;
-        public $reelStrip7_4 = null;
-        public $reelStrip7_5 = null;
-        public $reelStrip7_6 = null;
-        public $reelStrip8_1 = null;
-        public $reelStrip8_2 = null;
-        public $reelStrip8_3 = null;
-        public $reelStrip8_4 = null;
-        public $reelStrip8_5 = null;
-        public $reelStrip8_6 = null;
-        public $reelStrip9_1 = null;
-        public $reelStrip9_2 = null;
-        public $reelStrip9_3 = null;
-        public $reelStrip9_4 = null;
-        public $reelStrip9_5 = null;
-        public $reelStrip9_6 = null;
-        public $reelStrip10_1 = null;
-        public $reelStrip10_2 = null;
-        public $reelStrip10_3 = null;
-        public $reelStrip10_4 = null;
-        public $reelStrip10_5 = null;
-        public $reelStrip10_6 = null;
+        public $reelStrip5_7 = null;
+        
         public $slotId = '';
         public $slotDBId = '';
         public $Line = null;
@@ -104,12 +80,8 @@ namespace VanguardLTE\Games\WildBoosterPM
         public $game = null;
         public $shop = null;
         public $credits = null;
-        public $free_spins_in_base = [];
-        public $free_spins_in_free = [];
-        public $bonus_spins_in_base = [];
-        public $bonus_spins_in_bonus = [];
-        public $money_respin = [];
-        public $base_moon_chance = null;
+        public $freespinCount = [];
+        public $doubleWildChance = null;
         public $happyhouruser = null;
         public function __construct($sid, $playerId, $credits = null)
         {
@@ -139,6 +111,7 @@ namespace VanguardLTE\Games\WildBoosterPM
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,
+                'time' => date('G')
             ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
@@ -155,31 +128,21 @@ namespace VanguardLTE\Games\WildBoosterPM
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
 
-            $this->free_spins_in_base = [0, 0, 0, 5, 0, 0];
-            $this->free_spins_in_free = [0, 0, 0, 3, 0, 0];
-            $this->bonus_spins_in_base = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
-            $this->bonus_spins_in_bonus = [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
-            $this->money_respin = [
-                [30, 20, 15, 10, 5, 5, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
-                [25,50,75,100,125,150,175,200,250,350,400,450,500,600,750,2500]
-            ];
-            $this->base_moon_chance = 14;
+            $this->doubleWildChance = 90;
 
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,0,50,100,600];
-            $this->Paytable[4] = [0,0,0,20,50,300];
-            $this->Paytable[5] = [0,0,0,20,40,200];
-            $this->Paytable[6] = [0,0,0,12,25,150];
-            $this->Paytable[7] = [0,0,0,10,20,100];
-            $this->Paytable[8] = [0,0,0,6,12,60];
-            $this->Paytable[9] = [0,0,0,6,12,60];
-            $this->Paytable[10] = [0,0,0,5,20,50];
-            $this->Paytable[11] = [0,0,0,5,20,50];
-            $this->Paytable[12] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,0,0,0,20,30,35,40,50,100,150,300,700,1400,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000];
+            $this->Paytable[4] = [0,0,0,0,0,15,20,25,30,40,80,120,250,600,1200,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000];
+            $this->Paytable[5] = [0,0,0,0,0,10,15,20,25,30,60,90,200,500,1000,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800];
+            $this->Paytable[6] = [0,0,0,0,0,8,10,15,20,25,40,60,100,400,800,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600];
+            $this->Paytable[7] = [0,0,0,0,0,6,8,10,15,20,30,50,70,300,600,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200];
+            $this->Paytable[8] = [0,0,0,0,0,5,6,8,10,15,25,40,60,200,400,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800];
+            $this->Paytable[9] = [0,0,0,0,0,4,5,6,8,10,20,30,50,100,200,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400];
+            $this->freespinCounts = [0,0,0,10,11,12,13,14];
             $reel = new GameReel();
             foreach( [
                 'reelStrip1_1', 
@@ -188,60 +151,35 @@ namespace VanguardLTE\Games\WildBoosterPM
                 'reelStrip1_4', 
                 'reelStrip1_5', 
                 'reelStrip1_6',
+                'reelStrip1_7',
                 'reelStrip2_1', 
                 'reelStrip2_2', 
                 'reelStrip2_3', 
                 'reelStrip2_4', 
                 'reelStrip2_5', 
                 'reelStrip2_6',
+                'reelStrip2_7',
                 'reelStrip3_1', 
                 'reelStrip3_2', 
                 'reelStrip3_3', 
                 'reelStrip3_4', 
                 'reelStrip3_5', 
                 'reelStrip3_6',
+                'reelStrip3_7',
                 'reelStrip4_1', 
                 'reelStrip4_2', 
                 'reelStrip4_3', 
                 'reelStrip4_4', 
                 'reelStrip4_5', 
                 'reelStrip4_6',
+                'reelStrip4_7',
                 'reelStrip5_1', 
                 'reelStrip5_2', 
                 'reelStrip5_3', 
                 'reelStrip5_4', 
                 'reelStrip5_5', 
-                'reelStrip5_6',
-                'reelStrip6_1', 
-                'reelStrip6_2', 
-                'reelStrip6_3', 
-                'reelStrip6_4', 
-                'reelStrip6_5', 
-                'reelStrip6_6',
-                'reelStrip7_1', 
-                'reelStrip7_2', 
-                'reelStrip7_3', 
-                'reelStrip7_4', 
-                'reelStrip7_5', 
-                'reelStrip7_6',
-                'reelStrip8_1', 
-                'reelStrip8_2', 
-                'reelStrip8_3', 
-                'reelStrip8_4', 
-                'reelStrip8_5', 
-                'reelStrip8_6',
-                'reelStrip9_1', 
-                'reelStrip9_2', 
-                'reelStrip9_3', 
-                'reelStrip9_4', 
-                'reelStrip9_5', 
-                'reelStrip9_6',
-                'reelStrip10_1', 
-                'reelStrip10_2', 
-                'reelStrip10_3', 
-                'reelStrip10_4', 
-                'reelStrip10_5', 
-                'reelStrip10_6'
+                'reelStrip5_6', 
+                'reelStrip5_7'
             ] as $reelStrip ) 
             {
                 if( count($reel->reelsStrip[$reelStrip]) ) 
@@ -249,21 +187,6 @@ namespace VanguardLTE\Games\WildBoosterPM
                     $this->$reelStrip = $reel->reelsStrip[$reelStrip];
                 }
             }
-            $this->keyController = [
-                '13' => 'uiButtonSpin,uiButtonSkip', 
-                '49' => 'uiButtonInfo', 
-                '50' => 'uiButtonCollect', 
-                '51' => 'uiButtonExit2', 
-                '52' => 'uiButtonLinesMinus', 
-                '53' => 'uiButtonLinesPlus', 
-                '54' => 'uiButtonBetMinus', 
-                '55' => 'uiButtonBetPlus', 
-                '56' => 'uiButtonGamble', 
-                '57' => 'uiButtonRed', 
-                '48' => 'uiButtonBlack', 
-                '189' => 'uiButtonAuto', 
-                '187' => 'uiButtonSpin'
-            ];
             $this->slotReelsConfig = [
                 [
                     266, 
@@ -290,8 +213,6 @@ namespace VanguardLTE\Games\WildBoosterPM
             $this->slotExitUrl = '/';
             $this->slotWildMpl = 1;
             $this->GambleType = 1;
-            $this->slotFreeCount = 5;
-            $this->slotRespinCount = 3;
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
@@ -317,12 +238,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                 17,
                 18,
                 19,
-                20,
-                21,
-                22,
-                23,
-                24,
-                25
+                20
             ];
             $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
             $this->Balance = $user->balance;
@@ -338,7 +254,8 @@ namespace VanguardLTE\Games\WildBoosterPM
                 '9', 
                 '10', 
                 '11', 
-                '12'
+                '12',
+                '13'
             ];
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -366,7 +283,6 @@ namespace VanguardLTE\Games\WildBoosterPM
                     }
                 }
             }
-            // $reel->generationFreeStacks($this, $game->original_id);
         }
         public function SetGameData($key, $value)
         {
@@ -583,7 +499,7 @@ namespace VanguardLTE\Games\WildBoosterPM
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
             // exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
-        public function SetBank($slotState = '', $sum, $slotEvent = '')
+        public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -595,6 +511,11 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
+            if($isFreeSpin == true){
+                $game->set_gamebank($sum, 'inc', 'bonus');
+                $game->save();
+                return $game;
+            }
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {
                 if($slotState == 'bonus'){
@@ -611,8 +532,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                         $game->set_gamebank($diffMoney, 'inc', '');
                     }
                     $sum = $sum - $diffMoney;
-                }
-                else {
+                }else{
                     if ($sum < 0){
                         $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                     }
@@ -626,7 +546,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = $_obf_currentpercent / 3;
+                $_obf_bonus_percent = 10;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -674,6 +594,8 @@ namespace VanguardLTE\Games\WildBoosterPM
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
+            $game->set_gamebank($sum, 'inc', $slotState);
+            $game->save();
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -742,6 +664,9 @@ namespace VanguardLTE\Games\WildBoosterPM
             else if( $slotState == 'bet' ) 
             {
                 $_obf_slotstate = $this->slotId . '';
+            }else if( $slotState == 'doSpin' ) 
+            {
+                $_obf_slotstate = $this->slotId . ' Tumb';
             }
             else if( $slotState == 'slotGamble' ) 
             {
@@ -788,21 +713,6 @@ namespace VanguardLTE\Games\WildBoosterPM
                 ]);
             }
         }
-        public function GenerateFreeSpinCount($slotEvent){
-            $freeSpins = [
-                [80, 15, 5],
-                [3, 4, 5]
-            ];
-            $percent = rand(0, 70);
-            $sum = 0;
-            for($i = 0; $i < count($freeSpins[0]); $i++){
-                $sum = $sum + $freeSpins[0][$i];
-                if($percent <= $sum){
-                    return $freeSpins[1][$i];
-                }
-            }
-            return $freeSpins[1][0];
-        }
         public function saveGameLog($strLog, $roundID){
             \VanguardLTE\PPGameLog::create([
                 'game_id' => $this->slotDBId, 
@@ -815,19 +725,11 @@ namespace VanguardLTE\Games\WildBoosterPM
         public function GetFreeStack($betLine, $freespinType)
         {
             $winAvaliableMoney = $this->GetBank('bonus');
-            $limitOdd = 35;
-            if ($this->happyhouruser)
-            {
-                $limitOdd = floor($winAvaliableMoney / $betLine);
-            }
-            else
-            {
-                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
-                if($limitOdd < 35){
-                    $limitOdd = 35;
-                }else if($limitOdd > 100){
-                    $limitOdd = 100;
-                }
+            $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+            if($limitOdd < 30){
+                $limitOdd = 30;
+            }else if($limitOdd > 100){
+                $limitOdd = 100;
             }
             $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
                 $this->game->original_id, 
@@ -884,6 +786,16 @@ namespace VanguardLTE\Games\WildBoosterPM
             $game->save();
             return $isFreeStack;
         }
+        public function CheckMultiWild(){
+            $percent = rand(0, 100);
+            if($percent < 90){
+                return 2;
+            }else if($percent < 98){
+                return 3;
+            }else{
+                return 5;
+            }
+        }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
             $_obf_linecount = 10;
@@ -915,7 +827,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                     $_obf_linecount = 10;
                     break;
             }
-            if( $garantType != 'doSpin' ) 
+            if( $garantType != 'doSpin' &&  $garantType != 'tumbspin') 
             {
                 $_obf_granttype = '_bonus';
             }
@@ -951,16 +863,16 @@ namespace VanguardLTE\Games\WildBoosterPM
             $game->{'garant_win' . $_obf_granttype . $_obf_linecount} = $_obf_grantwin_count;
             $game->{'garant_bonus' . $_obf_granttype . $_obf_linecount} = $_obf_grantbonus_count;
             $game->save();
-            // if ($this->happyhouruser)
-            // {
-            //     $bonus_spin = rand(1, 10);
-            //     $spin_percent = 5;
-            //     if ($garantType == 'freespin')
-            //     {
-            //         $spin_percent = 3;
-            //     }
-            //     $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
-            // }
+            if ($this->happyhouruser)
+            {
+                $bonus_spin = rand(1, 10);
+                $spin_percent = 5;
+                if ($garantType == 'freespin')
+                {
+                    $spin_percent = 3;
+                }
+                $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
@@ -970,7 +882,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                     'bonus', 
                     $_obf_currentbank
                 ];
-                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet)  && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
+                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet)   && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 
@@ -1031,7 +943,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                     $_obf_linecount = 10;
                     break;
             }
-            if( $garantType != 'doSpin' ) 
+            if( $garantType != 'doSpin' && $garantType != 'tumbspin' ) 
             {
                 $_obf_granttype = '_bonus';
             }
@@ -1050,6 +962,42 @@ namespace VanguardLTE\Games\WildBoosterPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
+        public function GetBuyFreespinRandomScatterPos($rp, $isdoubleScatter = false)
+        {
+            $_obf_scatterposes = [];
+            for( $i = 0; $i < count($rp); $i++ ) 
+            {
+                if( $rp[$i] == '1' ) 
+                {
+                    array_push($_obf_scatterposes, $i);
+                }
+            }
+            $double_scatterposes = [];
+            $single_scatterposes = [];
+            for($i = 0; $i < count($_obf_scatterposes); $i++){
+                if(isset($_obf_scatterposes[$i + 1]) && ($_obf_scatterposes[$i + 1] - $_obf_scatterposes[$i]) <= 4){
+                    array_push($double_scatterposes, $_obf_scatterposes[$i]);
+                    $i++;
+                }else{
+                    array_push($single_scatterposes, $_obf_scatterposes[$i]);
+                }
+            }
+            shuffle($double_scatterposes);
+            shuffle($single_scatterposes);
+            if( !isset($double_scatterposes[0]) ) 
+            {
+                $double_scatterposes[0] = rand(2, count($rp) - 3);
+            }
+            if( !isset($single_scatterposes[0]) ) 
+            {
+                $single_scatterposes[0] = rand(2, count($rp) - 3);
+            }
+            if($isdoubleScatter == true){
+                return $double_scatterposes[0];
+            }else{
+                return $single_scatterposes[0];
+            }
+        }
         public function GetRandomScatterPos($rp)
         {
             $_obf_scatterposes = [];
@@ -1067,34 +1015,209 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             return $_obf_scatterposes[0];
         }
-        public function GetWildMul($spinType){
-            $wildMuls = [
-                [2, 5, 10, 100],
-                [3, 6, 12, 50]
-            ];
-            return $wildMuls[$spinType];
-        }
-        public function GetNormalWildMul(){
-            $wildMuls = [
-                [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 25, 50, 100],
-                [80, 10, 5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1]
-            ];
-            $percent = mt_rand(0, 98);
-            $sum = 0;
-            for($i = 0; $i < 13; $i++){
-                $sum = $sum + $wildMuls[1][$i];
-                if($sum > $percent){
-                    return $wildMuls[0][$i];
-                }
-            }
-            return $wildMuls[0][0];
-        }
         public function GetGambleSettings()
         {
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetReelStrips($winType, $slotEvent, $slotReelId, $scattercount)
+        public function GetBonusMul($isTumb, $winType){
+            if($isTumb == true || $winType != 'none'){
+                $percent = rand(0, 90);
+                $bonusMuls = [
+                    [30,23,13,9,7,3,2,1,1,1,3,3,3],
+                    [2,3,4,5,6,8,10,12,15,20,25,50,100]
+                ];
+            }else{
+                $percent = rand(0, 95);
+                $bonusMuls = [
+                    [5,5,5,10,10,10,10,10,10,10,5,5,5],
+                    [2,3,4,5,6,8,10,12,15,20,25,50,100]
+                ];
+            }
+            $sum = 0;
+            for($i = 0; $i < count($bonusMuls[0]); $i++){
+                $sum = $sum + $bonusMuls[0][$i];
+                if($percent <= $sum){
+                    return $bonusMuls[1][$i];
+                }
+            }
+            return $bonusMuls[1][0];
+        }
+        public function GenerateFreeSpinCount(){
+            $freeSpins = [
+                [85, 10, 3, 2],
+                [3, 4, 5, 6]
+            ];
+            $percent = rand(0, 90);
+            $sum = 0;
+            for($i = 0; $i < count($freeSpins[0]); $i++){
+                $sum = $sum + $freeSpins[0][$i];
+                if($percent <= $sum){
+                    return $freeSpins[1][$i];
+                }
+            }
+            return $freeSpins[1][0];
+        }
+        public function GetLastReel($lastReel, $lastBinaryReel, $bonusPoses){            
+            $reels = [[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]];
+            for($i = 0; $i < 49; $i++){
+                if($lastBinaryReel[$i] > 0){
+                    $lastReel[$i] = -1;
+                }
+                $reels[floor($i % 7)][$i / 7] = $lastReel[$i];
+            }
+            for($i = 0; $i < 7; $i++){
+                for($j = 6; $j >=1; $j--){
+                    if($reels[$i][$j] == -1){
+                        $k = 1;
+                        while($j >= $k){
+                            if($reels[$i][$j -$k] != -1){
+                                $reels[$i][$j] = $reels[$i][$j -$k];
+                                $reels[$i][$j -$k] = -1;
+                                for($bi = 0; $bi < count($bonusPoses); $bi++){
+                                    if($bonusPoses[$bi] == ($j -$k) * 7 + $i){
+                                        $bonusPoses[$bi] = ($j) * 7 + $i;
+                                    }
+                                }
+                                break;
+                            }else{
+                                $k++;
+                            }
+                        }                 
+                    }
+                }
+            }
+            return [$reels, $bonusPoses];
+        }
+        public function GetTumbReelIndex($key, $lastSymbol){
+            $rc = count($key);
+            $symbol_poses = [];
+            for( $i = 1; $i < $rc; $i++ ) 
+            {
+                if( ($key[$i] != $lastSymbol && $key[$i] == $key[$i -1]) || $key[$i] == 1 || $key[$i] != 12 ) 
+                {
+                    array_push($symbol_poses, $i);
+                }
+            }
+            shuffle($symbol_poses);
+            if( !isset($symbol_poses[0]) ) 
+            {
+                $symbol_poses[0] = rand(2, count($rp) - 3);
+            }
+            return $symbol_poses[0];
+        }
+        public function GetTumbReelStrips($lastReel, $slotReelId){
+            $slotReelId = $slotReelId + 1;
+            $reel = [
+                'rp' => []
+            ];
+            for($i = 1; $i <= 7; $i++){
+                $key = $this->{'reelStrip'.$slotReelId . '_' . $i};
+                $rc = count($key);
+                $reel['reel' . $i] = [];
+                $lastIndex = -1;
+                for($k = 6; $k >= 0; $k--){
+                    if($lastReel[$i - 1][$k] > -1){
+                        $reel['reel' . $i][$k] = $lastReel[$i - 1][$k];
+                    }else{
+                        if($lastIndex > -1 || $k == 6 || $reel['reel' . $i][$k + 1] == 1 || $reel['reel' . $i][$k + 1] == 12 || ($k < 5 && $reel['reel' . $i][$k + 1] == $reel['reel' . $i][$k + 2])){                                
+                            if($lastIndex == -1){
+                                if($k == 6){
+                                    $lastIndex = $this->GetTumbReelIndex($key, 1);
+                                }else{
+                                    $lastIndex = $this->GetTumbReelIndex($key, $reel['reel' . $i][$k + 1]);
+                                }
+                            }
+                            $reel['reel' . $i][$k] = $key[$lastIndex];
+                            $lastIndex = ($lastIndex - 1 + $rc) % $rc;
+                        }else{
+                            $reel['reel' . $i][$k] = $reel['reel' . $i][$k + 1];
+                            $lastIndex = $this->GetTumbReelIndex($key, $reel['reel' . $i][$k + 1]);
+                        }
+                    }
+                }
+                $reel['reel' . $i][-1] = rand(3, 9);
+                $reel['reel' . $i][7] = rand(3, 9);
+                $reel['rp'][$i] = $lastIndex;
+            }
+            return $reel;
+        }
+        public function GetBuyFreeSpinReelStrips($scattercount = 0)
+        {
+            $_obf_reelStripNumber = [
+                1, 
+                2, 
+                3, 
+                4, 
+                5,
+                6,
+                7
+            ];
+            $scatterStripReelNumber = $this->GetRandomNumber(0, 7, $scattercount - 1);
+            $doubleReelIndex = $scatterStripReelNumber[0];
+            for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
+            {
+                $issame = false;
+                for($j = 0; $j < $scattercount - 1; $j++){
+                    if($i == $scatterStripReelNumber[$j]){
+                        $issame = true;
+                        break;
+                    }
+                }
+                if($issame == true){
+                    $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetBuyFreespinRandomScatterPos($this->{'reelStrip5_'. $_obf_reelStripNumber[$i]}, $doubleReelIndex == $i);
+                }else{
+                    $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStrip5_'. $_obf_reelStripNumber[$i]}));
+                }
+            }
+            
+            $reel = [
+                'rp' => []
+            ];
+            foreach( $_obf_reelStripCounts as $index => $value ) 
+            {
+                $key = $this->{'reelStrip5_' . $index};
+                // if($slotEvent=='freespin'){
+                //     $key = $this->{'reelStripBonus' . $index};
+                // }
+                $rc = count($key);
+                $key[-1] = $key[$rc - 1];
+                $key[$rc] = $key[0];
+                $reel['reel' . $index][-1] = $key[$value - 1];
+                $diffNum = 1;               
+                if($doubleReelIndex == $index - 1) {
+                    $scatterPos = mt_rand(0, 1);
+                }else{
+                    $scatterPos = rand(0, 70);
+                    if($scatterPos < 10){
+                        $scatterPos = 0;
+                    }else if($scatterPos < 20){
+                        $scatterPos = 1;
+                    }else if($scatterPos < 30){
+                        $scatterPos = 2;
+                    }else if($scatterPos < 40){
+                        $scatterPos = 3;
+                    }else if($scatterPos < 50){
+                        $scatterPos = 4;
+                    }else if($scatterPos < 60){
+                        $scatterPos = 5;
+                    }else{
+                        $scatterPos = 6;
+                    }
+                }
+                $reel['reel' . $index][0] = $key[abs($value - $scatterPos * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][1] = $key[abs($value + (1 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][2] = $key[abs($value + (2 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][3] = $key[abs($value + (3 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][4] = $key[abs($value + (4 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][5] = $key[abs($value + (5 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][6] = $key[abs($value + (6 - $scatterPos) * $diffNum + $rc) % $rc];
+                $reel['reel' . $index][7] = rand(3, 9);
+                $reel['rp'][$index] = $value - $scatterPos;
+            }
+            return $reel;
+        }
+        public function GetReelStrips($winType, $slotEvent, $slotReelId, $scattercount = 0)
         {
             $slotReelId = $slotReelId + 1;
             $isScatter = false;
@@ -1106,12 +1229,14 @@ namespace VanguardLTE\Games\WildBoosterPM
                     'reelStrip'.$slotReelId.'_2', 
                     'reelStrip'.$slotReelId.'_3', 
                     'reelStrip'.$slotReelId.'_4', 
-                    'reelStrip'.$slotReelId.'_5'
+                    'reelStrip'.$slotReelId.'_5', 
+                    'reelStrip'.$slotReelId.'_6', 
+                    'reelStrip'.$slotReelId.'_7'
                 ] as $index => $reelStrip ) 
                 {
                     if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                     {
-                        $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 4);
+                        $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip));
                     }
                 }
             }
@@ -1122,9 +1247,11 @@ namespace VanguardLTE\Games\WildBoosterPM
                     2, 
                     3, 
                     4, 
-                    5
+                    5,
+                    6,
+                    7
                 ];
-                $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
+                $scatterStripReelNumber = $this->GetRandomNumber(0, 7, $scattercount);
                 for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                 {
                     $issame = false;
@@ -1138,7 +1265,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                         $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip'.$slotReelId .'_'. $_obf_reelStripNumber[$i]});
                         $isScatter = true;
                     }else{
-                        $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStrip'.$slotReelId .'_'. $_obf_reelStripNumber[$i]}) - 4);
+                        $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStrip'.$slotReelId .'_'. $_obf_reelStripNumber[$i]}));
                     }
                 }
             }
@@ -1149,40 +1276,59 @@ namespace VanguardLTE\Games\WildBoosterPM
             foreach( $_obf_reelStripCounts as $index => $value ) 
             {
                 $key = $this->{'reelStrip'.$slotReelId . '_' . $index};
+                // if($slotEvent=='freespin'){
+                //     $key = $this->{'reelStripBonus' . $index};
+                // }
                 $rc = count($key);
                 $key[-1] = $key[$rc - 1];
                 $key[$rc] = $key[0];
-                $reel['reel' . $index][-1] = rand(7, 11);
-                $diffNum = 1;
-                
+                $reel['reel' . $index][-1] = $key[$value - 1];
+                $diffNum = 1;                
+                $scatterPos = 0;
                 if($isScatter == false){
                     $reel['reel' . $index][0] = $key[$value];
                     $reel['reel' . $index][1] = $key[($value + $diffNum) % $rc];
                     $reel['reel' . $index][2] = $key[($value + 2 * $diffNum) % $rc];
+                    $reel['reel' . $index][3] = $key[($value + 3  * $diffNum) % $rc];
+                    $reel['reel' . $index][4] = $key[($value + 4  * $diffNum) % $rc];
+                    $reel['reel' . $index][5] = $key[($value + 5  * $diffNum) % $rc];
+                    $reel['reel' . $index][6] = $key[($value + 6  * $diffNum) % $rc];
                 }else{
-                    $scatterPos = rand(0, 100);
-                    if($scatterPos < 35){
+                    $scatterPos = rand(0, 70);
+                    if($scatterPos < 10){
                         $scatterPos = 0;
-                    }else if($scatterPos < 70){
+                    }else if($scatterPos < 20){
                         $scatterPos = 1;
-                    }else{
+                    }else if($scatterPos < 30){
                         $scatterPos = 2;
+                    }else if($scatterPos < 40){
+                        $scatterPos = 3;
+                    }else if($scatterPos < 50){
+                        $scatterPos = 4;
+                    }else if($scatterPos < 60){
+                        $scatterPos = 5;
+                    }else{
+                        $scatterPos = 6;
                     }
                     $reel['reel' . $index][0] = $key[abs($value - $scatterPos * $diffNum) % $rc];
                     $reel['reel' . $index][1] = $key[abs($value + (1 - $scatterPos) * $diffNum) % $rc];
                     $reel['reel' . $index][2] = $key[abs($value + (2 - $scatterPos) * $diffNum) % $rc];
+                    $reel['reel' . $index][3] = $key[abs($value + (3 - $scatterPos) * $diffNum) % $rc];
+                    $reel['reel' . $index][4] = $key[abs($value + (4 - $scatterPos) * $diffNum) % $rc];
+                    $reel['reel' . $index][5] = $key[abs($value + (5 - $scatterPos) * $diffNum) % $rc];
+                    $reel['reel' . $index][6] = $key[abs($value + (6 - $scatterPos) * $diffNum) % $rc];
                 }
-                
-                $reel['reel' . $index][3] = rand(7, 11);
-                $reel['rp'][] = $value;
+                $reel['reel' . $index][7] = rand(3, 9);
+                $reel['rp'][$index] = $value - $scatterPos;
             }
             return $reel;
         }
-        public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=3){
+
+        public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=4){
             $random = [];
             $tmp_random = [];
             $ino = 0;
-            for($i=$num_first;$i<=$num_last;$i++) {
+            for($i=$num_first;$i<$num_last;$i++) {
                 $tmp_random[$ino] = $i;
                 $ino++;
             }
@@ -1203,92 +1349,6 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             return $random;
         }
-        public function isScatterUpDownSame(){
-            $maskCounts = $this->GetGameData($this->slotId . 'scatterUpDownSameMaskCounts');
-            $scatterUpDownCounts = [1,1,1,1,1,1,0,0,0,0];
-            $count = 0;
-            for($i = 0; $i < 10; $i++){
-                if($maskCounts[$i] == 1){
-                    $count++;
-                }
-            }
-            if($count == 10){
-                $maskCounts = [0,0,0,0,0,0,0,0,0,0];
-                $count = 0;
-            }
-            $ismask = 0;
-            if($count > 8){
-                for($i = 0; $i < 10; $i++){
-                    if($maskCounts[$i] == 0){
-                        $maskCounts[$i] = 1;
-                        $ismask = $scatterUpDownCounts[$i];
-                    }
-                }
-            }else{
-                while(true){
-                    $count_index = mt_rand(0, 9);
-                    if($maskCounts[$count_index] == 0){
-                        $maskCounts[$count_index] = 1;
-                        $ismask = $scatterUpDownCounts[$count_index];
-                        break;
-                    }
-                }
-            }
-            $this->SetGameData($this->slotId . 'scatterUpDownSameMaskCounts', $maskCounts);
-            if($ismask == 0){
-                return false;
-            }else{
-                return true;
-            }
-        }
-        public function CheckDuplicationSymbol($reels){
-            for($i = 1; $i <= 5; $i++){                
-                $scatterPos = -1;
-                $wildPos = -1;
-                for($j = 0; $j < 3; $j++){
-                    if($reels['reel' . $i][$j] == 1){
-                        $scatterPos = $j;
-                    }else if($reels['reel' . $i][$j] == 2){
-                        $wildPos = $j;
-                    }
-                }
-                if($scatterPos >= 0 && $wildPos >= 0){
-                    $reels['reel' . $i][$wildPos] = $this->GetNoDuplicationSymbol($reels['reel' . $i][$scatterPos], $reels['reel' . $i][$wildPos]);
-                    $wildPos = -1;
-                }
-                if($scatterPos >= 0 || $wildPos >= 0){
-                    if($scatterPos == 0 || $wildPos == 0){
-                        $reels['reel' . $i][1] = mt_rand(8, 11);
-                    }else if($scatterPos == 1 || $wildPos == 1){
-                        $reels['reel' . $i][2] = mt_rand(8, 11);
-                        $reels['reel' . $i][0] = $this->GetNoDuplicationSymbol($reels['reel' . $i][$scatterPos], $reels['reel' . $i][2]);
-                    }else if($scatterPos == 2 || $wildPos == 2){
-                        $reels['reel' . $i][1] = mt_rand(8, 11);
-                    }
-                }
-                if($reels['reel' . $i][1] == $reels['reel' . $i][0]){
-                    $reels['reel' . $i][1] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][2]);
-                }
-                if($reels['reel' . $i][2] == $reels['reel' . $i][0]){
-                    $reels['reel' . $i][2] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][1]);
-                }
-                if($reels['reel' . $i][2] == $reels['reel' . $i][1]){
-                    $reels['reel' . $i][2] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][1]);
-                }
-
-                if($scatterPos == 1 && $this->isScatterUpDownSame()){
-                    $reels['reel' . $i][2] = $reels['reel' . $i][0];
-                }
-            }
-            return $reels;
-        }
-        public function GetNoDuplicationSymbol($first, $second){
-            while(true){
-                $sym = rand(8, 11);
-                if($sym != $first && $sym != $second){
-                    return $sym;
-                }
-            }
-        }
     }
+
 }
