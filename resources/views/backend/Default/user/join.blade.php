@@ -28,6 +28,7 @@
 					<table class="table table-bordered table-striped">
 					<thead>
 						<tr>
+							<th style="width:5%;">블랙검사</th>
 							<th>이름(아이디)</th>
 							<?php
 								for ($r=3;$r<auth()->user()->role_id;$r++)
@@ -54,6 +55,7 @@
 						</tbody>
 						<thead>
 						<tr>
+							<th style="width:5%;">블랙검사</th>
 							<th>이름(아이디)</th>
 							<?php
 								for ($r=3;$r<auth()->user()->role_id;$r++)
@@ -324,6 +326,14 @@
 
 		$(function() {
 
+			$('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+				checkboxClass: 'icheckbox_flat-green',
+				radioClass   : 'iradio_flat-green'
+			});
+			$('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+				checkboxClass: 'icheckbox_flat-red',
+				radioClass   : 'iradio_flat-red'
+			})
 			$('.allowJoin').click(function(event){
 				if( $(event.target).is('.newPayment') ){
 					var id = $(event.target).attr('data-id');
