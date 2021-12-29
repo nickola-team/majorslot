@@ -666,7 +666,7 @@ namespace VanguardLTE\Games\FruitPartyPM
                 $_obf_slotstate = $this->slotId . '';
             }else if( $slotState == 'doSpin' ) 
             {
-                $_obf_slotstate = $this->slotId . ' Tumb';
+                $_obf_slotstate = $this->slotId . '';
             }
             else if( $slotState == 'slotGamble' ) 
             {
