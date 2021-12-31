@@ -793,7 +793,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                 [80, 15, 5],
                 [3, 4, 5]
             ];
-            $percent = rand(0, 95);
+            $percent = rand(0, 70);
             $sum = 0;
             for($i = 0; $i < count($freeSpins[0]); $i++){
                 $sum = $sum + $freeSpins[0][$i];
@@ -1203,7 +1203,44 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             return $random;
         }
-        
+        public function isScatterUpDownSame(){
+            $maskCounts = $this->GetGameData($this->slotId . 'scatterUpDownSameMaskCounts');
+            $scatterUpDownCounts = [1,1,1,1,1,1,0,0,0,0];
+            $count = 0;
+            for($i = 0; $i < 10; $i++){
+                if($maskCounts[$i] == 1){
+                    $count++;
+                }
+            }
+            if($count == 10){
+                $maskCounts = [0,0,0,0,0,0,0,0,0,0];
+                $count = 0;
+            }
+            $ismask = 0;
+            if($count > 8){
+                for($i = 0; $i < 10; $i++){
+                    if($maskCounts[$i] == 0){
+                        $maskCounts[$i] = 1;
+                        $ismask = $scatterUpDownCounts[$i];
+                    }
+                }
+            }else{
+                while(true){
+                    $count_index = mt_rand(0, 9);
+                    if($maskCounts[$count_index] == 0){
+                        $maskCounts[$count_index] = 1;
+                        $ismask = $scatterUpDownCounts[$count_index];
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'scatterUpDownSameMaskCounts', $maskCounts);
+            if($ismask == 0){
+                return false;
+            }else{
+                return true;
+            }
+        }
         public function CheckDuplicationSymbol($reels){
             for($i = 1; $i <= 5; $i++){                
                 $scatterPos = -1;
@@ -1237,6 +1274,10 @@ namespace VanguardLTE\Games\WildBoosterPM
                 }
                 if($reels['reel' . $i][2] == $reels['reel' . $i][1]){
                     $reels['reel' . $i][2] = $this->GetNoDuplicationSymbol($reels['reel' . $i][0], $reels['reel' . $i][1]);
+                }
+
+                if($scatterPos == 1 && $this->isScatterUpDownSame()){
+                    $reels['reel' . $i][2] = $reels['reel' . $i][0];
                 }
             }
             return $reels;
