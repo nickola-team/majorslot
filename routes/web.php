@@ -669,10 +669,19 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@tree',
         'middleware' => 'permission:users.tree'
     ]);
+
+    Route::get('partner/black', [
+        'as' => 'backend.user.black',
+        'uses' => 'UsersController@blacklist',
+    ]);    
+
     Route::get('partner/{role_id}', [
         'as' => 'backend.user.partner',
         'uses' => 'UsersController@partner',
     ]);
+
+
+    
     Route::get('statistics', [
         'as' => 'backend.statistics',
         'uses' => 'DashboardController@statistics',

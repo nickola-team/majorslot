@@ -347,6 +347,35 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $msg = $succeed . '명의 회원을 생성하였습니다. 실패 ' . $failed . '명';
             return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
+        public function blacklist(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user->hasRole('admin'))
+            {
+                return redirect()->back()->withErrors('비정상적인 접근입니다.');
+            }
+            $blacklist = \VanguardLTE\BlackList::orderby('id');
+
+            if( $request->search != '' ) 
+            {
+                $blacklist = $blacklist->where('name', 'like', '%'.$request->search.'%');
+            }
+
+            if( $request->phone != '' ) 
+            {
+                $blacklist = $blacklist->where('phone', 'like', '%'.$request->phone.'%');
+            }
+
+            if( $request->account != '' ) 
+            {
+                $blacklist = $blacklist->where('account_number', 'like', '%'.$request->account.'%');
+            }
+
+            $blacklist = $blacklist->paginate(20);
+
+            return view('backend.Default.user.blacklist',  compact('blacklist'));
+        }
+
         public function partner($role_id, \Illuminate\Http\Request $request)
         {
             $user = auth()->user();
@@ -356,6 +385,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors('비정상적인 접근입니다.');
             }
+            
 
             $partners = \VanguardLTE\User::where('status', '<>',\VanguardLTE\Support\Enum\UserStatus::DELETED)->where('role_id', $role_id)->whereIn('id', $users);
 

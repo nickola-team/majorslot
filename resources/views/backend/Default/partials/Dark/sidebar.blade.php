@@ -146,6 +146,13 @@
                             <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}</span>
                         </a>
                     </li>
+
+                    <li class="{{ Request::is('slot/partner/black') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.user.black') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>블랙리스트</span>
+                        </a>
+                    </li>
                     @endif
                 </ul>
             </li>
