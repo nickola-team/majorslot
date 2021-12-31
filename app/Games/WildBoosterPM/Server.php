@@ -375,11 +375,11 @@ namespace VanguardLTE\Games\WildBoosterPM
                     $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'); 
                     
                     // free stacks
-                    if($slotSettings->happyhouruser){
+                    // if($slotSettings->happyhouruser){
                         $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
                         if(count($freeStacks) >= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
                             $isGeneratedFreeStack = true;
-                        }
+                        // }
                     }
                     if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') == 0){
                         $winType = 'win';

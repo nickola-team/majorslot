@@ -368,6 +368,10 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             // $reel->generationFreeStacks($this, $game->original_id);
         }
+        public function genfree(){
+            $reel = new GameReel();
+            $reel->generationFreeStacks($this, $this->game->original_id);
+        }
         public function SetGameData($key, $value)
         {
             $diffIndex = 86400;
