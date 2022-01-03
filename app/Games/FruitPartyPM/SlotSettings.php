@@ -794,14 +794,11 @@ namespace VanguardLTE\Games\FruitPartyPM
             $game->save();
             return $isFreeStack;
         }
-        public function CheckMultiWild(){
-            $percent = rand(0, 100);
-            if($percent < 90){
-                return 2;
-            }else if($percent < 98){
-                return 3;
+        public function IsBonusMul($slotEvent){
+            if($slotEvent == 'freespin'){
+                return true;
             }else{
-                return 5;
+                return mt_rand(0, 100) < 20 ? true : false;
             }
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
@@ -1052,6 +1049,7 @@ namespace VanguardLTE\Games\FruitPartyPM
             return $bonusMuls[1][0];
         }
         public function GenerateFreeSpinCount(){
+            return 3;
             $freeSpins = [
                 [85, 10, 3, 2],
                 [3, 4, 5, 6]
