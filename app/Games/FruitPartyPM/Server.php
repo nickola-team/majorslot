@@ -287,8 +287,8 @@ namespace VanguardLTE\Games\FruitPartyPM
                 // $winType = 'win';
                 // $_winAvaliableMoney = $slotSettings->GetBank('');
                 $isBonusMul = false;
-                if($winType == 'win' && mt_rand(0, 100) < 100){
-                    $isBonusMul = true;
+                if($winType == 'win'){
+                    $isBonusMul = $slotSettings->IsBonusMul($slotEvent['slotEvent']);
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
