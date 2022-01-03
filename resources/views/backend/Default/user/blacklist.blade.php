@@ -22,7 +22,19 @@
 					<div class="col-md-6">
 						<div class="form-group">
 						<label>이름</label>
-						<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="@lang('app.search_for_users')">
+						<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="이름">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+						<label>폰번호</label>
+						<input type="text" class="form-control" name="phone" value="{{ Request::get('phone') }}" placeholder="폰번호">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+						<label>계좌번호</label>
+						<input type="text" class="form-control" name="account" value="{{ Request::get('account') }}" placeholder="계좌번호">
 						</div>
 					</div>
 			
@@ -41,7 +53,7 @@
 					<h3 class="box-title">블랙리스트</h3>
 					<div class="pull-right box-tools">
 						@if (Auth::user()->hasRole('admin'))
-						<a href="{{ route($admurl.'.user.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
+						<a href="{{ route($admurl.'.black.create') }}" class="btn btn-block btn-primary btn-sm">@lang('app.add')</a>
 						@endif
 					</div>
 				</div>

@@ -95,7 +95,7 @@
                         </a>
                     </li>
                     <li class="{{ Request::is('backend/partner/black') ? 'active' : ''  }}">
-                        <a  href="{{ route($admurl.'.user.black') }}">
+                        <a  href="{{ route($admurl.'.black.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>블랙리스트</span>
                         </a>

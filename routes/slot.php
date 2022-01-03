@@ -263,10 +263,18 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@tree',
         'middleware' => 'permission:users.tree'
     ]);
-    Route::get('partner/black', [
-        'as' => 'slot.user.black',
+    Route::get('black', [
+        'as' => 'slot.black.list',
         'uses' => 'UsersController@blacklist',
-    ]);   
+    ]);
+    Route::get('black/create', [
+        'as' => 'slot.black.create',
+        'uses' => 'UsersController@blackcreate',
+    ]);
+    Route::post('black/create', [
+        'as' => 'slot.black.store',
+        'uses' => 'UsersController@blackstore',
+    ]);
     Route::get('partner/{role_id}', [
         'as' => 'slot.user.partner',
         'uses' => 'UsersController@partner',

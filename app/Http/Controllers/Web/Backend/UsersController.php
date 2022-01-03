@@ -511,6 +511,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             return view('backend.Default.user.view', compact('user', 'userActivities'));
         }
+        public function blackcreate()
+        {
+            return view('backend.Default.user.blackcreate');
+        }
+        public function blackstore(\Illuminate\Http\Request $request)
+        {
+            $data = $request->all();
+            \VanguardLTE\BlackList::create($data);
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙리스트에 추가되었습니다');
+        }
         public function create()
         {
             $happyhour = \VanguardLTE\HappyHour::where([
