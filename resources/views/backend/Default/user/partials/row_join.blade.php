@@ -1,14 +1,7 @@
 <tr>
-	<td style="width:5%;">
 <?php
 	$black = $user->checkBlack();
 ?>	
-	@if ($black['count'] > 0)
-	<a href="#"data-tooltip="tooltip" title="{{$black['name']}}"><input type="radio" class="flat-red" checked></a>
-	@else
-		<input type="radio" class="flat-green" checked>
-	@endif
-	</td>
     <td>
         <a href="{{ route($admurl.'.user.edit', $user->id) }}">
             {{ $user->username ?: trans('app.n_a') }}
@@ -38,7 +31,7 @@
 
 	<td>
 		@if ($black['phone'])
-			<a href="#"data-tooltip="tooltip" title="{{$black['phone']}}" style="background:#d73925;">
+			<a href="{{auth()->user()->hasRole('admin')?route($admurl.'.black.list', ['phone'=>$user->phone]):'#'}}" data-tooltip="tooltip" title="{{$black['phone']}}" style="background:#d73925;">
 			{{ $user->phone }}
 			</a>
 		@else
@@ -47,7 +40,7 @@
 	</td>
 	<td>
 		@if ($black['account'])
-			<a href="#"data-tooltip="tooltip" title="{{$black['account']}}" style="background:#d73925;">
+			<a href="{{auth()->user()->hasRole('admin')?route($admurl.'.black.list', ['account'=>$user->account_no]):'#'}}" data-tooltip="tooltip" title="{{$black['account']}}" style="background:#d73925;">
 			{{"[ " . $user->bank_name . " ] ". $user->account_no}}
 			</a>
 		@else
@@ -59,7 +52,7 @@
 	<td>
 		@if( auth()->user()->isInoutPartner())
 		<a class="newPayment allowJoin" href="#" data-toggle="modal" data-target="#openAllowModal" data-id="{{ $user->id }}" >
-		<button type="button" class="btn btn-block btn-success btn-xs">승인</button>
+		<button type="button" class="btn btn-block btn-success btn-xs" {{($black['count'] > 0)?'disabled':''}}>승인</button>
 		</a>
 		@endif
 	</td>

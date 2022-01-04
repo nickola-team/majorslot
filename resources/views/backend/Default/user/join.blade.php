@@ -28,7 +28,6 @@
 					<table class="table table-bordered table-striped">
 					<thead>
 						<tr>
-							<th style="width:5%;">블랙검사</th>
 							<th>이름(아이디)</th>
 							<?php
 								for ($r=3;$r<auth()->user()->role_id;$r++)
@@ -55,7 +54,6 @@
 						</tbody>
 						<thead>
 						<tr>
-							<th style="width:5%;">블랙검사</th>
 							<th>이름(아이디)</th>
 							<?php
 								for ($r=3;$r<auth()->user()->role_id;$r++)
