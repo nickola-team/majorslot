@@ -515,6 +515,38 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         {
             return view('backend.Default.user.blackcreate');
         }
+        public function blackedit($blackid)
+        {
+            $user = \VanguardLTE\BlackList::where('id', $blackid)->first();
+            if (!$user)
+            {
+                return redirect()->route(config('app.admurl').'.black.list');
+            }
+            return view('backend.Default.user.blackedit', compact('user'));
+        }
+        public function blackupdate($blackid, \Illuminate\Http\Request $request)
+        {
+            $data = $request->only(
+                [
+                    'name',
+                    'phone',
+                    'account_bank',
+                    'account_name',
+                    'account_number',
+                    'memo',
+                ]
+            );
+            $user = \VanguardLTE\BlackList::where('id', $blackid);
+            if ($user){
+                $user->update($data);
+            }
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙정보가 수정되었습니다');
+        }
+        public function blackremove($blackid, \Illuminate\Http\Request $request)
+        {
+            \VanguardLTE\BlackList::where('id', $blackid)->delete();
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙정보가 삭제되었습니다');
+        }
         public function blackstore(\Illuminate\Http\Request $request)
         {
             $data = $request->all();

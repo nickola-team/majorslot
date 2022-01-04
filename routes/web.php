@@ -682,6 +682,18 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.black.store',
         'uses' => 'UsersController@blackstore',
     ]);
+    Route::get('black/{blackid}/edit', [
+        'as' => 'backend.black.edit',
+        'uses' => 'UsersController@blackedit',
+    ]);  
+    Route::post('black/{blackid}/update', [
+        'as' => 'backend.black.update',
+        'uses' => 'UsersController@blackupdate',
+    ]);
+    Route::delete('black/{blackid}/remove', [
+        'as' => 'backend.black.remove',
+        'uses' => 'UsersController@blackremove',
+    ]);
 
     Route::get('partner/{role_id}', [
         'as' => 'backend.user.partner',

@@ -18,44 +18,7 @@
 			{!! Form::open(['route' => $admurl.'.black.store', 'id' => 'csv-upload-form']) !!}
 
             <div class="box-body">
-				<div class="row">
-					<div class="col-md-6">
-					<div class="form-group">
-                        <label>이름</label>
-                        <input type="text" class="form-control" name="name" placeholder="이름">
-					</div>
-					</div>
-					<div class="col-md-6">
-					<div class="form-group">
-                        <label>폰번호</label>
-                        <input type="text" class="form-control" name="phone" placeholder="">
-					</div>
-					</div>
-					<div class="col-md-6">
-					<div class="form-group">
-                        <label>은행</label>
-                        <input type="text" class="form-control" name="account_bank" placeholder="">
-					</div>
-					</div>
-					<div class="col-md-6">
-					<div class="form-group">
-                        <label>예금주</label>
-                        <input type="text" class="form-control" name="account_name" placeholder="">
-					</div>
-					</div>
-					<div class="col-md-6">
-					<div class="form-group">
-                        <label>계좌번호</label>
-                        <input type="text" class="form-control" name="account_number" placeholder="">
-					</div>
-					</div>
-					<div class="col-md-6">
-					<div class="form-group">
-                        <label>설명</label>
-                        <input type="text" class="form-control" name="memo" placeholder="">
-					</div>
-					</div>
-				</div>
+				@include('backend.Default.user.partials.blackbase', ['edit'=>false])
 				<div class="box-footer">
 					<button type="submit" class="btn btn-primary">
 						추가

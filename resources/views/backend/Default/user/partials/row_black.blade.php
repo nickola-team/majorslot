@@ -1,5 +1,5 @@
 <tr>
-    <td>{{$user->name}}</td>
+    <td><a href="{{route($admurl.'.black.edit', $user->id)}}" >{{$user->name}}</a></td>
 	<td>{{$user->phone}}</td>
 	<td>
 		@if ($user->account_number != null)

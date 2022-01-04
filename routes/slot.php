@@ -275,6 +275,21 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         'as' => 'slot.black.store',
         'uses' => 'UsersController@blackstore',
     ]);
+
+    Route::get('black/{blackid}/edit', [
+        'as' => 'slot.black.edit',
+        'uses' => 'UsersController@blackedit',
+    ]);  
+    Route::post('black/{blackid}/update', [
+        'as' => 'slot.black.update',
+        'uses' => 'UsersController@blackupdate',
+    ]);
+    Route::delete('black/{blackid}/remove', [
+        'as' => 'slot.black.remove',
+        'uses' => 'UsersController@blackremove',
+    ]);
+
+
     Route::get('partner/{role_id}', [
         'as' => 'slot.user.partner',
         'uses' => 'UsersController@partner',
