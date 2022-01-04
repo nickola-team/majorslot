@@ -84,7 +84,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent', 'distributor']) )
-            <li class="treeview {{ Request::is('slot/shops*') || Request::is('slot/partner/*') || Request::is('slot/user*') || Request::is('slot/join*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('slot/shops*') || Request::is('slot/partner/*') || Request::is('slot/user*') || Request::is('slot/join*') || Request::is('slot/black*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>파트너목록 <sup id="user_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -147,7 +147,7 @@
                         </a>
                     </li>
 
-                    <li class="{{ Request::is('slot/partner/black') ? 'active' : ''  }}">
+                    <li class="{{ Request::is('slot/black*') ? 'active' : ''  }}">
                         <a  href="{{ route($admurl.'.black.list') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>블랙리스트</span>
