@@ -284,6 +284,10 @@ namespace VanguardLTE\Games\FruitPartyPM
                 }
             }
         }
+        public function genfree(){
+            $reel = new GameReel();
+            $reel->generationFreeStacks($this, $this->game->original_id);
+        }
         public function SetGameData($key, $value)
         {
             $diffIndex = 86400;
@@ -1257,7 +1261,7 @@ namespace VanguardLTE\Games\FruitPartyPM
                     6,
                     7
                 ];
-                $scatterStripReelNumber = $this->GetRandomNumber(0, 7, $scattercount);
+                $scatterStripReelNumber = $this->GetRandomNumber(0, 6, $scattercount);
                 for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                 {
                     $issame = false;
