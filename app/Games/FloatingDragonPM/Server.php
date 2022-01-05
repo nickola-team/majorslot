@@ -453,6 +453,9 @@ namespace VanguardLTE\Games\FloatingDragonPM
                     else if($holdMoneyCount >= 3 && ($winType != 'bonus' || $slotEvent['slotEvent'] == 'freespin')){
 
                     }
+                    else if($holdMoneyCount == 1 && $reels['reel3'][1] == $holdMoneysymbol){
+                        
+                    }
                     else if($slotEvent['slotEvent'] == 'freespin' && (count($_obf_wildposes) > 2 || (count($_obf_wildposes) == 2 && mt_rand(0, 100) < 95) || $freeWildCount > $slotSettings->GetGameData($slotSettings->slotId . 'FinalWildCount') || $scattersCount > 0)){
 
                     }

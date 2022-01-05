@@ -77,6 +77,7 @@ namespace VanguardLTE\Games\FruitPartyPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -97,6 +98,9 @@ namespace VanguardLTE\Games\FruitPartyPM
                     }
                     if (isset($lastEvent->serverResponse->FreeStacks)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
+                    }
+                    if (isset($lastEvent->serverResponse->TotalRepeatFreeCount)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', $lastEvent->serverResponse->TotalRepeatFreeCount);
                     }
                 }
                 else
@@ -214,6 +218,13 @@ namespace VanguardLTE\Games\FruitPartyPM
                 $isGeneratedFreeStack = false;
                 $freeStacks = []; // free stacks
                 $isForceWin = false;
+                if($slotEvent['slotEvent'] == 'freespin'){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalRepeatFreeCount') + 1);
+                    $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
+                    if(count($freeStacks) >= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
+                        $isGeneratedFreeStack = true;
+                    }
+                }
                 if($slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') > 0){
                     $isTumb = true;
                     $reelsAndPoses = $slotSettings->GetLastReel($slotSettings->GetGameData($slotSettings->slotId . 'LastReel'), $slotSettings->GetGameData($slotSettings->slotId . 'BinaryReel'), $slotSettings->GetGameData($slotSettings->slotId . 'BonusMplPos'));
@@ -269,6 +280,7 @@ namespace VanguardLTE\Games\FruitPartyPM
                         $leftFreeGames = 0;
 
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
                     }
                 }
@@ -306,6 +318,10 @@ namespace VanguardLTE\Games\FruitPartyPM
                     $bonusMul = 0;
                     if($isGeneratedFreeStack == true){
                         //freestack
+                        $freeStack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalRepeatFreeCount') - 1];
+                        $reels = $freeStack['Reel'];
+                        $bonusMulReel = $freeStack['BonusMulReel'];
+                        $isBonusMul = $freeStack['IsBonusMul'];
                     }else{
                         if($isTumb == true && $lastReel != null){
                             $reels = $slotSettings->GetTumbReelStrips($lastReel, $reelSet_Num);
@@ -340,7 +356,9 @@ namespace VanguardLTE\Games\FruitPartyPM
                         }   
                     }
                     $binaryReel = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                    $bonusMulReel = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    if($isGeneratedFreeStack == false){
+                        $bonusMulReel = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    }
                     $bonusMulCount = 0;
                     $isNewTumb = false;
                     $arr_slm = [];
@@ -350,14 +368,21 @@ namespace VanguardLTE\Games\FruitPartyPM
                         $line_mul = 1;
                         for($k = 0; $k < count($arr_symbols); $k++){
                             $binaryReel[$arr_symbols[$k]] = $reels['reel' . ($arr_symbols[$k] % 7 + 1)][floor($arr_symbols[$k] / 7)];
-                            if($isBonusMul == true && $bonusMulReel[$arr_symbols[$k]] == 0 && mt_rand(0, 100) < 20){
-                                if(mt_rand(0, 100) < 97){
-                                    $bonusMulReel[$arr_symbols[$k]] = 2;
-                                }else{
-                                    $bonusMulReel[$arr_symbols[$k]] = 4;
+                            if($isGeneratedFreeStack == true){
+                                if($bonusMulReel[$arr_symbols[$k]] > 0){
+                                    $bonusMulCount++;
+                                    $line_mul = $line_mul * $bonusMulReel[$arr_symbols[$k]];
                                 }
-                                $bonusMulCount++;
-                                $line_mul = $line_mul * $bonusMulReel[$arr_symbols[$k]];
+                            }else{
+                                if($isBonusMul == true && $bonusMulReel[$arr_symbols[$k]] == 0 && mt_rand(0, 100) < 20){
+                                    if(mt_rand(0, 100) < 97){
+                                        $bonusMulReel[$arr_symbols[$k]] = 2;
+                                    }else{
+                                        $bonusMulReel[$arr_symbols[$k]] = 4;
+                                    }
+                                    $bonusMulCount++;
+                                    $line_mul = $line_mul * $bonusMulReel[$arr_symbols[$k]];
+                                }
                             }
                         }
                         $winLineMoney = $slotSettings->Paytable[$winLine['FirstSymbol']][$winLine['RepeatCount']] * $betline ;
@@ -481,6 +506,13 @@ namespace VanguardLTE\Games\FruitPartyPM
                         {
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freeSpinNum);
                             $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
+                        
+                            $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', 0);
+                            // FreeStack
+                            if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+    
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($betline, $scattersCount - 3));
+                            }
                         }
                         else
                         {
@@ -602,8 +634,8 @@ namespace VanguardLTE\Games\FruitPartyPM
                 array_push($replayLog, $current_replayLog);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
                 //------------ *** ---------------
-
-                $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"TumbState":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .   ',"freeBalance":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance') .  ',"tumbWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . ',"winLines":[],"Jackpots":""' .  ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"ReplayGameLogs":'.json_encode($replayLog) . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')). ',"strTmb":"'.$strtmp.  '","LastReel":'.json_encode($lastReel). ',"BinaryReel":'.json_encode($binaryReel).'}}';
+                
+                $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"TumbState":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .   ',"freeBalance":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance') .  ',"tumbWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . ',"winLines":[],"Jackpots":""' .  ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin').  ',"TotalRepeatFreeCount":'.$slotSettings->GetGameData($slotSettings->slotId . 'TotalRepeatFreeCount') . ',"ReplayGameLogs":'.json_encode($replayLog) . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')). ',"strTmb":"'.$strtmp.  '","LastReel":'.json_encode($lastReel). ',"BinaryReel":'.json_encode($binaryReel).'}}';
 
                 if($slotEvent['slotEvent'] == 'freespin' && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
                     $allBet = $betline * 2000;
@@ -651,16 +683,6 @@ namespace VanguardLTE\Games\FruitPartyPM
                 $this->findZokbos($reels, $i, $j - 1, $firstSymbol);
                 $bPathEnded = false;
             }
-
-            // if($bPathEnded == true){
-            //     if($this->repeatCount >= 5){
-            //         $winLine = [];
-            //         $winLine['FirstSymbol'] = $firstSymbol;
-            //         $winLine['RepeatCount'] = $this->repeatCount;
-            //         $winLine['StrLineWin'] = $this->strWinLinePos;
-            //         array_push($this->winLines, $winLine);
-            //     }
-            // }
         }
         public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
             $game_log = [];
