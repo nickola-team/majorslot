@@ -112,10 +112,14 @@ namespace VanguardLTE\Games\WildBoosterPM
             $scatter = '1';
             $scatterCounts = [3, 4, 5, 3, 4, 5];
             for($i = 0; $i < 6; $i++){
-                for($j = 0; $j < 3; $j++){
+                $bfinish = false;
+                while($bfinish == false){
                     $freespinType = floor($i / 3);
                     $wildMuls = $slotSettings->GetWildMul($freespinType);
                     $totalScatters = $scatterCounts[$i];
+                    // if($totalScatters > 3){
+                    //     break;
+                    // }
                     $totalWin = 0;
                     $totalReel = [];
                     $freespinCount = 5;
@@ -135,6 +139,7 @@ namespace VanguardLTE\Games\WildBoosterPM
                         }
                         for($kk = 0; $kk < 50; $kk++){
                             $reels = $slotSettings->GetReelStrips($winType, 'freespin', $currentReelSet, 0);
+                            $reels = $slotSettings->CheckDuplicationSymbol($reels);
                             $lineWinNum = [];
                             $lineWins = [];
                             $subtotalWin = 0;
@@ -200,6 +205,8 @@ namespace VanguardLTE\Games\WildBoosterPM
 
                             if($scattersCount >= 3 || ($totalScatters + $scattersCount) > 15){
 
+                            }else if($scattersCount == 2 && mt_rand(0, 100) < 70){
+
                             }else if($winType == 'win' && $subtotalWin > 0){
                                 break;
                             }else if($winType == 'none' && $subtotalWin == 0){
@@ -218,7 +225,18 @@ namespace VanguardLTE\Games\WildBoosterPM
                         $item['BonusMpl'] = $bonusMpl;
                         array_push($totalReel, $item);
                     }
-                    $this->SaveReel($game_id, $i, $totalReel, $totalWin, $freespinCount);
+                    if ($totalWin > 30 &&  $totalWin < 150) {
+                        $this->SaveReel($game_id, $i, $totalReel, $totalWin, $freespinCount);
+                    }
+                    $count = \VanguardLTE\PPGameFreeStack::where([
+                        'game_id' => $game_id, 
+                        'free_spin_type' => $i, 
+                    ])->count();
+                    if ($count > 10000)
+                    {
+                        $bfinish = true;
+                        break;
+                    }
                 }
             }
             $theEnd = false;

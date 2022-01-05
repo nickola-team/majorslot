@@ -669,10 +669,37 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@tree',
         'middleware' => 'permission:users.tree'
     ]);
+
+    Route::get('black', [
+        'as' => 'backend.black.list',
+        'uses' => 'UsersController@blacklist',
+    ]);    
+    Route::get('black/create', [
+        'as' => 'backend.black.create',
+        'uses' => 'UsersController@blackcreate',
+    ]);
+    Route::post('black/create', [
+        'as' => 'backend.black.store',
+        'uses' => 'UsersController@blackstore',
+    ]);
+    Route::get('black/{blackid}/edit', [
+        'as' => 'backend.black.edit',
+        'uses' => 'UsersController@blackedit',
+    ]);  
+    Route::post('black/{blackid}/update', [
+        'as' => 'backend.black.update',
+        'uses' => 'UsersController@blackupdate',
+    ]);
+    Route::delete('black/{blackid}/remove', [
+        'as' => 'backend.black.remove',
+        'uses' => 'UsersController@blackremove',
+    ]);
+
     Route::get('partner/{role_id}', [
         'as' => 'backend.user.partner',
         'uses' => 'UsersController@partner',
     ]);
+
     Route::get('statistics', [
         'as' => 'backend.statistics',
         'uses' => 'DashboardController@statistics',

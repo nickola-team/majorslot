@@ -88,7 +88,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $users = [];
             $joinusers = [];
             if (count($partner_users) > 0){
-                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('id', $partner_users)->get();
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('users.id', $partner_users)->get();
 
                 $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->whereNotNull('phone')->whereIn('id', $partner_users);
                 $users = $users->paginate(20);
@@ -347,6 +347,35 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $msg = $succeed . '명의 회원을 생성하였습니다. 실패 ' . $failed . '명';
             return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
+        public function blacklist(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user->hasRole('admin'))
+            {
+                return redirect()->back()->withErrors('비정상적인 접근입니다.');
+            }
+            $blacklist = \VanguardLTE\BlackList::orderby('id');
+
+            if( $request->search != '' ) 
+            {
+                $blacklist = $blacklist->where('name', 'like', '%'.$request->search.'%');
+            }
+
+            if( $request->phone != '' ) 
+            {
+                $blacklist = $blacklist->where('phone', 'like', '%'.$request->phone.'%');
+            }
+
+            if( $request->account != '' ) 
+            {
+                $blacklist = $blacklist->where('account_number', 'like', '%'.$request->account.'%');
+            }
+
+            $blacklist = $blacklist->paginate(20);
+
+            return view('backend.Default.user.blacklist',  compact('blacklist'));
+        }
+
         public function partner($role_id, \Illuminate\Http\Request $request)
         {
             $user = auth()->user();
@@ -356,6 +385,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors('비정상적인 접근입니다.');
             }
+            
 
             $partners = \VanguardLTE\User::where('status', '<>',\VanguardLTE\Support\Enum\UserStatus::DELETED)->where('role_id', $role_id)->whereIn('id', $users);
 
@@ -480,6 +510,48 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route(config('app.admurl').'.user.list');
             }
             return view('backend.Default.user.view', compact('user', 'userActivities'));
+        }
+        public function blackcreate()
+        {
+            return view('backend.Default.user.blackcreate');
+        }
+        public function blackedit($blackid)
+        {
+            $user = \VanguardLTE\BlackList::where('id', $blackid)->first();
+            if (!$user)
+            {
+                return redirect()->route(config('app.admurl').'.black.list');
+            }
+            return view('backend.Default.user.blackedit', compact('user'));
+        }
+        public function blackupdate($blackid, \Illuminate\Http\Request $request)
+        {
+            $data = $request->only(
+                [
+                    'name',
+                    'phone',
+                    'account_bank',
+                    'account_name',
+                    'account_number',
+                    'memo',
+                ]
+            );
+            $user = \VanguardLTE\BlackList::where('id', $blackid);
+            if ($user){
+                $user->update($data);
+            }
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙정보가 수정되었습니다');
+        }
+        public function blackremove($blackid, \Illuminate\Http\Request $request)
+        {
+            \VanguardLTE\BlackList::where('id', $blackid)->delete();
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙정보가 삭제되었습니다');
+        }
+        public function blackstore(\Illuminate\Http\Request $request)
+        {
+            $data = $request->all();
+            \VanguardLTE\BlackList::create($data);
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙리스트에 추가되었습니다');
         }
         public function create()
         {

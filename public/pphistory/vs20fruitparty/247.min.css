@@ -1,0 +1,35 @@
+:root {
+    --slot-item-height: 42px;
+    --slot-item-width: 42px
+}
+
+.LinesSlot .ReelsSlot .MoneyScatter__Label {
+    background-color: transparent;
+    font-size: .79rem
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+@media(max-width:500px) {
+    :root {
+        --slot-item-height: 40px;
+        --slot-item-width: 40px
+    }
+    .LinesSlot .ReelsSlot__ItemImg {
+        height: 40px;
+        width: 40px;
+        object-fit: contain
+    }
+}
+
+.WinLines-Group .LinesSlot {
+    display: flex
+}
+
+.WinLines-Group .LinesSlot .SlotWrap {
+    margin-top: auto
+}

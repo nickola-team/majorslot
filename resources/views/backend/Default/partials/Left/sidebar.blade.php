@@ -92,7 +92,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent', 'distributor']) )
-            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') || Request::is('backend/join*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') || Request::is('backend/join*') || Request::is('backend/black*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>파트너관리 <sup id="user_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -151,6 +151,12 @@
                         <a  href="{{ route($admurl.'.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}관리</span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/black*') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.black.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>블랙리스트</span>
                         </a>
                     </li>
                     @endif

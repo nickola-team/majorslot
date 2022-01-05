@@ -1051,6 +1051,58 @@ namespace VanguardLTE
             return false;
         }
 
+        public function checkBlack()
+        {
+            $result = [
+                'count' => 0,
+                'name' => null,
+                'phone' => null,
+                'account' => null,
+            ];
+            if ($this->phone != '')
+            {
+                $blacks = BlackList::where('phone', $this->phone)->get();
+                foreach ($blacks as $b)
+                {
+                    $result['count'] = $result['count'] + 1;
+                    if ($result['name'])
+                    {
+                        $result['name'] = $result['name'] . ',';
+                    }
+                    $result['name'] = $result['name'] . $b->name;
+
+                    if ($result['phone'])
+                    {
+                        $result['phone'] = $result['phone'] . ',';
+                    }
+                    $result['phone'] = $result['phone'] . $b->memo;
+                }
+            }
+
+            if ($this->account_no != '')
+            {
+                $blacks = BlackList::where('account_number', $this->account_no)->get();
+                foreach ($blacks as $b)
+                {
+                    $result['count'] = $result['count'] + 1;
+                    if ($result['name'])
+                    {
+                        $result['name'] = $result['name'] . ',';
+                    }
+                    $result['name'] = $result['name'] . $b->name;
+
+                    if ($result['account'])
+                    {
+                        $result['account'] = $result['account'] . ',';
+                    }
+                    $result['account'] = $result['account'] . $b->memo;
+                }
+
+            }
+            return $result;
+
+        }
+
 
     }
 
