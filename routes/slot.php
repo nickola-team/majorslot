@@ -375,6 +375,10 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         'as' => 'slot.user.update.details',
         'uses' => 'UsersController@updateDetails'
     ]);
+    Route::get('user/{user}/update/reset_confirm_pwd', [
+        'as' => 'slot.user.update.resetpwd',
+        'uses' => 'UsersController@resetConfirmPwd'
+    ]);  
     Route::post('user/{user}/update/move', [
         'as' => 'slot.user.update.move',
         'uses' => 'UsersController@move'

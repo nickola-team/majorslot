@@ -781,6 +781,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.user.update.details',
         'uses' => 'UsersController@updateDetails'
     ]);
+    Route::get('user/{user}/update/reset_confirm_pwd', [
+        'as' => 'backend.user.update.resetpwd',
+        'uses' => 'UsersController@resetConfirmPwd'
+    ]);    
     Route::post('user/{user}/update/move', [
         'as' => 'backend.user.update.move',
         'uses' => 'UsersController@move'

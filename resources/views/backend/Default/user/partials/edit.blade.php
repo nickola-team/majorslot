@@ -100,4 +100,11 @@
     <button type="submit" class="btn btn-primary" id="update-details-btn">
         확인
     </button>
+@if (auth()->user()->isInOutPartner())
+    <a href="{{route($admurl.'.user.update.resetpwd', $user->id)}}">
+    <button type="button" class="btn btn-danger" id="reset-confirmation-token-btn">
+        환전비번 리셋
+    </button>
+    </a>
+@endif    
 </div>

@@ -1046,6 +1046,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             return redirect()->back()->withSuccess(['파트너를 이동하였습니다.']);
         }
+        public function resetConfirmPwd(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
+        {
+            $users = auth()->user()->availableUsers();
+            if( count($users) && !in_array($user->id, $users) ) 
+            {
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.wrong_shop')]);
+            }
+            $user->update(['confirmation_token' => null]);
+            return redirect()->back()->withSuccess(['환전비번을 리셋했습니다']);
+        }
         public function updateDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
             $users = auth()->user()->availableUsers();
