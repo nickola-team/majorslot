@@ -5,7 +5,10 @@ namespace VanguardLTE\Http\Requests\User
     {
         public function rules()
         {
-            return [];
+            return [
+                'password' => 'confirmed', 
+                'confirmation_token' => 'confirmed', 
+            ];
         }
     }
 

@@ -1112,6 +1112,31 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '004'
                 ], 200);
             }
+            if ($user->role_id > 1 && empty($user->confirmation_token))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전비밀번호를 설정하세요',
+                    'code' => '010'
+                ], 200);
+            }
+            if ($user->role_id > 1 && empty($request->confirmation_token))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전비밀번호를 입력하세요',
+                    'code' => '011'
+                ], 200);
+            }
+            if ($user->role_id > 1 && !\Illuminate\Support\Facades\Hash::check($request->confirmation_token, $user->confirmation_token))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전비밀번호가 틀립니다',
+                    'code' => '012'
+                ], 200);
+            }
+
             if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
             {
                 return response()->json([

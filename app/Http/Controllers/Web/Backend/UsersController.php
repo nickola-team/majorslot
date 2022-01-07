@@ -1066,14 +1066,57 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'role_id' => 1
             ])->count();
             $data = $request->all();
-            if( empty($data['password']) ) 
-            {
-                unset($data['password']);
-            }
+            
             if( empty($data['password_confirmation']) ) 
             {
                 unset($data['password_confirmation']);
             }
+            if( empty($data['password']) ) 
+            {
+                unset($data['password']);
+            }
+            else
+            {
+                if (empty($data['password_confirmation']))
+                {
+                    return redirect()->back()->withErrors(['확인비밀번호를 입력해주세요']);
+                }
+                if ($data['password_confirmation'] != $data['password'])
+                {
+                    return redirect()->back()->withErrors(['확인비밀번호와 맞지 않습니다']);
+                }
+            }
+
+            if( empty($data['confirmation_token_confirmation']) ) 
+            {
+                unset($data['confirmation_token_confirmation']);
+            }
+
+            if( empty($data['confirmation_token']) ) 
+            {
+                unset($data['confirmation_token']);
+            }
+            else
+            {
+                if (empty($data['confirmation_token_confirmation']))
+                {
+                    return redirect()->back()->withErrors(['확인 환전비밀번호를 입력해주세요']);
+                }
+                if ($data['confirmation_token_confirmation'] != $data['confirmation_token'])
+                {
+                    return redirect()->back()->withErrors(['확인 환전비밀번호와 맞지 않습니다']);
+                }
+
+                $old_confirm_token = $data['old_confirmation_token'];
+                if(!empty($user->confirmation_token) && !\Illuminate\Support\Facades\Hash::check($old_confirm_token, $user->confirmation_token) ) 
+                {
+                    return redirect()->back()->withErrors(['이전 환전비밀번호가 틀립니다']);
+                }
+                $data['confirmation_token'] = \Illuminate\Support\Facades\Hash::make($data['confirmation_token']);
+            }
+            
+
+
             if( isset($data['role_id']) && $user->role_id != $data['role_id'] && $data['role_id'] == 1 && $this->max_users <= ($count + 1) ) 
             {
                 return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('max_users', ['max' => $this->max_users])]);

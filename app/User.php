@@ -23,10 +23,10 @@ namespace VanguardLTE
             'address',
             'balance', 
             'last_login', 
-            'confirmation_token', 
+            'confirmation_token',  //used for withdraw password
             'status', 
             'wager', 
-            'rating', 
+            'rating',  //used for in/out alarm
             'points', 
             'total_balance', 
             'bonus', 
