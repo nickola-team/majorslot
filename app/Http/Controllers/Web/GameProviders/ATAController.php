@@ -629,7 +629,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'loginname' => $user->id,
                 'key' => $user->api_token,
                 'currency' => 'KRW',
-                'lang' => 'kr',
+                'lang' => 'ko',
                 'gameid' => $gamecode,
                 'org' => config('app.ata_org'),
                 'home' => url('/'),
