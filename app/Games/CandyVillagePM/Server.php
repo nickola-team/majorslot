@@ -572,6 +572,8 @@ namespace VanguardLTE\Games\CandyVillagePM
                         $spinType = 's';
                         $isState = false;
                         $otherResponse = '&fsmul=1&prg=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fswin=0.00&fs=1&fsres=0.00&psym=1~' . $scattersWin.'~' . implode($winLines[$scatter], ',');
+                    }else{
+                        $otherResponse = '&prg=1';
                     }
                 }
 
@@ -603,12 +605,15 @@ namespace VanguardLTE\Games\CandyVillagePM
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', 0);
                 } 
+                if($isTumb == true){
+                    $otherResponse = $otherResponse.'&rs_win='.$_obf_totalWin;
+                }
                 // if($isEnd == true){
                 //     $otherResponse = $otherResponse.'&w='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 // }else{
                 //     $otherResponse = $otherResponse.'&w='.$_obf_totalWin;
                 // }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .'&prg_m=wm&balance='.$Balance.'&bl='.$isdoublechance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=5&c='.$betline.'&sver=5&n_reel_set='.$n_reel_set.$otherResponse.'&counter='. ((int)$slotEvent['counter'] + 1).'&w='.$_obf_totalWin .'&l=20&s='.$strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .'&prg_m=wm&balance='.$Balance.'&bl='.$isdoublechance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=5&c='.$betline.'&sver=5&reel_set='.$n_reel_set.$otherResponse.'&counter='. ((int)$slotEvent['counter'] + 1).'&w='.$_obf_totalWin .'&l=20&s='.$strLastReel;
 
 
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $isNewTumb == false) 
