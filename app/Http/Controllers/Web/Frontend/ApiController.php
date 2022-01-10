@@ -979,7 +979,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     return response()->json([
                         'error' => false, 
-                        'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender . empty($telegramId)?'':(', 텔레그램아이디 ' . $telegramId),
+                        'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender . (empty($telegramId)?'':(', 텔레그램아이디 ' . $telegramId)),
                     ], 200);
                 }
             }
