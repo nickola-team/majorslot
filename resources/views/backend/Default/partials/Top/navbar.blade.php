@@ -522,13 +522,15 @@
                 <p>
                 {{ Auth::user()->username }}[{{$available_roles_trans[auth()->user()->role_id]}}]님 
                 </p>
-                <p style="font-size:14px;">정산시간 : 
-                @if( Auth::user()->hasRole(['cashier', 'manager']) )
-                {{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
-                @else
-                {{auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"))}}
+                @if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+                    <p style="font-size:14px;">정산시간 : 
+                    @if (auth()->user()->hasRole('manager'))
+                        {{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
+                    @else
+                        {{auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"))}}
+                    @endif
+                    </p>
                 @endif
-                </p>
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
