@@ -556,6 +556,9 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', 0);
                 } 
+                if($isTumb == true){
+                    $otherResponse = $otherResponse.'&rs_win='.$_obf_totalWin;
+                }
                 // if($isEnd == true){
                 //     $otherResponse = $otherResponse.'&w='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 // }else{
