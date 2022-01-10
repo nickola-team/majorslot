@@ -82,14 +82,9 @@
     @if (count($notices)>0)
     <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="background:transparent;">
     <!-- Create the tabs -->
-        <div class="pop01_popup1 draggable02" style="top: 50px; display: none;" id="notification">
+        <div class="pop01_popup1 draggable02" style="display: none;" id="notification">
             <div class="pop01_popup_wrap">
-                <div class="pop01_popup_btn_wrap">
-                    <ul>
-                        <li><a href="#" onclick="closeNotification(false);"><span class="pop01_popup_btn">8시간동안 창을 열지 않음</span></a></li>
-                        <li><a href="#" onclick="closeNotification(true);"><span class="pop01_popup_btn">닫기 X</span></a></li>
-                    </ul>
-                </div>
+
                 <div class="pop01_popup_box">
                     <div class="pop01_popup_text">
                     @foreach ($notices as $notice)
@@ -101,6 +96,12 @@
                     </span>
                     @endforeach
                     </div>
+                </div>
+                <div class="pop01_popup_btn_wrap">
+                    <ul>
+                        <li><a href="#" onclick="closeNotification(false);"><span class="pop01_popup_btn">8시간동안 창을 열지 않음</span></a></li>
+                        <li><a href="#" onclick="closeNotification(true);"><span class="pop01_popup_btn">닫기 X</span></a></li>
+                    </ul>
                 </div>
             </div>
         </div>

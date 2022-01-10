@@ -471,7 +471,7 @@
                         $master = $master->referral;
                     }
                 ?>
-                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="Search" value="{{$master->address}}" style="color:#b8c7ce;cursor:default;" disabled>
+                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="텔레아이디" value="{{$master->address}}" style="color:#b8c7ce;cursor:default;" disabled>
                 @endif
             </div>
         </form>
