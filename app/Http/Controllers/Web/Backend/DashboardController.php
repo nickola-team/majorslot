@@ -274,6 +274,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $users = auth()->user()->hierarchyUsersOnly();
             $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC');
             $statistics = $statistics->whereIn('transactions.user_id', $users);
+            //not show admin payer
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $admin = \VanguardLTE\User::where('role_id', 8)->pluck('id')->toArray();
+                $statistics = $statistics->whereNotIn('transactions.payeer_id', $admin);
+            }
             if( $request->system_str != '' ) 
             {
                 $system = $request->system_str;
@@ -352,6 +358,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             array_push($users,auth()->user()->id);
             $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC')->orderBy('transactions.balance', 'ASC');
             $statistics = $statistics->whereIn('transactions.user_id', $users);
+            //not show admin payer
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $admin = \VanguardLTE\User::where('role_id', 8)->pluck('id')->toArray();
+                $statistics = $statistics->whereNotIn('transactions.payeer_id', $admin);
+            }
             if( $request->system_str != '' ) 
             {
                 $system = $request->system_str;
@@ -665,6 +677,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
             }
             $statistics = \VanguardLTE\ShopStat::select('shops_stat.*')->whereIn('shops_stat.shop_id', auth()->user()->availableShops())->orderBy('shops_stat.date_time', 'DESC')->orderBy('shops_stat.balance', 'ASC');
+            //not show admin payer
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $admin = \VanguardLTE\User::where('role_id', 8)->pluck('id')->toArray();
+                $statistics = $statistics->whereNotIn('shops_stat.user_id', $admin);
+            }
+            
             if( $request->name != '' ) 
             {
                 $statistics = $statistics->join('shops', 'shops.id', '=', 'shops_stat.shop_id');
