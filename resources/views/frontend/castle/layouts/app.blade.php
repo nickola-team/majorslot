@@ -304,7 +304,7 @@
         </div>
         <div class="foot">
             <img src="/frontend/castle/images/logo/logo_footer.png">
-            <p>ⓒ Copyright CASTLE SLOT 2022 All rights received.</p>
+            <p>ⓒ Copyright 레전드 SLOT 2022 All rights received.</p>
         </div>
     </div>
 
