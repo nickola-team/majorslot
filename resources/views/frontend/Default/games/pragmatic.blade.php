@@ -37,6 +37,7 @@
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1,maximum-scale=1, user-scalable=no');
             }
         };
+        
     </script>
     <script type="text/javascript">
         /* 
@@ -190,6 +191,13 @@
             }
             console.log(JSON.stringify(message.data));
 
+        }
+        //for pp live games
+        window.onbeforeunload = function () {
+            console.log('exiting game');
+            var formData = new FormData();
+            formData.append("name", "notifyCloseContainer");
+            navigator.sendBeacon('/pp/userbet', formData);
         }
     </script>
     @endif

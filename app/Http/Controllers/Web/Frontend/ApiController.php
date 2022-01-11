@@ -569,6 +569,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if ($request->user_id)
             {
+                $users = auth()->user()->availableUsers();
+                if( count($users) && !in_array($request->user_id, $users) ) 
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '비정상적인 접근입니다.',
+                        'code' => '005'
+                    ], 200);
+                }
                 $user = \VanguardLTE\User::lockForUpdate()->where('id',$request->user_id)->first();
             }
             else
@@ -581,6 +590,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'error' => true, 
                     'msg' => '다시 시도해주세요.',
                     'code' => '001'
+                ], 200);
+            }
+
+            if ($user->hasRole('user') && $user->playing_game != null)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '게임중에 딜비전환을 할수 없습니다.',
+                    'code' => '002'
                 ], 200);
             }
 
