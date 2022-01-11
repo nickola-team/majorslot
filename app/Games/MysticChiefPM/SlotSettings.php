@@ -784,11 +784,19 @@ namespace VanguardLTE\Games\MysticChiefPM
         public function GetFreeStack($betLine)
         {
             $winAvaliableMoney = $this->GetBank('bonus');
-            $limitOdd = floor($winAvaliableMoney / $betLine / 3);
-            if($limitOdd < 30){
-                $limitOdd = 30;
-            }else if($limitOdd > 100){
-                $limitOdd = 100;
+            $limitOdd = 35;
+            if ($this->happyhouruser)
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine);
+            }
+            else
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+                if($limitOdd < 35){
+                    $limitOdd = 35;
+                }else if($limitOdd > 100){
+                    $limitOdd = 100;
+                }
             }
             $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
                 $this->game->original_id, 

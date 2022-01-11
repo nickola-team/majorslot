@@ -248,6 +248,9 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 20);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,9,8,4,7,7,3,4,11,11,10,11,6,5,10]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -262,6 +265,12 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     $bet = $lastEvent->serverResponse->bet;
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
+                    if (isset($lastEvent->serverResponse->RoundID)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    }
+                    if (isset($lastEvent->serverResponse->FreeStacks)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
                     }
                 }
                 else
@@ -403,9 +412,22 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
+                $isGeneratedFreeStack = false;
+                $freeStacks = []; // free stacks
+                $isForceWin = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
+                    $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
+                    if(count($freeStacks) >= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
+                        $isGeneratedFreeStack = true;
+                    }
+                    $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
+                    if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') == 0){
+                        $winType = 'win';
+                        $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
+                        $isForceWin = true;
+                    }
                 }
                 else
                 {
@@ -424,16 +446,23 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '275' . substr($roundstr, 4, 7);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
+                    $leftFreeGames = 0;
                 }
                 $Balance = $slotSettings->GetBalance();
-                if( $slotEvent['slotEvent'] != 'bet' ) 
+                if( $slotEvent['slotEvent'] == 'bet' ) 
                 {
                     $slotSettings->UpdateJackpots($betline * $lines);
                 }
                 $defaultRespinCount = 0;
                 $bonusType = 0;
                 if($winType == 'bonus'){
-                    if(rand(0, 100) < 50){
+                    if(rand(0, 100) < 0){
                         $bonusType = 1;
                     }else{
                         $bonusType = 2;
@@ -454,12 +483,18 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     $scatter = '1';
                     $_obf_winCount = 0;
                     $strWinLine = '';
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $bonusType);
-                    if($bonusType == 2){
-                        $respinReelPoses = $slotSettings->GetRandomNumber(1, 5, $defaultRespinCount);
-                        for($r = 0; $r < count($respinReelPoses); $r++){
-                            for($k = 0; $k < 3; $k++){
-                                $reels['reel' . $respinReelPoses[$r]][$k] = 3;
+                    if($isGeneratedFreeStack == true){
+                        //freestack
+                        $freeStack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 2];
+                        $reels = $freeStack['Reel'];
+                    }else{
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $bonusType);
+                        if($bonusType == 2){
+                            $respinReelPoses = $slotSettings->GetRandomNumber(1, 5, $defaultRespinCount);
+                            for($r = 0; $r < count($respinReelPoses); $r++){
+                                for($k = 0; $k < 3; $k++){
+                                    $reels['reel' . $respinReelPoses[$r]][$k] = 3;
+                                }
                             }
                         }
                     }
@@ -604,6 +639,15 @@ namespace VanguardLTE\Games\GreatRhinoPM
                         else if( $respinCount >= 2 && ($winType != 'bonus' || $slotEvent['slotEvent'] == 'freespin' || $respinCount != $defaultRespinCount)) 
                         {
                         }
+                        else if($isGeneratedFreeStack == true){
+                            break;  //freestack
+                        }
+                        else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
+                            break;   // win by force when winmoney is 0 in freespin
+                        }
+                        else if($winType == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
+                            break;  // give freespin per 450spins over
+                        }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
                             $_obf_CurrentAvaliableMoney = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
@@ -656,11 +700,15 @@ namespace VanguardLTE\Games\GreatRhinoPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->slotFreeCount);
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
+                        if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($betline, 0));
+                        }
                     }
                     else
                     {
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $slotSettings->slotFreeCount);
                     }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 }
                 
                 for($k = 0; $k < 3; $k++){
@@ -676,6 +724,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $strFreeResponse = '';
                 $spinType = 's';
                 $isEnd = false;
+                $isState = true;
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
@@ -692,6 +741,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                     {
                         $n_reel_set = '&n_reel_set=1';
                         $strFreeResponse = '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        $isState = false;
                     }
                 }else
                 {
@@ -702,6 +752,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                         $spinType = 's';
                         $n_reel_set = '&n_reel_set=1';
                         $strFreeResponse = '&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=0.00&fs=1&fsres=0.00&psym=1~'.$totalWin.'~'.implode(',', $_obf_scatterposes);
+                        $isState = false;
                     }else{
                         $n_reel_set = '&n_reel_set=0';
                         if($totalWin > 0){
@@ -713,6 +764,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 if($respinCount >= 2){
                     $spinType = 'b';
                     $strRespinResponse = '&bgid=0&rsb_m='.$slotSettings->GetGameData($slotSettings->slotId . 'RespinGames').'&rsb_c='.$slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame').'&bgt=26&end=0&bw=1&bpw=0';
+                    $isState = false;
                 }
                 if($isEnd == true){
                     $strFreeResponse = $strFreeResponse.'&w='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
@@ -765,10 +817,10 @@ namespace VanguardLTE\Games\GreatRhinoPM
  
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
-                    ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"ReplayGameLogs":'.json_encode($replayLog).',"Balance":' . $Balance . 
+                    ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"ReplayGameLogs":'.json_encode($replayLog). ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')).',"Balance":' . $Balance . 
                     ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":'. $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') .',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 
                 if( $scattersCount >= 3 || ($slotEvent['slotEvent']!='respin' && $respinCount >= 2) ) 
                 {
@@ -915,11 +967,12 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $strLastReel = implode(',', $lastReel);
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 $spinType = 'b&end=0';
+                $isState = false;
                 if($isEndRespin == true){
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
-                    $spinType = 'cb&tw='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .'&rw='.$totalWin.'&end=1';
+                    $spinType = 'cb&tw='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .$strWinLine .'&rw='.$totalWin.'&end=1';
                 }
                 $response = 'bgid=0&rsb_m='.$slotSettings->GetGameData($slotSettings->slotId . 'RespinGames').'&balance='.$Balance.'&rsb_c='.$slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame').'&index='. $slotEvent['index'] . 
                 '&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.'&stime=' . floor(microtime(true) * 1000) .'&bgt=26&sver=5&bpw='.$totalWin.'&counter='. ((int)$slotEvent['counter'] + 1) .'&s='.$strLastReel.'';
@@ -935,6 +988,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                         // $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
                         $slotSettings->SetBank('', -1 * $totalWin);
                     }
+                    $isState = true;
                 }else{
                     $totalWin = 0;
                 }
@@ -950,14 +1004,44 @@ namespace VanguardLTE\Games\GreatRhinoPM
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
-                    ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"ReplayGameLogs":'.json_encode($replayLog).',"Balance":' . $Balance . 
+                    ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"ReplayGameLogs":'.json_encode($replayLog). ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')).',"Balance":' . $Balance . 
                     ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $totalWin, $slotEvent['slotEvent']);
             }
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
+            }
             $slotSettings->SaveGameData();
             \DB::commit();
             return $response;
+        }
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
         }
     }
 
