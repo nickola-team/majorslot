@@ -531,6 +531,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                         {
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $freeSpinNum);
                         }
+                        $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                     }
                 }
                 $otherResponse = '';
