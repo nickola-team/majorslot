@@ -462,7 +462,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $defaultRespinCount = 0;
                 $bonusType = 0;
                 if($winType == 'bonus'){
-                    if(rand(0, 100) < 0){
+                    if(rand(0, 100) < 50){
                         $bonusType = 1;
                     }else{
                         $bonusType = 2;
