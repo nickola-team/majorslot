@@ -1232,7 +1232,12 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 if ($proposedScatterCount > 0) {
                     $uniqueSymbols = [];
                     for ($i=0; $i < $proposedScatterCount; $i++) { 
-                        while( in_array( ($randReelId = random_int(0, $REELCOUNT - 1)), $uniqueSymbols));
+                        if ($slotEvent == 'buy_freespin') {
+                            while( in_array( ($randReelId = random_int(1, $REELCOUNT - 2)), $uniqueSymbols));
+                        }
+                        else {
+                                while( in_array( ($randReelId = random_int(0, $REELCOUNT - 1)), $uniqueSymbols));
+                        }
 
                         /* 스캐터심볼을 넣을수 있는 위치배열 */
                         $availablePoses = array_where($reels['symbols'][$randReelId], function ($symbol, $key) {
