@@ -243,7 +243,8 @@
           @if ($categories && count($categories))
               @foreach($categories AS $index=>$category)
                 @if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-                && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
+                && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan"
+                && $category->type != "live")
 
                   @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
                   <a href="javascript:void(0);" class="games-btn"  id=".{{ $category->title }}"  onclick=" getSlotGames('{{ $category->title }}', '{{ $category->href }}', 0)">
@@ -1107,7 +1108,7 @@
         @if ($categories && count($categories))
         @foreach($categories AS $index=>$category)
           @if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-          && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
+          && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->type != "live")
           <a href="javascript:void(0)" class="web-act {{ $category->title }}"  onclick=" getSlotGames('{{ $category->title }}', '{{ $category->href }}', 0)">
             <div class="img-cont">
               <img src="/frontend/castle/images/company/{{ $category->title }}.png">
