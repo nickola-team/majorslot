@@ -642,10 +642,16 @@
           && $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
           <a href="javascript:void(0)" class="web-act {{ $category->title }}"  onclick=" getSlotGames('{{ $category->title }}', '{{ $category->href }}', 0)">
             <div class="img-cont">
-              <img src="/frontend/castle/images/footer_company/{{ $category->title }}.png">
+              <img src="/frontend/castle/images/company/{{ $category->title }}.png">
             </div>
             <div class="text-cont">
-              <p>{{ $category->title }}</p>
+              <p>
+                @if ($category->trans)
+                  {{ $category->trans->trans_title }}
+                @else
+                    {{  $category->title }}
+                @endif
+                </p>
             </div>
           </a>
           @endif
