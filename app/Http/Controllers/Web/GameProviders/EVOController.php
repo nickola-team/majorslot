@@ -428,6 +428,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $code =  $game['gamecode'];
             }
 
+            $ip = \Request::ip();
+            if(!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $ip = '192.168.1.1';
+            }
+
             $data = [
                 'uuid' => EVOController::microtime_string(),
                 'player' => [
@@ -441,7 +446,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'currency' => 'KRW',
                     'session' => [
                         'id' => $user->api_token,
-                        'ip' => \Request::ip(),
+                        'ip' => $ip,
                     ],
                     'group' => [
                         'id' => config('app.evo_groupid_live'),
