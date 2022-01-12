@@ -1,0 +1,8 @@
+:root {
+    --reel-width: 55px;
+    --reel-height: 180px
+}
+
+.ReelsSlot__ItemImg {
+    object-fit: none
+}

@@ -56,7 +56,6 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
             }else if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
-                // $response = 'def_s=9,3,11,6,6,11,5,9,11,4,6,12,4,9,9,6,8,11,12,9,9,1,3,13&balance=100,000.00&cfgs=1&ver=2&index=1&balance_cash=100,000.00&reel_set_size=9&def_sb=3,4,7,6,8,4&def_sa=8,7,5,3,7,5&reel_set=0&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0,0~100,25,15,8,0,0~1,1,1,1,1,1&gmb=0,0,0&rt=d&stime=1609861447257&sa=8,7,5,3,7,5&sb=3,4,7,6,8,4&sc=0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.10,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.20,0.24,0.30,0.40,0.50,0.70,0.80,1.00,1.25,1.50&defc=0.05&sh=4&wilds=2~0,0,0,0,0,0~1,1,1,1,1,1&bonuses=0&fsbonus=&c=0.05&sver=5&counter=2&paytable=0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;300,250,200,80,0,0;250,200,100,60,0,0;250,200,100,60,0,0;200,120,80,40,0,0;200,120,80,40,0,0;120,80,40,20,0,0;120,80,40,20,0,0;100,60,30,10,0,0;100,60,30,10,0,0;80,40,20,10,0,0;80,40,20,10,0,0&l=40&rtp=96.06&reel_set0=3,3,3,3,8,7,10,9,9,4,11,8,8,10,6,9,1,11,11,5,5,10,12,10,11,6,6,6,4,13,13,7,7,7,12,10,6,13,4,11,11,10,12,5,13,1,12,12,3,8,11,11,10,6,6,9,9,5,5,5,10,10,12,7,7,13,13,11,4,4,4,10,10,9,7,13,13,5,9,8,12,12~12,12,8,9,5,13,13,7,9,10,10,4,4,4,11,13,13,7,7,12,10,10,12,12,6,6,6,13,13,7,11,7,5,8,13,6,9,12,3,3,11,8,8,7,7,7,13,13,5,5,5,6,12,12,4,4,8,8,11,10,7,9,9,10,5,5,11,11,1,9,6,10,8,2,11,4,9,9,7,8,8,3,3,3,3~3,3,3,3,8,8,7,9,9,4,11,6,8,10,6,9,1,11,11,5,5,10,6,6,6,12,10,11,4,13,13,7,7,7,12,10,6,2,4,11,11,10,12,5,13,1,12,12,3,8,11,11,10,6,6,9,9,5,5,5,10,10,12,7,7,13,13,11,4,4,4,10,10,9,7,13,13,5,9,8,12,12~12,12,8,9,5,13,13,7,9,10,10,4,4,4,11,13,13,7,7,12,10,10,12,12,6,6,6,13,13,7,11,7,5,8,13,6,9,12,3,3,11,8,8,13,13,7,7,7,5,5,5,6,12,12,4,4,8,8,11,10,7,9,9,10,5,5,11,11,1,9,6,10,8,2,11,4,9,9,7,8,8,3,3,3,3~3,3,3,3,8,8,7,9,9,4,11,6,8,10,6,9,1,11,11,5,5,10,12,10,11,4,13,13,7,7,7,12,10,6,2,4,11,11,10,6,6,6,12,5,13,1,12,12,3,8,11,11,10,6,6,9,9,5,5,5,10,10,12,7,7,13,13,11,4,4,4,10,10,9,7,13,13,5,9,8,12,12~12,12,8,9,5,13,13,7,9,10,10,4,4,4,11,5,5,5,13,13,7,7,12,10,10,12,12,6,6,6,13,13,7,11,7,5,8,13,6,9,12,3,3,11,7,7,7,8,8,13,13,6,12,12,4,4,8,8,11,10,7,9,9,10,5,5,11,11,1,9,6,10,8,2,11,4,9,9,7,8,8,3,3,3,3&s=9,3,11,6,6,11,5,9,11,4,6,12,4,9,9,6,8,11,12,9,9,1,3,13&reel_set2=12,12,7,9,5,13,13,7,9,12,3,3,3,3,13,13,13,7,7,12,10,10,5,5,5,9,9,9,7,7,7,9,9,13,13,7,12,7,5,10,13,9,9,12,3,3,10,9,9,13,13,7,12,12,5,5,10,10,10,12,7,9,9,10,5,5,12,12,1,10,7,3,3,3,13,5,9,9,7,10,10,3,3,3,3~5,5,5,8,8,6,6,9,9,11,11,8,8,12,6,9,1,11,11,5,5,9,9,11,12,12,5,8,8,4,9,9,6,6,6,12,12,12,4,4,4,11,11,5,12,8,8,1,9,9,5,8,11,11,12,6,6,9,9,5,5,5,8,8,12,5,5,11,11,11,4,4,4,9,9,9,4,11,11,11,9,8,12,12~3,3,3,3,8,7,10,10,4,11,3,3,3,10,6,13,1,11,11,11,3,3,10,8,8,7,10,11,8,8,4,13,13,7,7,7,13,13,6,10,3,3,3,10,4,4,13,1,11,11,3,8,8,8,10,7,7,7,13,13,6,6,6,10,8,7,7,13,13,11,4,4,4,10,10,10,3,3,3,11,6,8,8,8~12,12,8,9,5,13,13,7,9,10,10,4,4,4,11,13,13,7,7,12,10,10,5,5,5,9,9,6,6,6,6,13,13,7,11,7,5,8,13,6,9,12,7,7,7,3,3,3,3,8,8,11,6,12,12,4,4,8,8,11,10,7,9,9,10,5,5,11,11,1,9,6,10,8,2,11,4,9,9,7,8,8,3,3,3,3~3,3,3,3,8,8,7,9,9,4,11,2,8,10,6,9,1,11,11,5,5,10,9,9,6,6,6,7,10,11,8,8,4,13,13,7,7,7,12,10,6,6,4,11,11,10,12,5,13,1,12,12,3,3,3,3,8,6,6,9,9,5,5,5,10,10,12,7,7,13,13,11,4,4,4,10,10,9,7,13,13,5,9,8,12,12~12,12,8,9,5,13,13,7,9,10,10,4,4,4,11,13,13,7,7,12,10,10,5,5,5,9,9,6,6,6,6,13,13,7,11,7,5,8,13,6,9,12,7,7,7,3,3,3,3,8,8,11,6,12,12,4,4,8,8,11,10,7,9,9,10,5,5,11,11,1,9,6,10,8,2,11,4,9,9,7,8,8,3,3,3,3&t=243&reel_set1=3,3,3,3,8,7,10,10,4,11,3,3,3,10,6,13,1,11,11,3,3,10,8,8,7,10,11,8,6,11,11,11,10,4,13,13,7,7,7,13,13,6,10,3,3,3,10,4,4,13,1,11,11,3,8,8,8,10,7,7,7,13,13,6,6,6,10,8,7,7,13,13,11,4,4,4,10,10,10,3,3,3,11,6,8,8,8~12,12,7,9,5,13,13,7,9,12,3,3,3,3,13,13,13,7,7,12,10,10,5,5,5,9,9,7,10,10,12,12,9,9,9,13,13,7,12,7,5,10,13,9,9,7,7,7,12,3,3,10,9,9,13,13,7,12,12,5,5,10,10,10,12,7,9,9,10,5,5,12,12,1,10,7,3,3,3,13,5,9,9,7,10,10,3,3,3,3~5,5,5,8,8,6,6,9,9,11,11,8,8,12,6,9,1,11,11,5,5,9,9,11,12,12,5,8,6,12,12,12,11,4,9,9,6,6,6,12,12,4,4,4,11,11,5,12,8,8,1,9,9,5,8,11,11,12,6,6,9,9,5,5,5,8,8,12,5,5,11,11,11,4,4,4,9,9,9,4,11,11,11,9,8,12,12~12,12,8,9,5,13,13,7,9,10,10,4,4,4,11,13,13,7,7,12,10,10,5,5,5,9,9,6,11,3,3,10,6,6,6,13,13,7,11,7,5,8,13,6,9,12,3,3,3,3,7,7,7,8,8,11,6,12,12,4,4,8,8,11,10,7,9,9,10,5,5,11,11,1,9,6,10,8,2,11,4,9,9,7,8,8,3,3,3,3~3,3,3,3,8,8,7,9,9,4,11,2,8,10,6,9,1,11,11,5,5,6,6,6,10,9,9,7,10,11,8,6,10,3,3,11,4,13,13,7,7,7,12,10,6,6,4,11,11,10,12,5,13,1,12,12,3,3,3,3,8,6,6,9,9,5,5,5,10,10,12,7,7,13,13,11,4,4,4,10,10,9,7,13,13,5,9,8,12,12~12,12,8,9,5,13,13,7,9,10,10,4,4,4,11,13,13,7,7,12,10,10,5,5,5,9,9,6,11,3,3,10,6,6,6,13,13,7,11,7,5,8,13,6,9,12,3,3,3,3,8,8,7,7,7,11,6,12,12,4,4,8,8,11,10,7,9,9,10,5,5,11,11,1,9,6,10,8,2,11,4,9,9,7,8,8,3,3,3,3&reel_set4=3,3,3,3,10,10,12,6,6,11,11,5,8,8,3,10,10,5,5,5,12,12,1,8,11,6,6,6,11,10,1,8,11,5,12,12,3,3,3,11,11,10,10,10,5,5,8,8,8,11,11,6,6,6,10,12,12~9,9,7,7,7,13,13,4,10,10,9,4,4,4,10,10,12,7,13,13,3,12,12,4,9,9,4,9,13,13,7,7,7,13,13,1,12,12,3,10,10,10,13,12,4,9,9,3,12,12,13,13,3,3,3,3~6,6,6,13,13,5,8,6,6,11,4,4,9,7,7,7,8,6,9,9,5,13,13,1,8,7,9,4,4,4,11,9,1,9,8,7,7,11,4,13,13,7,7,8,8,5,5,5,9,8,8,4,11,11,7,7~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,13,13,3,3,12,12,12,7,8,9,9,4,13,13,6,6,6,11,4,4,4,4,8,1,12,12,5,10,10,3,3,3,11,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,11,3,3,3,10,10,5,12,12,1,8,11,6,6,6,4,4,4,4,10,1,9,8,7,12,12,12,4,3,3,13,13,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,13,13,3,3,12,12,12,7,8,9,9,4,13,13,6,6,6,11,8,1,4,4,4,4,12,12,5,10,10,3,3,3,11,11,11,6,6,12,13,13,3,3,3,3&reel_set3=3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,1,8,11,4,4,4,6,6,6,13,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,11,11,7,7,7,9,9,13~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,6,6,6,13,13,3,12,12,4,4,4,7,8,9,1,6,11,8,1,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,1,8,11,6,6,6,4,4,4,13,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,6,6,6,13,13,3,4,4,4,12,12,7,8,9,1,6,11,8,1,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,1,8,11,6,6,6,13,7,4,4,4,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,6,6,6,13,13,3,12,12,7,4,4,4,8,9,1,6,11,8,1,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3&reel_set6=3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,1,10,4,4,4,6,6,6,11,10,1,9,8,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,11,11,7,7,7,9,9,13~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,3,8,2,10,10,9,4,4,4,13,13,6,6,6,11,8,7,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,2,5,10,6,6,6,4,4,4,11,10,7,9,8,7,12,12,6,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,3,8,2,10,10,9,4,4,4,13,13,6,6,6,11,8,2,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,2,6,6,6,5,10,4,4,4,11,10,7,6,9,8,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,3,8,2,10,10,9,4,4,4,13,13,6,6,6,11,8,2,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3&reel_set5=3,3,3,3,10,10,12,6,6,11,11,5,8,8,3,10,10,5,12,12,1,8,11,6,6,5,5,11,10,1,8,11,5,12,12,3,3,3,11,11,10,10,10,5,5,5,8,8,8,11,11,6,6,6,10,12,12~6,6,6,13,13,5,8,6,6,11,4,4,9,7,7,7,8,6,9,9,5,13,13,1,8,11,5,9,4,4,4,11,9,1,9,8,7,7,11,4,13,13,7,7,8,8,5,5,5,9,8,8,4,11,11,7,7~9,9,7,7,7,13,13,3,3,10,10,9,4,4,10,10,12,7,13,13,3,12,12,7,9,10,4,4,4,9,13,13,7,7,7,13,13,1,12,12,3,10,10,10,13,12,4,9,9,7,12,12,13,13,3,3,3,3~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,13,13,3,3,12,12,12,7,8,10,10,9,4,13,13,4,4,4,4,6,6,6,11,8,1,12,12,5,10,10,3,3,3,11,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,11,3,3,3,10,10,5,12,12,1,8,11,6,6,6,4,4,4,4,10,1,9,8,7,12,12,12,4,3,3,13,13,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,13,13,3,3,12,12,12,7,8,10,10,9,4,13,13,6,6,6,11,8,1,4,4,4,4,12,12,5,10,10,3,3,3,11,11,11,6,6,12,13,13,3,3,3,3&reel_set8=3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,7,8,4,4,4,11,10,6,9,8,7,12,12,3,6,6,6,13,13,7,12,10,10,5,5,5,9,8,8,11,11,7,7,7,9,9,13~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,3,12,2,10,10,9,4,4,4,13,13,6,6,6,11,8,2,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,2,8,10,4,4,4,11,6,6,6,10,7,9,8,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,7,12,2,10,10,9,4,4,4,13,13,6,6,6,11,8,1,12,12,4,10,10,5,8,9,2,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,2,8,10,4,4,4,11,6,6,6,10,7,9,8,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,3,12,2,10,10,9,4,4,4,13,13,6,6,6,11,8,2,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3&reel_set7=3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,7,8,11,6,6,6,4,4,4,11,10,6,9,8,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,11,11,7,7,7,9,9,13~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,7,12,12,3,3,9,10,10,9,4,4,4,13,13,6,6,6,11,8,1,12,12,4,10,10,5,8,9,2,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,2,8,11,6,6,6,4,4,4,11,10,7,9,8,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,3,12,12,7,8,9,10,10,9,4,4,4,13,13,6,6,6,11,8,2,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3~3,3,3,3,13,13,12,6,6,11,11,4,9,8,3,10,10,5,12,12,2,8,11,6,6,6,4,4,4,11,10,7,9,8,7,12,12,3,13,13,7,12,10,10,5,5,5,9,8,8,2,11,11,7,7,7,9,9~9,9,7,7,7,11,11,2,8,8,9,5,5,5,10,10,12,7,13,13,3,12,12,7,8,9,10,10,9,4,4,4,13,13,6,6,6,11,8,2,12,12,5,10,10,3,8,9,4,11,11,6,6,12,13,13,3,3,3,3';
                 $lastEvent = $slotSettings->GetHistory();
                 $_obf_StrResponse = '';
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
@@ -68,7 +67,11 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 40);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [9,3,11,6,6,11,5,9,11,4,6,12,4,9,9,6,8,11,12,9,9,1,3,13]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -81,6 +84,15 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     $bet = $lastEvent->serverResponse->bet;
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
+                    if (isset($lastEvent->serverResponse->RoundID)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    }
+                    if (isset($lastEvent->serverResponse->BuyFreeSpin)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $lastEvent->serverResponse->BuyFreeSpin);
+                    }
+                    if (isset($lastEvent->serverResponse->FreeStacks)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
                     }
                 }
                 else
@@ -294,7 +306,6 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     $isBuyFreespin = $slotEvent['pur'];
                 }
                 
-                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $isBuyFreespin);
                 if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                 {
                     $slotEvent['slotEvent'] = 'freespin';
@@ -337,13 +348,25 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 if($isBuyFreespin == 0 && $slotEvent['slotEvent'] != 'freespin'){
                     $allBet = $betline * 3000;
                 }
+                $isGeneratedFreeStack = false;
+                $freeStacks = []; // free stacks
+                $isForceWin = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                     $_wildValue = $slotSettings->GetGameData($slotSettings->slotId . 'WildValues');
                     $_wildPos = $slotSettings->GetGameData($slotSettings->slotId . 'WildPos');
-                    $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
                     $reelSet_Num = rand(3, 8);
+                    $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
+                    if(count($freeStacks) >= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
+                        $isGeneratedFreeStack = true;
+                    }
+                    $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
+                    if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') == 0){
+                        $winType = 'win';
+                        $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
+                        $isForceWin = true;
+                    }
                 }
                 else
                 {
@@ -367,15 +390,20 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $isBuyFreespin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '275' . substr($roundstr, 4, 7);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
                     $leftFreeGames = 0;
                 }
                 $Balance = $slotSettings->GetBalance();
-                if( $slotEvent['slotEvent'] != 'bet' ) 
+                if( $slotEvent['slotEvent'] == 'bet' ) 
                 {
                     $slotSettings->UpdateJackpots($betline * $lines);
-                }
-                if ($winType == 'win'){
-                    $test = 1;
                 }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
@@ -387,21 +415,27 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     $strWinLine = '';
                     $winLineMuls = [];
                     $winLineMulNums = [];
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelSet_Num);
                     $tempWildReels = [];
-                    for($r = 0; $r < 6; $r++){
-                        $tempWildReels[$r] = [];
-                        for( $k = 0; $k < 4; $k++ ) 
-                        {
-                            if( $reels['reel' . ($r+1)][$k] == $wild) 
-                            {                                
-                                if($slotEvent['slotEvent'] == 'freespin'){
-                                    $tempWildReels[$r][$k] = $slotSettings->CheckMultiWild();
+                    if($isGeneratedFreeStack == true){
+                        $freeStack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 2];
+                        $reels = $freeStack['Reel'];
+                        $tempWildReels = $freeStack['TempWildReels'];
+                    }else{
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelSet_Num);
+                        for($r = 0; $r < 6; $r++){
+                            $tempWildReels[$r] = [];
+                            for( $k = 0; $k < 4; $k++ ) 
+                            {
+                                if( $reels['reel' . ($r+1)][$k] == $wild) 
+                                {                                
+                                    if($slotEvent['slotEvent'] == 'freespin'){
+                                        $tempWildReels[$r][$k] = $slotSettings->CheckMultiWild();
+                                    }else{
+                                        $tempWildReels[$r][$k] = 0;    
+                                    }
                                 }else{
-                                    $tempWildReels[$r][$k] = 0;    
+                                    $tempWildReels[$r][$k] = 0;
                                 }
-                            }else{
-                                $tempWildReels[$r][$k] = 0;
                             }
                         }
                     }
@@ -482,6 +516,15 @@ namespace VanguardLTE\Games\BuffaloKingPM
                         else if($scattersCount == 6)
                         {
                         }
+                        else if($isGeneratedFreeStack == true){
+                            break;  //freestack
+                        }
+                        else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
+                            break;   // win by force when winmoney is 0 in freespin
+                        }
+                        else if($winType == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
+                            break;  // give freespin per 450spins over
+                        }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
                             $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
@@ -530,11 +573,15 @@ namespace VanguardLTE\Games\BuffaloKingPM
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freeSpinNum);
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
+                        if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($betline, $scattersCount - 3));
+                        }
                     }
                     else
                     {
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $freeSpinNum);
                     }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 }
                 $lastTempReel = [];
                 for($k = 0; $k < 4; $k++){
@@ -548,6 +595,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
 
+                $isState = true;
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
@@ -563,6 +611,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     else
                     {
                         $spinType = 's&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        $isState = false;
                     }
                     
                     if($isWild){
@@ -585,9 +634,13 @@ namespace VanguardLTE\Games\BuffaloKingPM
                         $spinType = 's';
 
                         $n_reel_set = $n_reel_set.'&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fswin=0.00&fs=1'; //&psym=1~' . $scattersWin.'~' . $_obf_scatterposes[0] .'~' . $_obf_scatterposes[1] .'~' . $_obf_scatterposes[2];
+                        $isState = false;
                     }
                     if($isBuyFreespin == 0){
                         $n_reel_set = $n_reel_set . '&purtr=1';
+                    }
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                        $n_reel_set = $n_reel_set . '&puri=0';
                     }
                     $response = 'tw='.$totalWin .'&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .
                         '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline.'&sver=5&reel_set='.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=40&s='.$strLastReel.'&w='.$totalWin;
@@ -613,10 +666,13 @@ namespace VanguardLTE\Games\BuffaloKingPM
 
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').  ',"BuyFreeSpin":'.$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . 
                     ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"ReplayGameLogs":'.json_encode($replayLog).
                     ',"LastReel":'.json_encode($lastReel).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
+                if($slotEvent['slotEvent'] == 'freespin' && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                    $allBet = $betline * 3000;
+                }
+                $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 
                 if( $slotEvent['slotEvent'] != 'freespin' && $scattersCount >= 3) 
                 {
@@ -626,9 +682,39 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 }
             }
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
+            }
             $slotSettings->SaveGameData();
             \DB::commit();
             return $response;
+        }
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
         }
         public function findZokbos($reels, $tempWildReels, $mul, $firstSymbol, $repeatCount, $strLineWin){
             $wild = '2';
