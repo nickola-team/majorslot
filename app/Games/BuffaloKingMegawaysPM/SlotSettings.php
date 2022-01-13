@@ -676,7 +676,6 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             else if( $slotState == 'doSpin' ) 
             {
                 $_obf_slotstate = $this->slotId . '';
-                $bet = 0;
             }
             else if( $slotState == 'slotGamble' ) 
             {
