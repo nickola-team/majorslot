@@ -346,11 +346,11 @@ namespace VanguardLTE\Games\CandyVillagePM
                         if($isTumb == true && $lastReel != null){
                             $reels = $slotSettings->GetTumbReelStrips($lastReel, $reelSet_Num);
                         }else{
-                            if($isbuyfreespin == 0 && mt_rand(0, 100) < 50){
-                                $reels = $slotSettings->GetBuyFreeSpinReelStrips($defaultScatterCount);
-                            }else{
+                            // if($isbuyfreespin == 0 && mt_rand(0, 100) < 50){
+                            //     $reels = $slotSettings->GetBuyFreeSpinReelStrips($defaultScatterCount);
+                            // }else{
                                 $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelSet_Num, $defaultScatterCount);
-                            }
+                            // }
                         }
                     }
                     for($j = 1; $j < 13; $j++){
@@ -411,7 +411,22 @@ namespace VanguardLTE\Games\CandyVillagePM
                             }
                         }
                     }
-
+                    $isdoubleScatter = false;
+                    for($r = 0; $r < 6; $r++){ 
+                        $lineScatters = 0;
+                        for( $k = 0; $k < 5; $k++ ) 
+                        {
+                            if( $reels['reel' . ($r+1)][$k] == $scatter) 
+                            {                                
+                                $lineScatters++;
+                            }
+                        }                      
+                        if($lineScatters >= 2){
+                            $isdoubleScatter = true;
+                            break;
+                        }
+                    }
+                    
                     for($k = 0; $k < count($bonusMuls);$k++){
                         $bonusMul = $bonusMul + $bonusMuls[$k];
                     }
@@ -452,6 +467,8 @@ namespace VanguardLTE\Games\CandyVillagePM
                         else if($isbuyfreespin == 0 || ($totalWin * $bonusMul <= $_winAvaliableMoney && $winType == 'bonus')) 
                         {
                             break;
+                        }else if($isdoubleScatter == true){
+
                         }
                         else if($isGeneratedFreeStack == true){
                             break;  //freestack
