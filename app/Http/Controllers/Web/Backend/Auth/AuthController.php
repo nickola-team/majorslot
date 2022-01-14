@@ -42,6 +42,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Auth
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
+            $siteMaintence = env('MAINTENANCE', 0);
+
+            if( $siteMaintence==1 ) 
+            {
+                \Auth::logout();
+                return redirect()->to('backend/login')->withErrors(['사이트 점검중입니다']);
+            }
+
             $isCashier = false;
             $throttles = settings('throttle_enabled');
             $to = ($request->has('to') ? '?to=' . $request->get('to') : '');

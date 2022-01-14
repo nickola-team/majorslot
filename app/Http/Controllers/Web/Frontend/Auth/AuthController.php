@@ -61,6 +61,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
+            $siteMaintence = env('MAINTENANCE', 0);
+
+            if( $siteMaintence==1 ) 
+            {
+                \Auth::logout();
+                return redirect()->to('/')->withErrors('사이트 점검중입니다');
+            }
+
             $throttles = settings('throttle_enabled');
             $to = ($request->has('to') ? '?to=' . $request->get('to') : '');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
