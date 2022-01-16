@@ -55,7 +55,7 @@ namespace VanguardLTE\Console
 
             })->dailyAt('08:00');
 
-            $schedule->command('daily:reset_ggr')->dailyAt('00:00')->runInBackground();
+            // $schedule->command('daily:reset_ggr')->dailyAt('00:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
@@ -908,25 +908,25 @@ namespace VanguardLTE\Console
                                 $summ = $ggr;
                                 if ($summ > 0) {
                                     //out balance from master
-                                    $master = $user->referral;
-                                    while ($master!=null && !$master->isInoutPartner())
+                                    $comaster = $user->referral;
+                                    while ($comaster!=null && !$comaster->isInoutPartner())
                                     {
-                                        $master = $master->referral;
+                                        $comaster = $comaster->referral;
                                     }
 
-                                    if ($master == null)
+                                    if ($comaster == null)
                                     {
-                                        $this->warn('Can not find master');
-                                        return ;
+                                        $this->warn('Can not find comaster');
+                                        continue ;
                                     }
                                     
-                                    if ($master->balance < $summ )
+                                    if ($comaster->balance < $summ )
                                     {
-                                        $this->warn('Masters balance is not enough');
-                                        return ;
+                                        $this->warn('CoMasters balance is not enough');
+                                        continue ;
                                     }
-                                    $master->update(
-                                        ['balance' => $master->balance - $summ]
+                                    $comaster->update(
+                                        ['balance' => $comaster->balance - $summ]
                                     );
                                     
                                     $old = $user->balance;
@@ -935,17 +935,17 @@ namespace VanguardLTE\Console
                                     $user->save();
                                     $user = $user->fresh();
 
-                                    $master = $master->fresh();
+                                    $comaster = $comaster->fresh();
 
                                     \VanguardLTE\Transaction::create([
                                         'user_id' => $user->id,
-                                        'payeer_id' => $master->id,
+                                        'payeer_id' => $comaster->id,
                                         'system' => $user->username,
                                         'type' => 'ggr_out',
                                         'summ' => $summ,
                                         'old' => $old,
                                         'new' => $user->balance,
-                                        'balance' => $master->balance,
+                                        'balance' => $comaster->balance,
                                         'shop_id' => 0
                                     ]);
                                 }
@@ -956,25 +956,25 @@ namespace VanguardLTE\Console
                             $summ = $real_deal_balance;
                             if ($summ > 0) {
                                 //out balance from master
-                                $master = $user->referral;
-                                while ($master!=null && !$master->isInoutPartner())
+                                $comaster = $user->referral;
+                                while ($comaster!=null && !$comaster->isInoutPartner())
                                 {
-                                    $master = $master->referral;
+                                    $comaster = $comaster->referral;
                                 }
 
-                                if ($master == null)
+                                if ($comaster == null)
                                 {
-                                    $this->warn('Can not find master');
-                                    return ;
+                                    $this->warn('Can not find comaster');
+                                    continue ;
                                 }
                                 
-                                if ($master->balance < $summ )
+                                if ($comaster->balance < $summ )
                                 {
                                     $this->warn('Masters balance is not enough');
-                                    return ;
+                                    continue ;
                                 }
-                                $master->update(
-                                    ['balance' => $master->balance - $summ]
+                                $comaster->update(
+                                    ['balance' => $comaster->balance - $summ]
                                 );
                                 
                                 $old = $user->balance;
@@ -986,17 +986,17 @@ namespace VanguardLTE\Console
                                 $user->save();
                                 $user = $user->fresh();
 
-                                $master = $master->fresh();
+                                $comaster = $comaster->fresh();
 
                                 \VanguardLTE\Transaction::create([
                                     'user_id' => $user->id,
-                                    'payeer_id' => $master->id,
+                                    'payeer_id' => $comaster->id,
                                     'system' => $user->username,
                                     'type' => 'deal_out',
                                     'summ' => $summ,
                                     'old' => $old,
                                     'new' => $user->balance,
-                                    'balance' => $master->balance,
+                                    'balance' => $comaster->balance,
                                     'shop_id' => 0
                                 ]);
                             }
