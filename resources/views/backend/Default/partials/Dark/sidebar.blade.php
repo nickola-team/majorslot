@@ -269,7 +269,7 @@
             </li>
 
             <li class="treeview {{ Request::is('slot/adjustment_partner*') || Request::is('slot/adjustment_game*') 
-                || Request::is('slot/adjustment_shift*') || Request::is('slot/adjustment*')? 'active' : '' }}">
+                || Request::is('slot/adjustment_ggr*') || Request::is('slot/adjustment*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-calendar fa-lg"></i>
                     <span>정산</span>
@@ -286,6 +286,14 @@
                                 오늘
                         </a>
                     </li>
+                    @if (auth()->user()->isInoutPartner())
+                    <li class="{{ Request::is('slot/adjustment_ggr') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.adjustment_ggr') }}">
+                            <i class="fa fa-circle-o"></i>
+                                죽장
+                        </a>
+                    </li>
+                    @endif
                     
                     @endpermission
                     @permission('stats.pay')

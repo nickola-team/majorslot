@@ -301,7 +301,7 @@
             </li>
 
             <li class="treeview {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_ggr*') || Request::is('backend/adjustment*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
                     <span>정산관리</span>
@@ -321,6 +321,15 @@
                                 실시간정산
                         </a>
                     </li>
+
+                    @if (auth()->user()->isInoutPartner())
+                    <li class="{{ Request::is('backend/adjustment_ggr') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.adjustment_ggr') }}">
+                            <i class="fa fa-circle-o"></i>
+                                죽장정산
+                        </a>
+                    </li>
+                    @endif
                     
                     @endpermission
                     @permission('stats.pay')

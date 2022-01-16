@@ -102,6 +102,21 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         'uses' => 'DashboardController@adjustment_partner',
         'middleware' => 'permission:stats.game',
     ]);
+    Route::get('/adjustment_ggr', [
+        'as' => 'slot.adjustment_ggr',
+        'uses' => 'DashboardController@adjustment_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/process_ggr', [
+        'as' => 'slot.process_ggr',
+        'uses' => 'DashboardController@process_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/reset_ggr', [
+        'as' => 'slot.reset_ggr',
+        'uses' => 'DashboardController@reset_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
 
     Route::get('/adjustment_daily', [
         'as' => 'slot.adjustment_daily',

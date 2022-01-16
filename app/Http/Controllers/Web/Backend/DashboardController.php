@@ -848,6 +848,269 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $open_shift = $statistics->paginate(20);
             return view('backend.Default.stat.shift_stat', compact('open_shift', 'summ'));
         }
+        public function ggr_partner($parent)
+        {
+            $adjustments = [];
+            $ggr_childs = \VanguardLTE\User::where('parent_id', $parent->id)->get();
+            
+            foreach ($ggr_childs as $c)
+            {
+                if (!$c->hasRole('manager'))
+                {
+                    if ($c->ggr_percent > 0 && $c->reset_days > 0){
+                        $next_reset_at = date('Y-m-d', strtotime("$c->last_reset_at +$c->reset_days days"));
+                        $summary = \VanguardLTE\DailySummary::where('date', '>', $c->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $c->id);
+                        $total_ggr = $summary->sum('total_ggr') - $summary->sum('total_ggr_mileage');
+                        $total_deal = $summary->sum('total_deal') - $summary->sum('total_mileage');
+                        $total_sum = $total_ggr-$total_deal;
+                        if ($total_sum < 0) {$total_sum = 0;}
+                        $adjustments[] = [
+                            'user_id' => $c->id,
+                            'username' => $c->username ,
+                            'role_id' =>$c->role_id,
+                            'last_reset_at' => $c->last_reset_at,
+                            'next_reset_at' => $next_reset_at,
+                            'reset_days' => $c->reset_days,
+                            'total_bet' => $summary->sum('totalbet'),
+                            'total_win' => $summary->sum('totalwin'),
+                            'ggr_percent' => $c->ggr_percent,
+                            'deal_percent' => $c->deal_percent. '%, ' . $c->table_deal_percent . '%',
+                            'total_ggr' => $total_ggr,
+                            'total_deal' => $total_deal,
+                            'total_sum' => $total_sum,
+                        ];
+                        $adj_child = $this->ggr_partner($c);
+                        $adjustments = array_merge($adjustments, $adj_child);
+                    }
+                }
+                else
+                {
+                    $shop = $c->shop;
+                    if ($shop->ggr_percent > 0 && $shop->reset_days > 0){
+                        $next_reset_at = date('Y-m-d', strtotime("$shop->last_reset_at +$shop->reset_days days"));
+                        $summary = \VanguardLTE\DailySummary::where('date', '>', $shop->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $c->id);
+                        $total_ggr = $summary->sum('total_ggr');// - $summary->sum('total_ggr_mileage');
+                        $total_deal = $summary->sum('total_deal');// - $summary->sum('total_mileage');
+                        $total_sum = $total_ggr-$total_deal;
+                        if ($total_sum < 0) {$total_sum = 0;}
+                        $adjustments[] = [
+                            'user_id' => $c->id,
+                            'username' => $c->username,
+                            'role_id' =>$c->role_id,
+                            'last_reset_at' => $shop->last_reset_at,
+                            'next_reset_at' => $next_reset_at,
+                            'reset_days' => $shop->reset_days,
+                            'total_bet' => $summary->sum('totalbet'),
+                            'total_win' => $summary->sum('totalwin'),
+                            'ggr_percent' => $shop->ggr_percent,
+                            'deal_percent' => $shop->deal_percent. '%, ' . $shop->table_deal_percent . '%',
+                            'total_ggr' => $total_ggr,
+                            'total_deal' => $total_deal,
+                            'total_sum' => $total_sum,
+                        ];
+                    }
+                }
+            }
+            return $adjustments;
+        }
+        public function adjustment_ggr(\Illuminate\Http\Request $request)
+        {
+            $adjustments = [];
+            if (auth()->user()->hasRole('admin'))
+            {
+                $comasters = \VanguardLTE\User::where('parent_id', auth()->user()->id)->get();
+                foreach ($comasters as $comaster)
+                {
+                    $adj = $this->ggr_partner($comaster);
+                    $adjustments = array_merge($adjustments, $adj);
+                }
+                
+            }
+            else if (auth()->user()->hasRole('comaster'))
+            {
+                $adjustments = $this->ggr_partner(auth()->user());
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            return view('backend.Default.adjustment.adjustment_ggr', compact('adjustments'));
+        }
+        public function process_ggr(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->isInOutPartner())
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            $partner_id = $request->id;
+            if (!in_array($partner_id, auth()->user()->hierarchyPartners()))
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            $partner = \VanguardLTE\User::where('id', $partner_id)->first();
+            if (!$partner)
+            {
+                return redirect()->back()->withErrors(['파트너를 찾을수 없습니다']);
+            }
+            if ($partner->hasRole('manager'))
+            {
+                $shop = $partner->shop;
+                $next_reset_at = date('Y-m-d', strtotime("$shop->last_reset_at +$shop->reset_days days"));
+                $summary = \VanguardLTE\DailySummary::where('date', '>', $shop->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $partner->id);
+                $total_ggr = $summary->sum('total_ggr');// - $summary->sum('total_ggr_mileage');
+                $total_deal = $summary->sum('total_deal');// - $summary->sum('total_mileage');
+                $summ = $total_ggr-$total_deal;
+                if ($summ > 0)
+                {
+                    //out balance from master
+                    $master = $partner->referral;
+                    while ($master!=null && !$master->isInoutPartner())
+                    {
+                        $master = $master->referral;
+                    }
+
+                    if ($master == null)
+                    {
+                        return redirect()->back()->withErrors(['상위파트너를 찾을수 없습니다']);
+                    }
+                    
+                    if ($master->balance < $summ )
+                    {
+                        return redirect()->back()->withErrors(['상위파트너의 보유금이 부족합니다']);
+                    }
+                    $master->update(
+                        ['balance' => $master->balance - $summ]
+                    );
+                    
+                    $old = $shop->balance;
+
+                    $shop->balance = $shop->balance + $summ;
+
+                    $shop->save();
+                    $shop = $shop->fresh();
+
+                    $master = $master->fresh();
+
+                    \VanguardLTE\ShopStat::create([
+                        'user_id' => $master->id,
+                        'type' => 'ggr_out',
+                        'sum' => $summ,
+                        'old' => $old,
+                        'new' => $shop->balance,
+                        'balance' => $master->balance,
+                        'shop_id' => $shop->id,
+                        'date_time' => \Carbon\Carbon::now()
+                    ]);
+                }
+
+                $shop->ggr_balance = 0;
+                $shop->ggr_mileage = 0;
+                //reset count deal balances
+                $shop->count_deal_balance = 0;
+                $shop->count_mileage = 0;
+                $shop->last_reset_at = date('Y-m-d');
+                $shop->save();
+            }
+            else
+            {
+                $next_reset_at = date('Y-m-d', strtotime("$partner->last_reset_at +$partner->reset_days days"));
+                $summary = \VanguardLTE\DailySummary::where('date', '>', $partner->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $partner->id);
+                $total_ggr = $summary->sum('total_ggr') - $summary->sum('total_ggr_mileage');
+                $total_deal = $summary->sum('total_deal') - $summary->sum('total_mileage');
+                $summ = $total_ggr-$total_deal;
+                if ($summ > 0) {
+                    //out balance from master
+                    $comaster = $partner->referral;
+                    while ($comaster!=null && !$comaster->isInoutPartner())
+                    {
+                        $comaster = $comaster->referral;
+                    }
+
+                    if ($comaster == null)
+                    {
+                        return redirect()->back()->withErrors(['상위파트너를 찾을수 없습니다']);
+                    }
+                    
+                    if ($comaster->balance < $summ )
+                    {
+                        return redirect()->back()->withErrors(['상위파트너의 보유금이 부족합니다']);
+                    }
+                    $comaster->update(
+                        ['balance' => $comaster->balance - $summ]
+                    );
+                    
+                    $old = $partner->balance;
+
+                    $partner->balance = $partner->balance + $summ;
+                    $partner->save();
+                    $partner = $partner->fresh();
+
+                    $comaster = $comaster->fresh();
+
+                    \VanguardLTE\Transaction::create([
+                        'user_id' => $partner->id,
+                        'payeer_id' => $comaster->id,
+                        'system' => $partner->username,
+                        'type' => 'ggr_out',
+                        'summ' => $summ,
+                        'old' => $old,
+                        'new' => $partner->balance,
+                        'balance' => $comaster->balance,
+                        'shop_id' => 0
+                    ]);
+                }
+                $partner->ggr_balance = 0;
+                $partner->ggr_mileage = 0;
+                //reset count deal balances
+                $partner->count_deal_balance = 0;
+                $partner->count_mileage = 0;
+                $partner->last_reset_at = date('Y-m-d');
+                $partner->save();
+            }
+
+            return redirect()->back()->withSuccess(['죽장금이 정산되었습니다']);
+            
+
+        }
+        public function reset_ggr(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->isInOutPartner())
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            $partner_id = $request->id;
+            if (!in_array($partner_id, auth()->user()->hierarchyPartners()))
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            $partner = \VanguardLTE\User::where('id', $partner_id)->first();
+            if (!$partner)
+            {
+                return redirect()->back()->withErrors(['파트너를 찾을수 없습니다']);
+            }
+            if ($partner->hasRole('manager'))
+            {
+                $shop->ggr_balance = 0;
+                $shop->ggr_mileage = 0;
+                //reset count deal balances
+                $shop->count_deal_balance = 0;
+                $shop->count_mileage = 0;
+                $shop->last_reset_at = date('Y-m-d');
+                $shop->save();
+            }
+            else
+            {
+                $partner->ggr_balance = 0;
+                $partner->ggr_mileage = 0;
+                //reset count deal balances
+                $partner->count_deal_balance = 0;
+                $partner->count_mileage = 0;
+                $partner->last_reset_at = date('Y-m-d');
+                $partner->save();
+            }
+            return redirect()->back()->withSuccess(['죽장기간이 리셋되었습니다']);
+            
+        }
         public function adjustment_daily(\Illuminate\Http\Request $request)
         {
             $user_id = $request->input('parent');

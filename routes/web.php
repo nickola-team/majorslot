@@ -509,6 +509,22 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'middleware' => 'permission:stats.game',
     ]);
 
+    Route::get('/adjustment_ggr', [
+        'as' => 'backend.adjustment_ggr',
+        'uses' => 'DashboardController@adjustment_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/process_ggr', [
+        'as' => 'backend.process_ggr',
+        'uses' => 'DashboardController@process_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/reset_ggr', [
+        'as' => 'backend.reset_ggr',
+        'uses' => 'DashboardController@reset_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+
     Route::get('/adjustment_daily', [
         'as' => 'backend.adjustment_daily',
         'uses' => 'DashboardController@adjustment_daily',

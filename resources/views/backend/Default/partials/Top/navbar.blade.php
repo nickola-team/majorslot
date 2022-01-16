@@ -238,7 +238,7 @@
             </li>
 
             <li class="dropdown {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_ggr*') || Request::is('backend/adjustment*')? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-database"></i>
                     <span>정산리스트<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -257,6 +257,14 @@
                                 실시간정산
                         </a>
                     </li>
+                    @if (auth()->user()->isInoutPartner())
+                    <li class="{{ Request::is('backend/adjustment_ggr') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.adjustment_ggr') }}">
+                            <i class="fa fa-circle-o"></i>
+                                죽장정산
+                        </a>
+                    </li>
+                    @endif
                     
                     @endpermission
                     @permission('stats.pay')
