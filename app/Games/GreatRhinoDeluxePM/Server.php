@@ -835,7 +835,6 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                     }
                 }
                 $respinSymbolPoses = $slotSettings->GetGameData($slotSettings->slotId . 'RespinSymbolPoses');
-                $respinMuls = $slotSettings->GetGameData($slotSettings->slotId . 'RespinMuls');
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') + 1);
                 $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
                 $Balance = $slotSettings->GetBalance();
@@ -857,6 +856,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                     $strWinLine = '';
                     $acc_count = 0;
                     $arr_accv = [];
+                    $respinMuls = $slotSettings->GetGameData($slotSettings->slotId . 'RespinMuls');
                     if($bgt == 47){
                         for($r = 0; $r < 5; $r++){
                             $reels[$r] = [];
@@ -1003,13 +1003,17 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                         break;
                     }else if($rhinoCount > 13 || ($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames')<= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') && $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0)){
                         if($totalWin > 0 && ($winLineCount >= 3 || $rhinoCount <= 2)){ //$slotSettings->GetBank('') > $totalWin
-                            break;
+                            if($totalWin < $betline * $lines * 100){
+                                break;
+                            }else{
+                                $_obf_winType = 0;    
+                            }
                         }else{
                             $_obf_winType = 1;
                         }
                     }else if( $_obf_winType== 0 && $slotEvent['slotEvent'] == 'respin' &&  $respinChanged == false){
                         break;
-                    }else if( $slotSettings->GetBank('') > $totalWin ) 
+                    }else if( $slotSettings->GetBank('respin') > $totalWin ) 
                     {
                         break;
                     }
@@ -1081,7 +1085,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                     if( $totalWin > 0) 
                     {
                         $slotSettings->SetBalance($totalWin);
-                        $slotSettings->SetBank('', -1 * $totalWin);
+                        $slotSettings->SetBank('respin', -1 * $totalWin);
                     }
                     $isState = true;
                 }else{
