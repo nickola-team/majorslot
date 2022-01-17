@@ -137,6 +137,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                                         $subtotalWin += $winLineMoney;
                                     }
                                 } 
+                                $bonusSymbolCount = 0;
                                 for($r = 0; $r < count($winLines[$bonus]); $r++){
                                     $isExit = false;
                                     for($k = 0; $k < count($bonusMulPoses);$k++){
@@ -149,6 +150,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                                         array_push($bonusMuls, $slotSettings->GetBonusMul($isTumb, $winType));
                                         array_push($bonusMulPoses, $winLines[$bonus][$r]);
                                     }
+                                    $bonusSymbolCount++;
                                 }
 
                                 $scattersCount = count($winLines[$scatter]);
@@ -178,6 +180,8 @@ namespace VanguardLTE\Games\CandyVillagePM
     
                                 }else if($isdoubleScatter == true){
 
+                                }else if($bonusSymbolCount > 2){
+                            
                                 }else if($winType == 'win' && $subtotalWin > 0){
                                     break;
                                 }else if($winType == 'none' && $subtotalWin == 0){

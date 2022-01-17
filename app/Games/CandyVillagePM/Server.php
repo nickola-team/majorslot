@@ -247,6 +247,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                 $isGeneratedFreeStack = false;
                 $freeStacks = []; // free stacks
                 $isForceWin = false;
+                $isGenerateDoubleScatter = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalRepeatFreeCount') + 1);
                     $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
@@ -289,6 +290,9 @@ namespace VanguardLTE\Games\CandyVillagePM
                             $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], true);
                             $winType = 'bonus';
                             $_winAvaliableMoney = $slotSettings->GetBank('bonus');
+                            if(mt_rand(0, 100) < 50){
+                                $isGenerateDoubleScatter = true;
+                            }
                         }else{
                             $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
                         }
@@ -346,11 +350,11 @@ namespace VanguardLTE\Games\CandyVillagePM
                         if($isTumb == true && $lastReel != null){
                             $reels = $slotSettings->GetTumbReelStrips($lastReel, $reelSet_Num);
                         }else{
-                            // if($isbuyfreespin == 0 && mt_rand(0, 100) < 50){
-                            //     $reels = $slotSettings->GetBuyFreeSpinReelStrips($defaultScatterCount);
-                            // }else{
+                            if($isbuyfreespin == 0 && $isGenerateDoubleScatter == true){
+                                $reels = $slotSettings->GetBuyFreeSpinReelStrips($defaultScatterCount);
+                            }else{
                                 $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelSet_Num, $defaultScatterCount);
-                            // }
+                            }
                         }
                     }
                     for($j = 1; $j < 13; $j++){
@@ -396,6 +400,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                     $scattersWin = $slotSettings->Paytable[$scatter][$scattersCount] * $betline;
                     $totalWin = $totalWin + $scattersWin;
                     
+                    $bonusSymbolCount = 0;
                     if($isGeneratedFreeStack == false){
                         for($r = 0; $r < count($winLines[$bonus]); $r++){
                             $isExit = false;
@@ -409,6 +414,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                                 array_push($bonusMuls, $slotSettings->GetBonusMul($isTumb, $winType));
                                 array_push($bonusMulPoses, $winLines[$bonus][$r]);
                             }
+                            $bonusSymbolCount++;
                         }
                     }
                     $isdoubleScatter = false;
@@ -462,13 +468,15 @@ namespace VanguardLTE\Games\CandyVillagePM
                             
                         }
                         else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 15 && $freeSpinNum > 0){
-                        
+                            
                         }
                         else if($isbuyfreespin == 0 || ($totalWin * $bonusMul <= $_winAvaliableMoney && $winType == 'bonus')) 
                         {
                             break;
-                        }else if($isdoubleScatter == true){
-
+                        }else if($isdoubleScatter == true && $isGenerateDoubleScatter == false){
+                            
+                        }else if($slotEvent['slotEvent'] == 'freespin' && $bonusSymbolCount > 2){
+                            
                         }
                         else if($isGeneratedFreeStack == true){
                             break;  //freestack
