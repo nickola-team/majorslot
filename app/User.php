@@ -19,7 +19,7 @@ namespace VanguardLTE
             'password', 
             'email', 
             'username', 
-            'avatar', 
+            'avatar',   //used for user's memo
             'address',
             'balance', 
             'last_login', 
