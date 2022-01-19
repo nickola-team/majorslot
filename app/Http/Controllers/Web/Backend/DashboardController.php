@@ -859,7 +859,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 {
                     if ($c->ggr_percent > 0 && $c->reset_days > 0){
                         $next_reset_at = date('Y-m-d', strtotime("$c->last_reset_at +$c->reset_days days"));
-                        $summary = \VanguardLTE\DailySummary::where('date', '>', $c->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $c->id);
+                        $summary = \VanguardLTE\DailySummary::where('date', '>=', $c->last_reset_at)->where('date', '<', $next_reset_at)->where('user_id', $c->id);
                         $total_ggr = $summary->sum('total_ggr') - $summary->sum('total_ggr_mileage');
                         $total_deal = $summary->sum('total_deal') - $summary->sum('total_mileage');
                         $total_sum = $total_ggr-$total_deal;
@@ -888,7 +888,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     $shop = $c->shop;
                     if ($shop->ggr_percent > 0 && $shop->reset_days > 0){
                         $next_reset_at = date('Y-m-d', strtotime("$shop->last_reset_at +$shop->reset_days days"));
-                        $summary = \VanguardLTE\DailySummary::where('date', '>', $shop->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $c->id);
+                        $summary = \VanguardLTE\DailySummary::where('date', '>=', $shop->last_reset_at)->where('date', '<', $next_reset_at)->where('user_id', $c->id);
                         $total_ggr = $summary->sum('total_ggr');// - $summary->sum('total_ggr_mileage');
                         $total_deal = $summary->sum('total_deal');// - $summary->sum('total_mileage');
                         $total_sum = $total_ggr-$total_deal;
@@ -956,7 +956,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $shop = $partner->shop;
                 $next_reset_at = date('Y-m-d', strtotime("$shop->last_reset_at +$shop->reset_days days"));
-                $summary = \VanguardLTE\DailySummary::where('date', '>', $shop->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $partner->id);
+                $summary = \VanguardLTE\DailySummary::where('date', '>=', $shop->last_reset_at)->where('date', '<', $next_reset_at)->where('user_id', $partner->id);
                 $total_ggr = $summary->sum('total_ggr');// - $summary->sum('total_ggr_mileage');
                 $total_deal = $summary->sum('total_deal');// - $summary->sum('total_mileage');
                 $summ = $total_ggr-$total_deal;
@@ -1014,7 +1014,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             else
             {
                 $next_reset_at = date('Y-m-d', strtotime("$partner->last_reset_at +$partner->reset_days days"));
-                $summary = \VanguardLTE\DailySummary::where('date', '>', $partner->last_reset_at)->where('date', '<=', $next_reset_at)->where('user_id', $partner->id);
+                $summary = \VanguardLTE\DailySummary::where('date', '>=', $partner->last_reset_at)->where('date', '<', $next_reset_at)->where('user_id', $partner->id);
                 $total_ggr = $summary->sum('total_ggr') - $summary->sum('total_ggr_mileage');
                 $total_deal = $summary->sum('total_deal') - $summary->sum('total_mileage');
                 $summ = $total_ggr-$total_deal;
