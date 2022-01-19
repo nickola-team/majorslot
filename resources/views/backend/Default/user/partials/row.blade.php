@@ -1,6 +1,6 @@
 <tr>
     <td>
-        <a href="{{ route($admurl.'.user.edit', $user->id) }}">
+        <a href="{{ route($admurl.'.user.edit', $user->id) }}" data-tooltip="tooltip" title="{{$user->avatar}}">
             {{ $user->username ?: trans('app.n_a') }}
         </a>
     </td>
@@ -12,7 +12,7 @@
 		
 		if ($parent)
 		{
-			echo '<td><a href="'.route($admurl.'.user.edit', $parent->id).'">'.$parent->username.'</a></td>';
+			echo '<td><a href="'.route($admurl.'.user.edit', $parent->id).'" data-tooltip="tooltip" title="'.$parent->avatar.'">'.$parent->username.'</a></td>';
 		}
 		else
 		{

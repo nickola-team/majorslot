@@ -68,6 +68,11 @@
         <input type="email" class="form-control" id="email" name="email" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->email : '' }}">
     </div>
     @endif
+
+    <div class="form-group">
+        <label>메모</label>
+        <input type="text" class="form-control" id="avatar" name="avatar" placeholder="" value="{{ $edit ? $user->avatar : '' }}">
+    </div>
     
     @if (!$user->isInoutPartner() && $user->id == auth()->user()->id)
     <div class="form-group">
