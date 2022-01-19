@@ -7,7 +7,7 @@
 	<td>{{number_format($adjustment['total_win'])}}</td> 
 	<td>{{number_format($adjustment['total_bet'] - $adjustment['total_win'])}}</td> 
 	<td>{{$adjustment['ggr_percent']}}</td> 
-	<td>{{number_format($adjustment['total_ggr'])}}</td> 
+	<td>{{$adjustment['total_ggr']>0?number_format($adjustment['total_ggr']) : '0'}}</td> 
 	<td>{{$adjustment['deal_percent']}}</td> 
 	<td>{{number_format($adjustment['total_deal'])}}</td> 
 	<td>{{number_format($adjustment['total_sum'])}}</td> 
