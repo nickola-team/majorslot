@@ -146,8 +146,6 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
-						<th>보유금</th>
-						<th>하위보유금(합계)</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
 						<th>순이익금</th>
