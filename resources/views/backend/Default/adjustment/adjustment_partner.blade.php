@@ -132,19 +132,22 @@
 						<th>등급</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>수동충전</th>
+						<th>수동환전</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						<th>딜비전환</th>
 						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 						<th>죽장수익</th>
+						<th>죽장전환</th>
 						@endif
-						<th>딜비전환</th>
-						{{--<th>매장충전</th>
-						<th>매장환전</th> --}}
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
+						<th>보유금</th>
+						<th>하위보유금(합계)</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
 						<th>순이익금</th>
@@ -166,19 +169,22 @@
 						<th>등급</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>수동충전</th>
+						<th>수동환전</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						<th>딜비전환</th>
 						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 						<th>죽장수익</th>
+						<th>죽장전환</th>
 						@endif
-						<th>딜비전환</th>
-						{{--<th>매장충전</th>
-						<th>매장환전</th> --}}
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
+						<th>보유금</th>
+						<th>하위보유금(합계)</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
 						<th>순이익금</th>

@@ -8,11 +8,12 @@ namespace VanguardLTE
             'user_id', 
             'shop_id',
             'date',
-            'totalin',
-            'totalout',
-            'moneyin',
-            'moneyout',
+            'totalin', //deposit via request
+            'totalout', //withdraw via request
+            'moneyin', // manual deposit
+            'moneyout', //manual withdraw
             'dealout',
+            'ggrout',
             'totalbet',
             'totalwin',
             'total_deal',
@@ -20,6 +21,7 @@ namespace VanguardLTE
             'total_ggr',
             'total_ggr_mileage',
             'balance',
+            'childsum',
             'type',
             'updated_at'
         ];
@@ -37,17 +39,12 @@ namespace VanguardLTE
         public static function adjustment($user_id, $from, $to)
         {
             set_time_limit(0);
-            $b_shop = false;
             $user = \VanguardLTE\User::where('id', $user_id)->first();
             if (!$user)
             {
                 return null;
             }
             if($user->hasRole('manager')){
-                $b_shop = true;
-            }
-
-            if($b_shop){
                 $shop = \VanguardLTE\Shop::where('id', $user->shop_id)->first();
                 $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
                 $in_out = \DB::select($query);
@@ -60,27 +57,52 @@ namespace VanguardLTE
                 $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
                 $in_out = \DB::select($query);
                 $adj['dealout'] = $in_out[0]->dealout??0;
-                //$adj['totalout'] = $adj['totalout'] + $adj['dealout'];
+
+                $query = 'SELECT SUM(sum) as ggrout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="ggr_out"';
+                $in_out = \DB::select($query);
+                $adj['ggrout'] = $in_out[0]->ggrout??0;
 
                 $shop_users = $shop->getUsersByRole('user')->pluck('id')->toArray();
                 
-                $adj['moneyin'] = 0;
-                $adj['moneyout'] = 0;
+                $query = 'SELECT SUM(sum) as moneyin FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL';
+                $in_out = \DB::select($query);
+                $adj['moneyin'] = $in_out[0]->moneyin??0;
+
+                $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL';
+                $in_out = \DB::select($query);
+                $adj['moneyout'] = $in_out[0]->moneyout??0;
                 
                 if (count($shop_users)>0)
                 {
 
-                    // $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL';
-                    // $user_in_out = \DB::select($query);
-                    // $adj['moneyin'] = $user_in_out[0]->moneyin??0;
+                    $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
+                    $user_in_out = \DB::select($query);
+                    $adj['totalin'] = $adj['totalin'] + $user_in_out[0]->totalin??0;
 
-                    // $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL';
-                    // $user_in_out = \DB::select($query);
-                    // $adj['moneyout'] = $user_in_out[0]->moneyout??0;
+                    $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
+                    $user_in_out = \DB::select($query);
+                    $adj['totalout'] = $adj['totalout'] + $user_in_out[0]->totalout??0;
+
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id <> ' . $user->id;
+                    $user_in_out = \DB::select($query);
+                    $adj['moneyin'] = $adj['moneyin'] + $user_in_out[0]->totalin??0;
+
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id <> ' . $user->id;
+                    $user_in_out = \DB::select($query);
+                    $adj['moneyout'] = $adj['moneyout'] + $user_in_out[0]->totalout??0;
+
 
                     $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
                     $user_in_out = \DB::select($query);
                     $adj['dealout'] = $adj['dealout'] + $user_in_out[0]->dealout??0;
+
+                    $query = 'SELECT SUM(summ) as ggrout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="ggr_out"';
+                    $user_in_out = \DB::select($query);
+                    $adj['ggrout'] = $adj['ggrout'] + $user_in_out[0]->ggrout??0;
+
+                    $query = 'SELECT SUM(balance) as sumbalance FROM w_users WHERE id in ('.implode(',', $shop_users) .')';
+                    $in_out = \DB::select($query);
+                    $adj['childsum'] =  $in_out[0]->sumbalance??0;
                 }
 
                 $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
@@ -94,6 +116,10 @@ namespace VanguardLTE
                 $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
                 $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
                 $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+
+                // $query = 'SELECT balance FROM w_shops WHERE id=' . $shop->id;
+                // $in_out = \DB::select($query);
+                // $adj['balance'] =  $in_out[0]->balance??0;
                 $adj['balance'] = $shop->balance;
                 $adj['shop_id'] = $shop->id;
                 $adj['name'] = $shop->name;
@@ -102,152 +128,7 @@ namespace VanguardLTE
                 $adj['user_id'] = $user_id;
                 return $adj;
             }
-            else
-            {
-                //repeat child partners
-                $partner = $user;
-                $shops = $partner->availableShops();
-                /*if( $partner->hasRole('admin') ) 
-                {
-                    $partners = $partner->childPartners();
-                    $shops = \VanguardLTE\ShopUser::whereIn('user_id', $partners)->pluck('shop_id')->toArray();
-                }
-                else
-                {
-                    $shops = \VanguardLTE\ShopUser::where('user_id', $partner->id)->pluck('shop_id')->toArray();
-                }*/
-                $adj['totalin'] = 0;
-                $adj['totalout'] = 0;
-                $adj['dealout'] = 0;
-                if (count($shops) > 0 ){
-                    $query = 'SELECT SUM(sum) as totalin FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
-                    $user_in_out = \DB::select($query);
-                    $adj['totalin'] = $user_in_out[0]->totalin??0;
-
-                    $query = 'SELECT SUM(sum) as totalout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
-                    $user_in_out = \DB::select($query);
-                    $adj['totalout'] = $user_in_out[0]->totalout??0;
-                    
-
-                    $query = 'SELECT SUM(sum) as dealout FROM w_shops_stat WHERE shop_id in ('.implode(',', $shops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="deal_out"';
-                    $in_out = \DB::select($query);
-                    $adj['dealout'] = $in_out[0]->dealout??0;
-                    //$adj['totalout'] = $adj['totalout'] + $in_out[0]->dealout;
-                    
-                    //agent, distributor's deal out
-                    $partner_users = $partner->availableUsers();
-                    if( count($partner_users) > 0) 
-                    {
-                        $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $partner_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
-                        $in_out = \DB::select($query);
-                        $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
-
-
-                        $level = $partner->level();
-                        //$childpartners = \VanguardLTE\User::whereIn('role_id', range(4,$level))->whereIn('id', $partner_users)->pluck('id')->toArray();
-                        $childpartners = $partner_users;
-
-                        if (count($childpartners) > 0){
-                            
-                            $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
-                            $in_out = \DB::select($query);
-                            $adj['totalin'] = $adj['totalin'] + $in_out[0]->totalin;
-
-                            $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $childpartners).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
-                            $in_out = \DB::select($query);
-                            $adj['totalout'] = $adj['totalout'] + $in_out[0]->totalout;
-                        }
-                    }
-                    
-                }
-
-                $adj['moneyin'] = 0;
-                $adj['moneyout'] = 0;
-
-                // if (count($shops) > 0){
-                //     $shop_users = ShopUser::whereIn('shop_id', $shops)->groupBy('user_id')->pluck('user_id');
-                //     if( $shop_users ) 
-                //     {
-                //         $shop_users = User::where('role_id',1)->whereIn('id', $shop_users)->pluck('id')->toArray();
-                //     }
-                //     if (count($shop_users) > 0) {
-                //         $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add"';
-                //         $user_in_out = \DB::select($query);
-                //         $adj['moneyin'] = $user_in_out[0]->moneyin??0;
-
-                //         $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out"';
-                //         $user_in_out = \DB::select($query);
-                //         $adj['moneyout'] = $user_in_out[0]->moneyout??0;
-                //     }
-                // }
-                if (count($shops) > 0 )
-                {
-                    $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id in ('. implode(',',$shops) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                }
-                else
-                {
-                    $query = 'SELECT 0 as totalbet, 0 as totalwin';
-                }
-                $game_bet = \DB::select($query);
-                $adj['totalbet'] = $game_bet[0]->totalbet??0;
-                $adj['totalwin'] = $game_bet[0]->totalwin??0;
-                
-                if ($partner->hasRole('admin'))
-                {
-                    $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                }
-                else if ($partner->hasRole('comaster'))
-                {
-                    if (settings('enable_master_deal'))
-                    {
-                        $masters = $partner->childPartners();
-                        if (count($masters) > 0){
-                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage,  SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$masters) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                        }
-                        else
-                        {
-                            $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                        }
-                    }
-                    else
-                    {
-                        $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                    }
-                }
-                else if ($partner->hasRole('master'))
-                {
-                    if (settings('enable_master_deal'))
-                    {
-                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                    }
-                    else
-                    {
-                        $agents = $partner->childPartners();
-                        if (count($agents) > 0){
-                            $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',',$agents) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                        }
-                        else
-                        {
-                            $query = 'SELECT 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                        }
-                    }
-                }
-                else
-                {
-                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $partner->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                }
-                $deal_logs = \DB::select($query);
-                $adj['total_deal'] = $deal_logs[0]->total_deal??0;
-                $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
-                $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
-                $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
-                $adj['balance'] = $partner->balance;
-                $adj['name'] = $partner->username;
-                $adj['user_id'] = $partner->id;
-                $adj['role_id'] = $partner->role_id;
-                $adj['profit'] = 0;
-                return $adj;
-            }
+            return null;
         }
         public static function summary_month($user_id, $month=null)
         {
@@ -281,6 +162,7 @@ namespace VanguardLTE
             $adj['moneyin']=$d_summary->sum('moneyin');
             $adj['moneyout']=$d_summary->sum('moneyout');
             $adj['dealout']=$d_summary->sum('dealout');
+            $adj['ggrout']=$d_summary->sum('ggrout');
             $adj['totalbet']=$d_summary->sum('totalbet');
             $adj['totalwin']=$d_summary->sum('totalwin');
             $adj['total_deal']=$d_summary->sum('total_deal');
@@ -288,6 +170,7 @@ namespace VanguardLTE
             $adj['total_ggr']=$d_summary->sum('total_ggr');
             $adj['total_ggr_mileage']=$d_summary->sum('total_ggr_mileage');
             $adj['balance']=0;
+            $adj['childsum']=0;
             $adj['type']='monthly';
             $monthlysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user_id, 'date' => $from, 'type'=>'monthly'])->first();
             if ($monthlysumm)
@@ -324,6 +207,18 @@ namespace VanguardLTE
             if($b_shop){
                 $adj = DailySummary::adjustment($user_id, $from, $to);
                 $adj['date'] = $day;
+
+                //get balance and childsum from snapshot table
+                $shop_users = $user->availableUsers();
+                if (count($shop_users) > 0) {
+                    $query = 'SELECT SUM(balance) as sumbalance FROM w_users_snapshot WHERE id in ('.implode(',', $shop_users) .')';
+                    $in_out = \DB::select($query);
+                    $adj['childsum'] =  $in_out[0]->sumbalance??0;
+
+                    $query = 'SELECT balance FROM w_shops_snapshot WHERE id=' . $user->shop_id;
+                    $in_out = \DB::select($query);
+                    $adj['balance'] =  $in_out[0]->balance??0;
+                }
                 $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
                 {
@@ -333,17 +228,85 @@ namespace VanguardLTE
                 {
                     \VanguardLTE\DailySummary::create($adj);
                 }
+                return $adj;
             }
             else
             {
                 //repeat child partners
+                $adj = [
+                    'user_id' => $user->id, 
+                    'shop_id' => 0,
+                    'date' => $day,
+                    'totalin' => 0, //deposit via request
+                    'totalout' => 0, //withdraw via request
+                    'moneyin' => 0, // manual deposit
+                    'moneyout' => 0, //manual withdraw
+                    'dealout' => 0,
+                    'ggrout' => 0,
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                    'balance' => 0,
+                    'childsum' => 0,
+                    'type' => 'daily',
+                ];
                 $childusers = $user->childPartners(); //하위 파트너들 먼저 정산하고, 그다음 해당 파트너들의 정산을 이용해서 계산
                 foreach ($childusers as $c)
                 {
-                    DailySummary::summary($c, $day);
+                    $childAdj = DailySummary::summary($c, $day);
+                    $adj['totalin'] = $adj['totalin'] + $childAdj['totalin'];
+                    $adj['totalout'] = $adj['totalout'] + $childAdj['totalout'];
+                    $adj['moneyin'] = $adj['moneyin'] + $childAdj['moneyin'];
+                    $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
+                    $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
+                    $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
+                    $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
+                    $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
+                    $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
                 }
-                $adj = DailySummary::adjustment($user_id, $from, $to);
-                $adj['date'] = $day;             
+
+                if (!$user->isInoutPartner())
+                {
+
+                    $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
+                    $in_out = \DB::select($query);
+                    $adj['totalin'] = $adj['totalin'] + $in_out[0]->totalin;
+
+                    $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
+                    $in_out = \DB::select($query);
+                    $adj['totalout'] = $adj['totalout'] + $in_out[0]->totalout;
+
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL';
+                    $in_out = \DB::select($query);
+                    $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL';
+                    $in_out = \DB::select($query);
+                    $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
+
+                    $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
+                    $in_out = \DB::select($query);
+                    $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
+
+                    $query = 'SELECT SUM(summ) as ggrout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="ggr_out"';
+                    $in_out = \DB::select($query);
+                    $adj['ggrout'] = $adj['ggrout'] + $in_out[0]->ggrout;
+
+                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+
+                    $deal_logs = \DB::select($query);
+                    $adj['total_deal'] = $deal_logs[0]->total_deal??0;
+                    $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
+                    $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
+                    $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                }
+
+                $query = 'SELECT balance FROM w_users_snapshot WHERE id=' . $user->id;
+                $in_out = \DB::select($query);
+                $adj['balance'] =  $in_out[0]->balance??0;
 
                 $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
@@ -354,6 +317,7 @@ namespace VanguardLTE
                 {
                     \VanguardLTE\DailySummary::create($adj);
                 }
+                return $adj;
 
             }
         }
@@ -368,16 +332,6 @@ namespace VanguardLTE
             }
             $day = date("Y-m-d");
 
-
-            if(!$user->hasRole('manager')){
-                //repeat child partners
-                $childusers = $user->childPartners(); //하위 파트너들 먼저 정산하고, 그다음 해당 파트너들의 정산을 이용해서 계산
-                foreach ($childusers as $c)
-                {
-                    DailySummary::summary_today($c);
-                }
-            }
-            
             $todaysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->first();
             if ($todaysumm)
             {
@@ -389,7 +343,87 @@ namespace VanguardLTE
             }
             $to =  date("Y-m-d H:i:s", strtotime("now"));
 
-            $adj = DailySummary::adjustment($user_id, $from, $to);
+            $adj = [
+                'user_id' => $user->id, 
+                'shop_id' => 0,
+                'date' => $day,
+                'totalin' => 0, //deposit via request
+                'totalout' => 0, //withdraw via request
+                'moneyin' => 0, // manual deposit
+                'moneyout' => 0, //manual withdraw
+                'dealout' => 0,
+                'ggrout' => 0,
+                'totalbet' => 0,
+                'totalwin' => 0,
+                'total_deal' => 0,
+                'total_mileage' => 0,
+                'total_ggr' => 0,
+                'total_ggr_mileage' => 0,
+                'balance' => 0,
+                'childsum' => 0,
+                'type' => 'today',
+                'updated_at' => $to,
+            ];
+
+            if($user->hasRole('manager')){
+
+                $adj = DailySummary::adjustment($user_id, $from, $to);
+            }
+            else
+            {
+                $childusers = $user->childPartners(); //하위 파트너들 먼저 정산하고, 그다음 해당 파트너들의 정산을 이용해서 계산
+                foreach ($childusers as $c)
+                {
+                    $childAdj = DailySummary::summary_today($c);
+                    $adj['totalin'] = $adj['totalin'] + $childAdj['totalin'];
+                    $adj['totalout'] = $adj['totalout'] + $childAdj['totalout'];
+                    $adj['moneyin'] = $adj['moneyin'] + $childAdj['moneyin'];
+                    $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
+                    $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
+                    $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
+                    $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
+                    $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
+                    $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
+                }
+
+                if (!$user->isInoutPartner())
+                {
+                    $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
+                    $in_out = \DB::select($query);
+                    $adj['totalin'] = $adj['totalin'] + $in_out[0]->totalin;
+
+                    $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
+                    $in_out = \DB::select($query);
+                    $adj['totalout'] = $adj['totalout'] + $in_out[0]->totalout;
+
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL';
+                    $in_out = \DB::select($query);
+                    $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL';
+                    $in_out = \DB::select($query);
+                    $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
+
+                    $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
+                    $in_out = \DB::select($query);
+                    $adj['dealout'] = $adj['dealout'] + $in_out[0]->dealout;
+
+                    $query = 'SELECT SUM(summ) as ggrout FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="ggr_out"';
+                    $in_out = \DB::select($query);
+                    $adj['ggrout'] = $adj['ggrout'] + $in_out[0]->ggrout;
+
+                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+
+                    $deal_logs = \DB::select($query);
+                    $adj['total_deal'] = $deal_logs[0]->total_deal??0;
+                    $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
+                    $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
+                    $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                }
+
+                $adj['balance'] =  $user->balance;
+            }
+
             $adj['date'] = $day;
             $adj['type'] ='today';
             $adj['updated_at'] = $to;
@@ -402,19 +436,20 @@ namespace VanguardLTE
                 $adj['moneyin']+=$todaysumm->moneyin;
                 $adj['moneyout']+=$todaysumm->moneyout;
                 $adj['dealout']+=$todaysumm->dealout;
+                $adj['ggrout']+=$todaysumm->ggrout;
                 $adj['totalbet']+=$todaysumm->totalbet;
                 $adj['totalwin']+=$todaysumm->totalwin;
                 $adj['total_deal']+=$todaysumm->total_deal;
                 $adj['total_mileage']+=$todaysumm->total_mileage;
                 $adj['total_ggr']+=$todaysumm->total_ggr;
                 $adj['total_ggr_mileage']+=$todaysumm->total_ggr_mileage;
-                $adj['balance']=0;
                 $todaysumm->update($adj);
             }
             else
             {
                 \VanguardLTE\DailySummary::create($adj);
             }
+            return $adj;
         }
     }
 

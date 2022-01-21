@@ -55,7 +55,7 @@ namespace VanguardLTE\Console
 
             })->dailyAt('08:00');
 
-            // $schedule->command('daily:reset_ggr')->dailyAt('00:00')->runInBackground();
+            $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
@@ -882,6 +882,12 @@ namespace VanguardLTE\Console
                     }
                 }
                 $this->info('End reset game bank');
+            });
+            \Artisan::command('daily:snapshot', function () {
+                \DB::statement('DROP TABLE IF EXISTS w_users_snapshot');
+                \DB::statement('CREATE TABLE w_users_snapshot AS SELECT * FROM w_users');
+                \DB::statement('DROP TABLE IF EXISTS w_shops_snapshot');
+                \DB::statement('CREATE TABLE w_shops_snapshot AS SELECT * FROM w_shops');
             });
             \Artisan::command('daily:reset_ggr {masterid=0}', function ($masterid) {
                 $this->info('Begin reset calculation');

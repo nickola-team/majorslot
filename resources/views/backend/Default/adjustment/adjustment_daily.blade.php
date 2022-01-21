@@ -81,19 +81,22 @@
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>수동충전</th>
+						<th>수동환전</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						<th>딜비전환</th>
 						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 						<th>죽장수익</th>
+						<th>죽장전환</th>
 						@endif
-						<th>딜비전환</th>
-						{{--<th>매장충전</th>
-						<th>매장환전</th> --}}
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
+						<th>보유금</th>
+						<th>하위보유금(합계)</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
 						<th>순이익금</th>
@@ -126,19 +129,22 @@
 						<td><span class='text-red'>합계</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalin'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalout'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>
 						@if(auth()->user()->isInoutPartner())
 						<td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
 						@endif
 						<td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
 						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 						<td><span class='text-red'>{{ number_format($summary->sum('total_ggr')- $summary->sum('total_ggr_mileage')-($summary->sum('total_deal')- $summary->sum('total_mileage')),0) }}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('ggrout'),0)}}</span></td>
 						@endif
-						<td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
-						{{--<td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>--}}
 						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('balance'),0)}}</span></td>
+						<td><span class='text-red'>{{number_format($summary->sum('childsum'),0)}}</span></td>
 						@if(auth()->user()->isInoutPartner())
 						<td><span class='text-red'>{{ number_format($totalggr ,0) }}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - $totalggr,0) }}</span></td>
@@ -155,24 +161,26 @@
 						<th>날짜</th>
 						<th>충전</th>
 						<th>환전</th>
+						<th>수동충전</th>
+						<th>수동환전</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>이익금</th>
 						@endif
 						<th>딜비수익</th>
+						<th>딜비전환</th>
 						@if ( auth()->user()->hasRole('admin') || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
 						<th>죽장수익</th>
+						<th>죽장전환</th>
 						@endif
-						<th>딜비전환</th>
-						{{--
-						<th>매장충전</th>
-						<th>매장환전</th> --}}
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
+						<th>보유금</th>
+						<th>하위보유금(합계)</th>
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
 						<th>순이익금</th>
-						@endif		
+						@endif
 					</tr>
 					</thead>
                     </table>
