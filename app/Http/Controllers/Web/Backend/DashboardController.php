@@ -1317,7 +1317,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             $adjustments = [];
 
-            $adj_days = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->whereIn('user_id', $users->pluck('id')->toArray())->selectRaw('user_id, shop_id, sum(totalin) as totalin,sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, updated_at')->get();
+            $adj_days = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->whereIn('user_id', $users->pluck('id')->toArray())->selectRaw('user_id, shop_id, sum(totalin) as totalin,sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(ggrout) as ggrout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, updated_at')->get();
 
             foreach ($adj_days as $adj_user)
             {
