@@ -915,6 +915,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function adjustment_ggr(\Illuminate\Http\Request $request)
         {
+            set_time_limit(0);
             $adjustments = [];
             if (auth()->user()->hasRole('admin'))
             {
