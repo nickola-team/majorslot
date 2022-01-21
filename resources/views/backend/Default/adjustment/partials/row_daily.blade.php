@@ -21,8 +21,10 @@
 	<td>{{ number_format($adjustment->totalbet,0)}}</td>
 	<td>{{ number_format($adjustment->totalwin,0)}}</td>
 	<td>{{ number_format($adjustment->totalbet - $adjustment->totalwin,0) }}</td>
+	@if ($type=='daily')
 	<td>{{ number_format($adjustment->balance,0)}}</td>
 	<td>{{ number_format($adjustment->childsum,0)}}</td>
+	@endif
 	@if(auth()->user()->isInoutPartner())
 	<td>{{ number_format($ggr,0) }}</td>
 	<td>{{ number_format($adjustment->totalin - $adjustment->totalout - $ggr,0) }}</td>

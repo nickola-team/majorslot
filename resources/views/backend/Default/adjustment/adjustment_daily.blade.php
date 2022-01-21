@@ -95,8 +95,10 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
+						@if ($type=='daily')
 						<th>보유금</th>
 						<th>하위보유금(합계)</th>
+						@endif
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
 						<th>순이익금</th>
@@ -143,8 +145,10 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalbet'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
+						@if ($type=='daily')
 						<td><span class='text-red'>{{number_format($summary->sum('balance'),0)}}</span></td>
 						<td><span class='text-red'>{{number_format($summary->sum('childsum'),0)}}</span></td>
+						@endif
 						@if(auth()->user()->isInoutPartner())
 						<td><span class='text-red'>{{ number_format($totalggr ,0) }}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalin') - $summary->sum('totalout') - $totalggr,0) }}</span></td>
@@ -175,8 +179,10 @@
 						<th>베팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
+						@if ($type=='daily')
 						<th>보유금</th>
 						<th>하위보유금(합계)</th>
+						@endif
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
 						<th>순이익금</th>
