@@ -826,11 +826,15 @@ namespace VanguardLTE
             $game = $stat_game->game;
             $betMoney = $stat_game->bet;
             $winMoney = $stat_game->win;
-            $refundGame = '_refund';
-            if (substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
+            $refundGames = ['_refund', '_tie'];
+            foreach($refundGames as $refundGame) 
             {
-                $betMoney = -$stat_game->win;
-                $winMoney = 0;
+                if (substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
+                {
+                    $betMoney = -$stat_game->win;
+                    $winMoney = 0;
+                    break;
+                }
             }
             $date_time = $stat_game->date_time;
             if ($date_time == null)
