@@ -1091,6 +1091,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             }
             if ($partner->hasRole('manager'))
             {
+                $shop = $partner->shop;
                 $shop->ggr_balance = 0;
                 $shop->ggr_mileage = 0;
                 //reset count deal balances
