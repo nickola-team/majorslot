@@ -879,8 +879,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             'total_deal' => $total_deal,
                             'total_sum' => $total_sum,
                         ];
-                        $adj_child = $this->ggr_partner($c);
-                        $adjustments = array_merge($adjustments, $adj_child);
+                        // $adj_child = $this->ggr_partner($c);
+                        // $adjustments = array_merge($adjustments, $adj_child);
                     }
                 }
                 else
@@ -916,26 +916,40 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         public function adjustment_ggr(\Illuminate\Http\Request $request)
         {
             set_time_limit(0);
-            $adjustments = [];
-            if (auth()->user()->hasRole('admin'))
-            {
-                $comasters = \VanguardLTE\User::where('parent_id', auth()->user()->id)->get();
-                foreach ($comasters as $comaster)
-                {
-                    $adj = $this->ggr_partner($comaster);
-                    $adjustments = array_merge($adjustments, $adj);
-                }
-                
-            }
-            else if (auth()->user()->hasRole('comaster'))
-            {
-                $adjustments = $this->ggr_partner(auth()->user());
-            }
-            else
+            $user_id = $request->input('parent');
+            if (!auth()->user()->isInoutPartner())
             {
                 return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+
             }
-            return view('backend.Default.adjustment.adjustment_ggr', compact('adjustments'));
+            $user = null;
+            $adjustments = [];
+            if($user_id == null || $user_id == 0)
+            {
+                if (auth()->user()->hasRole('admin'))
+                {
+                    $comasters = \VanguardLTE\User::where('parent_id', auth()->user()->id)->get();
+                    foreach ($comasters as $comaster)
+                    {
+                        $adj = $this->ggr_partner($comaster);
+                        $adjustments = array_merge($adjustments, $adj);
+                    }
+                }
+                else if (auth()->user()->hasRole('comaster'))
+                {
+                    $adjustments = $this->ggr_partner(auth()->user());
+                }
+            }
+            else {
+                if (auth()->user()->id!=$user_id && !in_array($user_id, auth()->user()->hierarchyPartners()))
+                {
+                    return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+                }
+                $user = \VanguardLTE\User::where('id', $user_id)->first();
+                $adjustments = $this->ggr_partner($user);
+            }
+            
+            return view('backend.Default.adjustment.adjustment_ggr', compact('adjustments','user'));
         }
         public function process_ggr(\Illuminate\Http\Request $request)
         {

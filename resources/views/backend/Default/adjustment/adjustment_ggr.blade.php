@@ -22,6 +22,21 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">죽장정산</h3>
+				<?php  
+					$available_roles = Auth::user()->available_roles( true );
+					$available_roles_trans = [];
+					foreach ($available_roles as $key=>$role)
+					{
+						$role = \VanguardLTE\Role::find($key)->description;
+						$available_roles_trans[$key] = $role;
+					}
+				?>
+					@if($user != null && $user->id!=auth()->user()->id)
+					<a href="{{ route($admurl.'.adjustment_ggr',  'parent='.$user->parent_id) }}" style="color:#72afd2;">
+						{{$user->username}}
+						[ {{$available_roles_trans[$user->role_id]}} ]
+					</a>
+					@endif
 			</div>
 			<div class="box-body">
 				<div class="table-responsive">

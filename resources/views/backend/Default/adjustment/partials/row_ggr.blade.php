@@ -1,5 +1,5 @@
 <tr>
-	<td>{{$adjustment['username']}} [ {{$available_roles_trans[$adjustment['role_id']]}} ]</td>
+	<td><a href="{{ route($admurl.'.adjustment_ggr', ['parent'=>$adjustment['user_id']]) }}">{{$adjustment['username']}} [ {{$available_roles_trans[$adjustment['role_id']]}} ]</a></td>
 	<td>{{$adjustment['last_reset_at']}}</td>
 	<td>{{$adjustment['next_reset_at']}}</td> 
 	<td>{{$adjustment['reset_days']}}일</td> 
