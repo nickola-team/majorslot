@@ -71,6 +71,7 @@ namespace VanguardLTE
                 $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL';
                 $in_out = \DB::select($query);
                 $adj['moneyout'] = $in_out[0]->moneyout??0;
+                $adj['childsum'] = 0;
                 
                 if (count($shop_users)>0)
                 {
