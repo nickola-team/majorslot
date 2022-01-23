@@ -1380,7 +1380,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $promo->racedetails = $response->body();
                 }
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v2/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v3/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->tournamentleaderboard = $response->body();
