@@ -818,10 +818,13 @@ namespace VanguardLTE
 
         public function processBetDealerMoney_Queue($stat_game) 
         {
-
-            $betMoney = $stat_game->bet;
-            $winMoney = $stat_game->win;
             $game = $stat_game->game;
+            $refundGame = '_refund';
+            if (substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
+            {
+                $betMoney = - $stat_game->bet;
+                $winMoney = $stat_game->win - $stat_game->bet;
+            }
             $date_time = $stat_game->date_time;
             if ($date_time == null)
             {
@@ -853,8 +856,8 @@ namespace VanguardLTE
                     'partner_id' => $this->id, //user's id
                     'balance_before' => 0, 
                     'balance_after' => 0, 
-                    'bet' => abs($betMoney), 
-                    'win' => abs($winMoney), 
+                    'bet' => abs($stat_game->bet), 
+                    'win' => abs($stat_game->win), 
                     'deal_profit' => $deal_balance,
                     'game' => $game,
                     'shop_id' => $shop->id,
@@ -883,8 +886,8 @@ namespace VanguardLTE
                         'partner_id' => $manager->id, //manager's id
                         'balance_before' => 0, 
                         'balance_after' => 0, 
-                        'bet' => abs($betMoney), 
-                        'win' => abs($winMoney), 
+                        'bet' => abs($stat_game->bet), 
+                        'win' => abs($stat_game->win), 
                         'deal_profit' => $deal_balance,
                         'game' => $game,
                         'shop_id' => $shop->id,
@@ -914,8 +917,8 @@ namespace VanguardLTE
                             'partner_id' => $partner->id,
                             'balance_before' => 0, 
                             'balance_after' => 0, 
-                            'bet' => abs($betMoney),
-                            'win' => abs($winMoney),
+                            'bet' => abs($stat_game->bet),
+                            'win' => abs($stat_game->win),
                             'deal_profit' => $deal_balance,
                             'game' => $game,
                             'shop_id' => $this->shop_id,
