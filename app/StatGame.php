@@ -122,6 +122,10 @@ namespace VanguardLTE
                     return $model;
                 }
             } */
+            if (($model->type == 'table') && ($model->bet==$model->win)) // if live game and tie, then don't process deal
+            {
+                return $model;
+            }
             if ($model->bet > 0 || $model->win > 0) {
                 $user = \VanguardLTE\User::where('id',$model->user_id)->first();
                 $user->processBetDealerMoney_Queue($model);
