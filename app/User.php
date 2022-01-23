@@ -819,6 +819,8 @@ namespace VanguardLTE
         public function processBetDealerMoney_Queue($stat_game) 
         {
             $game = $stat_game->game;
+            $betMoney = $stat_game->bet;
+            $winMoney = $stat_game->win;
             $refundGame = '_refund';
             if (substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
             {
