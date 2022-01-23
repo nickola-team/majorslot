@@ -236,7 +236,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             //check if result is tie
             $betamount = 0;
-            $betrounds = \VanguardLTE\StatGame::where(['user_id' => $user->id, 'roundid' => $roundid, 'game_id' => $tableid]);
+            $betrounds = \VanguardLTE\StatGame::where(['user_id' => $user->id, 'roundid' => $roundid, 'game_id' => $tableid])->get();
             if (count($betrounds) > 0)
             {
                 $betamount = $betrounds->sum('bet');
