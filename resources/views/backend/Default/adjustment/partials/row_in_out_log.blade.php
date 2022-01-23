@@ -29,8 +29,14 @@
 			}
 			else
 			{
-				echo "<td>".$parent->username."</td>";
-				$parent = $parent->referral;
+				if ($parent) {
+					echo "<td>".$parent->username."</td>";
+					$parent = $parent->referral;
+				}
+				else
+				{
+					echo "<td>삭제된 파트너</td>";
+				}
 			}
 		}
 	?>
