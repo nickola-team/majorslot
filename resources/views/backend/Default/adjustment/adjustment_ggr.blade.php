@@ -31,7 +31,7 @@
 						$available_roles_trans[$key] = $role;
 					}
 				?>
-					@if($user != null && $user->id!=auth()->user()->id)
+					@if($user != null && $user->id!=auth()->user()->id && !$user->isInoutPartner())
 					<a href="{{ route($admurl.'.adjustment_ggr',  'parent='.$user->parent_id) }}" style="color:#72afd2;">
 						{{$user->username}}
 						[ {{$available_roles_trans[$user->role_id]}} ]
