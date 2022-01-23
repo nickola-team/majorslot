@@ -229,7 +229,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $game = $this->getGameObj($tableid);
             
             $category = \VanguardLTE\Category::where(['provider' => 'evo', 'shop_id' => 0, 'href' => $game['href']])->first();
-            $gamename = $game['name'] . '_' . $game['href'];
+            $gamename = '';
+            if ($game){
+                $gamename = $game['name'] . '_' . $game['href'];
+            }
 
             //check if result is tie
             $betamount = 0;
