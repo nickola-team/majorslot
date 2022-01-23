@@ -89,7 +89,7 @@ namespace VanguardLTE
 
                     $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id <> ' . $user->id;
                     $user_in_out = \DB::select($query);
-                    $adj['moneyout'] = $adj['moneyout'] + $user_in_out[0]->totalout??0;
+                    $adj['moneyout'] = $adj['moneyout'] + $user_in_out[0]->moneyout??0;
 
 
                     $query = 'SELECT SUM(summ) as dealout FROM w_transactions WHERE user_id in ('.implode(',', $shop_users).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="deal_out"';
