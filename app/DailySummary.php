@@ -367,7 +367,6 @@ namespace VanguardLTE
             ];
 
             if($user->hasRole('manager')){
-
                 $adj = DailySummary::adjustment($user_id, $from, $to);
             }
             else
@@ -428,6 +427,7 @@ namespace VanguardLTE
             $adj['date'] = $day;
             $adj['type'] ='today';
             $adj['updated_at'] = $to;
+            $aa = $adj;
             if ($todaysumm)
             {
                 $adj['user_id']=$user_id;
@@ -450,7 +450,7 @@ namespace VanguardLTE
             {
                 \VanguardLTE\DailySummary::create($adj);
             }
-            return $adj;
+            return $aa;
         }
     }
 
