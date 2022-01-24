@@ -161,6 +161,12 @@ return [
     'ata_org' => env('ATA_ORG', 'major'),
     'ata_key' => env('ATA_KEY', 'test'),
 
+    /*
+    GAC Auth key
+    */
+    'gac_api' => env('GAC_API', ''),
+    'gac_key' => env('GAC_KEY', 'test'),
+
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
 
