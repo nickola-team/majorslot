@@ -1,5 +1,5 @@
 @extends('backend.argon.layouts.app', ['class' => 'bg-light'])
-@section('page-title',  __('Sign in') )
+@section('page-title',  '로그인' )
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/login.css?v=1.0.0" rel="stylesheet">
 @endpush
