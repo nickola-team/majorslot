@@ -282,15 +282,24 @@ namespace VanguardLTE
 
                     $childPartners = $user->hierarchyPartners();
                     $availableUsers = $user->availableUsers();
+                    $availableShops = $user->availableShops();
                     $availableUsers[] = $user->id; //include self in/out
 
-                    if (count($availableUsers) > 0 && count($childPartners) > 0){
+                    if (count($availableUsers) > 0 && count($childPartners) > 0 && count($availableShops) > 0){
 
                         $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id IN ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
+                        $query = 'SELECT SUM(summ) as moneyin FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
+                        $in_out = \DB::select($query);
+                        $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
                         $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id IN ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
+                        $in_out = \DB::select($query);
+                        $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
+
+                        $query = 'SELECT SUM(summ) as moneyout FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
                     }
@@ -405,15 +414,24 @@ namespace VanguardLTE
 
                     $childPartners = $user->hierarchyPartners();
                     $availableUsers = $user->availableUsers();
+                    $availableShops = $user->availableShops();
                     $availableUsers[] = $user->id; //include self in/out
 
-                    if (count($availableUsers) > 0 && count($childPartners) > 0){
+                    if (count($availableUsers) > 0 && count($childPartners) > 0 && count($availableShops) > 0){
 
                         $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id IN ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
+                        $query = 'SELECT SUM(summ) as moneyin FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
+                        $in_out = \DB::select($query);
+                        $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
                         $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id IN ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
+                        $in_out = \DB::select($query);
+                        $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
+
+                        $query = 'SELECT SUM(summ) as moneyout FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
                     }
