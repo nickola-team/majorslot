@@ -291,7 +291,7 @@ namespace VanguardLTE
                         $in_out = \DB::select($query);
                         $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
-                        $query = 'SELECT SUM(summ) as moneyin FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
+                        $query = 'SELECT SUM(sum) as moneyin FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
@@ -299,7 +299,7 @@ namespace VanguardLTE
                         $in_out = \DB::select($query);
                         $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
 
-                        $query = 'SELECT SUM(summ) as moneyout FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
+                        $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
                     }
@@ -402,7 +402,7 @@ namespace VanguardLTE
                     $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
                 }
 
-                if (!$user->isInoutPartner())
+                if (!$user->hasRole('admin'))
                 {
                     $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id='.$user->id.' AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
                     $in_out = \DB::select($query);
@@ -423,7 +423,7 @@ namespace VanguardLTE
                         $in_out = \DB::select($query);
                         $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
-                        $query = 'SELECT SUM(summ) as moneyin FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
+                        $query = 'SELECT SUM(sum) as moneyin FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
@@ -431,7 +431,7 @@ namespace VanguardLTE
                         $in_out = \DB::select($query);
                         $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
 
-                        $query = 'SELECT SUM(summ) as moneyout FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
+                        $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE shop_id IN ('.implode(',', $availableShops).') AND date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id NOT IN ('.implode(',', $childPartners).')';
                         $in_out = \DB::select($query);
                         $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
                     }
