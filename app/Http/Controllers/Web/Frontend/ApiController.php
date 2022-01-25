@@ -715,7 +715,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'old' => $old,
                         'new' => $user->balance,
                         'balance' => $master->balance,
-                        'shop_id' => 0
+                        'shop_id' => $user->shop_id
                     ]);
                 }
             }

@@ -892,6 +892,11 @@ namespace VanguardLTE
                 if($deal_percent > 0 || $ggr_percent > 0) {
                     $deal_balance = $betMoney * $deal_percent  / 100;
                     $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
+                    if ($deal_balance < $deal_mileage || $ggr_profit < $ggr_mileage)
+                    {
+                        //error
+                        return ;
+                    }
                     $deal_data[] = [
                         'user_id' => $this->id, 
                         'partner_id' => $manager->id, //manager's id
@@ -923,6 +928,11 @@ namespace VanguardLTE
                     if($deal_percent > 0 || $ggr_percent > 0) {
                         $deal_balance = $betMoney * $deal_percent  / 100;
                         $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
+                        if ($deal_balance < $deal_mileage || $ggr_profit < $ggr_mileage)
+                        {
+                            //error
+                            return ;
+                        }
                         $deal_data[] = [
                             'user_id' => $this->id, 
                             'partner_id' => $partner->id,
@@ -945,6 +955,12 @@ namespace VanguardLTE
                         ];
                     }
                     $partner = $partner->referral;
+                }
+                // last check if the deal_percent is less than comaster's deal percent
+                if ($partner!=null && ($partner->deal_percent < $deal_percent || $partner->ggr_percent < $ggr_percent)  )
+                {
+                    //error
+                    return;
                 }
             }
 
