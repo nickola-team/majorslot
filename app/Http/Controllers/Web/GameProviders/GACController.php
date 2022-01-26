@@ -22,7 +22,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         /*
-        * FROM Play'n GO, BACK API
+        * FROM GAC, BACK API
         */
 
         public function checkplayer($userid, \Illuminate\Http\Request $request)
@@ -177,7 +177,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameList = [];
             $query = 'SELECT * FROM w_provider_games WHERE provider="gac' . $href .'"';
             $gac_games = \DB::select($query);
-            foreach ($evo_games as $game)
+            foreach ($gac_games as $game)
             {
                 $icon_name = str_replace(' ', '_', $game->gameid);
                 $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
@@ -191,7 +191,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'type' => $game->type,
                     'href' => $href,
                     'view' => $game->view,
-                    'icon' => '/frontend/Default/ico/gac/'. $href . '/' . $icon_name . '.jpg',
+                    'icon' => '/frontend/Default/ico/gac/'. $href . '/' . $icon_name . '.png',
                     ]);
             }
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -208,10 +208,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $data = [
-                'loginId' => $user->id,
-                'recommend' => config('app.gac_key')
+                'userId' => strval($user->id),
+                'userName' => $user->username,
+                'recommend' => config('app.gac_key'),
+                'gameType' => 31
             ];
-            
+            $url = null;
             try {
                 $response = Http::timeout(10)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
                 if (!$response->ok())
@@ -219,8 +221,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return ['error' => true, 'data' => $response->body()];
                 }
                 $data = $response->json();
-                if (isset($data['entry'])){
-                    $url = $data['entry'];
+                if (isset($data['lobbyUrl'])){
+                    $url = $data['lobbyUrl'];
                 }
             }
             catch (\Exception $ex)
@@ -238,7 +240,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => false, 'data' => ['url' => $url]];
             }
             return ['error' => true, 'msg' => '로그인하세요'];
-            
         }
 
     }
