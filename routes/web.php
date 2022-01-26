@@ -1452,7 +1452,7 @@ Route::group([ 'prefix' => 'ata',], function () {
  * GameArtCasino Game Provider
  */
 Route::group([ 'prefix' => 'gac',], function () {
-	Route::get('/checkplayer/{userid}', 'GameProviders\GACController@checkplayer');
+	Route::get('/checkPlayer/{userid}', 'GameProviders\GACController@checkplayer');
     Route::get('/balance/{userid}', 'GameProviders\GACController@balance');
     Route::post('/placeBet', 'GameProviders\GACController@placebet');
     Route::post('/betResult', 'GameProviders\GACController@betresult');
