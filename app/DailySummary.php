@@ -320,6 +320,24 @@ namespace VanguardLTE
                     $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
                     $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
                 }
+                else //admin
+                {
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id;
+                    $in_out = \DB::select($query);
+                    $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(sum) as moneyin FROM w_shops_stat WHERE date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id =' . $user->id;
+                    $in_out = \DB::select($query);
+                    $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id;
+                    $in_out = \DB::select($query);
+                    $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
+
+                    $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id =' . $user->id;
+                    $in_out = \DB::select($query);
+                    $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
+                }
 
                 $query = 'SELECT balance FROM w_users_snapshot WHERE id=' . $user->id;
                 $in_out = \DB::select($query);
