@@ -281,6 +281,7 @@ namespace VanguardLTE
                     $adj['totalout'] = $adj['totalout'] + $in_out[0]->totalout;
 
                     $childPartners = $user->hierarchyPartners();
+                    $childPartners[] = $user->id;
                     $availableUsers = $user->availableUsers();
                     $availableShops = $user->availableShops();
                     $availableUsers[] = $user->id; //include self in/out
