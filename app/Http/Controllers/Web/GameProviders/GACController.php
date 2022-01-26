@@ -59,7 +59,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'result' => true,
                 'message' => 'OK',
                 'data' => [
-                    'balance' => floatval($user->balance)
+                    'balance' => intval($user->balance)
                 ]
             ]);
         }
@@ -90,13 +90,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            $user->balance = $user->balance - floatval(abs($betAmount));
+            $user->balance = $user->balance - intval(abs($betAmount));
             $user->save();
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
                 'data' => [
-                    'balance' => floatval($user->balance)
+                    'balance' => intval($user->balance)
                 ]
             ]);
         }
@@ -129,14 +129,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            $user->balance = $user->balance + floatval(abs($winAmount));
+            $user->balance = $user->balance + intval(abs($winAmount));
             $user->save();
 
             $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => 'gac'])->first();
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
-                'balance' => floatval($user->balance), 
+                'balance' => intval($user->balance), 
                 'bet' => $betAmount, 
                 'win' => $winAmount, 
                 'game' =>  $tableName, 
@@ -156,7 +156,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'result' => true,
                 'message' => 'OK',
                 'data' => [
-                    'balance' => floatval($user->balance)
+                    'balance' => intval($user->balance)
                 ]
             ]);
         }
