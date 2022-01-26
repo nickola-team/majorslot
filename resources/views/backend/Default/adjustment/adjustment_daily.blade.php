@@ -147,9 +147,9 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
 						@if ($type=='daily')
-						<td><span class='text-red'>{{number_format($summary->sum('balance'),0)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('childsum'),0)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('balance')+$summary->sum('childsum'),0)}}</span></td>
+						<td><span class='text-red'>0</span></td>
+						<td><span class='text-red'>0</span></td>
+						<td><span class='text-red'>0</span></td>
 						@endif
 						@if(auth()->user()->isInoutPartner())
 						<td><span class='text-red'>{{ number_format($totalggr ,0) }}</span></td>
