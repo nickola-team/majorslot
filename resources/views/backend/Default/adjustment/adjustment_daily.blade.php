@@ -98,6 +98,7 @@
 						@if ($type=='daily')
 						<th>보유금</th>
 						<th>하위보유금(합계)</th>
+						<th>총보유금</th>
 						@endif
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>
@@ -146,8 +147,9 @@
 						<td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
 						<td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
 						@if ($type=='daily')
-						<td><span class='text-red'>{{number_format($summary->sum('balance'),0)}}</span></td>
-						<td><span class='text-red'>{{number_format($summary->sum('childsum'),0)}}</span></td>
+						<td><span class='text-red'>0</span></td>
+						<td><span class='text-red'>0</span></td>
+						<td><span class='text-red'>0</span></td>
 						@endif
 						@if(auth()->user()->isInoutPartner())
 						<td><span class='text-red'>{{ number_format($totalggr ,0) }}</span></td>
@@ -182,6 +184,7 @@
 						@if ($type=='daily')
 						<th>보유금</th>
 						<th>하위보유금(합계)</th>
+						<th>총보유금</th>
 						@endif
 						@if(auth()->user()->isInoutPartner())
 						<th>머니금액</th>

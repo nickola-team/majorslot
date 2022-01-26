@@ -1311,14 +1311,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function updateLoginDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateLoginDetailsRequest $request)
         {
-            $data = $request->all();
-            if( trim($data['password']) == '' ) 
-            {
-                unset($data['password']);
-                unset($data['password_confirmation']);
-            }
-            $this->users->update($user->id, $data);
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            // $data = $request->all();
+            // if( trim($data['password']) == '' ) 
+            // {
+            //     unset($data['password']);
+            //     unset($data['password_confirmation']);
+            // }
+            // $this->users->update($user->id, $data);
+            // event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
             return redirect()->route(config('app.admurl').'.user.edit', $user->id)->withSuccess(trans('app.login_updated'));
         }
         public function delete(\VanguardLTE\User $user)
