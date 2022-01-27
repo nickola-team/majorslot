@@ -750,7 +750,7 @@ namespace VanguardLTE\Console
                 }
                 $availableUsers = $comaster->availableUsers();
                 if ($game=='all'){
-                    $stat_games = \VanguardLTE\StatGame::groupby('user_id','game')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->whereIn('user_id', $availableUsers)->selectRaw('SUM(bet) as bet, win, game, type, user_id')->get();
+                    $stat_games = \VanguardLTE\StatGame::groupby('user_id','game')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->whereIn('user_id', $availableUsers)->selectRaw('SUM(bet) as bet, win, game, type, user_id, date_time, category_id, game_id')->get();
                 }
                 else
                 {
@@ -765,41 +765,6 @@ namespace VanguardLTE\Console
                 //     {
                 //         $user->processBetDealerMoney_Queue($stat);
                 //     }
-                //     else
-                //     {
-                //         $betMoney = $stat->bet;
-                //         $shop = $user->shop;
-                //         $deal_balance = 0;
-                //         $deal_mileage = 0;
-                //         $deal_percent = 0;
-                //         $deal_data = [];
-                //         $deal_percent = $shop->deal_percent - $shop->table_deal_percent;
-                //         $manager = $user->referral;
-                //         if ($manager != null){
-                //             if($deal_percent > 0) {
-                //                 $deal_balance = $betMoney * $deal_percent  / 100;
-                //                 if ($$shop->deal_balance > $deal_balance)
-                //                 {
-                //                     $$shop->decrement('deal_balance',  $deal_balance);
-                //                 }
-                //             }
-                //             $partner = $manager->referral;
-                //             while ($partner != null && !$partner->isInoutPartner())
-                //             {
-                //                 $deal_mileage = $deal_balance;
-                //                 $deal_percent = $partner->deal_percent-$partner->table_deal_percent;
-                //                 if($deal_percent > 0) {
-                //                     $deal_balance = $betMoney * $deal_percent  / 100;
-                //                     if ($partner->deal_balance > $deal_balance)
-                //                     {
-                //                         $partner->decrement('deal_balance',  $deal_balance);
-                //                     }
-                //                 }
-                //                 $partner = $partner->referral;
-                //             }
-                //         }
-                //     }
-                    
                 // }
                 $this->info('End deal calculation');
             });
