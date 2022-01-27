@@ -429,6 +429,9 @@ namespace VanguardLTE\Games\FruitPartyPM
                         else if($scattersCount > 6){
                             
                         }
+                        else if($isbuyfreespin == 0 && $scattersCount < 3){
+
+                        }
                         else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') >= 15 && $freeSpinNum > 0){
                         
                         }

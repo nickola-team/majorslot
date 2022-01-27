@@ -24,6 +24,7 @@
 	@if ($type=='daily')
 	<td>{{ number_format($adjustment->balance,0)}}</td>
 	<td>{{ number_format($adjustment->childsum,0)}}</td>
+	<td>{{ number_format($adjustment->balance+$adjustment->childsum,0)}}</td>
 	@endif
 	@if(auth()->user()->isInoutPartner())
 	<td>{{ number_format($ggr,0) }}</td>
