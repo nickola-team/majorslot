@@ -757,15 +757,15 @@ namespace VanguardLTE\Console
                     $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', 'like', '%' . $game . '%')->whereIn('user_id', $availableUsers)->selectRaw('SUM(bet) as bet, win, game, type, user_id')->get();
                 }
                 $this->info("total bet = " . $stat_games->sum('bet') . ', count=' . $stat_games->count());
-                // foreach ($stat_games as $stat)
-                // {
-                //     usleep(10);
-                //     $user = \VanguardLTE\User::where('id',$stat->user_id)->first();
-                //     if ($game=='all')
-                //     {
-                //         $user->processBetDealerMoney_Queue($stat);
-                //     }
-                // }
+                foreach ($stat_games as $stat)
+                {
+                    usleep(10);
+                    $user = \VanguardLTE\User::where('id',$stat->user_id)->first();
+                    if ($game=='all')
+                    {
+                        $user->processBetDealerMoney_Queue($stat);
+                    }
+                }
                 $this->info('End deal calculation');
             });
             \Artisan::command('hourly:reset_bank {masterid=0}', function ($masterid) {
