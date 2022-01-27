@@ -739,7 +739,7 @@ namespace VanguardLTE\Console
                 $this->info('End');
             });
 
-            \Artisan::command('daily:dealsum {from} {to} {$comastername} {game=all} ', function ($from, $to, $comastername, $game) {
+            \Artisan::command('daily:dealsum {from} {to} {comastername} {game=all}', function ($from, $to, $comastername, $game) {
                 set_time_limit(0);
                 $this->info("Begin deal calculation");
                 $comaster = \VanguardLTE\User::where('username', $comastername)->first();
