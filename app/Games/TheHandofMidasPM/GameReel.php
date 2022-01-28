@@ -85,6 +85,195 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 }
             }
         }
+        public function generationFreeStacks($slotSettings, $game_id){   
+            $linesId = [];
+            $linesId[0] = [2,2,2,2,2];
+            $linesId[1] = [1,1,1,1,1];
+            $linesId[2] = [3,3,3,3,3];
+            $linesId[3] = [1,2,3,2,1];
+            $linesId[4] = [3,2,1,2,3];
+            $linesId[5] = [2,1,1,1,2];
+            $linesId[6] = [2,3,3,3,2];
+            $linesId[7] = [1,1,2,3,3];
+            $linesId[8] = [3,3,2,1,1];
+            $linesId[9] = [2,3,2,1,2];
+            $linesId[10] = [2,1,2,3,2];
+            $linesId[11] = [1,2,2,2,1];
+            $linesId[12] = [3,2,2,2,3];
+            $linesId[13] = [2,2,1,2,2];
+            $linesId[14] = [2,2,3,2,2];
+            $linesId[15] = [1,3,1,3,1];
+            $linesId[16] = [3,1,3,1,3];
+            $linesId[17] = [1,1,3,1,1];
+            $linesId[18] = [3,3,1,3,3];
+            $linesId[19] = [1,3,3,3,1];
+
+            for($i = 9; $i <= 45; $i++){
+
+                $wild = '2';
+                $scatter = '1';
+                $bfinish = false;
+                $freespinCount = $i;
+                $freespinType = $i;
+                while ($bfinish==false)
+                {
+                    $totalWin = 0;
+                    $totalReel = [];
+                    $wildValue = [];
+                    $wildPos = [];
+                    for($k = 0; $k < $freespinCount; $k++){                        
+                        $lines = 20;
+                        $betline = 1;
+                        $_spinSettings = $slotSettings->GetSpinSettings('freespin', $betline * $lines, $lines, 0);
+                        $winType = $_spinSettings[0];
+                        if($winType == 'bonus'){
+                            $winType = 'win';
+                        }
+                        for($kk = 0; $kk < 50; $kk++){
+                            $subWildReelValue = $slotSettings->CheckMultiWild();
+                            $reels = $slotSettings->GetReelStrips($winType, 'freespin', 1, -1);
+                            $tempReels = [];
+                            $tempWildReels = [];
+                            $lineWinNum = [];
+                            $lineWins = [];
+                            $subtotalWin = 0;
+                            for($r = 0; $r < 5; $r++){
+                                $tempWildReels[$r] = [];
+                                $tempReels['reel' . ($r+1)] = [];
+                                for( $m = 0; $m < 3; $m++ ) 
+                                {
+                                    if( $reels['reel' . ($r+1)][$m] == $wild) 
+                                    {                                
+                                        if(($r == 2 && rand(0, 100) < 70) || $winType == 'none'){
+                                            $reels['reel' . ($r+1)][$m] = '' . rand(6, 13);
+                                            $tempWildReels[$r][$m] = 0;    
+                                        }else{
+                                            if($r > 0 && $r < 4){
+                                                $tempWildReels[$r][$m] = $slotSettings->CheckMultiWild();
+                                            }else{
+                                                $tempWildReels[$r][$m] = 0;    
+                                            }
+                                        }
+                                    }else{
+                                        $tempWildReels[$r][$m] = 0;
+                                    }
+                                    $tempReels['reel' . ($r+1)][$m] = $reels['reel' . ($r+1)][$m];
+                                }
+                            }
+                            for($r = 0; $r < count($wildPos); $r++){
+                                $col = $wildPos[$r] % 5;
+                                $row = floor($wildPos[$r] / 5);
+                                $reels['reel'.($col + 1)][$row] = $wild;
+                                $tempWildReels[$col][$row] = $wildValue[$r];
+                            }
+                            $totalWildValue = 0;
+                            for($r = 0; $r < 5; $r++){
+                                for($m = 0; $m < 3; $m++){
+                                    $totalWildValue = $totalWildValue + $tempWildReels[$r][$m];
+                                }
+                            }
+                            for( $m = 0; $m < $lines; $m++ ) 
+                            {
+                                $firstEle = $reels['reel1'][$linesId[$m][0] - 1];
+                                $lineWinNum[$m] = 1;
+                                $lineWins[$m] = 0;
+                                $mul = $totalWildValue + 1;
+                                for($n = 1; $n < 5; $n++){
+                                    $ele = $reels['reel'. ($n + 1)][$linesId[$m][$n] - 1];
+                                    if($firstEle == $wild){
+                                        $firstEle = $ele;
+                                        $lineWinNum[$m] = $lineWinNum[$m] + 1;
+                                    }else if($ele == $firstEle || $ele == $wild){
+                                        $lineWinNum[$m] = $lineWinNum[$m] + 1;
+                                        if($n == 4){
+                                            if($mul == 0){$mul = 1;}
+                                            $lineWins[$m] = $slotSettings->Paytable[$firstEle][$lineWinNum[$m]] * $betline / $lines * $mul;
+                                            if($lineWins[$m] > 0){
+                                                $subtotalWin += $lineWins[$m];
+                                            }
+                                        }
+                                    }else{
+                                        if($slotSettings->Paytable[$firstEle][$lineWinNum[$m]] > 0){
+                                            if($mul == 0){$mul = 1;}
+                                            $lineWins[$m] = $slotSettings->Paytable[$firstEle][$lineWinNum[$m]] * $betline / $lines * $mul;
+                                            if($lineWins[$m] > 0){
+                                                $subtotalWin += $lineWins[$m];
+                                            }
+                                        }else{
+                                            $lineWinNum[$m] = 0;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            $scattersCount = 0;
+                            for( $r = 1; $r <= 5; $r++ ) 
+                            {
+                                for( $m = 0; $m < 3; $m++ ) 
+                                {
+                                    if( $reels['reel' . $r][$m] == $scatter ) 
+                                    {
+                                        $scattersCount++;
+                                    }
+                                }
+                            }
+
+                            if($scattersCount > 2){
+                                
+                            }else if($winType == 'win' && $subtotalWin > 0){
+                                break;
+                            }else if($winType == 'none' && $subtotalWin == 0){
+                                if($kk >= 10){
+                                    $winType = 'win';
+                                    $isScatter = false;
+                                }
+                                break;
+                            }
+                        }
+    
+                        $wildValue = [];
+                        $wildPos = [];
+                        for($l = 0; $l < 3; $l++){
+                            for($m = 0; $m < 5; $m++){
+                                if($tempWildReels[$m][$l] > 0){
+                                    array_push($wildValue, $tempWildReels[$m][$l]);
+                                    array_push($wildPos, $l * 5 + $m);
+                                }
+                            }
+                        }
+                        
+                        $totalWin = $totalWin + $subtotalWin;
+                        $item = [];
+                        $item['TempReels'] = $tempReels;
+                        $item['Reel'] = $reels;
+                        $item['TempWildReels'] = $tempWildReels;
+                        array_push($totalReel, $item);
+                    }
+                    if ($totalWin > 30 &&  $totalWin < 150) {
+                        $this->SaveReel($game_id, $freespinType, $totalReel, $totalWin, $freespinCount);
+                    }
+                    $count = \VanguardLTE\PPGameFreeStack::where([
+                        'game_id' => $game_id, 
+                        'free_spin_type' => $freespinType
+                    ])->count();
+                    if ($count > 5000)
+                    {
+                        $bfinish = true;
+                        break;
+                    }
+                }
+            }
+            $theEnd = false;
+        }
+        public function SaveReel($game_id, $freespinType, $totalReel, $totalWin, $freespinCount){
+            \VanguardLTE\PPGameFreeStack::create([
+                'game_id' => $game_id, 
+                'odd' => $totalWin, 
+                'free_spin_type' => $freespinType, 
+                'free_spin_count' => $freespinCount, 
+                'free_spin_stack' => json_encode($totalReel)
+            ]);
+        }
     }
 
 }
