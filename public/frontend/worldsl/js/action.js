@@ -573,7 +573,7 @@ function onRegister() {
             }
             else{
                 alert(response.msg);
-                document.location.href='/login'; 
+                location.reload(true);
             }
         }, 
         error: function(err, xhr){ } 
