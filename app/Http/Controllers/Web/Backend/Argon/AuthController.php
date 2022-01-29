@@ -12,33 +12,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('auth', [
                 'only' => ['getLogout']
             ]);
-            $this->middleware('registration', [
-                'only' => [
-                    'getRegister', 
-                    'postRegister'
-                ]
-            ]);
             $this->users = $users;
         }
         public function getLogin(\Illuminate\Http\Request $request)
         {
-            $directories = [];
-            foreach( glob(resource_path() . '/lang/*', GLOB_ONLYDIR) as $fileinfo ) 
-            {
-                $dirname = basename($fileinfo);
-                $directories[$dirname] = $dirname;
-            }
-            $title = settings('app_name');
-            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
-            if ($site)
-            {
-                $title = $site->title;
-            }
-            else
-            {
-                return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
-            }
-            return view('backend.Argon.auth.login', compact('directories','title', 'site'));
+            return view('backend.argon.auth.login');
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
@@ -47,12 +25,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if( $siteMaintence==1 ) 
             {
                 \Auth::logout();
-                return redirect()->to('backend/login')->withErrors(['사이트 점검중입니다']);
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(['사이트 점검중입니다']);
             }
 
-            $isCashier = false;
             $throttles = settings('throttle_enabled');
-            $to = ($request->has('to') ? '?to=' . $request->get('to') : '');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
             {
                 return $this->sendLockoutResponse($request);
@@ -64,14 +40,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     $this->incrementLoginAttempts($request);
                 }
-                return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('auth.failed'));
             }
             $user = \Auth::getProvider()->retrieveByCredentials($credentials);
-            if ($user->role_id == 2) //it is co-master
-            {
-                $user = $user->referral;
-                $isCashier = true;
-            }
+
             //check admin id per site
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->get();
             $adminid = [0]; //default admin id
@@ -88,18 +60,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
                     {
-                        return redirect()->to('backend/login' . $to)->withErrors('삭제된 계정입니다.');
+                        return redirect()->to(argon_route('argon.auth.login'))->withErrors('삭제된 계정입니다.');
                     }
                     if (!$admin->isActive())
                     {
-                        return redirect()->to('backend/login' . $to)->withErrors('계정이 임시 차단되었습니다.');
+                        return redirect()->to(argon_route('argon.auth.login'))->withErrors('계정이 임시 차단되었습니다.');
                     }
                     $admin = $admin->referral;
                 }
 
                 if (!$admin || !in_array($admin->id, $adminid))
                 {
-                    return redirect()->to('backend/login' . $to)->withErrors(trans('auth.failed'));
+                    return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('auth.failed'));
                 }
 
                 if (!$admin->isActive())
@@ -108,14 +80,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
-            if( $request->lang ) 
-            {
-                $user->update(['language' => $request->lang]);
-            }
             if( !$user->hasRole('admin') && setting('siteisclosed') ) 
             {
                 \Auth::logout();
-                return redirect()->route(config('app.admurl').'.auth.login')->withErrors(trans('app.site_is_turned_off'));
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('app.site_is_turned_off'));
             }
             if( $user->hasRole([
                 1, 
@@ -123,17 +91,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 3
             ]) && (!$user->shop || $user->shop->is_blocked) ) 
             {
-                return redirect()->to('backend/login' . $to)->withErrors(trans('app.your_shop_is_blocked'));
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('app.your_shop_is_blocked'));
             }
             if( $user->isBanned() ) 
             {
-                return redirect()->to('backend/login' . $to)->withErrors(trans('app.your_account_is_banned'));
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('app.your_account_is_banned'));
             }
+
             // block Internet Explorer
             $ua = $request->header('User-Agent');
             if (str_contains($ua,'Trident') )
             {
-                return redirect()->to('backend/login' . $to)->withErrors(['크롬브라우저를 이용하세요']);
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(['크롬브라우저를 이용하세요']);
             }
             
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
@@ -147,7 +116,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     }
                 }
             }
-            $request->session()->put('isCashier',  $isCashier);
             return $this->handleUserWasAuthenticated($request, $throttles, $user);
         }
         protected function handleUserWasAuthenticated(\Illuminate\Http\Request $request, $throttles, $user)
@@ -167,31 +135,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     {
                         event(new \VanguardLTE\Events\User\IrLoggedIn());
                         \Auth::logout();
-                        return redirect('/backend/login')->withErrors('허용되지 않은 기기에서의 접근입니다.');
+                        return redirect()->to(argon_route('argon.auth.login'))->withErrors(['허용되지 않은 기기에서의 접근입니다.']);
                     }
                 }
-
             }
             event(new \VanguardLTE\Events\User\LoggedIn());
-            if( $request->has('to') ) 
-            {
-                return redirect()->to($request->get('to'));
-            }
-            if (config('app.admurl') == 'slot')
-            {
-                return redirect()->route(config('app.admurl').'.dashboard');
-            }
-            if( !\Auth::user()->hasPermission('dashboard') ) 
-            {
-                return redirect()->route(config('app.admurl').'.user.list');
-            }
-            return redirect()->route(config('app.admurl').'.dashboard');
+
+            return redirect()->to(argon_route('argon.dashboard'));
         }
         public function getLogout()
         {
             event(new \VanguardLTE\Events\User\LoggedOut());
             \Auth::logout();
-            return redirect(route(config('app.admurl').'.auth.login'));
+            return redirect()->to(argon_route('argon.auth.login'));
         }
         public function loginUsername()
         {
@@ -235,18 +191,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $lockout = 1;
             }
             return 60 * $lockout;
-        }
-        public function getRegister()
-        {
-            return view('backend.Default.auth.register');
-        }
-        public function postRegister(\VanguardLTE\Http\Requests\Auth\RegisterRequest $request, \VanguardLTE\Repositories\Role\RoleRepository $roles)
-        {
-            $user = $this->users->create(array_merge($request->only('username', 'password'), ['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE]));
-            $role = \jeremykenedy\LaravelRoles\Models\Role::where('name', '=', 'User')->first();
-            $user->attachRole($role);
-            event(new \VanguardLTE\Events\User\Registered($user));
-            return redirect(route(config('app.admurl').'.auth.login'))->with('success', trans('app.account_created_login'));
         }
     }
 

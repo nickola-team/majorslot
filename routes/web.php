@@ -1459,16 +1459,3 @@ Route::group([ 'prefix' => 'gac',], function () {
 });
 
 
-
-/**
- *  Argon Backend ROUTE
- */
-
-Route::prefix('argon')->group(function () {
-    Route::namespace('Backend\Argon')->group(function () {
-        Route::get('login', [
-            'as' => 'backend.argon.auth.login',
-            'uses' => 'AuthController@getLogin'
-        ]);
-    });
-});

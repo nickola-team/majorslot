@@ -60,7 +60,9 @@ class AppServiceProvider extends ServiceProvider
         \View::share('layout', $layout);
         \View::share('admurl', $backendurl);
         config(['app.admurl' => $backendurl]);
+        config(['app.slug' => $layout]);
     }
+
 
     /**
      * Register any application services.

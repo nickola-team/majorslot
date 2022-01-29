@@ -68,8 +68,7 @@ h6 {
 p {
     font-family: Poppins-Regular;
     font-size: 14px;
-    line-height: 1.7;
-    color: #666;
+    color: rgb(49, 49, 49);
     margin: 0
 }
 
@@ -245,6 +244,18 @@ iframe {
     text-align: center;
     width: 100%;
     display: block
+}
+
+.login100-form-error {
+    font-family: Montserrat-Bold;
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+    width: 100%;
+    display: block;
+    background : orangered;
+    padding: 5px;
+    margin-top : -40px;
 }
 
 .wrap-input100 {

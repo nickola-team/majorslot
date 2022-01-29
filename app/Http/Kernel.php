@@ -49,6 +49,7 @@ namespace VanguardLTE\Http
             'bng' => 'VanguardLTE\Http\Middleware\BNGMiddleware', 
             'hbn' => 'VanguardLTE\Http\Middleware\HBNMiddleware',
             'simultaneous' => 'VanguardLTE\Http\Middleware\ThrottleSimultaneousRequests',
+            'argonbackend' => '\VanguardLTE\Http\Middleware\ArgonBackend'
         ];
     }
 
