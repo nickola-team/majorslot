@@ -78,11 +78,15 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                                     $this->findZokbos($reels, $reels['reel1'][$r], 1, '~'.($r * 5));
                                 }                        
                             }
+                            $fiveSymbol = 0;
                             for($r = 0; $r < count($this->winLines); $r++){
                                 $winLine = $this->winLines[$r];
                                 $winLineMoney = $slotSettings->Paytable[$winLine['FirstSymbol']][$winLine['RepeatCount']] * $betline;
                                 if($winLineMoney > 0){
                                     $subtotalWin += $winLineMoney;
+                                    if($winLine['RepeatCount'] == 5 && $winLine['FirstSymbol'] <= 5 && $fiveSymbol == 0){
+                                        $fiveSymbol = $winLine['FirstSymbol'];
+                                    }
                                 }
                             }      
                             $scattersCount = 0;
@@ -103,6 +107,8 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                             }
                             if($scattersCount >= 3 || $moneyCount >= 6){
 
+                            }else if($fiveSymbol > 0 && $fiveSymbol <= 5 && mt_rand(0, 100) < 70){
+                                $test_str = '';
                             }else if($winType == 'win' && $subtotalWin > 0){
                                 break;
                             }else if($winType == 'none' && $subtotalWin == 0){
