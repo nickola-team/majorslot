@@ -305,8 +305,8 @@
 					window.f = new flux.slider('#slider', {
 						pagination: true,
 						controls: false,
-						transitions: ['bars3d', 'tiles3d', 'blinds3d', 'swipe', 'turn'],
-						// transitions: ['turn', 'turn', 'turn', 'turn', 'turn'],
+						// transitions: ['bars3d', 'tiles3d', 'blinds3d', 'swipe', 'turn'],
+						 transitions: ['turn', 'turn', 'turn', 'turn', 'turn'],
 						delay:4000,
 						autoplay: true //ysk 자동재생
 					});		
