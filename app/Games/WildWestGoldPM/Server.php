@@ -294,9 +294,9 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     if($buyFreeSpin == 0){
                         $slotSettings->SetBalance(-1 * ($betline * 2000), $slotEvent['slotEvent']);
                         $winType = 'bonus';
-                        $_winAvaliableMoney = $slotSettings->GetBank('bonus');
                         $_sum = $betline * 2000 * $slotSettings->GetPercent() / 100;
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], true);
+                        $_winAvaliableMoney = $slotSettings->GetBank('bonus');
                     }else{
                         $slotSettings->SetBalance(-1 * ($betline * $lines / 2), $slotEvent['slotEvent']);
                         $_sum = ($betline * $lines / 2) / 100 * $slotSettings->GetPercent();
