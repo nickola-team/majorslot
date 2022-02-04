@@ -930,7 +930,12 @@ namespace VanguardLTE\Games\GatesofOlympusPM
 
         public function GenerateScatterCount($winType, $slotEvent){ // Scatter수 생성 함수
             if($winType == 'bonus'){      
-                if ($slotEvent == 'freespin') {
+                if ($slotEvent == 'buy_freespin') {
+                    $probabilityMap = [
+                            4 => 100,
+                    ];
+                }
+                else if ($slotEvent == 'freespin') {
                     /* 프리스핀중에는 스캐터 3개이상일때 보너스당첨 */
                     $probabilityMap = [
                         3 => 90,
