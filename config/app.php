@@ -64,7 +64,7 @@ return [
 
     'url' => env('APP_URL', 'http://major999.com/'),
 
-    'server_addr' => env('APP_SERVER', 'major999.com'),
+    'server_addr' => env('APP_SERVER', 'game.major999.com'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
