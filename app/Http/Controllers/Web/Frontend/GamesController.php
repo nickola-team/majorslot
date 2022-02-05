@@ -150,6 +150,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($notice==null || $shop_id != 0) { //it is logged in
                 $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
             }
+            $trhistory = [];
             if ($shop_id != 0)
             {
                 $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
