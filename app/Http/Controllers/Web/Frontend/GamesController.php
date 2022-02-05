@@ -154,8 +154,22 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
                 $unreadmsg = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->whereNull('read_at')->count();
+                //transaction history
+
+                $trhistory = \VanguardLTE\WithdrawDeposit::leftJoin('transactions', function($join){
+                    $join->on('withdraw_deposit.id', '=', 'transactions.request_id');
+                })->where('withdraw_deposit.user_id', auth()->user()->id)->orderby('withdraw_deposit.created_at','desc')->take(20)->get(
+                    [
+                        'withdraw_deposit.type',
+                        'withdraw_deposit.status',
+                        'withdraw_deposit.sum',
+                        'withdraw_deposit.created_at',
+                        'transactions.updated_at',
+
+                    ]
+                );
             }
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'msgs','unreadmsg', 'ppgames'));
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'msgs','unreadmsg', 'ppgames', 'trhistory'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {

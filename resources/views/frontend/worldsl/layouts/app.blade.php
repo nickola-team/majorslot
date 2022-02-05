@@ -834,6 +834,19 @@
 										<td width="10%" class="list_title1">충/환전금액</td>
 										<td width="10%" class="list_title1">처리현황</td>
 									</tr> `;
+									@if (count($trhistory) > 0)
+									@foreach ($trhistory as $tr)
+										data += `
+										<tr>
+											<td width="10%" class="list_title1">{{$loop->index+1}}</td>
+											<td width="10%" class="list_title1">{{$tr->type=='add'?'입금':'출금'}}</td>
+											<td width="10%" class="list_title1">{{$tr->created_at}}</td>
+											<td width="10%" class="list_title1">{{$tr->updated_at}}</td>
+											<td width="10%" class="list_title1">{{number_format($tr->sum)}}</td>
+											<td width="10%" class="list_title1">{{\VanguardLTE\WithdrawDeposit::statMsg()[$tr->status]}}</td>
+										</tr>`;
+									@endforeach
+									@endif
 					data +=`</table></div> `;
 				}
 				else if( pid == "chatList" ){

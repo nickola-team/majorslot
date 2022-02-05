@@ -168,6 +168,7 @@ function DepositProc(){
             }
 
             alert("충전 신청이 완료되었습니다.");
+            location.reload();
         },
         error: function(err, xhr){ }
     });
@@ -244,6 +245,7 @@ function WithdrawProc() {
                 }
     
                 alert("환전 신청이 완료되었습니다.");
+                location.reload();
             },
             error: function(err, xhr){ }
         });
