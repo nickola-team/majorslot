@@ -913,9 +913,9 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
         }
         public function GetMoreRespin(){
             $percent = rand(0, 100);
-            if($percent < 70) {
+            if($percent <= 30) {
                 return 1;
-            }else if($percent < 95){
+            }else if($percent <= 70){
                 return 2;
             }else{
                 return 3;
