@@ -22,7 +22,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $title = $site->title;
                 $adminid = $site->adminid;
                 if ($frontend != 'Default') {
-                    $excat[] = 'virtualtech';
+                    // $excat[] = 'virtualtech';
                     $excat[] = 'skywind';
                 }
             }

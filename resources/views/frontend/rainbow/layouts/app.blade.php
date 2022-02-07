@@ -355,7 +355,7 @@
 							@foreach($categories AS $index=>$category)
 								@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 								&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-								&& $category->title != "Skywind" && $category->title != "VirtualTech")
+								&& $category->title != "Skywind" )
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
@@ -363,7 +363,11 @@
 									@else
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
 									@endif										
+									@if ($category->title == 'VirtualTech')
+										<img src="/frontend/rainbow/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 252px;height: 230px;border-radius:30px">
+									@else
 										<img src="/frontend/rainbow/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 252px;height: 230px;border-radius:30px">
+									@endif
 										<img src="/frontend/rainbow/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
 									</a>
 								</li>
@@ -429,7 +433,7 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "slot")
+							&& $category->title != "Skywind"  && $category->type == "slot")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
@@ -437,7 +441,11 @@
 								@else
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 								@endif										
+								@if ($category->title == 'VirtualTech')
+								data += `<img src="/frontend/rainbow/tutu/images/slot/{{ $category->title.'.gif' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								@else
 								data += `<img src="/frontend/rainbow/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								@endif
 								data += `<img src="/frontend/rainbow/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
 								data += `</a>`;     
 								data += `</li>`;
@@ -455,7 +463,7 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "live")
+							&& $category->title != "Skywind"  && $category->type == "live")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;

@@ -354,7 +354,7 @@
 							@foreach($categories AS $index=>$category)
 								@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 								&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-								&& $category->title != "Skywind" && $category->title != "VirtualTech")
+								&& $category->title != "Skywind" )
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
@@ -428,7 +428,7 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "slot")
+							&& $category->title != "Skywind"  && $category->type == "slot")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
@@ -454,7 +454,7 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "live")
+							&& $category->title != "Skywind"  && $category->type == "live")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
