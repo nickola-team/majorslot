@@ -405,7 +405,11 @@
 							<span></span><span></span><span></span><span></span>
 						</div> 
 						 <div class="slot-cont">
-							<img class="slot-img" src="/frontend/hero/images/slots/{{ $category->title.'.png' }}" />
+               @if ($category->title == 'VirtualTech')
+                <img class="slot-img" src="/frontend/hero/images/slots/{{ $category->title.'.gif' }}" />
+               @else
+							  <img class="slot-img" src="/frontend/hero/images/slots/{{ $category->title.'.png' }}" />
+              @endif
 						</div> 
 						</div>
 					</a>

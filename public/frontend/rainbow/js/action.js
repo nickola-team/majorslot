@@ -368,7 +368,7 @@ function getSlotGames(title, category) {
                     }
                     else
                     {
-                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].gamecode}');">
+                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].name}');">
                                                         <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="xImag" />
                                                     </a>
                                                 </div>
