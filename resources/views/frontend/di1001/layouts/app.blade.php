@@ -316,7 +316,8 @@
 				<div style="position:absolute; width:1920px; left:50%; margin-left:-960px;">   
 					<div id="slider">
 												<img src="/frontend/di1001/tutu/images/slideshow1.jpg">
-																	</div>
+												<img src="/frontend/di1001/tutu/images/slideshow2.jpg">
+					</div>
 				</div>
 			</div>
 			<!-- ▲slideshow6▲ -->
