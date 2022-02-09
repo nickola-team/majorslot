@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('backend.argon.layouts.app')
 @section('page-title',  '대시보드' )
 @section('content-right-header')
 <div class="col-lg-6 col-5 text-right">
-    <a href="{{route('partners.create')}}" class="btn btn-neutral">{{__('New')}}</a>
+    <a href="#" class="btn btn-neutral">{{__('New')}}</a>
 </div>
 @endsection
 @section('content')
@@ -40,7 +40,7 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">{{__(__(\App\Models\User::ROLE_NAMES[$role_id]))}} {{ __('List')}}</h3>
+        <h3 class="mb-0">{{ __('List')}}</h3>
     </div>
     <div class="table-responsive">
         <table class="table align-items-center table-flush">
@@ -49,16 +49,10 @@
             <th scope="col" class="sort" data-sort="name">{{__('Name')}}</th>
             <th scope="col" class="sort" data-sort="budget">{{__('Email')}}</th>
             <th scope="col" class="sort" data-sort="budget">{{__('Parent')}}</th>
-            @if ($role_id == \App\Models\User::ROLE_OPERATOR)
             <th scope="col" class="sort" data-sort="budget">{{__('RTP')}}</th>
-            @endif
             <th scope="col" class="sort" data-sort="budget">{{__('Balance')}}</th>
             <th scope="col" class="sort" data-sort="budget">
-            @if ($role_id == \App\Models\User::ROLE_OPERATOR)
                 {{__('PlayerSum')}}
-            @else
-                {{__('ChildBalanceSum')}}
-            @endif
             </th>
             <th scope="col" class="sort" data-sort="budget">{{__('Rate')}}</th>
             <th scope="col" class="sort" data-sort="status">{{__('CreatedAt')}}</th>
@@ -67,21 +61,12 @@
             </tr>
         </thead>
         <tbody class="list">
-            @if (count($partners) > 0)
-                @foreach ($partners as $operator)
-                    <tr>
-                        @include('partners.partials.row')
-                    </tr>
-                @endforeach
-            @else
                 <tr><td colspan="6">{{__('No Data')}}</td></tr>
-            @endif
         </tbody>
         </table>
     </div>
     <!-- Card footer -->
     <div class="card-footer py-4">
-        {{ $partners->withQueryString()->links('vendor.pagination.argon') }}
     </div>
     </div>
 </div>
@@ -90,7 +75,7 @@
 
 
 <div class="modal fade" id="modal-addbalance" tabindex="-1" role="dialog" aria-labelledby="modal-addbalance" aria-hidden="true">
-    <form action="{{ route('partners.balance.update') }}" method="POST">
+    <form action="#" method="POST">
     @csrf
         <input type="hidden" name="type" value="add">
         <input type="hidden" id="AddId" name="user_id">
@@ -124,7 +109,7 @@
 </div>
 
 <div class="modal fade" id="modal-outbalance" tabindex="-1" role="dialog" aria-labelledby="modal-addbalance" aria-hidden="true">
-    <form action="{{ route('partners.balance.update') }}" method="POST">
+    <form action="#" method="POST">
         @csrf
         <input type="hidden" name="type" value="out">
         <input type="hidden" id="OutId" name="user_id">
@@ -159,7 +144,7 @@
 
 <!-- delete Modal -->
 <div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-confirm" aria-hidden="true">
-    <form action="{{ route('partners.status.delete') }}" method="POST">
+    <form action="#" method="POST">
         @csrf
     <input type="hidden" id="delId" name="user_id">
   <div class="modal-dialog modal-dialog-centered" role="document">

@@ -56,6 +56,12 @@ class AppServiceProvider extends ServiceProvider
             {
                 $backendurl = 'slot';
             }
+            
+            $backendtheme = ['Dark', 'Default', 'Left', 'Top'];
+            if (!in_array($layout, $backendtheme))
+            {
+                $backendurl = $layout;
+            }
         }
         \View::share('layout', $layout);
         \View::share('admurl', $backendurl);
