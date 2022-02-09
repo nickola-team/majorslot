@@ -32,25 +32,29 @@ namespace VanguardLTE\Http\Middleware
             }
             else if( !$request->is('api*') ) 
             {
-
-                if( $request->is(config('app.slug') . '*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
+                $backendtheme = ['slot', 'backend'];
+                if (!in_array(config('app.admurl'), $backendtheme))
                 {
-                    return redirect()->to('/');
+                    if( $request->is(config('app.slug') . '*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
+                    {
+                        return redirect()->to('/');
+                    }
+                    if( !$request->is(config('app.slug') . '*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
+                    {
+                        return redirect()->to(argon_route('argon.dashboard'));
+                    } 
                 }
-                if( !$request->is(config('app.slug') . '*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
+                else
                 {
-                    return redirect()->to(argon_route('argon.dashboard'));
-                } 
-
-
-                if( $request->is(config('app.admurl') . '*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
-                {
-                    return redirect()->to('/');
+                    if( $request->is(config('app.admurl') . '*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
+                    {
+                        return redirect()->to('/');
+                    }
+                    if( !$request->is(config('app.admurl') . '*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
+                    {
+                        return redirect()->to('/' . config('app.admurl'));
+                    } 
                 }
-                if( !$request->is(config('app.admurl') . '*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
-                {
-                    return redirect()->to('/' . config('app.admurl'));
-                } 
             }
             return $next($request);
         }
