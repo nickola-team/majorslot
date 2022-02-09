@@ -139,6 +139,7 @@ namespace VanguardLTE\Games\ThorCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentAwardWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'AwardLevel', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentLevel', 0);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
@@ -239,7 +240,14 @@ namespace VanguardLTE\Games\ThorCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
+            $isFreeScatter = false;
+            if($slotEvent == 'freespin'){
+                $leftFreeSpin = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');
+                if($leftFreeSpin == mt_rand(0, 2) && $slotSettings->GetGameData($slotSettings->slotId . 'FreeScatterCount') == 0){
+                    $isFreeScatter = true;
+                }
+            }            
+            // $winType = 'none';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             for( $i = 0; $i <= 2000; $i++ ) 
             {
@@ -261,8 +269,8 @@ namespace VanguardLTE\Games\ThorCQ9
                 $totalWin = $winResults['totalWin'];
                 $OutputWinLines = $winResults['OutputWinLines'];
                 
+                $scatter1Count = 0;  
                 if($slotEvent == 'freespin'){
-                    $scatter1Count = 0;  
                     $scatter1Positions = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]; 
                     for($r = 0; $r < 5; $r++){
                         for( $k = 0; $k < 3; $k++ ) 
@@ -352,6 +360,11 @@ namespace VanguardLTE\Games\ThorCQ9
                 }
                 else if($FiveSymbolCount > 1){
                 }
+                else if($isFreeScatter == true){
+                    if($scatter1Count == 1){
+                        break;
+                    }
+                }
                 else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                 {
                     $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent) ? $slotEvent : ''));
@@ -381,6 +394,9 @@ namespace VanguardLTE\Games\ThorCQ9
                     break;
                 }
             }
+            if($scatter1Count > 0){
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount', $slotSettings->GetGameData($slotSettings->slotId . 'FreeScatterCount') + 1);
+            }
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
                 $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
@@ -400,6 +416,7 @@ namespace VanguardLTE\Games\ThorCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentAwardWin', $newAwardMoney);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount', 0);
                 }
                 $isEnd = false;
             }

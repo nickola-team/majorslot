@@ -118,7 +118,8 @@ namespace VanguardLTE
                 '중국공상', 
                 '펀드온라인코리아', 
                 '케이티비투자증권',
-                'PAYWIN'
+                'PAYWIN',
+                'JUNCOIN'
             ],
             'reset_days' => [
                 '',
@@ -892,7 +893,7 @@ namespace VanguardLTE
                 if($deal_percent > 0 || $ggr_percent > 0) {
                     $deal_balance = $betMoney * $deal_percent  / 100;
                     $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
-                    if ($deal_balance < $deal_mileage)
+                    if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                     {
                         //error
                         return ;
@@ -928,7 +929,7 @@ namespace VanguardLTE
                     if($deal_percent > 0 || $ggr_percent > 0) {
                         $deal_balance = $betMoney * $deal_percent  / 100;
                         $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
-                        if ($deal_balance < $deal_mileage)
+                        if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                         {
                             //error
                             return ;

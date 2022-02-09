@@ -1,0 +1,41 @@
+:root {
+    --slot-item-width: 52px;
+    --slot-item-height: 42px
+}
+
+.LinesSlot .ReelsSlot {
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    object-fit: none;
+    height: 100%;
+    width: 100%
+}
+
+.Multiplier {
+    order: 1;
+    margin-left: 20px;
+    height: 130px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Multiplier__Label {
+    position: absolute;
+    top: 38px;
+    text-shadow: -1px -1px 0 #777, 1px -1px 0 #777, -1px 1px 0 #777, 1px 1px 0 #777;
+    padding-right: 2px;
+    font-size: 11px
+}
+
+.Multiplier__Bg {
+    position: relative;
+    opacity: .8
+}
+
+.Attributes .MoneyScatter__Label {
+    background-color: transparent
+}

@@ -378,7 +378,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                         $winLineMoney = $slotSettings->Paytable[$r][count($winLine)] * $betline;
                         if($winLineMoney > 0){
                             $isNewTumb = true;
-                            $strWinLine = $strWinLine . '&l'. $winlineindex.'='.$winlineindex.'~'.$winLineMoney . '~' . implode($winLine, '~');
+                            $strWinLine = $strWinLine . '&l'. $winlineindex.'='.$winlineindex.'~'.$winLineMoney . '~' . implode('~', $winLine);
                             for($k = 0; $k < count($winLine); $k++){
                                 $binaryReel[$winLine[$k]] = $r;
                             }

@@ -263,6 +263,10 @@ namespace VanguardLTE\Games\DancePartyPM
                 }
             }
         }
+        public function genfree(){
+            $reel = new GameReel();
+            $reel->generationFreeStacks($this, $this->game->original_id);
+        }
         public function SetGameData($key, $value)
         {
             $diffIndex = 86400;
@@ -628,12 +632,12 @@ namespace VanguardLTE\Games\DancePartyPM
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
         }
-        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState)
+        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $isState = true)
         {
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
             {
-                $_obf_slotstate = $this->slotId . ' FG';
+                $_obf_slotstate = $this->slotId . ' Free';
             }
             else if( $slotState == 'bet' ) 
             {
@@ -666,19 +670,100 @@ namespace VanguardLTE\Games\DancePartyPM
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
-            \VanguardLTE\StatGame::create([
+            if ($bet == 0 && $win == 0)
+            {
+                return;   
+            }
+            if($isState == true){
+                $roundstr = $this->GetGameData($this->slotId . 'RoundID');
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $this->playerId, 
+                    'balance' => $this->Balance * $this->CurrentDenom, 
+                    'bet' => $bet * $this->CurrentDenom, 
+                    'win' => $win * $this->CurrentDenom, 
+                    'game' => $_obf_slotstate, 
+                    'percent' => $this->toGameBanks, 
+                    'percent_jps' => $this->toSysJackBanks, 
+                    'percent_jpg' => $this->toSlotJackBanks, 
+                    'profit' => $this->betProfit, 
+                    'denomination' => $this->CurrentDenom, 
+                    'shop_id' => $this->shop_id,
+                    'roundid' => $roundstr,
+                ]);
+            }
+        }
+        public function saveGameLog($strLog, $roundID){
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
                 'user_id' => $this->playerId, 
-                'balance' => $this->Balance * $this->CurrentDenom, 
-                'bet' => $bet * $this->CurrentDenom, 
-                'win' => $win * $this->CurrentDenom, 
-                'game' => $_obf_slotstate, 
-                'percent' => $this->toGameBanks, 
-                'percent_jps' => $this->toSysJackBanks, 
-                'percent_jpg' => $this->toSlotJackBanks, 
-                'profit' => $this->betProfit, 
-                'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
             ]);
+        }
+        public function GetFreeStack($betLine, $freespinType)
+        {
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+            if($limitOdd < 30){
+                $limitOdd = 30;
+            }else if($limitOdd > 100){
+                $limitOdd = 100;
+            }
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $this->game->original_id, 
+                $freespinType,
+                $limitOdd,
+                $this->playerId
+            ])->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+            }else{
+                \VanguardLTE\PPGameFreeStackLog::where([
+                    'user_id' => $this->playerId,
+                    'game_id' => $this->game->original_id
+                    ])->where('odd', '<=', $limitOdd)->delete();
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                        $this->game->original_id, 
+                        $freespinType,
+                        $limitOdd,
+                        $this->playerId
+                    ])->get();
+                if(count($freeStacks) > 0){
+                    $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
+                }else{
+                    $freeStack = null;
+                }
+            }
+            if($freeStack){
+                \VanguardLTE\PPGameFreeStackLog::create([
+                    'game_id' => $this->game->original_id, 
+                    'user_id' => $this->playerId, 
+                    'freestack_id' => $freeStack->id, 
+                    'odd' => $freeStack->odd, 
+                    'free_spin_count' => $freeStack->free_spin_count
+            ]);
+                return json_decode($freeStack->free_spin_stack, true);
+            }else{
+                return [];
+            }
+        }
+        public function IsAvailableFreeStack(){
+            $linecount = 5; // line num for free stack
+            $game = $this->game;
+            $grantfree_count = $game->{'garant_win' . $linecount};
+            $free_count = $game->{'winline' . $linecount};
+            $grantfree_count++;
+            $isFreeStack = false;
+            if( $free_count <= $grantfree_count ) 
+            {
+                $grantfree_count = 0;
+                $isFreeStack = true;
+                $game->{'winline' . $linecount} = $this->getNewSpin($game, 0, 1, $linecount, 'doSpin');
+            }
+            $game->{'garant_win' . $linecount} = $grantfree_count;
+            $game->save();
+            return $isFreeStack;
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
         {
@@ -767,7 +852,7 @@ namespace VanguardLTE\Games\DancePartyPM
                     'bonus', 
                     $_obf_currentbank
                 ];
-                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
+                if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 

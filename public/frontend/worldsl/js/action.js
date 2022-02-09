@@ -76,21 +76,38 @@ function onAskAccount(){
         return;
     }
 
-    var data = { nType: 0, strQueContent: "입금계좌번호 문의합니다." }
+    var amount = uncomma($("#deposit_amount").val());
+    if (amount == '' || amount == 0) { 
+        alert("입금하실 금액을 입력하여 주세요");
+        $("#deposit_amount").focus();  
+        return; 
+    }
+    var accountName = $(".userName").val();
     
     $.ajax({
-        type: "GET",
-        url: "/onChatCreate",
-        data: data,
+        type: "POST",
+        url: "/api/depositAccount",
+        data: { money: amount, account:accountName },
         cache: false,
         async: true,
         beforeSend: function(){ },
-        success: function(response, status){
-            if(response.success == -1){
-                if(wndGame != null) wndGame.close();
-                document.location.href = '/login';
-            } else {
-                alert(response.message);
+        success: function(data, status){
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            $("#depositAcc").html(data.msg);
+            if (data.url != null)
+            {
+                var leftPosition, topPosition;
+                width = 600;
+                height = 1000;
+                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                wndGame = window.open(data.url, "Deposit",
+                "status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+                + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+                + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
             }
         },
         error: function(err, xhr){ }
@@ -137,6 +154,10 @@ function DepositProc(){
         $("#deposit_amount").focus();  
         return; 
     }
+    if (amount < 30000) { 
+        alert("입금은 3만원 이상부터 가능합니다"); $("#deposit_amount").focus();  return false; 
+    }
+
 
     if(!confirm("입금신청 하시겠습니까?")) return;
 
@@ -159,6 +180,7 @@ function DepositProc(){
             }
 
             alert("충전 신청이 완료되었습니다.");
+            location.reload();
         },
         error: function(err, xhr){ }
     });
@@ -235,6 +257,7 @@ function WithdrawProc() {
                 }
     
                 alert("환전 신청이 완료되었습니다.");
+                location.reload();
             },
             error: function(err, xhr){ }
         });
@@ -368,7 +391,7 @@ function getSlotGames(title, category) {
                     }
                     else
                     {
-                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].gamecode}');">
+                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].name}');">
                                                         <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="xImag" />
                                                     </a>
                                                 </div>
@@ -573,7 +596,7 @@ function onRegister() {
             }
             else{
                 alert(response.msg);
-                document.location.href='/login'; 
+                location.reload(true);
             }
         }, 
         error: function(err, xhr){ } 
@@ -591,4 +614,17 @@ function directBankName(val){
         f.banknm.value="" ;
         document.getElementById('banknmId').style.display="none" ;
     }
+}
+
+//-- 쪽지 --//
+function readMessage(idx) {
+    $.ajax({
+        url: "/api/readMsg",
+        type: 'POST',
+        data: { id: idx },
+        headers: {},
+        success: function(data) {},
+        error: function(xhr, status, error) {},
+        complete: function() {}
+    });
 }
