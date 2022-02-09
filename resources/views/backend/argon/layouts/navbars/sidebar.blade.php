@@ -1,4 +1,4 @@
-<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-primary" id="sidenav-main">
     <div class="container-fluid">
         <!-- Toggler -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,30 +13,32 @@
             <li class="nav-item dropdown">
                 <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="media align-items-center">
-                        <span class="avatar avatar-sm rounded-circle">
-                        <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/team-1-800x800.jpg">
+                        <span class="avatar avatar-sm rounded-circle" style="background-color:white;">
+                        <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/profile.png">
                         </span>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
                     <div class=" dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6>
+                        <!-- <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6> -->
                     </div>
                     <a href="#" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
-                        <span>{{ __('My profile') }}</span>
+                        <span>설정 및 정보</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
-                        <i class="ni ni-user-run"></i>
-                        <span>{{ __('Logout') }}</span>
+                        <i class="ni ni-curved-next"></i>
+                        <span>로그아웃</span>
                     </a>
                 </div>
             </li>
         </ul>
+        <!-- <hr class="my-0 sidebar-hr"> -->
+
         <!-- Collapse -->
-        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <div class="collapse navbar-collapse bg-primary" id="sidenav-collapse-main">
             <!-- Collapse header -->
             <div class="navbar-collapse-header d-md-none">
                 <div class="row">
@@ -53,94 +55,262 @@
                     </div>
                 </div>
             </div>
-            <!-- Form -->
-            <form class="mt-4 mb-3 d-md-none">
-                <div class="input-group input-group-rounded input-group-merge">
-                    <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="{{ __('Search') }}" aria-label="Search">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <span class="fa fa-search"></span>
-                        </div>
-                    </div>
-                </div>
-            </form>
+
             <!-- Navigation -->
             <ul class="navbar-nav">
+                <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-examples1" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples1">
-                        <i class="ni ni-single-02 text-primary"></i>
-                        <span class="nav-link-text text-blue">ROLE_ID</span>
+                    <a class="nav-link  text-white" href="#">
+                        <i class="ni ni-chart-bar-32 text-white"></i>
+                        <span class="nav-link-text text-white">대시보드</span>
+                    </a>
+                </li>
+                @if (!auth()->user()->hasRole('manager'))
+                <hr class="my-0 sidebar-hr">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#navbar-agents" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-agents">
+                        <i class="ni ni-single-02 text-white"></i>
+                        <span class="nav-link-text text-white">에이전트</span>
                     </a>
 
-                    <div class="collapse show" id="navbar-examples1">
+                    <div class="collapse" id="navbar-agents">
                         <ul class="nav nav-sm flex-column">
-                      
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    {{ __('Transfer History') }}
+                                <a class="nav-link  text-white" href="#">
+                                    에이전트생성
+                                </a>
+                            </li>
+                        </ul>
+                    
+                    @for ($role=auth()->user()->role_id-1;$role>=3;$role--)
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link  text-white" href="#">
+                                        {{\VanguardLTE\Role::where('level',$role)->first()->description}}
+                                    </a>
+                                </li>
+                            </ul>
+                    @endfor
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link  text-white" href="#">
+                                    롤링내역
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                <hr class="my-0 sidebar-hr">
+                <li class="nav-item">
+                    <a class="nav-link" href="#navbar-players" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                        <i class="ni ni-user-run text-white"></i>
+                        <span class="nav-link-text text-white">플레이어</span>
+                    </a>
+
+                    <div class="collapse" id="navbar-players">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    플레이어목록
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    게임배팅내역
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    지급내역
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @if (auth()->user()->hasRole('admin') )
+                <hr class="my-0 sidebar-hr">
+                <li class="nav-item">
+                    <a class="nav-link" href="#navbar-games" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                        <i class="ni ni-controller text-white"></i>
+                        <span class="nav-link-text text-white">게임설정</span>
+                    </a>
+
+                    <div class="collapse" id="navbar-games">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    게임사
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    게임
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    환수금
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    콜
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    환수금내역
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                <hr class="my-0 sidebar-hr">
+                <li class="nav-item">
+                    <a class="nav-link" href="#navbar-deposit" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                        <i class="ni ni-money-coins text-white"></i>
+                        <span class="nav-link-text text-white">충환전</span>
+                    </a>
+
+                    <div class="collapse" id="navbar-deposit">
+                        <ul class="nav nav-sm flex-column">
+                            @if (auth()->user()->isInoutPartner())
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    충전
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    환전
+                                </a>
+                            </li>
+                            @else
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    충전신청
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    환전신청
+                                </a>
+                            </li>
+                            @endif
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    충환전내역
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li>
 
+                <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-examples2" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples2">
-                        <i class="ni ni-user-run text-primary"></i>
-                        <span class="nav-link-text text-blue">{{ __('Players') }}</span>
+                    <a class="nav-link" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                        <i class="ni ni-chart-pie-35 text-white"></i>
+                        <span class="nav-link-text text-white">보고서</span>
                     </a>
 
-                    <div class="collapse show" id="navbar-examples2">
+                    <div class="collapse" id="navbar-report">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    {{ __('Player List') }}
+                                <a class="nav-link text-white" href="#">
+                                    일별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    {{ __('Game History') }}
+                                <a class="nav-link text-white" href="#">
+                                    월별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    {{ __('Balance Transfer') }}
+                                <a class="nav-link text-white" href="#">
+                                    게임별벳윈
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    일별충환전
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li>
-
+                @if (auth()->user()->isInoutPartner())
+                <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-examples3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples3">
-                    <i class="ni ni-trophy text-primary"></i>
-                        <span class="nav-link-text text-blue">{{ __('Summary') }}</span>
+                    <a class="nav-link" href="#navbar-adjustment" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                        <i class="ni ni-collection text-white"></i>
+                        <span class="nav-link-text text-white">정산</span>
                     </a>
 
-                    <div class="collapse show" id="navbar-examples3">
+                    <div class="collapse" id="navbar-adjustment">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    {{ __('Daily Summary') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    {{ __('Rate Summary') }}
+                                <a class="nav-link text-white" href="#">
+                                    벳윈정산
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li>
-
+                @endif
+                @if (auth()->user()->isInoutPartner())
+                <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="ni ni-books text-primary"></i> <span class="nav-link-text text-blue">{{ __('API Doc') }}</span>
+                    <a class="nav-link" href="#navbar-customer" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                        <i class="ni ni-headphones text-white"></i>
+                        <span class="nav-link-text text-white">고객센터</span>
                     </a>
-                </li>
 
-                
-                
+                    <div class="collapse" id="navbar-customer">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    공지
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    쪽지
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @if (auth()->user()->hasRole('admin'))
+                <hr class="my-0 sidebar-hr">
+                <li class="nav-item">
+                    <a class="nav-link" href="#navbar-system" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                        <i class="ni ni-settings text-white"></i>
+                        <span class="nav-link-text text-white">시스템설정</span>
+                    </a>
+
+                    <div class="collapse" id="navbar-system">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    도메인
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                    접속로그
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </li>
+                @endif
             </ul>
         </div>
     </div>

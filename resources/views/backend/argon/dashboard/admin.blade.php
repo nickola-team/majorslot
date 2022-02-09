@@ -8,31 +8,6 @@
 @section('content')
 <div class="container-fluid mt--8">
     <!-- Search -->
-<div class="row">
-    <div class="col">
-        <div class="card shadow">
-        <div class="card-header border-0">
-            <h3 class="mb-0">{{__('Search')}}</h3>
-        </div>
-        <hr class="my-1">
-        <div class="card-body">
-            <form action="" method="GET" >
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="name" class="form-control-label">{{__('Name')}}</label>
-                            <input class="form-control" type="text" value="{{ Request::get('name') }}" id="name" name="name">
-                        </div>
-                    </div>
-                </div>
-                <div class="text-left">
-                    <button type="submit" class="btn btn-success">{{__('Search')}}</button>
-                </div>
-            </form>
-        </div>
-        </div>
-    </div>
-</div>
 
 <div class="row">
 <div class="col">
