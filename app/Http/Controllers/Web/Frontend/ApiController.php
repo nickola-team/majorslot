@@ -876,7 +876,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '001'
                 ], 200);
             }
-            if ($master->bank_name == 'PAYWIN') // 가상계좌
+            if ($master->bank_name == 'PAYWIN') // 페이윈 가상계좌
             {
                 //상품조회
                 try {
@@ -973,18 +973,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ], 200);
                 }
             }
+            else if ($master->bank_name == 'JUNCOIN') //준코인 가상계좌
+            {
+                if ($amount % 10000 != 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '1만원 단위로 입금하세요',
+                        'code' => '001'
+                    ], 200);
+                }
+                $url = 'https://jun-200.com/sign-up-process-api?uid='.$master->account_no. '@'.$user->id.'&site='.$master->recommender.'&p='.($amount/10000).'&rec_name=' . $account;
+                return response()->json([
+                    'error' => false, 
+                    'msg' => '팝업창에서 입금계좌신청을 하세요',
+                    'url' => $url
+                ], 200);
+            }
             else
             {
-                $master = $user->referral;
-                $telegramId = '';
-                while ($master && !$master->isInOutPartner())
-                {
-                    $master = $master->referral;
-                }
-                if ($master)
-                {
-                    $telegramId = $master->address;
-                }
+                $telegramId = $master->address;
                 if ($force==0 && $user->hasRole('user'))
                 {
                     

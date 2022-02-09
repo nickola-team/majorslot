@@ -93,10 +93,22 @@ function onAskAccount(){
         beforeSend: function(){ },
         success: function(data, status){
             if (data.error) {
-                alert_error(data.msg);
+                alert(data.msg);
                 return;
             }
             $("#depositAcc").html(data.msg);
+            if (data.url != null)
+            {
+                var leftPosition, topPosition;
+                width = 600;
+                height = 1000;
+                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                wndGame = window.open(data.url, "Deposit",
+                "status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+                + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+                + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+            }
         },
         error: function(err, xhr){ }
     });
