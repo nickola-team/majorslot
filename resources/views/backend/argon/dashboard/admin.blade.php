@@ -1,195 +1,287 @@
 @extends('backend.argon.layouts.app')
 @section('page-title',  '대시보드' )
-@section('content-right-header')
-<div class="col-lg-6 col-5 text-right">
-    <a href="#" class="btn btn-neutral">{{__('New')}}</a>
-</div>
-@endsection
+
 @section('content')
 <div class="container-fluid mt--8">
-    <!-- Search -->
-
 <div class="row">
-<div class="col">
-    <div class="card shadow mt-4">
-    <!-- Light table -->
-    <!-- Card header -->
-    <div class="card-header border-0">
-        <h3 class="mb-0">{{ __('List')}}</h3>
-    </div>
-    <div class="table-responsive">
-        <table class="table align-items-center table-flush">
-        <thead class="thead-light">
-            <tr>
-            <th scope="col" class="sort" data-sort="name">{{__('Name')}}</th>
-            <th scope="col" class="sort" data-sort="budget">{{__('Email')}}</th>
-            <th scope="col" class="sort" data-sort="budget">{{__('Parent')}}</th>
-            <th scope="col" class="sort" data-sort="budget">{{__('RTP')}}</th>
-            <th scope="col" class="sort" data-sort="budget">{{__('Balance')}}</th>
-            <th scope="col" class="sort" data-sort="budget">
-                {{__('PlayerSum')}}
-            </th>
-            <th scope="col" class="sort" data-sort="budget">{{__('Rate')}}</th>
-            <th scope="col" class="sort" data-sort="status">{{__('CreatedAt')}}</th>
-            <th scope="col" class="sort" data-sort="status">{{__('Status')}}</th>
-            <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody class="list">
-                <tr><td colspan="6">{{__('No Data')}}</td></tr>
-        </tbody>
-        </table>
-    </div>
-    <!-- Card footer -->
-    <div class="card-footer py-4">
-    </div>
-    </div>
-</div>
-</div>
-<!-- Add/Out Balance Modal -->
-
-
-<div class="modal fade" id="modal-addbalance" tabindex="-1" role="dialog" aria-labelledby="modal-addbalance" aria-hidden="true">
-    <form action="#" method="POST">
-    @csrf
-        <input type="hidden" name="type" value="add">
-        <input type="hidden" id="AddId" name="user_id">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content ">
-            <div class="modal-header">
-                <h2 class="modal-title" id="exampleModalLabel">{{__('AddBalance')}}</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="name" class="form-control-label">{{__('Please input balance to add')}}</label>
-                    <input class="form-control" type="text" value="" id="AddSum" name="summ">
-                    <br>
-                    <button type="button" class="btn btn-default changeAddSum" data-value="10000000">{{__('10M')}}</button>
-                    <button type="button" class="btn btn-default changeAddSum" data-value="30000000">{{__('30M')}}</button>
-                    <button type="button" class="btn btn-default changeAddSum" data-value="50000000">{{__('50M')}}</button>
-                    <button type="button" class="btn btn-default changeAddSum" data-value="100000000">{{__('100M')}}</button>
-                    <button type="button" class="btn btn-primary changeAddSum" data-value="0">{{__('Reset')}}</button>
+            <div class="col-xl-8 mb-5 mb-xl-0">
+                <div class="card bg-gradient-default shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
+                                <h2 class="text-white mb-0">Sales value</h2>
+                            </div>
+                            <div class="col">
+                                <ul class="nav nav-pills justify-content-end">
+                                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                                            <span class="d-none d-md-block">Month</span>
+                                            <span class="d-md-none">M</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                                            <span class="d-none d-md-block">Week</span>
+                                            <span class="d-md-none">W</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <!-- Chart wrapper -->
+                            <canvas id="chart-sales" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Cancel')}}</button>
-                <button type="submit" class="btn btn-primary">{{__('AddBalance')}}</button>
-            </div>
-        </div>
-    </div>
-    </form>
-</div>
-
-<div class="modal fade" id="modal-outbalance" tabindex="-1" role="dialog" aria-labelledby="modal-addbalance" aria-hidden="true">
-    <form action="#" method="POST">
-        @csrf
-        <input type="hidden" name="type" value="out">
-        <input type="hidden" id="OutId" name="user_id">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content ">
-            <div class="modal-header">
-                <h2 class="modal-title" id="exampleModalLabel">{{__('OutBalance')}}</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="name" class="form-control-label">{{__('Please input balance to out')}}</label>
-                    <input class="form-control" type="text" value="" id="OutSum" name="summ">
-                    <br>
-                    <button type="button" class="btn btn-default changeOutSum" data-value="10000000">{{__('10M')}}</button>
-                    <button type="button" class="btn btn-default changeOutSum" data-value="30000000">{{__('30M')}}</button>
-                    <button type="button" class="btn btn-default changeOutSum" data-value="50000000">{{__('50M')}}</button>
-                    <button type="button" class="btn btn-default changeOutSum" data-value="100000000">{{__('100M')}}</button>
-                    <button type="button" class="btn btn-primary changeOutSum" data-value="0">{{__('Reset')}}</button>
+            <div class="col-xl-4">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
+                                <h2 class="mb-0">Total orders</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <canvas id="chart-orders" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Cancel')}}</button>
-                <button type="submit" class="btn btn-danger">{{__('OutBalance')}}</button>
+        </div>
+        <div class="row mt-5">
+            <div class="col-xl-8 mb-5 mb-xl-0">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Page visits</h3>
+                            </div>
+                            <div class="col text-right">
+                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Page name</th>
+                                    <th scope="col">Visitors</th>
+                                    <th scope="col">Unique users</th>
+                                    <th scope="col">Bounce rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">
+                                        /argon/
+                                    </th>
+                                    <td>
+                                        4,569
+                                    </td>
+                                    <td>
+                                        340
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        /argon/index.html
+                                    </th>
+                                    <td>
+                                        3,985
+                                    </td>
+                                    <td>
+                                        319
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        /argon/charts.html
+                                    </th>
+                                    <td>
+                                        3,513
+                                    </td>
+                                    <td>
+                                        294
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        /argon/tables.html
+                                    </th>
+                                    <td>
+                                        2,050
+                                    </td>
+                                    <td>
+                                        147
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-up text-success mr-3"></i> 50,87%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        /argon/profile.html
+                                    </th>
+                                    <td>
+                                        1,795
+                                    </td>
+                                    <td>
+                                        190
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-down text-danger mr-3"></i> 46,53%
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Social traffic</h3>
+                            </div>
+                            <div class="col text-right">
+                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Referral</th>
+                                    <th scope="col">Visitors</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">
+                                        Facebook
+                                    </th>
+                                    <td>
+                                        1,480
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="mr-2">60%</span>
+                                            <div>
+                                                <div class="progress">
+                                                <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Facebook
+                                    </th>
+                                    <td>
+                                        5,480
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="mr-2">70%</span>
+                                            <div>
+                                                <div class="progress">
+                                                <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Google
+                                    </th>
+                                    <td>
+                                        4,807
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="mr-2">80%</span>
+                                            <div>
+                                                <div class="progress">
+                                                <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Instagram
+                                    </th>
+                                    <td>
+                                        3,678
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="mr-2">75%</span>
+                                            <div>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        twitter
+                                    </th>
+                                    <td>
+                                        2,645
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="mr-2">30%</span>
+                                            <div>
+                                                <div class="progress">
+                                                <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    </form>
-</div> 
-
-<!-- delete Modal -->
-<div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-confirm" aria-hidden="true">
-    <form action="#" method="POST">
-        @csrf
-    <input type="hidden" id="delId" name="user_id">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{__('Confirm')}}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {{__('Do you wanna delete this user?')}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Cancel')}}</button>
-        <button type="submit" class="btn btn-primary">{{__('Yes')}}</button>
-      </div>
-    </div>
-  </div>
-</form>
 </div>
 @stop
 
+
 @push('js')
-<script>
-    $('.addPayment').click(function(event){
-			if( $(event.target).is('.newPayment') ){
-				var id = $(event.target).attr('data-id');
-			}else{
-				var id = $(event.target).parents('.newPayment').attr('data-id');
-			}
-			$('#AddId').val(id);
-		});
-    $('.changeAddSum').click(function(event){
-			$v = Number($('#AddSum').val());
-			if ($(event.target).data('value') == 0)
-			{
-				$('#AddSum').val(0);
-			}
-			else
-			{
-				$('#AddSum').val($v + $(event.target).data('value'));
-			}
-		});
-    $('.outPayment').click(function(event){
-			if( $(event.target).is('.newPayment') ){
-				var id = $(event.target).attr('data-id');
-			}else{
-				var id = $(event.target).parents('.newPayment').attr('data-id');
-			}
-			$('#OutId').val(id);
-		});
-    $('.deleteUser').click(function(event){
-			if( $(event.target).is('.newPayment') ){
-				var id = $(event.target).attr('data-id');
-			}else{
-				var id = $(event.target).parents('.newPayment').attr('data-id');
-			}
-			$('#delId').val(id);
-		});
-    $('.changeOutSum').click(function(event){
-			$v = Number($('#OutSum').val());
-			if ($(event.target).data('value') == 0)
-			{
-				$('#OutSum').val(0);
-			}
-			else
-			{
-				$('#OutSum').val($v + $(event.target).data('value'));
-			}
-		});
-</script>
+    <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
 @endpush

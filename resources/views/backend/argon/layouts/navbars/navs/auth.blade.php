@@ -5,6 +5,56 @@
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"></a>
         <!-- User -->
         <ul class="navbar-nav align-items-center d-none d-md-flex">
+            @if (!auth()->user()->hasRole('admin'))
+            @if (auth()->user()->isInoutPartner())
+                <li class="nav-item">
+                    <div class="nav-item-btn align-items-center">
+                    <a class="nav-link text-dark btn btn-success" href="#">
+                        충전 (0건)
+                    </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-item-btn align-items-center">
+                    <a class="nav-link text-dark btn btn-warning" href="#">
+                        환전 (0건)
+                    </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-item-btn align-items-center">
+                    <a class="nav-link text-dark btn btn-info" href="#">
+                    <i class="ni ni-notification-70"></i>
+                    </a>
+                    </div>
+                </li>
+            @else
+                <li class="nav-item">
+                    <div class="nav-item-btn align-items-center">
+                    <a class="nav-link text-dark btn btn-success" href="#">
+                        충전신청
+                    </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-item-btn align-items-center">
+                    <a class="nav-link text-dark btn btn-info" href="#">
+                        환전신청
+                    </a>
+                    </div>
+                </li>
+            @endif
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#">
+                    현재 보유금 {{number_format(auth()->user()->balance)}}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#">
+                    하부 총 보유금 {{number_format(auth()->user()->balance)}}
+                </a>
+            </li>
+            @endif
             <li class="nav-item dropdown">
                 <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="media align-items-center">
@@ -12,7 +62,7 @@
                             <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/profile.png">
                         </span>
                         <div class="media-body ml-2 d-none d-lg-block">
-                            <span class="mb-0 text-sm  font-weight-bold">{{ auth()->user()->name }}</span>
+                            <span class="mb-0 text-sm  font-weight-bold text-dark">{{ auth()->user()->username }}</span>
                         </div>
                     </div>
                 </a>

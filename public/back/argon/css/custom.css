@@ -32,7 +32,7 @@
 body,
 html {
     height: 100%;
-    font-family: Montserrat-Bold, sans-serif !important;
+    font-family: Poppins-Regular, sans-serif !important;
     font-size : .9rem;
 }
 
@@ -66,4 +66,16 @@ html {
 .navbar-vertical .navbar-nav .nav-link .sub-i
 {
     min-width : 1.75rem !important;
+}
+
+.navbar-top .navbar-nav .nav-item-btn
+{
+    min-height : 36px;
+    vertical-align: middle;
+    padding: 0.5rem;
+}
+
+.btn
+{
+    box-shadow : none !important;
 }
