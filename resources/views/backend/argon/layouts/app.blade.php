@@ -24,6 +24,9 @@
         <!-- Argon CSS -->
         <link type="text/css" href="{{ asset('back/argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
         <link type="text/css" href="{{ asset('back/argon') }}/css/custom.css?v=1.0.0" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="{{ asset('back/argon') }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+
         @stack('css')
     </head>
     <body class="{{ $class ?? '' }}">

@@ -65,42 +65,39 @@
                         <span class="nav-link-text text-white">대시보드</span>
                     </a>
                 </li>
-                @if (!auth()->user()->hasRole('manager'))
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link active" href="#navbar-agents" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-agents">
                         <i class="ni ni-single-02 text-white"></i>
                         <span class="nav-link-text text-white">에이전트</span>
                     </a>
-
                     <div class="collapse" id="navbar-agents">
-                        <ul class="nav nav-sm flex-column">
+                    <ul class="nav nav-sm flex-column">
+                    @if (!auth()->user()->hasRole('manager'))
                             <li class="nav-item">
                                 <a class="nav-link  text-white" href="#">
-                                    에이전트생성
+                                    <i class="far fa-circle text-white sub-i"></i>
+                                    <span class="nav-link-text text-white">에이전트생성</span>
                                 </a>
                             </li>
-                        </ul>
                     
                     @for ($role=auth()->user()->role_id-1;$role>=3;$role--)
-                            <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
                                     <a class="nav-link  text-white" href="#">
+                                    <i class="far fa-circle text-white sub-i"></i>
                                         {{\VanguardLTE\Role::where('level',$role)->first()->description}}
                                     </a>
                                 </li>
-                            </ul>
                     @endfor
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link  text-white" href="#">
-                                    롤링내역
-                                </a>
-                            </li>
-                        </ul>
+                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="#">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            롤링내역
+                        </a>
+                    </li>
                     </div>
                 </li>
-                @endif
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link" href="#navbar-players" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
@@ -112,16 +109,19 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     플레이어목록
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     게임배팅내역
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     지급내역
                                 </a>
                             </li>
@@ -140,26 +140,31 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     게임사
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     게임
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     환수금
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     콜
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     환수금내역
                                 </a>
                             </li>
@@ -180,28 +185,33 @@
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     충전
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     환전
                                 </a>
                             </li>
                             @else
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     충전신청
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     환전신청
                                 </a>
                             </li>
                             @endif
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     충환전내역
                                 </a>
                             </li>
@@ -220,21 +230,25 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     일별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     월별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     게임별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     일별충환전
                                 </a>
                             </li>
@@ -253,6 +267,7 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     벳윈정산
                                 </a>
                             </li>
@@ -272,11 +287,13 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     공지
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     쪽지
                                 </a>
                             </li>
@@ -298,11 +315,13 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     도메인
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
                                     접속로그
                                 </a>
                             </li>
