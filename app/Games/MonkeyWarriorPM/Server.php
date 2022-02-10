@@ -77,9 +77,13 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 25);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [10,3,6,8,9,9,7,10,3,5,4,5,8,4,10]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'DefaultMaskMoneyCount', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'DefaultMaskBonusType', [0,0,0,0,0,0,0,0,0,0,0,0,0,0]);                
+                $slotSettings->SetGameData($slotSettings->slotId . 'DefaultMaskBoxMaxCount', [0,0,0,0,0,0,0,0,0,0,0,0,0,0]);  
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
-                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);           
+                $slotSettings->SetGameData($slotSettings->slotId . 'BoxMaxCount', 0);  
+                $slotSettings->SetGameData($slotSettings->slotId . 'BoxCurrentCount', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -98,6 +102,12 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                     }
                     if (isset($lastEvent->serverResponse->RoundID)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    }
+                    if (isset($lastEvent->serverResponse->BoxMaxCount)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BoxMaxCount', $lastEvent->serverResponse->BoxMaxCount);
+                    }
+                    if (isset($lastEvent->serverResponse->BoxCurrentCount)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BoxCurrentCount', $lastEvent->serverResponse->BoxCurrentCount);
                     }
                     $bet = $lastEvent->serverResponse->bet;
                 }
@@ -227,6 +237,8 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BoxMaxCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BoxCurrentCount', 0);
                     $leftFreeGames = 0;
                 }
                 $slotSettings->SetGameData($slotSettings->slotId . 'IsMoreRespin', 0);
@@ -239,7 +251,7 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                 $defaultMoneyCount = 0;
                 $isrespin = false;
                 if($winType == 'bonus'){
-                    if(mt_rand(0, 100) < 50 && $slotEvent['slotEvent'] != 'freespin'){                        
+                    if($slotSettings->GetBonusType() == 2 && $slotEvent['slotEvent'] != 'freespin'){                        
                         $initMoneyCounts = $slotSettings->GetMoneyCount();
                         $isrespin = true;
                         for($i = 0; $i < count($initMoneyCounts); $i++){
@@ -271,11 +283,17 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                             $this->findZokbos($reels, $reels['reel1'][$r], 1, '~'.($r * 5));
                         }                        
                     }
+                    $fiveSymbol = 0;
                     for($r = 0; $r < count($this->winLines); $r++){
                         $winLine = $this->winLines[$r];
                         $winLineMoney = $slotSettings->Paytable[$winLine['FirstSymbol']][$winLine['RepeatCount']] * $betline * $bonusMpl;
-                        $strWinLine = $strWinLine . '&l'. $r.'='.$r.'~'.$winLineMoney . $winLine['StrLineWin'];
-                        $totalWin += $winLineMoney;
+                        if($winLineMoney > 0){
+                            $strWinLine = $strWinLine . '&l'. $r.'='.$r.'~'.$winLineMoney . $winLine['StrLineWin'];
+                            $totalWin += $winLineMoney;
+                        }
+                        if($winLine['RepeatCount'] == 5 && $winLine['FirstSymbol'] <= 5 && $fiveSymbol == 0){
+                            $fiveSymbol = $winLine['FirstSymbol'];
+                        }
                     }      
                     
                     $_obf_scatterposes = [];
@@ -353,6 +371,9 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                         else if($winType == 'bonus' && $scattersCount >= 3 && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
                             break;  // give freespin per 450spins over
                         }
+                        else if($fiveSymbol > 0 && $fiveSymbol <= 5 && mt_rand(0, 100) < 70){
+                            $test_str = '';
+                        }
                         else if( $moneyTotalWin + $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
                             $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
@@ -416,6 +437,8 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RespinGames', $slotSettings->slotRespinCount);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BoxMaxCount', $slotSettings->GetBoxMaxCount());
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BoxCurrentCount', 0);
                 }
                 
                 for($k = 0; $k < 3; $k++){
@@ -495,7 +518,7 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                     }
                 }
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')  . ',"IsMoreRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'IsMoreRespin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"MoneyValues":'.json_encode($_moneyValue).',"LastReel":'.json_encode($lastReel).'}}';
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')  . ',"IsMoreRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'IsMoreRespin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"BoxMaxCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'BoxMaxCount') . ',"BoxCurrentCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'BoxCurrentCount') . ',"winLines":[],"Jackpots":""' . ',"MoneyValues":'.json_encode($_moneyValue).',"LastReel":'.json_encode($lastReel).'}}';
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin'), $slotEvent['slotEvent'], $isState);
                 if( ($scattersCount >= 3 || $moneyCount >= 6) && $slotEvent['slotEvent']!='freespin' ) 
                 {
@@ -580,7 +603,8 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                         $_obf_winType = 0;
                     }
                 }
-                if( $isMoreRespin == false && $moneyCount < 13 && rand(0, 100) < 10){
+                if( $isMoreRespin == false && $slotSettings->GetGameData($slotSettings->slotId . 'BoxCurrentCount') < $slotSettings->GetGameData($slotSettings->slotId . 'BoxMaxCount') && $slotSettings->IsBox() == true){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BoxCurrentCount', $slotSettings->GetGameData($slotSettings->slotId . 'BoxCurrentCount') + 1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'IsMoreRespin', 1);
                 }
                 
@@ -654,7 +678,7 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"totalRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') . ',"currentRespinGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinGame') . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')   . ',"IsMoreRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'IsMoreRespin'). ',"winLines":[],"Jackpots":""' . 
-                    ',"MoneyValues":'.json_encode($_moneyValue) . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')).',"LastReel":'.json_encode($lastReel).'}}';
+                    ',"MoneyValues":'.json_encode($_moneyValue) . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"BoxMaxCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'BoxMaxCount') . ',"BoxCurrentCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'BoxCurrentCount') .',"LastReel":'.json_encode($lastReel).'}}';
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin'), $slotEvent['slotEvent'], $isState);
             }
             if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){

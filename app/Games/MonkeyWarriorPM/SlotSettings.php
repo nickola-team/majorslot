@@ -818,6 +818,88 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
             $this->SetGameData($this->slotId . 'DefaultMaskMoneyCount', $moneyMaskCounts);
             return $moneyCounts[$moneyIndex];
         }
+        public function GetBonusType(){
+            $bonusTypes = [1,1,1,1,1,1,1,2,2,2,2,2,2,2]; // 1 : FreeSpin, 2 : Respin
+            $maskBonusTypes = $this->GetGameData($this->slotId . 'DefaultMaskBonusType');
+            $count = 0;
+            for($i = 0; $i < 14; $i++){
+                if($maskBonusTypes[$i] == 1){
+                    $count++;
+                }
+            }
+            if($count == 14){
+                $this->SetGameData($this->slotId . 'DefaultMaskBonusType', [0,0,0,0,0,0,0,0,0,0,0,0,0,0]);    
+                $maskBonusTypes = $this->GetGameData($this->slotId . 'DefaultMaskBonusType');
+                $count = 0;
+            }
+            
+            $typeIndex = 0;
+            if($count >= 13){
+                for($i = 0; $i < 14; $i++){
+                    if($maskBonusTypes[$i] == 0){
+                        $maskBonusTypes[$i] = 1;
+                        $typeIndex = $i;
+                    }
+                }
+            }else{
+                while(true){
+                    $typeIndex = mt_rand(0, 13);
+                    if($maskBonusTypes[$typeIndex] == 0){
+                        $maskBonusTypes[$typeIndex] = 1;
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'DefaultMaskBonusType', $maskBonusTypes);
+            return $bonusTypes[$typeIndex];
+        }
+        public function GetBoxMaxCount(){
+            $boxMaxCounts = [2,3,3,3,3,4,4,4,4,5]; // 1 : FreeSpin, 2 : Respin
+            $maskBoxCounts = $this->GetGameData($this->slotId . 'DefaultMaskBoxMaxCount');
+            $count = 0;
+            for($i = 0; $i < 10; $i++){
+                if($maskBoxCounts[$i] == 1){
+                    $count++;
+                }
+            }
+            if($count == 10){
+                $this->SetGameData($this->slotId . 'DefaultMaskBoxMaxCount', [0,0,0,0,0,0,0,0,0,0,0,0,0,0]);    
+                $maskBoxCounts = $this->GetGameData($this->slotId . 'DefaultMaskBoxMaxCount');
+                $count = 0;
+            }
+            
+            $boxIndex = 0;
+            if($count >= 9){
+                for($i = 0; $i < 10; $i++){
+                    if($maskBoxCounts[$i] == 0){
+                        $maskBoxCounts[$i] = 1;
+                        $boxIndex = $i;
+                    }
+                }
+            }else{
+                while(true){
+                    $boxIndex = mt_rand(0, 9);
+                    if($maskBoxCounts[$boxIndex] == 0){
+                        $maskBoxCounts[$boxIndex] = 1;
+                        break;
+                    }
+                }
+            }
+            $this->SetGameData($this->slotId . 'DefaultMaskBoxMaxCount', $maskBoxCounts);
+            return $boxMaxCounts[$boxIndex];
+        }
+        public function IsBox(){
+            $leftRespins = $this->GetGameData($this->slotId . 'RespinGames') - $this->GetGameData($this->slotId . 'CurrentRespinGame');
+            $leftBoxCounts = $this->GetGameData($this->slotId . 'BoxMaxCount') - $this->GetGameData($this->slotId . 'BoxCurrentCount');
+            if($leftRespins <= $leftBoxCounts){
+                return true;
+            }
+            if(mt_rand(0, 100) < 30){
+                return true;
+            }else{
+                return false;
+            }
+        }
         public function GetMoneyWin(){
             $percent = rand(0, 100);
             $sum = $this->money_respin[0][0];
@@ -831,9 +913,9 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
         }
         public function GetMoreRespin(){
             $percent = rand(0, 100);
-            if($percent < 70) {
+            if($percent <= 30) {
                 return 1;
-            }else if($percent < 95){
+            }else if($percent <= 70){
                 return 2;
             }else{
                 return 3;
