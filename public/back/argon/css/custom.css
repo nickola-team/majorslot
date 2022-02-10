@@ -79,3 +79,10 @@ html {
 {
     box-shadow : none !important;
 }
+
+.page-item.active .page-link
+{
+    box-shadow : none !important;
+    border-color: #6a6a6a !important;
+    background-color : #6a6a6a !important;
+}

@@ -1,20 +1,22 @@
+<td>{{$stat->id}}</td>
 <td>
     @if ($stat->user)
-        {{$stat->user->username}}
-        [{{__(\App\Models\User::ROLE_NAMES[$stat->user->role_id])}}]
+    <a href="#" data-toggle="tooltip" data-original-title="{{$stat->user->parents()}}">
+        {{$stat->user->username}} [{{$stat->user->role->description}}]
+    </a>
+    @else
+        {{__('Unknown')}}
+    @endif
+</td>
+<td>
+    @if ($stat->admin)
+    {{$stat->admin->username}} [{{$stat->admin->role->description}}]
     @else
     {{__('Unknown')}}
     @endif
 </td>
 <td>
-    @if ($stat->payeer)
-    {{$stat->payeer->username}}
-    @else
-    {{__('Unknown')}}
-    @endif
-</td>
-<td>
-    @if ($stat->payeer && auth()->user()->role_id >= $stat->payeer->role_id)
+    @if ($stat->admin && auth()->user()->role_id >= $stat->admin->role_id)
         {{number_format($stat->balance,0)}}
     @else
         0
@@ -23,10 +25,17 @@
 <td>{{number_format($stat->old,0)}}</td>
 <td>{{number_format($stat->new,0)}}</td>
 @if($stat->type == 'add')
-<td><span class="text-green">{{__('AddBalance')}}</span></td>
 <td><span class="text-green">{{number_format($stat->summ,0)}}</span></td>
+<td><span class="text-green">{{__($stat->type)}}</span></td>
 @else
-<td><span class="text-red">{{__('OutBalance')}}</span></td>
 <td><span class="text-red">{{number_format($stat->summ,0)}}</span></td>
+<td><span class="text-red">{{__($stat->type)}}</span></td>
 @endif
+<td>
+@if ($stat->request_id != null)
+<span class="badge badge-default" style="background-color:#11cdef">계좌</span>
+@else
+<span class="badge badge-default" style="background-color:#f5365c">수동</span>
+@endif
+</td>
 <td>{{$stat->created_at}}</td>

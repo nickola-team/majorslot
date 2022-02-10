@@ -1131,8 +1131,24 @@ namespace VanguardLTE
 
             }
             return $result;
-
         }
+
+        public function parents()
+        {
+            $hirechy = $this->username;
+            $parent = $this;
+            do
+            {
+                $parent = $parent->referral;
+                if ($parent!=null)
+                {
+                    $hirechy = $hirechy . " → " . $parent->username;
+                }
+            }
+            while ($parent!=null && !$parent->isInoutPartner());
+            return $hirechy;
+        }
+
 
 
     }

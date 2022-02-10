@@ -24,7 +24,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $availablePartners = $user->hierarchyPartners();
             $statistics = $statistics->whereIn('user_id', $availablePartners);
 
-            $start_date = date("Y-m-1 0:0:0");
+            $start_date = date("2000-m-1 0:0:0");
             $end_date = date("Y-m-d 23:59:59");
 
             if ($request->dates != '')
