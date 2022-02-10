@@ -42,7 +42,7 @@ html {
 }
 .navbar-vertical .navbar-nav .nav-link[data-toggle='collapse']:after
 {
-    color: #fff;
+    color: #fff !important;
 }
 
 @media (max-width: 767.98px)
@@ -68,13 +68,6 @@ html {
     min-width : 1.75rem !important;
 }
 
-.navbar-top .navbar-nav .nav-item-btn
-{
-    min-height : 36px;
-    vertical-align: middle;
-    padding: 0.5rem;
-}
-
 .btn
 {
     box-shadow : none !important;
@@ -85,4 +78,14 @@ html {
     box-shadow : none !important;
     border-color: #6a6a6a !important;
     background-color : #6a6a6a !important;
+}
+
+.navbar-vertical.navbar-expand-xs .navbar-nav>.nav-item>.nav-link.active
+{
+    background: #3e3e3e !important;
+}
+
+.sidenav-toggler-dark .sidenav-toggler-line
+{
+    background-color : #000000 !important;
 }

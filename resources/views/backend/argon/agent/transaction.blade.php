@@ -1,7 +1,45 @@
 @extends('backend.argon.layouts.app')
 @section('page-title',  '에이전트 지급내역')
+@section('content-header')
+<div class="row">
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="card-title text-uppercase text-muted mb-0 text-green">충전</h3>
+                        <span class="h2 font-weight-bold mb-0 text-green">{{number_format($total['add'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-success text-white rounded-circle shadow">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="card-title text-uppercase text-muted mb-0  text-red">환전</h3>
+                        <span class="h2 font-weight-bold mb-0  text-red">{{number_format($total['out'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
 @section('content')
-<div class="container-fluid mt--8">
+<div class="container-fluid">
     <!-- Search -->
 <div class="row">
     <div class="col">

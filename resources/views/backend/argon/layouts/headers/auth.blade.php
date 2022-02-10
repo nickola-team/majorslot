@@ -1,4 +1,4 @@
-<div class="header pb-8 pt-md-6">
+<div class="header pb-4">
     <div class="container-fluid">
         <div class="header-body">
             <div class="row align-items-center py-4">

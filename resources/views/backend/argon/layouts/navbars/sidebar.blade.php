@@ -1,63 +1,25 @@
-<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-primary" id="sidenav-main">
-    <div class="container-fluid">
-        <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Brand -->
-        <a class="navbar-brand pt-0" href="#">
-            <img src="{{ asset('back/argon') }}/img/brand/blue.png" class="navbar-brand-img" alt="...">
-        </a>
-        <!-- User -->
-        <ul class="nav align-items-center d-md-none">
-            <li class="nav-item dropdown">
-                <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <div class="media align-items-center">
-                        <span class="avatar avatar-sm rounded-circle" style="background-color:white;">
-                        <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/profile.png">
-                        </span>
-                    </div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
-                    <div class=" dropdown-header noti-title">
-                        <!-- <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6> -->
-                    </div>
-                    <a href="#" class="dropdown-item">
-                        <i class="ni ni-single-02"></i>
-                        <span>설정 및 정보</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item" onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                        <i class="ni ni-curved-next"></i>
-                        <span>로그아웃</span>
-                    </a>
-                </div>
-            </li>
-        </ul>
-        <!-- <hr class="my-0 sidebar-hr"> -->
-
-        <!-- Collapse -->
-        <div class="collapse navbar-collapse bg-primary" id="sidenav-collapse-main">
-            <!-- Collapse header -->
-            <div class="navbar-collapse-header d-md-none">
-                <div class="row">
-                    <div class="col-6 collapse-brand">
-                        <a href="#">
-                            <img src="{{ asset('back/argon') }}/img/brand/blue.png">
-                        </a>
-                    </div>
-                    <div class="col-6 collapse-close">
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle sidenav">
-                            <span></span>
-                            <span></span>
-                        </button>
+<nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-blue" id="sidenav-main">
+    <div class="scrollbar-inner scroll-scrollx_visible">
+        <div class="sidenav-header d-flex align-items-center">
+            <a class="navbar-brand" href="#">
+                <img src="{{ asset('back/argon') }}/img/brand/blue.png" class="navbar-brand-img" alt="...">
+            </a>
+            <div class="ml-auto">
+                <!-- Sidenav toggler -->
+                <div class="sidenav-toggler d-none d-xl-block" data-action="sidenav-unpin" data-target="#sidenav-main">
+                    <div class="sidenav-toggler-inner">
+                        <i class="sidenav-toggler-line"></i>
+                        <i class="sidenav-toggler-line"></i>
+                        <i class="sidenav-toggler-line"></i>
                     </div>
                 </div>
             </div>
-
-            <!-- Navigation -->
-            <ul class="navbar-nav">
+        </div>
+        <div class="navbar-inner">
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+                <!-- Navigation -->
+                <ul class="navbar-nav">
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link  text-white" href="#">
@@ -334,6 +296,8 @@
                 </li>
                 @endif
             </ul>
+                
+            </div>
         </div>
     </div>
 </nav>

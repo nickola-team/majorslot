@@ -14,7 +14,6 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
         <!-- Extra details for Live View on GitHub Pages -->
 
@@ -47,8 +46,15 @@
 
         @include('backend.argon.layouts.footers.guest')
 
-        <script src="{{ asset('back/argon') }}/vendor/jquery/dist/jquery.min.js"></script>
-        <script src="{{ asset('back/argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <script src="{{ asset('back/argon') }}/vendor/js-cookie/js.cookie.js"></script>
+        <script src="{{ asset('back/argon') }}/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+        <script src="{{ asset('back/argon') }}/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+        <script src="{{ asset('back/argon') }}/vendor/lavalamp/js/jquery.lavalamp.min.js"></script>
+        <!-- Optional JS -->
+        <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
+        <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
         
         @stack('js')
  
