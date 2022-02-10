@@ -1517,6 +1517,36 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
+        public function savesettings($ppgame, \Illuminate\Http\Request $request)
+        {
+            $userId = auth()->user()->id;
+            $object = '\VanguardLTE\Games\\' . $ppgame . '\SlotSettings';
+            if (!class_exists($object))
+            {
+                return response('SoundState=true_true_true_false_false');
+            }
+            $slot = new $object($ppgame, $userId);
+
+            if ($request->method == 'load') // send settings to client from server
+            {
+                $settings = $slot->GetGameData('settings');
+                if ($settings)
+                {
+                    return response($settings);
+                }
+                else
+                {
+                    return response('SoundState=true_true_true_false_false');
+                }
+            }
+            else //save settings to server from client
+            {
+                $slot->SetGameData('settings', $request->settings);
+                $slot->SaveGameData();
+                return response($request->settings);
+            }
+        }
+
     }
 
     

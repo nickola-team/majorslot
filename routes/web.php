@@ -1409,6 +1409,8 @@ Route::group(['prefix' => 'gs2c',], function () {
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
 
+Route::post('games/{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
+
 
 /**
  * Booongo Game Provider
