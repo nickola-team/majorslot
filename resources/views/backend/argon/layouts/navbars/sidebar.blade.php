@@ -74,22 +74,25 @@
                     <div class="collapse" id="navbar-agents">
                     <ul class="nav nav-sm flex-column">
                     @if (!auth()->user()->hasRole('manager'))
-                            <li class="nav-item">
-                                <a class="nav-link  text-white" href="#">
-                                    <i class="far fa-circle text-white sub-i"></i>
-                                    <span class="nav-link-text text-white">에이전트생성</span>
-                                </a>
-                            </li>
-                    
-                    @for ($role=auth()->user()->role_id-1;$role>=3;$role--)
-                                <li class="nav-item">
-                                    <a class="nav-link  text-white" href="#">
-                                    <i class="far fa-circle text-white sub-i"></i>
-                                        {{\VanguardLTE\Role::where('level',$role)->first()->description}}
-                                    </a>
-                                </li>
-                    @endfor
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                <span class="nav-link-text text-white">에이전트생성</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                <span class="nav-link-text text-white">에이전트목록</span>
+                            </a>
+                        </li>
                     @endif
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            지급내역
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link  text-white" href="#">
                             <i class="far fa-circle text-white sub-i"></i>

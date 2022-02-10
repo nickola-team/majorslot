@@ -37,9 +37,22 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
         Route::get('/', [
             'as' => 'argon.dashboard',
             'uses' => 'DashboardController@index',
-            //
         ]);
 
+        Route::get('/agent/list', [
+            'as' => 'argon.agent.list',
+            'uses' => 'UsersController@agent_list',
+        ]);
+
+        Route::get('/agent/transaction', [
+            'as' => 'argon.agent.transaction',
+            'uses' => 'UsersController@agent_transaction',
+        ]);
+
+        Route::get('/agent/rolling', [
+            'as' => 'argon.agent.rolling',
+            'uses' => 'UserController@agent_rolling',
+        ]);
 
     });
 });
