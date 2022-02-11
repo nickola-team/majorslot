@@ -89,3 +89,8 @@ html {
 {
     background-color : #000000 !important;
 }
+
+.table thead th
+{
+    font-size: .9rem !important;
+}

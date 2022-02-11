@@ -29,9 +29,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             if ($request->dates != '')
             {
-                $dates = explode(' - ', $request->dates);
-                $start_date = $dates[0];
-                $end_date = $dates[1];            
+                // $dates = explode(' - ', $request->dates);
+                $start_date = $request->dates[0];
+                $end_date = $request->dates[1];            
             }
             $statistics = $statistics->where('transactions.created_at', '>=', $start_date);
             $statistics = $statistics->where('transactions.created_at', '<=', $end_date );
