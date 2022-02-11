@@ -144,11 +144,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             shuffle($hotgames);
 
             $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
-            $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
+            $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for admin's popup
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
             $msgs = [];
             $unreadmsg = 0;
             if ($notice==null || $shop_id != 0) { //it is logged in
-                $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
+                $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for comaster's popup
+                $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get(); //for comaster's popup
             }
             $trhistory = [];
             if ($shop_id != 0)
@@ -166,11 +168,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'withdraw_deposit.sum',
                         'withdraw_deposit.created_at',
                         'transactions.updated_at',
-
                     ]
                 );
             }
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'msgs','unreadmsg', 'ppgames', 'trhistory'));
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'noticelist','msgs','unreadmsg', 'ppgames', 'trhistory'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {
