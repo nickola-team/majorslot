@@ -94,3 +94,27 @@ html {
 {
     font-size: .9rem !important;
 }
+
+.card-header .box .box-tools .box-button[data-toggle='collapse']:after
+{
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 700;
+    font-style: normal;
+    font-variant: normal;
+
+    display: inline-block;
+
+    margin-left: auto;
+
+    content: '\f105';
+    transition: all .15s ease; 
+
+    color: #8898aa;
+
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+.card-header .box .box-tools .box-button[data-toggle='collapse'][aria-expanded='true']:after
+{
+    transform: rotate(90deg);
+}

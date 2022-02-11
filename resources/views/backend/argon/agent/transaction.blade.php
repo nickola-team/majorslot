@@ -3,12 +3,12 @@
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card card-stats  mb-xl-0">
             <div class="card-body">
                 <div class="row">
-                    <div class="col">
-                        <h3 class="card-title text-uppercase text-muted mb-0 text-green">충전</h3>
-                        <span class="h2 font-weight-bold mb-0 text-green">{{number_format($total['add'])}}</span>
+                    <div class="col ">
+                        <h3 class="card-title text-success mb-0 ">충전</h3>
+                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['add'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-success text-white rounded-circle shadow">
@@ -20,12 +20,12 @@
         </div>
     </div>
     <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card card-stats  mb-xl-0">
             <div class="card-body">
                 <div class="row">
-                    <div class="col">
-                        <h3 class="card-title text-uppercase text-muted mb-0  text-red">환전</h3>
-                        <span class="h2 font-weight-bold mb-0  text-red">{{number_format($total['out'])}}</span>
+                    <div class="col ">
+                        <h3 class="card-title text-warning mb-0 ">환전</h3>
+                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['out'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -36,34 +36,36 @@
             </div>
         </div>
     </div>
+
     <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card card-stats  mb-xl-0">
             <div class="card-body">
                 <div class="row">
-                    <div class="col">
-                        <h3 class="card-title text-uppercase text-muted mb-0  text-red">롤링전환</h3>
-                        <span class="h2 font-weight-bold mb-0  text-red">{{number_format($total['out'])}}</span>
+                    <div class="col ">
+                        <h3 class="card-title text-primary mb-0 ">롤링전환</h3>
+                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['deal_out'])}}</span>
                     </div>
                     <div class="col-auto">
-                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                            <i class="fas fa-chart-pie"></i>
+                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                            <i class="fas fa-chart-area"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card card-stats  mb-xl-0">
             <div class="card-body">
                 <div class="row">
-                    <div class="col">
-                        <h3 class="card-title text-uppercase text-muted mb-0  text-red">벳윈전환</h3>
-                        <span class="h2 font-weight-bold mb-0  text-red">{{number_format($total['out'])}}</span>
+                    <div class="col ">
+                        <h3 class="card-title text-info mb-0 ">벳윈전환</h3>
+                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($total['ggr_out'])}}</span>
                     </div>
                     <div class="col-auto">
-                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                            <i class="fas fa-chart-pie"></i>
+                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                            <i class="fas fa-chart-line"></i>
                         </div>
                     </div>
                 </div>
@@ -79,12 +81,12 @@
     <div class="col">
         <div class="card">
             <div class="card-header border-0" id="headingOne">
-                <div class="row align-items-center">
+                <div class="row align-items-center box">
                     <div class="col-8">
                         <h3 class="mb-0">검색</h3>
                     </div>
-                    <div class="col-4 text-right">
-                        <a  data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><i class="fa fa-plus"></i></a>
+                    <div class="col-4 text-right box-tools">
+                        <a class="box-button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"></a>
                     </div>
                 </div>
             </div>
@@ -95,12 +97,12 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="name" class="col-md-2 col-form-label form-control-label">에이전트</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('name')}}" id="name" name="name">
+                                <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
 
-                            <label for="admin" class="col-md-2 col-form-label form-control-label">지급자</label>
+                            <label for="admin" class="col-md-2 col-form-label form-control-label text-center">지급자이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('admin')}}" id="admin"  name="admin">
                             </div>
@@ -110,17 +112,17 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="type" class="col-md-2 col-form-label form-control-label">타입</label>
+                            <label for="type" class="col-md-2 col-form-label form-control-label text-center">타입</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="type" name="type">
                                     <option value="" @if (Request::get('type') == '') selected @endif>@lang('app.all')</option>
 									<option value="add" @if (Request::get('type') == 'add') selected @endif>충전</option>
 									<option value="out" @if (Request::get('type') == 'out') selected @endif>환전</option>
-									<option value="deal_out" @if (Request::get('type') == 'deal_out') selected @endif>딜비전환</option>
-									<option value="ggr_out" @if (Request::get('type') == 'ggr_out') selected @endif>죽장전환</option>
+									<option value="deal_out" @if (Request::get('type') == 'deal_out') selected @endif>롤링전환</option>
+									<option value="ggr_out" @if (Request::get('type') == 'ggr_out') selected @endif>벳윈전환</option>
                                 </select>
                             </div>
-                            <label for="mode" class="col-md-2 col-form-label form-control-label">방식</label>
+                            <label for="mode" class="col-md-2 col-form-label form-control-label text-center">방식</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="mode" name="mode">
                                     <option value="" @if (Request::get('mode') == '') selected @endif>@lang('app.all')</option>
@@ -134,13 +136,26 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="dates" class="col-md-2 col-form-label form-control-label">처리시간</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 등급</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="role" name="role">
+                                    <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
+                                    @for ($level=3;$level<=auth()->user()->role_id;$level++)
+									<option value="{{$level}}" @if (Request::get('role') == $level) selected @endif> {{\VanguardLTE\Role::find($level)->description}}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="dates" class="col-md-2 col-form-label form-control-label text-center">처리시간</label>
                             <div class="col-md-2">
-                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')??date('Y-m-01\T00:00')}}" id="dates" name="dates">
+                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[0]??date('Y-m-01\T00:00')}}" id="dates" name="dates[]">
                             </div>
                             <label for="dates" class="col-form-label form-control-label" >~</label>
                             <div class="col-md-2">
-                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')??date('Y-m-d\TH:i')}}" id="dates" name="dates">
+                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[1]??date('Y-m-d\TH:i')}}" id="dates" name="dates[]">
                             </div>
                         </div>
                             
