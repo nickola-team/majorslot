@@ -50,8 +50,8 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
         ]);
 
         Route::get('/agent/rolling', [
-            'as' => 'argon.agent.rolling',
-            'uses' => 'UserController@agent_rolling',
+            'as' => 'argon.agent.dealstat',
+            'uses' => 'UsersController@agent_deal_stat',
         ]);
 
     });

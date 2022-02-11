@@ -1,5 +1,5 @@
 @extends('backend.argon.layouts.app')
-@section('page-title',  '에이전트 지급내역')
+@section('page-title',  '에이전트 롤링내역')
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -7,8 +7,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-success mb-0 ">충전합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['add'])}}</span>
+                        <h3 class="card-title text-success mb-0 ">배팅합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['bet'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-success text-white rounded-circle shadow">
@@ -24,8 +24,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-warning mb-0 ">환전합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['out'])}}</span>
+                        <h3 class="card-title text-warning mb-0 ">당첨합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['win'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -42,8 +42,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-primary mb-0 ">롤링전환합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['deal_out'])}}</span>
+                        <h3 class="card-title text-primary mb-0 ">롤링합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['deal'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
@@ -60,8 +60,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-info mb-0 ">벳윈전환합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($total['ggr_out'])}}</span>
+                        <h3 class="card-title text-info mb-0 ">벳윈합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($total['ggr'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -99,12 +99,12 @@
                             </div>
                             <label for="user" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
+                                <input class="form-control" type="text" value="{{Request::get('user')??auth()->user()->username}}" id="user" name="user">
                             </div>
 
-                            <label for="admin" class="col-md-2 col-form-label form-control-label text-center">지급자이름</label>
+                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">플레이어이름</label>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('admin')}}" id="admin"  name="admin">
+                                <input class="form-control" type="text" value="{{Request::get('player')}}" id="player"  name="player">
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -112,46 +112,17 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="type" class="col-md-2 col-form-label form-control-label text-center">타입</label>
+                            <label for="game" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
                             <div class="col-md-3">
-                                <select class="form-control" id="type" name="type">
-                                    <option value="" @if (Request::get('type') == '') selected @endif>@lang('app.all')</option>
-									<option value="add" @if (Request::get('type') == 'add') selected @endif>충전</option>
-									<option value="out" @if (Request::get('type') == 'out') selected @endif>환전</option>
-									<option value="deal_out" @if (Request::get('type') == 'deal_out') selected @endif>롤링전환</option>
-									<option value="ggr_out" @if (Request::get('type') == 'ggr_out') selected @endif>벳윈전환</option>
-                                </select>
-                            </div>
-                            <label for="mode" class="col-md-2 col-form-label form-control-label text-center">방식</label>
-                            <div class="col-md-3">
-                                <select class="form-control" id="mode" name="mode">
-                                    <option value="" @if (Request::get('mode') == '') selected @endif>@lang('app.all')</option>
-									<option value="manual" @if (Request::get('mode') == 'manual') selected @endif>수동</option>
-									<option value="account" @if (Request::get('mode') == 'account') selected @endif>계좌</option>
-                                </select>
-                            </div>
-                            <div class="col-md-1">
+                                <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 등급</label>
-                            <div class="col-md-3">
-                                <select class="form-control" id="role" name="role">
-                                    <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
-                                    @for ($level=3;$level<=auth()->user()->role_id;$level++)
-									<option value="{{$level}}" @if (Request::get('role') == $level) selected @endif> {{\VanguardLTE\Role::find($level)->description}}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
-                            <label for="dates" class="col-md-2 col-form-label form-control-label text-center">처리시간</label>
+                            <label for="dates" class="col-md-2 col-form-label form-control-label text-center">배팅시간</label>
                             <div class="col-md-2">
-                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[0]??date('Y-m-01\T00:00')}}" id="dates" name="dates[]">
+                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[0]??date('Y-m-d\TH:i', strtotime('-1 hours'))}}" id="dates" name="dates[]">
                             </div>
                             <label for="dates" class="col-form-label form-control-label" >~</label>
                             <div class="col-md-2">
@@ -179,7 +150,7 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">에이전트 지급내역</h3>
+        <h3 class="mb-0">에이전트 롤링내역</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush">
@@ -187,21 +158,20 @@
                 <tr>
                 <th scope="col">번호</th>
                 <th scope="col">에이전트</th>
-                <th scope="col">지급자</th>
-                <th scope="col">지급자보유금</th>
-                <th scope="col">변동전 금액</th>
-                <th scope="col">변동후 금액</th>
-                <th scope="col">금액</th>
-                <th scope="col">타입</th>
-                <th scope="col">방식</th>
-                <th scope="col">처리 시간</th>
+                <th scope="col">플레이어</th>
+                <th scope="col">게임</th>
+                <th scope="col">게임사</th>
+                <th scope="col">배팅금</th>
+                <th scope="col">당첨금</th>
+                <th scope="col">롤링금</th>
+                <th scope="col">배팅시간</th>
                 </tr>
             </thead>
             <tbody class="list">
                 @if (count($statistics) > 0)
                     @foreach ($statistics as $stat)
                         <tr>
-                            @include('backend.argon.agent.partials.row_transaction')
+                            @include('backend.argon.agent.partials.row_deal')
                         </tr>
                     @endforeach
                 @else

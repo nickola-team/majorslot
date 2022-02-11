@@ -56,7 +56,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  text-white" href="#">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.dealstat')}}">
                             <i class="far fa-circle text-white sub-i"></i>
                             롤링내역
                         </a>
