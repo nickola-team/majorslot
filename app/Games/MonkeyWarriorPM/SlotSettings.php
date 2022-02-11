@@ -819,7 +819,7 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
             return $moneyCounts[$moneyIndex];
         }
         public function GetBonusType(){
-            $bonusTypes = [1,1,1,1,1,1,1,2,2,2,2,2,2,2]; // 1 : FreeSpin, 2 : Respin
+            $bonusTypes = [1,1,1,1,1,2,2,2,2,2,2,2,2,2]; // 1 : FreeSpin, 2 : Respin
             $maskBonusTypes = $this->GetGameData($this->slotId . 'DefaultMaskBonusType');
             $count = 0;
             for($i = 0; $i < 14; $i++){
