@@ -33,7 +33,9 @@
 @endif
 <td>
 @if ($stat->request_id != null)
+<a href="#" data-toggle="tooltip" data-original-title="{{$stat->requestInfo->bankinfo()}}">
 <span class="badge badge-default" style="background-color:#11cdef">계좌</span>
+</a>
 @else
 <span class="badge badge-default" style="background-color:#f5365c">수동</span>
 @endif
