@@ -85,7 +85,7 @@
             $user = $user->referral;
         }
         $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
-        $notices = \VanguardLTE\Notice::where(['active' => 1, 'type' => 'partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
+        $notices = \VanguardLTE\Notice::where(['active' => 1])->whereIn('type', ['all','partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
     ?>
     @if (count($notices)>0)
     <aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="">

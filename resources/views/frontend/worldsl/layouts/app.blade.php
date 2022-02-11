@@ -499,9 +499,13 @@
                 $("#divpopup" + popupid).hide();
             }
 			$(document).ready(function(){
-                if ( document.cookie.indexOf("divpopup2=close") < 0 ){
-                    $("#divpopup2").show();
+@if ($noticelist!=null && count($noticelist) >0)
+@foreach ($noticelist as $ntc)
+                if ( document.cookie.indexOf("divpopup{{$loop->index}}=close") < 0 ){
+                    $("#divpopup{{$loop->index}}").show();
                 }
+@endforeach				
+@endif				
             });
 			function tabActionPopView(obj, pid, idx) {
 				if(nCheckLetter == 1&& !pid.includes('letter')) {
@@ -599,6 +603,9 @@
 								</div>`;
 				}
 				else if(pid == "noticeView"){
+					writedate = $("#notice_" + idx).children("td#noticetime").html();
+					title = $("#notice_" + idx).children("td#noticetitle").html();
+					content = $("#notice_" + idx).children("td#noticecontent").html();
 					$(".sk_tab_con_01").html("");
 						data= `<div class="title1">
 												공지사항
@@ -607,14 +614,14 @@
 												<div class="con_box10">             
 														<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
 																<tr>
-																		<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> <?php if ($notice!=null) {echo $notice->date_time;} ?>      </td>
+																		<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> ${writedate}      </td>
 																</tr>
 																<tr>
-																		<td class="view1 write_title_top">★공지사항★</td>
+																		<td class="view1 write_title_top">${title}</td>
 																</tr>
 																<tr>
 																		<td class="view2">
-																				<?php if ($notice!=null) {echo $notice->content;} ?>
+																				${content}
 																		</td>
 																</tr>
 														</table>
@@ -895,14 +902,18 @@
 											<td class="list_title1">제목</td>
 											<td width="20%" class="list_title1">작성일</td>
 										</tr>`;
-										@if ($notice != null)
+										@if ($noticelist != null && count($noticelist) > 0)
+										@foreach ($noticelist as $ntc)
 										data += `
-										<tr onclick="tabActionPopView('','noticeView','2');" style="cursor: pointer">
+										<tr onclick="tabActionPopView('','noticeView','{{$loop->index}}');" style="cursor: pointer" id="notice_{{$loop->index}}">
 											<td class="list_notice1"><img src="/frontend/di1001/tutu/images/icon_notice.png"></td>
-											<td class="list_notice2"><a href="#">★공지사항★</a></td>
-											<td class="list_notice2" style="text-align: center"><a href="#">{{$notice->date_time}}</a></td>
+											<td class="list_notice2" id="noticetitle"><a href="#">★공지사항★ {{$ntc->title}}</a></td>
+											<td class="list_notice2" style="text-align: center" id="noticetime"><a href="#">{{$ntc->date_time}}</a></td>
+											<td width="0%" class="list_title1" id="noticecontent" style="display:none;"><?php echo $ntc->content ?></td>
 										</tr>`;
+										@endforeach
 										@endif
+
 					data += `
 									</table>
 								</div>
@@ -914,25 +925,27 @@
 			}
 		</script>
 
-@if ($notice != null)
-		<div class="pop02_popup1 draggable02" id="divpopup2" style="position: absolute; top: 250px; left: 100px; z-index: 1000;display:none">
+@if ($noticelist != null && count($noticelist) > 0)
+@foreach ($noticelist as $ntc)
+		<div class="pop02_popup1 draggable02" id="divpopup{{$loop->index}}" style="position: absolute; top: 250px; left: {{(100+$loop->index*510)}}px; z-index: 1000;display:none">
             <div class="pop02_popup_wrap">
                 <div class="pop02_popup_btn_wrap">
                     <ul>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('2');">오늘 하루 이 창을 열지 않음</span></a></li>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('2');">닫기 X</span></a></li>            
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('{{$loop->index}}');">오늘 하루 이 창을 열지 않음</span></a></li>
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('{{$loop->index}}');">닫기 X</span></a></li>            
                     </ul>
                 </div>
                 <div class="pop02_popup_box">
                     <div class="pop02_popup_text" style="padding:30px;width:500px">
                         <span class="pop02_popup_font1" style="border-bottom:2px solid #fff;margin-bottom:15px">★공지사항★</span>
                         <span class="pop02_popup_font2">
-								<?php echo $notice->content ?>
+								<?php echo $ntc->content ?>
                         </span> 
                     </div>
                 </div>
             </div>
         </div>
+@endforeach		
 @endif
 		<style type="text/css">
             .pop02_popup1 {position:absolute; z-index:1000000000;}
