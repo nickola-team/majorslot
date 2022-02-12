@@ -12,9 +12,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->users = $users;
         }
 
-        public function agent_list()
+        public function agent_child(\Illuminate\Http\Request $request)
         {
+            $user = auth()->user();
+            $availablePartners = $user->hierarchyPartners();
+            $child_id = $request->id;
+            $users = [];
+            if (in_array($child_id, $availablePartners))
+            {
+                $users = \VanguardLTE\User::where('parent_id', $child_id)->get();
+            }
+            return view('backend.argon.agent.partials.childs', compact('users'));
+        }
 
+        public function agent_list(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $childPartners = $user->childPartners();
+            $users = \VanguardLTE\User::whereIn('id', $childPartners);
+            $users = $users->paginate(20);
+            return view('backend.argon.agent.list', compact('users'));
         }
 
         public function agent_deal_stat(\Illuminate\Http\Request $request)

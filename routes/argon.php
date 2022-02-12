@@ -44,6 +44,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'UsersController@agent_list',
         ]);
 
+        Route::get('/agent/child', [
+            'as' => 'argon.agent.child',
+            'uses' => 'UsersController@agent_child',
+        ]);
+
         Route::get('/agent/transaction', [
             'as' => 'argon.agent.transaction',
             'uses' => 'UsersController@agent_transaction',
