@@ -1119,7 +1119,11 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             foreach( $response_loges as $param ) 
             {
                 $_obf_arr = explode('=', $param);
-                $response[$_obf_arr[0]] = $_obf_arr[1];
+                if(isset($_obf_arr[1])){
+                    $response[$_obf_arr[0]] = $_obf_arr[1];
+                }else{
+                    $response[$_obf_arr[0]] = '';
+                }
             }
 
             $request = [];
