@@ -151,16 +151,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'error' => [ 'code' => 'FUNDS_EXCEED']];
                 }
 
-                $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($args['bet'])));
+                // $user->balance = floatval(sprintf('%.4f', $user->balance - floatval($args['bet'])));
                 $bet = floatval($args['bet']);
             }
             if ($args['win'])
             {
-                $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($args['win'])));
+                // $user->balance = floatval(sprintf('%.4f', $user->balance + floatval($args['win'])));
                 $win = floatval($args['win']);
             }
-
+            $user->balance = $user->balance - $bet + $win;
             $user->save();
+            $user = $user->fresh();
 
             $category = \VanguardLTE\Category::where(['provider' => 'bng', 'shop_id' => 0, 'href' => $provider_name])->first();
 
