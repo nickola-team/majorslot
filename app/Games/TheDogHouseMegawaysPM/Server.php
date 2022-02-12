@@ -568,7 +568,8 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                 if( $LASTSPIN === NULL || $scattersCount < 3) {
                     // throw exception
-                    return '';
+                    $response = 'unlogged';
+                    exit($response);
                 }
 
                 $fsRainingMax = $slotSettings->freeSpinTable[0][$scattersCount];
