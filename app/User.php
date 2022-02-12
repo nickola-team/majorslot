@@ -830,7 +830,7 @@ namespace VanguardLTE
             $refundGames = ['_refund', '_tie'];
             foreach($refundGames as $refundGame) 
             {
-                if (substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
+                if (strlen($game) >= strlen($refundGame) && substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
                 {
                     $betMoney = -$stat_game->win;
                     $winMoney = 0;

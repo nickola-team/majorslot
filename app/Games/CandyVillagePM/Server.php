@@ -597,7 +597,7 @@ namespace VanguardLTE\Games\CandyVillagePM
                     if($freeSpinNum > 0 ){
                         $spinType = 's';
                         $isState = false;
-                        $otherResponse = '&fsmul=1&prg=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fswin=0.00&fs=1&fsres=0.00&psym=1~' . $scattersWin.'~' . implode($winLines[$scatter], ',');
+                        $otherResponse = '&fsmul=1&prg=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fswin=0.00&fs=1&fsres=0.00&psym=1~' . $scattersWin.'~' . implode( ',', $winLines[$scatter]);
                     }else{
                         $otherResponse = '&prg=1';
                     }
