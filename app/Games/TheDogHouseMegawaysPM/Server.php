@@ -173,6 +173,13 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
                 /* Balance 업데이트 */
                 $allBet = 0;
+
+                // *** added by pine ***
+                $isGeneratedFreeStack = false;
+                $freeStacks = []; // free stacks
+                $isForceWin = false;
+                // *** - ***
+                
                 if ($slotEvent['slotEvent'] === 'fsStart') {
                     $allBet = $bet * $lines * 100;
                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
@@ -182,7 +189,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney, 0);
                 }
                 else if ($slotEvent['slotEvent'] === 'fsRaining' || $slotEvent['slotEvent'] === 'fsSticky') {
-
+                   
                 }
                 else {
                     $allBet = $bet * $lines;
@@ -193,6 +200,36 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
                 $BALANCE = $slotSettings->GetBalance();
                 
+                // *** added by pine ***
+                if ($slotEvent['slotEvent'] === 'fsRaining' || $slotEvent['slotEvent'] === 'fsSticky') {
+                    $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')  ?? [];
+                    if(count($freeStacks) >= $fsmax){
+                        $isGeneratedFreeStack = true;
+                    }
+                    $leftFreeGames = $fsmax - $fs;
+                    if($leftFreeGames <= mt_rand(1 , 2) && ($LASTSPIN->tw ?? 0) == 0){
+                        $winType = 'win';
+                        $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
+                        $isForceWin = true;
+                    }    
+                    $regularSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') ?? 0;
+                }else{
+                    if($slotEvent['slotEvent'] === 'fsStart'){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', true);
+                    }else{
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', false);
+                    }
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '275' . substr($roundstr, 4, 7);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                    $regularSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') ?? 0 + 1;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $regularSpinCount);
+                    $leftFreeGames = 0;
+                }
+                // *** - ***
+
                 /* 릴배치표 생성, 2천번 시행 */
                 /*************************************************** */
                 $overtry = false;           // 1500번이상 시행했을때 true
@@ -202,58 +239,70 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $strWinLine = '';
                     
                     $this->winLines = [];
-
-                    /* 릴배치표 생성 */
-                    if ($overtry) {
-                        /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
-                        $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent'], $lastWILDCollection);
+                    // *** added by pine ***
+                    if($isGeneratedFreeStack == true){
+                        $freeStack = $freeStacks[$fs - 1];
+                        $reels = $freeStack['Reel'];
+                        $wildsCollection = $freeStack['WildsCollection'];
+                        $newWILDCollection = $freeStack['NewWILDCollection'];
+                        $originReels = $freeStack['OriginalReels'];
                     }
                     else {
-                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $defaultScatterCount, $lastWILDCollection, $resetCount == 0);
-                    }
+                    // *** - ***
 
-                    $originReels = array_merge(array(), $reels);        // 변경되지 않은 릴배치표 보관, 프리스핀에 이용
+                        /* 릴배치표 생성 */
+                        if ($overtry) {
+                            /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
+                            $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent'], $lastWILDCollection);
+                        }
+                        else {
+                            $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $defaultScatterCount, $lastWILDCollection, $resetCount == 0);
+                        }
 
-                    $wildsCollection = [];
-                    $newWILDCollection = [];        // 스티키 프리스핀에서 이용
+                        $originReels = array_merge(array(), $reels);        // 변경되지 않은 릴배치표 보관, 프리스핀에 이용
 
-                    /* 프리스핀일때 와일드심볼 생성 */
-                    if ($slotEvent['slotEvent'] == 'fsRaining') {
-                        $reels = $this->generateWILDs($reels, $slotEvent['slotEvent']);
-                    }
-                    else if ($slotEvent['slotEvent'] == 'fsSticky') {
-                        $reels = $this->generateStickyWILDs($reels, $fssticky_wildset, $lastWILDCollection, $fs, $fsmax);
+                        $wildsCollection = [];
+                        $newWILDCollection = [];        // 스티키 프리스핀에서 이용
 
-                        /* 이전 WILD심볼을 그대로 유지 */
-                        $wildsCollection = $lastWILDCollection;
-                    }
+                        /* 프리스핀일때 와일드심볼 생성 */
+                        if ($slotEvent['slotEvent'] == 'fsRaining') {
+                            $reels = $this->generateWILDs($reels, $slotEvent['slotEvent']);
+                        }
+                        else if ($slotEvent['slotEvent'] == 'fsSticky') {
+                            $reels = $this->generateStickyWILDs($reels, $fssticky_wildset, $lastWILDCollection, $fs, $fsmax);
 
-                    /* 와일드 멀티플라이어 할당 */ 
-                    for ($i=1; $i <= $REELCOUNT; $i++) { 
-                        $wilds = array_keys($reels["reel{$i}"], $WILD);
+                            /* 이전 WILD심볼을 그대로 유지 */
+                            $wildsCollection = $lastWILDCollection;
+                        }
 
-                        foreach ($wilds as $idx => $pos) {
-                            if ($slotEvent['slotEvent'] == 'fsRaining') {
-                                /* 레이닝 프리스핀 WILD 멀티플라이어는 최소 x2 */
-                                $multiplier = $slotSettings->GetMultiValue(2);
-                            }
-                            else if ($slotEvent['slotEvent'] == 'fsSticky' && ($i == 2 || $i == 3)) {
-                                /* 스티키 프리스핀 WILD 멀티플라이어 2,3번릴에서는 x2 */
-                                $multiplier = 2;
-                            }
-                            else {
-                                $multiplier = $slotSettings->GetMultiValue(1);
-                            }
-                            
-                            $wildPos = $pos * 6 + $i - 1;
+                        /* 와일드 멀티플라이어 할당 */ 
+                        for ($i=1; $i <= $REELCOUNT; $i++) { 
+                            $wilds = array_keys($reels["reel{$i}"], $WILD);
 
-                            /* 스티키프리스핀은 와일드심볼 유지, */
-                            if (!array_key_exists($wildPos, $wildsCollection)) {
-                                $wildsCollection[$wildPos] = $multiplier;
-                                $newWILDCollection[$wildPos] = $multiplier;
+                            foreach ($wilds as $idx => $pos) {
+                                if ($slotEvent['slotEvent'] == 'fsRaining') {
+                                    /* 레이닝 프리스핀 WILD 멀티플라이어는 최소 x2 */
+                                    $multiplier = $slotSettings->GetMultiValue(2);
+                                }
+                                else if ($slotEvent['slotEvent'] == 'fsSticky' && ($i == 2 || $i == 3)) {
+                                    /* 스티키 프리스핀 WILD 멀티플라이어 2,3번릴에서는 x2 */
+                                    $multiplier = 2;
+                                }
+                                else {
+                                    $multiplier = $slotSettings->GetMultiValue(1);
+                                }
+                                
+                                $wildPos = $pos * 6 + $i - 1;
+
+                                /* 스티키프리스핀은 와일드심볼 유지, */
+                                if (!array_key_exists($wildPos, $wildsCollection)) {
+                                    $wildsCollection[$wildPos] = $multiplier;
+                                    $newWILDCollection[$wildPos] = $multiplier;
+                                }
                             }
                         }
                     }
+                    
 
                     /* 윈라인 검사 */
                     for($r = 0; $r < 7; $r++){
@@ -305,6 +354,15 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                             }
                         }
                     }
+
+                    // *** added by pine ***
+                    if($isGeneratedFreeStack == true){
+                        break;  //freestack
+                    }
+                    else if($isForceWin == true && $totalWin > 0 && $totalWin < $bet * $lines * 10){
+                        break;   // win by force when winmoney is 0 in freespin
+                    }
+                    // *** - ***
 
                      /* 개심볼이 8개이상이면 스킵 */
                      if ($dogsCount > 8) {
@@ -420,6 +478,10 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $objRes['wlm_v'] = implode(",", array_values($wilds));
                 }
 
+                // *** added by pine ***
+                $isState = true;
+                // *** - ***
+
                 /* 프리스핀 준비 */
                 if ($scattersCount >= 3) {
                     $objRes['fs_opt_mask'] = 'fs,m,msk';
@@ -434,6 +496,11 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         $objRes['purtr'] = 1;
                         $objRes['puri'] = 0;
                     }
+                    
+                    // *** added by pine ***
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);                    
+                    $isState = false;
+                    // *** - ***
                 }
 
                 /* 프리스핀 중 */
@@ -475,6 +542,10 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                         $objRes['fsres'] = $objRes['tw'];
 
                         $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', $fs + 1);
+                        
+                        // *** added by pine ***
+                        $isState = false;
+                        // *** - ***
                     }
                     else if ($fsmax <= $fs) {
                         /* 프리스핀 완료 */
@@ -534,7 +605,14 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
 
 
                 $_GameLog = json_encode($objRes);
-                $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $totalWin, $slotEvent['slotEvent']);
+                // *** added & changed by pine ***
+                if($fsmax > 0 && $isState == true && ($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') ?? false) == true){
+                    $allBet = $bet * $lines * 100;
+                }else{
+                    $allBet = $bet * $lines;
+                }
+                $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $objRes['tw'], $slotEvent['slotEvent'], $isState);
+                // *** - ***
             }
             else if( $slotEvent['slotEvent'] == 'doCollect') 
             {
@@ -641,13 +719,55 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 array_push($roundLogs, $objRes);
 
                 $slotSettings->SetGameData($slotSettings->slotId . 'RNDLogs', $roundLogs);
-            
+                
+                // *** added by pine ***
+                if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($LASTSPIN->c, $fsType * 4 + $scattersCount - 3));
+                }
+                // *** - ***
             }
+
+            // *** added by pine ***
+            $response = $this->toResponse($objRes);
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doFSOption'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') ?? 0, $slotSettings);
+            }
+            // *** - ***
 
             $slotSettings->SaveGameData();
             \DB::commit();
-            return $this->toResponse($objRes);
+            return $response;
         }
+        
+        // *** added by pine ***
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
+        }
+        // *** - ***
 
         public function findZokbos($reels, $firstSymbol, $repeatCount, $positions){
             $WILD = '2';
