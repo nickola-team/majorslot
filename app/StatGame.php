@@ -90,7 +90,7 @@ namespace VanguardLTE
             $filterGames = [' FG', ' FG1', ' respin', ' RS', ' doBonus'];
             foreach($filterGames as $ignoreGame) 
             {
-                if (substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
+                if (strlen($attributes['game']) >= strlen($ignoreGame) && substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
                 {
                     $attributes['bet'] = 0;
                 }
