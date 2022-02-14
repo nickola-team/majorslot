@@ -241,6 +241,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = auth()->user();
             if ($user)
             {
+                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
                 $user->update(['playing_game' => null]);
             }
             if (!isset($game))
@@ -299,6 +300,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }*/
             $GLOBALS['rgrc'] = config('app.salt');
             $userId = \Illuminate\Support\Facades\Auth::id();
+            $user = \VanguardLTE\User::find($userId);
+            if (!$user || $user->playing_game == 'pp')
+            {
+                exit('unlogged'); // it must be different per every game. but...
+            }
             $object = '\VanguardLTE\Games\\' . $game . '\Server';
             $server = new $object();
             echo $server->get($request, $game, $userId);
