@@ -210,7 +210,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
             $user = \VanguardLTE\User::find($userid);
-            if (!$user || !$user->hasRole('user') || $user->api_token != $token){
+            if (!$user || !$user->hasRole('user') || $user->api_token != $token || $user->playing_game == 'pp'){
                 $response['status'] = 'INVALID_SID';
                 return $response;
             }
