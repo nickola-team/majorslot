@@ -642,12 +642,27 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 ];
             }
             else if( $slotEvent['slotEvent'] == 'doFSOption') {
-                $scattersCount = $slotSettings->GetGameData($slotSettings->slotId . 'ScattersCount');
+                $scattersCount = $slotSettings->GetGameData($slotSettings->slotId . 'ScattersCount') ?? 0;
 
-                if( $LASTSPIN === NULL || $scattersCount < 3) {
+                // *** added & changed by pine ***
+                if( $LASTSPIN === NULL) {
                     // throw exception
                     return '';
                 }
+                if($scattersCount < 3){
+                    $lastReel = explode(',', $LASTSPIN->s);
+                    $scattersCount = 0;
+                    for($k = 0; $k < count($lastReel); $k++){
+                        if($lastReel[$k] == $SCATTER){
+                            $scattersCount++;
+                        }
+                    }
+                    if($scattersCount < 3){
+                        // throw exception
+                        return '';
+                    }
+                }
+                // *** - ***
 
                 $fsRainingMax = $slotSettings->freeSpinTable[0][$scattersCount];
                 $fsStickyMax = $slotSettings->freeSpinTable[1][$scattersCount];
