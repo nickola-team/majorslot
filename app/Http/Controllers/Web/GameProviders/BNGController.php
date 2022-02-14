@@ -131,10 +131,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $provider_name = $data['provider_name'];
             $userId = $args['player']['id'];
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
-            if (!$user || !$user->hasRole('user')){
+            if (!$user || !$user->hasRole('user')  || $user->playing_game == 'pp'){
                 return [
                     'uid' => $uid,
-                    'error' => [ 'code' => 'FATAL_ERROR']];
+                    'error' => [ 'code' => 'SESSION_CLOSED']];
             }
             $bet = 0;
             $win = 0;
