@@ -241,6 +241,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = auth()->user();
             if ($user)
             {
+                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
                 $user->update(['playing_game' => null]);
             }
             if (!isset($game))
@@ -299,6 +300,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }*/
             $GLOBALS['rgrc'] = config('app.salt');
             $userId = \Illuminate\Support\Facades\Auth::id();
+            $user = \VanguardLTE\User::find($userId);
+            if (!$user || $user->playing_game == 'pp')
+            {
+                exit('unlogged'); // it must be different per every game. but...
+            }
             $object = '\VanguardLTE\Games\\' . $game . '\Server';
             $server = new $object();
             echo $server->get($request, $game, $userId);
@@ -306,6 +312,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         public function game_result(\Illuminate\Http\Request $request)
         {
+            if (!\Illuminate\Support\Facades\Auth::check())
+            {
+                abort(404);
+            }
             $user_id = auth()->user()->id;
             $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
             $statistics = $statistics->where('stat_game.user_id', $user_id);
@@ -328,17 +338,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             //$user_id = auth()->user()->id;
             $bet_rate = $request->bet_rate;
             $game_name = $request->gameType;
-            
-
             $gamepaytable = \VanguardLTE\GamePaytableVT::select('*')->where('game_name', $game_name)->get();
-
-            $Paytable = json_decode($gamepaytable[0]->pay_table, true);
-            for($i = 0; $i < count($Paytable); $i++) {
-                for($j =0; $j < 5; $j++){
-                    $Paytable[$i][$j] = $Paytable[$i][$j] * $bet_rate / 100;
+            if ($gamepaytable->count() > 0){
+                $Paytable = json_decode($gamepaytable[0]->pay_table, true);
+                for($i = 0; $i < count($Paytable); $i++) {
+                    for($j =0; $j < 5; $j++){
+                        $Paytable[$i][$j] = $Paytable[$i][$j] * $bet_rate / 100;
+                    }
                 }
+                return view('frontend.help.'. $game_name.'.pay_table', compact('Paytable'));
             }
-            return view('frontend.help.'. $game_name.'.pay_table', compact('Paytable'));
+            else 
+            {
+                abort(404);
+            }
         }
 
 

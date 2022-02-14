@@ -171,6 +171,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 1000,
                 ];
             }
+            if ($user->playing_game == 'pp')
+            {
+                return [
+                    'code' => 1007,
+                ];
+            }
             $record = $this->checkreference($reference);
             if ($record)
             {
