@@ -22,16 +22,51 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $users = \VanguardLTE\User::where('parent_id', $child_id)->get();
             }
-            return view('backend.argon.agent.partials.childs', compact('users'));
+            return view('backend.argon.agent.partials.childs', compact('users', 'child_id'));
         }
 
         public function agent_list(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();
-            $childPartners = $user->childPartners();
+            if ($request->user != '' || $request->role != '')
+            {
+                $childPartners = $user->hierarchyPartners();
+            }
+            else
+            {
+                $childPartners = $user->childPartners();
+            }
+
             $users = \VanguardLTE\User::whereIn('id', $childPartners);
+
+            if ($request->user != '')
+            {
+                $users = $users->where('username', 'like', '%' . $request->user . '%');
+            }
+
+            if ($request->role != '')
+            {
+                $users = $users->where('role_id', $request->role);
+            }
+            
+            $usersum = (clone $users)->get();
+            $sum = 0;
+            $count = 0;
+            foreach ($usersum as $u)
+            {
+                $sum = $sum + $u->childBalanceSum();
+                $count = $count + count($u->hierarchyPartners());
+            }
+
+            $total = [
+                'count' => $users->count() + $count,
+                'balance' => $users->sum('balance'),
+                'childbalance' => $sum
+            ];
+            
+
             $users = $users->paginate(20);
-            return view('backend.argon.agent.list', compact('users'));
+            return view('backend.argon.agent.list', compact('users','total'));
         }
 
         public function agent_deal_stat(\Illuminate\Http\Request $request)

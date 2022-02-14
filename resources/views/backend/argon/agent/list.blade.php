@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col ">
                         <h3 class="card-title text-success mb-0 ">총 에이전트</h3>
-                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format(1000000)}}</span>
+                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['count'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-success text-white rounded-circle shadow">
@@ -30,7 +30,7 @@
                 <div class="row">
                     <div class="col ">
                         <h3 class="card-title text-warning mb-0 ">보유금합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format(1000000)}}</span>
+                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['balance']+$total['childbalance'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -42,41 +42,6 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats  mb-xl-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col ">
-                        <h3 class="card-title text-primary mb-0 ">플레이어 보유금합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format(1000000)}}</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
-                            <i class="fas fa-chart-area"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats  mb-xl-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col ">
-                        <h3 class="card-title text-info mb-0 ">멀 보여줄까</h3>
-                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format(1000000)}}</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 @section('content')
@@ -106,7 +71,7 @@
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 등급</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="role" name="role">
                                     <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
@@ -146,17 +111,22 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">에이전트</th>
-                <th scope="col">등급</th>
+                <th scope="col">레벨</th>
                 <th scope="col">보유금</th>
                 <th scope="col">롤링금</th>
                 <th scope="col">롤링%</th>
                 <th scope="col">라이브롤링%</th>
+                <th scope="col">가입날짜</th>
+                <th></th>
                 </tr>
             </thead>
             <tbody class="list">
                 @include('backend.argon.agent.partials.childs')
             </tbody>
             </table>
+    </div>
+    <div id="waitAjax" class="loading" style="margin-left: 0px; display:none;">
+        <img src="{{asset('back/argon')}}/img/theme/loading.gif">
     </div>
     <!-- Card footer -->
     <div class="card-footer py-4">
@@ -178,13 +148,15 @@
         },
         onNodeExpand: function() {
             var node = this;
-
+            table.treetable("unloadBranch", node);
+            $('#waitAjax').show();
             $.ajax({
-                async: false, // Must be false, otherwise loadBranch happens after showChildren?
+                async: true,
                 url: "{{argon_route('argon.agent.child')}}?id="+node.id
                 }).done(function(html) {
                     var rows = $(html).filter("tr");
                     table.treetable("loadBranch", node, rows);
+                    $('#waitAjax').hide();
             });
         }
         });

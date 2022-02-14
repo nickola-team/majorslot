@@ -136,7 +136,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 등급</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="role" name="role">
                                     <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
