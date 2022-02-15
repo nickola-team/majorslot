@@ -59,6 +59,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'UsersController@agent_deal_stat',
         ]);
 
+        Route::get('/common/balance', [
+            'as' => 'argon.common.balance',
+            'uses' => 'UsersController@balance',
+        ]);
+
     });
 });
 

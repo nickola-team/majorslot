@@ -185,6 +185,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $statistics = $statistics->paginate(20);
             return view('backend.argon.agent.transaction', compact('statistics', 'total'));
         }
+
+        public function balance(\Illuminate\Http\Request $request)
+        {
+            $type = 'add';
+            return view('backend.argon.common.balance',compact('type'));
+        }
     }
 
 }
