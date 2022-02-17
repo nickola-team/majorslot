@@ -69,10 +69,25 @@
     </div>
     @endif
 
-    {{-- <div class="form-group">
-        <label>@lang('app.lang')</label>
-        {!! Form::select('language', $langs, $edit ? $user->language : '', ['class' => 'form-control']) !!}
-    </div> --}}
+    <div class="form-group">
+        <label>메모</label>
+        <input type="text" class="form-control" id="avatar" name="avatar" placeholder="" value="{{ $edit ? $user->avatar : '' }}">
+    </div>
+    
+    @if (!$user->isInoutPartner() && $user->id == auth()->user()->id)
+    <div class="form-group">
+        <label>이전 환전비밀번호</label>
+        <input type="password" class="form-control" id="old_confirmation_token" name="old_confirmation_token" >
+    </div>
+    <div class="form-group">
+        <label>새 환전비밀번호</label>
+        <input type="password" class="form-control" id="confirmation_token" placeholder="@lang('app.leave_blank_if_you_dont_want_to_change')" name="confirmation_token" >
+    </div>
+    <div class="form-group">
+        <label>새 환전비밀번호 확인</label>
+        <input type="password" class="form-control" id="confirmation_token_confirmation" placeholder="@lang('app.leave_blank_if_you_dont_want_to_change')" name="confirmation_token_confirmation" >
+    </div>
+    @endif
 
     <div class="form-group">
         <label>{{ $edit ? trans("app.new_password") : trans('app.password') }}</label>
@@ -90,4 +105,11 @@
     <button type="submit" class="btn btn-primary" id="update-details-btn">
         확인
     </button>
+@if (auth()->user()->isInOutPartner())
+    <a href="{{route($admurl.'.user.update.resetpwd', $user->id)}}">
+    <button type="button" class="btn btn-danger" id="reset-confirmation-token-btn">
+        환전비번 리셋
+    </button>
+    </a>
+@endif    
 </div>

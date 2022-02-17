@@ -1,7 +1,7 @@
 @extends('backend.Default.layouts.'.$layout.'.app')
 
-@section('page-title', '딜비정산')
-@section('page-heading', '딜비정산')
+@section('page-title', '죽장정산')
+@section('page-heading', '죽장정산')
 
 @section('content')
 
@@ -10,15 +10,33 @@
 	</section>
 
 	<section class="content">
-		
+	<?php  
+		$available_roles = Auth::user()->available_roles( true );
+		$available_roles_trans = [];
+		foreach ($available_roles as $key=>$role)
+		{
+			$role = \VanguardLTE\Role::find($key)->description;
+			$available_roles_trans[$key] = $role;
+		}
+	?>
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">딜비정산</h3>
-				@if($user != null)
-					<a href="{{ route($admurl.'.adjustment_shift', $user->id==auth()->user()->id?'':'parent='.$user->parent_id) }}">
+				<h3 class="box-title">죽장정산</h3>
+				<?php  
+					$available_roles = Auth::user()->available_roles( true );
+					$available_roles_trans = [];
+					foreach ($available_roles as $key=>$role)
+					{
+						$role = \VanguardLTE\Role::find($key)->description;
+						$available_roles_trans[$key] = $role;
+					}
+				?>
+					@if($user != null && $user->id!=auth()->user()->id && !$user->isInoutPartner())
+					<a href="{{ route($admurl.'.adjustment_ggr',  'parent='.$user->parent_id) }}" style="color:#72afd2;">
 						{{$user->username}}
+						[ {{$available_roles_trans[$user->role_id]}} ]
 					</a>
-				@endif
+					@endif
 			</div>
 			<div class="box-body">
 				<div class="table-responsive">
@@ -26,84 +44,52 @@
 					<thead>
 					<tr>
 						<th>이름</th>
-						<th>정산시작시간</th>
-						<th>정산마감시간</th>
-						<th>이월된 보유금</th>
-						<th>충전</th>
-						<th>환전</th>
-						<th>하위충전</th>
-						<th>하위환전</th>
-						@if(auth()->user()->hasRole('manager') || (($user != null) && ($user->hasRole('distributor'))))
-						<th>회원보유금</th>
-						@endif
+						<th>시작날짜</th>
+						<th>마감날짜</th>
+						<th>정산기간</th>
+						<th>배팅금</th>
+						<th>당첨금</th>
+						<th>죽은금액</th>
+						<th>죽장%</th>
+						<th>죽장수익</th>
+						<th>딜비%</th>
 						<th>딜비수익</th>
-						<th>하위수익</th>
-						<th>딜비전환</th>
-						<th>최종수익</th>
-						<th>현재보유금</th>
+						<th>정산금</th>
 						<th>정산</th>
+						<th>리셋</th>
 					</tr>
 					</thead>
 					<tbody>
 					@if (count($adjustments))
 						@foreach ($adjustments as $adjustment)
-							@include('backend.Default.adjustment.partials.row_shift')
+							@include('backend.Default.adjustment.partials.row_ggr')
 						@endforeach
 					@else
-						<tr><td colspan="14">@lang('app.no_data')</td></tr>
+						<tr><td colspan="14">죽장정산 파트너가 없습니다</td></tr>
 					@endif
-					{{-- @if (count($shift_logs))
-						@foreach ($shift_logs as $shift_log)
-							@include('backend.Default.adjustment.partials.row_shift_log')
-						@endforeach
-					@endif --}}
+					<tr>
+						<th>이름</th>
+						<th>시작날짜</th>
+						<th>마감날짜</th>
+						<th>정산기간</th>
+						<th>배팅금</th>
+						<th>당첨금</th>
+						<th>죽은금액</th>
+						<th>죽장%</th>
+						<th>죽장수익</th>
+						<th>딜비%</th>
+						<th>딜비수익</th>
+						<th>합계</th>
+						<th>정산</th>
+						<th>리셋</th>
+					</tr>
 					</tbody>
 					
 					</table>
 				</div>
-				{{-- {{ $statistics->appends(Request::except('page'))->links() }} --}}
 			</div>	
 		</div>
 
-		<div class="box box-primary">
-			<div class="box-header">
-			<h4 class="box-title">정산내역</h4>
-			</div>
-			<div class="box-body">
-				<div class="table-responsive">
-					<table class="table table-bordered table-striped">
-					<thead>
-					<tr>
-						<th>이름</th>
-						<th>정산시작시간</th>
-						<th>정산마감시간</th>
-						<th>이월된 보유금</th>
-						<th>충전</th>
-						<th>환전</th>
-						<th>하위충전</th>
-						<th>하위환전</th>
-						<th>딜비수익</th>
-						<th>하위수익</th>
-						<th>딜비전환</th>
-						<th>최종수익</th>
-						<th>보유금</th>
-						<th>정산금</th>
-					</tr>
-					</thead>
-					<tbody>
-					@if (count($shift_logs))
-						@foreach ($shift_logs as $shift_log)
-							@include('backend.Default.adjustment.partials.row_shift_log')
-						@endforeach
-					@else
-						<tr><td colspan="14">@lang('app.no_data')</td></tr>
-					@endif
-					</tbody>
-					</table>
-				</div>
-			</div>
-			
-		</div>
 	</section>
 
 

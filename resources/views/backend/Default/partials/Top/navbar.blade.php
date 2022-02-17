@@ -34,7 +34,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster','master','agent', 'distributor']) )
-            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') || Request::is('backend/join*') ? 'active' : '' }}">
+            <li class="dropdown {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') || Request::is('backend/join*') || Request::is('backend/black*') ? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-users"></i>
                     <span>파트너리스트 <sup id="user_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -92,6 +92,12 @@
                         <a  href="{{ route($admurl.'.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}리스트</span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('backend/black*') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.black.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>블랙리스트</span>
                         </a>
                     </li>
                     @endif
@@ -232,7 +238,7 @@
             </li>
 
             <li class="dropdown {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_ggr*') || Request::is('backend/adjustment*')? 'active' : '' }}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-database"></i>
                     <span>정산리스트<sup id="adj_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -251,6 +257,14 @@
                                 실시간정산
                         </a>
                     </li>
+                    @if (auth()->user()->isInoutPartner())
+                    <li class="{{ Request::is('backend/adjustment_ggr') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.adjustment_ggr') }}">
+                            <i class="fa fa-circle-o"></i>
+                                죽장정산
+                        </a>
+                    </li>
+                    @endif
                     
                     @endpermission
                     @permission('stats.pay')
@@ -465,7 +479,7 @@
                         $master = $master->referral;
                     }
                 ?>
-                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="Search" value="{{$master->address}}" style="color:#b8c7ce;cursor:default;" disabled>
+                <input type="text" class="form-control" name="address" id="navbar-search-input" placeholder="텔레아이디" value="{{$master->address}}" style="color:#b8c7ce;cursor:default;" disabled>
                 @endif
             </div>
         </form>
@@ -516,13 +530,15 @@
                 <p>
                 {{ Auth::user()->username }}[{{$available_roles_trans[auth()->user()->role_id]}}]님 
                 </p>
-                <p style="font-size:14px;">정산시간 : 
-                @if( Auth::user()->hasRole(['cashier', 'manager']) )
-                {{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
-                @else
-                {{auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"))}}
+                @if (auth()->user()->hasRole('admin')  || auth()->user()->ggr_percent > 0 || (auth()->user()->hasRole('manager') && auth()->user()->shop->ggr_percent > 0))
+                    <p style="font-size:14px;">정산시간 : 
+                    @if (auth()->user()->hasRole('manager'))
+                        {{$shop->last_reset_at?\Carbon\Carbon::parse($shop->last_reset_at)->addDays($shop->reset_days):date('Y-m-d 00:00:00', strtotime("+" . $shop->reset_days . " days"))}}
+                    @else
+                        {{auth()->user()->last_reset_at?\Carbon\Carbon::parse(auth()->user()->last_reset_at)->addDays(auth()->user()->reset_days):date('Y-m-d', strtotime("+" . auth()->user()->reset_days . " days"))}}
+                    @endif
+                    </p>
                 @endif
-                </p>
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">

@@ -88,7 +88,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $users = [];
             $joinusers = [];
             if (count($partner_users) > 0){
-                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('id', $partner_users)->get();
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('users.id', $partner_users)->get();
 
                 $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->whereNotNull('phone')->whereIn('id', $partner_users);
                 $users = $users->paginate(20);
@@ -347,6 +347,35 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             $msg = $succeed . '명의 회원을 생성하였습니다. 실패 ' . $failed . '명';
             return view('backend.Default.user.createfromcsv',  compact('ispartner', 'fuser', 'msg'));
         }
+        public function blacklist(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user->hasRole('admin'))
+            {
+                return redirect()->back()->withErrors('비정상적인 접근입니다.');
+            }
+            $blacklist = \VanguardLTE\BlackList::orderby('id');
+
+            if( $request->search != '' ) 
+            {
+                $blacklist = $blacklist->where('name', 'like', '%'.$request->search.'%');
+            }
+
+            if( $request->phone != '' ) 
+            {
+                $blacklist = $blacklist->where('phone', 'like', '%'.$request->phone.'%');
+            }
+
+            if( $request->account != '' ) 
+            {
+                $blacklist = $blacklist->where('account_number', 'like', '%'.$request->account.'%');
+            }
+
+            $blacklist = $blacklist->paginate(20);
+
+            return view('backend.Default.user.blacklist',  compact('blacklist'));
+        }
+
         public function partner($role_id, \Illuminate\Http\Request $request)
         {
             $user = auth()->user();
@@ -356,6 +385,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 return redirect()->back()->withErrors('비정상적인 접근입니다.');
             }
+            
 
             $partners = \VanguardLTE\User::where('status', '<>',\VanguardLTE\Support\Enum\UserStatus::DELETED)->where('role_id', $role_id)->whereIn('id', $users);
 
@@ -480,6 +510,48 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->route(config('app.admurl').'.user.list');
             }
             return view('backend.Default.user.view', compact('user', 'userActivities'));
+        }
+        public function blackcreate()
+        {
+            return view('backend.Default.user.blackcreate');
+        }
+        public function blackedit($blackid)
+        {
+            $user = \VanguardLTE\BlackList::where('id', $blackid)->first();
+            if (!$user)
+            {
+                return redirect()->route(config('app.admurl').'.black.list');
+            }
+            return view('backend.Default.user.blackedit', compact('user'));
+        }
+        public function blackupdate($blackid, \Illuminate\Http\Request $request)
+        {
+            $data = $request->only(
+                [
+                    'name',
+                    'phone',
+                    'account_bank',
+                    'account_name',
+                    'account_number',
+                    'memo',
+                ]
+            );
+            $user = \VanguardLTE\BlackList::where('id', $blackid);
+            if ($user){
+                $user->update($data);
+            }
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙정보가 수정되었습니다');
+        }
+        public function blackremove($blackid, \Illuminate\Http\Request $request)
+        {
+            \VanguardLTE\BlackList::where('id', $blackid)->delete();
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙정보가 삭제되었습니다');
+        }
+        public function blackstore(\Illuminate\Http\Request $request)
+        {
+            $data = $request->all();
+            \VanguardLTE\BlackList::create($data);
+            return redirect()->route(config('app.admurl').'.black.list')->withSuccess('블랙리스트에 추가되었습니다');
         }
         public function create()
         {
@@ -974,6 +1046,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
             return redirect()->back()->withSuccess(['파트너를 이동하였습니다.']);
         }
+        public function resetConfirmPwd(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
+        {
+            $users = auth()->user()->availableUsers();
+            if( count($users) && !in_array($user->id, $users) ) 
+            {
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.wrong_shop')]);
+            }
+            $user->update(['confirmation_token' => null]);
+            return redirect()->back()->withSuccess(['환전비번을 리셋했습니다']);
+        }
         public function updateDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
             $users = auth()->user()->availableUsers();
@@ -994,14 +1076,57 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'role_id' => 1
             ])->count();
             $data = $request->all();
-            if( empty($data['password']) ) 
-            {
-                unset($data['password']);
-            }
+            
             if( empty($data['password_confirmation']) ) 
             {
                 unset($data['password_confirmation']);
             }
+            if( empty($data['password']) ) 
+            {
+                unset($data['password']);
+            }
+            else
+            {
+                if (empty($data['password_confirmation']))
+                {
+                    return redirect()->back()->withErrors(['확인비밀번호를 입력해주세요']);
+                }
+                if ($data['password_confirmation'] != $data['password'])
+                {
+                    return redirect()->back()->withErrors(['확인비밀번호와 맞지 않습니다']);
+                }
+            }
+
+            if( empty($data['confirmation_token_confirmation']) ) 
+            {
+                unset($data['confirmation_token_confirmation']);
+            }
+
+            if( empty($data['confirmation_token']) ) 
+            {
+                unset($data['confirmation_token']);
+            }
+            else
+            {
+                if (empty($data['confirmation_token_confirmation']))
+                {
+                    return redirect()->back()->withErrors(['확인 환전비밀번호를 입력해주세요']);
+                }
+                if ($data['confirmation_token_confirmation'] != $data['confirmation_token'])
+                {
+                    return redirect()->back()->withErrors(['확인 환전비밀번호와 맞지 않습니다']);
+                }
+
+                $old_confirm_token = $data['old_confirmation_token'];
+                if(!empty($user->confirmation_token) && !\Illuminate\Support\Facades\Hash::check($old_confirm_token, $user->confirmation_token) ) 
+                {
+                    return redirect()->back()->withErrors(['이전 환전비밀번호가 틀립니다']);
+                }
+                $data['confirmation_token'] = \Illuminate\Support\Facades\Hash::make($data['confirmation_token']);
+            }
+            
+
+
             if( isset($data['role_id']) && $user->role_id != $data['role_id'] && $data['role_id'] == 1 && $this->max_users <= ($count + 1) ) 
             {
                 return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('max_users', ['max' => $this->max_users])]);
@@ -1186,14 +1311,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
         }
         public function updateLoginDetails(\VanguardLTE\User $user, \VanguardLTE\Http\Requests\User\UpdateLoginDetailsRequest $request)
         {
-            $data = $request->all();
-            if( trim($data['password']) == '' ) 
-            {
-                unset($data['password']);
-                unset($data['password_confirmation']);
-            }
-            $this->users->update($user->id, $data);
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            // $data = $request->all();
+            // if( trim($data['password']) == '' ) 
+            // {
+            //     unset($data['password']);
+            //     unset($data['password_confirmation']);
+            // }
+            // $this->users->update($user->id, $data);
+            // event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
             return redirect()->route(config('app.admurl').'.user.edit', $user->id)->withSuccess(trans('app.login_updated'));
         }
         public function delete(\VanguardLTE\User $user)

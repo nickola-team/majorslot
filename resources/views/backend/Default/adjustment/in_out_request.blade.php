@@ -92,12 +92,18 @@
 				@endif
 
 
-					<div class="row" style="margin-top: 20px;">
-						<div class="col-md-6">
-							<label>충/환전금액:</label>
-							<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요." readonly>
-						</div>
+				<div class="row" style="margin-top: 20px;">
+					<div class="col-md-6">
+						<label>충/환전금액:</label>
+						<input type="number" class="form-control" id="withdraw_money" name="withdraw_money" value="" placeholder="충/환전금액을 입력하세요." readonly>
 					</div>
+				</div>
+				<div class="row" style="margin-top: 20px;">
+					<div class="col-md-6">
+						<label>환전비밀번호:</label>
+						<input type="password" class="form-control" id="confirmation_token" name="confirmation_token" value="" placeholder="환전하시려면 환전비밀번호를 입력하세요">
+					</div>
+				</div>
 				</div>
 				<div class='col-md-6'>
 				<div class="banktable">
@@ -426,19 +432,20 @@
 		function withdraw_balance() {
 			$('#withdraw-balance-btn').attr('disabled', 'disabled');
             var money = $('#withdraw_money').val();
+			var confirmation_token = $('#confirmation_token').val();
             var _token = $('#_token').val();
 
             $.ajax({
                 type: 'POST',
                 url: '/api/outbalance',
-                data: { money: money, _token: _token },
+                data: { money: money, _token: _token, confirmation_token : confirmation_token },
                 cache: false,
                 async: false,
                 success: function (data) {
                     if (data.error) {
                         alert(data.msg);
                         if (data.code == '001') {
-                            location.reload(true);
+							location.reload(true);
                         }
                         else if (data.code == '002') {
                             $('#withdraw_money').focus();
@@ -446,6 +453,14 @@
                         else if (data.code == '003') {
                             $('#withdraw_money').val('0');
                         }
+						else if (data.code == '010') {
+                            location.href = "{{ route($admurl.'.user.edit', auth()->user()->id) }}";
+							return;
+                        }
+						else
+						{
+							location.reload(true);
+						}
                         return;
                     }
                     alert('환전 신청이 완료되었습니다.');

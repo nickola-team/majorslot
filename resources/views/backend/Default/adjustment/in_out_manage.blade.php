@@ -15,7 +15,7 @@
 				<h3 class="box-title">{{$type=='add'?'충전':'환전'}}관리( {{count($in_out_request)}}건)</h3>
 				@if (auth()->user()->hasRole(['comaster', 'master']))
 				<div class="pull-right box-tools">
-					<input type="checkbox" id="ratingOn" checked={{auth()->user()->rating>0?'true':'false'}}>
+					<input type="checkbox" id="ratingOn" {{auth()->user()->rating>0?'checked':''}}>
 						알림음 ON/OFF
 				</div>
 				@endif
@@ -44,8 +44,6 @@
 				<button class="btn btn-primary" id="change-bank-account-btn" onclick="change_bank_account_info();">
 					계좌정보변경
 				</button>
-				<input type="checkbox" id="ratingOn" checked={{auth()->user()->rating>0?'true':'false'}}>
-						알림음 ON/OFF
 			</div>
 			@endif
 			

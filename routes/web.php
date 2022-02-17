@@ -509,6 +509,22 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'middleware' => 'permission:stats.game',
     ]);
 
+    Route::get('/adjustment_ggr', [
+        'as' => 'backend.adjustment_ggr',
+        'uses' => 'DashboardController@adjustment_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/process_ggr', [
+        'as' => 'backend.process_ggr',
+        'uses' => 'DashboardController@process_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/reset_ggr', [
+        'as' => 'backend.reset_ggr',
+        'uses' => 'DashboardController@reset_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+
     Route::get('/adjustment_daily', [
         'as' => 'backend.adjustment_daily',
         'uses' => 'DashboardController@adjustment_daily',
@@ -669,10 +685,37 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@tree',
         'middleware' => 'permission:users.tree'
     ]);
+
+    Route::get('black', [
+        'as' => 'backend.black.list',
+        'uses' => 'UsersController@blacklist',
+    ]);    
+    Route::get('black/create', [
+        'as' => 'backend.black.create',
+        'uses' => 'UsersController@blackcreate',
+    ]);
+    Route::post('black/create', [
+        'as' => 'backend.black.store',
+        'uses' => 'UsersController@blackstore',
+    ]);
+    Route::get('black/{blackid}/edit', [
+        'as' => 'backend.black.edit',
+        'uses' => 'UsersController@blackedit',
+    ]);  
+    Route::post('black/{blackid}/update', [
+        'as' => 'backend.black.update',
+        'uses' => 'UsersController@blackupdate',
+    ]);
+    Route::delete('black/{blackid}/remove', [
+        'as' => 'backend.black.remove',
+        'uses' => 'UsersController@blackremove',
+    ]);
+
     Route::get('partner/{role_id}', [
         'as' => 'backend.user.partner',
         'uses' => 'UsersController@partner',
     ]);
+
     Route::get('statistics', [
         'as' => 'backend.statistics',
         'uses' => 'DashboardController@statistics',
@@ -754,6 +797,10 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
         'as' => 'backend.user.update.details',
         'uses' => 'UsersController@updateDetails'
     ]);
+    Route::get('user/{user}/update/reset_confirm_pwd', [
+        'as' => 'backend.user.update.resetpwd',
+        'uses' => 'UsersController@resetConfirmPwd'
+    ]);    
     Route::post('user/{user}/update/move', [
         'as' => 'backend.user.update.move',
         'uses' => 'UsersController@move'
@@ -1350,7 +1397,7 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::post('/promo/tournament/player/choice/OPTIN', 'GameProviders\PPController@promochoice');
     Route::get('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
     Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
-    Route::get('/promo/tournament/v2/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
+    Route::get('/promo/tournament/v3/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
     Route::get('/minilobby/games.json', 'GameProviders\PPController@minilobby_games_json');
     Route::get('/minilobby/start', 'GameProviders\PPController@minilobby_start');
     Route::get('lastGameHistory.do', 'GameProviders\PPController@ppHistory');
@@ -1361,6 +1408,8 @@ Route::group(['prefix' => 'gs2c',], function () {
 
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
+
+Route::post('games/{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
 
 
 /**
@@ -1399,4 +1448,14 @@ Route::group(['prefix' => 'evo',], function () {
  */
 Route::group([ 'prefix' => 'ata',], function () {
 	Route::post('/api/{service}', 'GameProviders\ATAController@endpoint');
+});
+
+/**
+ * GameArtCasino Game Provider
+ */
+Route::group([ 'prefix' => 'gac',], function () {
+	Route::get('/checkPlayer/{userid}', 'GameProviders\GACController@checkplayer');
+    Route::get('/balance/{userid}', 'GameProviders\GACController@balance');
+    Route::post('/placeBet', 'GameProviders\GACController@placebet');
+    Route::post('/betResult', 'GameProviders\GACController@betresult');
 });

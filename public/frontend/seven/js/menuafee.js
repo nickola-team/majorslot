@@ -72,7 +72,7 @@ function askAccount() {
         cache: false,
         url: "/api/depositAccount",
         type: "POST",
-        data: { money: money, _token: _token, account:accountname },
+        data: { money: money, _token: _token, account:accountname, force: 1 },
         success: function(data) {
             //console.log(data);
             if (data.error) {

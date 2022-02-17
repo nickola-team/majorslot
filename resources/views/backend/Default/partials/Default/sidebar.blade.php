@@ -91,7 +91,7 @@
             @endif
             @endpermission
             @if ( auth()->check() && auth()->user()->hasRole(['admin','comaster', 'master','agent', 'distributor']) )
-            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') || Request::is('backend/join*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('backend/shops*') || Request::is('backend/partner*') || Request::is('backend/user*') || Request::is('backend/join*') || Request::is('backend/black*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>파트너관리 <sup id="user_newmark" style="background:blue;font-size:12px;display: none;">&nbsp;N&nbsp;</sup></span>
@@ -150,6 +150,13 @@
                         <a  href="{{ route($admurl.'.user.partner', 7) }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{\VanguardLTE\Role::where('slug','comaster')->first()->description}}관리</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ Request::is('backend/black*') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.black.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>블랙리스트</span>
                         </a>
                     </li>
                     @endif
@@ -294,7 +301,7 @@
             </li>
 
             <li class="treeview {{ Request::is('backend/adjustment_partner*') || Request::is('backend/adjustment_game*') 
-                || Request::is('backend/adjustment_shift*') || Request::is('backend/adjustment*')? 'active' : '' }}">
+                || Request::is('backend/adjustment_ggr*') || Request::is('backend/adjustment*')? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
                     <span>정산관리</span>
@@ -314,6 +321,15 @@
                                 실시간정산
                         </a>
                     </li>
+
+                    @if (auth()->user()->isInoutPartner())
+                    <li class="{{ Request::is('backend/adjustment_ggr') ? 'active' : ''  }}">
+                        <a  href="{{ route($admurl.'.adjustment_ggr') }}">
+                            <i class="fa fa-circle-o"></i>
+                                죽장정산
+                        </a>
+                    </li>
+                    @endif
                     
                     @endpermission
                     @permission('stats.pay')

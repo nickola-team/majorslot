@@ -356,15 +356,19 @@
 							@foreach($categories AS $index=>$category)
 								@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 								&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-								&& $category->title != "Skywind" && $category->title != "VirtualTech")
+								&& $category->title != "Skywind" )
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
 									
 									@else
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
-									@endif										
+									@endif
+									@if (file_exists( public_path() . '/frontend/worldsl/tutu/images/slot-icon/' . $category->title.'.gif'))
+										<img src="/frontend/worldsl/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 252px;height: 230px;border-radius:30px">
+									@else
 										<img src="/frontend/worldsl/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 252px;height: 230px;border-radius:30px">
+									@endif
 										<img src="/frontend/worldsl/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
 									</a>
 								</li>
@@ -409,7 +413,7 @@
 										</tr>
 										<tr><td class="write_title">은행선택</td><td class="write_td"></td>\r\n<td class="write_basic">   
 											<select class="input1" name="bankname" id="strBankName" onchange="directBankName(this);"></select>    <span id="banknmId" style="display: none;">
-											<input class="input1" name="banknm" type="text" id="strDirBankName" maxlength="20" placeholder="은행명직접입력"></span></td></tr> <tr><td class="write_title">예금주</td><td class="write_td"></td><td class="write_basic">    <input class="input1" type="text" id="strBankUser" onblur="CheckHangul(this);"><span>&nbsp;&nbsp;( 입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다 )</span></td></tr><tr><td class="write_title">계좌번호</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="accountnumber" type="text" id="strBankNum" onkeypress="return digit_check(event)" placeholder="계좌번호를 입력하세요">    <span>&nbsp;&nbsp;( 띄어쓰기와 - 없이 숫자로만 기입하여 주시기 바랍니다 )</span></td></tr>   <tr><td class="write_title">핸드폰</td><td class="write_td"></td><td class="write_basic"><input class="input1" type="tel" id="strPhone" maxlength="16"></td></tr>     <tr style="display:none;"><td class="write_title">추천코드</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="recomcode_id" type="text" id="strMark" value="worldshop123"></td></tr>\r\n            </table>\r\n        </div>\r\n        <div class="con_box10">\r\n            <div class="btn_wrap_center"><ul><li><a href="#none" onclick="onRegister();return false;"><span class="btn3_1">회원가입완료</span></a></li></ul>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</form>
+											<input class="input1" name="banknm" type="text" id="strDirBankName" maxlength="20" placeholder="은행명직접입력"></span></td></tr> <tr><td class="write_title">예금주</td><td class="write_td"></td><td class="write_basic">    <input class="input1" type="text" id="strBankUser" onblur="CheckHangul(this);"><span>&nbsp;&nbsp;( 입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다 )</span></td></tr><tr><td class="write_title">계좌번호</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="accountnumber" type="text" id="strBankNum" onkeypress="return digit_check(event)" placeholder="계좌번호를 입력하세요">    <span>&nbsp;&nbsp;( 띄어쓰기와 - 없이 숫자로만 기입하여 주시기 바랍니다 )</span></td></tr>   <tr><td class="write_title">핸드폰</td><td class="write_td"></td><td class="write_basic"><input class="input1" type="tel" id="strPhone" maxlength="16"></td></tr>     <tr ><td class="write_title">추천코드</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="recomcode_id" type="text" id="strMark" value=""></td></tr>\r\n            </table>\r\n        </div>\r\n        <div class="con_box10">\r\n            <div class="btn_wrap_center"><ul><li><a href="#none" onclick="onRegister();return false;"><span class="btn3_1">회원가입완료</span></a></li></ul>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</form>
 						`;
 
 					$("#popupbox_ajax").html(data);
@@ -430,7 +434,7 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "slot")
+							&& $category->title != "Skywind"  && $category->type == "slot")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
@@ -438,7 +442,11 @@
 								@else
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 								@endif										
+								@if (file_exists( public_path() . '/frontend/worldsl/tutu/images/slot/' . $category->title.'.gif'))
+								data += `<img src="/frontend/worldsl/tutu/images/slot/{{ $category->title.'.gif' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								@else
 								data += `<img src="/frontend/worldsl/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								@endif
 								data += `<img src="/frontend/worldsl/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
 								data += `</a>`;     
 								data += `</li>`;
@@ -456,7 +464,7 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" && $category->title != "VirtualTech" && $category->type == "live")
+							&& $category->title != "Skywind"  && $category->type == "live")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
@@ -491,9 +499,13 @@
                 $("#divpopup" + popupid).hide();
             }
 			$(document).ready(function(){
-                if ( document.cookie.indexOf("divpopup2=close") < 0 ){
-                    $("#divpopup2").show();
+@if ($noticelist!=null && count($noticelist) >0)
+@foreach ($noticelist as $ntc)
+                if ( document.cookie.indexOf("divpopup{{$loop->index}}=close") < 0 ){
+                    $("#divpopup{{$loop->index}}").show();
                 }
+@endforeach				
+@endif				
             });
 			function tabActionPopView(obj, pid, idx) {
 				if(nCheckLetter == 1&& !pid.includes('letter')) {
@@ -511,12 +523,43 @@
 					target.removeClass("sk_tab_hidden_01");
 					target.html("");
 				} else {
-					$(".sk_tab_con_01").html("");
+					
 				}
 				if( pid == "letterView" ){
-						
+					writedate = $("#letters" + idx).children("td#lettercreated").html();
+					title = $("#letters" + idx).children("td#lettertitle").html();
+					content = $("#letters" + idx).children("td#lettercontent").html();
+					$(".sk_tab_con_01").html("");
+					data= `<div class="title1">
+										쪽지
+								</div>
+								<div class="contents_in">
+										<div class="con_box10">             
+												<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+														<tr>
+																<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> ${writedate} </td>
+														</tr>
+														<tr>
+																<td class="view1 write_title_top">${title}</td>
+														</tr>
+														<tr>
+																<td class="view2">
+																		${content}
+																</td>
+														</tr>
+												</table>
+										</div>
+										<div class="con_box20">
+												<div class="btn_wrap_center">
+														<ul>
+																<li><a href="#" onclick="tabActionProc('tab4','letterList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+														</ul>
+												</div>
+										</div>
+								</div>`;
 				}
 				else if( pid == "chatView" ){
+					$(".sk_tab_con_01").html("");
 						data = `<div class="title1">
 									문의
 								</div>
@@ -560,6 +603,10 @@
 								</div>`;
 				}
 				else if(pid == "noticeView"){
+					writedate = $("#notice_" + idx).children("td#noticetime").html();
+					title = $("#notice_" + idx).children("td#noticetitle").html();
+					content = $("#notice_" + idx).children("td#noticecontent").html();
+					$(".sk_tab_con_01").html("");
 						data= `<div class="title1">
 												공지사항
 										</div>
@@ -567,14 +614,14 @@
 												<div class="con_box10">             
 														<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
 																<tr>
-																		<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> <?php if ($notice!=null) {echo $notice->date_time;} ?>      </td>
+																		<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> ${writedate}      </td>
 																</tr>
 																<tr>
-																		<td class="view1 write_title_top">★공지사항★</td>
+																		<td class="view1 write_title_top">${title}</td>
 																</tr>
 																<tr>
 																		<td class="view2">
-																				<?php if ($notice!=null) {echo $notice->content;} ?>
+																				${content}
 																		</td>
 																</tr>
 														</table>
@@ -585,7 +632,7 @@
 																		<li><a href="#" onclick="tabActionProc('tab6','noticeList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
 																</ul>
 														</div>
-												</div>                                                         
+												</div>
 										</div>`;
 				}
 
@@ -658,10 +705,7 @@
 											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
 										</tr>
 										
-										<tr>
-											<td class="write_title">충전계좌</td>
-											<td class="write_basic" id="bank_refresh"><a href="#" id="bank_call_btn" onclick="onAskAccount();"><span class="btn1_2">텔레그램 문의</span></a></td>
-										</tr>
+										
 										<tr>
 											<td class="write_title">신청금액</td>
 											<td class="write_basic"><input class="input1" size="30" id="deposit_amount" class="input1 numeric.decimalPlaces" placeholder="0">
@@ -672,10 +716,17 @@
 												<a href="javascript:addDeposit(1000000);"><span class="btn1_2">100만원</span></a>
 												<a href="javascript:addDeposit(5000000);"><span class="btn1_2">500만원</span></a>
 												<a href="javascript:addDeposit(10000000);"><span class="btn1_2">1000만원</span></a>
-												<a href="javascript:addDeposit(0);"><span class="btn1_1">정정</span></a><br>5만원이상 만원단위로 입금신청해주시기 바랍니다.
+												<a href="javascript:addDeposit(0);"><span class="btn1_1">정정</span></a><br>3만원이상 만원단위로 입금신청해주시기 바랍니다.
 											</td>
 										</tr>  
-									</table>                
+										<tr>
+											<td class="write_title">충전계좌</td>
+											<td class="write_basic" id="bank_refresh">
+												<a href="#" id="bank_call_btn" onclick="onAskAccount();"><span class="btn1_2">텔레그램 문의</span></a>
+												&nbsp;&nbsp;<span id="depositAcc"></span>
+											</td>
+										</tr>
+									</table>
 								</div>
 								<div class="con_box20">
 									<div class="btn_wrap_center">
@@ -770,9 +821,21 @@
 										<td width="20%" class="list_title1">작성일</td>
 										<td width="10%" class="list_title1">상태</td>
 										<td width="10%" class="list_title1">기능</td>
-									</tr>
-										</table>
-							</div>`;
+									</tr>`;
+									@if (count($msgs) > 0)
+									@foreach ($msgs as $m)
+										data += `
+										<tr onclick="readMessage({{$m->id}}); tabActionPopView('','letterView','{{$loop->index+1}}');" style="cursor: pointer" id="letters{{$loop->index+1}}">
+												<td width="10%" class="list_title1" id="letteridx">{{$loop->index+1}}</td>
+												<td class="list_title1" id="lettertitle">{{$m->title}}</td>
+												<td width="20%" class="list_title1" id="lettercreated">{{$m->created_at}}</td>
+												<td width="10%" class="list_title1" id="letterstatus">{{$m->read_at!=null?'읽음':'안읽음'}}</td>
+												<td width="10%" class="list_title1"></td>
+												<td width="0%" class="list_title1" id="lettercontent" style="display:none;"><?php echo $m->content ?></td>
+										</tr>`;
+									@endforeach
+									@endif
+					data += `</table></div>`;
 				}
 				else if( pid == "inoutList" ){
 					data=`<div class="title1">입출금내역</div>
@@ -785,10 +848,21 @@
 										<td width="10%" class="list_title1">처리일시</td>
 										<td width="10%" class="list_title1">충/환전금액</td>
 										<td width="10%" class="list_title1">처리현황</td>
-									</tr> 
-										</table>
-								
-							</div> `;
+									</tr> `;
+									@if (count($trhistory) > 0)
+									@foreach ($trhistory as $tr)
+										data += `
+										<tr>
+											<td width="10%" class="list_title1">{{$loop->index+1}}</td>
+											<td width="10%" class="list_title1">{{$tr->type=='add'?'입금':'출금'}}</td>
+											<td width="10%" class="list_title1">{{$tr->created_at}}</td>
+											<td width="10%" class="list_title1">{{$tr->updated_at}}</td>
+											<td width="10%" class="list_title1">{{number_format($tr->sum)}}</td>
+											<td width="10%" class="list_title1">{{\VanguardLTE\WithdrawDeposit::statMsg()[$tr->status]}}</td>
+										</tr>`;
+									@endforeach
+									@endif
+					data +=`</table></div> `;
 				}
 				else if( pid == "chatList" ){
 					data= `<div class="title1">
@@ -828,14 +902,18 @@
 											<td class="list_title1">제목</td>
 											<td width="20%" class="list_title1">작성일</td>
 										</tr>`;
-										@if ($notice != null)
+										@if ($noticelist != null && count($noticelist) > 0)
+										@foreach ($noticelist as $ntc)
 										data += `
-										<tr onclick="tabActionPopView('','noticeView','2');" style="cursor: pointer">
+										<tr onclick="tabActionPopView('','noticeView','{{$loop->index}}');" style="cursor: pointer" id="notice_{{$loop->index}}">
 											<td class="list_notice1"><img src="/frontend/di1001/tutu/images/icon_notice.png"></td>
-											<td class="list_notice2"><a href="#">★공지사항★</a></td>
-											<td class="list_notice2" style="text-align: center"><a href="#">{{$notice->date_time}}</a></td>
+											<td class="list_notice2" id="noticetitle"><a href="#">★공지사항★ {{$ntc->title}}</a></td>
+											<td class="list_notice2" style="text-align: center" id="noticetime"><a href="#">{{$ntc->date_time}}</a></td>
+											<td width="0%" class="list_title1" id="noticecontent" style="display:none;"><?php echo $ntc->content ?></td>
 										</tr>`;
+										@endforeach
 										@endif
+
 					data += `
 									</table>
 								</div>
@@ -847,25 +925,27 @@
 			}
 		</script>
 
-@if ($notice != null)
-		<div class="pop02_popup1 draggable02" id="divpopup2" style="position: absolute; top: 250px; left: 100px; z-index: 1000;display:none">
+@if ($noticelist != null && count($noticelist) > 0)
+@foreach ($noticelist as $ntc)
+		<div class="pop02_popup1 draggable02" id="divpopup{{$loop->index}}" style="position: absolute; top: 250px; left: {{(100+$loop->index*510)}}px; z-index: 1000;display:none">
             <div class="pop02_popup_wrap">
                 <div class="pop02_popup_btn_wrap">
                     <ul>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('2');">오늘 하루 이 창을 열지 않음</span></a></li>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('2');">닫기 X</span></a></li>            
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('{{$loop->index}}');">오늘 하루 이 창을 열지 않음</span></a></li>
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('{{$loop->index}}');">닫기 X</span></a></li>            
                     </ul>
                 </div>
                 <div class="pop02_popup_box">
                     <div class="pop02_popup_text" style="padding:30px;width:500px">
                         <span class="pop02_popup_font1" style="border-bottom:2px solid #fff;margin-bottom:15px">★공지사항★</span>
                         <span class="pop02_popup_font2">
-								<?php echo $notice->content ?>
+								<?php echo $ntc->content ?>
                         </span> 
                     </div>
                 </div>
             </div>
         </div>
+@endforeach		
 @endif
 		<style type="text/css">
             .pop02_popup1 {position:absolute; z-index:1000000000;}

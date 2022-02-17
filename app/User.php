@@ -19,14 +19,14 @@ namespace VanguardLTE
             'password', 
             'email', 
             'username', 
-            'avatar', 
+            'avatar',   //used for user's memo
             'address',
             'balance', 
             'last_login', 
-            'confirmation_token', 
+            'confirmation_token',  //used for withdraw password
             'status', 
             'wager', 
-            'rating', 
+            'rating',  //used for in/out alarm
             'points', 
             'total_balance', 
             'bonus', 
@@ -118,7 +118,8 @@ namespace VanguardLTE
                 '중국공상', 
                 '펀드온라인코리아', 
                 '케이티비투자증권',
-                'PAYWIN'
+                'PAYWIN',
+                'JUNCOIN'
             ],
             'reset_days' => [
                 '',
@@ -132,6 +133,11 @@ namespace VanguardLTE
                 '8일',  
                 '9일',  
                 '10일',  
+                '11일',  
+                '12일',  
+                '13일',  
+                '14일',  
+                '15일', 
             ]
         ];
 
@@ -818,10 +824,19 @@ namespace VanguardLTE
 
         public function processBetDealerMoney_Queue($stat_game) 
         {
-
+            $game = $stat_game->game;
             $betMoney = $stat_game->bet;
             $winMoney = $stat_game->win;
-            $game = $stat_game->game;
+            $refundGames = ['_refund', '_tie'];
+            foreach($refundGames as $refundGame) 
+            {
+                if (strlen($game) >= strlen($refundGame) && substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
+                {
+                    $betMoney = -$stat_game->win;
+                    $winMoney = 0;
+                    break;
+                }
+            }
             $date_time = $stat_game->date_time;
             if ($date_time == null)
             {
@@ -853,8 +868,8 @@ namespace VanguardLTE
                     'partner_id' => $this->id, //user's id
                     'balance_before' => 0, 
                     'balance_after' => 0, 
-                    'bet' => abs($betMoney), 
-                    'win' => abs($winMoney), 
+                    'bet' => abs($stat_game->bet), 
+                    'win' => abs($stat_game->win), 
                     'deal_profit' => $deal_balance,
                     'game' => $game,
                     'shop_id' => $shop->id,
@@ -878,13 +893,18 @@ namespace VanguardLTE
                 if($deal_percent > 0 || $ggr_percent > 0) {
                     $deal_balance = $betMoney * $deal_percent  / 100;
                     $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
+                    if ($betMoney > 0 && ($deal_balance < $deal_mileage))
+                    {
+                        //error
+                        return ;
+                    }
                     $deal_data[] = [
                         'user_id' => $this->id, 
                         'partner_id' => $manager->id, //manager's id
                         'balance_before' => 0, 
                         'balance_after' => 0, 
-                        'bet' => abs($betMoney), 
-                        'win' => abs($winMoney), 
+                        'bet' => abs($stat_game->bet), 
+                        'win' => abs($stat_game->win), 
                         'deal_profit' => $deal_balance,
                         'game' => $game,
                         'shop_id' => $shop->id,
@@ -909,13 +929,18 @@ namespace VanguardLTE
                     if($deal_percent > 0 || $ggr_percent > 0) {
                         $deal_balance = $betMoney * $deal_percent  / 100;
                         $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
+                        if ($betMoney > 0 && ($deal_balance < $deal_mileage))
+                        {
+                            //error
+                            return ;
+                        }
                         $deal_data[] = [
                             'user_id' => $this->id, 
                             'partner_id' => $partner->id,
                             'balance_before' => 0, 
                             'balance_after' => 0, 
-                            'bet' => abs($betMoney),
-                            'win' => abs($winMoney),
+                            'bet' => abs($stat_game->bet),
+                            'win' => abs($stat_game->win),
                             'deal_profit' => $deal_balance,
                             'game' => $game,
                             'shop_id' => $this->shop_id,
@@ -931,6 +956,12 @@ namespace VanguardLTE
                         ];
                     }
                     $partner = $partner->referral;
+                }
+                // last check if the deal_percent is less than comaster's deal percent
+                if ($partner!=null && $partner->deal_percent < $deal_percent  )
+                {
+                    //error
+                    return;
                 }
             }
 
@@ -1049,6 +1080,58 @@ namespace VanguardLTE
                 return true;
             }
             return false;
+        }
+
+        public function checkBlack()
+        {
+            $result = [
+                'count' => 0,
+                'name' => null,
+                'phone' => null,
+                'account' => null,
+            ];
+            if ($this->phone != '')
+            {
+                $blacks = BlackList::where('phone', $this->phone)->get();
+                foreach ($blacks as $b)
+                {
+                    $result['count'] = $result['count'] + 1;
+                    if ($result['name'])
+                    {
+                        $result['name'] = $result['name'] . ',';
+                    }
+                    $result['name'] = $result['name'] . $b->name;
+
+                    if ($result['phone'])
+                    {
+                        $result['phone'] = $result['phone'] . ',';
+                    }
+                    $result['phone'] = $result['phone'] . $b->memo;
+                }
+            }
+
+            if ($this->account_no != '')
+            {
+                $blacks = BlackList::where('account_number', $this->account_no)->get();
+                foreach ($blacks as $b)
+                {
+                    $result['count'] = $result['count'] + 1;
+                    if ($result['name'])
+                    {
+                        $result['name'] = $result['name'] . ',';
+                    }
+                    $result['name'] = $result['name'] . $b->name;
+
+                    if ($result['account'])
+                    {
+                        $result['account'] = $result['account'] . ',';
+                    }
+                    $result['account'] = $result['account'] . $b->memo;
+                }
+
+            }
+            return $result;
+
         }
 
 

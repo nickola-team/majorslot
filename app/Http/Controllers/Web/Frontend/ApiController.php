@@ -261,10 +261,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $data['parent_id'] = $parent->id;
             $data['phone'] = $request->tel1;
             if ($request->tel2 != '') {
-                $data['phone'] = $data['phone'] . '-' . $request->tel2 ;
+                $data['phone'] = $data['phone'] . $request->tel2 ;
             }
             if ($request->tel3 != '') {
-                $data['phone'] = $data['phone'] . '-' . $request->tel3 ;
+                $data['phone'] = $data['phone'] . $request->tel3 ;
             }
 
             $onlineShop = \VanguardLTE\OnlineShop::where('shop_id', $parent->shop_id)->first();
@@ -569,6 +569,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if ($request->user_id)
             {
+                $users = auth()->user()->availableUsers();
+                if( count($users) && !in_array($request->user_id, $users) ) 
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '비정상적인 접근입니다.',
+                        'code' => '005'
+                    ], 200);
+                }
                 $user = \VanguardLTE\User::lockForUpdate()->where('id',$request->user_id)->first();
             }
             else
@@ -581,6 +590,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'error' => true, 
                     'msg' => '다시 시도해주세요.',
                     'code' => '001'
+                ], 200);
+            }
+
+            if ($user->hasRole('user') && $user->playing_game != null)
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '게임중에 딜비전환을 할수 없습니다.',
+                    'code' => '002'
                 ], 200);
             }
 
@@ -697,7 +715,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'old' => $old,
                         'new' => $user->balance,
                         'balance' => $master->balance,
-                        'shop_id' => 0
+                        'shop_id' => $user->shop_id
                     ]);
                 }
             }
@@ -858,7 +876,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '001'
                 ], 200);
             }
-            if ($master->bank_name == 'PAYWIN') // 가상계좌
+            if ($master->bank_name == 'PAYWIN') // 페이윈 가상계좌
             {
                 //상품조회
                 try {
@@ -955,18 +973,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ], 200);
                 }
             }
+            else if ($master->bank_name == 'JUNCOIN') //준코인 가상계좌
+            {
+                if ($amount % 10000 != 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '1만원 단위로 입금하세요',
+                        'code' => '001'
+                    ], 200);
+                }
+                $url = 'https://jun-200.com/sign-up-process-api?uid='.$master->account_no. '@'.$user->id.'&site='.$master->recommender.'&p='.($amount/10000).'&rec_name=' . $account;
+                return response()->json([
+                    'error' => false, 
+                    'msg' => '팝업창에서 입금계좌신청을 하세요',
+                    'url' => $url
+                ], 200);
+            }
             else
             {
-                $master = $user->referral;
-                $telegramId = '';
-                while ($master && !$master->isInOutPartner())
-                {
-                    $master = $master->referral;
-                }
-                if ($master)
-                {
-                    $telegramId = $master->address;
-                }
+                $telegramId = $master->address;
                 if ($force==0 && $user->hasRole('user'))
                 {
                     
@@ -979,7 +1005,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     return response()->json([
                         'error' => false, 
-                        'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender . ', 텔레그램아이디 ' . $telegramId,
+                        'msg' => $master->bank_name . ' [ ' .$master->account_no. ' ] , ' . $master->recommender . (empty($telegramId)?'':(', 텔레그램아이디 ' . $telegramId)),
                     ], 200);
                 }
             }
@@ -1112,6 +1138,31 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '004'
                 ], 200);
             }
+            if ($user->role_id > 1 && empty($user->confirmation_token))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전비밀번호를 설정하세요',
+                    'code' => '010'
+                ], 200);
+            }
+            if ($user->role_id > 1 && empty($request->confirmation_token))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전비밀번호를 입력하세요',
+                    'code' => '011'
+                ], 200);
+            }
+            if ($user->role_id > 1 && !\Illuminate\Support\Facades\Hash::check($request->confirmation_token, $user->confirmation_token))
+            {
+                return response()->json([
+                    'error' => true, 
+                    'msg' => '환전비밀번호가 틀립니다',
+                    'code' => '012'
+                ], 200);
+            }
+
             if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
             {
                 return response()->json([

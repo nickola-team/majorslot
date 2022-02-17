@@ -324,6 +324,14 @@
 
 		$(function() {
 
+			$('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+				checkboxClass: 'icheckbox_flat-green',
+				radioClass   : 'iradio_flat-green'
+			});
+			$('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+				checkboxClass: 'icheckbox_flat-red',
+				radioClass   : 'iradio_flat-red'
+			})
 			$('.allowJoin').click(function(event){
 				if( $(event.target).is('.newPayment') ){
 					var id = $(event.target).attr('data-id');

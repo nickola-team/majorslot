@@ -22,7 +22,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $title = $site->title;
                 $adminid = $site->adminid;
                 if ($frontend != 'Default') {
-                    $excat[] = 'virtualtech';
+                    // $excat[] = 'virtualtech';
                     $excat[] = 'skywind';
                 }
             }
@@ -144,18 +144,34 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             shuffle($hotgames);
 
             $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
-            $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
+            $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for admin's popup
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
             $msgs = [];
             $unreadmsg = 0;
             if ($notice==null || $shop_id != 0) { //it is logged in
-                $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1, 'type' => 'user'])->first(); //for admin's popup
+                $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for comaster's popup
+                $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get(); //for comaster's popup
             }
+            $trhistory = [];
             if ($shop_id != 0)
             {
                 $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
                 $unreadmsg = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->whereNull('read_at')->count();
+                //transaction history
+
+                $trhistory = \VanguardLTE\WithdrawDeposit::leftJoin('transactions', function($join){
+                    $join->on('withdraw_deposit.id', '=', 'transactions.request_id');
+                })->where('withdraw_deposit.user_id', auth()->user()->id)->orderby('withdraw_deposit.created_at','desc')->take(20)->get(
+                    [
+                        'withdraw_deposit.type',
+                        'withdraw_deposit.status',
+                        'withdraw_deposit.sum',
+                        'withdraw_deposit.created_at',
+                        'transactions.updated_at',
+                    ]
+                );
             }
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'msgs','unreadmsg', 'ppgames'));
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'noticelist','msgs','unreadmsg', 'ppgames', 'trhistory'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {
@@ -225,6 +241,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = auth()->user();
             if ($user)
             {
+                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
                 $user->update(['playing_game' => null]);
             }
             if (!isset($game))
@@ -283,6 +300,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }*/
             $GLOBALS['rgrc'] = config('app.salt');
             $userId = \Illuminate\Support\Facades\Auth::id();
+            $user = \VanguardLTE\User::find($userId);
+            if (!$user || $user->playing_game == 'pp')
+            {
+                exit('unlogged'); // it must be different per every game. but...
+            }
             $object = '\VanguardLTE\Games\\' . $game . '\Server';
             $server = new $object();
             echo $server->get($request, $game, $userId);
@@ -290,6 +312,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         public function game_result(\Illuminate\Http\Request $request)
         {
+            if (!\Illuminate\Support\Facades\Auth::check())
+            {
+                abort(404);
+            }
             $user_id = auth()->user()->id;
             $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
             $statistics = $statistics->where('stat_game.user_id', $user_id);
@@ -312,17 +338,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             //$user_id = auth()->user()->id;
             $bet_rate = $request->bet_rate;
             $game_name = $request->gameType;
-            
-
             $gamepaytable = \VanguardLTE\GamePaytableVT::select('*')->where('game_name', $game_name)->get();
-
-            $Paytable = json_decode($gamepaytable[0]->pay_table, true);
-            for($i = 0; $i < count($Paytable); $i++) {
-                for($j =0; $j < 5; $j++){
-                    $Paytable[$i][$j] = $Paytable[$i][$j] * $bet_rate / 100;
+            if ($gamepaytable->count() > 0){
+                $Paytable = json_decode($gamepaytable[0]->pay_table, true);
+                for($i = 0; $i < count($Paytable); $i++) {
+                    for($j =0; $j < 5; $j++){
+                        $Paytable[$i][$j] = $Paytable[$i][$j] * $bet_rate / 100;
+                    }
                 }
+                return view('frontend.help.'. $game_name.'.pay_table', compact('Paytable'));
             }
-            return view('frontend.help.'. $game_name.'.pay_table', compact('Paytable'));
+            else 
+            {
+                abort(404);
+            }
         }
 
 

@@ -55,7 +55,7 @@ namespace VanguardLTE\Console
 
             })->dailyAt('08:00');
 
-            $schedule->command('daily:reset_ggr')->dailyAt('00:00')->runInBackground();
+            $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
@@ -739,15 +739,22 @@ namespace VanguardLTE\Console
                 $this->info('End');
             });
 
-            \Artisan::command('daily:dealsum {from} {to} {game=all}', function ($from, $to, $game) {
-                set_time_limit(0);                
+            \Artisan::command('daily:dealsum {from} {to} {comastername} {game=all}', function ($from, $to, $comastername, $game) {
+                set_time_limit(0);
                 $this->info("Begin deal calculation");
+                $comaster = \VanguardLTE\User::where('username', $comastername)->first();
+                if (!$comaster || !$comaster->hasRole('comaster'))
+                {
+                    $this->info("Can not find comaster");
+                    return;
+                }
+                $availableUsers = $comaster->availableUsers();
                 if ($game=='all'){
-                    $stat_games = \VanguardLTE\StatGame::where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->get();
+                    $stat_games = \VanguardLTE\StatGame::groupby('user_id','game')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->whereIn('user_id', $availableUsers)->selectRaw('SUM(bet) as bet, win, game, type, user_id, date_time, category_id, game_id')->get();
                 }
                 else
                 {
-                    $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', 'like', '%' . $game . '%')->selectRaw('SUM(bet) as bet, game, type, user_id')->get();
+                    $stat_games = \VanguardLTE\StatGame::groupby('user_id')->where('date_time','>=',$from)->where('date_time','<=',$to)->where('bet','>', 0)->where('game', 'like', '%' . $game . '%')->whereIn('user_id', $availableUsers)->selectRaw('SUM(bet) as bet, win, game, type, user_id')->get();
                 }
                 $this->info("total bet = " . $stat_games->sum('bet') . ', count=' . $stat_games->count());
                 foreach ($stat_games as $stat)
@@ -756,43 +763,8 @@ namespace VanguardLTE\Console
                     $user = \VanguardLTE\User::where('id',$stat->user_id)->first();
                     if ($game=='all')
                     {
-                        $user->processBetDealerMoney_Queue($stat->bet, $stat->game, $stat->type);
+                        $user->processBetDealerMoney_Queue($stat);
                     }
-                    else
-                    {
-                        $betMoney = $stat->bet;
-                        $shop = $user->shop;
-                        $deal_balance = 0;
-                        $deal_mileage = 0;
-                        $deal_percent = 0;
-                        $deal_data = [];
-                        $deal_percent = $shop->deal_percent - $shop->table_deal_percent;
-                        $manager = $user->referral;
-                        if ($manager != null){
-                            if($deal_percent > 0) {
-                                $deal_balance = $betMoney * $deal_percent  / 100;
-                                if ($$shop->deal_balance > $deal_balance)
-                                {
-                                    $$shop->decrement('deal_balance',  $deal_balance);
-                                }
-                            }
-                            $partner = $manager->referral;
-                            while ($partner != null && !$partner->isInoutPartner())
-                            {
-                                $deal_mileage = $deal_balance;
-                                $deal_percent = $partner->deal_percent-$partner->table_deal_percent;
-                                if($deal_percent > 0) {
-                                    $deal_balance = $betMoney * $deal_percent  / 100;
-                                    if ($partner->deal_balance > $deal_balance)
-                                    {
-                                        $partner->decrement('deal_balance',  $deal_balance);
-                                    }
-                                }
-                                $partner = $partner->referral;
-                            }
-                        }
-                    }
-                    
                 }
                 $this->info('End deal calculation');
             });
@@ -883,6 +855,12 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End reset game bank');
             });
+            \Artisan::command('daily:snapshot', function () {
+                \DB::statement('DROP TABLE IF EXISTS w_users_snapshot');
+                \DB::statement('CREATE TABLE w_users_snapshot AS SELECT * FROM w_users');
+                \DB::statement('DROP TABLE IF EXISTS w_shops_snapshot');
+                \DB::statement('CREATE TABLE w_shops_snapshot AS SELECT * FROM w_shops');
+            });
             \Artisan::command('daily:reset_ggr {masterid=0}', function ($masterid) {
                 $this->info('Begin reset calculation');
                 if ($masterid>0)
@@ -908,25 +886,25 @@ namespace VanguardLTE\Console
                                 $summ = $ggr;
                                 if ($summ > 0) {
                                     //out balance from master
-                                    $master = $user->referral;
-                                    while ($master!=null && !$master->isInoutPartner())
+                                    $comaster = $user->referral;
+                                    while ($comaster!=null && !$comaster->isInoutPartner())
                                     {
-                                        $master = $master->referral;
+                                        $comaster = $comaster->referral;
                                     }
 
-                                    if ($master == null)
+                                    if ($comaster == null)
                                     {
-                                        $this->warn('Can not find master');
-                                        return ;
+                                        $this->warn('Can not find comaster');
+                                        continue ;
                                     }
                                     
-                                    if ($master->balance < $summ )
+                                    if ($comaster->balance < $summ )
                                     {
-                                        $this->warn('Masters balance is not enough');
-                                        return ;
+                                        $this->warn('CoMasters balance is not enough');
+                                        continue ;
                                     }
-                                    $master->update(
-                                        ['balance' => $master->balance - $summ]
+                                    $comaster->update(
+                                        ['balance' => $comaster->balance - $summ]
                                     );
                                     
                                     $old = $user->balance;
@@ -935,17 +913,17 @@ namespace VanguardLTE\Console
                                     $user->save();
                                     $user = $user->fresh();
 
-                                    $master = $master->fresh();
+                                    $comaster = $comaster->fresh();
 
                                     \VanguardLTE\Transaction::create([
                                         'user_id' => $user->id,
-                                        'payeer_id' => $master->id,
+                                        'payeer_id' => $comaster->id,
                                         'system' => $user->username,
                                         'type' => 'ggr_out',
                                         'summ' => $summ,
                                         'old' => $old,
                                         'new' => $user->balance,
-                                        'balance' => $master->balance,
+                                        'balance' => $comaster->balance,
                                         'shop_id' => 0
                                     ]);
                                 }
@@ -956,25 +934,25 @@ namespace VanguardLTE\Console
                             $summ = $real_deal_balance;
                             if ($summ > 0) {
                                 //out balance from master
-                                $master = $user->referral;
-                                while ($master!=null && !$master->isInoutPartner())
+                                $comaster = $user->referral;
+                                while ($comaster!=null && !$comaster->isInoutPartner())
                                 {
-                                    $master = $master->referral;
+                                    $comaster = $comaster->referral;
                                 }
 
-                                if ($master == null)
+                                if ($comaster == null)
                                 {
-                                    $this->warn('Can not find master');
-                                    return ;
+                                    $this->warn('Can not find comaster');
+                                    continue ;
                                 }
                                 
-                                if ($master->balance < $summ )
+                                if ($comaster->balance < $summ )
                                 {
                                     $this->warn('Masters balance is not enough');
-                                    return ;
+                                    continue ;
                                 }
-                                $master->update(
-                                    ['balance' => $master->balance - $summ]
+                                $comaster->update(
+                                    ['balance' => $comaster->balance - $summ]
                                 );
                                 
                                 $old = $user->balance;
@@ -986,17 +964,17 @@ namespace VanguardLTE\Console
                                 $user->save();
                                 $user = $user->fresh();
 
-                                $master = $master->fresh();
+                                $comaster = $comaster->fresh();
 
                                 \VanguardLTE\Transaction::create([
                                     'user_id' => $user->id,
-                                    'payeer_id' => $master->id,
+                                    'payeer_id' => $comaster->id,
                                     'system' => $user->username,
                                     'type' => 'deal_out',
                                     'summ' => $summ,
                                     'old' => $old,
                                     'new' => $user->balance,
-                                    'balance' => $master->balance,
+                                    'balance' => $comaster->balance,
                                     'shop_id' => 0
                                 ]);
                             }

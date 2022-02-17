@@ -102,6 +102,21 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         'uses' => 'DashboardController@adjustment_partner',
         'middleware' => 'permission:stats.game',
     ]);
+    Route::get('/adjustment_ggr', [
+        'as' => 'slot.adjustment_ggr',
+        'uses' => 'DashboardController@adjustment_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/process_ggr', [
+        'as' => 'slot.process_ggr',
+        'uses' => 'DashboardController@process_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
+    Route::get('/reset_ggr', [
+        'as' => 'slot.reset_ggr',
+        'uses' => 'DashboardController@reset_ggr',
+        'middleware' => 'permission:stats.game',
+    ]);
 
     Route::get('/adjustment_daily', [
         'as' => 'slot.adjustment_daily',
@@ -263,6 +278,33 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         'uses' => 'UsersController@tree',
         'middleware' => 'permission:users.tree'
     ]);
+    Route::get('black', [
+        'as' => 'slot.black.list',
+        'uses' => 'UsersController@blacklist',
+    ]);
+    Route::get('black/create', [
+        'as' => 'slot.black.create',
+        'uses' => 'UsersController@blackcreate',
+    ]);
+    Route::post('black/create', [
+        'as' => 'slot.black.store',
+        'uses' => 'UsersController@blackstore',
+    ]);
+
+    Route::get('black/{blackid}/edit', [
+        'as' => 'slot.black.edit',
+        'uses' => 'UsersController@blackedit',
+    ]);  
+    Route::post('black/{blackid}/update', [
+        'as' => 'slot.black.update',
+        'uses' => 'UsersController@blackupdate',
+    ]);
+    Route::delete('black/{blackid}/remove', [
+        'as' => 'slot.black.remove',
+        'uses' => 'UsersController@blackremove',
+    ]);
+
+
     Route::get('partner/{role_id}', [
         'as' => 'slot.user.partner',
         'uses' => 'UsersController@partner',
@@ -348,6 +390,10 @@ Route::prefix('slot')->middleware(['auth'])->group(function () {
         'as' => 'slot.user.update.details',
         'uses' => 'UsersController@updateDetails'
     ]);
+    Route::get('user/{user}/update/reset_confirm_pwd', [
+        'as' => 'slot.user.update.resetpwd',
+        'uses' => 'UsersController@resetConfirmPwd'
+    ]);  
     Route::post('user/{user}/update/move', [
         'as' => 'slot.user.update.move',
         'uses' => 'UsersController@move'

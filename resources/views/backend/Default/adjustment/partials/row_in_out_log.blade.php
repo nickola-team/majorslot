@@ -16,11 +16,17 @@
 	@endif
 	@endif
 	@if (auth()->user()->isInoutPartner())
-	@if ($in_out_log->user)
 	<?php
 		$end = auth()->user()->level();
-		$begin = $in_out_log->user->level();
-		$parent = $in_out_log->user->referral;
+		if ($in_out_log->user){
+			$begin = $in_out_log->user->level();
+			$parent = $in_out_log->user->referral;
+		}
+		else
+		{
+			$begin = 3;
+			$parent = null;
+		}
 		for ($l=3;$l<$end;$l++)
 		{
 			if ($l<=$begin)
@@ -29,14 +35,17 @@
 			}
 			else
 			{
-				echo "<td>".$parent->username."</td>";
-				$parent = $parent->referral;
+				if ($parent) {
+					echo "<td>".$parent->username."</td>";
+					$parent = $parent->referral;
+				}
+				else
+				{
+					echo "<td></td>";
+				}
 			}
 		}
 	?>
-	@else
-	<td></td>
-	@endif
 	@endif
 	@if($in_out_log->type == 'add' )
 	<td><span class="text-green">{{ number_format($in_out_log->sum,0) }}</span></td>

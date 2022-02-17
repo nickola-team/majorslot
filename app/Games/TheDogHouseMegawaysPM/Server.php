@@ -647,7 +647,8 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 // *** added & changed by pine ***
                 if( $LASTSPIN === NULL) {
                     // throw exception
-                    return '';
+                    $response = 'unlogged';
+                    exit($response);
                 }
                 if($scattersCount < 3){
                     $lastReel = explode(',', $LASTSPIN->s);

@@ -12,13 +12,13 @@
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
     <script>
         function injectJS() {
-            var iFrameDoc = window.frames["embedgameIframe"].contentWindow.document;         
-            var myscript = document.createElement('script');
-            myscript.type = 'text/javascript';
-            myscript.src = '/frontend/Default/js/dev_tools.js';
-            if (iFrameDoc){
-                iFrameDoc.head.appendChild(myscript);
-            }
+            // var iFrameDoc = window.frames["embedgameIframe"].contentWindow.document;         
+            // var myscript = document.createElement('script');
+            // myscript.type = 'text/javascript';
+            // myscript.src = '/frontend/Default/js/dev_tools.js';
+            // if (iFrameDoc){
+            //     iFrameDoc.head.appendChild(myscript);
+            // }
         }
         window.onload = function () {
             document.documentElement.style.width = "100%";
@@ -37,6 +37,7 @@
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1,maximum-scale=1, user-scalable=no');
             }
         };
+        
     </script>
     <script type="text/javascript">
         /* 
@@ -190,6 +191,13 @@
             }
             console.log(JSON.stringify(message.data));
 
+        }
+        //for pp live games
+        window.onbeforeunload = function () {
+            console.log('exiting game');
+            var formData = new FormData();
+            formData.append("name", "notifyCloseContainer");
+            navigator.sendBeacon('/pp/userbet', formData);
         }
     </script>
     @endif

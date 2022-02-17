@@ -1380,7 +1380,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $promo->racedetails = $response->body();
                 }
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v2/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v3/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->tournamentleaderboard = $response->body();
@@ -1515,6 +1515,36 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             // return response($data, 200)->header('Content-Type', 'application/json');
             return response()->json($data);
             
+        }
+
+        public function savesettings($ppgame, \Illuminate\Http\Request $request)
+        {
+            $userId = auth()->user()->id;
+            $object = '\VanguardLTE\Games\\' . $ppgame . '\SlotSettings';
+            if (!class_exists($object))
+            {
+                return response('SoundState=true_true_true_false_false');
+            }
+            $slot = new $object($ppgame, $userId);
+
+            if ($request->method == 'load') // send settings to client from server
+            {
+                $settings = $slot->GetGameData('settings');
+                if ($settings)
+                {
+                    return response($settings);
+                }
+                else
+                {
+                    return response('SoundState=true_true_true_false_false');
+                }
+            }
+            else //save settings to server from client
+            {
+                $slot->SetGameData('settings', $request->settings);
+                $slot->SaveGameData();
+                return response($request->settings);
+            }
         }
 
     }

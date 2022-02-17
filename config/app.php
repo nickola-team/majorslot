@@ -64,7 +64,7 @@ return [
 
     'url' => env('APP_URL', 'http://major999.com/'),
 
-    'server_addr' => env('APP_SERVER', 'major999.com'),
+    'server_addr' => env('APP_SERVER', 'game.major999.com'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -160,6 +160,12 @@ return [
     'ata_toporg' => env('ATA_TOPORG', 'MajorGroup'),
     'ata_org' => env('ATA_ORG', 'major'),
     'ata_key' => env('ATA_KEY', 'test'),
+
+    /*
+    GAC Auth key
+    */
+    'gac_api' => env('GAC_API', ''),
+    'gac_key' => env('GAC_KEY', 'test'),
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),

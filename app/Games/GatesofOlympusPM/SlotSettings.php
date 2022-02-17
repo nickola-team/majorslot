@@ -784,7 +784,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
             $_obf_grantbonus_count++;
 
             if ($isDouble) {
-                $_obf_grantwin_count++;
+                // $_obf_grantwin_count++;
                 $_obf_grantbonus_count++;
             }
             
@@ -930,7 +930,12 @@ namespace VanguardLTE\Games\GatesofOlympusPM
 
         public function GenerateScatterCount($winType, $slotEvent){ // Scatter수 생성 함수
             if($winType == 'bonus'){      
-                if ($slotEvent == 'freespin') {
+                if ($slotEvent == 'buy_freespin') {
+                    $probabilityMap = [
+                            4 => 100,
+                    ];
+                }
+                else if ($slotEvent == 'freespin') {
                     /* 프리스핀중에는 스캐터 3개이상일때 보너스당첨 */
                     $probabilityMap = [
                         3 => 90,
@@ -1232,7 +1237,12 @@ namespace VanguardLTE\Games\GatesofOlympusPM
                 if ($proposedScatterCount > 0) {
                     $uniqueSymbols = [];
                     for ($i=0; $i < $proposedScatterCount; $i++) { 
-                        while( in_array( ($randReelId = random_int(0, $REELCOUNT - 1)), $uniqueSymbols));
+                        if ($slotEvent == 'buy_freespin') {
+                            while( in_array( ($randReelId = random_int(1, $REELCOUNT - 2)), $uniqueSymbols));
+                        }
+                        else {
+                                while( in_array( ($randReelId = random_int(0, $REELCOUNT - 1)), $uniqueSymbols));
+                        }
 
                         /* 스캐터심볼을 넣을수 있는 위치배열 */
                         $availablePoses = array_where($reels['symbols'][$randReelId], function ($symbol, $key) {

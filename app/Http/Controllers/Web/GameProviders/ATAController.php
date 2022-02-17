@@ -171,6 +171,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 1000,
                 ];
             }
+            if ($user->playing_game == 'pp')
+            {
+                return [
+                    'code' => 1007,
+                ];
+            }
             $record = $this->checkreference($reference);
             if ($record)
             {
@@ -569,7 +575,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $gameList = [];
-            $slotgameString = ['Slot game', 'Video Slot','3-Reel Slot Machine', '5-Reel Slot Machine'];
+            $slotgameString = ['Slot game', 'Video Slot','3-Reel Slot Machine', '5-Reel Slot Machine', 'SLOT','5x5 Grid Slot Machine','7x7 Grid Slot Machine','5x7 Grid Slot Machine','8x8 Grid Slot Machine','3x3 Grid Slot Machine','6x6 Grid Slot Machine'];
             $exceptGames = [ 150328,150331,150332,150325,150319,150320,150316,150312,150298,150295,150294,150268,150267,150266,150265,150264,150251,150250,150249,150244,150237,150236,150235,150232,150233,150212,150207,150196,150174,150209,150206,150200,150181,150202,150215,150211,150010,150205,150012];
             if ($resultdata['code'] == 0){
 
@@ -629,7 +635,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'loginname' => $user->id,
                 'key' => $user->api_token,
                 'currency' => 'KRW',
-                'lang' => 'kr',
+                'lang' => 'ko',
                 'gameid' => $gamecode,
                 'org' => config('app.ata_org'),
                 'home' => url('/'),

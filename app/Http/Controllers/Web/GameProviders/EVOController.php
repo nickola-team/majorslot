@@ -210,7 +210,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
             $user = \VanguardLTE\User::find($userid);
-            if (!$user || !$user->hasRole('user') || $user->api_token != $token){
+            if (!$user || !$user->hasRole('user') || $user->api_token != $token || $user->playing_game == 'pp'){
                 $response['status'] = 'INVALID_SID';
                 return $response;
             }
@@ -229,13 +229,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $game = $this->getGameObj($tableid);
             
             $category = \VanguardLTE\Category::where(['provider' => 'evo', 'shop_id' => 0, 'href' => $game['href']])->first();
+            $gamename = '';
+            if ($game){
+                $gamename = $game['name'] . '_' . $game['href'];
+            }
 
+            //check if result is tie
+            $betamount = 0;
+            $betrounds = \VanguardLTE\StatGame::where(['user_id' => $user->id, 'roundid' => $roundid, 'game_id' => $tableid])->get();
+            if (count($betrounds) > 0)
+            {
+                $betamount = $betrounds->sum('bet');
+            }
+            if ($betamount == $amount) // this is tie
+            {
+                $gamename = $gamename . '_tie';
+            }
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => floatval($user->balance), 
                 'bet' => 0, 
                 'win' => $amount, 
-                'game' => $game['name'] . '_' . $game['href'] , 
+                'game' =>  $gamename, 
                 'type' => ($game['type']=='slot')?'slot':'table',
                 'percent' => 0, 
                 'percent_jps' => 0, 
@@ -428,6 +443,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $code =  $game['gamecode'];
             }
 
+            $ip = \Request::ip();
+            if(!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $ip = '192.168.1.1';
+            }
+
             $data = [
                 'uuid' => EVOController::microtime_string(),
                 'player' => [
@@ -441,7 +461,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'currency' => 'KRW',
                     'session' => [
                         'id' => $user->api_token,
-                        'ip' => \Request::ip(),
+                        'ip' => $ip,
                     ],
                     'group' => [
                         'id' => config('app.evo_groupid_live'),

@@ -1388,6 +1388,25 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                                 }
 
                                 $randomPos = array_rand($availablePoses);         
+                                // 이미 스캐터심볼이 잇다면 그 좌우위치에만 배치
+                                if (count($availablePoses) <= 3) {
+                                    if ($randomPos == 0) {
+                                            if ($reels['top']['symbols'][1] != $S_SCATTER) {
+                                                    $i--;
+                                                    continue;
+                                            }
+                                    }
+                                    else if ($randomPos == 3) {
+                                            if ($reels['top']['symbols'][2] != $S_SCATTER) {
+                                                    $i--;
+                                                    continue;
+                                            }
+                                    }
+                                    else if ($reels['top']['symbols'][$randomPos - 1] != $S_SCATTER && $reels['top']['symbols'][$randomPos + 1] != $S_SCATTER) {
+                                            $i--;
+                                            continue;
+                                    }
+                                }
                                 $reels['top']['symbols'][$randomPos] = $S_SCATTER;
                             }    
                         }

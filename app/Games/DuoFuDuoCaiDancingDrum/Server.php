@@ -31,7 +31,7 @@ namespace VanguardLTE\Games\DuoFuDuoCaiDancingDrum
             $userId = \Auth::id();// changed by game developer
             
             $serverAddress = config('app.server_addr');
-            $serverPort = '8555';
+            $serverPort = '80';
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
             $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
             $slotSettings = new SlotSettings($game, $userId, $credits);
