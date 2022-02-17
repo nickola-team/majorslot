@@ -280,7 +280,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
         }
         public function SetGameData($key, $value)
         {
-            $diffIndex = 86400;
+            $diffIndex = 864000;
             $this->gameData[$key] = [
                 'timelife' => time() + $diffIndex, 
                 'payload' => $value
