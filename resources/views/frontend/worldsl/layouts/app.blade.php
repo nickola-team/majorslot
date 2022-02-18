@@ -697,12 +697,12 @@
 										</tr>
 										<tr>
 											<td class="write_title">예금주명</td>
-											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
+											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
 										</tr>
 
 										<tr>
 											<td class="write_title">계좌번호</td>
-											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
+											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
 										</tr>
 										
 										
@@ -775,12 +775,12 @@
 										</tr>
 										<tr>
 											<td class="write_title">예금주명</td>
-											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
+											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
 										</tr>
 
 										<tr>
 											<td class="write_title">계좌번호</td>
-											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
+											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
 										</tr>
 										<tr>
 											<td class="write_title">신청금액</td>
