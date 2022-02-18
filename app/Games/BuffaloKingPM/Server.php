@@ -47,6 +47,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
             }
             if( !isset($slotEvent['action']) ) 
             {
+                $slotSettings->SaveErrorLog(48, 'No Action');
                 return '';
             }
             $slotEvent['slotEvent'] = $slotEvent['action'];
@@ -317,21 +318,25 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     if( $lines <= 0 || $betline <= 0.0001 ) 
                     {
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bet state"}';
+                        $slotSettings->SaveErrorLog(318, $response);
                         exit( $response );
                     }
                     if( $slotEvent['slotEvent'] == 'doSpin' && $slotSettings->GetBalance() < ($lines * $betline) ) 
                     {
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid balance"}';
+                        $slotSettings->SaveErrorLog(324, $response);
                         exit( $response );
                     }
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotEvent['slotEvent'] == 'freespin' ) 
                     {
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bonus state"}';
+                        $slotSettings->SaveErrorLog(330, $response);
                         exit( $response );
                     }
                     if($slotEvent['slotEvent'] == 'freespin'){
                         if ($lastEvent->serverResponse->bet != $betline){
                             $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid Bets"}';
+                            $slotSettings->SaveErrorLog(339, $response);
                         exit( $response );
                         }
                     }

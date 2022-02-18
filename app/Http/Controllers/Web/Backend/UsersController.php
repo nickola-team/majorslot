@@ -1197,6 +1197,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                     ]);
                 }
             }
+            if (empty($data['memo']))
+            {
+                if ($user->memo)
+                {
+                    $user->memo->delete();
+                }
+            }
+            else
+            {
+                if ($user->memo)
+                {
+                    $user->memo->update(['memo' => $data['memo']]);
+                }
+                else
+                {
+                    \VanguardLTE\UserMemo::create([
+                        'user_id' => $user->id,
+                        'writer_id' => auth()->user()->id,
+                        'memo' => $data['memo']
+                    ]);
+                }
+            }
             event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
             if( $this->userIsBanned($user, $request) ) 
             {

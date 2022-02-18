@@ -548,6 +548,23 @@ namespace VanguardLTE\Games\BuffaloKingPM
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
             //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
+        public function SaveErrorLog($line, $message)
+        {
+            $_obf_strlog = '';
+            $_obf_strlog .= "\n";
+            $_obf_strlog .= date("Y-m-d H:i:s") . ' ';
+            $_obf_strlog .= ('Line :' . $line . ', Message : ' . $message);
+            $_obf_strlog .= "\n";
+            $_obf_strlog .= ' ############################################### ';
+            $_obf_strlog .= "\n";
+            $_obf_strinternallog = '';
+            if( file_exists(storage_path('logs/') . $this->slotId . 'BuffaloKingPM.log') ) 
+            {
+                $_obf_strinternallog = file_get_contents(storage_path('logs/') . $this->slotId . 'BuffaloKingPM.log');
+            }
+            file_put_contents(storage_path('logs/') . $this->slotId . 'BuffaloKingPM.log', $_obf_strinternallog . $_obf_strlog);
+            //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
+        }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isBuyFreespin = -1)
         {
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
