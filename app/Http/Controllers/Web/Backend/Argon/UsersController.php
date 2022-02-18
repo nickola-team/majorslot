@@ -189,7 +189,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function balance(\Illuminate\Http\Request $request)
         {
             $type = 'add';
-            return view('backend.argon.common.balance',compact('type'));
+            if ($request->type != '')
+            {
+                $type = $request->type;
+            }
+            $userid = -1;
+            if ($request->id != '')
+            {
+                $userid = $request->id;
+            }
+            
+            $availableUsers = auth()->user()->availableUsers();
+            if (!in_array($userid, $availableUsers))
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+            $user = \VanguardLTE\User::find($userid);
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+            $url = $request->url;
+            
+            return view('backend.argon.common.balance',compact('type', 'user', 'url'));
         }
     }
 

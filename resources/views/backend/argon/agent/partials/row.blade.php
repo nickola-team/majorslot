@@ -23,8 +23,8 @@
     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
         <a class="dropdown-item" href="#">설정 및 정보</a>
         <hr class="my-1">
-        <a class="dropdown-item" href="{{argon_route('argon.common.balance', ['type' => 'add', 'role' => $user->role_id])}}">충 전</a>
-        <a class="dropdown-item" href="#">환 전</a>
+        <a class="dropdown-item" href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}">충 전</a>
+        <a class="dropdown-item" href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}">환 전</a>
         <a class="dropdown-item" href="{{argon_route('argon.agent.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
     </div>
 </div>

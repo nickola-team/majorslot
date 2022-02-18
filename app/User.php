@@ -1163,6 +1163,11 @@ namespace VanguardLTE
 
             return $sum + $sumShop - $this->balance;
         }
+        
+        public function bankInfo()
+        {
+            return $this->bank_name . ' - ' . $this->account_no . ' - ' . $this->recommender;
+        }
 
 
 
