@@ -1,6 +1,6 @@
 @if(isset ($errors) && count($errors) > 0)
     <div class="alert alert-danger">
-        <h4>{{__('Error')}}</h4>
+        <h4>오류</h4>
         @foreach($errors->all() as $error)
             <p>{{ $error }}</p>
         @endforeach
@@ -12,13 +12,13 @@
     @if (is_array($data))
         @foreach ($data as $msg)
 	        <div class="alert alert-success">
-                <h4>{{__('Success')}}</h4>
+                <h4>조작성공</h4>
                 <p>{{ $msg }}</p>
             </div>
         @endforeach
     @else
 	        <div class="alert alert-success">
-                <h4>{{__('Success')}}</h4>
+                <h4>조작성공</h4>
             <p>{{ $data }}</p>
             </div>
     @endif

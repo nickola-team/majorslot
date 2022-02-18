@@ -213,6 +213,48 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             return view('backend.argon.common.balance',compact('type', 'user', 'url'));
         }
+
+        public function updateBalance(\Illuminate\Http\Request $request)
+        {
+            $data = $request->all();
+            if( !array_get($data, 'type') ) 
+            {
+                $data['type'] = 'add';
+            }
+            $user = \VanguardLTE\User::lockForUpdate()->find($request->user_id);
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+
+            if (!in_array($user->id, auth()->user()->availableUsers()))
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+
+            if ($user->playing_game != null )
+            {
+                return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
+            }
+
+            $summ = str_replace(',','',$request->amount);
+
+            if( $request->all && $request->all == '1' ) 
+            {
+                $summ = $user->balance;
+            }
+            $result = $user->addBalance($data['type'], abs($summ), false, 0, null, isset($data['reason'])?$data['reason']:null);
+            
+            $result = json_decode($result, true);
+
+
+            if( $result['status'] == 'error' ) 
+            {
+                return redirect()->back()->withErrors([$result['message']]);
+            }
+            
+            return redirect($request->url)->withSuccess($result['message']);
+        }
     }
 
 }

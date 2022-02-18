@@ -64,6 +64,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'UsersController@balance',
         ]);
 
+        Route::post('/common/balance', [
+            'as' => 'argon.common.balance.post',
+            'uses' => 'UsersController@updateBalance',
+        ]);
+
     });
 });
 

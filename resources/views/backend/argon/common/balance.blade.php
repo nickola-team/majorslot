@@ -15,7 +15,11 @@
             </div>
             <hr class="my-1">
             <div class="card-body">
-                <form action="" method="GET" >
+                <form action="" method="POST"  id="form">
+                    <input type="hidden" value="{{$type}}" name="type">
+                    <input type="hidden" value="{{$url}}" name="url">
+                    <input type="hidden" value="{{$user->id}}" name="user_id">
+                    <input type="hidden" id="outAll" name="all" value="0">
                     <div class="form-group row">
                         <div class="col-6 text-center">
                             이 름
@@ -32,14 +36,14 @@
                             {{$user->role->description}}
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <!-- <div class="form-group row">
                         <div class="col-6 text-center">
                             계좌 정보
                         </div>
                         <div class="col-6">
                             {{$user->bankInfo()}}
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group row">
                         <div class="col-6 text-center">
                             현재 보유금
@@ -66,12 +70,32 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-6 text-right">
-                            <button type="submit" class="btn {{$type=='add'?'btn-primary':'btn-warning'}} col-8">{{$type=='add'?'충전':'환전'}}</button>
+                        <div class="col-6 text-center">
+                        {{$type=='add'?'충전':'환전'}}사유
                         </div>
-                        <div class="col-6 text-left">
-                            <button type="button" class="btn btn-secondary col-8" onclick="location.href='{{$url}}';">취소</button>
+                        <div class="col-6">
+                            <input class="form-control col-8" type="text" value="" id="reason" name="reason">
                         </div>
+                    </div>
+                    <div class="form-group row">
+                        @if ($type=='add')
+                            <div class="col-6 text-right">
+                                <button type="button" class="btn btn-primary col-8" id="doSubmit">충전</button>
+                            </div>
+                            <div class="col-6 text-left">
+                                <button type="button" class="btn btn-secondary col-8" onclick="location.href='{{$url}}';">취소</button>
+                            </div>
+                        @else
+                            <div class="col-4 text-right">
+                                <button type="button" class="btn btn-warning col-8" id="doSubmit">환전</button>
+                            </div>
+                            <div class="col-4 text-center">
+                                <button type="button" class="btn btn-danger col-8" id="doOutAll">모두환전</button>
+                            </div>
+                            <div class="col-4 text-left">
+                                <button type="button" class="btn btn-secondary col-8" onclick="location.href='{{$url}}';">취소</button>
+                            </div>
+                        @endif
                     </div>
                     
                 </form>
@@ -94,6 +118,15 @@
         {
             $('#amount').val($v + $(event.target).data('value'));
         }
+    });
+    $('#doOutAll').click(function () {
+			$(this).attr('disabled', 'disabled');
+			$('#outAll').val('1');
+			$('form#form').submit();
+    });
+    $('#doSubmit').click(function () {
+        $(this).attr('disabled', 'disabled');
+        $('form#form').submit();
     });
 </script>
 @endpush
