@@ -347,6 +347,10 @@ namespace VanguardLTE\Games\SweetBonanzaPM
                         $reels = $slotSettings->GetTumbReelStrips($lastReel, $reelSet_Num);
                     }else{
                         if($isbuyfreespin == 0 && mt_rand(0, 100) < 50){
+                            if($defaultScatterCount == 0){
+                                $response = 'unlogged';
+                                exit( $response );
+                            }
                             $reels = $slotSettings->GetBuyFreeSpinReelStrips($defaultScatterCount);
                         }else{
                             $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $reelSet_Num, $defaultScatterCount);
