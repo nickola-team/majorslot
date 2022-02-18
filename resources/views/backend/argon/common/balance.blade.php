@@ -66,7 +66,7 @@
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="100000">10만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="200000">20만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="500000">50만</button>
-                            <button type="button" class="btn btn-primary mb-1 changeAmount" data-value="0">정정</button>
+                            <button type="button" class="btn btn-primary mb-1 changeAmount" data-value="0">리셋</button>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -87,13 +87,13 @@
                             </div>
                         @else
                             <div class="col-4 text-right">
-                                <button type="button" class="btn btn-warning col-8" id="doSubmit">환전</button>
+                                <button type="button" class="btn btn-warning col-12" id="doSubmit">환전</button>
                             </div>
                             <div class="col-4 text-center">
-                                <button type="button" class="btn btn-danger col-8" id="doOutAll">모두환전</button>
+                                <button type="button" class="btn btn-danger col-12" id="doOutAll">모두환전</button>
                             </div>
                             <div class="col-4 text-left">
-                                <button type="button" class="btn btn-secondary col-8" onclick="location.href='{{$url}}';">취소</button>
+                                <button type="button" class="btn btn-secondary col-12" onclick="location.href='{{$url}}';">취소</button>
                             </div>
                         @endif
                     </div>
