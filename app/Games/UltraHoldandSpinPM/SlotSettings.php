@@ -341,7 +341,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
         }
         public function SetGameData($key, $value)
         {
-            $diffIndex = 86400;
+            $diffIndex = 86400 * 7;
             $this->gameData[$key] = [
                 'timelife' => time() + $diffIndex, 
                 'payload' => $value

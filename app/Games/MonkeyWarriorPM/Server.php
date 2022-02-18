@@ -371,7 +371,7 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                         else if($winType == 'bonus' && $scattersCount >= 3 && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
                             break;  // give freespin per 450spins over
                         }
-                        else if($fiveSymbol > 0 && $fiveSymbol <= 5 && mt_rand(0, 100) < 70){
+                        else if($fiveSymbol > 0 && $fiveSymbol <= 5 && mt_rand(0, 100) < 90){
                             $test_str = '';
                         }
                         else if( $moneyTotalWin + $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 

@@ -319,7 +319,7 @@ namespace VanguardLTE\Games\GatesofOlympusPM
         }
         public function SetGameData($key, $value)
         {
-            $diffIndex = 864000;
+            $diffIndex = 86400 * 7;
             $this->gameData[$key] = [
                 'timelife' => time() + $diffIndex, 
                 'payload' => $value
