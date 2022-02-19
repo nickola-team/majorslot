@@ -255,6 +255,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             return redirect($request->url)->withSuccess($result['message']);
         }
+
+        public function profile(\Illuminate\Http\Request $request)
+        {
+            return view('backend.argon.common.profile');
+        }
+
     }
 
 }

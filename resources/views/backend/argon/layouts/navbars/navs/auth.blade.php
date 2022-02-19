@@ -82,7 +82,7 @@
                         <div class=" dropdown-header noti-title">
                             <!-- <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6> -->
                         </div>
-                        <a href="#" class="dropdown-item">
+                        <a href="{{argon_route('argon.common.profile')}}" class="dropdown-item">
                             <i class="ni ni-single-02"></i>
                             <span>설정 및 정보</span>
                         </a>

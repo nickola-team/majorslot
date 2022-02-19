@@ -69,6 +69,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'UsersController@updateBalance',
         ]);
 
+        Route::get('/user/profile', [
+            'as' => 'argon.common.profile',
+            'uses' => 'UsersController@profile',
+        ]);
+
     });
 });
 
