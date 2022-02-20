@@ -166,6 +166,12 @@ namespace VanguardLTE\Games\PirateGoldPM
                 $winType = $_spinSettings[0];                   // 보상방식
                 $_winAvaliableMoney = $_spinSettings[1];        // 당첨금 한도
 
+                // *** added by pine ***
+                $isGeneratedFreeStack = false;
+                $freeStacks = []; // free stacks
+                $isForceWin = false;
+                // *** - ***
+                
                 /* Balance 업데이트 */
                 if ($slotEvent['slotEvent'] == 'freespin') {
                     $allBet = 0;
@@ -177,6 +183,32 @@ namespace VanguardLTE\Games\PirateGoldPM
                     $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
                     $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney);
                 }
+
+                // *** added by pine ***
+                if ($slotEvent['slotEvent'] === 'freespin') {
+                    $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')  ?? [];
+                    if(count($freeStacks) >= $fsmax){
+                        $isGeneratedFreeStack = true;
+                    }
+                    $leftFreeGames = $fsmax - $fs;
+                    if($leftFreeGames <= mt_rand(1 , 2) && ($LASTSPIN->tw ?? 0) == 0){
+                        $winType = 'win';
+                        $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
+                        $isForceWin = true;
+                    }    
+                    $regularSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') ?? 0;
+                }else{
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '275' . substr($roundstr, 4, 7);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                    $regularSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') ?? 0 + 1;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $regularSpinCount);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
+                    $leftFreeGames = 0;
+                }
+                // *** - ***
 
                 $BALANCE = $slotSettings->GetBalance();
 
@@ -193,16 +225,25 @@ namespace VanguardLTE\Games\PirateGoldPM
                     $moneySymbols = [];
                     $moneySymbolValues = array_fill(0, 20, 0);
                     $moneySymbolTypes = array_fill(0, 20, 'r');
-                    
-                    /* 릴배치표 생성 */
-                    if ($overtry) {
-                        /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
-                        $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent']);
+
+                    // *** added by pine ***
+                    if($isGeneratedFreeStack == true){
+                        $freeStack = $freeStacks[$fs - 1];
+                        $reels = $freeStack['Reel'];
+                        $moneySymbolValues = $freeStack['MoneySymbolValues'];
                     }
                     else {
-                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
-                    }
+                    // *** - ***
 
+                        /* 릴배치표 생성 */
+                        if ($overtry) {
+                            /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
+                            $reels = $slotSettings->GetLimitedReelStrips($slotEvent['slotEvent']);
+                        }
+                        else {
+                            $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                        }
+                    }
                     /* 릴셋 1차원배열 생성 */
                     $flattenSymbols = [];
                     foreach ($reels['symbols'] as $reelId => $symbols) {
@@ -221,8 +262,12 @@ namespace VanguardLTE\Games\PirateGoldPM
 
                     /* 머니심볼 머니배당 */
                     foreach ($moneySymbols as $pos => $symbol) {
-                        $idx = array_rand($MoneyTable["standard"]);
-                        $moneySymbolValues[$pos] = $MoneyTable["standard"][$idx];
+                        // *** added & changed by pine ***
+                        if($isGeneratedFreeStack == false){
+                            $idx = array_rand($MoneyTable["standard"]);
+                            $moneySymbolValues[$pos] = $MoneyTable["standard"][$idx];
+                        }
+                        // *** - ***
                         $moneySymbolTypes[$pos] = "v";
                     }
 
@@ -238,6 +283,17 @@ namespace VanguardLTE\Games\PirateGoldPM
                         $overtry = true;
                         continue;
                     }
+
+                    // *** added by pine ***
+                    if($isGeneratedFreeStack == true){
+                        /* 스핀 당첨금 */
+                        $winMoney = array_reduce($winLines, function($carry, $winLine) {
+                            $carry += $winLine['Money']; 
+                            return $carry;
+                        }, 0);
+                        break;  //freestack
+                    }
+                    // *** - ***
 
                     if ($winType != "bonus" && count($bonusSymbols) == 3) {
                         continue;
@@ -257,6 +313,11 @@ namespace VanguardLTE\Games\PirateGoldPM
                             return $carry;
                         }, 0);
 
+                        // *** added by pine ***
+                        if($isForceWin == true && $winMoney > 0 && $winMoney < $bet * $lines * 10){
+                            break;   // win by force when winmoney is 0 in freespin
+                        }
+                        // *** - ***
                         /* 당첨금이 한도이상일때 스킵 */
                         if ($winMoney >= $_winAvaliableMoney) {
                             continue;
@@ -336,8 +397,18 @@ namespace VanguardLTE\Games\PirateGoldPM
                         /* 럭키스핀 최대 머니심볼갯수 결정, 보관 */
                         $maxMoneySymbolsCount = random_int(count($moneySymbols) + 1, 16);
                         $slotSettings->SetGameData($slotSettings->slotId . 'LSMaxSymbols', $maxMoneySymbolsCount);
+                        
+                        // *** added by pine ***
+                        $isState = false;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $BALANCE);
+                        // *** - ***
                     }
                 }
+
+                // *** added by pine ***
+                $isState = true;
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $winMoney);
+                // *** - ***
 
                 /* 프리스핀 */
                 if ($slotEvent['slotEvent'] == 'freespin') {
@@ -358,6 +429,10 @@ namespace VanguardLTE\Games\PirateGoldPM
                         $objRes["fswin"] = $objRes['tw'];
                         $objRes["fsres"] = $objRes['tw'];
                         $objRes["n_reel_set"] = 1;
+                        
+                        // *** added by pine ***
+                        $isState = false;
+                        // *** - ***
                     }
                     else {
                         /* 프리스핀 완료 */
@@ -387,6 +462,14 @@ namespace VanguardLTE\Games\PirateGoldPM
 
                     /* 프리스핀 시작밸런스 저장 */
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $BALANCE);
+                    
+                    // *** added by pine ***
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);                    
+                    $isState = false;
+                    if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($bet, count($bonusSymbols) - 3));
+                    }
+                    // *** - ***
                 }
                 /*********************************************** */
 
@@ -398,16 +481,31 @@ namespace VanguardLTE\Games\PirateGoldPM
                 }
 
                 /* 러키스핀일때 밸런스 업데이트 */
+                // *** changed by pine ***
                 if ($luckyMoney > 0) {
                     $slotSettings->SetBalance($luckyMoney);
                     $slotSettings->SetBank('luckyspin', -1 * $luckyMoney);
+                    
+                    // *** added by pine ***
+                    $bonusWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') ?? 0;
+                    $bonusWin = $bonusWin + $luckyMoney;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $bonusWin);
+                    // *** - ***
                 }
-
+                // *** - ***
+                
                 $_GameLog = json_encode($objRes);
-                $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $winMoney, $slotEvent['slotEvent']);
+                // *** added & changed by pine ***
+                $slotSettings->SaveLogReport($_GameLog, $bet * $lines, $slotEvent['l'], $objRes['tw'], $slotEvent['slotEvent'], $isState);
+                // *** - ***
             }
             else if( $slotEvent['slotEvent'] == 'doCollect') 
-            {
+            {                
+                // *** added & changed by pine ***
+                $Balance = $slotSettings->GetBalance();
+                $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $Balance);
+                // *** - ***
+
                 $objRes = [
                     'balance' => $BALANCE,
                     'index' => $slotEvent['index'],
@@ -482,6 +580,9 @@ namespace VanguardLTE\Games\PirateGoldPM
                     'e_aw' => $LASTSPIN->e_aw ?? null,
                 ];
 
+                // *** added by pine ***
+                $isState = false;
+                // *** - ***
                 /* 리트리거에 의한 새 럭키스핀 */
                 if ($isRetriggered) {
                     $winMoney = $slotSettings->SumMoneySymbols($lastReelSet['values'], $lastReelSet['types'], $lastMultiplier, false) * $bet;
@@ -547,38 +648,55 @@ namespace VanguardLTE\Games\PirateGoldPM
                     if ($respinCount >= 3) {
                         $tw = $slotSettings->SumMoneySymbols($lastReelSet['values'], $lastReelSet['types'], $lastMultiplier, true) * $bet;
 
-                        $objRes['tw'] = $tw;
-                        $objRes['rw'] = $objRes['tw'];
+
+                        $objRes['rw'] = $tw;
+                         // *** - ***
+
                         $objRes['na'] = 'cb';
                         $objRes['is'] = $LASTSPIN->start_with->s ?? null;
 
                         if ($retriggerCount == 1) {
                             $objRes['na'] = 'b';
+                        }else{                            
+                            // *** added by pine ***
+                            $isState = true;
+                            // *** - ***
                         }
 
                         $isBonusEnded = true;
                     }
                 }
-
                 /* 밸런스 업뎃 */
                 if ($winMoney > 0) {
                     $slotSettings->SetBalance($winMoney);
                     $slotSettings->SetBank('luckyspin', -1 * $winMoney);
+                    
+                    // *** added & changed by pine ***
+                    $bonusWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') ?? 0;
+                    $bonusWin = $bonusWin + $winMoney;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $bonusWin);
                 }
-                
+                if ($isBonusEnded == true){                        
+                    $objRes['tw'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') ?? 0;
+                }
+                // *** - ***
+
                 /* 럭키스핀 시작응답을 유지, doInit에서 이용 */
                 $isFirstDoBonus = isset($LASTSPIN->bw);     // 럭키스핀 첫스핀
 
                 $_GameLog = json_encode(array_merge($objRes, ['start_with' => $isFirstDoBonus ? $LASTSPIN : $LASTSPIN->start_with]));
-                if ($isBonusEnded) {
-                    /* 럭키스핀완료이면 당첨금 계산 */
-                    $slotSettings->SaveLogReport($_GameLog, 0, 0, $objRes['tw'], $slotEvent['slotEvent']);
-                }
-                else {
-                    $slotSettings->SaveLogReport($_GameLog, 0, 0, 0, $slotEvent['slotEvent']);
-                }
+                
+                // *** added & changed by pine ***
+                $slotSettings->SaveLogReport($_GameLog, $bet * 40, 40, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') ?? 0, $slotEvent['slotEvent'], $isState);
+                // *** - ***
             }
             else if( $slotEvent['slotEvent'] == 'doCollectBonus') {     // Luck Treasure spin collect
+                     
+                // *** added & changed by pine ***
+                $Balance = $slotSettings->GetBalance();
+                $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $Balance);
+                // *** - ***
+
                 $objRes = [
                     'balance' => $BALANCE,
                     'coef' => 1,
@@ -596,9 +714,13 @@ namespace VanguardLTE\Games\PirateGoldPM
             else if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 /* 프리스핀, 럭키스핀일 경우 스핀 첫밸런스 로드 */
-                if (isset($LASTSPIN->fsmax) || isset($LASTSPIN->rsb_s)) {
-                    $BALANCE = $LASTSPIN->balance;
-                }
+
+                // *** added & changed by pine ***
+                // if (isset($LASTSPIN->fsmax) || isset($LASTSPIN->rsb_s)) {
+                //     $BALANCE = $LASTSPIN->balance;
+                // }
+                $BALANCE = $slotSettings->GetGameData($slotSettings->slotId . 'FSStartBalance') ?? $slotSettings->GetBalance();
+                // *** - ***
 
                 $objRes = [
                     'balance_bonus' => '0.00',
@@ -607,11 +729,46 @@ namespace VanguardLTE\Games\PirateGoldPM
                     'stime' => floor(microtime(true) * 1000),
                 ];
             }
-            
+            // *** added by pine ***
+            $response = $this->toResponse($objRes);
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') ?? 0, $slotSettings);
+            }
+            // *** - ***
             $slotSettings->SaveGameData();
             \DB::commit();
-            return $this->toResponse($objRes);
+            return $response;
         }
+
+        // *** added by pine ***
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
+        }
+        // *** - ***
 
         public function checkWinLines($flattenSymbols, $PayLines, $PayTable, $bet, $spinType) {
             $WILD = 2;
