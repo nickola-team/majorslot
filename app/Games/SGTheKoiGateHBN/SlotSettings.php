@@ -616,7 +616,7 @@ namespace VanguardLTE\Games\SGTheKoiGateHBN
             ]);
             \VanguardLTE\StatGame::create([
                 'user_id' => $this->playerId, 
-                'balance' => $this->Balance * $this->CurrentDenom, 
+                'balance' => $this->GetBalance() * $this->CurrentDenom, 
                 'bet' => $bet * $this->CurrentDenom, 
                 'win' => $win * $this->CurrentDenom, 
                 'game' => $_obf_slotstate, 
