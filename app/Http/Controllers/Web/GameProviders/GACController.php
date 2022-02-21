@@ -92,8 +92,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $amount = ($type==1)?(abs($betAmount)) : (-1 * abs($betAmount));
+            if ($user->balance < $amount)
+            {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'balance is not enough',
+                    'data' => [
+                        'balance' => 0,
+                    ]
+                ]);
+            }
+
             $user->balance = $user->balance - intval($amount);
             $user->save();
+            $user = $user->fresh();
+            
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
