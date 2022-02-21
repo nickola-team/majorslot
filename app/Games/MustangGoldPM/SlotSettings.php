@@ -492,12 +492,31 @@ namespace VanguardLTE\Games\MustangGoldPM
             {
                 $slotState = '';
             }
-            if( $this->GetBank($slotState) + $sum < 0 ) 
-            {
-                $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
-            }
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
+            if( $this->GetBank($slotState) + $sum < 0 ) 
+            {
+                if($slotState == 'bonus'){
+                    $diffMoney = $this->GetBank($slotState) + $sum;
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else{
+                        $normalbank = $game->get_gamebank('');
+                        if ($normalbank + $diffMoney < 0)
+                        {
+                            $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                        }
+                        $game->set_gamebank($diffMoney, 'inc', '');
+                    }
+                    $sum = $sum - $diffMoney;
+
+                }else{
+                    if ($sum < 0) {
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
+                }
+            }
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet' ) 
             {
@@ -652,7 +671,7 @@ namespace VanguardLTE\Games\MustangGoldPM
             ]);
             \VanguardLTE\StatGame::create([
                 'user_id' => $this->playerId, 
-                'balance' => $this->Balance * $this->CurrentDenom, 
+                'balance' => $this->GetBalance() * $this->CurrentDenom, 
                 'bet' => $bet * $this->CurrentDenom, 
                 'win' => $win * $this->CurrentDenom, 
                 'game' => $_obf_slotstate, 

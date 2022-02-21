@@ -575,16 +575,35 @@ namespace VanguardLTE\Games\BuffaloKingPM
             {
                 $slotState = '';
             }
-            if( $this->GetBank($slotState) + $sum < 0 ) 
-            {
-                $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
-            }
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isBuyFreespin == 0){
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
+            }
+            if( $this->GetBank($slotState) + $sum < 0 ) 
+            {
+                if($slotState == 'bonus'){
+                    $diffMoney = $this->GetBank($slotState) + $sum;
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else{
+                        $normalbank = $game->get_gamebank('');
+                        if ($normalbank + $diffMoney < 0)
+                        {
+                            $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                        }
+                        $game->set_gamebank($diffMoney, 'inc', '');
+                    }
+                    $sum = $sum - $diffMoney;
+
+                }else{
+                    if ($sum < 0) {
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
+                }
             }
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet' ) 
@@ -746,7 +765,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 $roundstr = $this->GetGameData($this->slotId . 'RoundID');
                 \VanguardLTE\StatGame::create([
                     'user_id' => $this->playerId, 
-                    'balance' => $this->Balance * $this->CurrentDenom, 
+                    'balance' => $this->GetBalance() * $this->CurrentDenom, 
                     'bet' => $bet * $this->CurrentDenom, 
                     'win' => $win * $this->CurrentDenom, 
                     'game' => $_obf_slotstate, 
@@ -1127,7 +1146,7 @@ namespace VanguardLTE\Games\BuffaloKingPM
                     6
                 ];
                 $scattercount = $this->GenerateFreeSpinCount($slotEvent);
-                $scatterStripReelNumber = $this->GetRandomNumber(0, 6, $scattercount);
+                $scatterStripReelNumber = $this->GetRandomNumber(0, 5, $scattercount);
                 for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                 {
                     $issame = false;

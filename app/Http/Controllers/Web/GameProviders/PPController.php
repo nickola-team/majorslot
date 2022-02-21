@@ -631,7 +631,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [];
             }
             $data = $response->json();
-            $newgames = \VanguardLTE\NewGame::where('provider', $href)->get()->toArray();
+            // $newgames = \VanguardLTE\NewGame::where('provider', $href)->get()->toArray();
             if ($data['error'] == "0"){
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
@@ -675,23 +675,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
-            usort($gameList, function ($a,$b) use($newgames)
-                {
-                    $a_id = 999;
-                    $b_id = 999;
-                    foreach ($newgames as $game)
-                    {
-                        if ($a['gamecode'] == $game['gameid'])
-                        {
-                            $a_id = $game['id'];
-                        }
-                        if ($b['gamecode'] == $game['gameid'])
-                        {
-                            $b_id = $game['id'];
-                        }
-                    }
-                    return $a_id - $b_id;
-                });
+            // usort($gameList, function ($a,$b) use($newgames)
+            //     {
+            //         $a_id = 999;
+            //         $b_id = 999;
+            //         foreach ($newgames as $game)
+            //         {
+            //             if ($a['gamecode'] == $game['gameid'])
+            //             {
+            //                 $a_id = $game['id'];
+            //             }
+            //             if ($b['gamecode'] == $game['gameid'])
+            //             {
+            //                 $b_id = $game['id'];
+            //             }
+            //         }
+            //         return $a_id - $b_id;
+            //     });
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
                 return $gameList;
             }
@@ -970,6 +970,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'password' => config('app.ppsecretkey'),
                 'dataType' => $dataType,
                 'timepoint' => $timepoint,
+                'options' => 'addBalance'
             ];
             $response = null;
             try {
@@ -1069,7 +1070,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 for ($i=2;$i<count($parts);$i++)
                 {
                     $round = explode(",", $parts[$i]);
-                    if (count($round) < 8)
+                    if (count($round) < 14)
                     {
                         continue;
                     }
@@ -1080,7 +1081,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $gameObj =  PPController::gamecodetoname($round[2]);
                         \VanguardLTE\StatGame::create([
                             'user_id' => $round[1], 
-                            'balance' => floatval(-1), 
+                            'balance' => $round[13], 
                             'bet' => $round[9], 
                             'win' => $round[10], 
                             'game' =>$gameObj[0] . '_pp', 
