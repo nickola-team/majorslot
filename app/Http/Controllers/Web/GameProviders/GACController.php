@@ -69,6 +69,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $userId = $data['userId'];
             $tableName = $data['tableName'];
             $betAmount = $data['betAmount'];
+            $type = $data['betInfo'];
             if (!$userId || !$tableName || !$betAmount)
             {
                 return response()->json([
@@ -90,7 +91,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            $user->balance = $user->balance - intval(abs($betAmount));
+            $amount = ($type==1)?(abs($betAmount)) : (-1 * abs($betAmount));
+            $user->balance = $user->balance - intval($amount);
             $user->save();
             return response()->json([
                 'result' => true,
