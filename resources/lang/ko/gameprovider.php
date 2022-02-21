@@ -188,6 +188,22 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Lucky New Year - Tiger Treasures" => "럭키 뉴이어 - 타이거트레져",
+        "Colossal Cash Zone" => "콜로잘 캐시 존",
+        "Elemental Gems Megaways" => "엘레멘탈 젬스 메가웨이",
+        "Emperor Caishen" => "임페로 카이선",
+        "Extra Juicy Megaways" => "엑스트라 쥬스 메가웨이",
+        "Fortune of Giza" => "포츈 오브 기자",
+        "Gates of Valhalla" => "게이트 오브 발랄라",
+        "Gold Party" => "골드 파티",
+        "Might of Ra" => "마이트 오브 라",
+        "Queenie" => "퀸",
+        "Rainbow Gold" => "레인보우 골드",
+        "Rock Vegas" => "록 베가스",
+        "Snakes and Ladders Megadice" => "스네이크 앤 래더 메가다이스",
+        "The Ultimate 5" => "더 얼티메이트 5",
+        "Tic Tac Take" => "틱 택 테이크",
+        "Wild Beach Party" => "와일드 비치 파티",
         "Wild Depths" => "와일드 뎁스",
         "Hockey Attack" => "하키 어택",
         "Magician's Secrets" => "매직컨스 시크릿",
