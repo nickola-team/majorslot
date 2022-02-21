@@ -631,7 +631,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [];
             }
             $data = $response->json();
-            $newgames = \VanguardLTE\NewGame::where('provider', $href)->get()->toArray();
+            // $newgames = \VanguardLTE\NewGame::where('provider', $href)->get()->toArray();
             if ($data['error'] == "0"){
                 $gameList = [];
                 foreach ($data['gameList'] as $game)
@@ -675,23 +675,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
-            usort($gameList, function ($a,$b) use($newgames)
-                {
-                    $a_id = 999;
-                    $b_id = 999;
-                    foreach ($newgames as $game)
-                    {
-                        if ($a['gamecode'] == $game['gameid'])
-                        {
-                            $a_id = $game['id'];
-                        }
-                        if ($b['gamecode'] == $game['gameid'])
-                        {
-                            $b_id = $game['id'];
-                        }
-                    }
-                    return $a_id - $b_id;
-                });
+            // usort($gameList, function ($a,$b) use($newgames)
+            //     {
+            //         $a_id = 999;
+            //         $b_id = 999;
+            //         foreach ($newgames as $game)
+            //         {
+            //             if ($a['gamecode'] == $game['gameid'])
+            //             {
+            //                 $a_id = $game['id'];
+            //             }
+            //             if ($b['gamecode'] == $game['gameid'])
+            //             {
+            //                 $b_id = $game['id'];
+            //             }
+            //         }
+            //         return $a_id - $b_id;
+            //     });
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
                 return $gameList;
             }
