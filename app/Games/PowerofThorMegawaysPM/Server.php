@@ -60,11 +60,46 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     'stime' => floor(microtime(true) * 1000),
                 ];
             }
-
+            // *** added by pine ***
+            $response = $this->toResponse($objRes);
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doGamble' || $slotEvent['action'] == 'doBonus'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') ?? 0, $slotSettings);
+            }
+            // *** - ***
             $slotSettings->SaveGameData();
             \DB::commit();
-            return $this->toResponse($objRes);
+            return $response;
         }
+
+        // *** added by pine ***
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
+        }
+        // *** - ***
 
         public function doInit($slotEvent, $slotSettings, $LASTSPIN) {
             $BALANCE = $slotSettings->GetBalance();
@@ -211,6 +246,11 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             
             /* 텀블보너스 당첨인 경우 */
             $isTumbleBonus = $slotSettings->GetGameData($slotSettings->slotId . 'TumbleBonus');
+            
+            // *** added by pine ***
+            $fsmax = 0;
+            $fs = 0;            
+            // *** - ***
 
             /* 프리스핀 구매 */
             if (isset($slotEvent['pur'])) {
@@ -240,6 +280,12 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $_winAvaliableMoney = $_spinSettings[1];        // 당첨금 한도
             }
 
+            // *** added by pine ***
+            $isGeneratedFreeStack = false;
+            $freeStacks = []; // free stacks
+            $isForceWin = false;
+            // *** - ***
+            
              /* Balance 업데이트 */
              if ($slotEvent['slotEvent'] === 'doGamble') {
                 $allBet = $bet * $lines * 100;
@@ -264,6 +310,39 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             /* 벨런스 업데이트 */
             $BALANCE = $slotSettings->GetBalance();
 
+            // *** added by pine ***
+            if ($slotEvent['slotEvent'] === 'freespin') {
+                $totalRepeatFreeCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalRepeatFreeCount') ?? 0;
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', $totalRepeatFreeCount + 1);
+                $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')  ?? [];
+                if(count($freeStacks) >= $fsmax){
+                    $isGeneratedFreeStack = true;
+                }
+                $leftFreeGames = $fsmax - $fs;
+                if($leftFreeGames <= mt_rand(1 , 2) && ($LASTSPIN->tw ?? 0) == 0){
+                    $winType = 'win';
+                    $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
+                    $isForceWin = true;
+                }    
+                $regularSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') ?? 0;
+            }else if($isTumble == false){
+                if($slotEvent['slotEvent'] === 'doGamble'){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', true);
+                }else{
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', false);
+                }
+                $roundstr = sprintf('%.4f', microtime(TRUE));
+                $roundstr = str_replace('.', '', $roundstr);
+                $roundstr = '275' . substr($roundstr, 4, 7);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                $regularSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') ?? 0 + 1;
+                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $regularSpinCount);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', 0);
+                $leftFreeGames = 0;
+            }
+            // *** - ***
+            
             /* SCATTER 생성갯수  */
             $defaultScatterCount = 0;
             if($winType == 'bonus'){      
@@ -328,16 +407,26 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $this->winLines = [];
                 $winMoney = 0;
 
-                /* 릴배치표 생성 */
-                if ($overtry) {
-                    /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
-                    $lastReels = $isTumble ? json_decode($LASTSPIN->g, true) : null;
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $lastReels, 0);
+                // *** added by pine ***
+                if($isGeneratedFreeStack == true){
+                    $freeStack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalRepeatFreeCount') - 1];
+                    $reels = $freeStack['Reel'];
+                    $tumbleMultiplier = $freeStack['TumbleMultiplier'];
+                }else{
+                // *** - ***
+
+                    /* 릴배치표 생성 */
+                    if ($overtry) {
+                        /* 더이상 자동릴생성은 하지 않고 최소당첨릴을 수동생성 */
+                        $lastReels = $isTumble ? json_decode($LASTSPIN->g, true) : null;
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $lastReels, 0);
+                    }
+                    else {
+                        $lastReels = $isTumble ? json_decode($LASTSPIN->g, true) : null;
+                        $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $lastReels, $defaultScatterCount);
+                    }
                 }
-                else {
-                    $lastReels = $isTumble ? json_decode($LASTSPIN->g, true) : null;
-                    $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $lastReels, $defaultScatterCount);
-                }
+
 
                 /* 윈라인 검사 */
                 $this->checkWinLines($reels);
@@ -362,7 +451,22 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     }
                 }
 
-                $scatterCount = $this->getScatterCount($reels);
+
+                // *** added by pine ***
+                if($isGeneratedFreeStack == true){
+                    /* 스핀 당첨금 */
+                    $winMoney = array_reduce($this->winLines, function($carry, $winLine) {
+                        $carry += $winLine['Money']; 
+                        return $carry;
+                    }, 0) * $bet;
+
+                    /* 프리스핀시 멀티플라이어 적용 */
+                    if ($slotEvent['slotEvent'] == 'freespin') {
+                        $winMoney = $winMoney * $tumbleMultiplier;
+                    }
+                    break;  //freestack
+                }
+                // *** - ***
 
                 if ($winType == 'none') {
                     if ($slotEvent['slotEvent'] == 'freespin' && $scatterCount >= 3) {
@@ -387,7 +491,11 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     if ($slotEvent['slotEvent'] == 'freespin') {
                         $winMoney = $winMoney * $tumbleMultiplier;
                     }
-
+                    // *** added by pine ***
+                    if($isForceWin == true && $winMoney > 0 && $winMoney < $bet * $lines * 10){
+                        break;   // win by force when winmoney is 0 in freespin
+                    }
+                    // *** - ***
                     /* 당첨금이 한도이상일때 스킵 */
                     if ($winMoney >= $_winAvaliableMoney) {
                         continue;
@@ -480,6 +588,10 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 }
             }
 
+            // *** added by pine ***
+            $isState = true;
+            // *** - ***
+
             if ($winMoney > 0) {
                 /* 윈라인 구성 */
                 foreach ($this->winLines as $idx => $winLine) {
@@ -528,6 +640,10 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $objRes['w'] = $winMoney;
                 $objRes['rs_c'] = 1;
                 $objRes['rs_m'] = 1;
+
+                // *** added by pine ***
+                $isState = false;
+                // *** - ***
             }
             else {
                 /* 텀블스핀 완료 */
@@ -586,6 +702,11 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
 
                     /* 프리스핀 카운터 */
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', $objRes['fs']);
+
+                    
+                    // *** added by pine ***
+                    $isState = false;
+                    // *** - ***
                 }
                 else if ($fsmax <= $fs) {
                     /* 프리스핀 완료 */
@@ -647,6 +768,11 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     if ($fsCountMap[$scatterCount] >= 22) {
                         $fsCount = $fsCountMap[$scatterCount];
                         $gambleStep = -1;
+                        // *** added by pine ***
+                        if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($bet, $fsCount));
+                        }
+                        // *** - ***
                     }
                     else {
                         // 갬블시작 스텝설정 (10, 14, 18, 22)
@@ -688,7 +814,13 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentStep', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusScatterCount', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbleBonusCurrentScatterCount', 0);
+
+                    // *** added by pine ***
+                    $isState = false;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                    // *** - ***
                 }
+                
             }
 
             /* 밸런스 업데이트 */
@@ -699,8 +831,14 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
             }
 
             $_GameLog = json_encode($objRes);
-            $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $winMoney, $slotEvent['slotEvent']);
-            
+            // *** added & changed by pine ***
+            if($fsmax > 0 && $isState == true && ($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') ?? false) == true){
+                $allBet = $bet * $lines * 100;
+            }else{
+                $allBet = $bet * $lines;
+            }
+            $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $objRes['tw'], $slotEvent['slotEvent'], $isState);
+            // *** - ***
             return $objRes;
         }
 
@@ -759,6 +897,9 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 'counter' => ((int)$slotEvent['counter'] + 1)
             ];
 
+            // *** added by pine ***
+            $isState = false;
+            // *** - ***
             /* 갬블 시도? 프리스핀 획득? */
             if ($slotEvent['ind'] == 1) {
                 /* 갬블 당첨가능한 프리스핀갯수 */
@@ -797,6 +938,9 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
 
                     $objRes['status'] = $LASTSPIN->status;
                     $objRes['rw'] = 0;
+                    // *** added by pine ***
+                    $isState = true;
+                    // *** - ***
                 }
             }
             else if ($slotEvent['ind'] == 0) {
@@ -827,11 +971,25 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSMax', $objRes['fsmax']);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', 1);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSStartBalance', $BALANCE);
+
+                
+                // *** added by pine ***
+                if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($LASTSPIN->coef / 20, $objRes['fsmax']));
+                }
+                // *** - ***
             }
             
             $_GameLog = json_encode($objRes);
-            $slotSettings->SaveLogReport($_GameLog, 0, 0, 0, 'doBonus');
-
+            // *** added & changed by pine ***
+            // $slotSettings->SaveLogReport($_GameLog, 0, 0, 0, 'doBonus');
+            if($isState == true && ($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') ?? false) == true){
+                $allBet = $LASTSPIN->coef * 100;
+            }else{
+                $allBet = $LASTSPIN->coef;
+            }
+            $slotSettings->SaveLogReport($_GameLog, $allBet, 20, $LASTSPIN->tw, $slotEvent['slotEvent'], $isState);
+            // *** - ***
             return $objRes;
         }
 
