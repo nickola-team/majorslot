@@ -970,6 +970,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'password' => config('app.ppsecretkey'),
                 'dataType' => $dataType,
                 'timepoint' => $timepoint,
+                'options' => 'addBalance'
             ];
             $response = null;
             try {
