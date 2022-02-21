@@ -1070,7 +1070,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 for ($i=2;$i<count($parts);$i++)
                 {
                     $round = explode(",", $parts[$i]);
-                    if (count($round) < 8)
+                    if (count($round) < 14)
                     {
                         continue;
                     }
@@ -1081,7 +1081,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $gameObj =  PPController::gamecodetoname($round[2]);
                         \VanguardLTE\StatGame::create([
                             'user_id' => $round[1], 
-                            'balance' => floatval(-1), 
+                            'balance' => $round[13], 
                             'bet' => $round[9], 
                             'win' => $round[10], 
                             'game' =>$gameObj[0] . '_pp', 
