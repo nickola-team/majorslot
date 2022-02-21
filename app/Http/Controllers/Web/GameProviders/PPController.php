@@ -1519,6 +1519,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function savesettings($ppgame, \Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
+            {
+                return response('SoundState=true_true_true_false_false');
+            }
             $userId = auth()->user()->id;
             $object = '\VanguardLTE\Games\\' . $ppgame . '\SlotSettings';
             if (!class_exists($object))

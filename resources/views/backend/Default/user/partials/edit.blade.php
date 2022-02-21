@@ -61,6 +61,10 @@
         <label>@lang('app.username')</label>
         <input type="text" class="form-control" id="username" name="username" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->username : '' }}">
     </div>
+    <div class="form-group">
+        <label>전화번호</label>
+        <input type="text" class="form-control" id="phone" name="phone"  value="{{ $edit ? $user->phone : '' }}">
+    </div>
 
     @if( $user->email != '' )
     <div class="form-group">
@@ -71,7 +75,10 @@
 
     <div class="form-group">
         <label>메모</label>
-        <input type="text" class="form-control" id="avatar" name="avatar" placeholder="" value="{{ $edit ? $user->avatar : '' }}">
+        @if ($edit && $user->memo)
+        <p> 작성날짜 : {{$user->memo->created_at}} 저장날짜 : {{$user->memo->updated_at}}</p>
+        @endif
+        <textarea id="memo" name="memo" class="form-control" rows="5">{{($edit && $user->memo)?$user->memo->memo:''}}</textarea>
     </div>
     
     @if (!$user->isInoutPartner() && $user->id == auth()->user()->id)

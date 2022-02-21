@@ -67,6 +67,7 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
+                                        <th>아이피</th>
                                         <th>@lang('app.action')</th>
                                         <th>@lang('app.date')</th>
                                     </tr>
@@ -74,6 +75,7 @@
                                     <tbody>
                                     @foreach($userActivities as $activity)
                                         <tr>
+                                            <td>{{ $activity->ip_address }}</td>
                                             <td>{{ $activity->description }}</td>
                                             <td>{{ $activity->created_at->format(config('app.date_time_format')) }}</td>
                                         </tr>

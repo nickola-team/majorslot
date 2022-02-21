@@ -19,7 +19,7 @@ namespace VanguardLTE
             'password', 
             'email', 
             'username', 
-            'avatar',   //used for user's memo
+            'avatar',
             'address',
             'balance', 
             'last_login', 
@@ -547,6 +547,11 @@ namespace VanguardLTE
         public function shop()
         {
             return $this->belongsTo('VanguardLTE\Shop', 'shop_id');
+        }
+
+        public function memo()
+        {
+            return $this->hasOne('VanguardLTE\UserMemo', 'user_id');
         }
         public function getJWTIdentifier()
         {
