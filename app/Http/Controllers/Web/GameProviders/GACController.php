@@ -213,7 +213,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'userId' => strval($user->id),
                 'userName' => $user->username,
                 'recommend' => config('app.gac_key'),
-                'gameType' => 31
+                'gameType' => 36
             ];
             $url = null;
             try {
