@@ -1466,8 +1466,10 @@ namespace VanguardLTE\Games\PirateGoldPM
                         continue;
                     }
                 }
-                else if ($randMoneyType == 'multiplier' && array_search('m', $moneySymbolTypes)) {
-                    continue;
+                else if ($randMoneyType == 'multiplier') {
+                    if (array_search('m', $moneySymbolTypes) || $lastRespinCount >= 2) {
+                        continue;
+                    }
                 }
 
                 /* 랜덤 머니심볼 생성 */
