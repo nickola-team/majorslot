@@ -76,7 +76,9 @@
                         <thead class="thead-light">
                             <tr>
                             <th scope="col">시간</th>
+                            @if (auth()->user()->isInOutPartner())
                             <th scope="col">아이피</th>
+                            @endif
                             <th scope="col">내역</th>
                             </tr>
                         </thead>
@@ -84,7 +86,9 @@
                             @foreach($userActivities as $activity)
                                 <tr>
                                     <td>{{ $activity->created_at}}</td>
-                                    <td>{{ $activity->ip_address }}</td>
+                                    @if (auth()->user()->isInOutPartner())
+                                        <td>{{ $activity->ip_address }}</td>
+                                    @endif
                                     <td>{{ $activity->description }}</td>
                                 </tr>
                             @endforeach
@@ -112,32 +116,34 @@
                             <h6 class="heading-small text-muted mb-4">일반설정</h6>
 
                             <div class="pl-lg-4">
-                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-name">이름</label>
-                                    <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>
+                                <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="username">이름</label>
+                                    <input type="text" name="username" id="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="{{ old('name', $user->username) }}" required autofocus>
 
                                 </div>
-                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">전화번호</label>
-                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
-
+                                <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="phone">전화번호</label>
+                                    <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone', $user->phone) }}">
                                 </div>
 
-				                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">롤링%</label>
-                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
+				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="deal_percent">롤링%</label>
+                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="{{ old('deal_percent', $user->deal_percent) }}">
                                 </div>
-                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">라이브롤링%</label>
-                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
+                                <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>
+                                    <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->table_deal_percent) }}">
                                 </div>
-                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">벳윈%</label>
-                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
+                                <div class="form-group{{ $errors->has('ggr_percent') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="ggr_percent">벳윈%</label>
+                                    <input type="text" name="ggr_percent" id="ggr_percent" class="form-control{{ $errors->has('ggr_percent') ? ' is-invalid' : '' }}" value="{{ old('ggr_percent', $user->ggr_percent) }}">
                                 </div>
-                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-email">메모</label>
-                                    <textarea id="memo" name="memo" class="form-control" rows="5"></textarea>
+                                    @if ($user->memo)
+                                    <p> 작성날짜 : {{$user->memo->created_at}} 저장날짜 : {{$user->memo->updated_at}}</p>
+                                    @endif
+                                    <textarea id="memo" name="memo" class="form-control" rows="5">{{$user->memo?$user->memo->memo:''}}</textarea>
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">보관</button>
