@@ -256,9 +256,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return redirect($request->url)->withSuccess($result['message']);
         }
 
-        public function profile(\Illuminate\Http\Request $request)
+        public function profile(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)
         {
-            return view('backend.argon.common.profile');
+            $userid = auth()->user()->id;
+            if ($request->id != '')
+            {
+                $userid = $request->id;
+            }
+            
+            $availableUsers = auth()->user()->availableUsers();
+            if (!in_array($userid, $availableUsers))
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+            $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
+            return view('backend.argon.common.profile', compact('user', 'userActivities'));
         }
 
     }

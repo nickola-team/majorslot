@@ -82,13 +82,12 @@
                         <div class=" dropdown-header noti-title">
                             <!-- <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6> -->
                         </div>
-                        <a href="{{argon_route('argon.common.profile')}}" class="dropdown-item">
+                        <a href="{{argon_route('argon.common.profile', ['id'=>auth()->user()->id])}}" class="dropdown-item">
                             <i class="ni ni-single-02"></i>
                             <span>설정 및 정보</span>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item" onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
+                        <a href="{{argon_route('argon.auth.logout')}}" class="dropdown-item">
                             <i class="ni ni-curved-next"></i>
                             <span>로그아웃</span>
                         </a>

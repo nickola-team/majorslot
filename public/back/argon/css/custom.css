@@ -146,3 +146,23 @@ hr.horizontal {
 hr.horizontal.dark {
     background-image : linear-gradient(90deg,transparent,rgba(0,0,0,.4),transparent);
 }
+
+.card-profile-circle {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+.profile-circle {
+    width: calc(1em / 0.4);
+    height: calc(1em / 0.4);
+    margin-top: calc(-1em / 0.8);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 3em;
+    color: white;
+    border: 2px solid green;
+    background-color: green;
+}

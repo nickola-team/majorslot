@@ -1,154 +1,96 @@
 @extends('backend.argon.layouts.app')
-@section('page-title',  '설정 및 프로필')
+@section('page-title',  '설정 및 정보')
 
 @section('content')
 <div class="container-fluid">
         <div class="row">
             <div class="col-xl-4 order-xl-2">
                 <div class="card card-profile">
-                    <img src="{{ asset('back/argon') }}/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top">
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
-                            <div class="card-profile-image">
-                                <a href="#">
-                                    <img src="{{ asset('back/argon') }}/img/theme/team-1.jpg" class="rounded-circle">
-                                </a>
+                            <div class="card-profile-circle">
+                                    <div class="profile-circle">{{mb_substr($user->username, 0, 1)}}</div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                        <div class="d-flex justify-content-between">
-                            <a href="#" class="btn btn-sm btn-info mr-4">Connect</a>
-                            <a href="#" class="btn btn-sm btn-default float-right">Message</a>
-                        </div>
-                    </div>
+
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center">
                                     <div>
-                                        <span class="heading">22</span>
-                                        <span class="description">Friends</span>
+                                        <span class="heading">{{number_format($user->balance)}}</span>
+                                        <span class="description">현재 보유금</span>
                                     </div>
                                     <div>
-                                        <span class="heading">10</span>
-                                        <span class="description">Photos</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">89</span>
-                                        <span class="description">Comments</span>
+                                        <span class="heading">{{number_format($user->childBalanceSum())}}</span>
+                                        <span class="description">하부 총 보유금</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center">
+                            <?php
+                                $badge_class = [
+                                    'badge-default',
+                                    'badge-primary',
+                                    'badge-danger',
+                                    'badge-success',
+                                    'badge-info',
+                                    'badge-warning',
+                                ]
+                            ?>
                             <h5 class="h3">
-                                {{ auth()->user()->username }}<span class="font-weight-light">, 27</span>
+                                {{ $user->username }} 
                             </h5>
                             <div class="h5 font-weight-300">
-                                <i class="ni location_pin mr-2"></i>Bucharest, Romania
+                                <span class="badge {{$badge_class[$user->role_id-3]}}">{{$user->role->description}}</span>
                             </div>
-                            <div class="h5 mt-4">
-                                <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
-                            </div>
-                            <div>
-                                <i class="ni education_hat mr-2"></i>University of Computer Science
-                            </div>
+                            
                         </div>
+                        @if (auth()->user()->role_id > $user->role_id)
+                        <div class="row" style="padding:1rem 0;">
+                            <div class="col justify-content-center text-center">
+                                <button type="button" class="btn btn-warning col-8">삭제</button>
+                            </div>
+                            @if (auth()->user()->hasRole('admin'))
+                            <div class="col justify-content-center text-center">
+                                <button type="button" class="btn btn-danger col-8">어드민삭제</button>
+                            </div>
+                            @endif
+                        </div>
+                        @endif
                     </div>
                 </div>
-                <!-- Progress track -->
+                <!-- Latest Log -->
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header">
                         <!-- Title -->
-                        <h5 class="h3 mb-0">Progress track</h5>
+                        <h5 class="h3 mb-0">최근 페이지내역</h5>
                     </div>
                     <!-- Card body -->
                     <div class="card-body">
-                        <!-- List group -->
-                        <ul class="list-group list-group-flush list my--3">
-                            <li class="list-group-item px-0">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <!-- Avatar -->
-                                        <a href="#" class="avatar rounded-circle">
-                                            <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/bootstrap.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <h5>Argon Design System</h5>
-                                        <div class="progress progress-xs mb-0">
-                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item px-0">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <!-- Avatar -->
-                                        <a href="#" class="avatar rounded-circle">
-                                            <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/angular.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <h5>Angular Now UI Kit PRO</h5>
-                                        <div class="progress progress-xs mb-0">
-                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item px-0">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <!-- Avatar -->
-                                        <a href="#" class="avatar rounded-circle">
-                                            <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/sketch.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <h5>Black Dashboard</h5>
-                                        <div class="progress progress-xs mb-0">
-                                            <div class="progress-bar bg-red" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item px-0">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <!-- Avatar -->
-                                        <a href="#" class="avatar rounded-circle">
-                                            <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/react.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <h5>React Material Dashboard</h5>
-                                        <div class="progress progress-xs mb-0">
-                                            <div class="progress-bar bg-teal" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item px-0">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <!-- Avatar -->
-                                        <a href="#" class="avatar rounded-circle">
-                                            <img alt="Image placeholder" src="{{ asset('back/argon') }}/img/theme/vue.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <h5>Vue Paper UI Kit PRO</h5>
-                                        <div class="progress progress-xs mb-0">
-                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="agentlist">
+                        <thead class="thead-light">
+                            <tr>
+                            <th scope="col">시간</th>
+                            <th scope="col">아이피</th>
+                            <th scope="col">내역</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            @foreach($userActivities as $activity)
+                                <tr>
+                                    <td>{{ $activity->created_at}}</td>
+                                    <td>{{ $activity->ip_address }}</td>
+                                    <td>{{ $activity->description }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        </table>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -157,10 +99,7 @@
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">{{ __('Edit Profile') }}</h3>
-                            </div>
-                            <div class="col-4 text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">{{ __('Settings') }}</a>
+                                <h3 class="mb-0">설정 및 정보</h3>
                             </div>
                         </div>
                     </div>
@@ -170,31 +109,38 @@
                             @csrf
                             @method('put')
 
-                            <h6 class="heading-small text-muted mb-4">{{ __('User information') }}</h6>
-
+                            <h6 class="heading-small text-muted mb-4">일반설정</h6>
 
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-name">{{ __('Name') }}</label>
+                                    <label class="form-control-label" for="input-name">이름</label>
                                     <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>
 
                                 </div>
                                 <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
+                                    <label class="form-control-label" for="input-email">전화번호</label>
                                     <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
 
                                 </div>
-				                <div class="form-group{{ $errors->has('photo') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label">{{ __('Profile photo') }}</label>
-                                    <div class="custom-file">
-                                        <label class="custom-file-label" for="input-picture">{{ __('Select profile photo') }}</label>
-                                        <input type="file" name="photo" class="custom-file-input{{ $errors->has('photo') ? ' is-invalid' : '' }}" id="input-picture" accept="image/*">
-                                        
-                                    </div>
 
+				                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-email">롤링%</label>
+                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
+                                </div>
+                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-email">라이브롤링%</label>
+                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
+                                </div>
+                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-email">벳윈%</label>
+                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
+                                </div>
+                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-email">메모</label>
+                                    <textarea id="memo" name="memo" class="form-control" rows="5"></textarea>
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
+                                    <button type="submit" class="btn btn-success mt-4">보관</button>
                                 </div>
                             </div>
                         </form>
@@ -203,27 +149,26 @@
                             @csrf
                             @method('put')
 
-                            <h6 class="heading-small text-muted mb-4">{{ __('Password') }}</h6>
+                            <h6 class="heading-small text-muted mb-4">비밀번호</h6>
 
 
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('old_password') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-current-password">{{ __('Current Password') }}</label>
+                                    <label class="form-control-label" for="input-current-password">현재 비밀번호</label>
                                     <input type="password" name="old_password" id="input-current-password" class="form-control{{ $errors->has('old_password') ? ' is-invalid' : '' }}" placeholder="{{ __('Current Password') }}" value="" required>
-
                                 </div>
                                 <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-password">{{ __('New Password') }}</label>
+                                    <label class="form-control-label" for="input-password">새 비밀번호</label>
                                     <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('New Password') }}" value="" required>
 
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-password-confirmation">{{ __('Confirm New Password') }}</label>
+                                    <label class="form-control-label" for="input-password-confirmation">비밀번호 확인</label>
                                     <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="{{ __('Confirm New Password') }}" value="" required>
                                 </div>
 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-success mt-4">{{ __('Change password') }}</button>
+                                    <button type="submit" class="btn btn-success mt-4">비번변경</button>
                                 </div>
                             </div>
                         </form>

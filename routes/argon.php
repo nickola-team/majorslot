@@ -31,7 +31,7 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
 	Route::namespace('Backend\Argon')->group(function () {
         Route::get('logout', [
             'as' => 'argon.auth.logout',
-            'uses' => 'Auth\AuthController@getLogout'
+            'uses' => 'AuthController@getLogout'
         ]);
 
         Route::get('/', [
