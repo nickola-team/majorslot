@@ -108,17 +108,14 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="#" autocomplete="off"
-                            enctype="multipart/form-data">
+                        <form method="post" action="#" autocomplete="off">
                             @csrf
-                            @method('put')
-
                             <h6 class="heading-small text-muted mb-4">일반설정</h6>
 
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="username">이름</label>
-                                    <input type="text" name="username" id="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="{{ old('name', $user->username) }}" required autofocus>
+                                    <input type="text" name="username" id="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="{{ old('name', $user->username) }}" required autofocus disabled>
 
                                 </div>
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
@@ -134,10 +131,7 @@
                                     <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>
                                     <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->table_deal_percent) }}">
                                 </div>
-                                <div class="form-group{{ $errors->has('ggr_percent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="ggr_percent">벳윈%</label>
-                                    <input type="text" name="ggr_percent" id="ggr_percent" class="form-control{{ $errors->has('ggr_percent') ? ' is-invalid' : '' }}" value="{{ old('ggr_percent', $user->ggr_percent) }}">
-                                </div>
+                                @if (auth()->user()->isInOutPartner())
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">메모</label>
                                     @if ($user->memo)
@@ -145,6 +139,7 @@
                                     @endif
                                     <textarea id="memo" name="memo" class="form-control" rows="5">{{$user->memo?$user->memo->memo:''}}</textarea>
                                 </div>
+                                @endif
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">보관</button>
                                 </div>

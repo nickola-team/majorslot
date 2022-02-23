@@ -58,20 +58,27 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'as' => 'argon.agent.dealstat',
             'uses' => 'UsersController@agent_deal_stat',
         ]);
+        
+        /// Common
+
 
         Route::get('/common/balance', [
             'as' => 'argon.common.balance',
-            'uses' => 'UsersController@balance',
+            'uses' => 'CommonController@balance',
         ]);
 
         Route::post('/common/balance', [
             'as' => 'argon.common.balance.post',
-            'uses' => 'UsersController@updateBalance',
+            'uses' => 'CommonController@updateBalance',
         ]);
 
-        Route::get('/user/profile', [
+        Route::get('/common/profile', [
             'as' => 'argon.common.profile',
-            'uses' => 'UsersController@profile',
+            'uses' => 'CommonController@profile',
+        ]);
+        Route::post('/common/profile', [
+            'as' => 'argon.common.profile.post',
+            'uses' => 'CommonController@updateProfile',
         ]);
 
     });
