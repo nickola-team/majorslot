@@ -76,8 +76,8 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'as' => 'argon.common.profile',
             'uses' => 'CommonController@profile',
         ]);
-        Route::post('/common/profile', [
-            'as' => 'argon.common.profile.post',
+        Route::post('/common/profile/update', [
+            'as' => 'argon.common.profile.detail',
             'uses' => 'CommonController@updateProfile',
         ]);
 

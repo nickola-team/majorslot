@@ -49,7 +49,8 @@
                                     'badge-success',
                                     'badge-info',
                                     'badge-warning',
-                                ]
+                                ];
+                                $statuses = \VanguardLTE\Support\Enum\UserStatus::lists();
                             ?>
                             <h5 class="h3">
                                 {{ $user->username }} , {{$user->id}}
@@ -124,10 +125,10 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="#" autocomplete="off">
+                        <form method="post" action="{{argon_route('argon.common.profile.detail')}}" autocomplete="off">
                             @csrf
                             <h6 class="heading-small text-muted mb-4">일반설정</h6>
-
+                            <input type="hidden" name="id" value="{{$user->id}}">
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="phone">전화번호</label>
@@ -159,6 +160,12 @@
                                     <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>
                                     <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->table_deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
                                 </div>
+
+                                <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="table_deal_percent">상태</label>
+                                    {!! Form::select('status', $statuses, $user->status ,
+                                        ['class' => 'form-control', 'id' => 'status', 'disabled' => ($user->hasRole(['admin']) || $user->id == auth()->user()->id) ? true: false]) !!}
+                                </div>
                                 @if (auth()->user()->isInOutPartner())
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">메모</label>
@@ -177,18 +184,17 @@
                         <hr class="my-4" />
                         <form method="post" action="#" autocomplete="off">
                             @csrf
-                            @method('put')
-
                             <h6 class="heading-small text-muted mb-4">비밀번호</h6>
+                            <input type="hidden" name="id" value="{{$user->id}}">
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-password">새 비밀번호</label>
-                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="" value="" required>
+                                    <label class="form-control-label" for="password">새 비밀번호</label>
+                                    <input type="password" name="password" id="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="" value="" required>
 
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-password-confirmation">비밀번호 확인</label>
-                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="" value="" required>
+                                    <label class="form-control-label" for="password_confirmation">비밀번호 확인</label>
+                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="" value="" required>
                                 </div>
 
                                 <div class="text-center">
@@ -209,23 +215,22 @@
                         <hr class="my-4" />
                         <form method="post" action="#" autocomplete="off">
                             @csrf
-                            @method('put')
-
                             <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>
+                            <input type="hidden" name="id" value="{{$user->id}}">
                             <div class="pl-lg-4">
-                                <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-password">기존 비밀번호</label>
-                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="" value="" required>
+                                <div class="form-group{{ $errors->has('confirmation_token') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="old_confirmation_token">기존 비밀번호</label>
+                                    <input type="password" name="old_confirmation_token" id="old_confirmation_token" class="form-control{{ $errors->has('old_confirmation_token') ? ' is-invalid' : '' }}" placeholder="" value="" required>
 
                                 </div>
-                                <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-password">새 비밀번호</label>
-                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="" value="" required>
+                                <div class="form-group{{ $errors->has('confirmation_token') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="confirmation_token">새 비밀번호</label>
+                                    <input type="password" name="confirmation_token" id="confirmation_token" class="form-control{{ $errors->has('confirmation_token') ? ' is-invalid' : '' }}" placeholder="" value="" required>
 
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-password-confirmation">비밀번호 확인</label>
-                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="" value="" required>
+                                    <label class="form-control-label" for="confirmation_token_confirmation">비밀번호 확인</label>
+                                    <input type="password" name="confirmation_token_confirmation" id="confirmation_token_confirmation" class="form-control" placeholder="" value="" required>
                                 </div>
 
                                 <div class="text-center">
