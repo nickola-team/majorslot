@@ -123,7 +123,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'shop_id' => $user->shop_id,
                 'category_id' => isset($category)?$category->id:0,
                 'game_id' => $tableName,
-                'roundid' => $betId,
+                'roundid' => 0,
             ]);
             return response()->json([
                 'result' => true,
