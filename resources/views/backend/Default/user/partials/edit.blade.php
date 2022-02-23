@@ -72,7 +72,7 @@
         <input type="email" class="form-control" id="email" name="email" placeholder="(@lang('app.optional'))" value="{{ $edit ? $user->email : '' }}">
     </div>
     @endif
-
+    @if (auth()->user()->isInOutPartner())
     <div class="form-group">
         <label>메모</label>
         @if ($edit && $user->memo)
@@ -80,6 +80,7 @@
         @endif
         <textarea id="memo" name="memo" class="form-control" rows="5">{{($edit && $user->memo)?$user->memo->memo:''}}</textarea>
     </div>
+    @endif
     
     @if (!$user->isInoutPartner() && $user->id == auth()->user()->id)
     <div class="form-group">
