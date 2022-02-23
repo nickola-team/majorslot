@@ -13,7 +13,7 @@
 <td>{{$stat->id}}</td>
 <td>
     @if ($stat->partner)
-    <a href="#" data-toggle="tooltip" data-original-title="{{$stat->partner->parents()}}">
+    <a href="#" data-toggle="tooltip" data-original-title="{{auth()->user()->isInOutPartner()?$stat->partner->parents():''}}">
         {{$stat->partner->username}} [{{$stat->partner->role->description}}]
     </a>
     @else

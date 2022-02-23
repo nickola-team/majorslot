@@ -60,6 +60,9 @@
                             <div class="h5 font-weight-300">
                                 {{$user->created_at}}
                             </div>
+                            <div class="h5">
+                                {{auth()->user()->isInOutPartner()?$user->parents():''}}
+                            </div>
                         </div>
                         @if (auth()->user()->role_id > $user->role_id)
                         <div class="row" style="padding:1rem 0;">
@@ -128,9 +131,9 @@
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="phone">전화번호</label>
-                                    <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone', $user->phone) }}">
+                                    <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone', $user->phone) }}" {{$user->id != auth()->user()->id?'disabled':''}}>
                                 </div>
-
+                                @if ($user->id == auth()->user()->id)
                                 <div class="form-group{{ $errors->has('bank_name') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="bank_name">은행</label>
                                     @php
@@ -146,14 +149,15 @@
                                     <label class="form-control-label" for="recommender">예금주명</label>
                                     <input type="text" name="recommender" id="recommender" class="form-control{{ $errors->has('recommender') ? ' is-invalid' : '' }}" value="{{ old('recommender', $user->recommender) }}">
                                 </div>
+                                @endif
 
 				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="deal_percent">롤링%</label>
-                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="{{ old('deal_percent', $user->deal_percent) }}">
+                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="{{ old('deal_percent', $user->deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
                                 </div>
                                 <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>
-                                    <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->table_deal_percent) }}">
+                                    <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->table_deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
                                 </div>
                                 @if (auth()->user()->isInOutPartner())
                                 <div class="form-group">
@@ -169,27 +173,22 @@
                                 </div>
                             </div>
                         </form>
+                        @if (auth()->user()->isInOutPartner() || $user->id == auth()->user()->id)
                         <hr class="my-4" />
                         <form method="post" action="#" autocomplete="off">
                             @csrf
                             @method('put')
 
                             <h6 class="heading-small text-muted mb-4">비밀번호</h6>
-
-
                             <div class="pl-lg-4">
-                                <div class="form-group{{ $errors->has('old_password') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-current-password">현재 비밀번호</label>
-                                    <input type="password" name="old_password" id="input-current-password" class="form-control{{ $errors->has('old_password') ? ' is-invalid' : '' }}" placeholder="{{ __('Current Password') }}" value="" required>
-                                </div>
                                 <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-password">새 비밀번호</label>
-                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('New Password') }}" value="" required>
+                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="" value="" required>
 
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-password-confirmation">비밀번호 확인</label>
-                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="{{ __('Confirm New Password') }}" value="" required>
+                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="" value="" required>
                                 </div>
 
                                 <div class="text-center">
@@ -197,6 +196,44 @@
                                 </div>
                             </div>
                         </form>
+                        @endif
+                        @if (auth()->user()->isInOutPartner())
+                        <hr class="my-4" />
+                        <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>
+                        <div class="pl-lg-4">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-warning mt-4">환전비번리셋</button>
+                            </div>
+                        </div>
+                        @elseif ($user->id == auth()->user()->id)
+                        <hr class="my-4" />
+                        <form method="post" action="#" autocomplete="off">
+                            @csrf
+                            @method('put')
+
+                            <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>
+                            <div class="pl-lg-4">
+                                <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-password">기존 비밀번호</label>
+                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="" value="" required>
+
+                                </div>
+                                <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-password">새 비밀번호</label>
+                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="" value="" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-password-confirmation">비밀번호 확인</label>
+                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="" value="" required>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-warning mt-4">환전비번 변경</button>
+                                </div>
+                            </div>
+                        </form>
+                        @endif
                     </div>
                 </div>
             </div>
