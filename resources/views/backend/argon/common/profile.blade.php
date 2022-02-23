@@ -22,10 +22,21 @@
                                         <span class="heading">{{number_format($user->balance)}}</span>
                                         <span class="description">현재 보유금</span>
                                     </div>
+                                    @if (!$user->hasRole('user'))
                                     <div>
                                         <span class="heading">{{number_format($user->childBalanceSum())}}</span>
                                         <span class="description">하부 총 보유금</span>
                                     </div>
+                                    @else
+                                    <div>
+                                        <span class="heading">{{number_format($user->total_in)}}</span>
+                                        <span class="description">총 충전금</span>
+                                    </div>
+                                    <div>
+                                        <span class="heading">{{number_format($user->total_out)}}</span>
+                                        <span class="description">총 환전금</span>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -41,12 +52,14 @@
                                 ]
                             ?>
                             <h5 class="h3">
-                                {{ $user->username }} 
+                                {{ $user->username }} , {{$user->id}}
                             </h5>
                             <div class="h5 font-weight-300">
                                 <span class="badge {{$badge_class[$user->role_id-3]}}">{{$user->role->description}}</span>
                             </div>
-                            
+                            <div class="h5 font-weight-300">
+                                {{$user->created_at}}
+                            </div>
                         </div>
                         @if (auth()->user()->role_id > $user->role_id)
                         <div class="row" style="padding:1rem 0;">
@@ -113,14 +126,25 @@
                             <h6 class="heading-small text-muted mb-4">일반설정</h6>
 
                             <div class="pl-lg-4">
-                                <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="username">이름</label>
-                                    <input type="text" name="username" id="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="{{ old('name', $user->username) }}" required autofocus disabled>
-
-                                </div>
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="phone">전화번호</label>
                                     <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone', $user->phone) }}">
+                                </div>
+
+                                <div class="form-group{{ $errors->has('bank_name') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="bank_name">은행</label>
+                                    @php
+                                        $banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
+                                    @endphp
+                                    {!! Form::select('bank_name', $banks, $user->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name']) !!}		
+                                </div>
+                                <div class="form-group{{ $errors->has('account_no') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="account_no">계좌번호</label>
+                                    <input type="text" name="account_no" id="account_no" class="form-control{{ $errors->has('account_no') ? ' is-invalid' : '' }}" value="{{ old('account_no', $user->account_no) }}">
+                                </div>
+                                <div class="form-group{{ $errors->has('recommender') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="recommender">예금주명</label>
+                                    <input type="text" name="recommender" id="recommender" class="form-control{{ $errors->has('recommender') ? ' is-invalid' : '' }}" value="{{ old('recommender', $user->recommender) }}">
                                 </div>
 
 				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
