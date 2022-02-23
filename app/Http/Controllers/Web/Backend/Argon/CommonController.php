@@ -112,10 +112,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다']);
             }
             
-            $request->validate([
-                'username' => 'required|unique:users,username,' . $user->username, 
-                'email' => 'nullable|unique:users,email,' . $user->email
-            ]);
             $data = $request->all();
             
             if( !$user->isInOutPartner())
