@@ -69,6 +69,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $userId = $data['userId'];
             $tableName = $data['tableName'];
             $betAmount = $data['betAmount'];
+            $type = $data['betInfo'];
             if (!$userId || !$tableName || !$betAmount)
             {
                 return response()->json([
@@ -90,8 +91,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            $user->balance = $user->balance - intval(abs($betAmount));
+            $amount = ($type==1)?(abs($betAmount)) : (-1 * abs($betAmount));
+            if ($user->balance < $amount)
+            {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'balance is not enough',
+                    'data' => [
+                        'balance' => 0,
+                    ]
+                ]);
+            }
+
+            $user->balance = $user->balance - intval($amount);
             $user->save();
+            $user = $user->fresh();
+            
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
@@ -211,7 +226,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'userId' => strval($user->id),
                 'userName' => $user->username,
                 'recommend' => config('app.gac_key'),
-                'gameType' => 31
+                'gameType' => 36
             ];
             $url = null;
             try {
