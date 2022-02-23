@@ -659,6 +659,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
                             else
                             {
+                                $view = 1;
+                                if ($href == 'live' && $game['gameID'] != 101)
+                                {
+                                    $view = 0;
+                                }
                                 array_push($gameList, [
                                     'provider' => 'pp',
                                     'gamecode' => $game['gameID'],
@@ -668,6 +673,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
                                     'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc" || $game['gameTypeID']=="r2")?'slot':'table',
                                     'gameType' => $game['gameTypeID'],
+                                    'view' => $view
                                 ]);
                             }
                             
