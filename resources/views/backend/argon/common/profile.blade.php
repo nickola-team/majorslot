@@ -170,7 +170,7 @@
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">메모</label>
                                     @if ($user->memo)
-                                    <p> 작성날짜 : {{$user->memo->created_at}} 저장날짜 : {{$user->memo->updated_at}}</p>
+                                    <h6 class="heading-small text-muted">작성날짜 : {{$user->memo->created_at}} 저장날짜 : {{$user->memo->updated_at}}</h6>
                                     @endif
                                     <textarea id="memo" name="memo" class="form-control" rows="5">{{$user->memo?$user->memo->memo:''}}</textarea>
                                 </div>
@@ -182,7 +182,7 @@
                         </form>
                         @if (auth()->user()->isInOutPartner() || $user->id == auth()->user()->id)
                         <hr class="my-4" />
-                        <form method="post" action="argon_route('argon.common.profile.password')" autocomplete="off">
+                        <form method="post" action="{{argon_route('argon.common.profile.password')}}" autocomplete="off">
                             @csrf
                             <h6 class="heading-small text-muted mb-4">비밀번호</h6>
                             <input type="hidden" name="id" value="{{$user->id}}">
@@ -208,7 +208,7 @@
                         <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>
                         <div class="pl-lg-4">
                             <div class="text-center">
-                                <a href="{{argon_route('')}}"><button type="submit" class="btn btn-warning mt-4">환전비번리셋</button></a>
+                                <a href="{{argon_route('argon.common.profile.resetdwpass', ['id'=>$user->id])}}"><button type="submit" class="btn btn-warning mt-4">환전비번리셋</button></a>
                             </div>
                         </div>
                         @elseif ($user->id == auth()->user()->id)
@@ -220,7 +220,7 @@
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('confirmation_token') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="old_confirmation_token">기존 비밀번호</label>
-                                    <input type="password" name="old_confirmation_token" id="old_confirmation_token" class="form-control{{ $errors->has('old_confirmation_token') ? ' is-invalid' : '' }}" placeholder="" value="" required>
+                                    <input type="password" name="old_confirmation_token" id="old_confirmation_token" class="form-control{{ $errors->has('old_confirmation_token') ? ' is-invalid' : '' }}" placeholder="" value="">
 
                                 </div>
                                 <div class="form-group{{ $errors->has('confirmation_token') ? ' has-danger' : '' }}">

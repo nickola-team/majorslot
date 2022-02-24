@@ -88,7 +88,7 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'as' => 'argon.common.profile.dwpass',
             'uses' => 'CommonController@updateDWPass',
         ]);
-        Route::post('/common/profile/resetdwpass', [
+        Route::get('/common/profile/resetdwpass', [
             'as' => 'argon.common.profile.resetdwpass',
             'uses' => 'CommonController@resetDWPass',
         ]);

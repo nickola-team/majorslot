@@ -1,7 +1,7 @@
 <td>{{$stat->id}}</td>
 <td>
     @if ($stat->user)
-    <a href="#" data-toggle="tooltip" data-original-title="{{auth()->user()->isInOutPartner()?$stat->partner->parents():''}}">
+    <a href="#" data-toggle="tooltip" data-original-title="{{auth()->user()->isInOutPartner()?$stat->user->parents():''}}">
         {{$stat->user->username}} [{{$stat->user->role->description}}]
     </a>
     @else

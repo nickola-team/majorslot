@@ -101,6 +101,65 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
             return view('backend.argon.common.profile', compact('user', 'userActivities'));
         }
+        public function updatePassword(\VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
+        {
+            $user_id = $request->id;
+            $user = \VanguardLTE\User::find($user_id);
+            $users = auth()->user()->availableUsers();
+            if( !$user || (count($users) && !in_array($user_id, $users) )) 
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다']);
+            }
+
+            $data = $request->all();
+            if( trim($data['password']) != '' ) 
+            {
+                unset($data['id']);
+                $user->update($data);
+            }
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            return redirect()->back()->withSuccess(trans('app.login_updated'));
+        }
+
+        public function updateDWPass(\VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
+        {
+            $user_id = $request->id;
+            $user = \VanguardLTE\User::find($user_id);
+            $users = auth()->user()->availableUsers();
+            if( !$user || (count($users) && !in_array($user_id, $users) )) 
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다']);
+            }
+
+            $data = $request->all();
+            $old_confirm_token = $data['old_confirmation_token'];
+            if(!empty($user->confirmation_token) && !\Illuminate\Support\Facades\Hash::check($old_confirm_token, $user->confirmation_token) ) 
+            {
+                return redirect()->back()->withErrors(['이전 환전비밀번호가 틀립니다']);
+            }
+
+            if( trim($data['confirmation_token']) != '' ) 
+            {
+                unset($data['id']);
+                $data['confirmation_token'] = \Illuminate\Support\Facades\Hash::make($data['confirmation_token']);
+                $user->update($data);
+            }
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            return redirect()->back()->withSuccess(['환전비번을 업데이트했습니다']);
+        }
+
+        public function resetDWPass(\Illuminate\Http\Request $request)
+        {
+            $user_id = $request->id;
+            $user = \VanguardLTE\User::find($user_id);
+            $users = auth()->user()->availableUsers();
+            if( !$user && count($users) && !in_array($user->id, $users) ) 
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다']);
+            }
+            $user->update(['confirmation_token' => null]);
+            return redirect()->back()->withSuccess(['환전비번을 리셋했습니다']);
+        }
 
         public function updateProfile(\Illuminate\Http\Request $request)
         {
@@ -166,6 +225,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             return redirect()->back()->withSuccess(['설정정보가 업데이트되었습니다']);
+        }
+        private function userIsBanned(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
+        {
+            return $user->status != $request->status && $request->status == \VanguardLTE\Support\Enum\UserStatus::BANNED;
         }
 
     }
