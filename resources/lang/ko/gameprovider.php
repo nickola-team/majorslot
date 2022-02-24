@@ -5,6 +5,8 @@ return [
         /**
          * Booongo Games
          */
+        "Queen Of The Sun" => "태양의 여왕",
+        "Book of Wizard Crystal Chance" => "마법의 서 크리스탈 찬스",
         "Candy Boom" => "캔디 붐",
         "Gold Express" => "골드 익스프레스",
         "Book of Wizard" => "북 오브 위자드",
@@ -564,6 +566,7 @@ return [
         /**
          * Booongo - Playson Play Games
          */
+        "Joker’s Coins" => "조커의 동전",
         "Diamond Fortunator" => "다이아몬드 포츄네터",
         "Golden Dancing Lion" => "골든 댄싱 라이온",
         "Black Wolf" => "블랙 울프",
@@ -658,6 +661,8 @@ return [
         /**
          * Habanero Games
          */
+        "Lantern Luck" => "랜턴 럭",
+        "Lucky Durian" => "럭키 두리안",
         "Prost!" => "프로스트!",
         "New Years Bash" => "새해 배쉬",
         "Nine Tails" => "나인 테일스",
@@ -791,6 +796,32 @@ return [
         /**
          * Relax Gaming
          */
+        "Slot Dice" => "슬롯 주사위",
+        "3 Secret Cities" => "3대 비밀 도시",
+        "Golden Gods" => "골든 가드",
+        "Medusa Hot 1" => "메두사 핫 1",
+        "Money Cart" => "머니 카트",
+        "Money Mariachi Infinity Reels" => "머니 마리아치 인피니티 릴스",
+        "Royal Potato" => "로열 포테이토",
+        "Gargoyle Infinity Reels" => "가고일 인피니티 릴스",
+        "Gems of Egypt" => "이집트의 보석",
+        "Jaguar Super Ways" => "재규어 슈퍼 웨이즈",
+        "Plunderland" => "플란더랜드",
+        "Medallion Megaways" => "메달리언 메가웨이즈",
+        "Star Pops" => "스타 팝스",
+        "Hazakura Ways" => "하자쿠라 길",
+        "Lady Merlin Lightning Chase" => "멀린 라이트닝 체이스",
+        "Legion Hot 1" => "레지옹 핫 1",
+        "Not Now Norman" => "지금은 아니다 노먼",
+        "Olympus Infinity Reels" => "올림푸스 인피니티 릴스",
+        "Royal Dragon Infinity Reels" => "로열 드래곤 인피니티 릴스",
+        "Spirits of the Storm" => "폭풍의 정령",
+        "Temple Frenzy Lightning Chase" => "템플 광란의 번개 추격전",
+        "Towering Pays Egypt" => "이집트에 돈을 주는 고층 건물",
+        "Valkyrie Wild Storm" => "발키리 와일드 스톰",
+        "Wild Joker Stacks" => "야생 조커 더미",
+        "Golden Haul Infinity Reels" => "골든 하울 인피니티 릴스",
+        "Arto And The Seven Deadly Spins Megaways" => "",
         "Dead Man's Trail" => "죽은자의 자국",
         "Erik the Red" => "에릭 더 레드",
         "Zombie Circus" => "좀비 서커스",
@@ -918,6 +949,18 @@ return [
         "Towering Pays Valhalla" => "타워링 페이스 발랄라",
 
         // Playn'Go Games ///
+        "Gemix 2" => "제믹스2",
+        "Sisters of the Sun" => "",
+        "Charlie Chance and The Curse of Cleopatra" => "찰리 찬스와 클레오파트라의 저주",
+        "Legend of the Ice Dragon" => "레전드 오브더 아이스 드래곤",
+        "Rich Wilde and the Wandering City" => "부유한 와일드와 방황하는 도시",
+        "Merlin and the Ice Queen Morgana" => "멀린과 얼음의 여왕 모르가나",
+        "Moon Princess: Christmas Kingdom" => "문 프린세스: 크리스마스 왕국",
+        "Hooligan Hustle" => "훌리건 허슬",
+        "Beasts of Fire" => "불의 짐승",
+        "Captain Xeno's Earth Adventure" => "캡틴 제노의 지구 모험",
+        "Tale of Kyubiko" => "규비코 이야기",
+        "15 Crystal Roses: A Tale of Love" => "15 크리스탈 로즈: 테일 오브 러브",
         "24k Dragon" => "24k 드래곤",
         "3 Clown Monty" => "쓰리 클라운 몬티",
         "3-Hand Casino Hold'em" => "쓰리핸드 카지노 홀덤",
@@ -925,7 +968,7 @@ return [
         "7 Sins" => "7개의 죄악",
         "Ace of Spades" => "에이스 오브 스페이드",
         "Agent Destiny" => "에이전트 데스티니",
-        "Ankh of Anubis" => "앙크 오브 아누비스 ",
+        "Ankh of Anubis" => "앙크 오브 아누비스",
         "Annihilator" => "어나이얼레이터",
         "Aztec Idols" => "아즈텍의 우상들",
         "Aztec Warrior Princess" => "아즈텍의 공주 전사",
