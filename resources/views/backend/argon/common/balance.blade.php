@@ -21,18 +21,18 @@
                     <input type="hidden" value="{{$user->id}}" name="user_id">
                     <input type="hidden" id="outAll" name="all" value="0">
                     <div class="form-group row">
-                        <div class="col-6 text-center">
+                        <div class="col-5 text-center">
                             이 름
                         </div>
-                        <div class="col-6">
+                        <div class="col-7">
                             {{$user->username}}
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-6 text-center">
+                        <div class="col-5 text-center">
                             레 벨
                         </div>
-                        <div class="col-6">
+                        <div class="col-7">
                             {{$user->role->description}}
                         </div>
                     </div>
@@ -45,19 +45,19 @@
                         </div>
                     </div> -->
                     <div class="form-group row">
-                        <div class="col-6 text-center">
+                        <div class="col-5 text-center">
                             현재 보유금
                         </div>
-                        <div class="col-6">
+                        <div class="col-7">
                             {{number_format($user->balance)}}
                         </div>
                     </div>
                     
                     <div class="form-group row">
-                        <div class="col-6 text-center">
+                        <div class="col-5 text-center">
                             적용할 금액
                         </div>
-                        <div class="col-6">
+                        <div class="col-7">
                             <input class="form-control col-8" type="text" value="" id="amount" name="amount">
                             <p></p>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="10000">1만</button>
@@ -70,10 +70,10 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-6 text-center">
+                        <div class="col-5 text-center">
                         {{$type=='add'?'충전':'환전'}}사유
                         </div>
-                        <div class="col-6">
+                        <div class="col-7">
                             <input class="form-control col-8" type="text" value="" id="reason" name="reason">
                         </div>
                     </div>

@@ -25,6 +25,92 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.agent.partials.childs', compact('users', 'child_id'));
         }
 
+        public function agent_create(\Illuminate\Http\Request $request)
+        {
+            return view('backend.argon.agent.create');
+        }
+
+        public function agent_store(\VanguardLTE\Http\Requests\User\CreateUserRequest $request)
+        {
+            $data = $request->all() + ['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE];
+
+            if( !$request->parent_id ) 
+            {
+                $data['parent_id'] = \Illuminate\Support\Facades\Auth::user()->id;
+            }
+            $role_id = (isset($data['role_id']) && $data['role_id'] < auth()->user()->role_id ? $data['role_id'] : auth()->user()->role_id - 1);
+            $data['role_id'] = $role_id;
+            $role = \jeremykenedy\LaravelRoles\Models\Role::find($role_id);
+            if( (auth()->user()->hasRole('distributor') && $role->slug == 'manager' || auth()->user()->hasRole('manager') && $role->slug == 'cashier') && \VanguardLTE\User::where([
+                'role_id' => $role->id, 
+                'shop_id' => $request->shop_id
+            ])->count() ) 
+            {
+                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.only_1', ['type' => $role->slug])]);
+            }
+
+            if( $data['role_id'] == 1 || $data['role_id'] == 4 || $data['role_id'] == 5 || $data['role_id'] == 6) //user, distributor, agent, master
+            {
+                $parent = auth()->user();
+                if ($data['role_id'] == 1)
+                {
+                    $parent = auth()->user()->shop;
+                }
+                if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
+                {
+                    return redirect()->back()->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
+                }
+                if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+                {
+                    return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+                }
+                if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
+                {
+                    return redirect()->back()->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
+                }
+            }
+
+            $user = $this->users->create($data);
+            $user->detachAllRoles();
+            $user->attachRole($role);
+            if( $request->shop_id && $request->shop_id > 0 && !empty($request->shop_id) ) 
+            {
+                \VanguardLTE\ShopUser::create([
+                    'shop_id' => $request->shop_id, 
+                    'user_id' => $user->id
+                ]);
+            }
+            if( !$user->shop_id && $user->hasRole([
+                'cashier', 
+                'user'
+            ]) ) 
+            {
+                $shops = $user->shops(true);
+                if( count($shops) ) 
+                {
+                    $shop_id = $shops->first();
+                    $user->update(['shop_id' => $shop_id]);
+                }
+            }
+            if ($role_id<3) {
+                return redirect()->route(config('app.admurl').'.user.list')->withSuccess(trans('app.user_created'));
+            }
+
+            //create shift for partners
+            $type = 'partner';
+
+            \VanguardLTE\OpenShift::create([
+                'start_date' => \Carbon\Carbon::now(), 
+                'user_id' => $user->id, 
+                'shop_id' => 0,
+                'old_total' => 0,
+                'deal_profit' => 0,
+                'mileage' => 0,
+                'type' => $type
+            ]);
+            return view('backend.argon.agent.create');
+        }
+
         public function agent_list(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();

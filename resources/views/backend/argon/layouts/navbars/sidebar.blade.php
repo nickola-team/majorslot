@@ -37,7 +37,7 @@
                     <ul class="nav nav-sm flex-column">
                     @if (!auth()->user()->hasRole('manager'))
                         <li class="nav-item">
-                            <a class="nav-link  text-white" href="#">
+                            <a class="nav-link  text-white" href="{{argon_route('argon.agent.create')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                 <span class="nav-link-text text-white">에이전트생성</span>
                             </a>

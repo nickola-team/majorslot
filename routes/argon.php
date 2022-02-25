@@ -41,6 +41,16 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
 
         //agent
 
+        Route::get('/agent/create', [
+            'as' => 'argon.agent.create',
+            'uses' => 'UsersController@agent_create',
+        ]);
+
+        Route::post('/agent/create', [
+            'as' => 'argon.agent.store',
+            'uses' => 'UsersController@agent_store',
+        ]);
+
         Route::get('/agent/list', [
             'as' => 'argon.agent.list',
             'uses' => 'UsersController@agent_list',
