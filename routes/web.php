@@ -234,6 +234,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.providers.cq9.render',
         'uses' => 'RenderingController@cq9render'
     ]);
+    Route::get('providers/bng/{gamecode}', [
+        'as' => 'frontend.providers.bng.render',
+        'uses' => 'RenderingController@booongorender'
+    ]);
     Route::get('providers/waiting/{provider}/{gamecode}', [
         'as' => 'frontend.providers.waiting',
         'uses' => 'RenderingController@waiting'
@@ -1418,6 +1422,38 @@ Route::post('games/{ppgame}/saveSettings.do', 'GameProviders\PPController@savese
 Route::group(['middleware' => 'bng', 'prefix' => 'bng',], function () {
 	Route::post('/betman/', 'GameProviders\BNGController@betman');
 });
+
+Route::prefix('booongo')->group(function () { 
+    Route::post('/process', [
+        'as' => 'frontend.booongo.process',
+        'uses' => 'GameProviders\BNGController@booongo_process',
+    ]);
+    Route::post('/desktoplog', [
+        'as' => 'frontend.booongo.desktoplog',
+        'uses' => 'GameProviders\BNGController@booongo_desktoplog',
+    ]);
+    Route::post('/mobilelog', [
+        'as' => 'frontend.booongo.mobilelog',
+        'uses' => 'GameProviders\BNGController@booongo_mobilelog',
+    ]);
+});
+
+Route::post('op/major/history/api/v1/game/list', [
+    'as' => 'frontend.booongo.game_list',
+    'uses' => 'GameProviders\BNGController@booongo_game_list',
+]);
+Route::post('op/major/history/api/v1/transaction/list', [
+    'as' => 'frontend.booongo.transaction_list',
+    'uses' => 'GameProviders\BNGController@booongo_transaction_list',
+]);
+Route::post('op/major/history/api/v1/playergame/aggregate', [
+    'as' => 'frontend.booongo.aggregate',
+    'uses' => 'GameProviders\BNGController@booongo_aggregate',
+]);
+Route::get('op/major/history/draw/{transaction_id}', [
+    'as' => 'frontend.booongo.draw_log',
+    'uses' => 'GameProviders\BNGController@booongo_draw_log',
+]);
 
 /**
  * Habanero Game Provider

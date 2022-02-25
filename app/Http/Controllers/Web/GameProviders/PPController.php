@@ -1076,10 +1076,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 for ($i=2;$i<count($parts);$i++)
                 {
                     $round = explode(",", $parts[$i]);
-                    if (count($round) < 14)
+                    if (count($round) < 11)
                     {
                         continue;
                     }
+                    $balance = (count($round)>13)?$round[13]:(-1);
                     if ($round[7] == "C") {
                         $time = strtotime($round[6].' UTC');
                         $dateInLocal = date("Y-m-d H:i:s", $time);
@@ -1087,7 +1088,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $gameObj =  PPController::gamecodetoname($round[2]);
                         \VanguardLTE\StatGame::create([
                             'user_id' => $round[1], 
-                            'balance' => $round[13], 
+                            'balance' => $balance, 
                             'bet' => $round[9], 
                             'win' => $round[10], 
                             'game' =>$gameObj[0] . '_pp', 

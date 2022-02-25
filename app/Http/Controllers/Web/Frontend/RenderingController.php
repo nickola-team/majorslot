@@ -253,6 +253,45 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return view('frontend.Default.games.cq9', compact('url', 'alonegame', 'data'));
             
         }
+
+        public function booongorender($gamecode, \Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
+
+            $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::gamecodetoname($gamecode);
+            $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename);
+            // $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+            $shop_id = \Auth::user()->shop_id;
+            $cat = \VanguardLTE\Category::where([
+                'shop_id' => $shop_id,
+                'href' => 'bngplay',
+                'view' => 1
+            ])->first();
+            $bng_games = \VanguardLTE\Game::where([
+                'shop_id' => $shop_id,
+                'name' => $gamename,
+                'view' => 1,
+                ]
+            )->get()->first();
+            
+            $alonegame = 0;
+            $url = null;
+            $data = [];
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $bng_games && $cat) {
+                $url = url('/game/' . $gamename);
+                $alonegame = 1;
+            }
+            else {
+                    //게임런칭
+                $url = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::makegamelink($gamecode, 'real');
+            }
+            return view('frontend.Default.games.booongo', compact('url', 'alonegame', 'data'));
+            
+        }
     }
 
 }

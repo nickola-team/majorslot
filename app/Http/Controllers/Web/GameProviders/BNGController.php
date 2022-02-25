@@ -31,6 +31,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $microstr = str_replace('.', '', $microstr);
             return $microstr;
         }
+
+        public static function gamecodetoname($code)
+        {
+            $gamelist = CQ9Controller::getgamelist('booongo');
+            $gamelist1 = CQ9Controller::getgamelist('playson');
+            if ($gamelist1){
+                $gamelist = array_merge_recursive($gamelist, $gamelist1);
+            }
+            $gamename = $code;
+            if ($gamelist)
+            {
+                foreach($gamelist as $game)
+                {
+                    if ($game['gamecode'] == $code)
+                    {
+                        $gamename = $game['name'];
+                        break;
+                    }
+                }
+            }
+            return $gamename;
+        }
         /*
         * FROM Booongo, BACK API
         */
@@ -424,12 +446,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            $url = BNGController::makegamelink($gamecode, "real");
-            if ($url)
-            {
-                return ['error' => false, 'data' => ['url' => $url]];
-            }
-            return ['error' => true, 'msg' => '로그인하세요'];
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.bng.render', $gamecode)]];
+            // $url = BNGController::makegamelink($gamecode, "real");
+            // if ($url)
+            // {
+            //     return ['error' => false, 'data' => ['url' => $url]];
+            // }
+            // return ['error' => true, 'msg' => '로그인하세요'];
             
         }
 
@@ -523,6 +546,97 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             return $reslist;
+        }
+
+
+        ///BNG request
+
+        public function booongo_process(\Illuminate\Http\Request $request){
+            return '[]';
+        }
+        public function booongo_desktoplog(\Illuminate\Http\Request $request){
+            return '[]';
+        }
+        public function booongo_mobilelog(\Illuminate\Http\Request $request){
+            return '[]';
+        }
+        public function booongo_game_list(\Illuminate\Http\Request $request){
+            $data = file(base_path() . '/public/op/major/assets/gamelist.json');
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
+        public function booongo_transaction_list(\Illuminate\Http\Request $request){
+            if(!isset($request->player_id) || !isset($request->game_id)){
+                return '[]';
+            }
+            $fetchSize = 100;
+            if(isset($request->fetch_size)){
+                $fetchSize = $request->fetch_size;
+            }
+            $fetch_state = 1;
+            if(isset($request->fetch_state)){
+                $fetch_state = $request->fetch_state;
+                $request->page = $fetch_state;
+            }
+            $bngLoges = \VanguardLTE\BNGGameLog::where([
+                'player_id' => $request->player_id, 
+                'game_id' => $request->game_id
+            ])->orderBy('c_at', 'DESC');
+            $paginator = $bngLoges->paginate($fetchSize);
+            $array = $paginator->toArray();
+            $data = [
+                'items' => $array['data']
+            ];
+            if($array['next_page_url'] != NULL){
+                // $nextPageLink = $array['next_page_url'];
+                // $data['fetch_state'] = explode('page=', $nextPageLink)[1];
+            }
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
+        
+        public function booongo_aggregate(\Illuminate\Http\Request $request){
+            if(!isset($request->player_id) || !isset($request->game_id)){
+                return '[]';
+            }
+            $bngLoges = \VanguardLTE\BNGGameLog::whereRaw('game_id=? and player_id=? ORDER BY c_at DESC LIMIT 100', [
+                $request->game_id, 
+                $request->player_id
+            ])->get();
+           
+            $bets = 0; 
+            $wins = 0;
+            $rounds = [];
+            foreach( $bngLoges as $log ) 
+            {
+                if($log->bet != NULL){
+                    $bets += $log->bet;
+                }
+                $wins += $log->win;
+                array_push($rounds, $log->round_id);
+            }
+            $rounds = array_unique($rounds);
+            if($bets == 0){
+                $percent = '0';
+            }else{
+                $percent = sprintf('%0.2f', ($wins / $bets) * 100);
+            }
+
+            $data = '{"bets": "' . $bets . '", "wins": "' . $wins . '", "profit": "' . ($bets - $wins) . '", "outcome": "' . ($wins - $bets) . '", "payout": "' . $percent . '", "rounds": "'. count($rounds) .'", "transactions": "'. count($bngLoges) .'"}';
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
+        public function booongo_draw_log(\Illuminate\Http\Request $request, $transaction_id)
+        {
+            if(!isset($transaction_id)){
+                return '[]';
+            }
+            $bngLog = \VanguardLTE\BNGGameLog::where([
+                'transaction_id' => $transaction_id
+            ])->first();
+            if($bngLog == NULL){
+                return '[]';
+            }
+            $gameName = $bngLog->game_name;
+            $details = $bngLog->log;
+            return view('frontend.Default.games.bng.' . $gameName, compact('details'));
         }
     }
 

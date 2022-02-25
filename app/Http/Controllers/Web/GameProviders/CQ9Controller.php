@@ -1468,7 +1468,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checkplayer($account, \Illuminate\Http\Request $request)
         {
-            $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
+            $user = \VanguardLTE\User::where('id',$account)->get()->first();
             $data = false;
             if ($user && $user->hasRole('user')) {
                 $data = true;
