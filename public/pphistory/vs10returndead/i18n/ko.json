@@ -37,7 +37,13 @@
     "lose": "패배",
     "totalWinTooltip": "총 당첨금은 모든 무료 기능이 실행된 유료 스핀에서부터 현재 스핀 종료까지 쵝득한 총액입니다.",
     "goldSymbol": "골드 심벌",
-    "jackpot": "잭팟"
+    "jackpot": "잭팟",
+    "next": "다음",
+    "allWins": "모든 당첨",
+    "jackpotAwarded": "잭팟 보너스 지급 완료",
+    "extra": "추가",
+    "extraDrop": "추가 드롭",
+    "wins": "당첨"
   },
   "winLines": {
     "title": "당첨 라인",
@@ -83,7 +89,8 @@
     "respinsWin": "리스핀 상금",
     "respins": "리스핀",
     "coin": "코인",
-    "coins": "코인"
+    "coins": "코인",
+    "respinsWon": "획득한 리스핀"
   },
   "free_spin": {
     "free_spin_played": "무료 스핀",
@@ -214,7 +221,8 @@
   "feature": {
     "title": "기능",
     "pending": "출시 예정 기능",
-    "winningSrf": "당첨 심벌 교체 기능"
+    "winningSrf": "당첨 심벌 교체 기능",
+    "superSpin": "슈퍼 스핀"
   },
   "vs40pirgold": {
     "game": "Pirate Gold Deluxe",
@@ -354,7 +362,7 @@
     "game": "Gates of Olympus"
   },
   "vs25davinci": {
-    "game": "Da Vinci Treasures",
+    "game": "Da Vinci`s Treasure",
     "bonus": {
       "9": {
         "title": "작품 선택",
@@ -906,7 +914,11 @@
     "game": "The Bird House"
   },
   "vs12bbb": {
-    "game": "Bigger Bass Bonanza"
+    "game": "Bigger Bass Bonanza",
+    "feature": {
+      "hook": "후크",
+      "dynamite": "다이너마이트"
+    }
   },
   "vs20fruitsheart": {
     "game": "Heart Bonanza"
@@ -915,7 +927,8 @@
     "game": "Super 7s"
   },
   "vs20trsbox": {
-    "game": "Treasure Wild"
+    "game": "Treasure Wild",
+    "treasurebox": "Treasure Wild"
   },
   "vs20rhinoyes": {
     "game": "Yesbet Great Rhino"
@@ -943,5 +956,193 @@
   },
   "vs20pbonanza": {
     "game": "Pyramid Bonanza"
+  },
+  "vswayswest": {
+    "game": "Mystic Chief"
+  },
+  "vswaysbankbonz": {
+    "game": "Cash Bonanza"
+  },
+  "vs20amuleteg": {
+    "game": "Fortune of Giza"
+  },
+  "vs20daydead": {
+    "game": "Day of Dead"
+  },
+  "vs10starpirate": {
+    "game": "Star Pirates Code"
+  },
+  "vs20fruitswbwin": {
+    "game": "BWIN Bonanza"
+  },
+  "vs40bigjuan": {
+    "game": "Big Juan"
+  },
+  "vs20bermuda": {
+    "game": "Bermuda Riches"
+  },
+  "vs25copsrobbers": {
+    "game": "Cash Patrol"
+  },
+  "vs20fruitbetway": {
+    "game": "Betway Sweet Bonanza"
+  },
+  "vs10madame": {
+    "game": "Madame Destiny"
+  },
+  "vs10threestar": {
+    "game": "Three Star Fortune"
+  },
+  "vs20fruitbetano": {
+    "game": "Betano Bonanza"
+  },
+  "vs25btygold": {
+    "game": "Bounty Gold"
+  },
+  "vs25safari": {
+    "game": "Hot Safari"
+  },
+  "vs20fruitswfn": {
+    "game": "Sweet Bonanza88"
+  },
+  "vswaysbbb": {
+    "game": "Big Bass Bonanza Megaways",
+    "feature": {
+      "bazooka": "바주카",
+      "dynamite": "다이너마이트"
+    }
+  },
+  "vswayshive": {
+    "game": "Star Bounty"
+  },
+  "vs20tweethouse": {
+    "game": "The Tweety house"
+  },
+  "vs20candvil": {
+    "game": "Candy Village"
+  },
+  "vs25wolfjpt": {
+    "game": "Wolf Gold Power Jackpot",
+    "bonus": {
+      "11": {
+        "extraWin": "추가 상금"
+      }
+    }
+  },
+  "vs25wolfsolbet": {
+    "game": "Solbet Wolf Gold",
+    "bonus": {
+      "11": {
+        "extraWin": "추가 상금"
+      }
+    }
+  },
+  "vs20santawonder": {
+    "game": "Santa's Wonderland"
+  },
+  "vs10bookfallen": {
+    "game": "Book of Fallen"
+  },
+  "vs20superx": {
+    "game": "Super X"
+  },
+  "vs20olympnova88": {
+    "game": "Nova88 Olympus"
+  },
+  "vs10bxmasbnza": {
+    "game": "Christmas Big Bass Bonanza"
+  },
+  "vs20smugcove": {
+    "game": "Smugglers Cove"
+  },
+  "vs10bblpop": {
+    "game": "Bubble Pop",
+    "fireBonus": "보너스",
+    "fireBonusJackpot": "잭팟"
+  },
+  "vs20fruitgaruda": {
+    "game": "Garuda Bonanza Gold"
+  },
+  "vs10bookdorado": {
+    "game": "Book of El Dorado"
+  },
+  "vswayscryscav": {
+    "game": "Crystal Caverns Megaways"
+  },
+  "vs25vegas": {
+    "game": "Vegas Nights"
+  },
+  "vs25vegas88": {
+    "game": "Vegas88 Nights"
+  },
+  "vs20fruitswvbet": {
+    "game": "Vbet Sweet Bonanza"
+  },
+  "vs20xmascarolwh": {
+    "game": "William Hill Christmas Megaways",
+    "fsOption": {
+      "startMultiplier": "시작 멀티플라이어"
+    }
+  },
+  "vs40wwestkd": {
+    "game": "Wild KDSLOTS Gold"
+  },
+  "vs25asgard": {
+    "game": "Asgard",
+    "bonus": {
+      "21": {
+        "title": "보너스"
+      }
+    }
+  },
+  "vs25mustangbetp": {
+    "game": "BetPlay Mustang Gold",
+    "bonus18": {
+      "title": "보너스",
+      "major": "메이저",
+      "minor": "마이너",
+      "mini": "미니",
+      "grand": "그랜드",
+      "jackpot": "잭팟"
+    }
+  },
+  "vs1024butterfly": {
+    "game": "Jade Butterfly"
+  },
+  "vs88hockattack": {
+    "game": "Hockey Attack"
+  },
+  "vs40wanderw": {
+    "game": "Wild Depths"
+  },
+  "vs243medusa": {
+    "game": "Medusa Strike"
+  },
+  "vs243fortune": {
+    "game": "Caishen's Gold"
+  },
+  "vs25fermin": {
+    "game": "Fiesta de San Fermin",
+    "bonus": {
+      "11": {
+        "extraWin": "추가 상금"
+      }
+    }
+  },
+  "vs4096magician": {
+    "game": "Magician Secrets",
+    "bonus": {
+      "title": "무료 스핀 옵션",
+      "startMultiplier": "시작 멀티플라이어"
+    }
+  },
+  "vs5aztecmpoplay": {
+    "game": "MPOPLAY Aztec Gems"
+  },
+  "vs20fruitswbee": {
+    "game": "Beebet Sweet Bonanza"
+  },
+  "vs20fsbuffbnz": {
+    "game": "Fish Buffet Bonanza"
   }
 }
