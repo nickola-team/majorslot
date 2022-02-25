@@ -595,7 +595,9 @@ namespace VanguardLTE\Games\scarabrichesbng
                     'percent_jpg' => $this->toSlotJackBanks, 
                     'profit' => $this->betProfit, 
                     'denomination' => $this->CurrentDenom, 
-                    'shop_id' => $this->shop_id
+                    'shop_id' => $this->shop_id,
+                    'game_id' => $this->game->original_id,
+                    'category_id' => $this->game->categories->first()->category->original_id,
                 ]);
             }
         }
