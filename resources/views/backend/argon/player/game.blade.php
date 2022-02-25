@@ -1,5 +1,5 @@
 @extends('backend.argon.layouts.app')
-@section('page-title',  '에이전트 롤링내역')
+@section('page-title',  '플레이어 게임내역')
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -37,41 +37,6 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats  mb-xl-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col ">
-                        <h3 class="card-title text-primary mb-0 ">롤링합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['deal'])}}</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
-                            <i class="fas fa-chart-area"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats  mb-xl-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col ">
-                        <h3 class="card-title text-info mb-0 ">벳윈합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($total['ggr'])}}</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 @section('content')
@@ -97,24 +62,16 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('user')??auth()->user()->username}}" id="user" name="user">
-                            </div>
-
                             <label for="player" class="col-md-2 col-form-label form-control-label text-center">플레이어이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('player')}}" id="player"  name="player">
                             </div>
-                            <div class="col-md-1">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
                             <label for="game" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
+                            </div>
+
+                            <div class="col-md-1">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -150,20 +107,17 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">에이전트 롤링내역</h3>
+        <h3 class="mb-0">플레이어 게임내역</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush">
             <thead class="thead-light">
                 <tr>
-                <th scope="col">번호</th>
-                <th scope="col">에이전트</th>
                 <th scope="col">플레이어</th>
                 <th scope="col">게임</th>
                 <th scope="col">게임사</th>
                 <th scope="col">배팅금</th>
                 <th scope="col">당첨금</th>
-                <th scope="col">롤링금</th>
                 <th scope="col">배팅시간</th>
                 </tr>
             </thead>
@@ -171,11 +125,11 @@
                 @if (count($statistics) > 0)
                     @foreach ($statistics as $stat)
                         <tr>
-                            @include('backend.argon.agent.partials.row_deal')
+                            @include('backend.argon.player.partials.row_game')
                         </tr>
                     @endforeach
                 @else
-                    <tr><td colspan="7">{{__('No Data')}}</td></tr>
+                    <tr><td colspan="6">{{__('No Data')}}</td></tr>
                 @endif
             </tbody>
             </table>

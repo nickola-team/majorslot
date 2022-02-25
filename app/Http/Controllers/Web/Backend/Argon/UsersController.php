@@ -220,6 +220,95 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.player.list', compact('users','total'));
         }
 
+        public function player_transaction(\Illuminate\Http\Request $request)
+        {
+            $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC');
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+            $statistics = $statistics->whereIn('user_id', $availableUsers);
+
+            $start_date = date("Y-m-1 0:0:0");
+            $end_date = date("Y-m-d 23:59:59");
+
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = $statistics->where('transactions.created_at', '>=', $start_date);
+            $statistics = $statistics->where('transactions.created_at', '<=', $end_date );
+
+            $statistics = $statistics->join('users', 'users.id', '=', 'transactions.user_id');
+
+            if ($request->role != '')
+            {
+                $statistics = $statistics->where('users.role_id', $request->role);
+            }
+            if ($request->user != '')
+            {
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
+            }
+
+            if ($request->admin != '')
+            {
+                $payeerIds = \VanguardLTE\User::where('username', 'like', '%' . $request->admin . '%')->pluck('id')->toArray();
+                $statistics = $statistics->whereIn('transactions.payeer_id', $payeerIds);
+            }
+
+            if ($request->type != '')
+            {
+                $statistics = $statistics->where('transactions.type',  $request->type);
+            }
+
+            $total = [
+                'add' => (clone $statistics)->where(['type'=>'add'])->sum('summ'),
+                'out' => (clone $statistics)->where(['type'=>'out'])->sum('summ'),
+            ];
+
+            $statistics = $statistics->paginate(20);
+            return view('backend.argon.player.transaction', compact('statistics', 'total'));
+        }
+
+        public function player_game_stat(\Illuminate\Http\Request $request)
+        {
+            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+
+            $start_date = date("Y-m-d H:i:s", strtotime("-1 hours"));
+            $end_date = date("Y-m-d H:i:s");
+
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = $statistics->where('stat_game.date_time', '>=', $start_date);
+            $statistics = $statistics->where('stat_game.date_time', '<=', $end_date );
+
+            $statistics = $statistics->join('users', 'users.id', '=', 'stat_game.user_id');
+
+            if ($request->player != '')
+            {
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->player . '%');
+            }
+
+            if ($request->game != '')
+            {
+                $statistics = $statistics->where('stat_game.game', 'like', '%'. $request->game . '%');
+            }
+
+            $total = [
+                'bet' => (clone $statistics)->sum('bet'),
+                'win' => (clone $statistics)->sum('win'),
+            ];
+
+            $statistics = $statistics->paginate(20);
+            return view('backend.argon.player.game', compact('statistics', 'total'));
+        }
+
     }
 
 }

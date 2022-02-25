@@ -1,8 +1,11 @@
+<?php 
+    $badge_class = \VanguardLTE\User::badgeclass();
+?>
 <td>{{$stat->id}}</td>
 <td>
     @if ($stat->user)
     <a href="#" data-toggle="tooltip" data-original-title="{{$stat->user->parents(auth()->user()->role_id)}}">
-        {{$stat->user->username}} [{{$stat->user->role->description}}]
+        {{$stat->user->username}}
     </a>
     @else
         {{__('Unknown')}}
@@ -10,7 +13,7 @@
 </td>
 <td>
     @if ($stat->admin)
-    {{$stat->admin->username}} [{{$stat->admin->role->description}}]
+    {{$stat->admin->username}} <span class="badge {{$badge_class[$stat->admin->role_id]}}">{{$stat->admin->role->description}}</span>
     @else
     {{__('Unknown')}}
     @endif
@@ -31,13 +34,4 @@
 <td><span class="text-warning">{{number_format($stat->summ,0)}}</span></td>
 <td><span class="text-warning">{{__($stat->type)}}</span></td>
 @endif
-<td>
-@if ($stat->request_id != null)
-<a href="#" data-toggle="tooltip" data-original-title="{{$stat->requestInfo->bankinfo()}}">
-<span class="badge badge-success">계좌</span>
-</a>
-@else
-<span class="badge badge-primary">수동</span>
-@endif
-</td>
 <td>{{$stat->created_at}}</td>

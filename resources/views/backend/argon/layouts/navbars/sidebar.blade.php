@@ -85,17 +85,18 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
-                                <i class="far fa-circle text-white sub-i"></i>
-                                    게임내역
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.transaction')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     지급내역
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.gamehistory')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    게임내역
+                                </a>
+                            </li>
+
                         </ul>
                     </div>
                 </li>

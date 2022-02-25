@@ -205,7 +205,7 @@
                         </tr>
                     @endforeach
                 @else
-                    <tr><td colspan="7">{{__('No Data')}}</td></tr>
+                    <tr><td colspan="10">{{__('No Data')}}</td></tr>
                 @endif
             </tbody>
             </table>

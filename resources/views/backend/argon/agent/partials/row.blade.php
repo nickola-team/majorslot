@@ -1,19 +1,9 @@
 <td><span  class="{{$user->role_id>3?'partner':'shop'}}">{{$user->username}}</span></td>
 <td>{{$user->id}}</td>
 <?php 
-    $badge_class = [
-        'badge-default',
-        'badge-primary',
-        'badge-danger',
-        'badge-success',
-        'badge-info',
-        'badge-warning',
-    ];
-    $status_class = [
-        ''
-    ];
+    $badge_class = \VanguardLTE\User::badgeclass();
 ?>
-<td><span class="badge {{$badge_class[$user->role_id-3]}}">{{$user->role->description}}</span></td>
+<td><span class="badge {{$badge_class[$user->role_id]}}">{{$user->role->description}}</span></td>
 <td>{{number_format($user->balance)}}</td>
 <td>{{ number_format($user->deal_balance - $user->mileage,0) }}</td>
 <td>{{ number_format($user->deal_percent,2) }}</td>

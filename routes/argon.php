@@ -76,7 +76,7 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
 
         Route::get('/player/gamehistory', [
             'as' => 'argon.player.gamehistory',
-            'uses' => 'UsersController@player_gamehistory',
+            'uses' => 'UsersController@player_game_stat',
         ]);
         
         /// Common

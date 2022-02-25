@@ -1,8 +1,11 @@
 <td>{{$stat->id}}</td>
+<?php 
+    $badge_class = \VanguardLTE\User::badgeclass();
+?>
 <td>
     @if ($stat->user)
     <a href="#" data-toggle="tooltip" data-original-title="{{$stat->user->parents(auth()->user()->role_id)}}">
-        {{$stat->user->username}} [{{$stat->user->role->description}}]
+        {{$stat->user->username}} <span class="badge {{$badge_class[$stat->user->role_id]}}">{{$stat->user->role->description}}</span>
     </a>
     @else
         {{__('Unknown')}}
@@ -10,7 +13,7 @@
 </td>
 <td>
     @if ($stat->admin)
-    {{$stat->admin->username}} [{{$stat->admin->role->description}}]
+    {{$stat->admin->username}} <span class="badge {{$badge_class[$stat->admin->role_id]}}">{{$stat->admin->role->description}}</span>
     @else
     {{__('Unknown')}}
     @endif

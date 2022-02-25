@@ -1168,6 +1168,20 @@ namespace VanguardLTE
         {
             return $this->bank_name . ' - ' . $this->account_no . ' - ' . $this->recommender;
         }
+        
+        public static function badgeclass(){
+            return [
+                'badge-warning',
+                'badge-warning',
+                'badge-warning',
+                'badge-default',
+                'badge-primary',
+                'badge-danger',
+                'badge-success',
+                'badge-info',
+                'badge-warning',
+            ];
+        }
 
 
 

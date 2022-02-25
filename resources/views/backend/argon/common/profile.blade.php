@@ -42,16 +42,7 @@
                         </div>
                         <div class="text-center">
                             <?php
-                                $badge_class = [
-                                    'badge-warning',
-                                    'badge-warning',
-                                    'badge-default',
-                                    'badge-primary',
-                                    'badge-danger',
-                                    'badge-success',
-                                    'badge-info',
-                                    'badge-warning',
-                                ];
+                                $badge_class = \VanguardLTE\User::badgeclass();
                                 $statuses = \VanguardLTE\Support\Enum\UserStatus::lists();
                             ?>
                             <h5 class="h3">
