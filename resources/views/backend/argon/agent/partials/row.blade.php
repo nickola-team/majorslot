@@ -1,4 +1,5 @@
 <td><span  class="{{$user->role_id>3?'partner':'shop'}}">{{$user->username}}</span></td>
+<td>{{$user->id}}</td>
 <?php 
     $badge_class = [
         'badge-default',
@@ -7,7 +8,10 @@
         'badge-success',
         'badge-info',
         'badge-warning',
-    ]
+    ];
+    $status_class = [
+        ''
+    ];
 ?>
 <td><span class="badge {{$badge_class[$user->role_id-3]}}">{{$user->role->description}}</span></td>
 <td>{{number_format($user->balance)}}</td>
@@ -16,6 +20,9 @@
 <td>{{ number_format($user->table_deal_percent,2) }}</td>
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
+<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => Request::getRequestUri()])}}" ><button class="btn btn-success btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>충 전</button></a>
+<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => Request::getRequestUri()])}}"><button class="btn btn-warning btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>환 전</button></a>
+
 <div class="dropdown">
     <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-ellipsis-v"></i>
@@ -23,8 +30,7 @@
     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
         <a class="dropdown-item" href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}">설정 및 정보</a>
         <hr class="my-1">
-        <a class="dropdown-item" href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}">충 전</a>
-        <a class="dropdown-item" href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}">환 전</a>
+        <a class="dropdown-item" href="{{argon_route('argon.agent.dealstat', ['user' => $user->username])}}">롤링내역</a>
         <a class="dropdown-item" href="{{argon_route('argon.agent.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
     </div>
 </div>

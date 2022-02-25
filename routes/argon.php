@@ -39,6 +39,8 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'DashboardController@index',
         ]);
 
+        //agent
+
         Route::get('/agent/list', [
             'as' => 'argon.agent.list',
             'uses' => 'UsersController@agent_list',
@@ -57,6 +59,24 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
         Route::get('/agent/rolling', [
             'as' => 'argon.agent.dealstat',
             'uses' => 'UsersController@agent_deal_stat',
+        ]);
+
+        //player
+
+        Route::get('/player/list', [
+            'as' => 'argon.player.list',
+            'uses' => 'UsersController@player_list',
+        ]);
+
+
+        Route::get('/player/transaction', [
+            'as' => 'argon.player.transaction',
+            'uses' => 'UsersController@player_transaction',
+        ]);
+
+        Route::get('/player/gamehistory', [
+            'as' => 'argon.player.gamehistory',
+            'uses' => 'UsersController@player_gamehistory',
         ]);
         
         /// Common

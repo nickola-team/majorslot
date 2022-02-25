@@ -187,6 +187,39 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.agent.transaction', compact('statistics', 'total'));
         }
 
+        public function player_list(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+
+            $users = \VanguardLTE\User::whereIn('id', $availableUsers);
+
+            if ($request->user != '')
+            {
+                $users = $users->where('username', 'like', '%' . $request->user . '%');
+            }
+
+            if ($request->shop != '')
+            {
+                $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shop.'%')->whereIn('id', auth()->user()->availableShops())->pluck('id')->toArray();
+                if (count($shops) > 0){
+                    $users = $users->whereIn('shop_id',$shops);
+                }
+                else
+                {
+                    $users = $users->where('shop_id',-1); //show nothing
+                }
+            }
+
+            $total = [
+                'count' => $users->count(),
+                'balance' => $users->sum('balance'),
+            ];
+            
+            $users = $users->paginate(20);
+            return view('backend.argon.player.list', compact('users','total'));
+        }
+
     }
 
 }

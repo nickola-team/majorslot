@@ -6,6 +6,6 @@
     @endforeach
 @else
     <tr  data-tt-id="-10" data-tt-parent-id="{{isset($child_id)?$child_id:0}}" >
-        <td colspan='8'>No Data</td>
+        <td colspan='9'>No Data</td>
     </tr>
 @endif

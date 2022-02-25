@@ -1138,7 +1138,7 @@ namespace VanguardLTE
             return $result;
         }
 
-        public function parents()
+        public function parents($maxlevel=999)
         {
             $hirechy = $this->username;
             $parent = $this;
@@ -1150,7 +1150,7 @@ namespace VanguardLTE
                     $hirechy = $hirechy . " → " . $parent->username;
                 }
             }
-            while ($parent!=null && !$parent->isInoutPartner());
+            while ($parent!=null && !$parent->isInoutPartner() && $parent->role_id<$maxlevel);
             return $hirechy;
         }
 

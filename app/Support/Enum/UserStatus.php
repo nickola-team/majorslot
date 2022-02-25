@@ -22,4 +22,19 @@ class UserStatus
             self::UNCONFIRMED => trans('app.' . self::UNCONFIRMED)
         ];
     }
+
+    public static function bgclass()
+    {
+        return
+        [
+            self::ACTIVE => 'bg-success',
+            self::BANNED => 'bg-danger',
+            self::DELETED => 'bg-warning',
+            self::REJECTED => 'bg-primary',
+            self::JOIN => 'bg-info',
+            self::UNCONFIRMED => 'bg-default'
+        ];
+    }
+
+
 }

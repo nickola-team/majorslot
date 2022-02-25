@@ -70,8 +70,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $result = $user->addBalance($data['type'], abs($summ), false, 0, null, isset($data['reason'])?$data['reason']:null);
             
             $result = json_decode($result, true);
-
-
             if( $result['status'] == 'error' ) 
             {
                 return redirect()->back()->withErrors([$result['message']]);

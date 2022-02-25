@@ -43,6 +43,8 @@
                         <div class="text-center">
                             <?php
                                 $badge_class = [
+                                    'badge-warning',
+                                    'badge-warning',
                                     'badge-default',
                                     'badge-primary',
                                     'badge-danger',
@@ -56,13 +58,13 @@
                                 {{ $user->username }} , {{$user->id}}
                             </h5>
                             <div class="h5 font-weight-300">
-                                <span class="badge {{$badge_class[$user->role_id-3]}}">{{$user->role->description}}</span>
+                                <span class="badge {{$badge_class[$user->role_id]}}">{{$user->role->description}}</span>
                             </div>
                             <div class="h5 font-weight-300">
                                 {{$user->created_at}}
                             </div>
                             <div class="h5">
-                                {{auth()->user()->isInOutPartner()?$user->parents():''}}
+                                {{$user->parents(auth()->user()->role_id)}}
                             </div>
                         </div>
                         @if (auth()->user()->role_id > $user->role_id)

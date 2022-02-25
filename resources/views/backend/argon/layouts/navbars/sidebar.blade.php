@@ -79,7 +79,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     플레이어목록
                                 </a>
@@ -87,7 +87,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    게임배팅내역
+                                    게임내역
                                 </a>
                             </li>
                             <li class="nav-item">
