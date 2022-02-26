@@ -187,7 +187,7 @@ namespace VanguardLTE\Games\PirateGoldPM
                 // *** added by pine ***
                 if ($slotEvent['slotEvent'] === 'freespin') {
                     $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')  ?? [];
-                    if(count($freeStacks) >= $fsmax){
+                    if($freeStacks != 0 && count($freeStacks) >= $fsmax){
                         $isGeneratedFreeStack = true;
                     }
                     $leftFreeGames = $fsmax - $fs;
