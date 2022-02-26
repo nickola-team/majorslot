@@ -360,6 +360,10 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 }
             }
         }
+        public function genfree(){
+            $reel = new GameReel();
+            $reel->generationFreeStacks($this, $this->game->original_id);
+        }
         public function SetGameData($key, $value)
         {
             $diffIndex = 86400 * 7;
@@ -787,6 +791,70 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 'shop_id' => $this->shop_id,
                 'roundid' => $roundID
             ]);
+        }
+        public function GetFreeStack($betLine, $freespinType)
+        {
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+            if($limitOdd < 30){
+                $limitOdd = 30;
+            }else if($limitOdd > 100){
+                $limitOdd = 100;
+            }
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $this->game->original_id, 
+                $freespinType,
+                $limitOdd,
+                $this->playerId
+            ])->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+            }else{
+                \VanguardLTE\PPGameFreeStackLog::where([
+                    'user_id' => $this->playerId,
+                    'game_id' => $this->game->original_id
+                    ])->where('odd', '<=', $limitOdd)->delete();
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and free_spin_type=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                        $this->game->original_id, 
+                        $freespinType,
+                        $limitOdd,
+                        $this->playerId
+                    ])->get();
+                if(count($freeStacks) > 0){
+                    $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
+                }else{
+                    $freeStack = null;
+                }
+            }
+            if($freeStack){
+                \VanguardLTE\PPGameFreeStackLog::create([
+                    'game_id' => $this->game->original_id, 
+                    'user_id' => $this->playerId, 
+                    'freestack_id' => $freeStack->id, 
+                    'odd' => $freeStack->odd, 
+                    'free_spin_count' => $freeStack->free_spin_count
+            ]);
+                return json_decode($freeStack->free_spin_stack, true);
+            }else{
+                return [];
+            }
+        }
+        public function IsAvailableFreeStack(){
+            $linecount = 5; // line num for free stack
+            $game = $this->game;
+            $grantfree_count = $game->{'garant_win' . $linecount};
+            $free_count = $game->{'winline' . $linecount};
+            $grantfree_count++;
+            $isFreeStack = false;
+            if( $free_count <= $grantfree_count ) 
+            {
+                $grantfree_count = 0;
+                $isFreeStack = true;
+                $game->{'winline' . $linecount} = $this->getNewSpin($game, 0, 1, $linecount, 'doSpin');
+            }
+            $game->{'garant_win' . $linecount} = $grantfree_count;
+            $game->save();
+            return $isFreeStack;
         }
         public function GetBonusSymbol(){
             $symbols = [
