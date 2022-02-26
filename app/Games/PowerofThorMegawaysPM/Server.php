@@ -306,7 +306,6 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
                 $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney);
             }
-
             /* 벨런스 업데이트 */
             $BALANCE = $slotSettings->GetBalance();
 
@@ -315,7 +314,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                 $totalRepeatFreeCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalRepeatFreeCount') ?? 0;
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', $totalRepeatFreeCount + 1);
                 $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')  ?? [];
-                if(count($freeStacks) >= $fsmax){
+                if($freeStacks != 0 && count($freeStacks) >= $fsmax){
                     $isGeneratedFreeStack = true;
                 }
                 $leftFreeGames = $fsmax - $fs;
