@@ -286,10 +286,10 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
         }
         public function SetGameData($key, $value)
         {
-            $diffIndex = 86400 * 7;
+            $expire = strtotime(date('Y-m-d 8:0:0', strtotime("+7 days +16 hours")));
             $this->gameData[$key] = [
-                'timelife' => time() + $diffIndex, 
-                'payload' => $value
+                    'timelife' => $expire, 
+                    'payload' => $value
             ];
         }
         public function GetGameData($key)
