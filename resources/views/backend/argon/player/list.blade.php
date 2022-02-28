@@ -114,6 +114,7 @@
                 <th scope="col">총환전금</th>
                 <th scope="col">상태</th>
                 <th scope="col">가입날짜</th>
+                <th scope="col">최근로그인</th>
                 <th></th>
                 </tr>
             </thead>

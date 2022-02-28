@@ -16,6 +16,7 @@
 </span>
 </td>
 <td>{{ $user->created_at }}</td>
+<td>{{ $user->last_login }}</td>
 <td class="text-right">
 <a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => Request::getRequestUri()])}}" ><button class="btn btn-success btn-sm" {{(auth()->user()->isInOutPartner() || auth()->user()->hasRole('manager')?'':'disabled')}}>충 전</button></a>
 <a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => Request::getRequestUri()])}}"><button class="btn btn-warning btn-sm" {{(auth()->user()->isInOutPartner() || auth()->user()->hasRole('manager')?'':'disabled')}}>환 전</button></a>
@@ -26,7 +27,7 @@
     <a class="dropdown-item" href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}">설정 및 정보</a>
     <hr class="my-1">
     <a class="dropdown-item" href="#">쪽지보내기</a>
-    <a class="dropdown-item" href="#">게임내역</a>
+    <a class="dropdown-item" href="{{argon_route('argon.player.gamehistory', ['player' => $user->username])}}">게임내역</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
 </div>
 </td>

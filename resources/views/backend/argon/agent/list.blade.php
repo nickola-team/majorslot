@@ -131,6 +131,7 @@
     </div>
     <!-- Card footer -->
     <div class="card-footer py-4">
+        {{ $users->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
     </div>
     </div>
 </div>

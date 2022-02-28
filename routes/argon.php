@@ -73,6 +73,16 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
 
         //player
 
+        Route::get('/player/create', [
+            'as' => 'argon.player.create',
+            'uses' => 'UsersController@player_create',
+        ]);
+
+        Route::post('/player/create', [
+            'as' => 'argon.player.store',
+            'uses' => 'UsersController@player_store',
+        ]);
+
         Route::get('/player/list', [
             'as' => 'argon.player.list',
             'uses' => 'UsersController@player_list',

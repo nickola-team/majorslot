@@ -34,67 +34,36 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $data = $request->all() + ['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE];
 
-            if( !$request->parent_id ) 
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;
+            $parent = \VanguardLTE\User::where(['username' => $request->parent, 'role_id' => $request->role_id+1])->whereIn('id', $availablePartners)->first();
+            if (!$parent)
             {
-                $data['parent_id'] = \Illuminate\Support\Facades\Auth::user()->id;
-            }
-            $role_id = (isset($data['role_id']) && $data['role_id'] < auth()->user()->role_id ? $data['role_id'] : auth()->user()->role_id - 1);
-            $data['role_id'] = $role_id;
-            $role = \jeremykenedy\LaravelRoles\Models\Role::find($role_id);
-            if( (auth()->user()->hasRole('distributor') && $role->slug == 'manager' || auth()->user()->hasRole('manager') && $role->slug == 'cashier') && \VanguardLTE\User::where([
-                'role_id' => $role->id, 
-                'shop_id' => $request->shop_id
-            ])->count() ) 
-            {
-                return redirect()->route(config('app.admurl').'.user.list')->withErrors([trans('app.only_1', ['type' => $role->slug])]);
+                $role = \jeremykenedy\LaravelRoles\Models\Role::find($request->role_id+1);
+                return redirect()->back()->withErrors([$request->parent . ' ' . $role->description . '을(를) 찾을수 없습니다']);
             }
 
-            if( $data['role_id'] == 1 || $data['role_id'] == 4 || $data['role_id'] == 5 || $data['role_id'] == 6) //user, distributor, agent, master
-            {
-                $parent = auth()->user();
-                if ($data['role_id'] == 1)
-                {
-                    $parent = auth()->user()->shop;
-                }
-                if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
-                {
-                    return redirect()->back()->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
-                }
-                if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
-                {
-                    return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
-                }
-                if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
-                {
-                    return redirect()->back()->withErrors(['죽장퍼센트는 상위파트너보다 클수 없습니다']);
-                }
-            }
+            $role = \jeremykenedy\LaravelRoles\Models\Role::find($request->role_id);
+            $data['parent_id'] = $parent->id;
 
-            $user = $this->users->create($data);
+
+            if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
+            {
+                return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+            }
+            if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+            {
+                return redirect()->back()->withErrors(['라이브딜비는 상위에이전트보다 클수 없습니다']);
+            }
+            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['죽장퍼센트는 상위에이전트보다 클수 없습니다']);
+            // }
+
+            $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();
             $user->attachRole($role);
-            if( $request->shop_id && $request->shop_id > 0 && !empty($request->shop_id) ) 
-            {
-                \VanguardLTE\ShopUser::create([
-                    'shop_id' => $request->shop_id, 
-                    'user_id' => $user->id
-                ]);
-            }
-            if( !$user->shop_id && $user->hasRole([
-                'cashier', 
-                'user'
-            ]) ) 
-            {
-                $shops = $user->shops(true);
-                if( count($shops) ) 
-                {
-                    $shop_id = $shops->first();
-                    $user->update(['shop_id' => $shop_id]);
-                }
-            }
-            if ($role_id<3) {
-                return redirect()->route(config('app.admurl').'.user.list')->withSuccess(trans('app.user_created'));
-            }
+            event(new \VanguardLTE\Events\User\Created($user));
 
             //create shift for partners
             $type = 'partner';
@@ -108,7 +77,42 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'mileage' => 0,
                 'type' => $type
             ]);
-            return view('backend.argon.agent.create');
+
+            if ($data['role_id'] == 3)  //create shop
+            {
+                $data['name'] = $data['username'];
+                $shop = \VanguardLTE\Shop::create($data + ['user_id' => auth()->user()->id]);
+                
+                //create shopuser table for all agents
+                $parent = $user;
+                while ($parent && !$parent->isInOutPartner())
+                {
+                    \VanguardLTE\ShopUser::create([
+                        'shop_id' => $shop->id, 
+                        'user_id' => $parent->id
+                    ]);
+                    $parent = $parent->referral;
+                }
+                
+                $user->update(['shop_id' => $shop->id]);
+                
+                $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
+                \VanguardLTE\Task::create([
+                    'category' => 'shop', 
+                    'action' => 'create', 
+                    'item_id' => $shop->id,
+                    'details' => $site->id,
+                ]);
+                $open_shift = \VanguardLTE\OpenShift::create([
+                    'start_date' => \Carbon\Carbon::now(), 
+                    'balance' => 0, 
+                    'user_id' => auth()->user()->id, 
+                    'shop_id' => $shop->id
+                ]); 
+                event(new \VanguardLTE\Events\Shop\ShopCreated($shop));
+
+            }
+            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]));
         }
 
         public function agent_list(\Illuminate\Http\Request $request)
@@ -271,6 +275,53 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $statistics = $statistics->paginate(20);
             return view('backend.argon.agent.transaction', compact('statistics', 'total'));
+        }
+
+        public function player_create(\Illuminate\Http\Request $request)
+        {
+            return view('backend.argon.player.create');
+        }
+
+        public function player_store(\VanguardLTE\Http\Requests\User\CreateUserRequest $request)
+        {
+            $data = $request->all() + ['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE];
+
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;
+            $parent = \VanguardLTE\User::where(['username' => $request->parent, 'role_id' => 3])->whereIn('id', $availablePartners)->first();
+            if (!$parent)
+            {
+                return redirect()->back()->withErrors([$request->parent . '매장을 찾을수 없습니다']);
+            }
+
+            $role = \jeremykenedy\LaravelRoles\Models\Role::find(1);
+            $data['parent_id'] = $parent->id;
+
+            $shop = $parent->shop;
+            if (isset($data['deal_percent']) && $shop!=null &&  $shop->deal_percent < $data['deal_percent'])
+            {
+                return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
+            }
+            if (isset($data['table_deal_percent']) && $shop!=null && $shop->table_deal_percent < $data['table_deal_percent'])
+            {
+                return redirect()->back()->withErrors(['라이브딜비는 매장보다 클수 없습니다']);
+            }
+            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['죽장퍼센트는 매장보다 클수 없습니다']);
+            // }
+            $data['shop_id'] = $shop->id;
+            $data['role_id'] = $role->id;
+            $user = \VanguardLTE\User::create($data);
+            $user->detachAllRoles();
+            $user->attachRole($role);
+            event(new \VanguardLTE\Events\User\Created($user));
+
+            \VanguardLTE\ShopUser::create([
+                'shop_id' => $shop->id, 
+                'user_id' => $user->id
+            ]);
+           return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어가 생성되었습니다']);
         }
 
         public function player_list(\Illuminate\Http\Request $request)

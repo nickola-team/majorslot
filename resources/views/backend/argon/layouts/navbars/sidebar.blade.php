@@ -73,7 +73,7 @@
                     <div class="collapse" id="navbar-players">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.create')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     플레이어생성
                                 </a>
