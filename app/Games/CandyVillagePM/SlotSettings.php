@@ -284,9 +284,9 @@ namespace VanguardLTE\Games\CandyVillagePM
         }
         public function SetGameData($key, $value)
         {
-            $diffIndex = 86400 * 7;
+            $expire = strtotime(date('Y-m-d 8:0:0', strtotime("+7 days +16 hours")));
             $this->gameData[$key] = [
-                'timelife' => time() + $diffIndex, 
+                'timelife' => $expire, 
                 'payload' => $value
             ];
         }
