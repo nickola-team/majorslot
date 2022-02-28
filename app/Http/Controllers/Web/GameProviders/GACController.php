@@ -106,25 +106,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = $user->balance - intval($amount);
             $user->save();
             $user = $user->fresh();
-            $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => 'gac'])->first();
+            // $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => 'gac'])->first();
 
-            \VanguardLTE\StatGame::create([
-                'user_id' => $user->id, 
-                'balance' => intval($user->balance), 
-                'bet' => abs($betAmount), 
-                'win' => 0, 
-                'game' =>  $tableName . (($type==1)?'_BET' :  '_CANCEL'), 
-                'type' => 'table',
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
-                'shop_id' => $user->shop_id,
-                'category_id' => isset($category)?$category->id:0,
-                'game_id' => $tableName,
-                'roundid' => 0,
-            ]);
+            // \VanguardLTE\StatGame::create([
+            //     'user_id' => $user->id, 
+            //     'balance' => intval($user->balance), 
+            //     'bet' => abs($betAmount), 
+            //     'win' => 0, 
+            //     'game' =>  $tableName . (($type==1)?'_BET' :  '_CANCEL'), 
+            //     'type' => 'table',
+            //     'percent' => 0, 
+            //     'percent_jps' => 0, 
+            //     'percent_jpg' => 0, 
+            //     'profit' => 0, 
+            //     'denomination' => 0, 
+            //     'shop_id' => $user->shop_id,
+            //     'category_id' => isset($category)?$category->id:0,
+            //     'game_id' => $tableName,
+            //     'roundid' => 0,
+            // ]);
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
@@ -172,7 +172,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => intval($user->balance), 
                 'bet' => $betAmount, 
                 'win' => $winAmount, 
-                'game' =>  $tableName . '_RESULT', 
+                'game' =>  $tableName . '_gac', 
                 'type' => 'table',
                 'percent' => 0, 
                 'percent_jps' => 0, 
