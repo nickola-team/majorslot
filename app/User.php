@@ -1158,9 +1158,11 @@ namespace VanguardLTE
         {
             $ids = $this->availableUsers();
             $sum = User::whereIn('id', $ids)->sum('balance');
-            $shops = $this->availableShops();
-            $sumShop = Shop::where('id', $shops)->sum('balance');
-
+            $sumShop = 0;
+            if (!$this->hasRole('manager')){
+                $shops = $this->availableShops();
+                $sumShop = Shop::where('id', $shops)->sum('balance');
+            }
             return $sum + $sumShop - $this->balance;
         }
         
