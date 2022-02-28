@@ -418,6 +418,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 1000,
                 ];
             }
+
             $record = $this->checkreference($reference);
             if ($record)
             {
@@ -587,6 +588,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
 
                     if (in_array($game['GameType'] , $slotgameString) && $game['GameStatus'] == 1){ // need to check the string
+                        if ($href=='nlc' && preg_match('/DX1$/',  $game['LogPara']))
+                        {
+                            continue;
+                        }
                         if ($href=='png')
                         {
                             $icon_name = str_replace(' ', '_', $game['GameName']);
@@ -599,8 +604,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'gamecode' => $game['DCGameID'],
                                 'name' => $game['LogPara'],
                                 'game' => preg_replace('/\s+/', '', $game['GameName']),
-                                'title' => __('gameprovider.'.$game['GameName']),
-                                'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
+                                'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['GameName'], 'ko')?__('gameprovider.'.$game['GameName']):$game['GameName'],
+                                'icon' => url('/frontend/Default/ico/png/'. $icon_name . '.jpg'),
                             ];
                         }
                         else
@@ -610,9 +615,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'href' => $href,
                                 'gamecode' => $game['DCGameID'],
                                 'name' => $game['LogPara'],
-                                'title' => __('gameprovider.'.$game['GameName']),
-                                // 'icon' => $game['GameIcon'],
-                                'icon' => '/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png',
+                                'game' => preg_replace('/\s+/', '', $game['GameName']),
+                                'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['GameName'], 'ko')?__('gameprovider.'.$game['GameName']):$game['GameName'],
+                                'icon' => $href=='aux'?url('/frontend/Default/ico/ata/avatarux/'. $game['DCGameID'] . '.png'):url('/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png'),
                             ];
                         }
                     }
