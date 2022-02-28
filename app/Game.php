@@ -701,10 +701,10 @@ namespace VanguardLTE
             $bank = \VanguardLTE\BonusBank::lockforUpdate()->where(['master_id' => $master->id, 'game_id' => $this->original_id])->first();
             if (!$bank)
             {
-                $bank = \VanguardLTE\BonusBank::lockforUpdate()->where(['master_id' => $master->id, 'game_id' => 0])->first();
-                if (!$bank){
+                // $bank = \VanguardLTE\BonusBank::lockforUpdate()->where(['master_id' => $master->id, 'game_id' => 0])->first();
+                // if (!$bank){
                     $bank = \VanguardLTE\BonusBank::create(['master_id' => $master->id, 'game_id' => $this->original_id]);
-                }
+                // }
             }
             return $bank;
         }
