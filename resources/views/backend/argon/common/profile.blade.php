@@ -124,7 +124,7 @@
                             <input type="hidden" name="id" value="{{$user->id}}">
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="phone">전화번호</label>
+                                    <label class="form-control-label" for="phone">연락처</label>
                                     <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone', $user->phone) }}" {{$user->id != auth()->user()->id?'disabled':''}}>
                                 </div>
                                 @if ($user->id == auth()->user()->id)

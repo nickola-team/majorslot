@@ -49,45 +49,43 @@
                         <div class="col-7">
                             <input class="form-control col-8" type="text" value="" id="amount" name="amount">
                             <p></p>
-                            <button type="button" class="btn btn-success mb-1 changeAmount" data-value="10000">1만</button>
-                            <button type="button" class="btn btn-success mb-1 changeAmount" data-value="20000">2만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="50000">5만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="100000">10만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="200000">20만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="500000">50만</button>
+                            <button type="button" class="btn btn-success mb-1 changeAmount" data-value="1000000">100만</button>
                             <button type="button" class="btn btn-primary mb-1 changeAmount" data-value="0">리셋</button>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                            거래은행
+                            거래계좌
                         </div>
                         <div class="col-7">
-                            {{auth()->user()->bank_name}}
+                            <div class="row">
+                                <div class="col-5">
+                                    <span>{{auth()->user()->bankInfo()}}</span> 
+                                </div>
+                                <div class="col-7">
+                                <a href="{{argon_route('argon.common.profile', ['id' => auth()->user()->id])}}"><button type="button" class="btn btn-info btn-sm">계좌수정</button></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-5 text-center">
-                            계좌번호
-                        </div>
-                        <div class="col-7">
-                            {{auth()->user()->account_no}}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-5 text-center">
-                            예금주
-                        </div>
-                        <div class="col-7">
-                            {{auth()->user()->recommender}}
-                        </div>
-                    </div>
+                    
                     <div class="form-group row">
                         <div class="col-5 text-center">
                             입금계좌
                         </div>
                         <div class="col-7">
-                            {{auth()->user()->username}}
+                            <div class="row">
+                                <div class="col-5">
+                                    <span id="targetbank">확인버튼을 눌러주세요</span> 
+                                </div>
+                                <div class="col-7">
+                                    <button type="button" class="btn btn-warning btn-sm">계좌확인</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row mt-5">

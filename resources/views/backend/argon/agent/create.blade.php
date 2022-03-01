@@ -34,7 +34,7 @@
                                     <input type="text" name="parent" id="parent" class="form-control{{ $errors->has('parent') ? ' is-invalid' : '' }}" value="{{auth()->user()->username}}" required>
                                 </div>
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="phone">전화번호</label>
+                                    <label class="form-control-label" for="phone">연락처</label>
                                     <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="" >
                                 </div>
 				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
