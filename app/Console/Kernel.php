@@ -231,7 +231,7 @@ namespace VanguardLTE\Console
             })->everyMinute();
             $schedule->call(function()
             {
-                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
+                $date_time = date('Y-m-d 0:0:0', strtotime("-1 days"));
                 $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'user', 
@@ -257,7 +257,7 @@ namespace VanguardLTE\Console
             })->everyMinute();
             $schedule->call(function()
             {
-                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
+                $date_time = date('Y-m-d 0:0:0', strtotime("-1 days"));
                 $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'shop', 
