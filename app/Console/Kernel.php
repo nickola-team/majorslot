@@ -14,13 +14,21 @@ namespace VanguardLTE\Console
         {
             //$schedule->command('queue:work --daemon')->everyMinute()->withoutOverlapping();
             $schedule->call(function () {
-                \Illuminate\Support\Facades\Redis::del('pplist');
-                \Illuminate\Support\Facades\Redis::del('livelist');
-                \Illuminate\Support\Facades\Redis::del('hbnlist');
-                \Illuminate\Support\Facades\Redis::del('booongolist');
-                \Illuminate\Support\Facades\Redis::del('playsonlist');
-                \Illuminate\Support\Facades\Redis::del('cq9list');
-                \Illuminate\Support\Facades\Redis::del('playngolist');
+                // \Illuminate\Support\Facades\Redis::del('pplist');
+                // \Illuminate\Support\Facades\Redis::del('livelist');
+                // \Illuminate\Support\Facades\Redis::del('hbnlist');
+                // \Illuminate\Support\Facades\Redis::del('booongolist');
+                // \Illuminate\Support\Facades\Redis::del('playsonlist');
+                // \Illuminate\Support\Facades\Redis::del('cq9list');
+                // \Illuminate\Support\Facades\Redis::del('playngolist');
+                $hrefcats = \VanguardLTE\Category::where(['shop_id'=>0, 'site_id'=>0])->whereNotNull('categories.provider')->get();
+                if (count($hrefcats) > 0)
+                {
+                    foreach ($hrefcats as $cat)
+                    {
+                        \Illuminate\Support\Facades\Redis::del($cat->href . 'list');
+                    }
+                }
 
                 set_time_limit(0);
                 $_daytime = strtotime("-1 days") * 10000;
