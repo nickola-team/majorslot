@@ -7,7 +7,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $this->middleware('auth');
             $this->middleware('permission:access.admin.panel');
-            $this->users = $users;
         }
 
         public function balance(\Illuminate\Http\Request $request)

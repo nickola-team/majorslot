@@ -1,5 +1,5 @@
 @extends('backend.argon.layouts.app')
-@section('page-title',  $type=='add'?'충전':'환전')
+@section('page-title',  '충전신청')
 
 @section('content')
 <div class="container-fluid">
@@ -9,23 +9,19 @@
             <div class="card-header border-0" id="headingOne">
                 <div class="row align-items-center box">
                     <div class="col-8">
-                        <h3 class="mb-0">{{$type=='add'?'충전':'환전'}}</h3>
+                        <h3 class="mb-0">충전신청</h3>
                     </div>
                 </div>
             </div>
             <hr class="my-1">
             <div class="card-body">
                 <form action="" method="POST"  id="form">
-                    <input type="hidden" value="{{$type}}" name="type">
-                    <input type="hidden" value="{{$url}}" name="url">
-                    <input type="hidden" value="{{$user->id}}" name="user_id">
-                    <input type="hidden" id="outAll" name="all" value="0">
                     <div class="form-group row">
                         <div class="col-5 text-center">
                             이 름
                         </div>
                         <div class="col-7">
-                            {{$user->username}}
+                            {{auth()->user()->username}}
                         </div>
                     </div>
                     <div class="form-group row">
@@ -33,29 +29,22 @@
                             레 벨
                         </div>
                         <div class="col-7">
-                            {{$user->role->description}}
+                            {{auth()->user()->role->description}}
                         </div>
                     </div>
-                    <!-- <div class="form-group row">
-                        <div class="col-6 text-center">
-                            계좌 정보
-                        </div>
-                        <div class="col-6">
-                            {{$user->bankInfo()}}
-                        </div>
-                    </div> -->
+
                     <div class="form-group row">
                         <div class="col-5 text-center">
                             현재 보유금
                         </div>
                         <div class="col-7">
-                            {{number_format($user->balance)}}
+                            {{number_format(auth()->user()->balance)}}
                         </div>
                     </div>
                     
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                            적용할 금액
+                            신청금액
                         </div>
                         <div class="col-7">
                             <input class="form-control col-8" type="text" value="" id="amount" name="amount">
@@ -71,31 +60,43 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                        {{$type=='add'?'충전':'환전'}}사유
+                            거래은행
                         </div>
                         <div class="col-7">
-                            <input class="form-control col-8" type="text" value="" id="reason" name="reason">
+                            {{auth()->user()->bank_name}}
                         </div>
                     </div>
                     <div class="form-group row">
-                        @if ($type=='add')
+                        <div class="col-5 text-center">
+                            계좌번호
+                        </div>
+                        <div class="col-7">
+                            {{auth()->user()->account_no}}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-5 text-center">
+                            예금주
+                        </div>
+                        <div class="col-7">
+                            {{auth()->user()->recommender}}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-5 text-center">
+                            입금계좌
+                        </div>
+                        <div class="col-7">
+                            {{auth()->user()->username}}
+                        </div>
+                    </div>
+                    <div class="form-group row mt-5">
                             <div class="col-6 text-center">
-                                <button type="button" class="btn btn-primary col-8" id="doSubmit">충전</button>
+                                <button type="button" class="btn btn-primary col-8" id="doSubmit">충전신청</button>
                             </div>
                             <div class="col-6 text-center">
-                                <button type="button" class="btn btn-secondary col-8" onclick="location.href='{{$url}}';">취소</button>
+                                <button type="button" class="btn btn-secondary col-8" >취소</button>
                             </div>
-                        @else
-                            <div class="col-4 text-center">
-                                <button type="button" class="btn btn-warning col-12" id="doSubmit">환전</button>
-                            </div>
-                            <div class="col-4 text-center">
-                                <button type="button" class="btn btn-danger col-12" id="doOutAll">모두환전</button>
-                            </div>
-                            <div class="col-4 text-center">
-                                <button type="button" class="btn btn-secondary col-12" onclick="location.href='{{$url}}';">취소</button>
-                            </div>
-                        @endif
                     </div>
                     
                 </form>

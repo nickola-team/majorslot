@@ -133,6 +133,12 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'CommonController@resetDWPass',
         ]);
 
+        /// deposit & withdraw
+        Route::get('/dw/addrequest', [
+            'as' => 'argon.dw.addrequest',
+            'uses' => 'DWController@addrequest',
+        ]);
+
     });
 });
 
