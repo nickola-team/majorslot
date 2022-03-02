@@ -605,7 +605,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'name' => $game['LogPara'],
                                 'game' => preg_replace('/\s+/', '', $game['GameName']),
                                 'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['GameName'], 'ko')?__('gameprovider.'.$game['GameName']):$game['GameName'],
-                                'icon' => url('/frontend/Default/ico/png/'. $icon_name . '.jpg'),
+                                'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
                             ];
                         }
                         else
@@ -617,7 +617,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'name' => $game['LogPara'],
                                 'game' => preg_replace('/\s+/', '', $game['GameName']),
                                 'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['GameName'], 'ko')?__('gameprovider.'.$game['GameName']):$game['GameName'],
-                                'icon' => $href=='aux'?url('/frontend/Default/ico/ata/avatarux/'. $game['DCGameID'] . '.png'):url('/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png'),
+                                'icon' => $href=='aux'?('/frontend/Default/ico/ata/avatarux/'. $game['DCGameID'] . '.png'):('/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png'),
                             ];
                         }
                     }
