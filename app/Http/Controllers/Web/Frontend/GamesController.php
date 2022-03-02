@@ -36,19 +36,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $categories = \VanguardLTE\Category::where([
                     'shop_id' => $shop_id,
                     'site_id' => $site->id,
-                ])->whereNotIn('href',$excat)->orderby('position')->get();
+                ])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
 
                 if (count($categories) == 0) // use default category
                 {
                     $categories = \VanguardLTE\Category::where([
                         'shop_id' => $shop_id,
                         'site_id' => 0,
-                    ])->whereNotIn('href',$excat)->orderby('position')->get();
+                    ])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
                 }
             }
             else
             {
-                $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position')->get();
+                $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
             }
             $hotgames = [];
 
