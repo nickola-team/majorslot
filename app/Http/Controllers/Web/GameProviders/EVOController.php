@@ -160,6 +160,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $user->save();
 
                 $game = $this->getGameObj($tableid);
+                if (!$game)
+                {
+                    $game = $this->getGameObj('unknowntable');
+                }
                 
                 $category = \VanguardLTE\Category::where(['provider' => 'evo', 'shop_id' => 0, 'href' => $game['href']])->first();
 
