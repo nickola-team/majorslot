@@ -16,6 +16,8 @@
             <hr class="my-1">
             <div class="card-body">
                 <form action="" method="POST"  id="form">
+                    @csrf
+                    <input type="hidden" id="recommender" value="{{auth()->user()->recommender}}">
                     <div class="form-group row">
                         <div class="col-5 text-center">
                             이 름
@@ -41,13 +43,29 @@
                             {{number_format(auth()->user()->balance)}}
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <div class="col-5 text-center">
+                            현재 롤링금
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-6">
+                                    <span >{{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}</span> 
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-danger btn-sm">롤링전환</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="form-group row">
                         <div class="col-5 text-center">
                             신청금액
                         </div>
                         <div class="col-7">
-                            <input class="form-control col-8" type="text" value="" id="amount" name="amount">
+                            <input class="form-control col-8" type="text" value="0" id="amount" name="amount">
                             <p></p>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="50000">5만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="100000">10만</button>
@@ -63,10 +81,10 @@
                         </div>
                         <div class="col-7">
                             <div class="row">
-                                <div class="col-5">
+                                <div class="col-6">
                                     <span>{{auth()->user()->bankInfo()}}</span> 
                                 </div>
-                                <div class="col-7">
+                                <div class="col-6">
                                 <a href="{{argon_route('argon.common.profile', ['id' => auth()->user()->id])}}"><button type="button" class="btn btn-info btn-sm">계좌수정</button></a>
                                 </div>
                             </div>
@@ -79,22 +97,19 @@
                         </div>
                         <div class="col-7">
                             <div class="row">
-                                <div class="col-5">
-                                    <span id="targetbank">확인버튼을 눌러주세요</span> 
+                                <div class="col-6">
+                                    <span id="bankinfo">확인버튼을 눌러주세요</span> 
                                 </div>
-                                <div class="col-7">
-                                    <button type="button" class="btn btn-warning btn-sm">계좌확인</button>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-warning btn-sm" id="togglebankinfo">계좌확인</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group row mt-5">
-                            <div class="col-6 text-center">
-                                <button type="button" class="btn btn-primary col-8" id="doSubmit">충전신청</button>
-                            </div>
-                            <div class="col-6 text-center">
-                                <button type="button" class="btn btn-secondary col-8" >취소</button>
-                            </div>
+                        <div class="col col-lg-6 m-auto">
+                            <button type="button" class="btn btn-primary col-12" id="doSubmit" onclick="deposit_balance();">충전신청</button>
+                        </div>
                     </div>
                     
                 </form>
@@ -118,14 +133,85 @@
             $('#amount').val($v + $(event.target).data('value'));
         }
     });
-    $('#doOutAll').click(function () {
-			$(this).attr('disabled', 'disabled');
-			$('#outAll').val('1');
-			$('form#form').submit();
-    });
+
     $('#doSubmit').click(function () {
         $(this).attr('disabled', 'disabled');
-        $('form#form').submit();
     });
+
+    $('#togglebankinfo').click(function() {
+        var money = $('#amount').val();
+        var accountname = $('#recommender').val();
+        $.ajax({
+            type: 'POST',
+            url: "{{route('frontend.api.depositAccount')}}",
+            data: { money: money, account:accountname },
+            cache: false,
+            async: false,
+            success: function (data) {
+                if (data.error) {
+                    alert(data.msg);
+                    if (data.code == '001') {
+                        location.reload(true);
+                    }
+                    else if (data.code == '002') {
+                        $('#withdraw_money').focus();
+                    }
+                    else if (data.code == '003') {
+                        $('#recommender').focus();
+                    }
+                    return;
+                }
+                $("#bankinfo").html(data.msg);
+                if (data.url != '')
+                {
+                    var leftPosition, topPosition;
+                    width = 600;
+                    height = 1000;
+                    leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                    topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                    wndGame = window.open(data.url, "Deposit",
+                    "status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+                    + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+                    + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+                }
+                
+            },
+            error: function (err, xhr) {
+                alert(err.responseText);
+            }
+        });       
+    });
+
+    function deposit_balance() {
+        var money = $('#amount').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/addbalance',
+            data: { money: money },
+            cache: false,
+            async: false,
+            success: function (data) {
+                if (data.error) {
+                    alert(data.msg);
+                    if (data.code == '001') {
+                        location.reload(true);
+                    }
+                    else if (data.code == '002') {
+                        $('#amount').focus();
+                    }
+                    else if (data.code == '003') {
+                        $('#amount').val('0');
+                    }
+                    return;
+                }
+                alert('충전 신청이 완료되었습니다.');
+                location.reload(true);
+            },
+            error: function (err, xhr) {
+                alert(err.responseText);
+            }
+        });
+    }
 </script>
 @endpush

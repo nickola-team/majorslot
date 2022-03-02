@@ -41,7 +41,7 @@
                 @else
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-success" href="#">
+                        <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">
                             충전신청
                         </a>
                         </div>
