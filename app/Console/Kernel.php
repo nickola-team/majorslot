@@ -37,7 +37,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\HBNTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\BNGTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\CQ9Transaction::where('timestamp', '<', $_daytime)->delete();
-                \VanguardLTE\PNGTransaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\ATATransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\EVOTransaction::where('timestamp', '<', $_daytime)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
