@@ -180,7 +180,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
 
-            $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\HBNController::gamecodetoname($gamecode);
+            $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\HBNController::getGameObj($gamecode);
+            if (!$gameObj)
+            {
+                return redirect('/');
+            }
+            $gamename = $gameObj['name'];
             $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
             $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
             $shop_id = \Auth::user()->shop_id;
