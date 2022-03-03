@@ -25,22 +25,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $microstr = str_replace('.', '', $microstr);
             return $microstr;
         }
-        public static function gamecodetoname($code)
+        public static function getGameObj($code)
         {
-            $gamelist = HBNController::getgamelist('hbn');
-            $gamename = $code;
-            if ($gamelist)
+
+            $categories = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'site_id' => 0])->get();
+            $gamelist = [];
+            foreach ($categories as $category)
             {
-                foreach($gamelist as $game)
+                $gamelist = HBNController::getgamelist($category->href);
+                if (count($gamelist) > 0 )
                 {
-                    if ($game['gamecode'] == $code)
+                    foreach($gamelist as $game)
                     {
-                        $gamename = $game['name'];
-                        break;
+                        if ($game['gamecode'] == $code)
+                        {
+                            $game['cat_id'] = $category->original_id;
+                            return $game;
+                            break;
+                        }
                     }
                 }
             }
-            return $gamename;
+            return null;
         }
         /*
         * FROM HABANERO, BACK API
@@ -134,7 +140,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $token = $fundtransferrequest->token;
             $user = \VanguardLTE\User::lockForUpdate()->find($accountid);
 
-            if (!$user || !$user->hasRole('user') || $user->playing_game == 'pp' || ($fundtransferrequest->isretry==false && $user->api_token != $token)){
+            if (!$user || !$user->hasRole('user') || ($fundtransferrequest->isretry==false && $user->api_token != $token)){
                 $externalResponse = $this->externalResponse();
                 $playerResponse = $this->playerResponse();
                 $fundsReponse = $this->fundsResponse();
@@ -199,20 +205,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 if ($total_bet > 0 || $total_win > 0)
                 {
-                    $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                    // $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                    $gmObj = HBNController::getGameObj($fundtransferrequest->gamedetails->brandgameid);
                     \VanguardLTE\StatGame::create([
                         'user_id' => $user->id, 
                         'balance' => floatval($user->balance), 
                         'bet' => $total_bet, 
                         'win' => $total_win, 
-                        'game' => $fundtransferrequest->gamedetails->keyname . '_HBN', 
+                        'game' => $fundtransferrequest->gamedetails->keyname . '_' . $gmObj['href'], 
                         'percent' => 0, 
                         'percent_jps' => 0, 
                         'percent_jpg' => 0, 
                         'profit' => 0, 
                         'denomination' => 0, 
                         'shop_id' => $user->shop_id,
-                        'category_id' => isset($category)?$category->id:0,
+                        'category_id' => isset($gmObj['cat_id'])?$gmObj['cat_id']:0,
                         'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                         'roundid' => 0,
                     ]);
@@ -265,20 +272,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $response['fundtransferresponse']['balance'] = $user->balance;
                     if ($total_bet > 0 || $total_win > 0)
                     {
-                        $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                        // $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                        $gmObj = HBNController::getGameObj($fundtransferrequest->gamedetails->brandgameid);
                         \VanguardLTE\StatGame::create([
                             'user_id' => $user->id, 
                             'balance' => floatval($user->balance), 
                             'bet' => $total_bet, 
                             'win' => $total_win, 
-                            'game' => $fundtransferrequest->gamedetails->keyname . '_HBN refund', 
+                            'game' => $fundtransferrequest->gamedetails->keyname . '_' . $gmObj['href'] . ' refund', 
                             'percent' => 0, 
                             'percent_jps' => 0, 
                             'percent_jpg' => 0, 
                             'profit' => 0, 
                             'denomination' => 0, 
                             'shop_id' => $user->shop_id,
-                            'category_id' => isset($category)?$category->id:0,
+                            'category_id' => isset($gmObj['cat_id'])?$gmObj['cat_id']:0,
                             'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                             'roundid' => 0,
                         ]);
@@ -316,20 +324,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     if ($total_bet > 0 || $total_win > 0)
                     {
-                        $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                        // $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                        $gmObj = HBNController::getGameObj($fundtransferrequest->gamedetails->brandgameid);
                         \VanguardLTE\StatGame::create([
                             'user_id' => $user->id, 
                             'balance' => floatval($user->balance), 
                             'bet' => $total_bet, 
                             'win' => $total_win, 
-                            'game' => $fundtransferrequest->gamedetails->keyname . '_HBN recredit', 
+                            'game' => $fundtransferrequest->gamedetails->keyname . '_' . $gmObj['href'] . ' recredit', 
                             'percent' => 0, 
                             'percent_jps' => 0, 
                             'percent_jpg' => 0, 
                             'profit' => 0, 
                             'denomination' => 0, 
                             'shop_id' => $user->shop_id,
-                            'category_id' => isset($category)?$category->id:0,
+                            'category_id' => isset($gmObj['cat_id'])?$gmObj['cat_id']:0,
                             'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                             'roundid' => 0,
                         ]);
@@ -365,20 +374,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 if ($total_bet > 0 || $total_win > 0)
                 {
-                    $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                    // $category = \VanguardLTE\Category::where(['provider' => 'hbn', 'shop_id' => 0, 'href' => 'hbn'])->first();
+                    $gmObj = HBNController::getGameObj($fundtransferrequest->gamedetails->brandgameid);
                     \VanguardLTE\StatGame::create([
                         'user_id' => $user->id, 
                         'balance' => floatval($user->balance), 
                         'bet' => $total_bet, 
                         'win' => $total_win, 
-                        'game' => $fundtransferrequest->gamedetails->keyname . '_HBN', 
+                        'game' => $fundtransferrequest->gamedetails->keyname . '_' . $gmObj['href'], 
                         'percent' => 0, 
                         'percent_jps' => 0, 
                         'percent_jpg' => 0, 
                         'profit' => 0, 
                         'denomination' => 0, 
                         'shop_id' => $user->shop_id,
-                        'category_id' => isset($category)?$category->id:0,
+                        'category_id' => isset($gmObj['cat_id'])?$gmObj['cat_id']:0,
                         'game_id' => $fundtransferrequest->gamedetails->brandgameid,
                         'roundid' => 0,
                     ]);
@@ -448,7 +458,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function getgamelist($href)
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get('hbnlist');
+            $gameList = \Illuminate\Support\Facades\Redis::get($href . 'list');
             if ($gameList)
             {
                 $games = json_decode($gameList, true);
@@ -469,21 +479,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $data = $response->json();
             $gameList = [];
+            $exProv = ($href != 'hbn');
+
             foreach ($data['Games'] as $game)
             {
-                if ($game['GameTypeName'] == "Video Slots")
+                if ($game['GameTypeName'] == "Video Slots" && $game['ExProv'] == $exProv)
                 {
                     $gameList[] = [
                         'provider' => 'hbn',
+                        'href' => $href,
                         'gamecode' => $game['BrandGameId'],
                         'name' => preg_replace('/\s+/', '', $game['KeyName']),
-                        'title' => __('gameprovider.'.$game['Name']),
+                        'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['Name'], 'ko')?__('gameprovider.'.$game['Name']):$game['Name'],
                         'icon' => config('app.hbn_game_server') . '/img/rect/300/'. $game['KeyName'] . '.png',
                         // 'demo' => HBNController::makegamelink($game['BrandGameId'], 'fun')
                     ];
                 }
             }
-            \Illuminate\Support\Facades\Redis::set('hbnlist', json_encode($gameList));
+            \Illuminate\Support\Facades\Redis::set($href. 'list', json_encode($gameList));
             return $gameList;
         }
 
@@ -587,7 +600,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 )
             );
         }
-
+        
         // History
         public function historyIndex(\Illuminate\Http\Request $request)
         {
