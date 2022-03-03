@@ -5,6 +5,7 @@ return [
         /**
          * Booongo Games
          */
+        "Happy Fish" => "해피 피쉬",
         "Queen Of The Sun" => "태양의 여왕",
         "Book of Wizard Crystal Chance" => "마법의 서 크리스탈 찬스",
         "Candy Boom" => "캔디 붐",
@@ -190,6 +191,8 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Barn Festival" => "헛간 축제",
+        "Cash Patrol" => "현금순찰대",
         "Lucky New Year - Tiger Treasures" => "럭키 뉴이어 - 타이거트레져",
         "Colossal Cash Zone" => "콜로잘 캐시 존",
         "Elemental Gems Megaways" => "엘레멘탈 젬스 메가웨이",
@@ -566,6 +569,7 @@ return [
         /**
          * Booongo - Playson Play Games
          */
+        "Burning Fortunator" => "불타는 행운아",
         "Joker’s Coins" => "조커의 동전",
         "Diamond Fortunator" => "다이아몬드 포츄네터",
         "Golden Dancing Lion" => "골든 댄싱 라이온",
@@ -949,6 +953,7 @@ return [
         "Towering Pays Valhalla" => "타워링 페이스 발랄라",
 
         // Playn'Go Games ///
+        "Gigantoonz" => "자이언툰즈",
         "Gemix 2" => "제믹스2",
         "Sisters of the Sun" => "",
         "Charlie Chance and The Curse of Cleopatra" => "찰리 찬스와 클레오파트라의 저주",
@@ -1166,7 +1171,11 @@ return [
         "Prism of Gems" => "보석프리즘",
 
         /** NoLimitCity* */
+        "Legion X" => "제10군단",
+        "True Grit Redemption" => "진정한 기개 회복",
         "Mental" => "멘탈",
+        "Jewel Race Halloween" => "쥬얼 레이스 할로윈",
+        "Wild Fusion" => "와일드 퓨전",
         "xWays Hoarder xSplit" => "x웨이 호더 x스플릿",
         "Infectious 5 xWays" => "인펙티오스 5 x웨이",
         "El Paso Gunfight xNudge" => "엘파소 간파이트 x누드",
@@ -1240,9 +1249,21 @@ return [
         "Reel Bonanza" => "릴 보난자",
         "Wild Dragon" => "와일드 드래곤",
 
+
+        /***
+         * AVATARUX Games
+         */
+
+
         /***
          * EVOPlay Games
          */
+        "Fruit Super Nova 100" => "과일 슈퍼노바 100",
+        "Hot Triple Sevens Special" => "핫 트리플 세븐스 스페셜",
+        "Christmas Reach" => "크리스마스 리치",
+        "Fruit Super Nova 80" => "과일 슈퍼노바 80",
+        "Dragon's Tavern" => "용의 술집",
+        "Christmas Reach Bonus Buy" => "크리스마스 도달 보너스 구매",
         "Candy Dreams" => "캔디 드림",
         "Elven Princesses" => "엘레븐 공주",
         "Egypt Gods" => "이짚트 신",
@@ -1340,4 +1361,48 @@ return [
         "Cycle of Luck Bonus Buy" => "사이클오브 럭 보너스 구매",
         "Fruit Super Nova 60" => "푸루트 슈퍼 노바60",
         "Curse of the Pharaoh Bonus Buy" => "커스 오브 파라오 보너스 구매",
+
+        // Habanero GMW games
+        "Spartans The Final Stand" => "스파르탄스 더 파이널 스탠드",
+        "Neon Nights" => "네온 나이트",
+        "Poseidon" => "포세이돈",
+        "Mayan Dreams" => "마얀 드림스",
+        "Wild Safari" => "와일드 사파리",
+        "Xtra Diamonds Deluxe" => "엑스트라 다이아몬드 디럭스",
+        "Yin Yang" => "인 양",
+        "Olympus" => "올림푸스",
+        "Spectacular 7's" => "스펙터쿨러 7s",
+        "Wild Red" => "와일드 레드",
+        "Sacred Flower" => "서크레드 플라워",
+        "Mega 9's" => "메가 9s",
+        "Treasure Cove" => "트레저 코브",
+        "Ten Tigers" => "텐 타이거",
+        "Super 8's" => "슈퍼 8s",
+        "Super 9's" => "슈퍼 9s",
+        "Ten Crowns" => "텐 크라운스",
+        "Phoenix" => "포에닉스",
+        "Super Sevens" => "슈퍼 세븐스",
+        "Lucky Jesters" => "럭키 제스터스",
+        "Pegasus" => "페가수스",
+        "Griffin" => "그리핀",
+        "King of the Deep" => "킹오브더딥",
+        "Double Joker's Money" => "더블 조커스 머니",
+        "Lightning Fruits" => "라이트닝 푸루츠",
+        "Double Black Cherry" => "더블 블랙 체리",
+        "Living The Dream" => "라이빙 더 드림",
+        "Diamonds Deluxe" => "다이아몬드 디럭스",
+        "101 Wolfpack" => "101 울프팩",
+        "Princess Of The Deep" => "프린시스오브더딥",
+        "Magical Fairies Deluxe" => "매지컬 패어리 디럭스",
+        "Red" => "레드",
+        "Hot Frozen Fruits" => "핫 프로즌 푸루츠",
+        "Golden Dragon" => "골든 드래곤",
+        "Gladiators" => "글래디어터",
+        "Dragon Gate" => "드래곤 게이트",
+        "Lucky Fortune" => "럭키 포츈",
+        "Wild Cleopatra Deluxe" => "와일드 클레오파트라 디럭스",
+        "Viking" => "바이킹",
+        "Spot" => "스팟",
+        "Super Fruits" => "슈퍼 푸루츠",
+        "101 Lions" => "101 라이온스",
 ];
