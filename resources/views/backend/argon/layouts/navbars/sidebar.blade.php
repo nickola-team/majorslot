@@ -169,7 +169,7 @@
                             </li>
                             @else
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.dw.dealconvert')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     롤링전환
                                 </a>

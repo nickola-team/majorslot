@@ -144,6 +144,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'DWController@outrequest',
         ]);
 
+        Route::get('/dw/rolling', [
+            'as' => 'argon.dw.dealconvert',
+            'uses' => 'DWController@dealconvert',
+        ]);
+
     });
 });
 

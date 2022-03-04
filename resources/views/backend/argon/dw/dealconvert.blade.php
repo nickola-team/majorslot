@@ -1,5 +1,5 @@
 @extends('backend.argon.layouts.app')
-@section('page-title',  '환전신청')
+@section('page-title',  '롤링전환')
 
 @section('content')
 <div class="container-fluid">
@@ -9,7 +9,7 @@
             <div class="card-header border-0" id="headingOne">
                 <div class="row align-items-center box">
                     <div class="col-8">
-                        <h3 class="mb-0">환전신청</h3>
+                        <h3 class="mb-0">롤링전환</h3>
                     </div>
                 </div>
             </div>
@@ -34,6 +34,23 @@
                             {{auth()->user()->role->description}}
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-5 text-center">
+                            롤링%
+                        </div>
+                        <div class="col-7">
+                            {{auth()->user()->deal_percent}} %
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-5 text-center">
+                            라이브 롤링%
+                        </div>
+                        <div class="col-7">
+                            {{auth()->user()->table_deal_percent}} %
+                        </div>
+                    </div>
 
                     <div class="form-group row">
                         <div class="col-5 text-center">
@@ -49,14 +66,7 @@
                             현재 롤링금
                         </div>
                         <div class="col-7">
-                            <div class="row">
-                                <div class="col-6">
-                                    <span >{{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}</span> 
-                                </div>
-                                <div class="col-6">
-                                    <a href="{{argon_route('argon.dw.dealconvert')}}"><button type="button" class="btn btn-danger btn-sm">롤링전환</button></a>
-                                </div>
-                            </div>
+                            <span >{{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}</span> 
                         </div>
                     </div>
                     
@@ -67,41 +77,19 @@
                         <div class="col-7">
                             <input class="form-control col-8" type="text" value="0" id="amount" name="amount">
                             <p></p>
+                            <button type="button" class="btn btn-success mb-1 changeAmount" data-value="10000">1만</button>
+                            <button type="button" class="btn btn-success mb-1 changeAmount" data-value="20000">2만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="50000">5만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="100000">10만</button>
                             <button type="button" class="btn btn-success mb-1 changeAmount" data-value="200000">20만</button>
-                            <button type="button" class="btn btn-success mb-1 changeAmount" data-value="500000">50만</button>
-                            <button type="button" class="btn btn-success mb-1 changeAmount" data-value="1000000">100만</button>
                             <button type="button" class="btn btn-primary mb-1 changeAmount" data-value="0">리셋</button>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-5 text-center">
-                            거래계좌
-                        </div>
-                        <div class="col-7">
-                            <div class="row">
-                                <div class="col-6">
-                                    <span>{{auth()->user()->bankInfo()}}</span> 
-                                </div>
-                                <div class="col-6">
-                                <a href="{{argon_route('argon.common.profile', ['id' => auth()->user()->id])}}"><button type="button" class="btn btn-info btn-sm">계좌수정</button></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-5 text-center">
-                            환전비밀번호
-                        </div>
-                        <div class="col-7">
-                            <input class="form-control col-8" type="password" value="" id="confirmation_token" name="confirmation_token">
-                        </div>
-                    </div>
+                    
                    
                     <div class="form-group row mt-5">
                         <div class="col col-lg-6 m-auto">
-                            <button type="button" class="btn btn-warning col-12" id="doSubmit" onclick="withdraw_balance();">환전신청</button>
+                            <button type="button" class="btn btn-warning col-12" id="doSubmit" onclick="convert_deal_balance();">롤링전환</button>
                         </div>
                     </div>
                     
@@ -157,16 +145,13 @@
     });
 
 
-    
-
-    function withdraw_balance() {
+    function convert_deal_balance() {
         $("#doSubmit").attr('disabled', 'disabled');
         var money = $('#amount').val();
-        var confirmation_token = $('#confirmation_token').val();
         $.ajax({
             type: 'POST',
-            url: '/api/outbalance',
-            data: { money: money, confirmation_token : confirmation_token },
+            url: '/api/convert_deal_balance',
+            data: { summ: money},
             cache: false,
             async: false,
             success: function (data) {
@@ -180,17 +165,10 @@
                     else if (data.code == '003') {
                         $('#amount').val('0');
                     }
-                    else if (data.code == '010')
-                    {
-                        show_alarm(data.msg, function() {
-                            location.href = "{{argon_route('argon.common.profile')}}";
-                        });
-                        return;
-                    }
                     show_alarm(data.msg);
                     return;
                 }
-                show_alarm('환전 신청이 완료되었습니다.', function() { location.reload(true);});
+                show_alarm('롤링금이 전환되었습니다.', function() { location.reload(true);});
             },
             error: function (err, xhr) {
                 show_alarm(err.responseText);

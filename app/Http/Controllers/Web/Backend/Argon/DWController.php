@@ -19,6 +19,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.dw.outrequest');
         }
 
+        public function dealconvert(\Illuminate\Http\Request $request)
+        {
+            return view('backend.argon.dw.dealconvert');
+        }
+
         public function addmanagement(\Illuminate\Http\Request $request)
         {
             return view('backend.argon.common.balance',compact('type', 'user', 'url'));

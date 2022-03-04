@@ -54,7 +54,7 @@
                                     <span >{{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}</span> 
                                 </div>
                                 <div class="col-6">
-                                    <button type="button" class="btn btn-danger btn-sm">롤링전환</button>
+                                    <a href="{{argon_route('argon.dw.dealconvert')}}"><button type="button" class="btn btn-danger btn-sm">롤링전환</button></a>
                                 </div>
                             </div>
                         </div>
