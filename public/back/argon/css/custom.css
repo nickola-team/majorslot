@@ -166,3 +166,11 @@ hr.horizontal.dark {
     border: 2px solid green;
     background-color: green;
 }
+
+.modal-header {
+    border-bottom:1px solid #e9ecef !important;
+}
+
+.modal-footer {
+    border-top: 1px solid #e9ecef !important;
+}

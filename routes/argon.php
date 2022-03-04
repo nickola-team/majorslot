@@ -139,6 +139,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'DWController@addrequest',
         ]);
 
+        Route::get('/dw/outrequest', [
+            'as' => 'argon.dw.outrequest',
+            'uses' => 'DWController@outrequest',
+        ]);
+
     });
 });
 

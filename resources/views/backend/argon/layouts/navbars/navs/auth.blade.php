@@ -48,7 +48,7 @@
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-info" href="#">
+                        <a class="nav-link text-dark btn btn-warning" href="#">
                             환전신청
                         </a>
                         </div>

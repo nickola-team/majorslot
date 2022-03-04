@@ -169,13 +169,19 @@
                             </li>
                             @else
                             <li class="nav-item">
+                                <a class="nav-link text-white" href="#">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    롤링전환
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.dw.addrequest')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     충전신청
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.dw.outrequest')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     환전신청
                                 </a>
