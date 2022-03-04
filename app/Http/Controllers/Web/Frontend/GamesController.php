@@ -286,7 +286,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $styleName = config('app.stylename');
             $replayUrl = config('app.replayurl');
             $is_api = false;
-            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl'));
+            $cq_loadimg = '';
+            if(strpos($game->name, 'CQ9') !== false){
+                $cq_promo = \VanguardLTE\CQPromo::first();
+                if(isset($cq_promo)){
+                    $cq_loadimg = $cq_promo->promoid;
+                }
+            }
+            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg'));
         }
         public function server(\Illuminate\Http\Request $request, $game)
         {
