@@ -283,11 +283,16 @@ namespace VanguardLTE\Games\PandasFortunePM
             //     $this->slotJackPercent = 0;
             //     $this->slotJackPercent0 = 0;
             // }
-            if( !isset($this->user->session) || strlen($this->user->session) <= 0 ) 
+            // if( !isset($this->user->session) || strlen($this->user->session) <= 0 ) 
+            // {
+            //     $this->user->session = serialize([]);
+            // }
+            // $this->gameData = unserialize($this->user->session);
+            if( !isset($this->user->session_json) || strlen($this->user->session_json) <= 0 ) 
             {
-                $this->user->session = serialize([]);
+                $this->user->session_json = json_encode([]);
             }
-            $this->gameData = unserialize($this->user->session);
+            $this->gameData = json_decode($this->user->session_json, true);
             if( count($this->gameData) > 0 ) 
             {
                 foreach( $this->gameData as $key => $vl ) 
@@ -525,7 +530,8 @@ namespace VanguardLTE\Games\PandasFortunePM
         }
         public function SaveGameData()
         {
-            $this->user->session = serialize($this->gameData);
+            // $this->user->session = serialize($this->gameData);
+            $this->user->session_json = json_encode($this->gameData);
             $this->user->save();
             $this->user->refresh();
         }
@@ -673,10 +679,10 @@ namespace VanguardLTE\Games\PandasFortunePM
         }
         public function GetCountBalanceUser()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             return $this->user->count_balance;
         }
         public function InternalError($errcode)
@@ -807,10 +813,10 @@ namespace VanguardLTE\Games\PandasFortunePM
             }
             $user->balance = $user->balance + $sum;
             $user->balance = $this->FormatFloat($user->balance);
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             if( $user->balance == 0 ) 
             {
                 $user->update([
@@ -837,10 +843,10 @@ namespace VanguardLTE\Games\PandasFortunePM
         }
         public function GetBalance()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             $user = $this->user;
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;

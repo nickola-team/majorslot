@@ -1127,7 +1127,31 @@ namespace VanguardLTE\Console
                 $slot->genfree();
                 $this->info('End freestack');
             });
-
+            \Artisan::command('convert:session', function () {
+                $this->info('Convert Session');
+                $users = \VanguardLTE\User::get();
+                foreach ($users as $user)
+                {
+                    if( !isset($user->session) || strlen($user->session) <= 0 ) 
+                    {
+                        $user->session = serialize([]);
+                    }
+                    $gameData = unserialize($user->session);
+                    // if( count($gameData) > 0 ) 
+                    // {
+                    //     foreach( $gameData as $key => $vl ) 
+                    //     {
+                    //         if( $vl['timelife'] <= time() ) 
+                    //         {
+                    //             unset($gameData[$key]);
+                    //         }
+                    //     }
+                    // }
+                    $user->session_json = json_encode($gameData);
+                    $user->save();
+                }
+                $this->info('End convert session');
+            });
             
         }
     }
