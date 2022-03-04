@@ -14,13 +14,21 @@ namespace VanguardLTE\Console
         {
             //$schedule->command('queue:work --daemon')->everyMinute()->withoutOverlapping();
             $schedule->call(function () {
-                \Illuminate\Support\Facades\Redis::del('pplist');
-                \Illuminate\Support\Facades\Redis::del('livelist');
-                \Illuminate\Support\Facades\Redis::del('hbnlist');
-                \Illuminate\Support\Facades\Redis::del('booongolist');
-                \Illuminate\Support\Facades\Redis::del('playsonlist');
-                \Illuminate\Support\Facades\Redis::del('cq9list');
-                \Illuminate\Support\Facades\Redis::del('playngolist');
+                // \Illuminate\Support\Facades\Redis::del('pplist');
+                // \Illuminate\Support\Facades\Redis::del('livelist');
+                // \Illuminate\Support\Facades\Redis::del('hbnlist');
+                // \Illuminate\Support\Facades\Redis::del('booongolist');
+                // \Illuminate\Support\Facades\Redis::del('playsonlist');
+                // \Illuminate\Support\Facades\Redis::del('cq9list');
+                // \Illuminate\Support\Facades\Redis::del('playngolist');
+                $hrefcats = \VanguardLTE\Category::where(['shop_id'=>0, 'site_id'=>0])->whereNotNull('categories.provider')->get();
+                if (count($hrefcats) > 0)
+                {
+                    foreach ($hrefcats as $cat)
+                    {
+                        \Illuminate\Support\Facades\Redis::del($cat->href . 'list');
+                    }
+                }
 
                 set_time_limit(0);
                 $_daytime = strtotime("-1 days") * 10000;
@@ -231,33 +239,34 @@ namespace VanguardLTE\Console
             })->everyMinute();
             $schedule->call(function()
             {
-                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
-                $task = \VanguardLTE\Task::where([
+                $date_time = date('Y-m-d 0:0:0', strtotime("-1 days"));
+                $tasks = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'user', 
                     'action' => 'delete'
-                ])->where('created_at', '<=', $date_time)->first();
-                if( $task ) 
+                ])->where('created_at', '<=', $date_time)->get();
+                if( count($tasks) > 0 ) 
                 {
-                    $task->update(['finished' => 1]);
-                    $user = \VanguardLTE\User::find($task->item_id);
-                    if ($user){
-                        $user->detachAllRoles();
-                        //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
-                        \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
-                        //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
-                        \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
-                        \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
-                        \VanguardLTE\Session::where('user_id', $user->id)->delete();
-                        \VanguardLTE\Info::where('user_id', $user->id)->delete();
-                        $user->delete();
+                    foreach ($tasks as $task){
+                        $task->update(['finished' => 1]);
+                        $user = \VanguardLTE\User::find($task->item_id);
+                        if ($user){
+                            $user->detachAllRoles();
+                            //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
+                            \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
+                            //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
+                            \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
+                            \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
+                            \VanguardLTE\Session::where('user_id', $user->id)->delete();
+                            \VanguardLTE\Info::where('user_id', $user->id)->delete();
+                            $user->delete();
+                        }
                     }
-
                 }
             })->everyMinute();
             $schedule->call(function()
             {
-                $date_time = date('Y-m-d H:i:s', strtotime("-1 days"));
+                $date_time = date('Y-m-d 0:0:0', strtotime("-1 days"));
                 $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'shop', 

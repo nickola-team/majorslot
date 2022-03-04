@@ -129,7 +129,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $url = null;
             $data = [];
             $ppiplist = ['195.69.223.', '176.112.120.', '185.8.155.', '5.2.130.103', '84.1.113.218', '81.196.86.120','185.54.229.'];
-            $ip = $request->server('HTTP_CF_CONNECTING_IP')??$request->server('REMOTE_ADDR');
+            $ip = $this->request->server('HTTP_CF_CONNECTING_IP')??($this->request->server('X_FORWARDED_FOR')??$this->request->server('REMOTE_ADDR'));
             $blocked = false;
             foreach ($ppiplist as $net)
             {
@@ -180,7 +180,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
 
-            $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\HBNController::gamecodetoname($gamecode);
+            $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\HBNController::getGameObj($gamecode);
+            if (!$gameObj)
+            {
+                return redirect('/');
+            }
+            $gamename = $gameObj['name'];
             $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
             $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
             $shop_id = \Auth::user()->shop_id;

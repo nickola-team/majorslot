@@ -291,7 +291,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                     if(count($freeStacks) >= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
                         $isGeneratedFreeStack = true;
                     }
-                    if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') == 0){
+                    if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') < $slotSettings->GetGameData($slotSettings->slotId . 'LimitWin')){
                         $winType = 'win';
                         $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
                         $isForceWin = true;
@@ -533,7 +533,7 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                         else if($isGeneratedFreeStack == true){
                             break;  //freestack
                         }
-                        else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
+                        else if($isForceWin == true && $totalWin > 0 && $totalWin < ($betline * $lines * 5 + $slotSettings->GetGameData($slotSettings->slotId . 'LimitWin'))){
                             break;   // win by force when winmoney is 0 in freespin
                         }
                         else if($winType == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
