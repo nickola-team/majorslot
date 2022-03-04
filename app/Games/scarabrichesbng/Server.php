@@ -51,9 +51,10 @@ namespace VanguardLTE\Games\scarabrichesbng
 
             $Counter = $slotSettings->GetGameData($slotSettings->slotId . 'Counter') ?? 0;
             if($slotEvent['command'] == 'login'){
+                $slotSettings->SetGameData($slotSettings->slotId . 'BalanceVersion', $BALANCE * $DENOMINATOR);
                 $user = [
                     'balance' => $BALANCE * $DENOMINATOR,
-                    'balance_version' => $BALANCE * $DENOMINATOR,
+                    'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
                     'currency' => 'KRW',
                     'huid' => '969:major:17390:rKRW',
                     'show_balance' => true
@@ -82,21 +83,21 @@ namespace VanguardLTE\Games\scarabrichesbng
                         'actions' => ['spin'],
                         'current' => 'spins',
                         'last_args' => [
-                            'bet_per_line' => $bets[0],
+                            'bet_per_line' => $bets[5],
                             'lines' => $LINES,
                         ],
                         'last_win' => 0,
                         'math_version' => 'a',
                         'round_finished' => true,
                         'spins' => [
-                            'bet_per_line' => $bets[0],
+                            'bet_per_line' => $bets[5],
                             'board' => [[3, 13, 2], [2, 12, 6], [5, 13, 2], [2, 12, 4], [3, 13, 2]],
                             'counter' => $Counter,
                             'feature_board' => [[3, 13, 2], [2, 12, 6], [5, 13, 2], [2, 12, 4], [3, 13, 2]],
                             'is_extra_feature' => false,
                             'lines' => $LINES,
                             'portal_level' => 0,
-                            'round_bet' => $bets[0] * $LINES,
+                            'round_bet' => $bets[5] * $LINES,
                             'round_win' => 0,
                             'total_win' => 0,
                         ],
@@ -117,7 +118,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     ],
                     'user' => [
                         'balance' => $BALANCE * 100,
-                        'balance_version' => $BALANCE * 100,
+                        'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
                         'currency' => 'KRW',
                         'huid' => '969:major:17390:rKRW',
                         'show_balance' => true
@@ -144,7 +145,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     ],
                     'user' => [
                         'balance' => $BALANCE * $DENOMINATOR,
-                        'balance_version' => $BALANCE * $DENOMINATOR,
+                        'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
                         'currency' => 'KRW',
                         'huid' => '969:major:17390:rKRW',
                         'show_balance' => true
@@ -194,7 +195,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     $betline = $action['params']['bet_per_line'] / $DENOMINATOR;
                     $slotEvent['slotEvent'] = 'bet';
                 }else if($action['name'] == 'freespin_init' || $action['name'] == 'freespin' || $action['name'] == 'freespin_stop'){
-                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? $slotSettings->Bet[0];
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? $slotSettings->Bet[5];
                     $slotEvent['slotEvent'] = 'freespin';
                 }else{
                     // throw error
@@ -255,7 +256,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                         ],
                         'user' => [
                             'balance' => $BALANCE * 100,
-                            'balance_version' => $BALANCE * 100,
+                            'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
                             'currency' => 'KRW',
                             'huid' => '969:major:17390:rKRW',
                             'show_balance' => true
@@ -307,7 +308,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                         ],
                         'user' => [
                             'balance' => $BALANCE * 100,
-                            'balance_version' => $BALANCE * 100,
+                            'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
                             'currency' => 'KRW',
                             'huid' => '969:major:17390:rKRW',
                             'show_balance' => true
@@ -465,6 +466,8 @@ namespace VanguardLTE\Games\scarabrichesbng
                         }
                         else if($wildScarabCount > 0 && $wildScarabCount != $wildCount){
 
+                        }else if($wildScarabCount == 0 && $wildCount > 1){
+                            
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {
@@ -501,9 +504,8 @@ namespace VanguardLTE\Games\scarabrichesbng
                         $slotSettings->SetBalance($totalWin);
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
                         $slotSettings->SetGameData($slotSettings->slotId . 'LastWin', $totalWin);
-
-                        $BALANCE = $slotSettings->GetBalance();
                     }
+                    $BALANCE = $slotSettings->GetBalance();
                     if( $scattersCount >= 3 ) 
                     {
                         
@@ -550,7 +552,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                         ],
                         'user' => [
                             'balance' => $BALANCE * 100,
-                            'balance_version' => $BALANCE * 100,
+                            'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
                             'currency' => 'KRW',
                             'huid' => '969:major:17390:rKRW',
                             'show_balance' => true
