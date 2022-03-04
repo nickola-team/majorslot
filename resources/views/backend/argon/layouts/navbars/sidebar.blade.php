@@ -158,13 +158,13 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    충전
+                                    충전관리
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    환전
+                                    환전관리
                                 </a>
                             </li>
                             @else

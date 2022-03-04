@@ -154,6 +154,16 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'DWController@history',
         ]);
 
+        Route::get('/dw/addmanage', [
+            'as' => 'argon.dw.addmanage',
+            'uses' => 'DWController@addmanage',
+        ]);
+
+        Route::get('/dw/outmanage', [
+            'as' => 'argon.dw.outmanage',
+            'uses' => 'DWController@outmanage',
+        ]);
+
     });
 });
 

@@ -87,11 +87,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.dw.history', compact('in_out_logs','total'));
         }
 
-        public function addmanagement(\Illuminate\Http\Request $request)
+        public function addmanage(\Illuminate\Http\Request $request)
         {
             return view('backend.argon.common.balance',compact('type', 'user', 'url'));
         }
-        public function outmanagement(\Illuminate\Http\Request $request)
+        public function outmanage(\Illuminate\Http\Request $request)
         {
             return view('backend.argon.common.balance',compact('type', 'user', 'url'));
         }
