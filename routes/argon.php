@@ -149,6 +149,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'DWController@dealconvert',
         ]);
 
+        Route::get('/dw/history', [
+            'as' => 'argon.dw.history',
+            'uses' => 'DWController@history',
+        ]);
+
     });
 });
 
