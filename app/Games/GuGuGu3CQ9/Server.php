@@ -93,13 +93,17 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
                             $result_val['PlayerOrderURL'] = config('app.cq9history') . '/?gametoken=' . auth()->user()->api_token;
-                            $result_val['PromotionData'] = false;
+                            $result_val['PromotionData'] = $slotSettings->getPromotionData();
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
                             $result_val['FeedbackURL'] = null;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['FreeTicketList'] = null;
-                            $result_val['DenomMultiple'] = 100;
+                            $result_val['DenomMultiple'] = $initDenom;
+                            $result_val['FreeTicketList'] = null;
+                            $result_val['FreeSpinLeftTimesInfoList'] = null;
+                            $result_val['RecommendList'] = $slotSettings->getRecommendList();
+
                         }else if($packet_id == 12){
                             $result_val['BGStripStartID'] = 0;
                             $result_val['FGStripStartID'] = 50;
@@ -251,6 +255,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             }else if(isset($paramData['irq']) && $paramData['irq'] == 1){
                 $response = $this->encryptMessage('{"err":0,"irs":1,"vals":[1,-2147483648,2,988435344],"msg":null}');
                 $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetGameData($slotSettings->slotId . 'CurrentBalance').'],"evt": 1}');
+                $response = $response . '------' . $this->encryptMessage('{"vals":[11,{ "FreeTicketList":{"ThisGameFreeTicketList": null,"OtherGameFreeTicketList": null}}],"evt": 11}');
             }
             $slotSettings->SaveGameData();
             \DB::commit();
