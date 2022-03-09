@@ -949,6 +949,29 @@ namespace VanguardLTE\Games\scarabrichesbng
                     $reel[$reel_id][0] = intval($key[$value]);
                     $reel[$reel_id][1] = intval($key[($value + $diffNum) % $rc]);
                     $reel[$reel_id][2] = intval($key[($value + 2 * $diffNum) % $rc]);
+                    $isWild = false;
+                    for($k = 0; $k < 3; $k++){
+                        if($reel[$reel_id][2] == 12){
+                            $isWild = true;
+                            break;
+                        }
+                    }
+                    $percent = mt_rand(0, 100);
+                    if($isWild == true){
+                        if($percent < 85){
+                            $reel[$reel_id][0] = 12;
+                            $reel[$reel_id][1] = 12;
+                            $reel[$reel_id][2] = 12;
+                        }else if($percent < 95){
+                            if(mt_rand(0, 1) == 0){
+                                $reel[$reel_id][0] = 12;
+                                $reel[$reel_id][1] = 12;
+                            }else{
+                                $reel[$reel_id][2] = 12;
+                                $reel[$reel_id][1] = 12;
+                            }
+                        }
+                    }
                 }else{
                     $scatterPos = rand(0, 100);
                     if($scatterPos < 35){
