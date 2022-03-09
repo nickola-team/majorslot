@@ -506,6 +506,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if ($cat1->provider != null)
                 {
                     $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
+                    //include gac lobby at all live casino
+                    if ($cat1->type == 'live' && $cat1->href != 'gac')
+                    {
+                        $cat2 = \VanguardLTE\Category::where([
+                            'href' => 'gac', 
+                            'shop_id' => $shop_id
+                        ])->first();
+                        if ($cat2 && $cat2->view == 1)
+                        {
+                            $gacgames = $this->gamelistbyProvider($cat2->provider, $cat2->href);
+                            foreach ($gacgames as $gc)
+                            {
+                                array_unshift($selectedGames, $gc);
+                            }
+                            
+                        }
+                    }
                 }
                 else{
                     if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
