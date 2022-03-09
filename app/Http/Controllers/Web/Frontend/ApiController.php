@@ -324,7 +324,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 foreach ($games as $game)
                 {
-                    if (!isset($game['view']) || $game['view'] == 1)
+                    //if (!isset($game['view']) || $game['view'] == 1)
                     {
                         $filtergames[] = $game;
                     }
