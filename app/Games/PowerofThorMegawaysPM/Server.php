@@ -448,6 +448,10 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     if ($winType == 'win') {
                         $winType = 'none';
                     }
+                    if ($winType == 'bonus' && $isTumbleBonus) {
+                        $curTumbleBonusStep = $tumbleBonusStepCount;
+                        $defaultScatterCount = $totalScatterCount;
+                    }
                 }
 
 
