@@ -156,7 +156,7 @@
                         <ul class="nav nav-sm flex-column">
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.dw.addmanage')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     충전관리
                                 </a>
