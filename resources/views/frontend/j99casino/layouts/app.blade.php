@@ -279,9 +279,9 @@
 				<div class="login">
 				@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 					<ul>
-                        <li data-target="#sk_tab_con_01_1"><a href="#" onclick="tabActionProc('tab4','letterList');" class="sub_pop2_open"></a>&nbsp;&nbsp;&nbsp;</li>                
                         <li style="color:#222"><img src="/frontend/j99casino/tutu/images/5UNZI____.png" width="20">&nbsp;{{ Auth::user()->username }}님 환영합니다.</li>
                         <li style="color:#222"><img src="/frontend/j99casino/tutu/images/coin.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->balance) }}</span> 원</li>
+						<li style="color:#222"><img src="/frontend/j99casino/tutu/images/coin_bonus.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->deal_balance) }}</span> 원</li>
 						<li><a href="/logout"><span class="login_btn2">로그아웃</span></a></li>
                     </ul>
 				@else
@@ -303,10 +303,11 @@
 						alert("Flux Slider requires a browser that supports CSS3 transitions");
 						
 					window.f = new flux.slider('#slider', {
-						pagination: false,
+						pagination: true,
 						controls: false,
-						//ysk transitions: ['explode', 'tiles3d', 'bars3d', 'cube', 'turn'], (터지는, 타일, 바3D, 큐브, 턴)
-						transitions: ['turn', 'turn', 'turn', 'turn', 'turn'],				
+						transitions: ['explode', 'tiles3d', 'bars3d', 'cube', 'turn'],// (터지는, 타일, 바3D, 큐브, 턴)
+						// transitions: ['turn', 'turn', 'turn', 'turn', 'turn'],
+						delay:4000,
 						autoplay: true //ysk 자동재생
 					});		
 				});
@@ -315,9 +316,9 @@
 			<div style="position:relative; height:660px; overflow:hidden; clear:both;">
 				<div style="position:absolute; width:1920px; left:50%; margin-left:-960px;">   
 					<div id="slider">
-						<img src="/frontend/j99casino/tutu/images/slideshow1.jpg">
-						<img src="/frontend/j99casino/tutu/images/slideshow2.jpg">
-						<img src="/frontend/j99casino/tutu/images/slideshow3.jpg">
+						<img src="/frontend/j99casino/tutu/images/slideshow3.jpg" />
+						<img src="/frontend/j99casino/tutu/images/slideshow1.jpg" />
+						<img src="/frontend/j99casino/tutu/images/slideshow2.jpg" />
 					</div>
 				</div>
 			</div>
@@ -331,8 +332,8 @@
 						<ul>
 							@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 							
-							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/j99casino/tutu/images/main_game1.png" style="display: inline;"><img src="/frontend/j99casino/tutu/images/main_game1.png" class="mouseover1" style="display: none;"></a></li>
-                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="javascript:swal('준비중입니다.');return false;"><img src="/frontend/j99casino/tutu/images/main_game2.png" style="display: inline;"><img src="/frontend/j99casino/tutu/images/main_game2.png" class="mouseover1" style="display: none;"></a></li>                
+							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subLive');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/j99casino/tutu/images/main_game1.png" style="display: inline;"><img src="/frontend/j99casino/tutu/images/main_game1.png" class="mouseover1" style="display: none;"></a></li>
+                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/j99casino/tutu/images/main_game2.png" style="display: inline;"><img src="/frontend/j99casino/tutu/images/main_game2.png" class="mouseover1" style="display: none;"></a></li>                
                                                                              
 							@else
 							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/j99casino/tutu/images/main_game1.png"><img src="/frontend/j99casino/tutu/images/main_game1.png" class="mouseover1" style="display:none;"></a></li>
@@ -342,12 +343,15 @@
 					</div>
 				</div>
 			</div>
-						<div class="main_best_wrap">
-				<div class="main_best_box">
-					<div class="main_best_title"></div>
+				<div class="main_best_wrap">
+					<div class="main_best_box">
+					<div class="main_best_title">
+					</div>
 					<div class="game_list_wrap">
 						<ul>
-						<?php $catcount = 0; ?>
+						<?php
+							$catcount = 0;
+						?>
 						@if ($categories && count($categories))
 							@foreach($categories AS $index=>$category)
 								@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
@@ -359,14 +363,14 @@
 									
 									@else
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
-									@endif										
+									@endif
 									@if (file_exists( public_path() . '/frontend/j99casino/tutu/images/slot-icon/' . $category->title.'.gif'))
-									<img src="/frontend/j99casino/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 252px;height: 230px;border-radius:30px">
+										<img src="/frontend/j99casino/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 252px;height: 230px;border-radius:30px">
 									@else
 										<img src="/frontend/j99casino/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 252px;height: 230px;border-radius:30px">
 									@endif
 										<img src="/frontend/j99casino/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
-									</a>     
+									</a>
 								</li>
 								<?php $catcount = $catcount +1; ?>
 								@endif
@@ -409,7 +413,7 @@
 										</tr>
 										<tr><td class="write_title">은행선택</td><td class="write_td"></td>\r\n<td class="write_basic">   
 											<select class="input1" name="bankname" id="strBankName" onchange="directBankName(this);"></select>    <span id="banknmId" style="display: none;">
-											<input class="input1" name="banknm" type="text" id="strDirBankName" maxlength="20" placeholder="은행명직접입력"></span></td></tr> <tr><td class="write_title">예금주</td><td class="write_td"></td><td class="write_basic">    <input class="input1" type="text" id="strBankUser" onblur="CheckHangul(this);"><span>&nbsp;&nbsp;( 입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다 )</span></td></tr><tr><td class="write_title">계좌번호</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="accountnumber" type="text" id="strBankNum" onkeypress="return digit_check(event)" placeholder="계좌번호를 입력하세요">    <span>&nbsp;&nbsp;( 띄어쓰기와 - 없이 숫자로만 기입하여 주시기 바랍니다 )</span></td></tr>   <tr><td class="write_title">핸드폰</td><td class="write_td"></td><td class="write_basic"><input class="input1" type="tel" id="strPhone" maxlength="16"></td></tr>     <tr><td class="write_title">추천코드</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="recomcode_id" type="text" id="strMark"></td></tr>\r\n            </table>\r\n        </div>\r\n        <div class="con_box10">\r\n            <div class="btn_wrap_center"><ul><li><a href="#none" onclick="onRegister();return false;"><span class="btn3_1">회원가입완료</span></a></li></ul>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</form>
+											<input class="input1" name="banknm" type="text" id="strDirBankName" maxlength="20" placeholder="은행명직접입력"></span></td></tr> <tr><td class="write_title">예금주</td><td class="write_td"></td><td class="write_basic">    <input class="input1" type="text" id="strBankUser" onblur="CheckHangul(this);"><span>&nbsp;&nbsp;( 입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다 )</span></td></tr><tr><td class="write_title">계좌번호</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="accountnumber" type="text" id="strBankNum" onkeypress="return digit_check(event)" placeholder="계좌번호를 입력하세요">    <span>&nbsp;&nbsp;( 띄어쓰기와 - 없이 숫자로만 기입하여 주시기 바랍니다 )</span></td></tr>   <tr><td class="write_title">핸드폰</td><td class="write_td"></td><td class="write_basic"><input class="input1" type="tel" id="strPhone" maxlength="16"></td></tr>     <tr ><td class="write_title">추천코드</td><td class="write_td"></td><td class="write_basic">    <input class="input1" name="recomcode_id" type="text" id="strMark" value=""></td></tr>\r\n            </table>\r\n        </div>\r\n        <div class="con_box10">\r\n            <div class="btn_wrap_center"><ul><li><a href="#none" onclick="onRegister();return false;"><span class="btn3_1">회원가입완료</span></a></li></ul>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</form>
 						`;
 
 					$("#popupbox_ajax").html(data);
@@ -430,7 +434,7 @@
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-							&& $category->title != "Skywind" )
+							&& $category->title != "Skywind"  && $category->type == "slot")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
@@ -443,6 +447,32 @@
 								@else
 								data += `<img src="/frontend/j99casino/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
 								@endif
+								data += `<img src="/frontend/j99casino/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
+								data += `</a>`;     
+								data += `</li>`;
+							@endif
+						@endforeach
+					@endif
+
+					data +="</ul></div>";
+
+					$("#popupbox_ajax").html(data);
+				}
+				else if(pid == "subLive"){
+					data =`<div class="game_tit"><img src="/frontend/j99casino/tutu/images/casino_title2.png"></div><div class="game_list_wrap"><ul>`;
+					@if ($categories && count($categories))
+						@foreach($categories AS $index=>$category)
+							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
+							&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
+							&& $category->title != "Skywind"  && $category->type == "live")
+							data += `<li>`;
+								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
+								
+								@else
+								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
+								@endif										
+								data += `<img src="/frontend/j99casino/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
 								data += `<img src="/frontend/j99casino/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
 								data += `</a>`;     
 								data += `</li>`;
@@ -469,10 +499,146 @@
                 $("#divpopup" + popupid).hide();
             }
 			$(document).ready(function(){
-                if ( document.cookie.indexOf("divpopup2=close") < 0 ){
-                    $("#divpopup2").show();
+@if ($noticelist!=null && count($noticelist) >0)
+@foreach ($noticelist as $ntc)
+                if ( document.cookie.indexOf("divpopup{{$loop->index}}=close") < 0 ){
+                    $("#divpopup{{$loop->index}}").show();
                 }
+@endforeach				
+@endif				
             });
+			function tabActionPopView(obj, pid, idx) {
+				if(nCheckLetter == 1&& !pid.includes('letter')) {
+					alert('먼저 중요 쪽지를 확인해주세요.');
+					return;
+				}
+				
+				if(obj) {
+					var tab = $(".popup_tab1 li." + obj).closest(".popup_tab1 > li");
+					tab.siblings().removeClass("sk_tab_active_01");
+					tab.addClass("sk_tab_active_01");
+
+					var target = $(tab.attr("data-target")+".sk_tab_con_01");
+					$(".sk_tab_con_01").addClass("sk_tab_hidden_01");
+					target.removeClass("sk_tab_hidden_01");
+					target.html("");
+				} else {
+					
+				}
+				if( pid == "letterView" ){
+					writedate = $("#letters" + idx).children("td#lettercreated").html();
+					title = $("#letters" + idx).children("td#lettertitle").html();
+					content = $("#letters" + idx).children("td#lettercontent").html();
+					$(".sk_tab_con_01").html("");
+					data= `<div class="title1">
+										쪽지
+								</div>
+								<div class="contents_in">
+										<div class="con_box10">             
+												<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+														<tr>
+																<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> ${writedate} </td>
+														</tr>
+														<tr>
+																<td class="view1 write_title_top">${title}</td>
+														</tr>
+														<tr>
+																<td class="view2">
+																		${content}
+																</td>
+														</tr>
+												</table>
+										</div>
+										<div class="con_box20">
+												<div class="btn_wrap_center">
+														<ul>
+																<li><a href="#" onclick="tabActionProc('tab4','letterList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+														</ul>
+												</div>
+										</div>
+								</div>`;
+				}
+				else if( pid == "chatView" ){
+					$(".sk_tab_con_01").html("");
+						data = `<div class="title1">
+									문의
+								</div>
+									<div class="contents_in">
+											<div class="con_box10">             
+													<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+														<tr>
+															<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">상태</span> 답변완료</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="color: greenyellow">문의</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">문의제목 : 계좌문의</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">문의내용 : 
+																입금계좌번호 문의합니다.
+															</td>
+														</tr> 
+														<tr>
+															<td class="view1 write_title_top" style="color: greenyellow">응답</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">응답제목 : 입금 계좌문의</td>
+														</tr>
+														<tr>
+															<td class="view1 write_title_top" style="padding-left: 100px;">응답내용 : 
+																<p>안녕하세요 계좌안내 입니다.</p><p><br></p><p>【은행명 : 전북은행】 - 【예금주 : 정호영】 - 【계좌번호 : 1021-01-6610476】</p><p><br></p><p>계좌번호는 수시로 변경될 수 있습니다.</p><p>입금전 반드시 계좌문의를 통하여 계좌번호를 확인후.</p><p>입금해주시기 바랍니다 감사합니다.</p>
+															</td>
+														</tr>
+												</table> 
+										</div>
+										<div class="con_box20">
+											<div class="btn_wrap_center">
+												<ul>
+													<li><a href="#" onclick="tabActionProc('tab5','chatList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+												</ul>
+											</div>
+										</div>
+								</div>`;
+				}
+				else if(pid == "noticeView"){
+					writedate = $("#notice_" + idx).children("td#noticetime").html();
+					title = $("#notice_" + idx).children("td#noticetitle").html();
+					content = $("#notice_" + idx).children("td#noticecontent").html();
+					$(".sk_tab_con_01").html("");
+						data= `<div class="title1">
+												공지사항
+										</div>
+										<div class="contents_in">
+												<div class="con_box10">             
+														<table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
+																<tr>
+																		<td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> ${writedate}      </td>
+																</tr>
+																<tr>
+																		<td class="view1 write_title_top">${title}</td>
+																</tr>
+																<tr>
+																		<td class="view2">
+																				${content}
+																		</td>
+																</tr>
+														</table>
+												</div>
+												<div class="con_box20">
+														<div class="btn_wrap_center">
+																<ul>
+																		<li><a href="#" onclick="tabActionProc('tab6','noticeList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
+																</ul>
+														</div>
+												</div>
+										</div>`;
+				}
+
+				$(".sk_tab_con_01").html(data);
+				
+			}
 
 			function tabActionProc(obj, pid) {
 				if(nCheckLetter == 1&& !pid.includes('letter')) {
@@ -509,7 +675,9 @@
 									<div class="money">
 										<ul>`
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/j99casino/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>`;
+											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/j99casino/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/j99casino/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>`;
 										@endif	
 										data+= `</ul>
 									</div>
@@ -529,18 +697,15 @@
 										</tr>
 										<tr>
 											<td class="write_title">예금주명</td>
-											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
+											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
 										</tr>
 
 										<tr>
 											<td class="write_title">계좌번호</td>
-											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
+											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
 										</tr>
 										
-										<tr>
-											<td class="write_title">충전계좌</td>
-											<td class="write_basic" id="bank_refresh"><a href="#" id="bank_call_btn" onclick="onAskAccount();"><span class="btn1_2">텔레그램 문의</span></a></td>
-										</tr>
+										
 										<tr>
 											<td class="write_title">신청금액</td>
 											<td class="write_basic"><input class="input1" size="30" id="deposit_amount" class="input1 numeric.decimalPlaces" placeholder="0">
@@ -551,10 +716,17 @@
 												<a href="javascript:addDeposit(1000000);"><span class="btn1_2">100만원</span></a>
 												<a href="javascript:addDeposit(5000000);"><span class="btn1_2">500만원</span></a>
 												<a href="javascript:addDeposit(10000000);"><span class="btn1_2">1000만원</span></a>
-												<a href="javascript:addDeposit(0);"><span class="btn1_1">정정</span></a><br>5만원이상 만원단위로 입금신청해주시기 바랍니다.
+												<a href="javascript:addDeposit(0);"><span class="btn1_1">정정</span></a><br>3만원이상 만원단위로 입금신청해주시기 바랍니다.
 											</td>
 										</tr>  
-									</table>                
+										<tr>
+											<td class="write_title">충전계좌</td>
+											<td class="write_basic" id="bank_refresh">
+												<a href="#" id="bank_call_btn" onclick="onAskAccount();"><span class="btn1_2">텔레그램 문의</span></a>
+												&nbsp;&nbsp;<span id="depositAcc"></span>
+											</td>
+										</tr>
+									</table>
 								</div>
 								<div class="con_box20">
 									<div class="btn_wrap_center">
@@ -582,7 +754,9 @@
 									<div class="money">
 										<ul>`;
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/j99casino/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>`;
+											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/j99casino/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/j99casino/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>  `;
 										@endif
 										data+=`</ul>
 									</div>
@@ -601,12 +775,12 @@
 										</tr>
 										<tr>
 											<td class="write_title">예금주명</td>
-											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
+											<td class="write_basic"><input class="input1 userName" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
 										</tr>
 
 										<tr>
 											<td class="write_title">계좌번호</td>
-											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->recommender:''}}"></td>
+											<td class="write_basic"><input class="input1 accountNo" size="30" value="{{Auth::check()?Auth::user()->account_no:''}}"></td>
 										</tr>
 										<tr>
 											<td class="write_title">신청금액</td>
@@ -647,9 +821,21 @@
 										<td width="20%" class="list_title1">작성일</td>
 										<td width="10%" class="list_title1">상태</td>
 										<td width="10%" class="list_title1">기능</td>
-									</tr>
-										</table>
-							</div>`;
+									</tr>`;
+									@if (count($msgs) > 0)
+									@foreach ($msgs as $m)
+										data += `
+										<tr onclick="readMessage({{$m->id}}); tabActionPopView('','letterView','{{$loop->index+1}}');" style="cursor: pointer" id="letters{{$loop->index+1}}">
+												<td width="10%" class="list_title1" id="letteridx">{{$loop->index+1}}</td>
+												<td class="list_title1" id="lettertitle">{{$m->title}}</td>
+												<td width="20%" class="list_title1" id="lettercreated">{{$m->created_at}}</td>
+												<td width="10%" class="list_title1" id="letterstatus">{{$m->read_at!=null?'읽음':'안읽음'}}</td>
+												<td width="10%" class="list_title1"></td>
+												<td width="0%" class="list_title1" id="lettercontent" style="display:none;"><?php echo $m->content ?></td>
+										</tr>`;
+									@endforeach
+									@endif
+					data += `</table></div>`;
 				}
 				else if( pid == "inoutList" ){
 					data=`<div class="title1">입출금내역</div>
@@ -662,10 +848,21 @@
 										<td width="10%" class="list_title1">처리일시</td>
 										<td width="10%" class="list_title1">충/환전금액</td>
 										<td width="10%" class="list_title1">처리현황</td>
-									</tr> 
-										</table>
-								
-							</div> `;
+									</tr> `;
+									@if (count($trhistory) > 0)
+									@foreach ($trhistory as $tr)
+										data += `
+										<tr>
+											<td width="10%" class="list_title1">{{$loop->index+1}}</td>
+											<td width="10%" class="list_title1">{{$tr->type=='add'?'입금':'출금'}}</td>
+											<td width="10%" class="list_title1">{{$tr->created_at}}</td>
+											<td width="10%" class="list_title1">{{$tr->updated_at}}</td>
+											<td width="10%" class="list_title1">{{number_format($tr->sum)}}</td>
+											<td width="10%" class="list_title1">{{\VanguardLTE\WithdrawDeposit::statMsg()[$tr->status]}}</td>
+										</tr>`;
+									@endforeach
+									@endif
+					data +=`</table></div> `;
 				}
 				else if( pid == "chatList" ){
 					data= `<div class="title1">
@@ -704,8 +901,20 @@
 											<td width="10%" class="list_title1"></td>
 											<td class="list_title1">제목</td>
 											<td width="20%" class="list_title1">작성일</td>
-										</tr>
-									
+										</tr>`;
+										@if ($noticelist != null && count($noticelist) > 0)
+										@foreach ($noticelist as $ntc)
+										data += `
+										<tr onclick="tabActionPopView('','noticeView','{{$loop->index}}');" style="cursor: pointer" id="notice_{{$loop->index}}">
+											<td class="list_notice1"><img src="/frontend/di1001/tutu/images/icon_notice.png"></td>
+											<td class="list_notice2" id="noticetitle"><a href="#">★공지사항★ {{$ntc->title}}</a></td>
+											<td class="list_notice2" style="text-align: center" id="noticetime"><a href="#">{{$ntc->date_time}}</a></td>
+											<td width="0%" class="list_title1" id="noticecontent" style="display:none;"><?php echo $ntc->content ?></td>
+										</tr>`;
+										@endforeach
+										@endif
+
+					data += `
 									</table>
 								</div>
 								
@@ -716,25 +925,27 @@
 			}
 		</script>
 
-@if ($notice != null)
-		<div class="pop02_popup1 draggable02" id="divpopup2" style="position: absolute; top: 250px; left: 100px; z-index: 1000;display:none">
+@if ($noticelist != null && count($noticelist) > 0)
+@foreach ($noticelist as $ntc)
+		<div class="pop02_popup1 draggable02" id="divpopup{{$loop->index}}" style="position: absolute; top: 250px; left: {{(100+$loop->index*510)}}px; z-index: 1000;display:none">
             <div class="pop02_popup_wrap">
                 <div class="pop02_popup_btn_wrap">
                     <ul>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('2');">오늘 하루 이 창을 열지 않음</span></a></li>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('2');">닫기 X</span></a></li>            
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('{{$loop->index}}');">오늘 하루 이 창을 열지 않음</span></a></li>
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('{{$loop->index}}');">닫기 X</span></a></li>            
                     </ul>
                 </div>
                 <div class="pop02_popup_box">
                     <div class="pop02_popup_text" style="padding:30px;width:500px">
                         <span class="pop02_popup_font1" style="border-bottom:2px solid #fff;margin-bottom:15px">★공지사항★</span>
                         <span class="pop02_popup_font2">
-								<?php echo $notice->content ?>
+								<?php echo $ntc->content ?>
                         </span> 
                     </div>
                 </div>
             </div>
         </div>
+@endforeach		
 @endif
 		<style type="text/css">
             .pop02_popup1 {position:absolute; z-index:1000000000;}

@@ -76,27 +76,71 @@ function onAskAccount(){
         return;
     }
 
-    var data = { nType: 0, strQueContent: "입금계좌번호 문의합니다." }
+    var amount = uncomma($("#deposit_amount").val());
+    if (amount == '' || amount == 0) { 
+        alert("입금하실 금액을 입력하여 주세요");
+        $("#deposit_amount").focus();  
+        return; 
+    }
+    var accountName = $(".userName").val();
     
     $.ajax({
-        type: "GET",
-        url: "/onChatCreate",
-        data: data,
+        type: "POST",
+        url: "/api/depositAccount",
+        data: { money: amount, account:accountName },
         cache: false,
         async: true,
         beforeSend: function(){ },
-        success: function(response, status){
-            if(response.success == -1){
-                if(wndGame != null) wndGame.close();
-                document.location.href = '/login';
-            } else {
-                alert(response.message);
+        success: function(data, status){
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            $("#depositAcc").html(data.msg);
+            if (data.url != null)
+            {
+                var leftPosition, topPosition;
+                width = 600;
+                height = 1000;
+                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                wndGame = window.open(data.url, "Deposit",
+                "status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+                + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+                + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
             }
         },
         error: function(err, xhr){ }
     });
 }
 
+function convertDeal(money) {
+
+    if (money < 30000) {
+        alert("전환 최소금액은 30,000원 입니다.");
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/convert_deal_balance',
+        data: { summ: money },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            alert('보너스금이 보유금으로 전환되었습니다.');
+            location.reload(true);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        }
+    });
+
+}
 function DepositProc(){
     if(nCheckLetter == 1) {
         alert('먼저 중요 쪽지를 확인해주세요.');
@@ -110,6 +154,10 @@ function DepositProc(){
         $("#deposit_amount").focus();  
         return; 
     }
+    if (amount < 30000) { 
+        alert("입금은 3만원 이상부터 가능합니다"); $("#deposit_amount").focus();  return false; 
+    }
+
 
     if(!confirm("입금신청 하시겠습니까?")) return;
 
@@ -132,6 +180,7 @@ function DepositProc(){
             }
 
             alert("충전 신청이 완료되었습니다.");
+            location.reload();
         },
         error: function(err, xhr){ }
     });
@@ -182,7 +231,12 @@ function WithdrawProc() {
     }
 
     var amount = uncomma($("#withdraw_amount").val());
-    if (amount == '' || amount == 0) { alert("입금하실 금액을 입력하여 주세요"); $("#withdraw_amount").focus();  return false; }
+    if (amount == '' || amount == 0) { 
+        alert("출금하실 금액을 입력하여 주세요"); $("#withdraw_amount").focus();  return false; 
+    }
+    if (amount < 30000) { 
+        alert("출금은 3만원 이상부터 가능합니다"); $("#withdraw_amount").focus();  return false; 
+    }
     if (confirm("출금신청 하시겠습니까?")){
         var data = { accountName: $(".userName").val(), bank:$(".userBankName").val(), no:$(".accountNo").val(), money: amount };
         $.ajax({
@@ -203,113 +257,14 @@ function WithdrawProc() {
                 }
     
                 alert("환전 신청이 완료되었습니다.");
+                location.reload();
             },
             error: function(err, xhr){ }
         });
     }
 }
 
-function tabActionPopView(obj, pid, idx) {
-    if(nCheckLetter == 1&& !pid.includes('letter')) {
-        alert('먼저 중요 쪽지를 확인해주세요.');
-        return;
-    }
-    
-    if(obj) {
-        var tab = $(".popup_tab1 li." + obj).closest(".popup_tab1 > li");
-        tab.siblings().removeClass("sk_tab_active_01");
-        tab.addClass("sk_tab_active_01");
 
-        var target = $(tab.attr("data-target")+".sk_tab_con_01");
-        $(".sk_tab_con_01").addClass("sk_tab_hidden_01");
-        target.removeClass("sk_tab_hidden_01");
-        target.html("");
-    } else {
-        $(".sk_tab_con_01").html("");
-    }
-    if( pid == "letterView" ){
-              
-    }
-    else if( pid == "chatView" ){
-            data = `<div class="title1">
-                        문의
-                    </div>
-                        <div class="contents_in">
-                                <div class="con_box10">             
-                                        <table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
-                                            <tr>
-                                                <td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">상태</span> 답변완료</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="view1 write_title_top" style="color: greenyellow">문의</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="view1 write_title_top" style="padding-left: 100px;">문의제목 : 계좌문의</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="view1 write_title_top" style="padding-left: 100px;">문의내용 : 
-                                                    입금계좌번호 문의합니다.
-                                                </td>
-                                            </tr> 
-                                            <tr>
-                                                <td class="view1 write_title_top" style="color: greenyellow">응답</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="view1 write_title_top" style="padding-left: 100px;">응답제목 : 입금 계좌문의</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="view1 write_title_top" style="padding-left: 100px;">응답내용 : 
-                                                    <p>안녕하세요 계좌안내 입니다.</p><p><br></p><p>【은행명 : 전북은행】 - 【예금주 : 정호영】 - 【계좌번호 : 1021-01-6610476】</p><p><br></p><p>계좌번호는 수시로 변경될 수 있습니다.</p><p>입금전 반드시 계좌문의를 통하여 계좌번호를 확인후.</p><p>입금해주시기 바랍니다 감사합니다.</p>
-                                                </td>
-                                            </tr>
-                                    </table> 
-                            </div>
-                            <div class="con_box20">
-                                <div class="btn_wrap_center">
-                                    <ul>
-                                        <li><a href="#" onclick="tabActionProc('tab5','chatList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
-                                    </ul>
-                                </div>
-                            </div>
-                    </div>`;
-    }
-    else if(pid == "noticeView"){
-            data= `<div class="title1">
-                                    공지사항
-                            </div>
-                            <div class="contents_in">
-                                    <div class="con_box10">             
-                                            <table width="98.5%" border="0" cellspacing="0" cellpadding="0" style="margin-left:10px;">
-                                                    <tr>
-                                                            <td height="30" align="right"><span class="view_box">글쓴이</span> 운영자      <span class="view_box">작성일</span> 2021-11-09 17:10:38      </td>
-                                                    </tr>
-                                                    <tr>
-                                                            <td class="view1 write_title_top">★공지사항★</td>
-                                                    </tr>
-                                                    <tr>
-                                                            <td class="view2">
-                                                                    <?xml encoding="utf-8" ?><?xml encoding="utf-8" ?><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><!--?xml encoding="utf-8" ?--><h2><span style='font-family: "Arial Black";'><b>입금계좌는 수시로 변경됩니다.</b></span></h2><h2><span style='font-family: "Arial Black";'><b><br></b></span><b style="color: inherit; font-family: inherit;">반드시 입금전 계좌문의후 입금해주시기 바랍니다.</b></h2><h2><b style="color: inherit; font-family: inherit;"><br></b><b style="color: inherit; font-family: inherit;">전계좌로 입금시 확인이 불가능합니다.</b></h2>
-                            
-                                                            </td>
-                                                    </tr>
-                                            </table>
-                                    </div>
-                                    <div class="con_box20">
-                                            <div class="btn_wrap_center">
-                                                    <ul>
-                                                            <li><a href="#" onclick="tabActionProc('tab6','noticeList');"><span class="btn2_1">목록</span></a></li>                                                                                                                                                                       
-                                                    </ul>
-                                            </div>
-                                    </div>                                                         
-                            </div>
-                            <script>
-                                    getUserMoney();
-                            </script>`;
-    }
-
-    $(".sk_tab_con_01").html(data);
-    
-}
 
 function tabActionSlot(plat, pid, platcode, platidx) {
     if(nCheckLetter == 1) {
@@ -436,7 +391,7 @@ function getSlotGames(title, category) {
                     }
                     else
                     {
-                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].gamecode}');">
+                        strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].name}');">
                                                         <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="xImag" />
                                                     </a>
                                                 </div>
@@ -659,4 +614,17 @@ function directBankName(val){
         f.banknm.value="" ;
         document.getElementById('banknmId').style.display="none" ;
     }
+}
+
+//-- 쪽지 --//
+function readMessage(idx) {
+    $.ajax({
+        url: "/api/readMsg",
+        type: 'POST',
+        data: { id: idx },
+        headers: {},
+        success: function(data) {},
+        error: function(xhr, status, error) {},
+        complete: function() {}
+    });
 }
