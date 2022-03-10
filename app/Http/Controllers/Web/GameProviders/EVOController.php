@@ -404,7 +404,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if ($href == 'evo')
                 {
-                    $icon_name = $game->name;
+                    $icon_name = trim($game->name);
                 }
                 else
                 {
