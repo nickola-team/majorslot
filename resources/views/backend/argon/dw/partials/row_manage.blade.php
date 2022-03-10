@@ -11,14 +11,18 @@
         {{__('Unknown')}}
     @endif
 </td>
-
+<td>
+    @if ($stat->user)
+    {{number_format($stat->user->balance,0)}}
+    @endif
+</td>
 <td><span class="text-success">{{number_format($stat->sum,0)}}</span></td>
 <td>{{$stat->bankinfo()}}</td>
 <td>{{$stat->created_at}}</td>
-<td>
-    @if ($stat->status==1)
-    <span class="text-green">승인</span>
-    @else
-    <span class="text-red">취소</span>
-    @endif
+<td class="text-right">
+<a href="{{argon_route('argon.dw.process', ['id' => $stat->id])}}" ><button class="btn btn-success btn-sm" >승인</button></a>
+@if ($stat->status != \VanguardLTE\WithdrawDeposit::WAIT)
+<a href="{{ route('frontend.api.wait_in_out', $stat->id) }}"><button class="btn btn-primary btn-sm" >대기</button></a>
+@endif
+<a href="#"><button class="btn btn-warning btn-sm" >취소</button></a>
 </td>

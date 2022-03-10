@@ -75,8 +75,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $in_out_logs = $in_out_logs->where('user_id', -1);
                 }
             }
-
-
             $total = [
                 'add' => (clone $in_out_logs)->where(['type'=>'add', 'status'=>\VanguardLTE\WithdrawDeposit::DONE])->sum('sum'),
                 'out' => (clone $in_out_logs)->where(['type'=>'out', 'status'=>\VanguardLTE\WithdrawDeposit::DONE])->sum('sum'),
@@ -85,6 +83,188 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $in_out_logs = $in_out_logs->paginate(20);
 
             return view('backend.argon.dw.history', compact('in_out_logs','total'));
+        }
+        public function process(\Illuminate\Http\Request $request)
+        {
+            $requestid = $request->id;
+            $in_out = \VanguardLTE\WithdrawDeposit::where('id', $requestid)->where('payeer_id', auth()->user()->id)->whereIn('status', [\VanguardLTE\WithdrawDeposit::REQUEST, \VanguardLTE\WithdrawDeposit::WAIT ])->first();
+            if (!$in_out)
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            return view('backend.argon.dw.dw', compact('in_out'));
+        }
+
+        public function processDW(\Illuminate\Http\Request $request){
+            $in_out_id = $request->id;
+            $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->where('payeer_id', auth()->user()->id)->first();
+            if (!$transaction)
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            $amount = $transaction->sum;
+            $type = $transaction->type;
+            $requestuser = \VanguardLTE\User::where('id', $transaction->user_id)->first();
+            $user = auth()->user();
+
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['본사를 찾을수 없습니다.']);
+            }
+            if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
+            {
+                return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
+            }
+            if ($requestuser->hasRole('user') && $requestuser->playing_game != null)
+            {
+                return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
+            }
+            if ($requestuser->hasRole('manager')) // for shops
+            {
+                $shop = \VanguardLTE\Shop::lockforUpdate()->where('id', $transaction->shop_id)->get()->first();
+                if($type == 'add'){
+                    if($user->balance < $amount) {
+                        if (auth()->user()->hasRole('comaster'))
+                        {
+                            return redirect()->back()->withErrors([$user->username. '본사의 보유금액이 충분하지 않습니다.']);
+                        }
+                        else
+                        {
+                            return redirect()->back()->withErrors(['보유금액이 충분하지 않습니다.']);
+                        }
+                    }
+
+                    $user->update(
+                        ['balance' => $user->balance - $amount]
+                    );
+                    $old = $shop->balance;
+                    $shop->update([
+                        'balance' => $shop->balance + $amount
+                    ]);
+
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'user_id' => $user->id, 
+                        'end_date' => null,
+                        'type' => 'partner'
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('money_in', $amount);
+                    }
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'shop_id' => $shop->id, 
+                        'end_date' => null,
+                        'type' => 'shop'
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('balance_in', $amount);
+                    }
+
+                }
+                else if($type == 'out'){
+                    $user->update(
+                        ['balance' => $user->balance + $amount]
+                    );
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'user_id' => $user->id, 
+                        'end_date' => null,
+                        'type' => 'partner'
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('money_out', $amount);
+                    }
+                    $old = $shop->balance + $amount;
+
+                }
+                else if($type == 'deal_out'){
+                    //out balance from master
+                    $user->update(
+                        ['balance' => $user->balance - $amount]
+                    ); 
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'user_id' => $user->id, 
+                        'end_date' => null,
+                        'type' => 'partner'
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('convert_deal', $amount);
+                    }
+                    $old = $shop->balance;
+                }
+
+                $transaction->update([
+                    'status' => 1
+                ]);
+                $shop = $shop->fresh();
+                $user = $user->fresh();
+
+                \VanguardLTE\ShopStat::create([
+                    'user_id' => $user->id,
+                    'type' => $type,
+                    'sum' => $amount,
+                    'old' => $old,
+                    'new' => $shop->balance,
+                    'balance' => $user->balance,
+                    'request_id' => $transaction->id,
+                    'shop_id' => $transaction->shop_id,
+                    'date_time' => \Carbon\Carbon::now()
+                ]);
+            }
+            else // for partners
+            {
+                if($type == 'add'){
+                    $result = $requestuser->addBalance('add', $amount, $user, 0, $transaction->id);
+                    $result = json_decode($result, true);
+                    if ($result['status'] == 'error')
+                    {
+                        return redirect()->back()->withErrors($result['message']);
+                    }
+                }
+                else if($type == 'out'){
+                    $user->update(
+                        ['balance' => $user->balance + $amount]
+                    );
+                    $open_shift = \VanguardLTE\OpenShift::where([
+                        'user_id' => $user->id, 
+                        'end_date' => null,
+                        'type' => 'partner'
+                    ])->first();
+                    if( $open_shift ) 
+                    {
+                        $open_shift->increment('money_out', $amount);
+                    }
+                    $old = $requestuser->balance + $amount;
+                    $user = $user->fresh();
+                    \VanguardLTE\Transaction::create([
+                        'user_id' => $transaction->user_id,
+                        'payeer_id' => $user->id,
+                        'system' => $user->username,
+                        'type' => $type,
+                        'summ' => $amount,
+                        'old' => $old,
+                        'new' => $requestuser->balance,
+                        'balance' => $user->balance,
+                        'request_id' => $transaction->id,
+                        'shop_id' => $transaction->shop_id,
+                        'created_at' => \Carbon\Carbon::now(),
+                        'updated_at' => \Carbon\Carbon::now()
+                    ]);
+                }
+
+                $transaction->update([
+                    'status' => 1
+                ]);
+            }
+            if ($type == 'add'){
+                return redirect()->to(argon_route('argon.dw.addmanage'))->withSuccess(['조작이 성공적으로 진행되었습니다.']);
+            }
+            else
+            {
+                return redirect()->to(argon_route('argon.dw.outmanage'))->withSuccess(['조작이 성공적으로 진행되었습니다.']);
+            }
         }
 
         public function addmanage(\Illuminate\Http\Request $request)

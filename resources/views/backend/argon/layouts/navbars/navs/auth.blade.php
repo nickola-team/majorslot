@@ -48,7 +48,7 @@
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-warning" href="#">
+                        <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outrequest')}}">
                             환전신청
                         </a>
                         </div>
