@@ -117,6 +117,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response['status'] = 'INVALID_SID';
                 return $response;
             }
+            $response['sid'] = $user->api_token;
             return $response;
         }
 
@@ -401,8 +402,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $evo_games = \DB::select($query);
             foreach ($evo_games as $game)
             {
-                $icon_name = str_replace(' ', '_', $game->gameid);
-                $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                if ($href == 'evo')
+                {
+                    $icon_name = $game->name;
+                }
+                else
+                {
+                    $icon_name = str_replace(' ', '_', $game->gameid);
+                    $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                }
+                $iconfullpath = '/frontend/Default/ico/evo/'. $href . '/' . $icon_name . '.jpg';
+                if (!file_exists(public_path($iconfullpath))) {
+                    $iconfullpath = '/frontend/Default/ico/evo/'. $href . '/' . $icon_name . '.png';
+                }
                 if (in_array($game->gamecode , $newgames))
                 {
                     array_unshift($gameList, [
@@ -416,7 +428,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'type' => $game->type,
                         'href' => $href,
                         'view' => $game->view,
-                        'icon' => '/frontend/Default/ico/evo/'. $href . '/' . $icon_name . '.jpg',
+                        'icon' => $iconfullpath,
                     ]);
                 }
                 else
@@ -432,7 +444,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'type' => $game->type,
                         'href' => $href,
                         'view' => $game->view,
-                        'icon' => '/frontend/Default/ico/evo/'. $href . '/' . $icon_name . '.jpg',
+                        'icon' => $iconfullpath,
                         ]);
                 }
             }
