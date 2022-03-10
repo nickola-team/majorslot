@@ -117,6 +117,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response['status'] = 'INVALID_SID';
                 return $response;
             }
+            $response['sid'] = $user->api_token;
             return $response;
         }
 
