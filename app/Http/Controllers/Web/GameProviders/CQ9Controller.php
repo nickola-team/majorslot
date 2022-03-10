@@ -1625,6 +1625,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return response()->json($data);
 
         }
+        public function toggle(\Illuminate\Http\Request $request)
+        {
+            $data = '{"code":0,"message":"Success","data":{"memberSystem":["7","9","10","15","24","26","31","50","52","64","67","69","79","83","89","99","105","115","117","138","140","152","153","160","179","182","183","186","188"],"xda":true}}';
+            return  response($data, 200)->header('Content-Type', 'application/json');
+
+        }
         public function cq9History(\Illuminate\Http\Request $request)
         {
             return view('frontend.Default.games.cq9.history');

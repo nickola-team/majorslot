@@ -95,11 +95,15 @@ namespace VanguardLTE\Games\CricketFeverCQ9
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
                             $result_val['PlayerOrderURL'] = config('app.cq9history') . '/?gametoken=' . auth()->user()->api_token;
-                            $result_val['PromotionData'] = false;
+                            $result_val['PromotionData'] = $slotSettings->getPromotionData();
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
                             $result_val['FeedbackURL'] = null;
                             $result_val['UserAccount'] = $user->username;
+                            $result_val['FreeTicketList'] = null;
+                            $result_val['DenomMultiple'] = $initDenom;
+                            $result_val['FreeSpinLeftTimesInfoList'] = null;
+                            $result_val['RecommendList'] = $slotSettings->getRecommendList();
                         }else if($packet_id == 12){
                             $result_val['BGStripStartID'] = 0;
                             $result_val['FGStripStartID'] = 50;
