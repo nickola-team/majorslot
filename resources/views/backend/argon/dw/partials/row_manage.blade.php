@@ -16,7 +16,13 @@
     {{number_format($stat->user->balance,0)}}
     @endif
 </td>
-<td><span class="text-success">{{number_format($stat->sum,0)}}</span></td>
+<td>
+    @if ($stat->type=='add')
+    <span class="text-success">{{number_format($stat->sum,0)}}</span>
+    @else
+    <span class="text-warning">{{number_format($stat->sum,0)}}</span>
+    @endif
+</td>
 <td>{{$stat->bankinfo()}}</td>
 <td>{{$stat->created_at}}</td>
 <td class="text-right">

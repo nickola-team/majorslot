@@ -379,7 +379,35 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function outmanage(\Illuminate\Http\Request $request)
         {
-            return view('backend.argon.dw.addmanage');
+            $type = 'out';
+            if (auth()->user()->isInoutPartner())
+            {
+                $in_out_request = \VanguardLTE\WithdrawDeposit::where([
+                    'payeer_id'=> auth()->user()->id,
+                    'status'=> \VanguardLTE\WithdrawDeposit::REQUEST,
+                ])->where('type', $type);
+                $in_out_wait = \VanguardLTE\WithdrawDeposit::where([
+                    'payeer_id'=> auth()->user()->id,
+                    'status'=> \VanguardLTE\WithdrawDeposit::WAIT,
+                ])->where('type', $type);
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::where([
+                    'payeer_id'=> auth()->user()->id,
+                ])->where('type', $type)->whereIn('status', [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->orderBy('created_at','desc')->take(20);
+            }
+            else
+            {
+                return redirect()->back()->withErrors('접근권한이 없습니다.');
+            }
+            $total = [
+                'add' => $in_out_request->sum('sum'),
+                'out' => $in_out_wait->sum('sum'),
+            ];
+            $in_out_request = $in_out_request->orderBy('created_at', 'desc');
+            $in_out_request = $in_out_request->paginate(20);
+            $in_out_wait = $in_out_wait->orderBy('created_at', 'desc');
+            $in_out_wait = $in_out_wait->paginate(20);
+            $in_out_logs = $in_out_logs->get();
+            return view('backend.argon.dw.outmanage', compact('in_out_request','in_out_wait','in_out_logs','total','type'));
         }
 
     }

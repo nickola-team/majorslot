@@ -1,5 +1,5 @@
 @extends('backend.argon.layouts.app')
-@section('page-title',  '충전관리')
+@section('page-title',  '환전관리')
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
