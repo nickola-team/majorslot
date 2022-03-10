@@ -158,6 +158,10 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'as' => 'argon.dw.process',
             'uses' => 'DWController@process',
         ]);
+        Route::get('/dw/reject', [
+            'as' => 'argon.dw.reject',
+            'uses' => 'DWController@rejectDW',
+        ]);
         Route::post('/dw/process', [
             'as' => 'argon.dw.process.post',
             'uses' => 'DWController@processDW',

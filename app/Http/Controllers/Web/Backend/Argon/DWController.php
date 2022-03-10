@@ -11,12 +11,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function addrequest(\Illuminate\Http\Request $request)
         {
-            return view('backend.argon.dw.addrequest');
+            $user = auth()->user();
+            $in_out_logs = \VanguardLTE\WithdrawDeposit::where('user_id', $user->id)->orderby('created_at', 'desc')->take(10)->get();
+            return view('backend.argon.dw.addrequest', compact('in_out_logs'));
         }
 
         public function outrequest(\Illuminate\Http\Request $request)
         {
-            return view('backend.argon.dw.outrequest');
+            $user = auth()->user();
+            $in_out_logs = \VanguardLTE\WithdrawDeposit::where('user_id', $user->id)->orderby('created_at', 'desc')->take(10)->get();
+            return view('backend.argon.dw.outrequest', compact('in_out_logs'));
         }
 
         public function dealconvert(\Illuminate\Http\Request $request)
@@ -95,6 +99,80 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.dw.dw', compact('in_out'));
         }
 
+        public function rejectDW(\Illuminate\Http\Request $request){
+            
+            $in_out_id = $request->id;
+            $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->first();
+            if($transaction == null){
+                return redirect()->back()->withErrors(['유효하지 않은 조작입니다.']);
+            }
+            if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
+            {
+                return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
+            }
+            
+            $amount = $transaction->sum;
+            $type = $transaction->type;
+            $requestuser = \VanguardLTE\User::where('id', $transaction->user_id)->first();
+            if ($requestuser){
+                if ($requestuser->hasRole('manager')) // for shops
+                {
+                    $shop = \VanguardLTE\Shop::where('id', $transaction->shop_id)->first();
+                    if($type == 'out'){
+                        $shop->update([
+                            'balance' => $shop->balance + $amount
+                        ]);
+                        $open_shift = \VanguardLTE\OpenShift::where([
+                            'shop_id' => $shop->id, 
+                            'end_date' => null,
+                            'type' => 'shop'
+                        ])->first();
+                        if( $open_shift ) 
+                        {
+                            $open_shift->decrement('balance_out', $amount);
+                        }
+                    }
+                    else if($type == 'deal_out'){
+                        $shop->update([
+                            'deal_balance' => $shop->deal_balance + $amount
+                        ]);
+                        $open_shift = \VanguardLTE\OpenShift::where([
+                            'shop_id' => $shop->id, 
+                            'end_date' => null,
+                            'type' => 'shop'
+                        ])->first();
+                        if( $open_shift ) 
+                        {
+                            $open_shift->decrement('balance_out', $amount);
+                        }
+                    }
+
+                }
+                else
+                {
+                    if($type == 'out'){
+                        $requestuser->update([
+                            'balance' => $requestuser->balance + $amount
+                        ]);
+                        $open_shift = \VanguardLTE\OpenShift::where([
+                            'user_id' => $requestuser->id, 
+                            'end_date' => null,
+                            'type' => 'partner'
+                        ])->first();
+                        if( $open_shift ) 
+                        {
+                            $open_shift->decrement('balance_out', $amount);
+                        }
+                    }
+
+                }
+            }
+            $transaction->update([
+                'status' => 2
+            ]);
+           return redirect()->back()->withSuccess(['조작이 성공적으로 진행되었습니다.']);
+        
+        }
         public function processDW(\Illuminate\Http\Request $request){
             $in_out_id = $request->id;
             $transaction = \VanguardLTE\WithdrawDeposit::where('id', $in_out_id)->where('payeer_id', auth()->user()->id)->first();
@@ -282,8 +360,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 ])->where('type', $type);
                 $in_out_logs = \VanguardLTE\WithdrawDeposit::where([
                     'payeer_id'=> auth()->user()->id,
-                    'status'=> \VanguardLTE\WithdrawDeposit::DONE,
-                ])->where('type', $type)->orderBy('created_at','desc')->take(20);
+                ])->where('type', $type)->whereIn('status', [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->orderBy('created_at','desc')->take(20);
             }
             else
             {

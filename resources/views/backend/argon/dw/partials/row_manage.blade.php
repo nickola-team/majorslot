@@ -24,5 +24,5 @@
 @if ($stat->status != \VanguardLTE\WithdrawDeposit::WAIT)
 <a href="{{ route('frontend.api.wait_in_out', $stat->id) }}"><button class="btn btn-primary btn-sm" >대기</button></a>
 @endif
-<a href="#"><button class="btn btn-warning btn-sm" >취소</button></a>
+<a href="{{ argon_route('argon.dw.reject', ['id' => $stat->id]) }}"><button class="btn btn-warning btn-sm" >취소</button></a>
 </td>

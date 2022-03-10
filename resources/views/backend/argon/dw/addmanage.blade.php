@@ -171,5 +171,31 @@
 </div>
 </div>
 
-
+<div class="modal fadein" tabindex="-1" role="dialog" id="alarm">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form action="{{ argon_route('argon.dw.reject') }}" method="POST" id="outForm">
+        <input type="hidden" id="out_id" name="id">
+      <div class="modal-header">
+        <h5 class="modal-title">취소처리</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="msgbody">취소처리 하시겠어요?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">확인</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
 @stop
+
+@push('js')
+<script>
+</script>
+@endpush

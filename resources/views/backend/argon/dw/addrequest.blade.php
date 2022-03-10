@@ -117,37 +117,7 @@
         </div>
     </div>
 </div>
-<div class="row">
-<div class="col">
-    <div class="card mt-4">
-    <!-- Light table -->
-    <!-- Card header -->
-    <div class="card-header border-0">
-        <h3 class="mb-0">신청내역</h3>
-    </div>
-    <div class="table-responsive">
-            <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-                <tr>
-                <th scope="col">번호</th>
-                <th scope="col">신청자</th>
-                <th scope="col">변동전 금액</th>
-                <th scope="col">변동후 금액</th>
-                <th scope="col">신청금액</th>
-                <th scope="col">타입</th>
-                <th scope="col">거래계좌</th>
-                <th scope="col">신청 시간</th>
-                <th scope="col">처리 시간</th>
-                <th scope="col">상태</th>
-                </tr>
-            </thead>
-            <tbody class="list">
-                    <tr><td colspan="10">{{__('No Data')}}</td></tr>
-            </tbody>
-            </table>
-    </div>
-    </div>
-</div>
+@include('backend.argon.dw.partials.recent_history')
 </div>
 
 <div class="modal" tabindex="-1" role="dialog" id="alarm">
