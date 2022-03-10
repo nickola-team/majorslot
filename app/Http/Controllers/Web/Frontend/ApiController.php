@@ -515,11 +515,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                             if ($cat2 && $cat2->view == 1)
                             {
                                 $gacgames = $this->gamelistbyProvider($cat2->provider, $cat2->href);
-                                foreach ($gacgames as $gc)
-                                {
-                                    array_unshift($selectedGames, $gc);
-                                }
-                                
+                                $selectedGames = array_merge($gacgames, $selectedGames);                                
                             }
                         }
                     }
