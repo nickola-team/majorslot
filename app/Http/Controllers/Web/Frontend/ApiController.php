@@ -318,19 +318,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             $games = null;
             $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist', $href);
-            //exclude if view=0
-            $filtergames = [];
-            if ($games != null && count($games) > 0)
-            {
-                foreach ($games as $game)
-                {
-                    //if (!isset($game['view']) || $game['view'] == 1)
-                    {
-                        $filtergames[] = $game;
-                    }
-                }
-            }
-            return $filtergames;
+
+            return $games;
         }
 
         public function gamelist($categoryIDs, $wherenot=false)
@@ -482,6 +471,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
             $category = $request->category;
+            $showAll = 0;
+            if ($request->showAll != '')
+            {
+                $showAll = $request->showAll;
+            }
             if( $category == '' ) 
             {
                 return response()->json(['error' => true, 'msg' => '카테고리ID 에러', 'code' => '002']);
@@ -521,11 +515,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                             if ($cat2 && $cat2->view == 1)
                             {
                                 $gacgames = $this->gamelistbyProvider($cat2->provider, $cat2->href);
-                                foreach ($gacgames as $gc)
-                                {
-                                    array_unshift($selectedGames, $gc);
-                                }
-                                
+                                $selectedGames = array_merge($gacgames, $selectedGames);                                
                             }
                         }
                     }
@@ -541,6 +531,21 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     }
                 }
             }
+
+            //exclude if view=0
+            if ($showAll != "1")
+            {
+                $filtergames = [];
+                foreach ($selectedGames as $game)
+                {
+                    if (!isset($game['view']) || $game['view'] == 1)
+                    {
+                        $filtergames[] = $game;
+                    }
+                }
+                $selectedGames = $filtergames;
+            }
+            
 
             return response()->json(['error' => false, 'games' => $selectedGames, 'others' => []]);
         }
