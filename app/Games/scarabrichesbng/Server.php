@@ -421,10 +421,12 @@ namespace VanguardLTE\Games\scarabrichesbng
                         $scattersCount = 0;
                         $scattersWin = 0;
                         $wildCount = 0;
+                        $wildReelCount = 0;
                         $wildPoses = [];
                         $points = 0;
                         for( $r = 0; $r < 5; $r++ ) 
                         {
+                            $wildReel = false;
                             for( $k = 0; $k <= 2; $k++ ) 
                             {
                                 if( $reels[$r][$k] == $SCATTER ) 
@@ -435,6 +437,10 @@ namespace VanguardLTE\Games\scarabrichesbng
                                 {
                                     $wildCount++;
                                     array_push($wildPoses, [$r, $k]);
+                                    if($wildReel == false){
+                                        $wildReelCount++;
+                                        $wildReel = true;
+                                    }
                                 }
                             }
                         }
@@ -466,8 +472,8 @@ namespace VanguardLTE\Games\scarabrichesbng
                         }
                         else if($wildScarabCount > 0 && $wildScarabCount != $wildCount){
 
-                        }else if($wildScarabCount == 0 && $wildCount > 1){
-                            
+                        }else if($wildScarabCount == 0 && $wildReelCount > 1){
+                            $str = "";
                         }
                         else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
                         {

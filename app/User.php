@@ -41,6 +41,7 @@ namespace VanguardLTE
             'parent_id', 
             'shop_id', 
             'session',
+            'session_json',
             'count_deal_balance', 
             'deal_balance', 
             'deal_percent',

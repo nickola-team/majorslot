@@ -237,11 +237,17 @@ namespace VanguardLTE\Games\ZeusCQ9
             //     $this->slotJackPercent = 0;
             //     $this->slotJackPercent0 = 0;
             // }
-            if( !isset($this->user->session) || strlen($this->user->session) <= 0 ) 
+            // if( !isset($this->user->session) || strlen($this->user->session) <= 0 ) 
+            // {
+            //     $this->user->session = serialize([]);
+            // }
+            // $this->gameData = unserialize($this->user->session);
+            if( !isset($this->user->session_json) || strlen($this->user->session_json) <= 0 ) 
             {
-                $this->user->session = serialize([]);
+                $this->user->session_json = json_encode([]);
             }
-            $this->gameData = unserialize($this->user->session);
+            $this->gameData = json_decode($this->user->session_json, true);
+
             if( count($this->gameData) > 0 ) 
             {
                 foreach( $this->gameData as $key => $vl ) 
@@ -297,7 +303,8 @@ namespace VanguardLTE\Games\ZeusCQ9
         }
         public function SaveGameData()
         {
-            $this->user->session = serialize($this->gameData);
+            // $this->user->session = serialize($this->gameData);
+            $this->user->session_json = json_encode($this->gameData);
             $this->user->save();
             $this->user->refresh();
         }
@@ -477,10 +484,10 @@ namespace VanguardLTE\Games\ZeusCQ9
         }
         public function GetCountBalanceUser()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             return $this->user->count_balance;
         }
         public function InternalError($errcode)
@@ -608,10 +615,10 @@ namespace VanguardLTE\Games\ZeusCQ9
             }
             $user->balance = $user->balance + $sum;
             $user->balance = $this->FormatFloat($user->balance);
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             if( $user->balance == 0 ) 
             {
                 $user->update([
@@ -638,10 +645,10 @@ namespace VanguardLTE\Games\ZeusCQ9
         }
         public function GetBalance()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             $user = $this->user;
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
@@ -898,6 +905,204 @@ namespace VanguardLTE\Games\ZeusCQ9
                 }
             }
             return $scatters[1][0];
+        }
+        public function getPromotionData(){
+            $promo_data = [];
+            $cq_promos = \VanguardLTE\CQPromo::get();
+            foreach($cq_promos as $promo){
+                $data = [
+                    "name" => $promo->name,
+                    "promoid" => $promo->promoid,
+                    "promourl" => $promo->promourl,
+                    "imageurl" => $promo->imageurl,
+                    "icon"  => [
+                        "png" => $promo->icon_png,
+                        "json" => $promo->icon_json
+                    ],
+                    "haslink" => $promo->icon_haslink == 1 ? true : false
+                ];
+                array_push($promo_data, $data);
+            }
+            return $promo_data;
+        }
+        public function getRecommendList(){
+            $data = [
+                "recommendGameList" => [
+                    [
+                        "type" => 1,
+                        "gameCode"=> "142",
+                        "maxScore"=> "4651767",
+                        "maxMultiplier"=> 713,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/31qyLrb2.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/RK31YwtL.jpg"
+                    ],
+                    [
+                        "type" => 1,
+                        "gameCode"=> "9",
+                        "maxScore"=> "4741134",
+                        "maxMultiplier"=> 1616,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/Qp8HJX37.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/EWIa7udg.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "79",
+                        "maxScore"=> "5077928",
+                        "maxMultiplier"=> 489,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/FFRRdPcq.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/I0hId8i0.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "89",
+                        "maxScore"=> "1196121",
+                        "maxMultiplier"=> 1234,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/xd4z0bYW.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/xrmFeJ8U.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "78",
+                        "maxScore"=> "1300494",
+                        "maxMultiplier"=> 669,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/t04iYWeL.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/l2kFkneI.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "31",
+                        "maxScore"=> "15749315",
+                        "maxMultiplier"=> 982,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/XdsdCyXK.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/7fpjEFNC.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "10",
+                        "maxScore"=> "10794100",
+                        "maxMultiplier"=> 1472,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/0s2JAojt.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/S4auUPEU.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "160",
+                        "maxScore"=> "6043295",
+                        "maxMultiplier"=> 1073,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/hFlPadSN.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/6Qz2B4Pb.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "50",
+                        "maxScore"=> "17189863",
+                        "maxMultiplier"=> 999,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/uMhLNEp6.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/n1ioRev0.jpg"
+                    ],
+                    [
+                        "type"=> 1,
+                        "gameCode"=> "154",
+                        "maxScore"=> "934855",
+                        "maxMultiplier"=> 399,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/SLSCP1Dd.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/gzkYARpe.jpg"
+                    ]
+                ],
+                "hotRankingGameList" => [
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "76",
+                        "maxScore"=> "248260",
+                        "maxMultiplier"=> 133,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/joK8d56Y.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/ouGPmuQV.jpg",
+                        "difficulty"=> 1
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "184",
+                        "maxScore"=> "241591",
+                        "maxMultiplier"=> 310,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/8zz928W9.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/TGabac0s.jpg",
+                        "difficulty"=> 5
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "115",
+                        "maxScore"=> "3531341",
+                        "maxMultiplier"=> 720,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/zaG4epx7.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/jcKoeAkm.jpg",
+                        "difficulty"=> 5
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "50",
+                        "maxScore"=> "17189863",
+                        "maxMultiplier"=> 999,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/uMhLNEp6.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/n1ioRev0.jpg",
+                        "difficulty"=> 3
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "103",
+                        "maxScore"=> "415157",
+                        "maxMultiplier"=> 820,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/bIUsXGbx.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/aP13N5fB.jpg",
+                        "difficulty"=> 5
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "197",
+                        "maxScore"=> "812475",
+                        "maxMultiplier"=> 463,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/B7tBS1CK.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/cbMHB181.jpg",
+                        "difficulty"=> 2
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "89",
+                        "maxScore"=> "1196121",
+                        "maxMultiplier"=> 1234,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/xd4z0bYW.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/xrmFeJ8U.jpg",
+                        "difficulty"=> 4
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "225",
+                        "maxScore"=> "2044109",
+                        "maxMultiplier"=> 653,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/ouxlCOaf.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/7hDjaiyn.jpg",
+                        "difficulty"=> 3
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "54",
+                        "maxScore"=> "1500903",
+                        "maxMultiplier"=> 701,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/CCUV6GQb.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/Seq2xci1.jpg",
+                        "difficulty"=> 4
+                    ],
+                    [
+                        "type"=> 2,
+                        "gameCode"=> "102",
+                        "maxScore"=> "302781",
+                        "maxMultiplier"=> 463,
+                        "iconURL"=> "https://images.cq9web.com/cherry/icon/xaFUUr6v.png",
+                        "backgroundURL"=> "https://images.cq9web.com/cherry/background/WWtn9Ml7.jpg",
+                        "difficulty"=> 5
+                    ]
+                ]
+            ];
+            return $data;
         }
         public function GetGambleSettings()
         {

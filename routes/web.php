@@ -1372,6 +1372,7 @@ Route::group(['middleware' => 'cq9', 'prefix' => 'cq9',], function () {
 });
 
 Route::get('clientinfo', 'GameProviders\CQ9Controller@clientInfo');
+Route::get('clientinfo/toggle', 'GameProviders\CQ9Controller@toggle');
 Route::get('platform/', 'GameProviders\CQ9Controller@cq9History');
 Route::get('playerodh5/', 'GameProviders\CQ9Controller@cq9PlayerOrder');
 Route::get('api/player_betting/search_time', 'GameProviders\CQ9Controller@searchTime');

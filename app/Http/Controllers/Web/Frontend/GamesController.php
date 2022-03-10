@@ -36,6 +36,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $categories = \VanguardLTE\Category::where([
                     'shop_id' => $shop_id,
                     'site_id' => $site->id,
+                    'view' => 1,
                 ])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
 
                 if (count($categories) == 0) // use default category
@@ -43,12 +44,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $categories = \VanguardLTE\Category::where([
                         'shop_id' => $shop_id,
                         'site_id' => 0,
+                        'view' => 1,
                     ])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
                 }
             }
             else
             {
-                $categories = \VanguardLTE\Category::where('shop_id' , $shop_id)->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
+                $categories = \VanguardLTE\Category::where(['shop_id' => $shop_id, 'view' => 1])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
             }
             $hotgames = [];
 
@@ -286,7 +288,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $styleName = config('app.stylename');
             $replayUrl = config('app.replayurl');
             $is_api = false;
-            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl'));
+            $cq_loadimg = '';
+            if(strpos($game->name, 'CQ9') !== false){
+                $cq_promo = \VanguardLTE\CQPromo::first();
+                if(isset($cq_promo)){
+                    $cq_loadimg = $cq_promo->promoid;
+                }
+            }
+            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg'));
         }
         public function server(\Illuminate\Http\Request $request, $game)
         {

@@ -129,7 +129,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $url = null;
             $data = [];
             $ppiplist = ['195.69.223.', '176.112.120.', '185.8.155.', '5.2.130.103', '84.1.113.218', '81.196.86.120','185.54.229.'];
-            $ip = $this->request->server('HTTP_CF_CONNECTING_IP')??($this->request->server('X_FORWARDED_FOR')??$this->request->server('REMOTE_ADDR'));
+            $ip = $request->server('HTTP_CF_CONNECTING_IP')??($request->server('X_FORWARDED_FOR')??$request->server('REMOTE_ADDR'));
             $blocked = false;
             foreach ($ppiplist as $net)
             {

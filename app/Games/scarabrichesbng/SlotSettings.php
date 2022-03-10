@@ -169,11 +169,16 @@ namespace VanguardLTE\Games\scarabrichesbng
             //     $this->slotJackPercent = 0;
             //     $this->slotJackPercent0 = 0;
             // }
-            if( !isset($this->user->session) || strlen($this->user->session) <= 0 ) 
+            // if( !isset($this->user->session) || strlen($this->user->session) <= 0 ) 
+            // {
+            //     $this->user->session = serialize([]);
+            // }
+            // $this->gameData = unserialize($this->user->session);
+            if( !isset($this->user->session_json) || strlen($this->user->session_json) <= 0 ) 
             {
-                $this->user->session = serialize([]);
+                $this->user->session_json = json_encode([]);
             }
-            $this->gameData = unserialize($this->user->session);
+            $this->gameData = json_decode($this->user->session_json, true);
             if( count($this->gameData) > 0 ) 
             {
                 foreach( $this->gameData as $key => $vl ) 
@@ -229,7 +234,8 @@ namespace VanguardLTE\Games\scarabrichesbng
         }
         public function SaveGameData()
         {
-            $this->user->session = serialize($this->gameData);
+            // $this->user->session = serialize($this->gameData);
+            $this->user->session_json = json_encode($this->gameData);
             $this->user->save();
             $this->user->refresh();
         }
@@ -374,10 +380,10 @@ namespace VanguardLTE\Games\scarabrichesbng
         }
         public function GetCountBalanceUser()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             return $this->user->count_balance;
         }
         public function InternalError($errcode)
@@ -507,10 +513,10 @@ namespace VanguardLTE\Games\scarabrichesbng
             }
             $user->balance = $user->balance + $sum;
             $user->balance = $this->FormatFloat($user->balance);
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             if( $user->balance == 0 ) 
             {
                 $user->update([
@@ -537,10 +543,10 @@ namespace VanguardLTE\Games\scarabrichesbng
         }
         public function GetBalance()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
+            // $this->user->session = serialize($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // $this->gameData = unserialize($this->user->session);
             $user = $this->user;
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
@@ -943,6 +949,29 @@ namespace VanguardLTE\Games\scarabrichesbng
                     $reel[$reel_id][0] = intval($key[$value]);
                     $reel[$reel_id][1] = intval($key[($value + $diffNum) % $rc]);
                     $reel[$reel_id][2] = intval($key[($value + 2 * $diffNum) % $rc]);
+                    $isWild = false;
+                    for($k = 0; $k < 3; $k++){
+                        if($reel[$reel_id][2] == 12){
+                            $isWild = true;
+                            break;
+                        }
+                    }
+                    $percent = mt_rand(0, 100);
+                    if($isWild == true){
+                        if($percent < 85){
+                            $reel[$reel_id][0] = 12;
+                            $reel[$reel_id][1] = 12;
+                            $reel[$reel_id][2] = 12;
+                        }else if($percent < 95){
+                            if(mt_rand(0, 1) == 0){
+                                $reel[$reel_id][0] = 12;
+                                $reel[$reel_id][1] = 12;
+                            }else{
+                                $reel[$reel_id][2] = 12;
+                                $reel[$reel_id][1] = 12;
+                            }
+                        }
+                    }
                 }else{
                     $scatterPos = rand(0, 100);
                     if($scatterPos < 35){
