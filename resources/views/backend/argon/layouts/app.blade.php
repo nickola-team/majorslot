@@ -60,5 +60,86 @@
         <!-- Argon JS -->
         
         <script src="{{ asset('back/argon') }}/js/argon.js?v=1.0.0"></script>
+        <script>
+        @if (Auth::check() && auth()->user()->isInoutPartner())
+        $( document ).ready(function() {
+            var updateTime = 3000;
+            var apiUrl="/api/inoutlist.json";
+            var timeout;
+            var lastRequest = 0;
+            var audio_in = new Audio("{{ url('/frontend/Major/major/audio/door-bell.mp3')}}");
+            var audio_out = new Audio("{{ url('/frontend/Major/major/audio/camera-beep.mp3')}}");
+            $("#in_newmark").hide();
+            $("#out_newmark").hide();
+            var updateInOutRequest = function (callback) {
+                if (true) {
+                    $.ajax({
+                        url: apiUrl,
+                        type: "GET",
+                        data: {'last':lastRequest, 'id': 
+                            @if (Auth::check())
+                                {{auth()->user()->id}} },
+                            @else
+                            0},
+                            @endif
+                        dataType: 'json',
+                        success: function (data) {
+                            var inouts=data;
+                            lastRequest = inouts['now'];
+                            if (inouts['add'] > 0)
+                            {
+                                if (inouts['rating'] > 0)
+                                {
+                                    audio_in.play();
+                                }
+                                $("#in_newmark").text('('+inouts['add']+'건)');
+                                $("#in_newmark").show();
+                            }
+                            if (inouts['out'] > 0)
+                            {
+                                if (inouts['rating'] > 0)
+                                {
+                                    audio_out.play();
+                                }
+                                $("#out_newmark").text('('+inouts['out']+'건)');
+                                $("#out_newmark").show();
+                            }
+                            if (inouts['join'] > 0)
+                            {
+                                $("#user_newmark").show();
+                                $("#join_newmark").show();
+                            }
+                            else
+                            {
+                                $("#user_newmark").hide();
+                                $("#join_newmark").hide();
+                            }
+
+
+                            if (inouts['add'] == 0 && inouts['out'] == 0)
+                            {
+                                $("#in_newmark").hide();
+                                $("#out_newmark").hide();
+                            }
+                            timeout = setTimeout(updateInOutRequest, updateTime);
+                            if (callback != null) callback();
+                        },
+                        error: function () {
+                            timeout = setTimeout(updateInOutRequest, updateTime);
+                            if (callback != null) callback();
+                        }
+                    });
+                } else {
+                    clearTimeout(timeout);
+                }
+            };
+
+            timeout = setTimeout(updateInOutRequest, updateTime);
+
+            
+        });
+        @endif
+
+    </script>
     </body>
 </html>

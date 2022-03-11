@@ -20,14 +20,14 @@
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
                         <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addmanage')}}">
-                            충전 (0건)
+                            충전관리<span id="in_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
                         <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outmanage')}}">
-                            환전 (0건)
+                            환전관리<span id="out_newmark" style="color:white;">(0건)</span>
                         </a>
                         </div>
                     </li>
