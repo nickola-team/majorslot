@@ -1,0 +1,147 @@
+@extends('backend.argon.layouts.app')
+@section('page-title',  '일별충환전')
+
+@push('css')
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@endpush
+
+@section('content-header')
+@endsection
+
+@section('content')
+<div class="container-fluid">
+    <!-- Search -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header border-0" id="headingOne">
+                    <div class="row align-items-center box">
+                        <div class="col-8">
+                            <h3 class="mb-0">검색</h3>
+                        </div>
+                        <div class="col-4 text-right box-tools">
+                            <a class="box-button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"></a>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-1">
+                <div id="collapseOne" class="collapse show">
+                    <div class="card-body">
+                        <form action="" method="GET" >
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                </div>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
+                                </div>
+                                <div class="col-md-1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                </div>
+                                <label for="dates" class="col-md-2 col-form-label form-control-label text-center">기간선택</label>
+                                <div class="col-md-2">
+                                <input class="form-control" type="date" value="{{Request::get('dates')[0]??date('Y-m-d', strtotime('-1 days'))}}" id="dates" name="dates[]">
+                                </div>
+                                <label for="dates" class="col-form-label form-control-label" >~</label>
+                                <div class="col-md-2">
+                                <input class="form-control" type="date" value="{{Request::get('dates')[1]??date('Y-m-d')}}" id="dates" name="dates[]">
+                                </div>
+                            </div>
+                                
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                </div>
+                                <button type="submit" class="btn btn-primary col-md-10">검색</button>
+                                <div class="col-md-1">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card mt-4">
+                <div class="card-header border-0">
+                    <h3 class="mb-0">일별벳윈</h3>
+                </div>
+                <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="dailydwlist">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">이름</th>
+                                <th scope="col">날짜</th>
+                                <th scope="col">충전</th>
+                                <th scope="col">환전</th>
+                                <th scope="col">수동충전</th>
+                                <th scope="col">수동환전</th>
+                                @if(auth()->user()->isInoutPartner())
+                                <th>이익금</th>
+                                @endif
+                                <th scope="col">딜비전환</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            @include('backend.argon.report.partials.childs_dailydw')
+                            @if (count($summary))
+                            <tr>
+                                <td><span class='text-red'></span></td>
+                                <td><span class='text-red'>합계</span></td>
+                                <td><span class='text-red'>{{number_format($summary->sum('totalin'),0)}}</span></td>
+                                <td><span class='text-red'>{{number_format($summary->sum('totalout'),0)}}</span></td>
+                                <td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
+                                <td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>
+                                @if(auth()->user()->isInoutPartner())
+                                <td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
+                                @endif
+                                <td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
+                            </tr>
+                            @endif
+                        </tbody>
+                        </table>
+                </div>
+                <div id="waitAjax" class="loading" style="margin-left: 0px; display:none;">
+                    <img src="{{asset('back/argon')}}/img/theme/loading.gif">
+                </div>
+                <div class="card-footer py-4">
+                    {{ $summary->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@stop
+
+@push('js')
+<script src="{{ asset('back/argon') }}/js/jquery.treetable.js"></script>
+<script>
+    var table = $("#dailydwlist");
+    $("#dailydwlist").treetable({ 
+        expandable: true ,
+        onNodeCollapse: function() {
+            var node = this;
+            table.treetable("unloadBranch", node);
+        },
+        onNodeExpand: function() {
+            var node = this;
+            table.treetable("unloadBranch", node);
+            $('#waitAjax').show();
+            $.ajax({
+                async: true,
+                url: "{{argon_route('argon.report.childdaily.dw', 'dw')}}?id="+node.id
+                }).done(function(html) {
+                    var rows = $(html).filter("tr");
+                    table.treetable("loadBranch", node, rows);
+                    $('#waitAjax').hide();
+            });
+        }
+    });
+</script>
+@endpush
