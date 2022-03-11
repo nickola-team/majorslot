@@ -56,7 +56,12 @@
                 @endif
                 <li class="nav-item d-none d-lg-block ml-lg-4">
                     <a class="nav-link text-dark" href="#">
-                        현재 보유금 {{number_format(auth()->user()->balance)}}
+                        현재 보유금 
+                        @if (auth()->user()->hasRole('manager'))
+                            {{number_format(auth()->user()->shop->balance)}}
+                        @else
+                            {{number_format(auth()->user()->balance)}}
+                        @endif
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block ml-lg-4">
