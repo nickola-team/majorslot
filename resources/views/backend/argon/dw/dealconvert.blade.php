@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'dw',
+        'elementName' => 'dw-deal'
+    ])
 @section('page-title',  '롤링전환')
 
 @section('content')

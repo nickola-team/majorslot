@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'dw',
+        'elementName' => 'dw-addmanage'
+    ])
 @section('page-title',  '충전관리')
 @section('content-header')
 <div class="row">

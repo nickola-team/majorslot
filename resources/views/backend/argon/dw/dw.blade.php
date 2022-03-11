@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'dw',
+        'elementName' => 'dw-process'
+    ])
 @section('page-title',  $in_out->type=='add'?'충전처리':'환전처리')
 
 @section('content')

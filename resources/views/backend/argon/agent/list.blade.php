@@ -1,4 +1,8 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',
+    [
+        'parentSection' => 'agent',
+        'elementName' => 'agent-list'
+    ])
 @section('page-title',  '에이전트 목록')
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">

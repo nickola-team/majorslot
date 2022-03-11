@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'dw',
+        'elementName' => 'dw-history'
+    ])
 @section('page-title',  '충환전 내역')
 @section('content-header')
 <div class="row">

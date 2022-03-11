@@ -85,6 +85,11 @@ html {
     background: #3e3e3e !important;
 }
 
+.nav>.nav-item>.nav-link.active
+{
+    color:aqua;
+}
+
 .sidenav-toggler-dark .sidenav-toggler-line
 {
     background-color : #000000 !important;

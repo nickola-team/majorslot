@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'dw',
+        'elementName' => 'dw-outrequest'
+    ])
 @section('page-title',  '환전신청')
 
 @section('content')

@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'agent',
+        'elementName' => 'agent-deal'
+    ])
 @section('page-title',  '에이전트 롤링내역')
 @section('content-header')
 <div class="row">
