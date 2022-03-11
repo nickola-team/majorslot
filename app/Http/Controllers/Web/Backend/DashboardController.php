@@ -1016,6 +1016,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'shop_id' => $shop->id,
                         'date_time' => \Carbon\Carbon::now()
                     ]);
+
+                    //create another transaction for mananger account
+                    $manager = $shop->getUsersByRole('manager')->first();
+                    \VanguardLTE\Transaction::create([
+                        'user_id' => $manager->id, 
+                        'payeer_id' => $master->id, 
+                        'type' => 'ggr_out', 
+                        'summ' => abs($summ), 
+                        'old' => $old,
+                        'new' => $shop->balance,
+                        'balance' => $master->balance,
+                        'shop_id' => $shop->id,
+                    ]);
                 }
 
                 $shop->ggr_balance = 0;
