@@ -162,7 +162,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.dw.outmanage')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     환전관리
                                 </a>

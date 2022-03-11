@@ -56,6 +56,7 @@
                 <tr>
                 <th scope="col">번호</th>
                 <th scope="col">신청자</th>
+                <th scope="col">신청자 보유금</th>
                 <th scope="col">신청금액</th>
                 <th scope="col">거래계좌</th>
                 <th scope="col">신청 시간</th>
@@ -70,7 +71,7 @@
                         </tr>
                     @endforeach
                 @else
-                    <tr><td colspan="10">{{__('No Data')}}</td></tr>
+                    <tr><td colspan="6">{{__('No Data')}}</td></tr>
                 @endif
             </tbody>
             </table>
@@ -80,8 +81,99 @@
         {{ $in_out_request->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
     </div>
     </div>
+    </div>
+</div>
+<div class="row">
+<div class="col">
+    <div class="card mt-4">
+    <!-- Light table -->
+    <!-- Card header -->
+    <div class="card-header border-0">
+        <h3 class="mb-0">대기내역</h3>
+    </div>
+    <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">번호</th>
+                <th scope="col">신청자</th>
+                <th scope="col">신청자 보유금</th>
+                <th scope="col">신청금액</th>
+                <th scope="col">거래계좌</th>
+                <th scope="col">신청 시간</th>
+                <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                @if (count($in_out_wait) > 0)
+                    @foreach ($in_out_wait as $stat)
+                        <tr>
+                            @include('backend.argon.dw.partials.row_manage')
+                        </tr>
+                    @endforeach
+                @else
+                    <tr><td colspan="6">{{__('No Data')}}</td></tr>
+                @endif
+            </tbody>
+            </table>
+    </div>
+    <!-- Card footer -->
+    <div class="card-footer py-4">
+        {{ $in_out_request->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
+    </div>
+    </div>
+    </div>
 </div>
 
-
+<div class="row">
+<div class="col">
+    <div class="card mt-4">
+    <!-- Light table -->
+    <!-- Card header -->
+    <div class="card-header border-0">
+        <h3 class="mb-0">최근처리내역</h3>
+    </div>
+    <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">번호</th>
+                <th scope="col">신청자</th>
+                <th scope="col">변동전 금액</th>
+                <th scope="col">변동후 금액</th>
+                <th scope="col">신청금액</th>
+                <th scope="col">타입</th>
+                <th scope="col">거래계좌</th>
+                <th scope="col">신청 시간</th>
+                <th scope="col">처리 시간</th>
+                <th scope="col">상태</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                @if (count($in_out_logs) > 0)
+                    @foreach ($in_out_logs as $stat)
+                        <tr>
+                            @include('backend.argon.dw.partials.row_history')
+                        </tr>
+                    @endforeach
+                @else
+                    <tr><td colspan="6">{{__('No Data')}}</td></tr>
+                @endif
+            </tbody>
+            </table>
+    </div>
+    <!-- Card footer -->
+    <div class="card-footer py-4">
+        {{ $in_out_request->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
+    </div>
+    </div>
+    </div>
 </div>
+</div>
+
 @stop
+
+@push('js')
+<script>
+</script>
+@endpush

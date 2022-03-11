@@ -154,10 +154,24 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'DWController@history',
         ]);
 
+        Route::get('/dw/process', [
+            'as' => 'argon.dw.process',
+            'uses' => 'DWController@process',
+        ]);
+        Route::get('/dw/reject', [
+            'as' => 'argon.dw.reject',
+            'uses' => 'DWController@rejectDW',
+        ]);
+        Route::post('/dw/process', [
+            'as' => 'argon.dw.process.post',
+            'uses' => 'DWController@processDW',
+        ]);
+
         Route::get('/dw/addmanage', [
             'as' => 'argon.dw.addmanage',
             'uses' => 'DWController@addmanage',
         ]);
+        
 
         Route::get('/dw/outmanage', [
             'as' => 'argon.dw.outmanage',

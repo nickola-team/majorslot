@@ -325,6 +325,7 @@ function getSlotGames(title, category) {
     var formData = new FormData();
     formData.append("_token", $("#_token").val());
     formData.append("category", category);
+    formData.append("showAll", 1);
    
     $.ajax({
         type: "POST",

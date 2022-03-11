@@ -110,6 +110,7 @@
         </div>
     </div>
 </div>
+@include('backend.argon.dw.partials.recent_history')
 </div>
 
 <div class="modal" tabindex="-1" role="dialog" id="alarm">
