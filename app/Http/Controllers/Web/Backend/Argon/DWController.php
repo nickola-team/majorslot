@@ -171,7 +171,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'status' => 2
             ]);
            return redirect()->back()->withSuccess(['조작이 성공적으로 진행되었습니다.']);
-        
         }
         public function processDW(\Illuminate\Http\Request $request){
             $in_out_id = $request->id;

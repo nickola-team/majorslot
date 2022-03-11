@@ -49,7 +49,11 @@
                             현재 보유금
                         </div>
                         <div class="col-7">
+                            @if ($user->hasRole('manager'))
+                            {{number_format($user->shop->balance)}}
+                            @else
                             {{number_format($user->balance)}}
+                            @endif
                         </div>
                     </div>
                     

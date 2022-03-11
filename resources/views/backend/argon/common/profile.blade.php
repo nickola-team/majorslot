@@ -147,16 +147,16 @@
 
 				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="deal_percent">롤링%</label>
-                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="{{ old('deal_percent', $user->deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
+                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="{{ old('deal_percent', $user->hasRole('manager')?$user->shop->deal_percent:$user->deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
                                 </div>
                                 <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>
-                                    <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->table_deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
+                                    <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->hasRole('manager')?$user->table_deal_percent:$user->table_deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
                                 </div>
 
                                 <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="table_deal_percent">상태</label>
-                                    {!! Form::select('status', $statuses, $user->status ,
+                                    {!! Form::select('status', $statuses, $user->status,
                                         ['class' => 'form-control', 'id' => 'status', 'disabled' => ($user->hasRole(['admin']) || $user->id == auth()->user()->id) ? true: false]) !!}
                                 </div>
                                 @if (auth()->user()->isInOutPartner())

@@ -39,7 +39,11 @@
                             롤링%
                         </div>
                         <div class="col-7">
-                            {{auth()->user()->deal_percent}} %
+                            @if (auth()->user()->hasRole('manager'))
+                                {{auth()->user()->shop->deal_percent}} %
+                            @else
+                                {{auth()->user()->deal_percent}} %
+                            @endif
                         </div>
                     </div>
 
@@ -48,7 +52,11 @@
                             라이브 롤링%
                         </div>
                         <div class="col-7">
-                            {{auth()->user()->table_deal_percent}} %
+                            @if (auth()->user()->hasRole('manager'))
+                                {{auth()->user()->shop->table_deal_percent}} %
+                            @else
+                                {{auth()->user()->table_deal_percent}} %
+                            @endif
                         </div>
                     </div>
 
@@ -57,7 +65,11 @@
                             현재 보유금
                         </div>
                         <div class="col-7">
+                        @if (auth()->user()->hasRole('manager'))
+                            {{number_format(auth()->user()->shop->balance)}}
+                        @else
                             {{number_format(auth()->user()->balance)}}
+                        @endif
                         </div>
                     </div>
 
@@ -66,7 +78,11 @@
                             현재 롤링금
                         </div>
                         <div class="col-7">
-                            <span >{{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}</span> 
+                        @if (auth()->user()->hasRole('manager'))
+                            {{number_format(auth()->user()->shop->deal_balance - auth()->user()->shop->mileage)}}
+                        @else
+                            {{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}
+                        @endif
                         </div>
                     </div>
                     

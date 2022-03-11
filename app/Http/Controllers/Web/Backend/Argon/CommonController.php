@@ -60,21 +60,111 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
             }
 
-            $summ = str_replace(',','',$request->amount);
+            $summ = abs(str_replace(',','',$request->amount));
+            if ($summ == 0)
+            {
+                return redirect()->back()->withErrors(['유효하지 않은 금액입니다']);
+            }
 
-            if( $request->all && $request->all == '1' ) 
+            if ($user->hasRole('manager')) // add shop balance
             {
-                $summ = $user->balance;
+
+                if( \Auth::user()->hasRole([
+                    'master', 
+                    'agent', 
+                    'distributor', 
+                    'manager'
+                ]) && $data['type'] == 'out') 
+                {
+                    return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+                }
+
+                $shop = $user->shop;
+                if( $request->all && $request->all == '1' ) 
+                {
+                    $summ = $shop->balance;
+                }
+                $payer = auth()->user();
+                if( $data['type'] == 'add' && (!$payer->hasRole('admin') && $payer->balance < $summ  ) )
+                {
+                    return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_user_balance', [
+                        'name' => $user->username, 
+                        'balance' => $user->balance
+                    ])]);
+                }
+                if( $data['type'] == 'out' && $shop->balance < $summ  ) 
+                {
+                    return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
+                        'name' => $shop->name, 
+                        'balance' => $shop->balance
+                    ])]);
+                }
+
+                $sum = ($request->type == 'out' ? -1 * $summ  : $summ );
+
+                if (!$payer->hasRole('admin')) {
+                    $payer->update([
+                        'balance' => $payer->balance - $sum, 
+                        'count_balance' => $payer->count_balance - $sum
+                    ]);
+                    $payer = $payer->fresh();
+                }
+
+                $old = $shop->balance;
+                $shop->update(['balance' => $shop->balance + $sum]);
+                $shop = $shop->fresh();
+                \VanguardLTE\ShopStat::create([
+                    'user_id' => \Auth::id(), 
+                    'shop_id' => $shop->id, 
+                    'type' => $request->type, 
+                    'sum' => abs($summ),
+                    'old' => $old,
+                    'new' => $shop->balance,
+                    'balance' => $payer->balance,
+                    'reason' => $request->reason,
+                ]);
+
+
+                //create another transaction for mananger account
+                \VanguardLTE\Transaction::create([
+                    'user_id' => $user->id, 
+                    'payeer_id' => $payer->id, 
+                    'type' => $request->type, 
+                    'summ' => abs($summ), 
+                    'old' => $old,
+                    'new' => $shop->balance,
+                    'balance' => $payer->balance,
+                    'shop_id' => $shop->id,
+                    'reason' => $request->reason
+                ]);
+
+                if( $payer->balance == 0 ) 
+                {
+                    $payer->update([
+                        'wager' => 0, 
+                        'bonus' => 0
+                    ]);
+                }
+                if( $payer->count_balance < 0 ) 
+                {
+                    $payer->update(['count_balance' => 0]);
+                }
             }
-            $result = $user->addBalance($data['type'], abs($summ), false, 0, null, isset($data['reason'])?$data['reason']:null);
-            
-            $result = json_decode($result, true);
-            if( $result['status'] == 'error' ) 
+            else
             {
-                return redirect()->back()->withErrors([$result['message']]);
-            }
+                if( $request->all && $request->all == '1' ) 
+                {
+                    $summ = $user->balance;
+                }
+                $result = $user->addBalance($data['type'], abs($summ), false, 0, null, isset($data['reason'])?$data['reason']:null);
             
-            return redirect($request->url)->withSuccess($result['message']);
+                $result = json_decode($result, true);
+                if( $result['status'] == 'error' ) 
+                {
+                    return redirect()->back()->withErrors([$result['message']]);
+                }
+            }
+            return redirect($request->url)->withSuccess(['조작이 성공했습니다.']);
         }
 
         public function profile(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)
@@ -189,6 +279,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
                 }
+            }
+            if ($user->hasRole('manager'))
+            {
+                $user->shop->update($data);   
             }
             $user->update($data);
 

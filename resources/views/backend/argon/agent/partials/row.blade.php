@@ -4,10 +4,17 @@
     $badge_class = \VanguardLTE\User::badgeclass();
 ?>
 <td><span class="badge {{$badge_class[$user->role_id]}}">{{$user->role->description}}</span></td>
+@if ($user->hasRole('manager'))
+<td>{{number_format($user->shop->balance)}}</td>
+<td>{{ number_format($user->shop->deal_balance - $user->shop->mileage,0) }}</td>
+<td>{{ number_format($user->shop->deal_percent,2) }}</td>
+<td>{{ number_format($user->shop->table_deal_percent,2) }}</td>
+@else
 <td>{{number_format($user->balance)}}</td>
 <td>{{ number_format($user->deal_balance - $user->mileage,0) }}</td>
 <td>{{ number_format($user->deal_percent,2) }}</td>
 <td>{{ number_format($user->table_deal_percent,2) }}</td>
+@endif
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
 <a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => Request::getRequestUri()])}}" ><button class="btn btn-success btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>충 전</button></a>
