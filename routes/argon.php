@@ -178,6 +178,137 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'DWController@outmanage',
         ]);
 
+
+        // added by pine
+        /**
+         * report routes
+         */
+        Route::get('/report/daily', [
+            'as' => 'argon.report.daily',
+            'uses' => 'ReportController@report_daily',
+        ]);
+        Route::get('/report/childdaily', [
+            'as' => 'argon.report.childdaily',
+            'uses' => 'ReportController@report_childdaily',
+        ]);
+        Route::get('/report/daily/{daily_type}', [
+            'as' => 'argon.report.daily.dw',
+            'uses' => 'ReportController@report_daily',
+        ]);
+        Route::get('/report/childdaily/{daily_type}', [
+            'as' => 'argon.report.childdaily.dw',
+            'uses' => 'ReportController@report_childdaily',
+        ]);
+        Route::get('/report/childmonthly', [
+            'as' => 'argon.report.childmonthly',
+            'uses' => 'ReportController@report_childmonthly',
+        ]);
+        Route::get('/report/monthly', [
+            'as' => 'argon.report.monthly',
+            'uses' => 'ReportController@report_monthly',
+        ]);
+    
+        Route::get('/report/game', [
+            'as' => 'argon.report.game',
+            'uses' => 'ReportController@report_game',
+        ]);
+
+        /**
+         * notices routes
+         */
+
+        Route::get('notices', [
+            'as' => 'argon.notice.list',
+            'uses' => 'NoticesController@index',
+        ]);
+        Route::get('notices/create', [
+            'as' => 'argon.notice.create',
+            'uses' => 'NoticesController@create',
+        ]);
+        Route::post('notices/create', [
+            'as' => 'argon.notice.store',
+            'uses' => 'NoticesController@store',
+        ]);
+        Route::get('notices/{notice}/edit', [
+            'as' => 'argon.notice.edit',
+            'uses' => 'NoticesController@edit',
+        ]);
+        Route::post('notices/{notice}/update', [
+            'as' => 'argon.notice.update',
+            'uses' => 'NoticesController@update',
+        ]);
+        Route::get('notices/{notice}/delete', [
+            'as' => 'argon.notice.delete',
+            'uses' => 'NoticesController@delete',
+        ]);
+        /**
+         * messages routes
+         */
+
+        Route::get('/messages', [
+            'as' => 'argon.msg.list',
+            'uses' => 'MessageController@index',
+        ]);
+        Route::get('messages/create', [
+            'as' => 'argon.msg.create',
+            'uses' => 'MessageController@create',
+        ]);
+        Route::post('messages/create', [
+            'as' => 'argon.msg.store',
+            'uses' => 'MessageController@store',
+        ]);
+        Route::get('messages/{message}/delete', [
+            'as' => 'argon.msg.delete',
+            'uses' => 'MessageController@delete',
+        ]);
+        /**
+         * websites routes
+         */
+
+        Route::get('websites', [
+            'as' => 'argon.website.list',
+            'uses' => 'SettingsController@index',
+        ]);
+        Route::get('websites/create', [
+            'as' => 'argon.website.create',
+            'uses' => 'SettingsController@create',
+        ]);
+        Route::post('websites/create', [
+            'as' => 'argon.website.store',
+            'uses' => 'SettingsController@store',
+        ]);
+        Route::get('websites/{website}/edit', [
+            'as' => 'argon.website.edit',
+            'uses' => 'SettingsController@edit',
+        ]);
+        Route::post('websites/{website}/update', [
+            'as' => 'argon.website.update',
+            'uses' => 'SettingsController@update',
+        ]);
+        Route::get('websites/{website}/delete', [
+            'as' => 'argon.website.delete',
+            'uses' => 'SettingsController@delete',
+        ]);
+
+        /**
+         * Activity Log
+         */
+
+        Route::get('activity', [
+            'as' => 'argon.activity.index',
+            'uses' => 'SettingsController@activity_index',
+            'middleware' => 'permission:users.activity',
+        ]);
+        Route::get('activity/user/{user}/log', [
+            'as' => 'argon.activity.user',
+            'uses' => 'SettingsController@userActivity'
+        ]);
+
+        Route::get('activity/clear', [
+            'as' => 'argon.activity.clear',
+            'uses' => 'SettingsController@activity_clear',
+        ]);
+        
     });
 });
 

@@ -207,25 +207,25 @@
                     <div class="collapse" id="navbar-report">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.report.daily')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     일별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.report.monthly')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     월별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.report.game')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     게임별벳윈
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw', 'dw')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     일별충환전
                                 </a>
@@ -264,13 +264,13 @@
                     <div class="collapse" id="navbar-customer">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.notice.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     공지
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msg.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     쪽지
                                 </a>
@@ -292,13 +292,13 @@
                     <div class="collapse" id="navbar-system">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.website.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     도메인
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.activity.index')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     접속로그
                                 </a>
