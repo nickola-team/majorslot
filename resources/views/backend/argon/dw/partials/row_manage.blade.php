@@ -13,7 +13,11 @@
 </td>
 <td>
     @if ($stat->user)
+    @if ($stat->user->hasRole('manager'))
+    {{number_format($stat->user->shop->balance,0)}}
+    @else
     {{number_format($stat->user->balance,0)}}
+    @endif
     @endif
 </td>
 <td>

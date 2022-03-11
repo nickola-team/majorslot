@@ -40,7 +40,11 @@
                             현재 보유금
                         </div>
                         <div class="col-7">
-                            {{number_format(auth()->user()->balance)}}
+                            @if (auth()->user()->hasRole('manager'))
+                                {{number_format(auth()->user()->shop->balance)}}
+                            @else
+                                {{number_format(auth()->user()->balance)}}
+                            @endif
                         </div>
                     </div>
 
@@ -51,7 +55,11 @@
                         <div class="col-7">
                             <div class="row">
                                 <div class="col-6">
-                                    <span >{{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}</span> 
+                                @if (auth()->user()->hasRole('manager'))
+                                    {{number_format(auth()->user()->shop->deal_balance - auth()->user()->shop->mileage)}}
+                                @else
+                                    {{number_format(auth()->user()->deal_balance - auth()->user()->mileage)}}
+                                @endif
                                 </div>
                                 <div class="col-6">
                                     <a href="{{argon_route('argon.dw.dealconvert')}}"><button type="button" class="btn btn-danger btn-sm">롤링전환</button></a>

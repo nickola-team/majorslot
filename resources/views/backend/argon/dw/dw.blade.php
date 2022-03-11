@@ -60,7 +60,11 @@
                         </div>
                         <div class="col-7">
                             @if ($in_out->user)
+                            @if ($in_out->user->hasRole('manager'))
+                                {{number_format($in_out->user->shop->balance)}}
+                            @else
                                 {{number_format($in_out->user->balance)}}
+                            @endif
                             @endif
                         </div>
                     </div>
@@ -73,21 +77,7 @@
                             {{number_format($in_out->sum)}}
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-5 text-center">
-                            처리후 보유금
-                        </div>
-                        <div class="col-7">
-                            @if ($in_out->user)
-                                @if ($in_out->type == 'add')
-                                    {{number_format($in_out->user->balance+$in_out->sum)}}
-                                @else
-                                    {{number_format($in_out->user->balance)}}
-                                @endif
-                            @endif
-                        </div>
-                    </div>
-                    
+
                     <div class="form-group row">
                         @if ($in_out->type=='add')
                             <div class="col-6 text-center">
