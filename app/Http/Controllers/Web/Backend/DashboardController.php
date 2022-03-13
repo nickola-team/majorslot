@@ -1485,6 +1485,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         $cq9_play_adj = null; // owner's game
                         $cq9_index = 0;
                         $cq9_play_index = 0;
+
+                        $bng_adj = null; // provider's game
+                        $bng_play_adj = null; // owner's game
+                        $bng_index = 0;
+                        $bng_play_index = 0;
                         foreach ($cat['cat'] as $index => $game)
                         {
                             if ($game['name'] == 'Pragmatic Play')
@@ -1517,6 +1522,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             {
                                 $cq9_adj = $game;
                                 $cq9_index = $index;
+                            }
+
+                            if ($game['name'] == 'Booongo Play')
+                            {
+                                $bng_play_adj = $game;
+                                $bng_play_index = $index;
+                            }
+                            if ($game['name'] == 'Booongo')
+                            {
+                                $bng_adj = $game;
+                                $bng_index = $index;
                             }
                         }
                         if ($pragmatic_adj)
@@ -1574,6 +1590,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                             {
                                 $cq9_play_adj['title'] = '씨큐9';
                                 $cat['cat'][$cq9_play_index] = $cq9_play_adj;
+                            }
+                            $categories[$i] = $cat;
+                        }
+
+                        if ($bng_play_adj)
+                        {
+                            if ($bng_adj)
+                            {
+                                $bng_adj['totalwin'] = $bng_adj['totalwin'] + $bng_play_adj['totalwin'];
+                                $bng_adj['totalbet'] = $bng_adj['totalbet'] + $bng_play_adj['totalbet'];
+                                $bng_adj['totalcount'] = $bng_adj['totalcount'] + $bng_play_adj['totalcount'];
+                                $bng_adj['total_deal'] = $bng_adj['total_deal'] + $bng_play_adj['total_deal'];
+                                $bng_adj['total_mileage'] = $bng_adj['total_mileage'] + $bng_play_adj['total_mileage'];
+                                $cat['cat'][$bng_index] = $bng_adj;
+                                unset($cat['cat'][$bng_play_index]);
+                            }
+                            else
+                            {
+                                $bng_play_adj['title'] = '부웅고';
+                                $cat['cat'][$bng_play_index] = $bng_play_adj;
                             }
                             $categories[$i] = $cat;
                         }
