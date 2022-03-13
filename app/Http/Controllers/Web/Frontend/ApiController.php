@@ -515,11 +515,21 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                             if ($cat2 && $cat2->view == 1)
                             {
                                 $gacgames = $this->gamelistbyProvider($cat2->provider, $cat2->href);
-                                foreach ($gacgames as $gc)
+                                //change game icons
+                                foreach ($gacgames as $index=>$gac)
                                 {
-                                    array_unshift($selectedGames, $gc);
+                                    $icon_name = str_replace(' ', '_', $gacgames[$index]['gameid']);
+                                    $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                                    if ($cat1->href == 'live') //pragmatic
+                                    {
+                                        $gacgames[$index]['icon'] = '/frontend/Default/ico/gac/pp/' .  $icon_name . '.png';
+                                    }
+                                    else if ($cat1->href == 'evo') //evolution
+                                    {
+                                        $gacgames[$index]['icon'] = '/frontend/Default/ico/gac/evo/' .  $icon_name . '.png';
+                                    }
                                 }
-                                
+                                $selectedGames = array_merge($gacgames, $selectedGames);                                
                             }
                         }
                     }
