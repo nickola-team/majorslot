@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'report',
+        'elementName' => 'report-game'
+    ])
 @section('page-title',  '게임별벳윈')
 
 @push('css')
@@ -71,9 +74,6 @@
             <div class="card mt-4">
                 <div class="card-header border-0">
                     <h3 class="mb-0">게임별벳윈</h3>
-                    <div style="float:right" class="box">
-                    마지막갱신시간 {{$updated_at}}
-                    </div>
                 </div>
                 <div class="table-responsive">
                         <table class="table align-items-center table-flush" id="gamelist">
@@ -81,13 +81,10 @@
                             <tr>
                                 <th>날짜</th>
                                 <th>게임이름</th>
-								<th>베팅금</th>
+								<th>배팅금</th>
 								<th>당첨금</th>
-								<th>죽은금액</th>
-								<th>베팅횟수</th>
+								<th>벳윈</th>
 								<th>딜비수익</th>
-								<th>하위수익</th>
-								<th>최종수익</th>
                             </tr>
                         </thead>
                         <tbody class="list">
@@ -106,9 +103,6 @@
                             </tr>
                         </tbody>
                         </table>
-                </div>
-                <div id="waitAjax" class="loading" style="margin-left: 0px; display:none;">
-                    <img src="{{asset('back/argon')}}/img/theme/loading.gif">
                 </div>
                 <div class="card-footer py-4">
                     {{-- $categories->withQueryString()->links('backend.argon.vendor.pagination.argon') --}}

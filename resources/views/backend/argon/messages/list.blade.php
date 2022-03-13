@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'customer',
+        'elementName' => 'message-list'
+    ])
 
 @section('page-title',  '쪽지')
 
@@ -9,7 +12,7 @@
             <div class="card mt-4">
                 <div class="card-header border-0">
                     <div class="pull-right">
-						<a href="{{ argon_route('argon.msg.create') }}" class="btn btn-primary box-button">보내기</a>
+						<a href="{{ argon_route('argon.msg.create') }}" class="btn btn-primary btn-sm">보내기</a>
 					</div>
                     <h3 class="mb-0">쪽지</h3>
                 </div>

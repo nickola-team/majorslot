@@ -14,9 +14,6 @@
 	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['totalbet'],0) }} </span></td>
 	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['totalwin'],0)}}</span></td>
 	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['totalbet'] - $cat['totalwin'],0)}}</span></td>
-	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['totalcount'])}}</span></td>
-	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['total_deal'],0)}}</span></td>
-	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['total_mileage'],0)}}</span></td>
 	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['total_deal'] - $cat['total_mileage'],0)}}</span></td>
 
 	@if ($loop->index > 0)

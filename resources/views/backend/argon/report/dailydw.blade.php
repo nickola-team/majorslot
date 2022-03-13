@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'report',
+        'elementName' => 'report-dailydw'
+    ])
 @section('page-title',  '일별충환전')
 
 @push('css')
@@ -82,10 +85,11 @@
                                 <th scope="col">환전</th>
                                 <th scope="col">수동충전</th>
                                 <th scope="col">수동환전</th>
+                                <th scope="col">딜비전환</th>
+                                <th scope="col">총보유금</th>
                                 @if(auth()->user()->isInoutPartner())
                                 <th>이익금</th>
                                 @endif
-                                <th scope="col">딜비전환</th>
                             </tr>
                         </thead>
                         <tbody class="list">
@@ -98,10 +102,11 @@
                                 <td><span class='text-red'>{{number_format($summary->sum('totalout'),0)}}</span></td>
                                 <td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
                                 <td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>
+                                <td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
+                                <td><span class='text-red'>0</span></td>
                                 @if(auth()->user()->isInoutPartner())
                                 <td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
                                 @endif
-                                <td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
                             </tr>
                             @endif
                         </tbody>

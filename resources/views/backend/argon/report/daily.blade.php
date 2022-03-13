@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'report',
+        'elementName' => 'report-daily'
+    ])
 @section('page-title',  $type=='daily'?'일별벳윈':'월별벳윈')
 
 @push('css')
@@ -78,12 +81,10 @@
                             <tr>
                                 <th scope="col">이름</th>
                                 <th scope="col">날짜</th>
-                                <th scope="col">딜비수익</th>
-                                <th scope="col">베팅금</th>
+                                <th scope="col">배팅금</th>
                                 <th scope="col">당첨금</th>
                                 <th scope="col">죽은금액</th>
-                                <th scope="col">보유금</th>
-                                <th scope="col">하위보유금(합계)</th>
+                                <th scope="col">딜비수익</th>
                             </tr>
                         </thead>
                         <tbody class="list">
@@ -92,12 +93,10 @@
                             <tr>
                                 <td><span class='text-red'></span></td>
                                 <td><span class='text-red'>합계</span></td>
-                                <td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
                                 <td><span class='text-red'>{{number_format($summary->sum('totalbet'),0)}}</span></td>
                                 <td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
                                 <td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
-                                <td><span class='text-red'>0</span></td>
-                                <td><span class='text-red'>0</span></td>
+                                <td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
                             </tr>
                             @endif
                         </tbody>

@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'setting',
+        'elementName' => 'activity'
+    ])
 
 @section('page-title', '접속로그')
 

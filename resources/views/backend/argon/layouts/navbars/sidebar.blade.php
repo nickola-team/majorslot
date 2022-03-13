@@ -199,12 +199,12 @@
 
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{(isset($parentSection) && $parentSection == 'report') ? 'active' : '' }}" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
                         <i class="ni ni-chart-pie-35 text-white"></i>
                         <span class="nav-link-text text-white">보고서</span>
                     </a>
 
-                    <div class="collapse" id="navbar-report">
+                    <div class="collapse {{(isset($parentSection) && $parentSection == 'report') ? 'show' : '' }}" id="navbar-report">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.daily')}}">
@@ -256,12 +256,12 @@
                 @if (auth()->user()->isInoutPartner())
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-customer" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'customer') ? 'active' : '' }}" href="#navbar-customer" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
                         <i class="ni ni-headphones text-white"></i>
                         <span class="nav-link-text text-white">고객센터</span>
                     </a>
 
-                    <div class="collapse" id="navbar-customer">
+                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'customer') ? 'show' : '' }}" id="navbar-customer">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.notice.list')}}">
@@ -284,12 +284,12 @@
                 @if (auth()->user()->hasRole('admin'))
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-system" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'setting') ? 'active' : '' }}" href="#navbar-system" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
                         <i class="ni ni-settings text-white"></i>
                         <span class="nav-link-text text-white">시스템설정</span>
                     </a>
 
-                    <div class="collapse" id="navbar-system">
+                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'setting') ? 'show' : '' }}" id="navbar-system">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.website.list')}}">

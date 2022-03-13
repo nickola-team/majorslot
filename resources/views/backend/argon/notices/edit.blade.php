@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'customer',
+        'elementName' => 'notice-edit'
+    ])
 
 @section('page-title', '공지편집')
 

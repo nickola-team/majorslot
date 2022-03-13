@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'setting',
+        'elementName' => 'domain-add'
+    ])
 
 @section('page-title', '도메인추가')
 

@@ -1,4 +1,7 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'customer',
+        'elementName' => 'message-add'
+    ])
 
 @section('page-title', '쪽지발송')
 @section('content')
