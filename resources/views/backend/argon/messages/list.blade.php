@@ -50,9 +50,10 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 				<div class="modal-header">
+				<h4 class="modal-title">쪽지내용</h4>
+
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">쪽지내용</h4>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">

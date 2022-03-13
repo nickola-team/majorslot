@@ -8,7 +8,7 @@
     @if (auth()->user()->hasRole('admin'))
     <td>{{$notice->writer?$notice->writer->username:'알수없음'}}</td>
     @endif
-    <td>
+    <td class="text-right">
     <a href="{{ argon_route('argon.notice.edit', $notice->id) }}">
         <button type="button" class="btn btn-success btn-sm">편집</button>
     </a>

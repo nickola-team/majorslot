@@ -75,16 +75,6 @@
         <div class="col">
             <div class="card mt-4">
                 <div class="card-header border-0">
-					<div class="pull-right">
-						<a href="{{ argon_route('argon.activity.clear') }}"
-									data-method="DELETE"
-						   			class="btn btn-danger"
-									data-confirm-title="경고"
-									data-confirm-text="접속로그정보를 삭제하시겠습니까?"
-									data-confirm-delete="확인">
-									로그 삭제
-						</a>
-					</div>
                     <h3 class="mb-0">접속로그</h3>
                 </div>
                 <div class="table-responsive">
@@ -92,7 +82,7 @@
 						<thead class="thead-light">
 							<tr>
 								@if (isset($adminView))
-									<th>이름(아이디)</th>
+									<th>아이디</th>
 								@endif
 								<th>@lang('app.ip')</th>
 								<th>@lang('app.message')</th>

@@ -39,6 +39,10 @@
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
                                 </div>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">게임사이름</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" value="{{Request::get('category')}}" id="category"  name="category">
+                                </div>
                                 <div class="col-md-1">
                                 </div>
                             </div>

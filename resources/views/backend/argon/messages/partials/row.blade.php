@@ -8,7 +8,7 @@
     @if (auth()->user()->hasRole('admin'))
     <td>{{$msg->writer?$msg->writer->username:'알수없음'}}</td>
     @endif
-    <td>
+    <td class="text-right">
         <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" >
             <button class="btn btn-success btn-sm">보기</button>
         </a>

@@ -207,6 +207,12 @@
                     <div class="collapse {{(isset($parentSection) && $parentSection == 'report') ? 'show' : '' }}" id="navbar-report">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw', 'dw')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    일별충환전
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.daily')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     일별벳윈
@@ -224,12 +230,7 @@
                                     게임별벳윈
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw', 'dw')}}">
-                                <i class="far fa-circle text-white sub-i"></i>
-                                    일별충환전
-                                </a>
-                            </li>
+                            
                         </ul>
                     </div>
                 </li>

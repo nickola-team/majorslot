@@ -12,7 +12,7 @@
             <div class="card mt-4">
                 <div class="card-header border-0">
                     <div class="pull-right">
-						<a href="{{ argon_route('argon.website.create') }}" class="btn btn-primary box-button">@lang('app.add')</a>
+						<a href="{{ argon_route('argon.website.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
 					</div>
                     <h3 class="mb-0">도메인</h3>
                 </div>
