@@ -1137,22 +1137,40 @@ namespace VanguardLTE\Console
                         $user->session = serialize([]);
                     }
                     $gameData = unserialize($user->session);
-                    // if( count($gameData) > 0 ) 
-                    // {
-                    //     foreach( $gameData as $key => $vl ) 
-                    //     {
-                    //         if( $vl['timelife'] <= time() ) 
-                    //         {
-                    //             unset($gameData[$key]);
-                    //         }
-                    //     }
-                    // }
                     $user->session_json = json_encode($gameData);
                     $user->save();
                 }
                 $this->info('End convert session');
             });
-            
+            \Artisan::command('add:gamesession', function () {
+                $this->info('Add Game Session');
+                $users = \VanguardLTE\User::get();
+                foreach ($users as $user)
+                {
+                    if( !isset($user->session_json) || strlen($user->session_json) <= 0 ) 
+                    {
+                        $user->session_json = json_encode([]);
+                    }
+                    $session_jsons = json_decode($user->session_json, true);
+                    $games = \VanguardLTE\Game::where('shop_id', $user->shop_id)->get();
+                    foreach($games as $game){
+                        $session = [];
+                        foreach($session_jsons as $key => $value){
+                            if(strpos($key, $game->name) !== false){
+                                $session[$key] = $value;
+                            }
+                        }
+                        if(is_array($session) && count($session) > 0){
+                            \VanguardLTE\GameSession::create([
+                                'user_id' => $user->id, 
+                                'game_id' => $game->id, 
+                                'session' => json_encode($session)
+                            ]);
+                        }
+                    }
+                }
+                $this->info('End add game session');
+            });
         }
     }
 

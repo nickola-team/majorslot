@@ -835,7 +835,14 @@ namespace VanguardLTE\Games\scarabrichesbng
             return false;
         }
         public function GetWildScarabCount(){
-            return mt_rand(4, 8);
+            $percent = mt_rand(0, 100);
+            if($percent < 15){
+                return 4;
+            }else if($percent < 30){
+                return 5;
+            }else{
+                return mt_rand(6, 8);
+            }
         }
         public function GetWildScarabReels($reels, $wildScarabCount){
             if($wildScarabCount > 0){
@@ -846,7 +853,7 @@ namespace VanguardLTE\Games\scarabrichesbng
             }
             return $reels;
         }
-        public function GetReelStrips($winType, $slotEvent)
+        public function GetReelStrips($winType, $slotEvent, $isDoubleScatter = false)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
@@ -891,7 +898,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     }
                 }
             }else{
-                if( $winType != 'bonus' ) 
+                if( $winType != 'bonus' && $isDoubleScatter == false ) 
                 {
                     $_obf_reelStripCounts = [];
                     foreach( [
@@ -922,7 +929,11 @@ namespace VanguardLTE\Games\scarabrichesbng
                     {
                         if( $i == 0 || $i == 2 || $i == 4 ) 
                         {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
+                            if($isDoubleScatter == true && $i == 4){
+                                $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = rand(0, count($this->{'reelStrip' . $_obf_reelStripNumber[$i]}) - 3);
+                            }else{
+                                $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_reelStripNumber[$i]});
+                            }
                             $isScatter = true;
                         }
                         else
