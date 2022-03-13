@@ -52,6 +52,8 @@ namespace VanguardLTE\Games\scarabrichesbng
             $Counter = $slotSettings->GetGameData($slotSettings->slotId . 'Counter') ?? 0;
             if($slotEvent['command'] == 'login'){
                 $slotSettings->SetGameData($slotSettings->slotId . 'BalanceVersion', $BALANCE * $DENOMINATOR);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'DoubleScatterCount', 0);
                 $user = [
                     'balance' => $BALANCE * $DENOMINATOR,
                     'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
@@ -330,6 +332,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     $_winAvaliableMoney = $_spinSettings[1];
                     // $winType = 'win';
                     // $_winAvaliableMoney = 1000;
+                    $isDoubleScatter = false;
                     if($slotEvent['slotEvent'] == 'freespin'){
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $currentFreeGames + 1);
                     }
@@ -348,6 +351,18 @@ namespace VanguardLTE\Games\scarabrichesbng
                         $roundstr = str_replace('.', '', $roundstr);
                         $roundstr = '273' . substr($roundstr, 4, 10) . '001';
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
+                        if($slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 100){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'DoubleScatterCount', 0);
+                        }
+                        if($winType == 'none'){
+                            if($slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 50 && $slotSettings->GetGameData($slotSettings->slotId . 'DoubleScatterCount') == 0){
+                                $isDoubleScatter = true;
+                            }else if($slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 90 && $slotSettings->GetGameData($slotSettings->slotId . 'DoubleScatterCount') == 1){
+                                $isDoubleScatter = true;
+                            }
+                        }
                     }
                     $wildScarabCount = 0;
                     if($winType == 'win' && $slotSettings->IsAvaliableScarabs($slotEvent['slotEvent'])){
@@ -364,7 +379,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                             $is_extra_feature = false;
                             $wildScarabCount = 0;
                         }
-                        $initReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent']);
+                        $initReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $isDoubleScatter);
                         $reels = $slotSettings->GetWildScarabReels($initReels, $wildScarabCount);
                         $_lineWinNumber = 1;
                         for( $k = 0; $k < $LINES; $k++ ) 
@@ -459,6 +474,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                         if( $i >= 1000 ) 
                         {
                             $winType = 'none';
+                            $isDoubleScatter = false;
                         }
                         if( $i > 1500 ) 
                         {
@@ -501,7 +517,11 @@ namespace VanguardLTE\Games\scarabrichesbng
                         }
                         else if( $totalWin == 0 && $winType == 'none' ) 
                         {
-                            break;
+                            if($isDoubleScatter == true && $scattersCount < 2){
+
+                            }else{
+                                break;
+                            }
                         }
                     }
                     if( $totalWin > 0) 
@@ -638,6 +658,9 @@ namespace VanguardLTE\Games\scarabrichesbng
                             $objRes['context']['actions'] = ['freespin_init'];
                             $objRes['context']['round_finished'] = false;
                             $objRes['context']['spins']['winscatters'] = $winscatters;
+                        }else if($scattersCount == 2){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'DoubleScatterCount', $slotSettings->GetGameData($slotSettings->slotId . 'DoubleScatterCount') + 1);
+                            $isState = true;
                         }else{
                             $isState = true;
                         }
