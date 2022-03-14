@@ -1,4 +1,7 @@
-<td><span class="{{$adjustment->user->role_id>3?'partner':'shop'}}">{{ $adjustment->user->username }}</span></td>
+<?php 
+    $badge_class = \VanguardLTE\User::badgeclass();
+?>
+<td><span class="{{$adjustment->user->role_id>3?'partner':'shop'}}">{{ $adjustment->user->username }}</span>&nbsp;<span class="badge {{$badge_class[$adjustment->user->role_id]}}">{{$adjustment->user->role->description}}</span></td>
 <td>{{ date('Y-m-d',strtotime($adjustment->date)) }}</td>
 <td>{{ number_format($adjustment->totalin,0) }}</td>
 <td>{{ number_format($adjustment->totalout,0) }}</td>

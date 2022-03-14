@@ -191,9 +191,9 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'as' => 'argon.report.childdaily',
             'uses' => 'ReportController@report_childdaily',
         ]);
-        Route::get('/report/daily/{daily_type}', [
+        Route::get('/report/dailydw', [
             'as' => 'argon.report.daily.dw',
-            'uses' => 'ReportController@report_daily',
+            'uses' => 'ReportController@report_dailydw',
         ]);
         Route::get('/report/childdaily/{daily_type}', [
             'as' => 'argon.report.childdaily.dw',

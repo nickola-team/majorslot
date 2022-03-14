@@ -207,7 +207,7 @@
                     <div class="collapse {{(isset($parentSection) && $parentSection == 'report') ? 'show' : '' }}" id="navbar-report">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw', 'dw')}}">
+                                <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     일별충환전
                                 </a>
@@ -218,12 +218,12 @@
                                     일별벳윈
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.monthly')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     월별벳윈
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.game')}}">
                                 <i class="far fa-circle text-white sub-i"></i>

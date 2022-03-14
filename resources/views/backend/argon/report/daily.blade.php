@@ -10,8 +10,62 @@
 @endpush
 
 @section('content-header')
-@endsection
+<div class="row">
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-success mb-0 ">배팅 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['totalbet'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-success text-white rounded-circle shadow">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-warning mb-0 ">당첨 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['totalwin'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-primary mb-0 ">벳윈 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['ggr'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                            <i class="fas fa-chart-area"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+@endsection
 @section('content')
 <div class="container-fluid">
     <!-- Search -->
@@ -47,11 +101,11 @@
                                 </div>
                                 <label for="dates" class="col-md-2 col-form-label form-control-label text-center">기간선택</label>
                                 <div class="col-md-2">
-                                <input class="form-control" type="{{$type=='daily'?'date':'month'}}" value="{{Request::get('dates')[0]??$type=='daily'?date('Y-m-d', strtotime('-1 days')):date('Y-m', strtotime('-1 months'))}}" id="dates" name="dates[]">
+                                <input class="form-control" type="{{$type=='daily'?'date':'month'}}" value="{{Request::get('dates')[0]??($type=='daily'?date('Y-m-d', strtotime('-1 days')):date('Y-m', strtotime('-1 months')))}}" id="dates" name="dates[]">
                                 </div>
                                 <label for="dates" class="col-form-label form-control-label" >~</label>
                                 <div class="col-md-2">
-                                <input class="form-control" type="{{$type=='daily'?'date':'month'}}" value="{{Request::get('dates')[1]??$type=='daily'?date('Y-m-d'):date('Y-m')}}" id="dates" name="dates[]">
+                                <input class="form-control" type="{{$type=='daily'?'date':'month'}}" value="{{Request::get('dates')[1]??($type=='daily'?date('Y-m-d'):date('Y-m'))}}" id="dates" name="dates[]">
                                 </div>
                             </div>
                                 
@@ -83,7 +137,7 @@
                                 <th scope="col">날짜</th>
                                 <th scope="col">배팅금</th>
                                 <th scope="col">당첨금</th>
-                                <th scope="col">죽은금액</th>
+                                <th scope="col">벳윈수익</th>
                                 <th scope="col">딜비수익</th>
                             </tr>
                         </thead>

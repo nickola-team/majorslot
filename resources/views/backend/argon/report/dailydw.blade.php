@@ -10,6 +10,78 @@
 @endpush
 
 @section('content-header')
+<div class="row">
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-success mb-0 ">계좌충전 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['totalin'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-success text-white rounded-circle shadow">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-warning mb-0 ">계좌환전 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['totalout'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-primary mb-0 ">수동충전 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['moneyin'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                            <i class="fas fa-chart-area"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-info mb-0 ">수동환전 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($total['moneyout'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 @endsection
 
 @section('content')
@@ -81,8 +153,8 @@
                             <tr>
                                 <th scope="col">이름</th>
                                 <th scope="col">날짜</th>
-                                <th scope="col">충전</th>
-                                <th scope="col">환전</th>
+                                <th scope="col">계좌충전</th>
+                                <th scope="col">계좌환전</th>
                                 <th scope="col">수동충전</th>
                                 <th scope="col">수동환전</th>
                                 <th scope="col">딜비전환</th>
@@ -94,21 +166,6 @@
                         </thead>
                         <tbody class="list">
                             @include('backend.argon.report.partials.childs_dailydw')
-                            @if (count($summary))
-                            <tr>
-                                <td><span class='text-red'></span></td>
-                                <td><span class='text-red'>합계</span></td>
-                                <td><span class='text-red'>{{number_format($summary->sum('totalin'),0)}}</span></td>
-                                <td><span class='text-red'>{{number_format($summary->sum('totalout'),0)}}</span></td>
-                                <td><span class='text-red'>{{number_format($summary->sum('moneyin'),0)}}</span></td>
-                                <td><span class='text-red'>{{number_format($summary->sum('moneyout'),0)}}</span></td>
-                                <td><span class='text-red'>{{number_format($summary->sum('dealout'),0)}}</span></td>
-                                <td><span class='text-red'>0</span></td>
-                                @if(auth()->user()->isInoutPartner())
-                                <td><span class='text-red'>{{number_format($summary->sum('totalin') - $summary->sum('totalout'),0)}}</span></td>
-                                @endif
-                            </tr>
-                            @endif
                         </tbody>
                         </table>
                 </div>
