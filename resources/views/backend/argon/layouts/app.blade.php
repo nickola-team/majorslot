@@ -29,6 +29,41 @@
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
+        <?php
+            $user = auth()->user();
+            $user_id = [];
+            while ($user)
+            {
+                if ($user->isInoutPartner())
+                {
+                    $user_id[] = $user->id;
+                }
+                $user = $user->referral;
+            }
+            $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
+            $notices = \VanguardLTE\Notice::where(['active' => 1])->whereIn('type', ['all','partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
+        ?>
+        @if (count($notices)>0)
+            @foreach ($notices as $notice)
+            <div class="noticeBar" style="left:{{$loop->index * 100}}px;top:{{40+$loop->index * 50}}px;" id="notification{{$notice->id}}">
+                <h3>공지</h5>
+                <hr class="my-1">
+                <div class="content">
+                    <?php echo $notice->content  ?>
+                </div>
+                <div id="footer">
+                    <div class="row">
+                        <div class="col-lg-6 m-auto">
+                        <button type="button" class="btn btn-primary col-12" id="doSubmit" onclick="closeNotification('notification{{$notice->id}}', false);">8시간동안 보지 않기</button>
+                        </div>
+                        <div class="col-lg-6 m-auto">
+                        <button type="button" class="btn btn-default col-12" id="doSubmit" onclick="closeNotification('notification{{$notice->id}}', true);">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        @endif
             <form id="logout-form" action="#" method="POST" style="display: none;">
                 @csrf
             </form>
@@ -63,6 +98,18 @@
         <script>
         @if (Auth::check() && auth()->user()->isInoutPartner())
         $( document ).ready(function() {
+            @if (count($notices)>0)
+            @foreach ($notices as $notice)
+            var prevTime = localStorage.getItem("hidenotification" + {{$notice->id}});
+            if (prevTime && Date.now() - prevTime < 24 * 3600 * 1000) {
+                $("#notification" + {{$notice->id}}).hide();
+            }
+            else{
+                $("#notification" + {{$notice->id}}).show();
+            }
+            @endforeach
+            @endif
+
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";
             var timeout;
@@ -160,6 +207,17 @@
                     }
 				});
 		});
+
+        function closeNotification(notice,onlyOnce) {
+            if (onlyOnce) {
+                
+            }
+            else {
+                localStorage.setItem("hide" + notice, Date.now());
+            }
+
+            $("#" + notice).hide();
+        }
         @endif
 
     </script>
