@@ -1,11 +1,11 @@
 {
 
-"port":8559,
-
-"host":"42.127.251.83",
+"port":80,
+"listen":8559,
+"host":"pang-slot.com",
 "prefix":"http://",
 
-"host_ws":"42.127.251.83",
+"host_ws":"oceanking.pang-slot.com",
 "prefix_ws":"ws://",
 
 "ssl":false
