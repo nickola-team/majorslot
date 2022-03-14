@@ -664,7 +664,7 @@ namespace VanguardLTE\Games\BurningScatterVS
             \VanguardLTE\StatGame::create([
                 'user_id' => $this->playerId, 
                 'balance' => $this->Balance * $this->CurrentDenom, 
-                'bet' => $bet * $this->CurrentDenom, 
+                'bet' => $bet * $lines * $this->CurrentDenom, 
                 'win' => $win * $this->CurrentDenom, 
                 'game' => $_obf_0D172C04372D1A2A3C2B33260B34083837222A08343211, 
                 'percent' => $this->toGameBanks, 
