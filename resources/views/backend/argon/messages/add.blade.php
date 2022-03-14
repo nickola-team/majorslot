@@ -33,10 +33,15 @@
 
 @stop
 
-@push('css')
-    <link rel="stylesheet" href="{{ asset('back/argon') }}/vendor/quill/dist/quill.core.css"> 
-@endpush 
-
 @push('js')
-<script src="{{ asset('back/argon') }}/vendor/quill/dist/quill.min.js"></script>
+<!-- CK Editor -->
+<script src="/back/bower_components/ckeditor/ckeditor.js"></script>
+<script>
+  $(function () {
+    // Replace the <textarea id="editor1"> with a CKEditor
+    // instance, using default configuration.
+    CKEDITOR.replace('content')
+  })
+</script>
+
 @endpush

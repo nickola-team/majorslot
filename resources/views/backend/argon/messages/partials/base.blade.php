@@ -8,6 +8,5 @@
 </div>
 <div class="form-group">
     <label>쪽지내용</label>
-    <!-- <textarea id="content" name="content" rows="10" cols="150" style="width:100%;"></textarea> -->
-    <div data-toggle="quill" data-quill-placeholder="쪽지내용을 입력하세요"></div>
+    <textarea id="content" name="content" rows="10" cols="150" style="width:100%;"></textarea>
 </div>

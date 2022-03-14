@@ -10,8 +10,7 @@
 </div>
 <div class="form-group">
     <label>공지내용</label>
-    <!-- <textarea id="content" name="content" rows="10" cols="150" style="width:100%;">{{ $edit ? $notice->content : '공지내용을 입력하세요' }}</textarea> -->
-    <div data-toggle="quill" data-quill-placeholder="공지를 입력하세요"></div>
+    <textarea id="content" name="content" rows="10" cols="150" style="width:100%;">{{ $edit ? $notice->content : '공지내용을 입력하세요' }}</textarea>
 </div>
 <div class="form-group">
     <label>공지대상</label>
