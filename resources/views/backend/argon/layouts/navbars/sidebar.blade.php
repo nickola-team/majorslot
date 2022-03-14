@@ -22,7 +22,7 @@
                 <ul class="navbar-nav">
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link  text-white" href="#">
+                    <a class="nav-link  {{ (isset($parentSection) && $parentSection == 'dashboard') ? 'active' : '' }}" href="{{argon_route('argon.dashboard')}}">
                         <i class="ni ni-chart-bar-32 text-white"></i>
                         <span class="nav-link-text text-white">대시보드</span>
                     </a>

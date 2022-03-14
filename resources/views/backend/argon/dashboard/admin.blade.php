@@ -1,287 +1,293 @@
-@extends('backend.argon.layouts.app')
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'dashboard',
+        'elementName' => 'dashboard'
+    ])
 @section('page-title',  '대시보드' )
-
-@section('content')
-<div class="container-fluid mt--8">
+@section('content-header')
 <div class="row">
-            <div class="col-xl-8 mb-5 mb-xl-0">
-                <div class="card bg-gradient-default shadow">
-                    <div class="card-header bg-transparent">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
-                                <h2 class="text-white mb-0">Sales value</h2>
-                            </div>
-                            <div class="col">
-                                <ul class="nav nav-pills justify-content-end">
-                                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
-                                        <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
-                                            <span class="d-none d-md-block">Month</span>
-                                            <span class="d-md-none">M</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
-                                        <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                                            <span class="d-none d-md-block">Week</span>
-                                            <span class="d-md-none">W</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <!-- Chart -->
-                        <div class="chart">
-                            <!-- Chart wrapper -->
-                            <canvas id="chart-sales" class="chart-canvas"></canvas>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-gradient-primary border-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 벳윈수익</h5>
+                        <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todaybetwin'])}}</span>
+                        <div class="progress progress-xs mt-3 mb-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                         </div>
                     </div>
                 </div>
+                <p class="mt-3 mb-0 text-sm">
+                    <a href="{{argon_route('argon.player.gamehistory')}}" class="text-nowrap text-white font-weight-600">게임내역보기</a>
+                </p>
             </div>
-            <div class="col-xl-4">
-                <div class="card shadow">
-                    <div class="card-header bg-transparent">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-                                <h2 class="mb-0">Total orders</h2>
-                            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-gradient-info border-0">
+            <!-- Card body -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충환수익</h5>
+                        <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todaydw'])}}</span>
+                        <div class="progress progress-xs mt-3 mb-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <!-- Chart -->
-                        <div class="chart">
-                            <canvas id="chart-orders" class="chart-canvas"></canvas>
+                </div>
+                <p class="mt-3 mb-0 text-sm">
+                    <a href="{{argon_route('argon.agent.transaction')}}" class="text-nowrap text-white font-weight-600">충환내역보기</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-6 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h2 class="mb-0">벳윈상황</h2>
                         </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Chart -->
+                    <div class="chart">
+                        <!-- Chart wrapper -->
+                        <canvas id="chart-betwin"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-5">
-            <div class="col-xl-8 mb-5 mb-xl-0">
-                <div class="card shadow">
-                    <div class="card-header border-0">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h3 class="mb-0">Page visits</h3>
-                            </div>
-                            <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
-                            </div>
+        <div class="col-xl-6">
+            <div class="card   shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h2 class=" mb-0">충환전상황</h2>
                         </div>
-                    </div>
-                    <div class="table-responsive">
-                        <!-- Projects table -->
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Page name</th>
-                                    <th scope="col">Visitors</th>
-                                    <th scope="col">Unique users</th>
-                                    <th scope="col">Bounce rate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        /argon/
-                                    </th>
-                                    <td>
-                                        4,569
-                                    </td>
-                                    <td>
-                                        340
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        /argon/index.html
-                                    </th>
-                                    <td>
-                                        3,985
-                                    </td>
-                                    <td>
-                                        319
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        /argon/charts.html
-                                    </th>
-                                    <td>
-                                        3,513
-                                    </td>
-                                    <td>
-                                        294
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        /argon/tables.html
-                                    </th>
-                                    <td>
-                                        2,050
-                                    </td>
-                                    <td>
-                                        147
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i> 50,87%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        /argon/profile.html
-                                    </th>
-                                    <td>
-                                        1,795
-                                    </td>
-                                    <td>
-                                        190
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i> 46,53%
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-4">
-                <div class="card shadow">
-                    <div class="card-header border-0">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h3 class="mb-0">Social traffic</h3>
-                            </div>
-                            <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <!-- Projects table -->
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Referral</th>
-                                    <th scope="col">Visitors</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        Facebook
-                                    </th>
-                                    <td>
-                                        1,480
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">60%</span>
-                                            <div>
-                                                <div class="progress">
-                                                <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Facebook
-                                    </th>
-                                    <td>
-                                        5,480
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">70%</span>
-                                            <div>
-                                                <div class="progress">
-                                                <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Google
-                                    </th>
-                                    <td>
-                                        4,807
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">80%</span>
-                                            <div>
-                                                <div class="progress">
-                                                <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Instagram
-                                    </th>
-                                    <td>
-                                        3,678
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">75%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        twitter
-                                    </th>
-                                    <td>
-                                        2,645
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">30%</span>
-                                            <div>
-                                                <div class="progress">
-                                                <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="card-body">
+                    <!-- Chart -->
+                    <div class="chart">
+                        <canvas id="chart-dw"></canvas>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
 @stop
+@php
 
+    $date_start = date("m-d", strtotime('-30 days'));
+    $date_end = date("m-d");
+    $labels = [];
+    $wins = [];
+    $bets = [];
+    $totalin = [];
+    $totalout = [];
+
+    for($i=1; $i<=30; $i++){
+        $label = date("m-d", strtotime(-30 + $i . ' days'));
+        $labels[] = $label;
+        $wins[$label] = 0;
+        $bets[$label] = 0;
+        $totalin[$label] = 0;
+        $totalout[$label] = 0;
+    }
+
+    foreach($monthsummary AS $stat){
+        $label = date("m-d", strtotime($stat->date));
+        if( isset($wins[$label]) ){
+            $wins[$label] += $stat->totalwin;
+            $totalin[$label] += $stat->totalin;
+        }
+        if( isset($bets[$label]) ){
+            $bets[$label] += $stat->totalbet;
+            $totalout[$label] += $stat->totalout;
+        }
+    }
+@endphp
 
 @push('js')
-    <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
-    <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
+    <script src="/back/js/Chart.min.js"></script>
+    <script>
+        
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 203, 75)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+
+        Chart.scaleService.updateScaleDefaults('linear', {
+            ticks: {
+                min: 0
+            }
+        });
+
+        var color = Chart.helpers.color;
+        var config = {
+            type: 'line',
+            data: {
+                labels: ["{!! implode('","', $labels) !!}"],
+                datasets: [{
+                    label: '당첨',
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.blue,
+                    fill: false,
+                    data: [@foreach($wins AS $win) {{ $win }}, @endforeach],
+                }, {
+                    label: '배팅',
+                    backgroundColor: color(window.chartColors.purple).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.purple,
+                    fill: false,
+                    data: [@foreach($bets AS $bet) {{ $bet }}, @endforeach],
+                }]
+            },
+            options: {
+                scaleShowGridLines      : true,
+                scaleGridLineColor      : 'rgba(0,0,0,.05)',
+                scaleGridLineWidth      : 1,
+                //Boolean - Whether to show horizontal lines (except X axis)
+                scaleShowHorizontalLines: true,
+                //Boolean - Whether to show vertical lines (except Y axis)
+                scaleShowVerticalLines  : true,
+                //Boolean - If there is a stroke on each bar
+                barShowStroke           : true,
+                //Number - Pixel width of the bar stroke
+                barStrokeWidth          : 2,
+                responsive: true,
+                title: {
+                    display: false,
+                    text: '@lang('app.line_chart')'
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'category',
+                        display: false,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '날짜'
+                        },
+                        ticks: {
+                            major: {
+                                fontStyle: 'bold',
+                                fontColor: '#FF0000'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display:true,
+                            color : 'rgba(0,0,0,1)',
+                            lineWidth : 1,
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value, index) {
+                                if(value.toString().length > 9 && value != 0) return (Math.floor(value / 100000000)).toLocaleString("ko-KR") + "억";
+                                else if(value.toString().length == 9 && value != 0) return (value / 100000000).toFixed(1) + "억";
+                                else if(value.toString().length > 6 && value != 0) return (Math.floor(value / 10000)).toLocaleString("ko-KR") + "만";
+                                else if(value.toString().length == 6 && value != 0) return (value / 10000).toFixed(1) + "만";
+                                else return value.toLocaleString("ko-KR");
+                            }
+                        }
+                    }]
+                }
+            }
+        };
+
+        var configbar = {
+            type: 'bar',
+            data: {
+                labels: ["{!! implode('","', $labels) !!}"],
+                datasets: [{
+                    label: '충전',
+                    backgroundColor: color(window.chartColors.green).rgbString(),
+                    borderColor: window.chartColors.green,
+                    fill: false,
+                    data: [@foreach($totalin AS $in) {{ $in }}, @endforeach],
+                }, {
+                    label: '환전',
+                    backgroundColor: color(window.chartColors.red).rgbString(),
+                    borderColor: window.chartColors.red,
+                    fill: false,
+                    data: [@foreach($totalout AS $out) {{ $out }}, @endforeach],
+                }]
+            },
+            options: {
+                scaleShowGridLines      : true,
+                scaleGridLineColor      : 'rgba(0,0,0,.05)',
+                scaleGridLineWidth      : 1,
+                //Boolean - Whether to show horizontal lines (except X axis)
+                scaleShowHorizontalLines: true,
+                //Boolean - Whether to show vertical lines (except Y axis)
+                scaleShowVerticalLines  : true,
+                //Boolean - If there is a stroke on each bar
+                barShowStroke           : true,
+                //Number - Pixel width of the bar stroke
+                barStrokeWidth          : 2,
+                responsive: true,
+                title: {
+                    display: false,
+                    text: '@lang('app.line_chart')'
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'category',
+                        display: false,
+                        scaleLabel: {
+                            display: false,
+                            labelString: '날짜'
+                        },
+                        ticks: {
+                            major: {
+                                fontStyle: 'bold',
+                                fontColor: '#FF0000'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display:true,
+                            color : 'rgba(0,0,0,1)',
+                            lineWidth : 1,
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value, index) {
+                                if(value.toString().length > 9 && value != 0) return (Math.floor(value / 100000000)).toLocaleString("ko-KR") + "억";
+                                else if(value.toString().length == 9 && value != 0) return (value / 100000000).toFixed(1) + "억";
+                                else if(value.toString().length > 6 && value != 0) return (Math.floor(value / 10000)).toLocaleString("ko-KR") + "만";
+                                else if(value.toString().length == 6 && value != 0) return (value / 10000).toFixed(1) + "만";
+                                else return value.toLocaleString("ko-KR");
+                            }
+                        }
+                    }]
+                }
+            }
+        };
+
+        window.onload = function() {
+            var ctx = document.getElementById('chart-betwin').getContext('2d');
+            window.myLine = new Chart(ctx, config);
+            var ctx1 = document.getElementById('chart-dw').getContext('2d');
+            window.myLine1 = new Chart(ctx1, configbar);
+        };
+
+    </script>
 @endpush
