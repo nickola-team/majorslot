@@ -224,7 +224,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'type' => $game->type,
                     'href' => $href,
                     'view' => $game->view,
-                    'icon' => '/frontend/Default/ico/gac/'. $href . '/' . $icon_name . '.png',
+                    'icon' => '/frontend/Default/ico/gac/'. $href . '/' . $icon_name . '.jpg',
                     ]);
             }
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -246,6 +246,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'recommend' => config('app.gac_key'),
                 'gameType' => 36
             ];
+            if ($gamecode != 'Lobby')
+            {
+                $data['tableId'] = $gamecode;
+            }
             $url = null;
             try {
                 $response = Http::timeout(10)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
