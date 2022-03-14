@@ -552,7 +552,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         ///BNG request
 
         public function booongo_process(\Illuminate\Http\Request $request){
-            return '[]';
+            return '[{"version": "2.0", "name": "glory_to_ukraine", "uid": "1b52dc28afcb40e0a2b77edc79646461", "type": "tournament", "status": "PRE_NOTIFICATION", "config": {"start_at": "2022-09-01T04:00:00+00:00", "end_at": "2022-09-02T00:00:00+00:00", "last_updated_at": "2022-03-14T02:06:50.548518+00:00", "games": [], "games_excluded": [], "payload": {"i18n": {}, "theme": "ukraine", "freebet_start_date": null, "freebet_end_date": null, "payment_period": 72}, "min_bet": "1400.0000000000", "min_rounds": 1, "rules": [{"name": "hsrw", "config": {}}], "theme": "ukraine"}, "leaderboard": [{"nick": "Player939458", "score": "0.00", "place": null, "replay_url": false, "is_current_player": true}], "prize_pool": {"items": [{"place": 1, "prizes": [{"type": "MONEY", "value": 140000}]}], "total": 140000, "types": ["MONEY"]}, "player": {"nick": "Player939458", "score": "0", "place": null, "replay_url": false, "is_current_player": true, "qualified": false, "qualified_rounds": 0}}]';
         }
         public function booongo_desktoplog(\Illuminate\Http\Request $request){
             return '[]';
