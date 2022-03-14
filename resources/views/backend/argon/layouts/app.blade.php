@@ -135,9 +135,31 @@
             };
 
             timeout = setTimeout(updateInOutRequest, updateTime);
-
             
         });
+
+        $('#ratingOn').click(function (event) {
+			var rating = 0;
+			if($('#rateText').text() == 'X'){
+				rating = 1;
+			}
+			$.ajax({
+					url: "/api/inoutlist.json",
+					type: "GET",
+					data: {'rating': rating },
+					dataType: 'json',
+					success: function (data) {
+                        if (rating == 0)
+                        {
+                            $('#rateText').text('X');
+                        }
+                        else
+                        {
+                            $('#rateText').text('');
+                        }
+                    }
+				});
+		});
         @endif
 
     </script>

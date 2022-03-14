@@ -33,8 +33,8 @@
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-info" href="#">
-                        <i class="ni ni-notification-70"></i>
+                        <a class="nav-link text-dark btn btn-info" href="#" id="ratingOn">
+                        <i class="ni ni-notification-70"><span class="text-red" id="rateText">{{auth()->user()->rating>0?'':'X'}}</span></i>
                         </a>
                         </div>
                     </li>
