@@ -45,7 +45,7 @@
         ?>
         @if (count($notices)>0)
             @foreach ($notices as $notice)
-            <div class="noticeBar" style="left:{{$loop->index * 100}}px;top:{{40+$loop->index * 50}}px;" id="notification{{$notice->id}}">
+            <div class="noticeBar" style="left:{{$loop->index * 100}}px;top:{{40+$loop->index * 50}}px; display:none;" id="notification{{$notice->id}}">
                 <h3>공지</h5>
                 <hr class="my-1">
                 <div class="content">
