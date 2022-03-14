@@ -1,22 +1,23 @@
-@foreach ($adjustment['cat'] as $cat)
-	@if ($loop->index > 0)
+@if ($total)
+<td>{{$user->username}}</td>
+<td>{{$stat->title}}</td>
+<td>{{number_format($stat->totalbet)}}</td>
+<td>{{number_format($stat->totalwin)}}</td>
+<td>{{number_format($stat->totalbet-$stat->totalwin)}}</td>
+<td>{{number_format($stat->totaldeal)}}</td>
+@else
+@foreach ($category['cat'] as $stat)
+    @if ($loop->index > 0)
 	<tr>
 	@endif
-	<td >
-	<span class="{{$total?'text-red':''}}">
-	@if (!$total && auth()->user()->hasRole('admin') && Request::get('partner') == '' && Request::get('cat') == '')
-	<a href="{{argon_route($admurl.'.report.game', ['cat'=>$cat['category_id'], 'date' => $cat['date'], 'type'=>$cat['type']] ) }}"> {{$cat['title'] }} </a>
-	@else
-	{{$cat['title'] }}
-	@endif
-	</span>
-	</td>
-	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['totalbet'],0) }} </span></td>
-	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['totalwin'],0)}}</span></td>
-	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['totalbet'] - $cat['totalwin'],0)}}</span></td>
-	<td ><span class="{{$total?'text-red':''}}"> {{ number_format($cat['total_deal'] - $cat['total_mileage'],0)}}</span></td>
-
-	@if ($loop->index > 0)
+    <td>{{$user->username}}</td>
+    <td>{{$stat['title']}}</td>
+    <td>{{number_format($stat['totalbet'])}}</td>
+    <td>{{number_format($stat['totalwin'])}}</td>
+    <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>
+	<td>{{number_format($stat['totaldeal'])}}</td>
+    @if ($loop->index > 0)
 	</tr>
 	@endif
 @endforeach
+@endif

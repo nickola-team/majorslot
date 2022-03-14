@@ -8,6 +8,7 @@
 <td>{{ number_format($adjustment->moneyin,0) }}</td>
 <td>{{ number_format($adjustment->moneyout,0) }}</td>
 <td>{{ number_format($adjustment->dealout,0) }}</td>
+<td>{{ number_format($adjustment->totalbet-$adjustment->totalwin,0) }}</td>
 <td>{{ number_format($adjustment->balance+$adjustment->childsum,0)}}</td>
 @if(auth()->user()->isInoutPartner())
     <td>{{ number_format($adjustment->totalin - $adjustment->totalout,0) }}</td>

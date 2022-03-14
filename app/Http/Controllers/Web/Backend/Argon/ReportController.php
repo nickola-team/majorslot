@@ -87,7 +87,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $partners = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->whereIn('id', $availablePartners)->pluck('id')->toArray();
                 if (count($partners) == 0)
                 {
-                    return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
+                    return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
                 }
                 $users = $partners;
             }
@@ -193,62 +193,81 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function report_game(\Illuminate\Http\Request $request)
         {
-            $dates = $request->dates;
-            $start_date = date("Y-m-d 0:0:0");
-            $end_date = date("Y-m-d H:i:s");
-            if($dates != null && $dates != ''){
-                $start_date = $dates[0] . " 00:00:00";
-                $end_date = $dates[1] . " 23:59:59";
-            }
-            $user_id = auth()->user()->id;
-            if( $request->partner != '' ) 
+            $statistics = \VanguardLTE\CategorySummary::orderBy('category_summary.date', 'DESC');
+        
+            $totalQuery = 'SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal-total_mileage) as totaldeal, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+
+            $dateQuery = 'SELECT totalbet, totalwin, (total_deal-total_mileage) as totaldeal, category_id, date, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title AS title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+
+            $start_date = date("Y-m-1");
+            $end_date = date("Y-m-d");
+
+            if ($request->dates != '')
             {
-                if ($request->type == 'shop')
-                {
-                    $availableShops = auth()->user()->availableShops();
-                    $shop = \VanguardLTE\Shop::where('shops.name', 'like', '%' . $request->partner . '%')->whereIn('id', $availableShops)->first();
-                    if (!$shop)
-                    {
-                        return redirect()->back()->withErrors('매장을 찾을수 없습니다.');
-                    }
-                    $user_id = $shop->getUsersByRole('manager')->first()->id;
-                }
-                else if ($request->type == 'partner')
-                {
-                    $availablePartners = auth()->user()->hierarchyPartners();
-                    $partner = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->whereIn('id', $availablePartners)->first();
-                    if (!$partner)
-                    {
-                        return redirect()->back()->withErrors('파트너를 찾을수 없습니다.');
-                    }
-                    $user_id = $partner->id;
-                }
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
             }
-            $bshowGame = false;
-            if ($request->cat != '' && $request->date != '' && $request->type != '')
+            $statistics = $statistics->where('category_summary.date', '>=', $start_date);
+            $statistics = $statistics->where('category_summary.date', '<=', $end_date);
+            $totalQuery = $totalQuery . "w_category_summary.date>=\"$start_date\" AND w_category_summary.date<=\"$end_date\" ";
+            $dateQuery = $dateQuery . "w_category_summary.date>=\"$start_date\" AND w_category_summary.date<=\"$end_date\" ";
+
+            if ($request->partner != '')
             {
-                $bshowGame = true;
-                $adj_games = \VanguardLTE\GameSummary::where(['date' => $request->date, 'type' => $request->type, 'category_id' => $request->cat, 'user_id'=> $user_id])->orderby('totalbet')->get();
+                $availablePartners = auth()->user()->hierarchyPartners();
+                $user = \VanguardLTE\User::where('username', $request->partner)->first();
+                if (!$user || !in_array($user->id, $availablePartners))
+                {
+                    return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
+                }
             }
             else
             {
-                $adj_games = \VanguardLTE\CategorySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('type',['daily','today'])->where('user_id', $user_id)->orderby('date')->get();
+                $user = auth()->user();
             }
-            $categories = null;
-            $totalcategory = [
-                'date' => '',
-                'title' => '합계',
-                'totalbet' => $adj_games->sum('totalbet'),
-                'totalwin' => $adj_games->sum('totalwin'),
-                'totalcount' => $adj_games->sum('totalcount'),
-                'total_deal' => $adj_games->sum('total_deal'),
-                'total_mileage' => $adj_games->sum('total_mileage'),
-            ];
-            if ($adj_games)
+
+            $statistics = $statistics->where('user_id', $user->id);
+            $totalQuery = $totalQuery . "AND w_category_summary.user_id=$user->id ";
+            $dateQuery = $dateQuery . "AND w_category_summary.user_id=$user->id ";
+
+            if ($request->game != '')
+            {
+                $category = \VanguardLTE\Category::where('title', $request->game);
+                if (!auth()->user()->hasRole('admin'))
+                {
+                    $category = $category->where('parent', 0);
+                }
+                $category = $category->first();
+                if (!$category)
+                {
+                    return redirect()->back()->withErrors(['게임사를 찾을수 없습니다']);
+                }
+                $statistics = $statistics->where('category_id', $category->id);
+                $totalQuery = $totalQuery . "AND w_category_summary.category_id=$category->id ";
+                $dateQuery = $dateQuery . "AND w_category_summary.category_id=$category->id ";
+            }
+            
+            $totalQuery = $totalQuery . "GROUP BY w_category_summary.category_id ORDER BY totalbet desc";
+            $dateQuery = $dateQuery . "ORDER BY w_category_summary.date desc";
+
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.totaldeal) as totaldeal, a.parent AS category_id, b.title FROM ($totalQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent ORDER BY totalbet desc";
+                $dateQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.totaldeal) as totaldeal, date, a.parent AS category_id, b.title FROM ($dateQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent, a.date ORDER BY a.date desc";
+            }
+        
+            $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.totaldeal) as totaldeal FROM ($totalQuery) c";
+
+            $totalstatics = \DB::select($totalQuery);
+            $totalsummary = \DB::select($sumQuery);
+            $statistics = \DB::select($dateQuery);
+
+            $categories = [];
+            if ($statistics)
             {
                 $last_date = null;
                 $date_cat = null;
-                foreach ($adj_games as $cat)
+                foreach ($statistics as $cat)
                 {
                     if ($cat->date != $last_date)
                     {
@@ -266,17 +285,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                             'date' => $cat->date,
                         ];
                     }
-                    $info = $cat->toArray();
-                    if ($bshowGame)
-                    {
-                        $info['title'] = $cat->name;
-                        $info['name'] = $cat->name;
-                    }
-                    else
-                    {
-                        $info['title'] = $cat->category->trans->trans_title;
-                        $info['name'] = $cat->category->title;
-                    }
+                    $info['totalbet'] = $cat->totalbet;
+                    $info['totalwin'] = $cat->totalwin;
+                    $info['totaldeal'] = $cat->totaldeal;
+                    $info['title'] = $cat->title;
                     $date_cat['cat'][] = $info;
                 }
                 if ($date_cat)
@@ -289,133 +301,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $categories[] = $date_cat;
                 }
             }
-
-            if (!auth()->user()->hasRole('admin'))
-            {
-                //merge pragmatic and pragmatic play games if not admin
-                //merge habanero and habanero play games if not admin
-                //merge cq9 and cq9 play games if not admin
-                if ($categories){
-                    foreach ($categories as $i => $cat)
-                    {
-                        $pp_adj = null; //provider's game
-                        $pragmatic_adj = null; // owner's game
-                        $pp_index = 0;
-                        $pragmatic_index = 0;
-
-                        $hbn_adj = null; // provider's game
-                        $hbn_play_adj = null; // owner's game
-                        $hbn_index = 0;
-                        $hbn_play_index = 0;
-
-                        $cq9_adj = null; // provider's game
-                        $cq9_play_adj = null; // owner's game
-                        $cq9_index = 0;
-                        $cq9_play_index = 0;
-                        foreach ($cat['cat'] as $index => $game)
-                        {
-                            if ($game['name'] == 'Pragmatic Play')
-                            {
-                                $pp_adj = $game;
-                                $pp_index = $index;
-                            }
-                            if ($game['name'] == 'Pragmatic')
-                            {
-                                $pragmatic_adj = $game;
-                                $pragmatic_index = $index;
-                            }
-                            if ($game['name'] == 'Habanero Play')
-                            {
-                                $hbn_play_adj = $game;
-                                $hbn_play_index = $index;
-                            }
-                            if ($game['name'] == 'Habanero')
-                            {
-                                $hbn_adj = $game;
-                                $hbn_index = $index;
-                            }
-
-                            if ($game['name'] == 'CQ9 Play')
-                            {
-                                $cq9_play_adj = $game;
-                                $cq9_play_index = $index;
-                            }
-                            if ($game['name'] == 'CQ9')
-                            {
-                                $cq9_adj = $game;
-                                $cq9_index = $index;
-                            }
-                        }
-                        if ($pragmatic_adj)
-                        {
-                            if ($pp_adj)
-                            {
-                                $pp_adj['totalwin'] = $pp_adj['totalwin'] + $pragmatic_adj['totalwin'];
-                                $pp_adj['totalbet'] = $pp_adj['totalbet'] + $pragmatic_adj['totalbet'];
-                                $pp_adj['totalcount'] = $pp_adj['totalcount'] + $pragmatic_adj['totalcount'];
-                                $pp_adj['total_deal'] = $pp_adj['total_deal'] + $pragmatic_adj['total_deal'];
-                                $pp_adj['total_mileage'] = $pp_adj['total_mileage'] + $pragmatic_adj['total_mileage'];
-                                $cat['cat'][$pp_index] = $pp_adj;
-                                unset($cat['cat'][$pragmatic_index]);
-                            }
-                            else
-                            {
-                                $pragmatic_adj['title'] = '프라그메틱 플레이';
-                                $cat['cat'][$pragmatic_index] = $pragmatic_adj;
-                            }
-                            $categories[$i] = $cat;
-                        }
-                        if ($hbn_play_adj)
-                        {
-                            if ($hbn_adj)
-                            {
-                                $hbn_adj['totalwin'] = $hbn_adj['totalwin'] + $hbn_play_adj['totalwin'];
-                                $hbn_adj['totalbet'] = $hbn_adj['totalbet'] + $hbn_play_adj['totalbet'];
-                                $hbn_adj['totalcount'] = $hbn_adj['totalcount'] + $hbn_play_adj['totalcount'];
-                                $hbn_adj['total_deal'] = $hbn_adj['total_deal'] + $hbn_play_adj['total_deal'];
-                                $hbn_adj['total_mileage'] = $hbn_adj['total_mileage'] + $hbn_play_adj['total_mileage'];
-                                $cat['cat'][$hbn_index] = $hbn_adj;
-                                unset($cat['cat'][$hbn_play_index]);
-                            }
-                            else
-                            {
-                                $hbn_play_adj['title'] = '하바네로';
-                                $cat['cat'][$hbn_play_index] = $hbn_play_adj;
-                            }
-                            $categories[$i] = $cat;
-                        }
-
-                        if ($cq9_play_adj)
-                        {
-                            if ($cq9_adj)
-                            {
-                                $cq9_adj['totalwin'] = $cq9_adj['totalwin'] + $cq9_play_adj['totalwin'];
-                                $cq9_adj['totalbet'] = $cq9_adj['totalbet'] + $cq9_play_adj['totalbet'];
-                                $cq9_adj['totalcount'] = $cq9_adj['totalcount'] + $cq9_play_adj['totalcount'];
-                                $cq9_adj['total_deal'] = $cq9_adj['total_deal'] + $cq9_play_adj['total_deal'];
-                                $cq9_adj['total_mileage'] = $cq9_adj['total_mileage'] + $cq9_play_adj['total_mileage'];
-                                $cat['cat'][$cq9_index] = $cq9_adj;
-                                unset($cat['cat'][$cq9_play_index]);
-                            }
-                            else
-                            {
-                                $cq9_play_adj['title'] = '씨큐9';
-                                $cat['cat'][$cq9_play_index] = $cq9_play_adj;
-                            }
-                            $categories[$i] = $cat;
-                        }
-                    }
-                }
-
-            }
-
-            $updated_at = '00:00:00';
-            if (count($adj_games) > 0)
-            {
-                $updated_at = $adj_games->last()->updated_at;
-            }
-
-            return view('backend.argon.report.game', compact('categories', 'totalcategory', 'updated_at','start_date', 'end_date'));
+            return view('backend.argon.report.game', compact('totalsummary', 'categories', 'totalstatics','user'));
 
 
         }

@@ -157,7 +157,8 @@
                                 <th scope="col">계좌환전</th>
                                 <th scope="col">수동충전</th>
                                 <th scope="col">수동환전</th>
-                                <th scope="col">딜비전환</th>
+                                <th scope="col">롤링전환</th>
+                                <th scope="col">벳윈수익</th>
                                 <th scope="col">총보유금</th>
                                 @if(auth()->user()->isInoutPartner())
                                 <th>이익금</th>

@@ -143,16 +143,6 @@
                         </thead>
                         <tbody class="list">
                             @include('backend.argon.report.partials.childs_daily')
-                            @if (count($summary))
-                            <tr>
-                                <td><span class='text-red'></span></td>
-                                <td><span class='text-red'>합계</span></td>
-                                <td><span class='text-red'>{{number_format($summary->sum('totalbet'),0)}}</span></td>
-                                <td><span class='text-red'>{{number_format($summary->sum('totalwin'),0)}}</span></td>
-                                <td><span class='text-red'>{{ number_format($summary->sum('totalbet')-$summary->sum('totalwin'),0) }}</span></td>
-                                <td><span class='text-red'>{{ number_format($summary->sum('total_deal')- $summary->sum('total_mileage'),0) }}</span></td>
-                            </tr>
-                            @endif
                         </tbody>
                         </table>
                 </div>
