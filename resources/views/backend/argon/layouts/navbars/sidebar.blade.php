@@ -234,7 +234,7 @@
                         </ul>
                     </div>
                 </li>
-                @if (auth()->user()->isInoutPartner())
+                <!-- @if (auth()->user()->isInoutPartner())
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link" href="#navbar-adjustment" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
@@ -253,7 +253,7 @@
                         </ul>
                     </div>
                 </li>
-                @endif
+                @endif -->
                 @if (auth()->user()->isInoutPartner())
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
