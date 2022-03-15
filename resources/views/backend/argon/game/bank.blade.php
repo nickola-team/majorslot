@@ -93,7 +93,7 @@
                     <th scope="col">에이전트이름</th>
                     <th scope="col">환수율%</th>
                     <th scope="col">환수금</th>
-                    <th scope="col"><a href="javascript:;" class="small-box-footer openAdd" data-toggle="modal" data-target="#openAddModal" data-type="slots" data-shop="{{ 0 }}">일괄수정 <i class="fa fa-arrow-circle-right"></i></a></th>
+                    <th scope="col"><a href="{{argon_route('argon.game.bankbalance', ['batch'=>1,'type'=>'slots','id'=>0])}}">일괄수정 <i class="fa fa-arrow-circle-right"></i></a></th>
                     </tr>
                 </thead>
                 <tbody class="list">

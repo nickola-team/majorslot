@@ -320,6 +320,14 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'as' => 'argon.game.bank',
             'uses' => 'GameController@game_bank',
         ]);
+        Route::get('game/bankbalance', [
+            'as' => 'argon.game.bankbalance',
+            'uses' => 'GameController@game_bankbalance',
+        ]);
+        Route::post('game/bankbalance', [
+            'as' => 'argon.game.bankbalance.post',
+            'uses' => 'GameController@game_bankstore',
+        ]);
         Route::get('game/bonusbank', [
             'as' => 'argon.game.bonusbank',
             'uses' => 'GameController@game_bonusbank',

@@ -7,6 +7,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $this->middleware('auth');
             $this->middleware('permission:access.admin.panel');
+            $this->middleware( function($request,$next) {
+                if (!auth()->user()->hasRole('admin'))
+                {
+                    return response('허용되지 않은 접근입니다.', 401);
+                }
+                return $next($request);
+            }
+            );
         }
         public function game_transaction(\Illuminate\Http\Request $request)
         {
@@ -36,7 +44,274 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus'], ['value' => $request->minbonus]);
             \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus'], ['value' => $request->maxbonus]);
             \VanguardLTE\Settings::updateOrCreate(['key' => 'reset_bank'], ['value' => $request->reset_bank]);
-            return redirect()->back()->withSuccess('환수금 설정이 업데이트되었습니다.');
+            return redirect()->back()->withSuccess(['환수금 설정이 업데이트되었습니다.']);
+        }
+        public function game_bankstore(\Illuminate\Http\Request $request)
+        {
+            $bank_type = $request->type;
+            $batch = $request->batch;
+            $bank_id = $request->id;
+            $act = $request->balancetype;
+            $amount = $request->amount;
+            $master = $request->master;
+
+            if ($request->outAll == '1') //bank clear
+            {
+                if ($bank_type=='bonus')
+                {
+                    if ($batch=='1')
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->master)->get();
+                    }
+                    else
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $bank_id)->get();
+                    }
+
+                    foreach ($bonus_bank as $bb){
+                        $master = \VanguardLTE\User::where('id', $bb->master_id)->first();
+                        if ($master)
+                        {
+                            $name = $master->username;
+                            $shop_id = 0;
+                            $old = $bb->bank;
+                            $bb->update(['bank' => 0]);
+                            $type = 'bonus';
+                            $game = ' General';
+                            if ($bb->game_id!=0)
+                            {
+                                $game = $bb->game->title;
+                            }
+                            \VanguardLTE\BankStat::create([
+                                'name' => ucfirst($type) . "[$name]-$game", 
+                                'user_id' => \Illuminate\Support\Facades\Auth::id(), 
+                                'type' =>  ($old<0)?'add':'out', 
+                                'sum' => abs($old), 
+                                'old' => $old, 
+                                'new' => 0, 
+                                'shop_id' => $shop_id
+                            ]);
+                        }
+                        
+                    }
+                }
+                elseif ($bank_type=='bonusmax')
+                {
+                    if ($batch=='1')
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->master)->get();
+                    }
+                    else
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $bank_id)->get();
+                    }
+
+                    foreach ($bonus_bank as $bb){
+                        $bb->update(['max_bank' => 0]);
+                    }
+                }
+                else
+                {
+
+                    if ($batch=='1')
+                    {
+                        $shops = auth()->user()->availableShops();
+                        $gamebank = \VanguardLTE\GameBank::whereIn('shop_id', $shops)->get();
+                    }
+                    else
+                    {
+                        $gamebank = \VanguardLTE\GameBank::where('id', $bank_id)->get();
+                    }
+                    foreach ($gamebank as $gb){
+                        $shop = $gb->shop;
+                        $name = $shop->name;
+                        $old = $gb->slots;
+                        $gb->update(['slots' => 0]);
+                        $shop_id = $gb->shop_id;
+                        $type = 'slots';
+                        \VanguardLTE\BankStat::create([
+                            'name' => ucfirst($type) . "[$name]", 
+                            'user_id' => \Illuminate\Support\Facades\Auth::id(), 
+                            'type' => (($old<0)?'add':'out'), 
+                            'sum' => abs($old), 
+                            'old' => $old, 
+                            'new' => 0, 
+                            'shop_id' => $shop_id
+                        ]);
+                    }
+                }
+            }
+            else
+            {
+                if ($bank_type=='bonus')
+                {
+                    if ($batch=='1')
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $master)->get();
+                    }
+                    else
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $bank_id)->get();
+                    }
+
+                    foreach ($bonus_bank as $bb){
+                        $master = \VanguardLTE\User::where('id', $bb->master_id)->first();
+                        if ($master)
+                        {
+                            $name = $master->username;
+                            $shop_id = 0;
+                            $old = $bb->bank;
+                            if ($act == 'add')
+                            {
+                                $bb->increment('bank', abs($amount));
+                            }
+                            else
+                            {
+                                $bb->decrement('bank', abs($amount));
+                            }
+                            $new = $bb->bank;
+                            $type = 'bonus';
+                            $game = ' General';
+                            if ($bb->game_id!=0)
+                            {
+                                $game = $bb->game->title;
+                            }
+                            \VanguardLTE\BankStat::create([
+                                'name' => ucfirst($type) . "[$name]" . "-$game", 
+                                'user_id' => \Illuminate\Support\Facades\Auth::id(), 
+                                'type' => $act, 
+                                'sum' => abs($amount), 
+                                'old' => $old, 
+                                'new' => $new, 
+                                'shop_id' => $shop_id
+                            ]);
+                        }
+                        
+                    }
+                }
+                elseif ($bank_type=='bonusmax')
+                {
+                    if ($request->id==0)
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('master_id', $request->master)->get();
+                    }
+                    else
+                    {
+                        $bonus_bank = \VanguardLTE\BonusBank::where('id', $request->id)->get();
+                    }
+
+                    foreach ($bonus_bank as $bb){
+                        if ($act == 'add')
+                        {
+                            $bb->increment('max_bank', abs($request->summ));
+                        }
+                        else
+                        {
+                            $bb->decrement('max_bank', abs($request->summ));
+                        }                        
+                    }
+                }
+                else
+                {
+                    if ($batch=='1')
+                    {
+                        $shops = auth()->user()->availableShops();
+                        $gamebank = \VanguardLTE\GameBank::whereIn('shop_id', $shops)->get();
+                    }
+                    else
+                    {
+                        $gamebank = \VanguardLTE\GameBank::where('id', $bank_id)->get();
+                    }
+                    foreach ($gamebank as $gb){
+                        $shop = $gb->shop;
+                        $name = $shop->name;
+                        $old = $gb->slots;
+                        if ($act == 'add')
+                        {
+                            $gb->increment('slots', abs($amount));
+                        }
+                        else
+                        {
+                            $gb->decrement('slots', abs($amount));
+                        }
+                        $new = $gb->slots;
+                        $shop_id = $gb->shop_id;
+                        $type = 'slots';
+                        \VanguardLTE\BankStat::create([
+                            'name' => ucfirst($type) . "[$name]", 
+                            'user_id' => \Illuminate\Support\Facades\Auth::id(), 
+                            'type' => $act, 
+                            'sum' => abs($amount), 
+                            'old' => $old, 
+                            'new' => $new, 
+                            'shop_id' => $shop_id
+                        ]);
+                    }
+                }
+            }
+
+            if ($bank_type == 'bonus')
+            {
+                return redirect()->to(argon_route('argon.game.bonusbank',['id'=>$request->master]));
+            }
+            else
+            {
+                return redirect()->to(argon_route('argon.game.bank'));
+            }
+
+        }
+        public function game_bankbalance(\Illuminate\Http\Request $request)
+        {
+            $bank_type = $request->type;
+            $batch = $request->batch;
+            $bank_id = $request->id;
+            $master = $request->master;
+            $bankinfo = [
+                'type' => $bank_type,
+                'batch' => $batch,
+                'id' => $bank_id,
+                'name' => '일괄수정',
+                'balance' => 0,
+                'master' => $master,
+            ];
+            if ($batch == '1')
+            {
+
+            }
+            else
+            {
+                if ($bank_type == 'bonus')
+                {
+                    $bank = \VanguardLTE\BonusBank::where('id', $bank_id)->first();
+                    if (!$bank)
+                    {
+                        return redirect()->back()->withSuccess('에이전트를 찾을수 없습니다');
+                    }
+                    if ($bank->game_id == 0)
+                    {
+                        $bankinfo['name'] = $bank->master->username . ' - 일반';
+                    }
+                    else
+                    {
+                        $bankinfo['name'] = $bank->master->username . ' - ' . $bank->game->title;
+                    }
+                    $bankinfo['balance'] = $bank->bank;
+                    $bankinfo['master'] = $bank->master_id;
+                }
+                else
+                {
+                    $bank = \VanguardLTE\GameBank::where('id', $bank_id)->first();
+                    if (!$bank)
+                    {
+                        return redirect()->back()->withSuccess('에이전트를 찾을수 없습니다');
+                    }
+                    $bankinfo['name'] = $bank->shop->name;
+                    $bankinfo['balance'] = $bank->slots;
+                }
+                
+            }
+
+            return view('backend.argon.game.bankbalance', compact('bankinfo'));
         }
 
         public function game_bonusbank(\Illuminate\Http\Request $request)

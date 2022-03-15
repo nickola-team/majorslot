@@ -888,20 +888,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         ]);
                     }
 
-                    $gamebank = \VanguardLTE\GameBank::where('shop_id', $request->shop)->first();
-                    if (!$gamebank)
-                    {
-                        return redirect()->back()->withErrors(['매장환수금을 찾을수 없습니다.']);
-                    }
-                    $shop = $gamebank->shop;
-                    $old = $gamebank->{$request->type};
-                    if( $old == 0 ) 
-                    {
-                        return redirect()->back()->withErrors([trans('app.gamebank_cleared')]);
-                    }
-                    $gamebank->update([$request->type => 0]);
-                    $name = $shop->name;
-                    $shop_id = $request->shop;
                 }
                 return redirect()->back()->withSuccess(trans('app.gamebank_cleared'));
             }

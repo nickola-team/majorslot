@@ -20,7 +20,7 @@
                     <tr>
                     <th scope="col">번호</th>
                     <th scope="col">게임이름</th>
-                    <th scope="col">환수금</th>
+                    <th scope="col">환수금&nbsp;<a href="{{argon_route('argon.game.bankbalance', ['batch'=>1,'type'=>'bonus','id'=>0,'master'=>$master->id])}}">일괄수정 <i class="fa fa-arrow-circle-right"></i></a></th>
                     <th scope="col">최대환수금</th>
                     </tr>
                 </thead>

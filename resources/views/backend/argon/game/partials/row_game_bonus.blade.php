@@ -6,7 +6,7 @@
 		{{ $bank->game->title }}
 	@endif
 </td>
-<td>{{ number_format($bank->bank,0) }}</td>
+<td>{{ number_format($bank->bank,0) }} <a href="{{argon_route('argon.game.bankbalance', ['batch'=>0,'type'=>'bonus','id'=>$bank->id])}}">환수금수정 <i class="fa fa-arrow-circle-right"></i></a></td>
 <td>
     @if ($bank->max_bank == 0)
         없음
