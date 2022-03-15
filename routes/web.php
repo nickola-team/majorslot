@@ -1496,3 +1496,5 @@ Route::group([ 'prefix' => 'gac',], function () {
     Route::post('/placeBet', 'GameProviders\GACController@placebet');
     Route::post('/betResult', 'GameProviders\GACController@betresult');
 });
+
+

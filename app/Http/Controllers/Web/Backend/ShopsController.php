@@ -877,6 +877,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 'balance' => $user->balance,
                 'reason' => $request->reason,
             ]);
+
+            //create another transaction for mananger account
+            $manager = $shop->getUsersByRole('manager')->first();
+            \VanguardLTE\Transaction::create([
+                'user_id' => $manager->id, 
+                'payeer_id' => $user->id, 
+                'type' => $request->type, 
+                'summ' => abs($summ), 
+                'old' => $old,
+                'new' => $shop->balance,
+                'balance' => $user->balance,
+                'shop_id' => $shop->id,
+                'reason' => $request->reason
+            ]);
             if( $user->balance == 0 ) 
             {
                 $user->update([

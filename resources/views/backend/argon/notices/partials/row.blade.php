@@ -1,0 +1,23 @@
+<tr>        
+    <td>{{$notice->title}}</td>
+	<td>{{ $notice->date_time }}</td>
+    <td>
+        {{\VanguardLTE\Notice::lists()[$notice->type]}}
+    </td>
+    <td>{{ $notice->active==1?'활성':'비활성' }} </td>
+    @if (auth()->user()->hasRole('admin'))
+    <td>{{$notice->writer?$notice->writer->username:'알수없음'}}</td>
+    @endif
+    <td class="text-right">
+    <a href="{{ argon_route('argon.notice.edit', $notice->id) }}">
+        <button type="button" class="btn btn-success btn-sm">편집</button>
+    </a>
+    <a href="{{ argon_route('argon.notice.delete', $notice->id) }}"
+            data-method="DELETE"
+            data-confirm-title="@lang('app.please_confirm')"
+            data-confirm-text="공지를 삭제하시겠습니까?"
+            data-confirm-delete="@lang('app.yes_delete_him')">
+            <button type="button" class="btn btn-warning btn-sm">삭제</button>
+        </a>
+    </td>
+</tr>
