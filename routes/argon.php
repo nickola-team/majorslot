@@ -308,7 +308,26 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'as' => 'argon.activity.clear',
             'uses' => 'SettingsController@activity_clear',
         ]);
-        
+
+        /**
+         * Game routes
+         */
+        Route::get('game/transaction', [
+            'as' => 'argon.game.transaction',
+            'uses' => 'GameController@game_transaction',
+        ]);
+        Route::get('game/bank', [
+            'as' => 'argon.game.bank',
+            'uses' => 'GameController@game_bank',
+        ]);
+        Route::get('game/bonusbank', [
+            'as' => 'argon.game.bonusbank',
+            'uses' => 'GameController@game_bonusbank',
+        ]);
+        Route::post('game/banksetting', [
+            'as' => 'argon.game.banksetting',
+            'uses' => 'GameController@gamebanks_setting',
+        ]);
     });
 });
 

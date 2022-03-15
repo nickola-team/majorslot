@@ -103,12 +103,12 @@
                 @if (auth()->user()->hasRole('admin') )
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link" href="#navbar-games" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'game') ? 'active' : '' }}" href="#navbar-games" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
                         <i class="ni ni-controller text-white"></i>
                         <span class="nav-link-text text-white">게임설정</span>
                     </a>
 
-                    <div class="collapse" id="navbar-games">
+                    <div class="collapse {{ (isset($parentSection) && $parentSection == 'game') ? 'show' : '' }}" id="navbar-games">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">
@@ -123,7 +123,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.bank')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     환수금
                                 </a>
@@ -135,7 +135,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.transaction')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     환수금내역
                                 </a>
