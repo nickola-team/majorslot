@@ -47,7 +47,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $in_out_logs = $in_out_logs->where('type', $request->type);
             }
 
-            $start_date = date("Y-m-1 0:0:0");
+            $start_date = date("Y-m-d 0:0:0");
             $end_date = date("Y-m-d 23:59:59");
             
             if( $request->dates != '' ) 

@@ -101,7 +101,7 @@
                                 </div>
                                 <label for="dates" class="col-md-2 col-form-label form-control-label text-center">기간선택</label>
                                 <div class="col-md-2">
-                                <input class="form-control" type="{{$type=='daily'?'date':'month'}}" value="{{Request::get('dates')[0]??($type=='daily'?date('Y-m-d', strtotime('-1 days')):date('Y-m', strtotime('-1 months')))}}" id="dates" name="dates[]">
+                                <input class="form-control" type="{{$type=='daily'?'date':'month'}}" value="{{Request::get('dates')[0]??($type=='daily'?date('Y-m-d'):date('Y-m', strtotime('-1 months')))}}" id="dates" name="dates[]">
                                 </div>
                                 <label for="dates" class="col-form-label form-control-label" >~</label>
                                 <div class="col-md-2">

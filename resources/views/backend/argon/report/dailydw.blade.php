@@ -119,7 +119,7 @@
                                 </div>
                                 <label for="dates" class="col-md-2 col-form-label form-control-label text-center">기간선택</label>
                                 <div class="col-md-2">
-                                <input class="form-control" type="date" value="{{Request::get('dates')[0]??date('Y-m-d', strtotime('-1 days'))}}" id="dates" name="dates[]">
+                                <input class="form-control" type="date" value="{{Request::get('dates')[0]??date('Y-m-d')}}" id="dates" name="dates[]">
                                 </div>
                                 <label for="dates" class="col-form-label form-control-label" >~</label>
                                 <div class="col-md-2">

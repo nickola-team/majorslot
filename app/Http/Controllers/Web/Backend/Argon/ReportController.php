@@ -48,7 +48,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $users = $partners;
             }
             
-            $start_date = date("Y-m-d",strtotime("-1 days"));
+            $start_date = date("Y-m-d");
             $end_date = date("Y-m-d");
             if ($request->dates != '')
             {
@@ -66,7 +66,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $total = [
                 'totalbet' => $summary->sum('totalbet'),
                 'totalwin' => $summary->sum('totalwin'),
@@ -92,7 +92,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $users = $partners;
             }
             
-            $start_date = date("Y-m-d",strtotime("-1 days"));
+            $start_date = date("Y-m-d");
             $end_date = date("Y-m-d");
             if ($request->dates != '')
             {
@@ -110,7 +110,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
-            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('type','daily')->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $total = [
                 'totalin' => $summary->sum('totalin'),
                 'totalout' => $summary->sum('totalout'),
