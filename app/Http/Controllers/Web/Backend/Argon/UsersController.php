@@ -324,12 +324,32 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어가 생성되었습니다']);
         }
 
+        public function vplayer_list(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+            $users = [];
+            $joinusers = [];
+            if (count($partner_users) > 0){
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('users.id', $partner_users)->get();
+
+                $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->where('email','<>', '')->whereIn('id', $partner_users);
+                $total = [
+                    'count' => $users->count(),
+                    'balance' => $users->sum('balance'),
+                ];
+                $users = $users->paginate(20);
+
+            }
+
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','total'));
+        }
+
         public function player_list(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();
             $availableUsers = $user->hierarchyUsersOnly();
 
-            $users = \VanguardLTE\User::whereIn('id', $availableUsers);
+            $users = \VanguardLTE\User::whereIn('id', $availableUsers)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
 
             if ($request->user != '')
             {

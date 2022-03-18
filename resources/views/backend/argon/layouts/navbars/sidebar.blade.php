@@ -78,6 +78,14 @@
                                     플레이어생성
                                 </a>
                             </li>
+                            @if (auth()->user()->isInoutPartner())
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.vlist')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    개인플레이어목록
+                                </a>
+                            </li>
+                            @endif
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>

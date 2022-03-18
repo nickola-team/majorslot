@@ -54,7 +54,7 @@
                 <div id="footer">
                     <div class="row">
                         <div class="col-lg-6 m-auto">
-                        <button type="button" class="btn btn-primary col-12" id="doSubmit" onclick="closeNotification('notification{{$notice->id}}', false);">8시간동안 보지 않기</button>
+                        <button type="button" class="btn btn-primary col-12" id="doSubmit" onclick="closeNotification('notification{{$notice->id}}', false);">하루동안 보지 않기</button>
                         </div>
                         <div class="col-lg-6 m-auto">
                         <button type="button" class="btn btn-default col-12" id="doSubmit" onclick="closeNotification('notification{{$notice->id}}', true);">닫기</button>

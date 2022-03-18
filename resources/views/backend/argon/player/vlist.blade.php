@@ -2,8 +2,11 @@
         'parentSection' => 'player',
         'elementName' => 'player-list'
     ])
-@section('page-title',  '플레이어 목록')
-
+@section('page-title',  '개인플레이어 목록')
+<?php 
+    $statuses = \VanguardLTE\Support\Enum\UserStatus::lists(); 
+    $status_class = \VanguardLTE\Support\Enum\UserStatus::bgclass(); 
+?>
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -45,6 +48,48 @@
 @endsection
 @section('content')
 <div class="container-fluid">
+
+<div class="row">
+<div class="col">
+    <div class="card mt-4">
+    <!-- Light table -->
+    <!-- Card header -->
+    <div class="card-header border-0">
+        <h3 class="mb-0">신청 목록</h3>
+    </div>
+    <div class="table-responsive">
+            <table class="table align-items-center table-flush" id="datalist">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">번호</th>
+                <th scope="col">이름</th>
+                <th scope="col">추천인</th>
+                <th scope="col">연락처</th>
+                <th scope="col">계좌정보</th>
+                <th scope="col">신청시간</th>
+                <th></th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                @if (count($joinusers) > 0)
+                    @foreach ($joinusers as $user)
+                        <tr>
+                            @include('backend.argon.player.partials.row_vrequest')
+                        </tr>
+                    @endforeach
+                @else
+                    <tr><td colspan="8">{{__('No Data')}}</td></tr>
+                @endif
+            </tbody>
+            </table>
+    </div>
+    <!-- Card footer -->
+    <div class="card-footer py-4">
+    </div>
+</div>
+</div>
+</div>
+
     <!-- Search -->
 <div class="row">
     <div class="col">
@@ -59,11 +104,6 @@
                     </div>
                 </div>
             </div>
-            <?php 
-
-                $statuses = \VanguardLTE\Support\Enum\UserStatus::lists(); 
-                $status_class = \VanguardLTE\Support\Enum\UserStatus::bgclass(); 
-            ?>
             <hr class="my-1">
             <div id="collapseOne" class="collapse show">
                 <div class="card-body">
@@ -75,7 +115,7 @@
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">매장이름</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">추천인이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('shop')}}" id="shop" name="shop">
                             </div>
@@ -103,7 +143,7 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">플레이어 목록</h3>
+        <h3 class="mb-0">개인플레이어 목록</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush" id="datalist">
@@ -111,10 +151,11 @@
                 <tr>
                 <th scope="col">번호</th>
                 <th scope="col">이름</th>
-                <th scope="col">매장</th>
+                <th scope="col">추천인</th>
                 <th scope="col">보유금</th>
                 <th scope="col">총충전금</th>
                 <th scope="col">총환전금</th>
+                <th scope="col">연락처</th>
                 <th scope="col">상태</th>
                 <th scope="col">가입날짜</th>
                 <th scope="col">최근로그인</th>
@@ -125,7 +166,7 @@
                 @if (count($users) > 0)
                     @foreach ($users as $user)
                         <tr>
-                            @include('backend.argon.player.partials.row')
+                            @include('backend.argon.player.partials.row_v')
                         </tr>
                     @endforeach
                 @else
@@ -142,4 +183,3 @@
 </div>
 </div>
 @stop
-
