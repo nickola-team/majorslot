@@ -53,17 +53,6 @@ class Handler extends ExceptionHandler
             $exception instanceof \jeremykenedy\LaravelRoles\App\Exceptions\LevelDeniedException;
 
         if ($userLevelCheck) {
-            $_obf_strlog = '';
-            $_obf_strlog .= "\n";
-            $_obf_strlog .= date("Y-m-d H:i:s") . ' ';
-            $_obf_strlog .= $request->fullUrl() . '\n';
-            $_obf_strinternallog= '';
-            if( file_exists(storage_path('logs/') . 'urlInternal.log') ) 
-            {
-                $_obf_strinternallog = file_get_contents(storage_path('logs/') . 'urlInternal.log');
-            }
-            file_put_contents(storage_path('logs/') . 'urlInternal.log', $_obf_strinternallog . $_obf_strlog);
-
             if ($request->expectsJson()) {
                 return Response::json(array(
                     'error'    =>  403,
