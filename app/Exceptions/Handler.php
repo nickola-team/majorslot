@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
             {
                 $_obf_strinternallog = file_get_contents(storage_path('logs/') . 'urlInternal.log');
             }
-            file_put_contents(storage_path('logs/') . $this->slotId . 'urlInternal.log', $_obf_strinternallog . $_obf_strlog);
+            file_put_contents(storage_path('logs/') . storage_path('logs/') .'urlInternal.log', $_obf_strinternallog . $_obf_strlog);
 
             if ($request->expectsJson()) {
                 return Response::json(array(
