@@ -13,6 +13,7 @@
 <td>{{$user->bankInfo()}}</td>
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
-    <button class="btn btn-success btn-sm">승인</button>
-    <button class="btn btn-warning btn-sm">취소</button>
+    <a href="{{argon_route('argon.player.join', ['id' => $user->id, 'type'=>'allow'])}}"><button class="btn btn-success btn-sm">승인</button></a>
+    <a href="{{argon_route('argon.player.join', ['id' => $user->id, 'type'=>'reject'])}}"><button class="btn btn-warning btn-sm">취소</button></a>
+    
 </td>

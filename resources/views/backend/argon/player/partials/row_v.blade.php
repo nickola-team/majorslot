@@ -8,7 +8,7 @@
 <td>{{number_format($user->balance)}}</td>
 <td>{{number_format($user->total_in)}}</td>
 <td>{{number_format($user->total_out)}}</td>
-<td>{{number_format($user->phone)}}</td>
+<td>{{$user->phone}}</td>
 <td>
 <span class="badge badge-dot mr-4">
     <i class="{{$status_class[$user->status]}}"></i>

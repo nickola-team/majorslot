@@ -93,6 +93,11 @@ Route::prefix('{slug}')->middleware(['auth'])->group(function () {
             'uses' => 'UsersController@vplayer_list',
         ]);
 
+        Route::get('/player/join', [
+            'as' => 'argon.player.join',
+            'uses' => 'UsersController@player_join',
+        ]);
+
 
         Route::get('/player/transaction', [
             'as' => 'argon.player.transaction',

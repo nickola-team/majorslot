@@ -344,6 +344,37 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.player.vlist',compact('users', 'joinusers','total'));
         }
 
+        public function player_join(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['권한이 없습니다.']);
+            }
+
+            $user = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->where('id', $request->id)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['잘못된 요청입니다.']);
+            }
+            if ($request->type == 'allow')
+            {
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE]);
+                $onlineShop = \VanguardLTE\OnlineShop::where('shop_id', $user->shop_id)->first();
+
+                if ($onlineShop) //it is online users
+                {
+                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $user->addBalance('add',$onlineShop->join_bonus, $admin);
+                }
+            }
+            else
+            {
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::REJECTED]);
+            }
+            return redirect()->back()->withSuccess(['가입신청을 처리했습니다']);
+        }
+
+
         public function player_list(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();

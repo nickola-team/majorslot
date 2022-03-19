@@ -260,6 +260,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $data['shop_id'] = $parent->shop_id;
             $data['parent_id'] = $parent->id;
             $data['phone'] = $request->tel1;
+            $data['email'] = $data['username'] . '@major.com';
             if ($request->tel2 != '') {
                 $data['phone'] = $data['phone'] . $request->tel2 ;
             }
