@@ -21,6 +21,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $microstr;
         }
 
+        public function getGameObj($tableName)
+        {
+            $gamelist = GACController::getgamelist('gac');
+            $tableName = preg_replace('/\s+/', '', $tableName);
+            if ($gamelist)
+            {
+                foreach($gamelist as $game)
+                {
+
+                    if ($game['name'] == $tableName)
+                    {
+                        return $game;
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
         /*
         * FROM GAC, BACK API
         */
@@ -167,12 +186,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => 'gac'])->first();
 
+            $gameObj = GACController::getGameObj($tableName);
+            if (!$gameObj)
+            {
+                $gameObj['name'] = 'Unknown';
+                $gameObj['gameid'] = 'GACUnknown';
+            }
+
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => intval($user->balance), 
                 'bet' => $betAmount, 
                 'win' => $winAmount, 
-                'game' =>  $tableName . '_gac', 
+                'game' =>  $gameObj['name'] . '_gac', 
                 'type' => 'table',
                 'percent' => 0, 
                 'percent_jps' => 0, 
@@ -181,7 +207,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id,
                 'category_id' => isset($category)?$category->id:0,
-                'game_id' => $tableName,
+                'game_id' => $gameObj['gameid'],
                 'roundid' => $betId,
             ]);
 
