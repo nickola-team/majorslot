@@ -76,6 +76,13 @@ class RouteServiceProvider extends ServiceProvider
         ], function ($router) {
             require base_path('routes/slot.php');
         });
+
+        Route::group([
+            'namespace' => $this->webNamespace,
+            'middleware' => 'web',
+        ], function ($router) {
+            require base_path('routes/argon.php');
+        });
     }
 
     /**

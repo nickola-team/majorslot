@@ -19,3 +19,13 @@ if (! function_exists('settings')) {
         return app('anlutro\LaravelSettings\SettingStore')->get($key, $default);
     }
 }
+if (! function_exists('argon_route')) {
+    function argon_route($name, $parameters = [], $absolute = true)
+    {
+        $parameters = array_merge([
+            'slug' => config('app.slug'),
+        ], array_wrap($parameters));
+
+        return route($name, $parameters, $absolute);
+    }
+}

@@ -20,7 +20,9 @@ namespace VanguardLTE
             'deal_percent',
             'ggr_percent',
             'ggr_profit',
-            'ggr_mileage'
+            'ggr_mileage',
+            'category_id',
+            'game_id'
         ];
         public $timestamps = false;
         public static function boot()
@@ -46,6 +48,11 @@ namespace VanguardLTE
         public function name_ico()
         {
             return explode(' ', $this->game)[0];
+        }
+
+        public function category()
+        {
+            return $this->belongsTo('VanguardLTE\Category', 'category_id');
         }
     }
 

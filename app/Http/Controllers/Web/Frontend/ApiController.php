@@ -260,6 +260,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $data['shop_id'] = $parent->shop_id;
             $data['parent_id'] = $parent->id;
             $data['phone'] = $request->tel1;
+            $data['email'] = $data['username'] . '@major.com';
             if ($request->tel2 != '') {
                 $data['phone'] = $data['phone'] . $request->tel2 ;
             }
@@ -732,6 +733,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'balance' => $master->balance,
                         'shop_id' => $shop->id,
                         'date_time' => \Carbon\Carbon::now()
+                    ]);
+                    //create another transaction for mananger account
+                    \VanguardLTE\Transaction::create([
+                        'user_id' => $user->id, 
+                        'payeer_id' => $master->id, 
+                        'type' => 'deal_out', 
+                        'summ' => abs($summ), 
+                        'old' => $old,
+                        'new' => $shop->balance,
+                        'balance' => $master->balance,
+                        'shop_id' => $shop->id,
                     ]);
                 }
                 else
@@ -1495,6 +1507,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'request_id' => $transaction->id,
                     'shop_id' => $transaction->shop_id,
                     'date_time' => \Carbon\Carbon::now()
+                ]);
+
+                //create another transaction for mananger account
+                \VanguardLTE\Transaction::create([
+                    'user_id' => $requestuser->id, 
+                    'payeer_id' => $user->id, 
+                    'type' => $type, 
+                    'summ' => abs($amount), 
+                    'old' => $old,
+                    'new' => $shop->balance,
+                    'balance' => $user->balance,
+                    'request_id' => $transaction->id,
+                    'shop_id' => $transaction->shop_id,
                 ]);
             }
             else // for partners

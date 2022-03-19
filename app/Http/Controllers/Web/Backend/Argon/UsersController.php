@@ -1,0 +1,502 @@
+<?php 
+namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
+{
+    class UsersController extends \VanguardLTE\Http\Controllers\Controller
+    {
+        private $users = null;
+        private $max_users = 10000;
+        public function __construct(\VanguardLTE\Repositories\User\UserRepository $users)
+        {
+            $this->middleware('auth');
+            $this->middleware('permission:access.admin.panel');
+            $this->users = $users;
+        }
+
+        public function agent_child(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $availablePartners = $user->hierarchyPartners();
+            $child_id = $request->id;
+            $users = [];
+            if (in_array($child_id, $availablePartners))
+            {
+                $users = \VanguardLTE\User::where('parent_id', $child_id)->get();
+            }
+            return view('backend.argon.agent.partials.childs', compact('users', 'child_id'));
+        }
+
+        public function agent_create(\Illuminate\Http\Request $request)
+        {
+            return view('backend.argon.agent.create');
+        }
+
+        public function agent_store(\VanguardLTE\Http\Requests\User\CreateUserRequest $request)
+        {
+            $data = $request->all() + ['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE];
+
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;
+            $parent = \VanguardLTE\User::where(['username' => $request->parent, 'role_id' => $request->role_id+1])->whereIn('id', $availablePartners)->first();
+            if (!$parent)
+            {
+                $role = \jeremykenedy\LaravelRoles\Models\Role::find($request->role_id+1);
+                return redirect()->back()->withErrors([$request->parent . ' ' . $role->description . '을(를) 찾을수 없습니다']);
+            }
+
+            $role = \jeremykenedy\LaravelRoles\Models\Role::find($request->role_id);
+            $data['parent_id'] = $parent->id;
+
+
+            if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
+            {
+                return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+            }
+            if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+            {
+                return redirect()->back()->withErrors(['라이브딜비는 상위에이전트보다 클수 없습니다']);
+            }
+            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['죽장퍼센트는 상위에이전트보다 클수 없습니다']);
+            // }
+
+            $user = \VanguardLTE\User::create($data);
+            $user->detachAllRoles();
+            $user->attachRole($role);
+            event(new \VanguardLTE\Events\User\Created($user));
+
+            //create shift for partners
+            $type = 'partner';
+
+            \VanguardLTE\OpenShift::create([
+                'start_date' => \Carbon\Carbon::now(), 
+                'user_id' => $user->id, 
+                'shop_id' => 0,
+                'old_total' => 0,
+                'deal_profit' => 0,
+                'mileage' => 0,
+                'type' => $type
+            ]);
+
+            if ($data['role_id'] == 3)  //create shop
+            {
+                $data['name'] = $data['username'];
+                $shop = \VanguardLTE\Shop::create($data + ['user_id' => auth()->user()->id]);
+                
+                //create shopuser table for all agents
+                $parent = $user;
+                while ($parent && !$parent->isInOutPartner())
+                {
+                    \VanguardLTE\ShopUser::create([
+                        'shop_id' => $shop->id, 
+                        'user_id' => $parent->id
+                    ]);
+                    $parent = $parent->referral;
+                }
+                
+                $user->update(['shop_id' => $shop->id]);
+                
+                $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
+                \VanguardLTE\Task::create([
+                    'category' => 'shop', 
+                    'action' => 'create', 
+                    'item_id' => $shop->id,
+                    'details' => $site->id,
+                ]);
+                $open_shift = \VanguardLTE\OpenShift::create([
+                    'start_date' => \Carbon\Carbon::now(), 
+                    'balance' => 0, 
+                    'user_id' => auth()->user()->id, 
+                    'shop_id' => $shop->id
+                ]); 
+                event(new \VanguardLTE\Events\Shop\ShopCreated($shop));
+
+            }
+            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]));
+        }
+
+        public function agent_list(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if ($request->user != '' || $request->role != '')
+            {
+                $childPartners = $user->hierarchyPartners();
+            }
+            else
+            {
+                $childPartners = $user->childPartners();
+            }
+
+            $users = \VanguardLTE\User::whereIn('id', $childPartners);
+
+            if ($request->user != '')
+            {
+                $users = $users->where('username', 'like', '%' . $request->user . '%');
+            }
+
+            if ($request->role != '')
+            {
+                $users = $users->where('role_id', $request->role);
+            }
+            
+            $usersum = (clone $users)->get();
+            $sum = 0;
+            $count = 0;
+            foreach ($usersum as $u)
+            {
+                $sum = $sum + $u->childBalanceSum();
+                $count = $count + count($u->hierarchyPartners());
+            }
+
+            $total = [
+                'count' => $users->count() + $count,
+                'balance' => $users->sum('balance'),
+                'childbalance' => $sum
+            ];
+            
+
+            $users = $users->paginate(20);
+            return view('backend.argon.agent.list', compact('users','total'));
+        }
+
+        public function agent_deal_stat(\Illuminate\Http\Request $request)
+        {
+            $statistics = \VanguardLTE\DealLog::select('deal_log.*')->orderBy('deal_log.date_time', 'DESC');
+            $user = auth()->user();
+            $availablePartners = $user->availableUsers();
+            
+
+            $start_date = date("Y-m-d H:i:s", strtotime("-1 hours"));
+            $end_date = date("Y-m-d H:i:s");
+
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = $statistics->where('deal_log.date_time', '>=', $start_date);
+            $statistics = $statistics->where('deal_log.date_time', '<=', $end_date );
+
+            $statistics = $statistics->join('users', 'users.id', '=', 'deal_log.partner_id');
+
+            if ($request->user != '')
+            {
+                $statistics = $statistics->whereIn('deal_log.partner_id', $availablePartners);
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
+            }
+            else
+            {
+                $statistics = $statistics->where('deal_log.partner_id', $user->id);
+            }
+
+            if ($request->player != '')
+            {
+                $playerIds = \VanguardLTE\User::where('username', 'like', '%' . $request->player . '%')->pluck('id')->toArray();
+                $statistics = $statistics->whereIn('deal_log.user_id', $playerIds);
+            }
+
+            if ($request->game != '')
+            {
+                $statistics = $statistics->where('deal_log.game', 'like', '%'. $request->game . '%');
+            }
+
+            $total = [
+                'bet' => (clone $statistics)->sum('bet'),
+                'win' => (clone $statistics)->sum('win'),
+                'deal' => (clone $statistics)->sum('deal_log.deal_profit') - (clone $statistics)->sum('deal_log.mileage'),
+                'ggr' => (clone $statistics)->sum('deal_log.ggr_profit') - (clone $statistics)->sum('deal_log.ggr_mileage'),
+            ];
+
+            $statistics = $statistics->paginate(20);
+            return view('backend.argon.agent.deal', compact('statistics', 'total'));
+        }
+
+        public function agent_transaction(\Illuminate\Http\Request $request)
+        {
+            $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC');
+            $user = auth()->user();
+            $availablePartners = $user->hierarchyPartners();
+            $availablePartners[] = $user->id;
+            $statistics = $statistics->whereIn('user_id', $availablePartners);
+
+            $start_date = date("Y-m-1 0:0:0");
+            $end_date = date("Y-m-d 23:59:59");
+
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = $statistics->where('transactions.created_at', '>=', $start_date);
+            $statistics = $statistics->where('transactions.created_at', '<=', $end_date );
+
+            $statistics = $statistics->join('users', 'users.id', '=', 'transactions.user_id');
+
+            if ($request->role != '')
+            {
+                $statistics = $statistics->where('users.role_id', $request->role);
+            }
+            if ($request->user != '')
+            {
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
+            }
+
+            if ($request->admin != '')
+            {
+                $payeerIds = \VanguardLTE\User::where('username', 'like', '%' . $request->admin . '%')->pluck('id')->toArray();
+                $statistics = $statistics->whereIn('transactions.payeer_id', $payeerIds);
+            }
+
+            if ($request->type != '')
+            {
+                $statistics = $statistics->where('transactions.type',  $request->type);
+            }
+
+            if ($request->mode != '')
+            {
+                if ($request->mode == 'manual')
+                {
+                    $statistics = $statistics->whereIsNull('transactions.request_id');
+                }
+                else
+                {
+                    $statistics = $statistics->whereNotNull('transactions.request_id');
+                }
+            }
+
+            $total = [
+                'add' => (clone $statistics)->where(['type'=>'add'])->sum('summ'),
+                'out' => (clone $statistics)->where(['type'=>'out'])->sum('summ'),
+                'deal_out' => (clone $statistics)->where(['type'=>'deal_out'])->sum('summ'),
+                'ggr_out' => (clone $statistics)->where(['type'=>'ggr_out'])->sum('summ'),
+            ];
+
+            $statistics = $statistics->paginate(20);
+            return view('backend.argon.agent.transaction', compact('statistics', 'total'));
+        }
+
+        public function player_create(\Illuminate\Http\Request $request)
+        {
+            return view('backend.argon.player.create');
+        }
+
+        public function player_store(\VanguardLTE\Http\Requests\User\CreateUserRequest $request)
+        {
+            $data = $request->all() + ['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE];
+
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;
+            $parent = \VanguardLTE\User::where(['username' => $request->parent, 'role_id' => 3])->whereIn('id', $availablePartners)->first();
+            if (!$parent)
+            {
+                return redirect()->back()->withErrors([$request->parent . '매장을 찾을수 없습니다']);
+            }
+
+            $role = \jeremykenedy\LaravelRoles\Models\Role::find(1);
+            $data['parent_id'] = $parent->id;
+
+            $shop = $parent->shop;
+            if (isset($data['deal_percent']) && $shop!=null &&  $shop->deal_percent < $data['deal_percent'])
+            {
+                return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
+            }
+            if (isset($data['table_deal_percent']) && $shop!=null && $shop->table_deal_percent < $data['table_deal_percent'])
+            {
+                return redirect()->back()->withErrors(['라이브딜비는 매장보다 클수 없습니다']);
+            }
+            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['죽장퍼센트는 매장보다 클수 없습니다']);
+            // }
+            $data['shop_id'] = $shop->id;
+            $data['role_id'] = $role->id;
+            $user = \VanguardLTE\User::create($data);
+            $user->detachAllRoles();
+            $user->attachRole($role);
+            event(new \VanguardLTE\Events\User\Created($user));
+
+            \VanguardLTE\ShopUser::create([
+                'shop_id' => $shop->id, 
+                'user_id' => $user->id
+            ]);
+           return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어가 생성되었습니다']);
+        }
+
+        public function vplayer_list(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+            $users = [];
+            $joinusers = [];
+            if (count($partner_users) > 0){
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('users.id', $partner_users)->get();
+
+                $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->where('email','<>', '')->whereIn('id', $partner_users);
+                $total = [
+                    'count' => $users->count(),
+                    'balance' => $users->sum('balance'),
+                ];
+                $users = $users->paginate(20);
+
+            }
+
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','total'));
+        }
+
+        public function player_join(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['권한이 없습니다.']);
+            }
+
+            $user = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->where('id', $request->id)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['잘못된 요청입니다.']);
+            }
+            if ($request->type == 'allow')
+            {
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::ACTIVE]);
+                $onlineShop = \VanguardLTE\OnlineShop::where('shop_id', $user->shop_id)->first();
+
+                if ($onlineShop) //it is online users
+                {
+                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $user->addBalance('add',$onlineShop->join_bonus, $admin);
+                }
+            }
+            else
+            {
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::REJECTED]);
+            }
+            return redirect()->back()->withSuccess(['가입신청을 처리했습니다']);
+        }
+
+
+        public function player_list(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+
+            $users = \VanguardLTE\User::whereIn('id', $availableUsers)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
+
+            if ($request->user != '')
+            {
+                $users = $users->where('username', 'like', '%' . $request->user . '%');
+            }
+
+            if ($request->shop != '')
+            {
+                $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shop.'%')->whereIn('id', auth()->user()->availableShops())->pluck('id')->toArray();
+                if (count($shops) > 0){
+                    $users = $users->whereIn('shop_id',$shops);
+                }
+                else
+                {
+                    $users = $users->where('shop_id',-1); //show nothing
+                }
+            }
+
+            $total = [
+                'count' => $users->count(),
+                'balance' => $users->sum('balance'),
+            ];
+            
+            $users = $users->paginate(20);
+            return view('backend.argon.player.list', compact('users','total'));
+        }
+
+        public function player_transaction(\Illuminate\Http\Request $request)
+        {
+            $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC');
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+            $statistics = $statistics->whereIn('user_id', $availableUsers);
+
+            $start_date = date("Y-m-1 0:0:0");
+            $end_date = date("Y-m-d 23:59:59");
+
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = $statistics->where('transactions.created_at', '>=', $start_date);
+            $statistics = $statistics->where('transactions.created_at', '<=', $end_date );
+
+            $statistics = $statistics->join('users', 'users.id', '=', 'transactions.user_id');
+
+            if ($request->role != '')
+            {
+                $statistics = $statistics->where('users.role_id', $request->role);
+            }
+            if ($request->user != '')
+            {
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->user . '%');
+            }
+
+            if ($request->admin != '')
+            {
+                $payeerIds = \VanguardLTE\User::where('username', 'like', '%' . $request->admin . '%')->pluck('id')->toArray();
+                $statistics = $statistics->whereIn('transactions.payeer_id', $payeerIds);
+            }
+
+            if ($request->type != '')
+            {
+                $statistics = $statistics->where('transactions.type',  $request->type);
+            }
+
+            $total = [
+                'add' => (clone $statistics)->where(['type'=>'add'])->sum('summ'),
+                'out' => (clone $statistics)->where(['type'=>'out'])->sum('summ'),
+            ];
+
+            $statistics = $statistics->paginate(20);
+            return view('backend.argon.player.transaction', compact('statistics', 'total'));
+        }
+
+        public function player_game_stat(\Illuminate\Http\Request $request)
+        {
+            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+
+            $start_date = date("Y-m-d H:i:s", strtotime("-1 hours"));
+            $end_date = date("Y-m-d H:i:s");
+
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = $statistics->where('stat_game.date_time', '>=', $start_date);
+            $statistics = $statistics->where('stat_game.date_time', '<=', $end_date );
+
+            $statistics = $statistics->join('users', 'users.id', '=', 'stat_game.user_id');
+
+            if ($request->player != '')
+            {
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->player . '%');
+            }
+
+            if ($request->game != '')
+            {
+                $statistics = $statistics->where('stat_game.game', 'like', '%'. $request->game . '%');
+            }
+
+            $total = [
+                'bet' => (clone $statistics)->sum('bet'),
+                'win' => (clone $statistics)->sum('win'),
+            ];
+
+            $statistics = $statistics->paginate(20);
+            return view('backend.argon.player.game', compact('statistics', 'total'));
+        }
+
+    }
+
+}
