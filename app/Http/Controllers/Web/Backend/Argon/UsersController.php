@@ -460,9 +460,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function player_game_stat(\Illuminate\Http\Request $request)
         {
-            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
             $user = auth()->user();
             $availableUsers = $user->hierarchyUsersOnly();
+            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC')->whereIn('user_id', $availableUsers);
 
             $start_date = date("Y-m-d H:i:s", strtotime("-1 hours"));
             $end_date = date("Y-m-d H:i:s");
