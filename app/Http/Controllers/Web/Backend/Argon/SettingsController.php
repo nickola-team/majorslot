@@ -24,12 +24,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $frontends[$dirname] = $dirname;
             }
 
-            foreach( glob(resource_path() . '/views/backend/argon/layouts/*', GLOB_ONLYDIR) as $fileinfo ) 
-            {
-                $dirname = basename($fileinfo);
-                $backends[$dirname] = $dirname;
-            }
-            return view('backend.argon.setting.add',compact('frontends','backends'));
+            // foreach( glob(resource_path() . '/views/backend/argon/layouts/*', GLOB_ONLYDIR) as $fileinfo ) 
+            // {
+            //     $dirname = basename($fileinfo);
+            //     $backends[$dirname] = $dirname;
+            // }
+            return view('backend.argon.setting.add',compact('frontends'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
