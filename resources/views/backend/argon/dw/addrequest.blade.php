@@ -202,7 +202,7 @@
                 }
                 $("#bankinfo").html(data.msg);
                 depositAccountRequested = true;
-                if (data.url != '')
+                if ('url' in data)
                 {
                     var leftPosition, topPosition;
                     width = 600;
