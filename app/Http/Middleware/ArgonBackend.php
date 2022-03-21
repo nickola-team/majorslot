@@ -10,7 +10,7 @@ namespace VanguardLTE\Http\Middleware
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->where('backend',$slug)->get();
             if ($site->count() == 0)
             {
-                return redirect('/');
+                abort(404);
             }
             return $next($request);
         }
