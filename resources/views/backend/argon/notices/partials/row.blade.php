@@ -14,9 +14,10 @@
     </a>
     <a href="{{ argon_route('argon.notice.delete', $notice->id) }}"
             data-method="DELETE"
-            data-confirm-title="@lang('app.please_confirm')"
+            data-confirm-title="확인"
             data-confirm-text="공지를 삭제하시겠습니까?"
-            data-confirm-delete="@lang('app.yes_delete_him')">
+            data-confirm-delete="확인"
+            data-confirm-cancel="취소">
             <button type="button" class="btn btn-warning btn-sm">삭제</button>
         </a>
     </td>

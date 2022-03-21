@@ -173,7 +173,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.dw.process',
             'uses' => 'DWController@process',
         ]);
-        Route::get('/dw/reject', [
+        Route::delete('/dw/reject', [
             'as' => 'argon.dw.reject',
             'uses' => 'DWController@rejectDW',
         ]);
@@ -252,7 +252,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.notice.update',
             'uses' => 'NoticesController@update',
         ]);
-        Route::get('notices/{notice}/delete', [
+        Route::delete('notices/{notice}/delete', [
             'as' => 'argon.notice.delete',
             'uses' => 'NoticesController@delete',
         ]);
@@ -272,7 +272,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.msg.store',
             'uses' => 'MessageController@store',
         ]);
-        Route::get('messages/{message}/delete', [
+        Route::delete('messages/{message}/delete', [
             'as' => 'argon.msg.delete',
             'uses' => 'MessageController@delete',
         ]);
@@ -300,7 +300,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.website.update',
             'uses' => 'SettingsController@update',
         ]);
-        Route::get('websites/{website}/delete', [
+        Route::delete('websites/{website}/delete', [
             'as' => 'argon.website.delete',
             'uses' => 'SettingsController@delete',
         ]);
