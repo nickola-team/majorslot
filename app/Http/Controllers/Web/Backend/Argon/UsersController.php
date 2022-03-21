@@ -20,7 +20,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $users = [];
             if (in_array($child_id, $availablePartners))
             {
-                $users = \VanguardLTE\User::where('parent_id', $child_id)->get();
+                $users = \VanguardLTE\User::where('parent_id', $child_id)->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->get();
             }
             return view('backend.argon.agent.partials.childs', compact('users', 'child_id'));
         }

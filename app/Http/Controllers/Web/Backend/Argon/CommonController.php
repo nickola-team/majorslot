@@ -185,6 +185,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
+            if ($user->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
+            {
+                return redirect()->to(argon_route('argon.dashboard'))->withErrors(['삭제된 유저입니다.']);
+            }
             $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
             return view('backend.argon.common.profile', compact('user', 'userActivities'));
         }
@@ -319,7 +323,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function deleteUser(\Illuminate\Http\Request $request)
         {
-            return redirect()->back()->withSuccess(['준비중입니다']);
             $id = $request->id;
             $hard = $request->hard;
             $user = \VanguardLTE\User::where('id', $id)->first();
@@ -348,27 +351,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
-            $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
-            \VanguardLTE\Task::create([
-                'user_id' => auth()->user()->id,
-                'category' => 'user', 
-                'action' => 'delete', 
-                'item_id' => $user->id
-            ]);
-
             $childUsers = $user->availableUsers();
             \VanguardLTE\User::whereIn('id', $childUsers)->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
 
             foreach ($childUsers as $cid){
-                \VanguardLTE\Task::create([
-                    'user_id' => auth()->user()->id,
-                    'category' => 'user', 
-                    'action' => 'delete', 
-                    'item_id' => $cid
-                ]);
+                if ($cid != 0){
+                    \VanguardLTE\Task::create([
+                        'user_id' => auth()->user()->id,
+                        'category' => 'user', 
+                        'action' => 'delete', 
+                        'item_id' => $cid
+                    ]);
+                }
             }
 
-            $shop_ids = auth()->user()->availableShops();
+            $shop_ids = $user->availableShops();
             \VanguardLTE\Shop::whereIn('id', $shop_ids)->update(['pending'=>2]);
 
             foreach ($shop_ids as $shop){
