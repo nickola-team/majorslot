@@ -18,7 +18,7 @@
     @endif
 </td>
 <td> {{$game}} </td>
-<td> {{$stat->category->trans->trans_title}}</td>
+<!-- <td> {{$stat->category->trans->trans_title}}</td> -->
 <td>{{number_format($stat->balance,0)}}</td>
 <td>{{number_format($stat->bet,0)}}</td>
 <td>{{number_format($stat->win,0)}}</td>
