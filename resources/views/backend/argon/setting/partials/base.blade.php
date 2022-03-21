@@ -14,7 +14,7 @@
 
 <div class="form-group">
     <label>관리자디자인</label>
-    {!! Form::select('backend', $backends,  $edit ? $website->backend : '' , ['class' => 'form-control']) !!}
+    <input type="text" class="form-control" id="backend" name="backend"  value="{{ $edit ? $website->backend : '' }}">
 </div>
 
 <div class="form-group">

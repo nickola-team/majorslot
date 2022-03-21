@@ -27,7 +27,7 @@ Route::prefix('{slug}')->middleware(['argonbackend'])->group(function () {
 });
 
 
-Route::prefix('{slug}')->middleware(['auth'])->group(function () {
+Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function () {
 	Route::namespace('Backend\Argon')->group(function () {
         Route::get('logout', [
             'as' => 'argon.auth.logout',
