@@ -16,7 +16,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function getLogin(\Illuminate\Http\Request $request)
         {
-            return view('backend.argon.auth.login');
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            if (!$site)
+            {
+                return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
+            }
+            return view('backend.argon.auth.login', compact('site'));
         }
         public function postLogin(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
