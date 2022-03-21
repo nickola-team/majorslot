@@ -52,6 +52,15 @@ class Handler extends ExceptionHandler
             $exception instanceof \jeremykenedy\LaravelRoles\App\Exceptions\PermissionDeniedException ||
             $exception instanceof \jeremykenedy\LaravelRoles\App\Exceptions\LevelDeniedException;
 
+        $response = [
+            'method' => request()->method(),
+            'url' => request()->url(),
+            'full_url' => request()->fullUrl(),
+            'data' => request()->all(),
+        ];
+
+        \Log::error('Request details: ', $response);
+
         if ($userLevelCheck) {
             if ($request->expectsJson()) {
                 return Response::json(array(
