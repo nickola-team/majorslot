@@ -89,7 +89,9 @@
         <!-- Optional JS -->
         <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
         <script src="{{ asset('back/argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
-        
+
+        <script src="{{ asset('back/argon') }}/js/delete.handler.js"></script>
+        <script src="/back/bower_components/sweetalert2/sweetalert2.js"></script>
         @stack('js')
  
         <!-- Argon JS -->

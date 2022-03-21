@@ -127,7 +127,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $childPartners = $user->childPartners();
             }
 
-            $users = \VanguardLTE\User::whereIn('id', $childPartners);
+            $users = \VanguardLTE\User::whereIn('id', $childPartners)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
 
             if ($request->user != '')
             {

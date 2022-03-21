@@ -61,11 +61,27 @@
                         @if (auth()->user()->role_id > $user->role_id)
                         <div class="row" style="padding:1rem 0;">
                             <div class="col justify-content-center text-center">
-                                <button type="button" class="btn btn-warning col-8">삭제</button>
+                            <a href="{{argon_route('argon.common.profile.delete',['id'=>$user->id])}}"
+                                class="btn btn-warning col-8"
+                                data-method="DELETE"
+                                data-confirm-title="확인"
+                                data-confirm-text="유저를 삭제하시겠습니까?"
+                                data-confirm-delete="확인"
+                                data-confirm-cancel="취소">
+                                삭제
+                            </a>
                             </div>
                             @if (auth()->user()->hasRole('admin'))
                             <div class="col justify-content-center text-center">
-                                <button type="button" class="btn btn-danger col-8">어드민삭제</button>
+                                <a href="{{argon_route('argon.common.profile.delete',['id'=>$user->id, 'hard'=>1])}}"
+                                    class="btn btn-warning col-8"
+                                    data-method="DELETE"
+                                    data-confirm-title="확인"
+                                    data-confirm-text="유저를 삭제하시겠습니까?"
+                                    data-confirm-delete="확인"
+                                    data-confirm-cancel="취소">
+                                    어드민삭제
+                                </a>
                             </div>
                             @endif
                         </div>

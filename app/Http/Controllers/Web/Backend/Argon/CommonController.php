@@ -317,6 +317,74 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             return redirect()->back()->withSuccess(['설정정보가 업데이트되었습니다']);
         }
+        public function deleteUser(\Illuminate\Http\Request $request)
+        {
+            return redirect()->back()->withSuccess(['준비중입니다']);
+            $id = $request->id;
+            $hard = $request->hard;
+            $user = \VanguardLTE\User::where('id', $id)->first();
+
+            $availableUsers = auth()->user()->availableUsers();
+            if (!$user || !in_array($id, $availableUsers))
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+
+            if( $user->id == \Illuminate\Support\Facades\Auth::id() ) 
+            {
+                return redirect()->back()->withErrors(trans('app.you_cannot_delete_yourself'));
+            }
+
+            if ($hard != '1')
+            {
+                if( $user->balance > 0 || ($user->hasRole('manager') && $user->shop->balance > 0)) 
+                {
+                    return redirect()->back()->withErrors(['유저의 보유금이 0이 아닙니다']);
+                }
+
+                if ($user->childBalanceSum() > 0)
+                {
+                    return redirect()->back()->withErrors(['하부 보유금이 0이 아닙니다']);
+                }
+            }
+
+            $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
+            \VanguardLTE\Task::create([
+                'user_id' => auth()->user()->id,
+                'category' => 'user', 
+                'action' => 'delete', 
+                'item_id' => $user->id
+            ]);
+
+            $childUsers = $user->availableUsers();
+            \VanguardLTE\User::whereIn('id', $childUsers)->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
+
+            foreach ($childUsers as $cid){
+                \VanguardLTE\Task::create([
+                    'user_id' => auth()->user()->id,
+                    'category' => 'user', 
+                    'action' => 'delete', 
+                    'item_id' => $cid
+                ]);
+            }
+
+            $shop_ids = auth()->user()->availableShops();
+            \VanguardLTE\Shop::whereIn('id', $shop_ids)->update(['pending'=>2]);
+
+            foreach ($shop_ids as $shop){
+                if ($shop != 0){
+                    \VanguardLTE\Task::create([
+                        'user_id' => auth()->user()->id,
+                        'category' => 'shop', 
+                        'action' => 'delete', 
+                        'item_id' => $shop
+                    ]);
+                }
+            }
+
+            event(new \VanguardLTE\Events\User\Deleted($user));
+            return redirect()->back()->withSuccess(['유저가 삭제되었습니다']);
+        }
         private function userIsBanned(\VanguardLTE\User $user, \Illuminate\Http\Request $request)
         {
             return $user->status != $request->status && $request->status == \VanguardLTE\Support\Enum\UserStatus::BANNED;

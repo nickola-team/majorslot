@@ -143,6 +143,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'CommonController@resetDWPass',
         ]);
 
+        Route::delete('/common/profile/delete', [
+            'as' => 'argon.common.profile.delete',
+            'uses' => 'CommonController@deleteUser',
+        ]);
+
         /// deposit & withdraw
         Route::get('/dw/addrequest', [
             'as' => 'argon.dw.addrequest',
