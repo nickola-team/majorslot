@@ -39,6 +39,18 @@
                         </div>
                     </li>
                 @else
+                <?php
+                    $master = auth()->user()->referral;
+                    while ($master!=null && !$master->isInoutPartner())
+                    {
+                        $master = $master->referral;
+                    }
+                ?>
+                    <li class="nav-item d-none d-lg-block ml-lg-4">
+                        <div class="nav-item-btn align-items-center">
+                            텔레그램문의 {{$master->address}}
+                        </div>
+                    </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
                         <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">

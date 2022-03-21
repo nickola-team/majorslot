@@ -123,8 +123,14 @@
                             <h6 class="heading-small text-muted mb-4">일반설정</h6>
                             <input type="hidden" name="id" value="{{$user->id}}">
                             <div class="pl-lg-4">
+                                @if ($user->isInoutPartner())
+                                <div class="form-group{{ $errors->has('address') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="address">텔레연락처</label>
+                                    <input type="text" name="address" id="address" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" value="{{ old('address', $user->address) }}">
+                                </div>
+                                @endif
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="phone">연락처</label>
+                                    <label class="form-control-label" for="phone">폰연락처</label>
                                     <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone', $user->phone) }}" {{$user->id != auth()->user()->id?'disabled':''}}>
                                 </div>
                                 @if ($user->id == auth()->user()->id)
