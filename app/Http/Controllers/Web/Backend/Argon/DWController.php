@@ -152,7 +152,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     if($type == 'out'){
                         $requestuser->update([
-                            'balance' => $requestuser->balance + $amount
+                            'balance' => $requestuser->balance + $amount,
+                            'total_out' => $requestuser->total_out - $amount,
                         ]);
                         $open_shift = \VanguardLTE\OpenShift::where([
                             'user_id' => $requestuser->id, 

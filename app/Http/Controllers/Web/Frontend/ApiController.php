@@ -1329,7 +1329,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else {
                 $user->update(
-                    ['balance' => $user->balance - $money]
+                    [
+                        'balance' => $user->balance - $money,
+                        'total_out' => $user->total_out + $money,
+                    ]
                 );
                 $master = $user->referral;
                 while ($master!=null && !$master->isInoutPartner())
@@ -1642,7 +1645,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     if($type == 'out'){
                         $requestuser->update([
-                            'balance' => $requestuser->balance + $amount
+                            'balance' => $requestuser->balance + $amount,
+                            'total_out' => $requestuser->total_out - $amount,
+
                         ]);
                         $open_shift = \VanguardLTE\OpenShift::where([
                             'user_id' => $requestuser->id, 
