@@ -16,6 +16,88 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             );
         }
+
+        public function category_update(\Illuminate\Http\Request $request)
+        {
+            $categoryid = $request->cat_id;
+            $status = $request->status;
+            $userid = $request->user_id;
+            $user = \VanguardLTE\User::where('id',$userid)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
+            }
+            $shops = $user->shops(true);
+            if (count($shops) == 0)
+            {
+                return redirect()->back()->withErrors(['하부매장이 없습니다']);
+            }
+            \VanguardLTE\Category::where('original_id', $categoryid)->whereIn('shop_id', $shops)->update(['view' => $status]);
+            return redirect()->back()->withSuccess(['게임상태를 업데이트했습니다']);
+        }
+
+        public function game_category(\Illuminate\Http\Request $request)
+        {
+            set_time_limit(0);
+            $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan','skywind'];
+            $categories = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0])->whereNotIn('href', $excat);
+            $users = \VanguardLTE\User::where('id', auth()->user()->id);
+            if ($request->user != '')
+            {
+                $users = \VanguardLTE\User::whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
+                $users = $users->where('username', 'like', '%' . $request->user . '%');
+                if ($request->role != '')
+                {
+                    $users = $users->where('role_id', $request->role);
+                }
+            }
+            if ($request->category != '')
+            {
+                $categories = $categories->where('title', 'like', '%' . $request->category . '%');
+            }
+            $categories = $categories->paginate(10);
+            $users = $users->get();
+            return view('backend.argon.game.category', compact('users','categories'));
+        }
+
+        public function game_update(\Illuminate\Http\Request $request)
+        {
+            $gameid = $request->game_id;
+            $status = $request->status;
+            $userid = $request->user_id;
+            $user = \VanguardLTE\User::where('id',$userid)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
+            }
+            $shops = $user->shops(true);
+            if (count($shops) == 0)
+            {
+                return redirect()->back()->withErrors(['하부매장이 없습니다']);
+            }
+            \VanguardLTE\Game::where('original_id', $gameid)->whereIn('shop_id', $shops)->update(['view' => $status]);
+            return redirect()->back()->withSuccess(['게임상태를 업데이트했습니다']);
+        }
+
+        public function game_game(\Illuminate\Http\Request $request)
+        {
+            set_time_limit(0);
+            $user_id = $request->user_id;
+            $cat_id = $request->cat_id;
+
+            $category = \VanguardLTE\Category::where('id', $cat_id)->first();
+            if (!$category)
+            {
+                return redirect()->back()->withErrors(['게임사를 찾을수 없습니다']);
+            }
+            $games = $category->games->paginate(10);
+            $user = \VanguardLTE\User::where('id', $user_id)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
+            }
+            return view('backend.argon.game.game', compact('user','games','category'));
+        }
         public function game_transaction(\Illuminate\Http\Request $request)
         {
             $statistics = \VanguardLTE\BankStat::select('bank_stat.*')->orderBy('bank_stat.created_at', 'DESC');

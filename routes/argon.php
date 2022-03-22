@@ -327,6 +327,26 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         /**
          * Game routes
          */
+        Route::get('game/category', [
+            'as' => 'argon.game.category',
+            'uses' => 'GameController@game_category',
+        ]);
+
+        Route::get('game/category/status', [
+            'as' => 'argon.game.category.status',
+            'uses' => 'GameController@category_update',
+        ]);
+
+        Route::get('game/game', [
+            'as' => 'argon.game.game',
+            'uses' => 'GameController@game_game',
+        ]);
+
+        Route::get('game/game/status', [
+            'as' => 'argon.game.game.status',
+            'uses' => 'GameController@game_update',
+        ]);
+
         Route::get('game/transaction', [
             'as' => 'argon.game.transaction',
             'uses' => 'GameController@game_transaction',

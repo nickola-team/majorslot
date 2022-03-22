@@ -119,15 +119,9 @@
                     <div class="collapse {{ (isset($parentSection) && $parentSection == 'game') ? 'show' : '' }}" id="navbar-games">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.category')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    게임사
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
-                                <i class="far fa-circle text-white sub-i"></i>
-                                    게임
+                                    게임관리
                                 </a>
                             </li>
                             <li class="nav-item">
