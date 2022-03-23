@@ -131,7 +131,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.happyhour.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     콜
                                 </a>

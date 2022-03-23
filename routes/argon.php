@@ -371,6 +371,39 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.game.banksetting',
             'uses' => 'GameController@gamebanks_setting',
         ]);
+
+        /**
+         * Happyhours routes
+         */
+
+        Route::get('happyhours', [
+            'as' => 'argon.happyhour.list',
+            'uses' => 'HappyHourController@index',
+            'middleware' => 'permission:happyhours.manage'
+        ]);
+        Route::get('happyhours/create', [
+            'as' => 'argon.happyhour.create',
+            'uses' => 'HappyHourController@create',
+            'middleware' => 'permission:happyhours.add'
+        ]);
+        Route::post('happyhours/create', [
+            'as' => 'argon.happyhour.store',
+            'uses' => 'HappyHourController@store',
+            'middleware' => 'permission:happyhours.add'
+        ]);
+        Route::get('happyhours/edit', [
+            'as' => 'argon.happyhour.edit',
+            'uses' => 'HappyHourController@edit',
+        ]);
+        Route::post('happyhours/update', [
+            'as' => 'argon.happyhour.update',
+            'uses' => 'HappyHourController@update',
+        ]);
+        Route::delete('happyhours/delete', [
+            'as' => 'argon.happyhour.delete',
+            'uses' => 'HappyHourController@delete',
+            'middleware' => 'permission:happyhours.delete'
+        ]);
     });
 });
 
