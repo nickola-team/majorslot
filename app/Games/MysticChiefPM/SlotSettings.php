@@ -123,6 +123,7 @@ namespace VanguardLTE\Games\MysticChiefPM
         public $money_respin = [];
         public $doubleWildChance = null;
         public $happyhouruser = null;
+        public $gamesession = null; // session table
         public function __construct($sid, $playerId, $credits = null)
         {
            
@@ -339,11 +340,18 @@ namespace VanguardLTE\Games\MysticChiefPM
             //     $this->user->session = serialize([]);
             // }
             // $this->gameData = unserialize($this->user->session);
-            if( !isset($this->user->session_json) || strlen($this->user->session_json) <= 0 ) 
+            // session table 
+            $game_session = \VanguardLTE\GameSession::lockForUpdate()->where([
+                'user_id' => $this->playerId, 
+                'game_id' => $this->slotDBId
+            ])->first();
+            if( !isset($game_session) || strlen($game_session->session) <= 0 ) 
             {
-                $this->user->session_json = json_encode([]);
+                $this->gameData = [];
+            }else{
+                $this->gameData = json_decode($game_session->session, true);
+                $this->gamesession = $game_session;
             }
-            $this->gameData = json_decode($this->user->session_json, true);
 
             if( count($this->gameData) > 0 ) 
             {
@@ -403,9 +411,22 @@ namespace VanguardLTE\Games\MysticChiefPM
         public function SaveGameData()
         {
             // $this->user->session = serialize($this->gameData);
-            $this->user->session_json = json_encode($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
+            // $this->user->session_json = json_encode($this->gameData);
+            // $this->user->save();
+            // $this->user->refresh();
+            // session table 
+            $game_session = $this->gamesession;
+            if($game_session == null){
+                $game_session = \VanguardLTE\GameSession::create([
+                    'user_id' => $this->playerId, 
+                    'game_id' => $this->slotDBId,
+                    'session' => json_encode($this->gameData)
+                ]);
+            }else{
+                $game_session->session = json_encode($this->gameData);
+                $game_session->save();
+                $game_session->refresh();
+            }
         }
         public function CheckBonusWin()
         {
