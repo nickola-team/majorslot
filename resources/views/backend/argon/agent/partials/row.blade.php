@@ -27,7 +27,9 @@
     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
         <a class="dropdown-item" href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}">설정 및 정보</a>
         <hr class="my-1">
-        <!-- <a class="dropdown-item" href="{{argon_route('argon.agent.move', ['id' => $user->id])}}">에이전트 이동</a> -->
+        @if (auth()->user()->hasRole('admin'))
+        <a class="dropdown-item" href="{{argon_route('argon.agent.move', ['id' => $user->id])}}">에이전트 이동</a>
+        @endif
         <a class="dropdown-item" href="{{argon_route('argon.agent.dealstat', ['user' => $user->username])}}">롤링내역</a>
         <a class="dropdown-item" href="{{argon_route('argon.agent.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
     </div>
