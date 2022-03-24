@@ -115,10 +115,13 @@
             $("#out_newmark").hide();
             var updateInOutRequest = function (callback) {
                 if (true) {
+                    var timestamp = + new Date();
                     $.ajax({
                         url: apiUrl,
                         type: "GET",
-                        data: {'last':lastRequest, 'id': 
+                        data: {'ts':timestamp,
+                            'last':lastRequest, 
+                            'id': 
                             @if (Auth::check())
                                 {{auth()->user()->id}} },
                             @else
