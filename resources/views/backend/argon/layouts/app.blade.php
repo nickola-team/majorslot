@@ -163,6 +163,15 @@
                                 $("#in_newmark").hide();
                                 $("#out_newmark").hide();
                             }
+
+                            if (inouts['rating'] == 0)
+                            {
+                                $('#rateText').text('X');
+                            }
+                            else
+                            {
+                                $('#rateText').text('');
+                            }
                             timeout = setTimeout(updateInOutRequest, updateTime);
                             if (callback != null) callback();
                         },
