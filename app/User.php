@@ -1137,8 +1137,55 @@ namespace VanguardLTE
 
             }
             return $result;
-
         }
+
+        public function parents($maxlevel=999)
+        {
+            $hirechy = $this->username;
+            $parent = $this;
+            do
+            {
+                $parent = $parent->referral;
+                if ($parent!=null)
+                {
+                    $hirechy = $hirechy . " → " . $parent->username;
+                }
+            }
+            while ($parent!=null && !$parent->isInoutPartner() && $parent->role_id<$maxlevel);
+            return $hirechy;
+        }
+
+        public function childBalanceSum()
+        {
+            $ids = $this->availableUsers();
+            $sum = User::whereIn('id', $ids)->sum('balance');
+            $sumShop = 0;
+            if (!$this->hasRole('manager')){
+                $shops = $this->availableShops();
+                $sumShop = Shop::where('id', $shops)->sum('balance');
+            }
+            return $sum + $sumShop - $this->balance;
+        }
+        
+        public function bankInfo()
+        {
+            return $this->bank_name . ' - ' . $this->account_no . ' - ' . $this->recommender;
+        }
+        
+        public static function badgeclass(){
+            return [
+                'badge-warning',
+                'badge-warning',
+                'badge-warning',
+                'badge-default',
+                'badge-primary',
+                'badge-danger',
+                'badge-success',
+                'badge-info',
+                'badge-warning',
+            ];
+        }
+
 
 
     }

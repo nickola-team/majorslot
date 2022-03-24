@@ -7,7 +7,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
             {
-                return redirect()->route(config('app.admurl').'.dashboard');
+                $backendtheme = ['slot', 'backend'];
+                if (!in_array(config('app.admurl'), $backendtheme))
+                {
+                    return redirect()->to(argon_route('argon.dashboard'));
+                }
+                else
+                {
+                    return redirect()->route(config('app.admurl').'.dashboard');
+                }
             }
 
             $title = trans('app.games');

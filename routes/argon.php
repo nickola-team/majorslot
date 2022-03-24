@@ -1,0 +1,420 @@
+<?php
+/**
+*
+*
+*
+******************* NEW shop
+*
+*
+*
+*/
+
+/**
+ *  Argon Backend ROUTE
+ */
+
+Route::prefix('{slug}')->middleware(['argonbackend'])->group(function () {
+    Route::namespace('Backend\Argon')->group(function () {
+        Route::get('login', [
+            'as' => 'argon.auth.login',
+            'uses' => 'AuthController@getLogin'
+        ]);
+        Route::post('login', [
+            'as' => 'argon.auth.login.post',
+            'uses' => 'AuthController@postLogin'
+        ]);
+    });
+});
+
+
+Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function () {
+	Route::namespace('Backend\Argon')->group(function () {
+        Route::get('logout', [
+            'as' => 'argon.auth.logout',
+            'uses' => 'AuthController@getLogout'
+        ]);
+
+        Route::get('/', [
+            'as' => 'argon.dashboard',
+            'uses' => 'DashboardController@index',
+        ]);
+
+        //agent
+
+        Route::get('/agent/create', [
+            'as' => 'argon.agent.create',
+            'uses' => 'UsersController@agent_create',
+        ]);
+
+        Route::post('/agent/create', [
+            'as' => 'argon.agent.store',
+            'uses' => 'UsersController@agent_store',
+        ]);
+
+        Route::get('/agent/move', [
+            'as' => 'argon.agent.move',
+            'uses' => 'UsersController@agent_move',
+        ]);
+
+        Route::post('/agent/move', [
+            'as' => 'argon.agent.move.post',
+            'uses' => 'UsersController@agent_update',
+        ]);
+
+        Route::get('/agent/list', [
+            'as' => 'argon.agent.list',
+            'uses' => 'UsersController@agent_list',
+        ]);
+
+        Route::get('/agent/child', [
+            'as' => 'argon.agent.child',
+            'uses' => 'UsersController@agent_child',
+        ]);
+
+        Route::get('/agent/transaction', [
+            'as' => 'argon.agent.transaction',
+            'uses' => 'UsersController@agent_transaction',
+        ]);
+
+        Route::get('/agent/rolling', [
+            'as' => 'argon.agent.dealstat',
+            'uses' => 'UsersController@agent_deal_stat',
+        ]);
+
+        //player
+
+        Route::get('/player/create', [
+            'as' => 'argon.player.create',
+            'uses' => 'UsersController@player_create',
+        ]);
+
+        Route::post('/player/create', [
+            'as' => 'argon.player.store',
+            'uses' => 'UsersController@player_store',
+        ]);
+
+        Route::get('/player/list', [
+            'as' => 'argon.player.list',
+            'uses' => 'UsersController@player_list',
+        ]);
+
+        Route::get('/player/vlist', [
+            'as' => 'argon.player.vlist',
+            'uses' => 'UsersController@vplayer_list',
+        ]);
+
+        Route::get('/player/join', [
+            'as' => 'argon.player.join',
+            'uses' => 'UsersController@player_join',
+        ]);
+
+
+        Route::get('/player/transaction', [
+            'as' => 'argon.player.transaction',
+            'uses' => 'UsersController@player_transaction',
+        ]);
+
+        Route::get('/player/gamehistory', [
+            'as' => 'argon.player.gamehistory',
+            'uses' => 'UsersController@player_game_stat',
+        ]);
+        
+        /// Common
+
+
+        Route::get('/common/balance', [
+            'as' => 'argon.common.balance',
+            'uses' => 'CommonController@balance',
+        ]);
+
+        Route::post('/common/balance', [
+            'as' => 'argon.common.balance.post',
+            'uses' => 'CommonController@updateBalance',
+        ]);
+
+        Route::get('/common/profile', [
+            'as' => 'argon.common.profile',
+            'uses' => 'CommonController@profile',
+        ]);
+        Route::post('/common/profile/update', [
+            'as' => 'argon.common.profile.detail',
+            'uses' => 'CommonController@updateProfile',
+        ]);
+        Route::post('/common/profile/password', [
+            'as' => 'argon.common.profile.password',
+            'uses' => 'CommonController@updatePassword',
+        ]);
+        Route::post('/common/profile/dwpass', [
+            'as' => 'argon.common.profile.dwpass',
+            'uses' => 'CommonController@updateDWPass',
+        ]);
+        Route::get('/common/profile/resetdwpass', [
+            'as' => 'argon.common.profile.resetdwpass',
+            'uses' => 'CommonController@resetDWPass',
+        ]);
+
+        Route::delete('/common/profile/delete', [
+            'as' => 'argon.common.profile.delete',
+            'uses' => 'CommonController@deleteUser',
+        ]);
+
+        /// deposit & withdraw
+        Route::get('/dw/addrequest', [
+            'as' => 'argon.dw.addrequest',
+            'uses' => 'DWController@addrequest',
+        ]);
+
+        Route::get('/dw/outrequest', [
+            'as' => 'argon.dw.outrequest',
+            'uses' => 'DWController@outrequest',
+        ]);
+
+        Route::get('/dw/rolling', [
+            'as' => 'argon.dw.dealconvert',
+            'uses' => 'DWController@dealconvert',
+        ]);
+
+        Route::get('/dw/history', [
+            'as' => 'argon.dw.history',
+            'uses' => 'DWController@history',
+        ]);
+
+        Route::get('/dw/process', [
+            'as' => 'argon.dw.process',
+            'uses' => 'DWController@process',
+        ]);
+        Route::delete('/dw/reject', [
+            'as' => 'argon.dw.reject',
+            'uses' => 'DWController@rejectDW',
+        ]);
+        Route::post('/dw/process', [
+            'as' => 'argon.dw.process.post',
+            'uses' => 'DWController@processDW',
+        ]);
+
+        Route::get('/dw/addmanage', [
+            'as' => 'argon.dw.addmanage',
+            'uses' => 'DWController@addmanage',
+        ]);
+        
+
+        Route::get('/dw/outmanage', [
+            'as' => 'argon.dw.outmanage',
+            'uses' => 'DWController@outmanage',
+        ]);
+
+
+        // added by pine
+        /**
+         * report routes
+         */
+        Route::get('/report/daily', [
+            'as' => 'argon.report.daily',
+            'uses' => 'ReportController@report_daily',
+        ]);
+        Route::get('/report/childdaily', [
+            'as' => 'argon.report.childdaily',
+            'uses' => 'ReportController@report_childdaily',
+        ]);
+        Route::get('/report/dailydw', [
+            'as' => 'argon.report.daily.dw',
+            'uses' => 'ReportController@report_dailydw',
+        ]);
+        Route::get('/report/childdaily/{daily_type}', [
+            'as' => 'argon.report.childdaily.dw',
+            'uses' => 'ReportController@report_childdaily',
+        ]);
+        Route::get('/report/childmonthly', [
+            'as' => 'argon.report.childmonthly',
+            'uses' => 'ReportController@report_childmonthly',
+        ]);
+        Route::get('/report/monthly', [
+            'as' => 'argon.report.monthly',
+            'uses' => 'ReportController@report_monthly',
+        ]);
+    
+        Route::get('/report/game', [
+            'as' => 'argon.report.game',
+            'uses' => 'ReportController@report_game',
+        ]);
+
+        /**
+         * notices routes
+         */
+
+        Route::get('notices', [
+            'as' => 'argon.notice.list',
+            'uses' => 'NoticesController@index',
+        ]);
+        Route::get('notices/create', [
+            'as' => 'argon.notice.create',
+            'uses' => 'NoticesController@create',
+        ]);
+        Route::post('notices/create', [
+            'as' => 'argon.notice.store',
+            'uses' => 'NoticesController@store',
+        ]);
+        Route::get('notices/{notice}/edit', [
+            'as' => 'argon.notice.edit',
+            'uses' => 'NoticesController@edit',
+        ]);
+        Route::post('notices/{notice}/update', [
+            'as' => 'argon.notice.update',
+            'uses' => 'NoticesController@update',
+        ]);
+        Route::delete('notices/{notice}/delete', [
+            'as' => 'argon.notice.delete',
+            'uses' => 'NoticesController@delete',
+        ]);
+        /**
+         * messages routes
+         */
+
+        Route::get('/messages', [
+            'as' => 'argon.msg.list',
+            'uses' => 'MessageController@index',
+        ]);
+        Route::get('messages/create', [
+            'as' => 'argon.msg.create',
+            'uses' => 'MessageController@create',
+        ]);
+        Route::post('messages/create', [
+            'as' => 'argon.msg.store',
+            'uses' => 'MessageController@store',
+        ]);
+        Route::delete('messages/{message}/delete', [
+            'as' => 'argon.msg.delete',
+            'uses' => 'MessageController@delete',
+        ]);
+        /**
+         * websites routes
+         */
+
+        Route::get('websites', [
+            'as' => 'argon.website.list',
+            'uses' => 'SettingsController@index',
+        ]);
+        Route::get('websites/create', [
+            'as' => 'argon.website.create',
+            'uses' => 'SettingsController@create',
+        ]);
+        Route::post('websites/create', [
+            'as' => 'argon.website.store',
+            'uses' => 'SettingsController@store',
+        ]);
+        Route::get('websites/{website}/edit', [
+            'as' => 'argon.website.edit',
+            'uses' => 'SettingsController@edit',
+        ]);
+        Route::post('websites/{website}/update', [
+            'as' => 'argon.website.update',
+            'uses' => 'SettingsController@update',
+        ]);
+        Route::delete('websites/{website}/delete', [
+            'as' => 'argon.website.delete',
+            'uses' => 'SettingsController@delete',
+        ]);
+
+        /**
+         * Activity Log
+         */
+
+        Route::get('activity', [
+            'as' => 'argon.activity.index',
+            'uses' => 'SettingsController@activity_index',
+            'middleware' => 'permission:users.activity',
+        ]);
+        Route::get('activity/user/{user}/log', [
+            'as' => 'argon.activity.user',
+            'uses' => 'SettingsController@userActivity'
+        ]);
+
+        Route::get('activity/clear', [
+            'as' => 'argon.activity.clear',
+            'uses' => 'SettingsController@activity_clear',
+        ]);
+
+        /**
+         * Game routes
+         */
+        Route::get('game/category', [
+            'as' => 'argon.game.category',
+            'uses' => 'GameController@game_category',
+        ]);
+
+        Route::get('game/category/status', [
+            'as' => 'argon.game.category.status',
+            'uses' => 'GameController@category_update',
+        ]);
+
+        Route::get('game/game', [
+            'as' => 'argon.game.game',
+            'uses' => 'GameController@game_game',
+        ]);
+
+        Route::get('game/game/status', [
+            'as' => 'argon.game.game.status',
+            'uses' => 'GameController@game_update',
+        ]);
+
+        Route::get('game/transaction', [
+            'as' => 'argon.game.transaction',
+            'uses' => 'GameController@game_transaction',
+        ]);
+        Route::get('game/bank', [
+            'as' => 'argon.game.bank',
+            'uses' => 'GameController@game_bank',
+        ]);
+        Route::get('game/bankbalance', [
+            'as' => 'argon.game.bankbalance',
+            'uses' => 'GameController@game_bankbalance',
+        ]);
+        Route::post('game/bankbalance', [
+            'as' => 'argon.game.bankbalance.post',
+            'uses' => 'GameController@game_bankstore',
+        ]);
+        Route::get('game/bonusbank', [
+            'as' => 'argon.game.bonusbank',
+            'uses' => 'GameController@game_bonusbank',
+        ]);
+        Route::post('game/banksetting', [
+            'as' => 'argon.game.banksetting',
+            'uses' => 'GameController@gamebanks_setting',
+        ]);
+
+        /**
+         * Happyhours routes
+         */
+
+        Route::get('happyhours', [
+            'as' => 'argon.happyhour.list',
+            'uses' => 'HappyHourController@index',
+            'middleware' => 'permission:happyhours.manage'
+        ]);
+        Route::get('happyhours/create', [
+            'as' => 'argon.happyhour.create',
+            'uses' => 'HappyHourController@create',
+            'middleware' => 'permission:happyhours.add'
+        ]);
+        Route::post('happyhours/create', [
+            'as' => 'argon.happyhour.store',
+            'uses' => 'HappyHourController@store',
+            'middleware' => 'permission:happyhours.add'
+        ]);
+        Route::get('happyhours/edit', [
+            'as' => 'argon.happyhour.edit',
+            'uses' => 'HappyHourController@edit',
+        ]);
+        Route::post('happyhours/update', [
+            'as' => 'argon.happyhour.update',
+            'uses' => 'HappyHourController@update',
+        ]);
+        Route::delete('happyhours/delete', [
+            'as' => 'argon.happyhour.delete',
+            'uses' => 'HappyHourController@delete',
+            'middleware' => 'permission:happyhours.delete'
+        ]);
+    });
+});
+
+?>

@@ -107,6 +107,11 @@ namespace VanguardLTE
         {
             return $this->hasOne('VanguardLTE\Transaction', 'request_id');
         }
+
+        public function bankinfo()
+        {
+            return $this->bank_name . " - " . $this->account_no . " - " . $this->recommender;
+        }
     }
 
 }

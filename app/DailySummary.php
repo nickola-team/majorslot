@@ -283,8 +283,13 @@ namespace VanguardLTE
                     $childPartners = $user->hierarchyPartners();
                     $childPartners[] = $user->id;
                     $availableUsers = $user->availableUsers();
-                    $availableShops = $user->availableShops();
                     $availableUsers[] = $user->id; //include self in/out
+                    //exclude manager users
+                    $managerUsers = $user->availableUsersByRole('manager');
+                    $availableUsers = array_diff($availableUsers, $managerUsers);
+
+                    $availableShops = $user->availableShops();
+                    
 
                     if (count($availableUsers) > 0 && count($childPartners) > 0 && count($availableShops) > 0){
 
