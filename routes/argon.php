@@ -51,6 +51,16 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'UsersController@agent_store',
         ]);
 
+        Route::get('/agent/move', [
+            'as' => 'argon.agent.move',
+            'uses' => 'UsersController@agent_move',
+        ]);
+
+        Route::post('/agent/move', [
+            'as' => 'argon.agent.move.post',
+            'uses' => 'UsersController@agent_update',
+        ]);
+
         Route::get('/agent/list', [
             'as' => 'argon.agent.list',
             'uses' => 'UsersController@agent_list',

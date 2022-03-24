@@ -11,6 +11,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('permission:access.admin.panel');
             $this->users = $users;
         }
+        public function agent_move(\Illuminate\Http\Request $request)
+        {
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $id = $request->id;
+            $user = \VanguardLTE\User::where('id', $id)->first();
+            if (!$user || !in_array($id, $availablePartners))
+            {
+                return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
+            }
+            return view('backend.argon.agent.move', compact('user'));
+        }
 
         public function agent_child(\Illuminate\Http\Request $request)
         {
