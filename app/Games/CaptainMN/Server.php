@@ -70,7 +70,7 @@ namespace VanguardLTE\Games\CaptainMN
                     if( isset($_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['reqDat']) ) 
                     {
                         $_obf_0D1725391C1C0A3529182B263529401F0E1322380B1A32 = 'Act19';
-                        $lines = 50;
+                        $lines = 30;
                         $betline = $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['reqDat']['bet'];
                         $allbet = $betline * $lines;
                         $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['slotEvent'] = 'bet';
