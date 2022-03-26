@@ -36,7 +36,7 @@ namespace VanguardLTE
 
         public static function adjustment($user_id, $from, $to)
         {
-            $categories = \VanguardLTE\Category::where('shop_id', 0);
+            $categories = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0]);
             $categories = $categories->get();
             $adjustments = [];
             $user = \VanguardLTE\User::where('id', $user_id)->first();
@@ -108,7 +108,7 @@ namespace VanguardLTE
 
             $shop_ids = $user->availableShops();
             if (count($shop_ids) > 0) {
-                $query = 'SELECT game, game_id, category_id, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
+                $query = 'SELECT game, game_id, category_id, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
                 $stat_games = \DB::select($query);
             }
             else
