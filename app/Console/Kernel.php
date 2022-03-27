@@ -825,7 +825,7 @@ namespace VanguardLTE\Console
                 foreach ($bonusbanks as $bank)
                 {
                     try {
-                        if ($bank->game->advanced == 'modern'){
+                        if ($bank->game && $bank->game->advanced == 'modern'){
                             $old = $bank->bank;
                             if ($minbonus && $bank->bank < $minbonus->value)
                             {
