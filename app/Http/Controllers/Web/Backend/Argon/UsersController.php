@@ -11,6 +11,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('permission:access.admin.panel');
             $this->users = $users;
         }
+        
         public function agent_move(\Illuminate\Http\Request $request)
         {
             $availablePartners = auth()->user()->hierarchyPartners();
@@ -21,6 +22,56 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
             }
             return view('backend.argon.agent.move', compact('user'));
+        }
+
+        public function agent_update(\Illuminate\Http\Request $request)
+        {
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $id = $request->id;
+            $user = \VanguardLTE\User::where('id', $id)->first();
+            if (!$user || !in_array($id, $availablePartners))
+            {
+                return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
+            }
+
+            $parentname = $request->parent;
+            $parent = \VanguardLTE\User::where('username', $parentname)->where('role_id', $user->role_id+1)->first();
+
+            if (!$parent || !in_array($parent->id, $availablePartners))
+            {
+                return redirect()->back()->withErrors(['상위에이전트를 찾을수 없습니다']);
+            }
+            $deal_percent = $user->deal_percent;
+            $table_deal_percent = $user->tabe_deal_percent;            
+            if ($user->hasRole('manager'))
+            {
+                $deal_percent = $user->shop->deal_percent;
+                $table_deal_percent = $user->shop->tabe_deal_percent;            
+            }
+
+            if ($deal_percent > $parent->deal_percent || $table_deal_percent > $parent->table_deal_percent)
+            {
+                return redirect()->back()->withErrors(['롤링은 상위에이전트보다 클수 없습니다.']);
+            }
+
+            if ($user->hasRole('manager'))
+            {
+                $shopUser = \VanguardLTE\ShopUser::where(['user_id' => $user->referral->id, 'shop_id' => $user->shop->id])->first();
+                if ($shopUser)
+                {
+                    $shopUser->update(['user_id' => $parent->id]);
+                }
+                $user->shop->update(['user_id' => $parent->id]);
+            }
+            else 
+            {
+                \VanguardLTE\ShopUser::where('user_id' , $user->referral->id)->whereIn('shop_id', $user->availableShops())->update(['user_id' => $parent->id]);
+            }
+
+            $user->update(['parent_id' => $parent->id]);
+
+            return redirect()->to(argon_route('argon.agent.list'))->withSuccess(['에이전트를 이동하였습니다']);
+           
         }
 
         public function agent_child(\Illuminate\Http\Request $request)

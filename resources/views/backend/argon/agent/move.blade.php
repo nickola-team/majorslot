@@ -26,6 +26,7 @@
                         </div>
                         <div class="col-7">
                             {{$user->username}}
+                            <p><span class="h5">{{$user->parents(auth()->user()->role_id)}}</span></p>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -54,15 +55,15 @@
                             이동할 상위에이전트
                         </div>
                         <div class="col-7">
-                            <input class="form-control col-8" type="text" value="" id="amount" name="amount">
+                            <input class="form-control col-8" type="text" value="" id="parent" name="parent">
                         </div>
                     </div>
                     <div class="form-group row">
                             <div class="col-6 text-center">
-                                <button type="button" class="btn btn-primary col-8" id="doSubmit">이동</button>
+                                <button type="submit" class="btn btn-primary col-8" id="doSubmit">이동</button>
                             </div>
                             <div class="col-6 text-center">
-                                <button type="button" class="btn btn-secondary col-8" onclick="#">취소</button>
+                                <button type="button" class="btn btn-secondary col-8" onclick="window.history.back();">취소</button>
                             </div>
                     </div>
                     
