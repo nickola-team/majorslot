@@ -681,23 +681,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
-            // usort($gameList, function ($a,$b) use($newgames)
-            //     {
-            //         $a_id = 999;
-            //         $b_id = 999;
-            //         foreach ($newgames as $game)
-            //         {
-            //             if ($a['gamecode'] == $game['gameid'])
-            //             {
-            //                 $a_id = $game['id'];
-            //             }
-            //             if ($b['gamecode'] == $game['gameid'])
-            //             {
-            //                 $b_id = $game['id'];
-            //             }
-            //         }
-            //         return $a_id - $b_id;
-            //     });
+                //add manually spaceman game
+                array_unshift($gameList, [
+                    'provider' => 'pp',
+                    'gamecode' => '1301',
+                    'enname' => 'Spaceman',
+                    'name' => 'Spaceman',
+                    'title' => __('gameprovider.Spaceman'),
+                    'icon' => '/frontend/Default/ico/pp/1301/Spaceman.png',
+                    'type' => 'slot',
+                    'gameType' => 'rng',
+                    'view' => $view
+                ]);
+ 
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
                 return $gameList;
             }

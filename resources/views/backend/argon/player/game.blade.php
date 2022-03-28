@@ -80,6 +80,21 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
+                            <label for="win_from" class="col-md-2 col-form-label form-control-label text-center">최소당첨금</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('win_from')}}" id="win_from"  name="win_from">
+                            </div>
+                            <label for="win_to" class="col-md-2 col-form-label form-control-label text-center">최대당첨금</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('win_to')}}" id="win_to"  name="win_to">
+                            </div>
+
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
                             <label for="dates" class="col-md-2 col-form-label form-control-label text-center">배팅시간</label>
                             <div class="col-md-2">
                             <input class="form-control" type="datetime-local" value="{{Request::get('dates')[0]??date('Y-m-d\TH:i', strtotime('-1 hours'))}}" id="dates" name="dates[]">

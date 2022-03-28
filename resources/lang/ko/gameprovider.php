@@ -191,6 +191,7 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Spaceman" => "스페이스맨",
         "Barn Festival" => "헛간 축제",
         "Cash Patrol" => "현금순찰대",
         "Lucky New Year - Tiger Treasures" => "럭키 뉴이어 - 타이거트레져",
