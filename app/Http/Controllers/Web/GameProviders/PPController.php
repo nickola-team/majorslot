@@ -682,7 +682,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
                 //add manually spaceman game
-                array_shift($gameList, [
+                array_unshift($gameList, [
                     'provider' => 'pp',
                     'gamecode' => '1301',
                     'enname' => 'Spaceman',
