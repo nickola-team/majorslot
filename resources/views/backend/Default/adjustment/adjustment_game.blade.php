@@ -19,23 +19,6 @@
 					</div>
 				</div> 
 				<div class="box-body">
-				{{--					<div class="col-md-6">
-						<div class="form-group">
-							<label>게임이름</label>
-							<input type="text" class="form-control" name="search" value="{{ Request::get('search') }}" placeholder="게임이름">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>@lang('app.category')</label>
-							<select class="form-control select2" name="category[]" id="category" multiple="multiple" style="width: 100%;" data-placeholder="">
-								<option value="0">선택안함</option>
-								@foreach ($categories as $key=>$category)
-									<option value="{{ $category->id }}" {{ $category->id == $saved_category ? 'selected="selected"' : '' }}>{{ $category->title }}</option>
-								@endforeach
-							</select>
-						</div>
-					</div> --}}
 					@if (!auth()->user()->hasRole('manager'))
 					<div class="col-md-3">
 						<div class="form-group">
@@ -47,6 +30,12 @@
 						<div class="form-group">
 							<label>타입</label>
 							{!! Form::select('type', ['partner' => '파트너', 'shop' => '매장'], Request::get('type'), ['id' => 'type', 'class' => 'form-control']) !!}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>게임사이름</label>
+							<input type="text" class="form-control" name="category" value="{{ Request::get('category') }}">
 						</div>
 					</div>
 					@endif

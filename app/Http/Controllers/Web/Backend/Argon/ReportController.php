@@ -23,7 +23,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
             $users = $user->childPartners();
 
-            $summary = \VanguardLTE\DailySummary::where('date', '=', $date)->where('type','daily')->whereIn('user_id', $users);
+            $summary = \VanguardLTE\DailySummary::where('date', '=', $date)->whereIn('user_id', $users);
             
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
             $summary = $summary->get();

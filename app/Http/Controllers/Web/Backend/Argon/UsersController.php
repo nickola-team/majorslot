@@ -550,6 +550,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $statistics = $statistics->where('stat_game.game', 'like', '%'. $request->game . '%');
             }
 
+            if( $request->win_from != '' ) 
+            {
+                $statistics = $statistics->where('stat_game.win', '>=', $request->win_from);
+            }
+            if( $request->win_to != '' ) 
+            {
+                $statistics = $statistics->where('stat_game.win', '<=', $request->win_to);
+            }
+
             $total = [
                 'bet' => (clone $statistics)->sum('bet'),
                 'win' => (clone $statistics)->sum('win'),

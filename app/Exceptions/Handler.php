@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
             'data' => request()->all(),
         ];
 
-        \Log::error('Request details: ', $response);
+        // \Log::error('Request details: ', $response);
 
         if ($userLevelCheck) {
             if ($request->expectsJson()) {

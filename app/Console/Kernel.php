@@ -825,35 +825,37 @@ namespace VanguardLTE\Console
                 foreach ($bonusbanks as $bank)
                 {
                     try {
-                        $old = $bank->bank;
-                        if ($minbonus && $bank->bank < $minbonus->value)
-                        {
-                            $bank->bank = $minbonus->value;
-                        }
-                        if ($maxbonus && $bank->bank > $maxbonus->value)
-                        {
-                            $bank->bank = $maxbonus->value;
-                        }
-                        if ($old != $bank->bank){
-                            $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
-                            if ($master)
+                        if ($bank->game && $bank->game->advanced == 'modern'){
+                            $old = $bank->bank;
+                            if ($minbonus && $bank->bank < $minbonus->value)
                             {
-                                $name = $master->username;
-                                $bank->save();
-                                $game = 'General';
-                                if ($bank->game_id!=0)
+                                $bank->bank = $minbonus->value;
+                            }
+                            if ($maxbonus && $bank->bank > $maxbonus->value)
+                            {
+                                $bank->bank = $maxbonus->value;
+                            }
+                            if ($old != $bank->bank){
+                                $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
+                                if ($master)
                                 {
-                                    $game = $bank->game->title;
+                                    $name = $master->username;
+                                    $bank->save();
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old<$bank->bank)?'add':'out', 
+                                        'sum' => abs($old - $bank->bank), 
+                                        'old' => $old, 
+                                        'new' => $bank->bank, 
+                                        'shop_id' => 0
+                                    ]);
                                 }
-                                \VanguardLTE\BankStat::create([
-                                    'name' => 'Bonus' . "[$name]-$game", 
-                                    'user_id' => $admin->id, 
-                                    'type' => ($old<$bank->bank)?'add':'out', 
-                                    'sum' => abs($old - $bank->bank), 
-                                    'old' => $old, 
-                                    'new' => $bank->bank, 
-                                    'shop_id' => 0
-                                ]);
                             }
                         }
                     }
