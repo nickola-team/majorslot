@@ -189,6 +189,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameObj = GACController::getGameObj($tableName);
             if (!$gameObj)
             {
+                $gameObj['gamecode'] = 'Unknown';
                 $gameObj['name'] = 'Unknown';
                 $gameObj['gameid'] = '0';
             }
