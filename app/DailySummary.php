@@ -330,7 +330,7 @@ namespace VanguardLTE
                 {
                     $managerUsers = $user->availableUsersByRole('manager');
                     $managerUsers[] = [0]; //avoid if count(manager)=0
-                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode($managerUsers). ')';
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';
                     $in_out = \DB::select($query);
                     $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
@@ -338,7 +338,7 @@ namespace VanguardLTE
                     $in_out = \DB::select($query);
                     $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
-                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode($managerUsers). ')';;
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';;
                     $in_out = \DB::select($query);
                     $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
 
@@ -487,7 +487,7 @@ namespace VanguardLTE
                 {
                     $managerUsers = $user->availableUsersByRole('manager');
                     $managerUsers[] = [0]; //avoid if count(manager)=0
-                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode($managerUsers). ')';
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';
                     $in_out = \DB::select($query);
                     $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
@@ -495,7 +495,7 @@ namespace VanguardLTE
                     $in_out = \DB::select($query);
                     $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
-                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode($managerUsers). ')';;
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';;
                     $in_out = \DB::select($query);
                     $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
 
