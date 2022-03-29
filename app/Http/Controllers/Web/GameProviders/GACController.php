@@ -24,7 +24,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $microstr;
         }
 
-        public function getGameObj($tableId)
+        public static function getGameObj($tableId)
         {
             $gamelist_gac = GACController::getgamelist('gac');
             $gamelist_evo = GACController::getgamelist('gvo');
