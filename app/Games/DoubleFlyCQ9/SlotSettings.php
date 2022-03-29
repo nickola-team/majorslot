@@ -542,6 +542,8 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
             {
                 $slotState = '';
             }
+            $sum = $sum * $this->CurrentDenom;
+            $game = $this->game;
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {
                 if($slotState == 'bonus'){
@@ -565,8 +567,6 @@ namespace VanguardLTE\Games\DoubleFlyCQ9
                 }
 
             }
-            $sum = $sum * $this->CurrentDenom;
-            $game = $this->game;
             $_obf_bonus_systemmoney = 0;
             if( $sum > 0 && $slotEvent == 'bet' ) 
             {
