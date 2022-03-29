@@ -8,6 +8,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
+        const GACEVO = 31;
+        const GACGAC = 36;
+
         public function checktransaction($id)
         {
             $record = \VanguardLTE\GACTransaction::Where('transactionId',$id)->first();
@@ -21,16 +24,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $microstr;
         }
 
-        public function getGameObj($tableName)
+        public function getGameObj($tableId)
         {
-            $gamelist = GACController::getgamelist('gac');
-            $tableName = preg_replace('/\s+/', '', $tableName);
+            $gamelist_gac = GACController::getgamelist('gac');
+            $gamelist_evo = GACController::getgamelist('gvo');
+
+            $gamelist = array_merge_recursive($gamelist_gac, $gamelist_evo);
+            $tableName = preg_replace('/\s+/', '', $tableId);
             if ($gamelist)
             {
                 foreach($gamelist as $game)
                 {
-
-                    if ($game['name'] == $tableName)
+                    if ($game['gamecode'] == $tableName)
                     {
                         return $game;
                         break;
@@ -184,22 +189,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = $user->balance + intval(abs($winAmount));
             $user->save();
 
-            $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => 'gac'])->first();
 
             $gameObj = GACController::getGameObj($tableName);
             if (!$gameObj)
             {
-                $gameObj['gamecode'] = 'Unknown';
+                $gameObj['gamecode'] = $tableName;
                 $gameObj['name'] = 'Unknown';
-                $gameObj['gameid'] = '0';
+                $gameObj['href'] = 'gac';
             }
+
+            $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => $gameObj['href']])->first();
 
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => intval($user->balance), 
                 'bet' => $betAmount, 
                 'win' => $winAmount, 
-                'game' =>  $gameObj['name'] . '_gac', 
+                'game' =>  $gameObj['name'] . '_' . $gameObj['href'], 
                 'type' => 'table',
                 'percent' => 0, 
                 'percent_jps' => 0, 
@@ -267,13 +273,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
+            $gameObj = GACController::getGameObj($gamecode);
+            if (!$gameObj)
+            {
+                return null;
+            }
             $data = [
                 'userId' => strval($user->id),
                 'userName' => $user->username,
                 'recommend' => config('app.gac_key'),
-                'gameType' => 36
+                'gameType' => ($gameObj['href'] == 'gac')?(self::GACGAC):(self::GACGVO),
             ];
-            if ($gamecode != 'Lobby')
+            if (!str_contains(strtolower($gamecode),'lobby'))
             {
                 $data['tableId'] = $gamecode;
             }
