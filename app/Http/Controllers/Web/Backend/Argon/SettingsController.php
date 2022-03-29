@@ -54,20 +54,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             $site = \VanguardLTE\WebSite::create($data);
             //create categories
-            $categories = \VanguardLTE\Category::where([
-                'shop_id' => 0, 
-                'parent' => 0,
-                'site_id' => 0,
-            ])->get();
-            if( count($categories) ) 
-            {
-                foreach( $categories as $category ) 
-                {
-                    $newCategory = $category->replicate();
-                    $newCategory->site_id = $site->id;
-                    $newCategory->save();
-                }
-            }
+            // $categories = \VanguardLTE\Category::where([
+            //     'shop_id' => 0, 
+            //     'parent' => 0,
+            //     'site_id' => 0,
+            // ])->get();
+            // if( count($categories) ) 
+            // {
+            //     foreach( $categories as $category ) 
+            //     {
+            //         $newCategory = $category->replicate();
+            //         $newCategory->site_id = $site->id;
+            //         $newCategory->save();
+            //     }
+            // }
             return redirect()->to(argon_route('argon.website.list'))->withSuccess(['도메인이 추가되었습니다.']);
         }
         public function edit(\Illuminate\Http\Request $request, $argon, $website)
