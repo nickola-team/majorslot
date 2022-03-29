@@ -8,7 +8,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
-        const GACEVO = 31;
+        const GACGVO = 31;
         const GACGAC = 36;
 
         public function checktransaction($id)
