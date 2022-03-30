@@ -328,7 +328,9 @@ namespace VanguardLTE
                 }
                 else //admin
                 {
-                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id;
+                    $managerUsers = $user->availableUsersByRole('manager');
+                    // $managerUsers[] = 0; //avoid if count(manager)=0
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';
                     $in_out = \DB::select($query);
                     $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
@@ -336,7 +338,7 @@ namespace VanguardLTE
                     $in_out = \DB::select($query);
                     $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
 
-                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id;
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';;
                     $in_out = \DB::select($query);
                     $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
 
@@ -437,9 +439,14 @@ namespace VanguardLTE
                     $adj['totalout'] = $adj['totalout'] + $in_out[0]->totalout;
 
                     $childPartners = $user->hierarchyPartners();
+                    $childPartners[] = $user->id;
                     $availableUsers = $user->availableUsers();
-                    $availableShops = $user->availableShops();
                     $availableUsers[] = $user->id; //include self in/out
+                    //exclude manager users
+                    $managerUsers = $user->availableUsersByRole('manager');
+                    $availableUsers = array_diff($availableUsers, $managerUsers);
+
+                    $availableShops = $user->availableShops();
 
                     if (count($availableUsers) > 0 && count($childPartners) > 0 && count($availableShops) > 0){
 
@@ -475,6 +482,26 @@ namespace VanguardLTE
                     $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
                     $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
                     $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                }
+                else //admin
+                {
+                    $managerUsers = $user->availableUsersByRole('manager');
+                    // $managerUsers[] = 0; //avoid if count(manager)=0
+                    $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';
+                    $in_out = \DB::select($query);
+                    $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(sum) as moneyin FROM w_shops_stat WHERE date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="add" AND request_id IS NULL AND user_id =' . $user->id;
+                    $in_out = \DB::select($query);
+                    $adj['moneyin'] = $adj['moneyin'] + $in_out[0]->moneyin;
+
+                    $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id =' . $user->id . ' AND user_id NOT IN (' .implode(',', $managerUsers). ')';;
+                    $in_out = \DB::select($query);
+                    $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
+
+                    $query = 'SELECT SUM(sum) as moneyout FROM w_shops_stat WHERE date_time <="'.$to .'" AND date_time>="'. $from. '" AND type="out" AND request_id IS NULL AND user_id =' . $user->id;
+                    $in_out = \DB::select($query);
+                    $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
                 }
 
                 $adj['balance'] =  $user->balance;

@@ -135,16 +135,8 @@ namespace VanguardLTE\Console
                     $categories = \VanguardLTE\Category::where([
                         'shop_id' => 0, 
                         'parent' => 0,
-                        'site_id' => $task->details,
+                        'site_id' => 0,
                     ])->get();
-                    if( count($categories) == 0) 
-                    {
-                        $categories = \VanguardLTE\Category::where([
-                            'shop_id' => 0, 
-                            'parent' => 0,
-                            'site_id' => 0,
-                        ])->get();
-                    }
                     if( count($categories) ) 
                     {
                         foreach( $categories as $category ) 
@@ -704,23 +696,23 @@ namespace VanguardLTE\Console
                 }
                 $data = $cat->toArray();
 
-                $sites = \VanguardLTE\WebSite::all()->pluck('id')->toArray();
-                foreach ($sites as $site)
-                {
-                    $sitecats = \VanguardLTE\Category::where('site_id', $site)->get();
-                    if (count($sitecats) > 0)
-                    {
-                        if (\VanguardLTE\Category::where(['shop_id'=>0,'original_id'=>$originalid,'site_id'=>$site])->first())
-                        {
-                            $this->info("Category already exist in " . $site . " site");
-                        }
-                        else
-                        {
-                            $data['site_id'] = $site;
-                            $site_cat = \VanguardLTE\Category::create($data);
-                        }
-                    }
-                }
+                // $sites = \VanguardLTE\WebSite::all()->pluck('id')->toArray();
+                // foreach ($sites as $site)
+                // {
+                //     $sitecats = \VanguardLTE\Category::where('site_id', $site)->get();
+                //     if (count($sitecats) > 0)
+                //     {
+                //         if (\VanguardLTE\Category::where(['shop_id'=>0,'original_id'=>$originalid,'site_id'=>$site])->first())
+                //         {
+                //             $this->info("Category already exist in " . $site . " site");
+                //         }
+                //         else
+                //         {
+                //             $data['site_id'] = $site;
+                //             $site_cat = \VanguardLTE\Category::create($data);
+                //         }
+                //     }
+                // }
                 $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
                 foreach ($shop_ids as $id)
                 {
