@@ -193,9 +193,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameObj = GACController::getGameObj($tableName);
             if (!$gameObj)
             {
-                $gameObj['gamecode'] = $tableName;
-                $gameObj['name'] = 'Unknown';
-                $gameObj['href'] = 'gac';
+                $gameObj = GACController::getGameObj('unknowntable');
             }
 
             $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => $gameObj['href']])->first();
@@ -215,7 +213,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'shop_id' => $user->shop_id,
                 'category_id' => isset($category)?$category->id:0,
                 'game_id' => $gameObj['gamecode'],
-                'roundid' => $betId,
+                'roundid' => $betId . '-' . $tableName,
             ]);
 
             return response()->json([
