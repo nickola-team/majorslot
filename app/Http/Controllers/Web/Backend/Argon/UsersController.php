@@ -320,7 +320,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 if ($request->mode == 'manual')
                 {
-                    $statistics = $statistics->whereIsNull('transactions.request_id');
+                    $statistics = $statistics->whereNull('transactions.request_id');
                 }
                 else
                 {
