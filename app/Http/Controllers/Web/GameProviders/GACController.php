@@ -273,6 +273,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
+            $is_test = str_contains($user->username, 'testfor');
+            if ($is_test) //it must be hidden from all providers
+            {
+                return null;
+            }
             $gameObj = GACController::getGameObj($gamecode);
             if (!$gameObj)
             {
