@@ -53,21 +53,35 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors('총본사를 입력하세요.');
             }
             $site = \VanguardLTE\WebSite::create($data);
-            //create categories
-            // $categories = \VanguardLTE\Category::where([
-            //     'shop_id' => 0, 
-            //     'parent' => 0,
-            //     'site_id' => 0,
-            // ])->get();
-            // if( count($categories) ) 
-            // {
-            //     foreach( $categories as $category ) 
-            //     {
-            //         $newCategory = $category->replicate();
-            //         $newCategory->site_id = $site->id;
-            //         $newCategory->save();
-            //     }
-            // }
+            // create categories
+            $categories = \VanguardLTE\Category::where([
+                'shop_id' => 0, 
+                'parent' => 0,
+                'site_id' => 0,
+            ])->get();
+            if( count($categories) ) 
+            {
+                foreach( $categories as $category ) 
+                {
+                    $newCategory = $category->replicate();
+                    $newCategory->site_id = $site->id;
+                    $newCategory->save();
+                    $categories_2 = \VanguardLTE\Category::where([
+                        'shop_id' => 0, 
+                        'parent' => $category->id
+                    ])->get();
+                    if( count($categories_2) ) 
+                    {
+                        foreach( $categories_2 as $category_2 ) 
+                        {
+                            $newCategory_2 = $category_2->replicate();
+                            $newCategory_2->site_id = $site->id;
+                            $newCategory_2->parent = $newCategory->id;
+                            $newCategory_2->save();
+                        }
+                    }
+                }
+            }
             return redirect()->to(argon_route('argon.website.list'))->withSuccess(['도메인이 추가되었습니다.']);
         }
         public function edit(\Illuminate\Http\Request $request, $argon, $website)
