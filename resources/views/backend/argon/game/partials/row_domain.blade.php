@@ -15,8 +15,8 @@
         @endif
     </td>
     <td class="text-right">
-        <a class="btn btn-success  btn-sm" href="#">활성</a>
-        <a  class="btn btn-warning btn-sm" href="#">비활성</a>
+        <a class="btn btn-success  btn-sm" href="{{argon_route('argon.game.domain.status', ['cat_id'=>$category->id, 'status'=>1])}}">활성</a>
+        <a  class="btn btn-warning btn-sm" href="{{argon_route('argon.game.domain.status', ['cat_id'=>$category->id, 'status'=>0])}}">비활성</a>
     </td>
     @if ($loop->index > 0)
 	</tr>

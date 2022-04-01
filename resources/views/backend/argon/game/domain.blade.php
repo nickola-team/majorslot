@@ -29,11 +29,7 @@
                             </div>
                             <label for="domain" class="col-md-2 col-form-label form-control-label text-center">도메인이름</label>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('domain')}}" id="user" name="user">
-                            </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('category')}}" id="category" name="category">
+                                <input class="form-control" type="text" value="{{Request::get('domain')}}" id="domain" name="domain">
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -76,14 +72,7 @@
             @if (count($sites) > 0)
                 @foreach ($sites as $site)
                     <tr>
-                        <?php
-                            $categories = $site->categories;
-                            if (Request::get('category') != '')
-                            {
-                                $categories = $categories->where('title', 'like', '%' . Request::get('category') . '%');
-                            }
-                        ?>
-                        @if ($categories && count($categories)>0)
+                        @if ($site->categories && count($site->categories)>0)
                             <td rowspan="{{$site->categories->count()}}" style="border-right: 1px solid rgb(233 236 239);" > 
                                 {{ $site->title }} 
                                 <p>
@@ -102,7 +91,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan='4'>No Data</td>
+                    <td colspan='6'>No Data</td>
                 </tr>
             @endif
             </tbody>

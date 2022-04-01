@@ -25,7 +25,7 @@ namespace VanguardLTE
         public function categories()
         {
             $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan','skywind'];
-            return $this->hasMany('VanguardLTE\Category', 'site_id')->whereNotIn('href', $excat);
+            return $this->hasMany('VanguardLTE\Category', 'site_id')->whereNotIn('href', $excat)->where('shop_id', 0);
         }
     }
 
