@@ -40,12 +40,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             set_time_limit(0);
             $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan','skywind'];
-            $categories = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0])->whereNotIn('href', $excat);
+            $categories = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0])->whereNotIn('href', $excat)->orderBy('position', 'desc');
             $users = \VanguardLTE\User::where('id', auth()->user()->id);
             if ($request->user != '')
             {
                 $users = \VanguardLTE\User::whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
-                $users = $users->where('username', 'like', '%' . $request->user . '%');
+                $users = $users->where('username', 'like', '%' . $request->user . '%')->where('role_id', '>=', 3);
                 if ($request->role != '')
                 {
                     $users = $users->where('role_id', $request->role);
@@ -58,6 +58,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $categories = $categories->paginate(10);
             $users = $users->get();
             return view('backend.argon.game.category', compact('users','categories'));
+        }
+
+        public function domain_category(\Illuminate\Http\Request $request)
+        {
+            set_time_limit(0);
+            $sites = \VanguardLTE\WebSite::orderby('id');
+            if ($request->domain != '')
+            {
+                $sites = $sites->where('title', 'like', '%'. $request->domain . '%');
+            }
+            $sites = $sites->paginate(5);
+            return view('backend.argon.game.domain', compact('sites'));
         }
 
         public function game_update(\Illuminate\Http\Request $request)
