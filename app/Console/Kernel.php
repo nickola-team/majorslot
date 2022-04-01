@@ -165,7 +165,7 @@ namespace VanguardLTE\Console
                                     $newCategory_2->shop_id = $shop->id;
                                     $newCategory_2->parent = $newCategory->id;
                                     $newCategory_2->save();
-                                    $superCategories[$category_2->id] = $newCategory_2->id;
+                                    $superCategories[$category_2->original_id] = $newCategory_2->id;
                                 }
                             }
                         }
