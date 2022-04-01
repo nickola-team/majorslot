@@ -22,6 +22,11 @@ namespace VanguardLTE
         {
             return $this->hasOne('VanguardLTE\User', 'id', 'adminid');
         }
+        public function categories()
+        {
+            $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan','skywind'];
+            return $this->hasMany('VanguardLTE\Category', 'site_id')->whereNotIn('href', $excat);
+        }
     }
 
 }

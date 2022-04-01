@@ -1,0 +1,118 @@
+@extends('backend.argon.layouts.app',[
+        'parentSection' => 'game',
+        'elementName' => 'game-domain'
+    ])
+@section('page-title',  '게임사목록')
+
+@section('content')
+<div class="container-fluid">
+    <!-- Search -->
+    <div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header border-0" id="headingOne">
+                <div class="row align-items-center box">
+                    <div class="col-8">
+                        <h3 class="mb-0">검색</h3>
+                    </div>
+                    <div class="col-4 text-right box-tools">
+                        <a class="box-button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1">
+            <div id="collapseOne" class="collapse show">
+                <div class="card-body">
+                    <form action="" method="GET" >
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="domain" class="col-md-2 col-form-label form-control-label text-center">도메인이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('domain')}}" id="user" name="user">
+                            </div>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('category')}}" id="category" name="category">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <button type="submit" class="btn btn-primary col-md-10">검색</button>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+<div class="col">
+    <div class="card mt-4">
+    <!-- Light table -->
+    <!-- Card header -->
+    <div class="card-header border-0">
+        <h3 class="mb-0">게임사 목록</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-items-center table-flush" id="agentlist">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">도메인</th>
+                <th scope="col">게임이름</th>
+                <th scope="col">포지션</th>
+                <th scope="col">게임제공사</th>
+                <th scope="col">상태</th>
+                <th></th>
+                </tr>
+            </thead>
+            <tbody class="list">
+            @if (count($sites) > 0)
+                @foreach ($sites as $site)
+                    <tr>
+                        <?php
+                            $categories = $site->categories;
+                            if (Request::get('category') != '')
+                            {
+                                $categories = $categories->where('title', 'like', '%' . Request::get('category') . '%');
+                            }
+                        ?>
+                        @if ($categories && count($categories)>0)
+                            <td rowspan="{{$site->categories->count()}}" style="border-right: 1px solid rgb(233 236 239);" > 
+                                {{ $site->title }} 
+                                <p>
+                                <a href="{{$site->domain}}">{{$site->domain}}</a>
+                            </td>
+                            @include('backend.argon.game.partials.row_domain')
+                        @else
+                        <td > 
+                            {{ $site->title }} 
+                            <p>
+                            <a href="{{$site->domain}}">{{$site->domain}}</a>
+                        </td>
+                        <td colspan='5'>No Data</td>
+                        @endif
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan='4'>No Data</td>
+                </tr>
+            @endif
+            </tbody>
+        </table>
+    </div>
+    <!-- Card footer -->
+    <div class="card-footer py-4">
+        {{ $sites->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
+    </div>
+    </div>
+</div>
+</div>
+@stop
