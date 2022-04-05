@@ -281,10 +281,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
+            $master = $user->referral;
+            while ($master!=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            if ($master == null)
+            {
+                return null;
+            }
+            $recommend = config('app.gac_key');
+            $query = 'SELECT * FROM w_provider_info WHERE provider="gac" and user_id=' . $master->id;
+            $gac_info = \DB::select($query);
+            foreach ($gac_info as $info)
+            {
+                $recommend = $info->config;
+            }
             $data = [
                 'userId' => strval($user->id),
                 'userName' => $user->username,
-                'recommend' => config('app.gac_key'),
+                'recommend' => $recommend,
                 'gameType' => ($gameObj['href'] == 'gac')?(self::GACGAC):(self::GACGVO),
             ];
             if (!str_contains(strtolower($gamecode),'lobby'))
