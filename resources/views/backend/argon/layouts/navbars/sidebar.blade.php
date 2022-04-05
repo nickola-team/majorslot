@@ -119,7 +119,7 @@
                     <div class="collapse {{ (isset($parentSection) && $parentSection == 'game') ? 'show' : '' }}" id="navbar-games">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.domain')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     도메인별 게임관리
                                 </a>

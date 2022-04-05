@@ -165,7 +165,7 @@ namespace VanguardLTE\Console
                                     $newCategory_2->shop_id = $shop->id;
                                     $newCategory_2->parent = $newCategory->id;
                                     $newCategory_2->save();
-                                    $superCategories[$category_2->id] = $newCategory_2->id;
+                                    $superCategories[$category_2->original_id] = $newCategory_2->id;
                                 }
                             }
                         }
@@ -607,16 +607,16 @@ namespace VanguardLTE\Console
                 $pp_users = \VanguardLTE\User::where('playing_game','pp')->get()->toArray();
                 $pp_playing_users = [];
                 foreach ($pp_users as $user) {
-                    if ( time() - $user['played_at'] > 300) //5min
-                    {
-                        $this->info('terminate human user id = ' . $user['id']);
-                        PPController::terminate($user['id']);
-                        \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['playing_game' => null]);
-                    }
-                    else
-                    {
+                    // if ( time() - $user['played_at'] > 300) //5min
+                    // {
+                    //     $this->info('terminate human user id = ' . $user['id']);
+                    //     PPController::terminate($user['id']);
+                    //     \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['playing_game' => null]);
+                    // }
+                    // else
+                    // {
                         $pp_playing_users[] = $user;
-                    }
+                    // }
                 }
 
                 $client = new Client();
@@ -687,6 +687,15 @@ namespace VanguardLTE\Console
 
                 // Force the pool of requests to complete.
                 $promise->wait();
+
+                foreach ($pp_users as $user) {
+                    if ( time() - $user['played_at'] > 300) //5min
+                    {
+                        $this->info('terminate human user id = ' . $user['id']);
+                        PPController::terminate($user['id']);
+                        \VanguardLTE\User::lockforUpdate()->where('id',$user['id'])->update(['playing_game' => null]);
+                    }
+                }
 
                 $this->info('Synchronized ' . $synccount .  ' users, failed ' . $failedcount . ' users.');
 

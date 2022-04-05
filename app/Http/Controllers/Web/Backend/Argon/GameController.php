@@ -71,6 +71,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $sites = $sites->paginate(5);
             return view('backend.argon.game.domain', compact('sites'));
         }
+        public function domain_update(\Illuminate\Http\Request $request)
+        {
+            $categoryid = $request->cat_id;
+            $status = $request->status;
+            $category = \VanguardLTE\Category::where('id', $categoryid)->first();
+            if (!$category)
+            {
+                return redirect()->back()->withErrors(['게임을 찾을수 없습니다']);
+            }
+            $category->update(['view' => $status]);
+            return redirect()->back()->withSuccess(['게임상태를 업데이트했습니다']);
+
+        }
 
         public function game_update(\Illuminate\Http\Request $request)
         {
