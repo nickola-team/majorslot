@@ -1524,6 +1524,82 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return response()->json($data);
             
         }
+        
+        public function verify($gamecode, \Illuminate\Http\Request $request){
+            $failde_url = "http://404.pragmaticplay.com";
+            $user = \Auth()->user();
+            if (!$user)
+            {
+                return redirect($failde_url);
+            }
+            return redirect($failde_url);
+            $data = PPController::getBalance($user->id);
+            if ($data['error'] == -1) {
+                //연동오류
+                return redirect($failde_url);
+            }
+            else if ($data['error'] == 17) //Player not found
+            {
+                $data = PPController::createPlayer($user->id);
+                if ($data['error'] != 0) //create player failed
+                {
+                    //오류
+                    return redirect($failde_url);
+                }
+            }
+            else if ($data['error'] == 0)
+            {
+                if ($data['balance'] > 0) //밸런스 초기화
+                {
+                    $data = PPController::transfer($user->id, -$data['balance']);//이미 밸런스가 있다면
+                    if ($data['error'] != 0)
+                    {
+                        return null;
+                    }
+                }
+            }
+            else //알수 없는 오류
+            {
+                //오류
+                return redirect($failde_url);
+            }
+            //밸런스 넘기기
+            if ($user->balance > 0) {
+                $data = PPController::transfer($user->id, $user->balance);
+                if ($data['error'] != 0)
+                {
+                    return redirect($failde_url);
+                }
+            }
+            
+            $url = PPController::getgamelink_pp($gamecode, $user);
+            if ($url['error'] == true)
+            {
+                return redirect($failde_url);
+            }
+            $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                        break;
+                    }
+                }
+                if (!$mgckey){
+                    return redirect($failde_url);
+                }
+                return redirect('https://pragmaticplay.com/verify/?lang=ko&'.$mgckey);
+            }
+            else
+            {
+                return redirect($failde_url);
+            }
+        }
 
         public function savesettings($ppgame, \Illuminate\Http\Request $request)
         {
