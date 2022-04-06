@@ -1528,7 +1528,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return redirect($failde_url);
             }
-            return redirect($failde_url);
             $data = PPController::getBalance($user->id);
             if ($data['error'] == -1) {
                 //연동오류
