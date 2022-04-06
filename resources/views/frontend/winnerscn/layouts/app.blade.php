@@ -344,15 +344,14 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">Winners SLOT</span>
+      <span class="a_style">Winners CASINO</span>
     </div>
 
     <div class="slot-container">
 
     @if ($categories && count($categories))
 				@foreach($categories AS $index=>$category)
-					@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-					&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
+					@if($category->provider=='gac')
 
           @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
             @if ($unreadmsg>0)
