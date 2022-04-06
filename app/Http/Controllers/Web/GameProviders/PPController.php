@@ -1532,7 +1532,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return redirect($failde_url);
             }
-            return redirect($failde_url);
             $data = PPController::getBalance($user->id);
             if ($data['error'] == -1) {
                 //연동오류
@@ -1593,7 +1592,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$mgckey){
                     return redirect($failde_url);
                 }
-                return redirect('https://pragmaticplay.com/verify/?lang=ko&'.$mgckey);
+                return redirect(config('app.ppgameserver') . '/gs2c/session/verify/?lang=ko&'.$mgckey);
             }
             else
             {
