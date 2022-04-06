@@ -386,7 +386,7 @@ function getSlotGames(title, category) {
                         }
                         strHtml += `</div>
                                     <div class="info-cont">
-                                    <span class="game-name">${data.games[i].title}</span>
+                                    <span class="game-name">${data.games[i].name}</span>
                                     </div>
                                     <button class="start-btn">开始游戏</button>
                                 </div>

@@ -357,7 +357,7 @@
             @if ($unreadmsg>0)
             <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('请确认纸条');">
             @else
-            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->title }}', '{{ $category->href }}', 0)">
             @endif
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('需要登陆');">
