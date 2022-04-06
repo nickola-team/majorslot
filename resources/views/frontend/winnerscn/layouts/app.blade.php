@@ -370,11 +370,7 @@
                 </div>
               </div>
               <button class="name-btn">
-              @if ($category->trans)
-                {{ $category->trans->trans_title }}
-              @else
                 {{ $category->title }}
-              @endif
               </button>
               <img class="plate" src="/frontend/winnerscn/img/bg/slot-plate.png">
             </div>
