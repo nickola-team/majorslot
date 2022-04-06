@@ -610,6 +610,12 @@ namespace VanguardLTE\Games\scarabrichesbng
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
+            $cat_id = 0;
+            $cat = $this->game->categories->first();
+            if ($cat)
+            {
+                $cat_id = $cat->category->original_id;
+            }
             if($isState){
                 \VanguardLTE\StatGame::create([
                     'user_id' => $this->playerId, 
@@ -624,7 +630,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     'denomination' => $this->CurrentDenom, 
                     'shop_id' => $this->shop_id,
                     'game_id' => $this->game->original_id,
-                    'category_id' => $this->game->categories->first()->category->original_id,
+                    'category_id' => $cat_id,
                 ]);
             }
         }
