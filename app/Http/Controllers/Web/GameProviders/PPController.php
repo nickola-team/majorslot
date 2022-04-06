@@ -1588,7 +1588,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$mgckey){
                     return redirect($failde_url);
                 }
-                return redirect(config('app.ppgameserver') . '/gs2c/session/verify/?lang=ko&'.$mgckey);
+                return redirect(config('app.ppgameserver') . '/gs2c/session/verify?lang=ko&'.$mgckey);
             }
             else
             {
