@@ -1409,8 +1409,8 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('api/history/v2/settings/general', 'GameProviders\PPController@general');
     Route::get('api/history/v2/play-session/last-items', 'GameProviders\PPController@last_items');
     Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');    
+    Route::get('session/verify/{gamecode}', 'GameProviders\PPController@verify');    
 });
-
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
 
