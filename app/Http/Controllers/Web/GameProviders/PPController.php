@@ -1522,16 +1522,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         
         public function verify($gamecode, \Illuminate\Http\Request $request){
-            $failde_url = "http://404.pragmaticplay.com";
+            $failed_url = "http://404.pragmaticplay.com";
             $user = \Auth()->user();
             if (!$user)
             {
-                return redirect($failde_url);
+                return redirect($failed_url);
             }
             $data = PPController::getBalance($user->id);
             if ($data['error'] == -1) {
                 //연동오류
-                return redirect($failde_url);
+                return redirect($failed_url);
             }
             else if ($data['error'] == 17) //Player not found
             {
@@ -1539,7 +1539,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($data['error'] != 0) //create player failed
                 {
                     //오류
-                    return redirect($failde_url);
+                    return redirect($failed_url);
                 }
             }
             else if ($data['error'] == 0)
@@ -1556,21 +1556,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             else //알수 없는 오류
             {
                 //오류
-                return redirect($failde_url);
+                return redirect($failed_url);
             }
             //밸런스 넘기기
             if ($user->balance > 0) {
                 $data = PPController::transfer($user->id, $user->balance);
                 if ($data['error'] != 0)
                 {
-                    return redirect($failde_url);
+                    return redirect($failed_url);
                 }
             }
             
             $url = PPController::getgamelink_pp($gamecode, $user);
             if ($url['error'] == true)
             {
-                return redirect($failde_url);
+                return redirect($failed_url);
             }
             $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
             if ($response->status() == 302)
@@ -1586,13 +1586,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
                 if (!$mgckey){
-                    return redirect($failde_url);
+                    return redirect($failed_url);
+                }
+
+                $data = [
+                    'action' => 'doInit',
+                    'symbol' => $gamecode,
+                    'cver' => 99951,
+                    'index' => 1,
+                    'counter' => 1,
+                    'repeat' => 0,
+                    'mgckey' => explode('=', $mgckey)[1]
+                ];
+                $response = Http::post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
+                if (!$response->ok())
+                {
+                    return redirect($failed_url);
                 }
                 return redirect(config('app.ppgameserver') . '/gs2c/session/verify?lang=ko&'.$mgckey);
             }
             else
             {
-                return redirect($failde_url);
+                return redirect($failed_url);
             }
         }
 
