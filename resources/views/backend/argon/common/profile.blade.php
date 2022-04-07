@@ -195,7 +195,6 @@
                                 </div>
                             </div>
                         </form>
-                        @if (auth()->user()->isInOutPartner() || $user->id == auth()->user()->id)
                         <hr class="my-4" />
                         <form method="post" action="{{argon_route('argon.common.profile.password')}}" autocomplete="off">
                             @csrf
@@ -217,7 +216,6 @@
                                 </div>
                             </div>
                         </form>
-                        @endif
                         @if (auth()->user()->isInOutPartner())
                         <hr class="my-4" />
                         <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>

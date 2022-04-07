@@ -796,7 +796,7 @@ namespace VanguardLTE\Console
                     }
                     else
                     {
-                        $this->info('Categoryes already exist at ' . $site_id . ' site.');
+                        $this->info('Categoryes already exist at ' . $site . ' site.');
                     }
                 }
                 $this->info('End');
