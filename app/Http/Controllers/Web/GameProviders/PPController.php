@@ -1589,11 +1589,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$mgckey){
                     return redirect($failed_url);
                 }
-
+                $cver = 99951;
+                $response =  Http::get(config('app.ppgameserver') . '/gs2c/common/games-html5/games/vs/'. $gamecode .'/desktop/bootstrap.js');
+                if ($response->ok())
+                {
+                    $content = $response->body();
+                    preg_match("/UHT_REVISION={common:'(\d+)',desktop:'\d+',mobile/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $cver = $match[1];
+                    }
+                }
                 $data = [
                     'action' => 'doInit',
                     'symbol' => $gamecode,
-                    'cver' => 99951,
+                    'cver' => $cver,
                     'index' => 1,
                     'counter' => 1,
                     'repeat' => 0,
@@ -1647,9 +1656,5 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response($request->settings);
             }
         }
-
     }
-
-    
-
 }
