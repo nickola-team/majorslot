@@ -1355,24 +1355,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$mgckey){
                     return ['error' => true, 'msg' => 'could not find mgckey value'];
                 }
-                $data = [
-                    'action' => 'doInit',
-                    'symbol' => 'vs5aztecgems',
-                    'cver' => 99951,
-                    'index' => 1,
-                    'counter' => 1,
-                    'repeat' => 0,
-                    'mgckey' => explode('=', $mgckey)[1]
-                ];
-                $response = Http::withHeaders([
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                    ])->asForm()->post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
-                if (!$response->ok())
-                {
-                    $body = $response->body();
-                    return ['error' => true, 'msg' => 'doInit error - ' . $body];
-                }
-                $msg = $response->body();
+                
                 $promo = \VanguardLTE\PPPromo::take(1)->first();
                 if (!$promo)
                 {
@@ -1426,7 +1409,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
 
                 $promo->save();
-                return ['error' => false, 'msg' => $msg];
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
             }
             else
             {
@@ -1616,7 +1599,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'repeat' => 0,
                     'mgckey' => explode('=', $mgckey)[1]
                 ];
-                $response = Http::post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
                 if (!$response->ok())
                 {
                     return redirect($failed_url);
