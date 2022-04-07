@@ -1364,7 +1364,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'repeat' => 0,
                     'mgckey' => explode('=', $mgckey)[1]
                 ];
-                $response = Http::post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
                 if (!$response->ok())
                 {
                     $body = $response->body();
