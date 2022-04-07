@@ -1367,7 +1367,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
                 if (!$response->ok())
                 {
-                    return ['error' => true, 'msg' => 'doInit error'];
+                    $body = $response->body();
+                    return ['error' => true, 'msg' => 'doInit error - ' . $body];
                 }
                 $msg = $response->body();
                 $promo = \VanguardLTE\PPPromo::take(1)->first();
