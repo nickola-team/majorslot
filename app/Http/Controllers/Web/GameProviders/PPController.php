@@ -1369,6 +1369,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     return ['error' => true, 'msg' => 'doInit error'];
                 }
+                $msg = $response->body();
                 $promo = \VanguardLTE\PPPromo::take(1)->first();
                 if (!$promo)
                 {
@@ -1422,7 +1423,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
 
                 $promo->save();
-                return ['error' => false, 'msg' => 'synchronized successfully.'];
+                return ['error' => false, 'msg' => $msg];
             }
             else
             {
