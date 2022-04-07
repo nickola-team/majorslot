@@ -1355,6 +1355,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$mgckey){
                     return ['error' => true, 'msg' => 'could not find mgckey value'];
                 }
+                $data = [
+                    'action' => 'doInit',
+                    'symbol' => 'vs5aztecgems',
+                    'cver' => 99951,
+                    'index' => 1,
+                    'counter' => 1,
+                    'repeat' => 0,
+                    'mgckey' => explode('=', $mgckey)[1]
+                ];
+                $response = Http::post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
+                if (!$response->ok())
+                {
+                    return ['error' => true, 'msg' => 'doInit error'];
+                }
                 $promo = \VanguardLTE\PPPromo::take(1)->first();
                 if (!$promo)
                 {
