@@ -134,7 +134,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             //create categories
             \VanguardLTE\Category::where([
                 'shop_id' => 0,
-                'parent' => 0,
                 'site_id' => $website,
             ])->delete();
             return redirect()->to(argon_route('argon.website.list'))->withSuccess(['도메인이 삭제되었습니다.']);
