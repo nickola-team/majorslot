@@ -2416,6 +2416,7 @@ span {
         background-color: black;
         color: white;
         border: 1px solid yellow;
+        padding: 10px 8px 5px 8px;
     }
 }
 @media screen and (max-width: 900px) and (min-width: 700px),
@@ -2430,6 +2431,7 @@ span {
         background-color: black;
         color: white;
         border: 1px solid yellow;
+        padding: 20px 10px 10px 10px;
     }
 }
 @media(max-width:560px) {
