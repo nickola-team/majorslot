@@ -168,15 +168,26 @@ function stopDrag() {
 
 
 
-@if ($notice!=null)
-<div id="pop8" style="position:absolute; left:50px; top:50px; width:250px; height:400px; z-index:9999; background-color: #000000; border:1px solid white;">
-	<div style="position:absolute;left:15px;bottom:10px;width:200px;background-color:transparent;color:white;">
-		<input type="checkbox" name="notice8" id="notice8" value="" style="width:14px;"><label for="notice8" style="font-size:12px;">오늘 하루 열지 않음</label>
-		<a href="#" onclick="closeWin(document.getElementById('pop8'), 8, document.getElementById('notice8').checked);" style="color:white;margin-left:12px;font-size:12px;">[ 닫기 ]</a>
+@if (count($noticelist) > 0)
+@foreach ($noticelist as $notice)
+<div id="pop{{$notice->id}}" style="position:absolute; left:{{50+$loop->index*360}}px; top:50px; width:350px; z-index:9999; background-color: #000000; border:1px solid white; padding:20px 10px 0px 10px">
+	<div style="position:absolute;left:15px;bottom:10px;background-color:transparent;color:white;">
+		<input type="checkbox" name="notice{{$notice->id}}" id="notice{{$notice->id}}" value="" style="width:14px;"><label for="notice{{$notice->id}}" style="font-size:16px;">오늘 하루 열지 않음</label>
+		<a href="#" onclick="closeWin(document.getElementById('pop{{$notice->id}}'), {{$notice->id}}, document.getElementById('notice{{$notice->id}}').checked);" style="color:white;margin-left:12px;font-size:16px;">[ 닫기 ]</a>
 	</div>
 	<div><?php echo $notice->content ?></div>
 </div>
+@endforeach
 @endif
+<script type='text/javascript'>
+@if (count($noticelist) > 0)
+  @foreach ($noticelist as $notice)
+    if ( getCookie( "divpopup{{$notice->id}}" ) == "check" ) {
+      closeWin2(document.getElementById('pop{{$notice->id}}'));
+    }
+  @endforeach
+@endif
+</script>
 
 <div class="main_slide">
 	<div class="video_bg">
