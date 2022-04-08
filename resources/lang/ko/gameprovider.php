@@ -5,6 +5,8 @@ return [
         /**
          * Booongo Games
          */
+        "Pearl Diver 2: Treasure Chest" => "진주 다이버 2: 보물 상자",
+        "Sun of Egypt 3" => "이집트의 태양 3",
         "Happy Fish" => "해피 피쉬",
         "Queen Of The Sun" => "태양의 여왕",
         "Book of Wizard Crystal Chance" => "마법의 서 크리스탈 찬스",
@@ -191,6 +193,16 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Bull Fiesta" => "불 피에스타",
+        "Fire Strike 2" => "파이어 스트라이크 2",
+        "Disco Lady" => "디스코 레이디",
+        "North Guardians" => "노스 가디언즈",
+        "Spirit of Adventure" => "모험심",
+        "Clover Gold" => "클로버 골드",
+        "Eye of Cleopatra" => "클레오파트라의 눈",
+        "Book of Aztec King" => "아즈텍 왕의 북",
+        "Chicken Chase" => "치킨 체이스",
+        "Drill That Gold" => "드릴 댓 골드",
         "Spaceman" => "스페이스맨",
         "Barn Festival" => "헛간 축제",
         "Cash Patrol" => "현금순찰대",
@@ -570,6 +582,7 @@ return [
         /**
          * Booongo - Playson Play Games
          */
+        "Lion Gems: Hold and Win" => "라이온 젬스: 홀드 앤 윈",
         "Burning Fortunator" => "불타는 행운아",
         "Joker’s Coins" => "조커의 동전",
         "Diamond Fortunator" => "다이아몬드 포츄네터",
