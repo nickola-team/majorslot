@@ -469,9 +469,13 @@
                 $("#divpopup" + popupid).hide();
             }
 			$(document).ready(function(){
-                if ( document.cookie.indexOf("divpopup2=close") < 0 ){
-                    $("#divpopup2").show();
+				@if ($noticelist!=null && count($noticelist) >0)
+@foreach ($noticelist as $ntc)
+                if ( document.cookie.indexOf("divpopup{{$ntc->id}}=close") < 0 ){
+                    $("#divpopup{{$ntc->id}}").show();
                 }
+@endforeach				
+@endif	
             });
 
 			function tabActionProc(obj, pid) {
@@ -716,25 +720,27 @@
 			}
 		</script>
 
-@if ($notice != null)
-		<div class="pop02_popup1 draggable02" id="divpopup2" style="position: absolute; top: 250px; left: 100px; z-index: 1000;display:none">
+@if ($noticelist != null && count($noticelist) > 0)
+@foreach ($noticelist as $ntc)
+		<div class="pop02_popup1 draggable02" id="divpopup{{$ntc->id}}" style="position: absolute; top: 250px; left: {{(100+$loop->index*510)}}px; z-index: 1000;display:none">
             <div class="pop02_popup_wrap">
                 <div class="pop02_popup_btn_wrap">
                     <ul>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('2');">오늘 하루 이 창을 열지 않음</span></a></li>
-                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('2');">닫기 X</span></a></li>            
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup('{{$ntc->id}}');">오늘 하루 이 창을 열지 않음</span></a></li>
+                        <li><a href="#"><span class="pop02_popup_btn" onclick="closePopup1('{{$ntc->id}}');">닫기 X</span></a></li>            
                     </ul>
                 </div>
                 <div class="pop02_popup_box">
                     <div class="pop02_popup_text" style="padding:30px;width:500px">
                         <span class="pop02_popup_font1" style="border-bottom:2px solid #fff;margin-bottom:15px">★공지사항★</span>
                         <span class="pop02_popup_font2">
-								<?php echo $notice->content ?>
+								<?php echo $ntc->content ?>
                         </span> 
                     </div>
                 </div>
             </div>
         </div>
+@endforeach		
 @endif
 		<style type="text/css">
             .pop02_popup1 {position:absolute; z-index:1000000000;}

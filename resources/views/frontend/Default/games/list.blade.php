@@ -9,9 +9,10 @@
     </script>
 @endif
 <!-- 팝업메시지 -->
-@if ($notice != null)
-<div class="modal fade in" id="liveperson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="padding-right: 16px; width: 1024px !important; margin-top: 58px;">
+@if (count($noticelist)>0)
+@foreach ($noticelist as $notice)
+<div class="modal fade in" id="liveperson{{$notice->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="padding-right: 16px; width: 768px !important; margin-top: 58px;margin-left:{{$loop->index*500}}px">
         <div class="modal-content noticecontent">
             <div class="modal-body noticebox">
                 <?php echo $notice->content ?>
@@ -21,12 +22,13 @@
                     <input type="checkbox" id="hide-today" style="margin-right: 5px;">오늘 하루동안 이 창을 열지 않음
                 </label>
                 &nbsp;&nbsp;
-                <a style="color: red;font-weight:bold; cursor: pointer; margin-right: 10px;" id="banner-close">닫기</a>
+                <a style="color: red;font-weight:bold; cursor: pointer; margin-right: 10px;" id="banner-close{{$notice->id}}">닫기</a>
             </div>
         </div>
         
     </div>
 </div>
+@endforeach
 @endif
 <!-- 퀵위치 랭킹-->
 {{-- <div class="quick1_wrap">
@@ -887,24 +889,28 @@
             $("#myCarousel").carousel({
                 interval: 5000
             })
-            $("#banner-close").click(function() {
-                if ($("#hide-today").is(":checked") == true)
-                {
-                    @if (auth()->check())
-                    $.cookie('hide-today_user', 'done', { expires: 1 });
-                    @else
-                    $.cookie('hide-today', 'done', { expires: 1 });
-                    @endif
+            @if (count($noticelist)>0)
+            @foreach ($noticelist as $notice)
+                $("#banner-close{{$notice->id}}").click(function() {
+                    if ($("#hide-today{{$notice->id}}").is(":checked") == true)
+                    {
+                        @if (auth()->check())
+                        $.cookie("hide-today_user{{$notice->id}}", 'done', { expires: 1 });
+                        @else
+                        $.cookie("hide-today{{$notice->id}}", 'done', { expires: 1 });
+                        @endif
+                    }
+                    $("#liveperson{{$notice->id}}").modal('hide');
+                });
+                @if (auth()->check())
+                if ($.cookie("hide-today_user{{$notice->id}}") != 'done') {
+                @else
+                if ($.cookie("hide-today{{$notice->id}}") != 'done') {
+                @endif
+                    $("#liveperson{{$notice->id}}").modal('show');
                 }
-                $('#liveperson').modal('hide');
-            });
-            @if (auth()->check())
-            if ($.cookie('hide-today_user') != 'done') {
-            @else
-            if ($.cookie('hide-today') != 'done') {
+            @endforeach
             @endif
-                $('#liveperson').modal('show');
-            }
             console.log( "ready!" );
             var odometers = [ "#minijp", "#minorjp", "#majorjp", "#grandjp"];
             var updateTime = 1000;
