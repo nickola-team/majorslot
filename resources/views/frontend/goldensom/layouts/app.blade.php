@@ -1402,6 +1402,7 @@
 @foreach ($noticelist as $notice)
 <div class="pop1" id="pop{{$notice->id}}" style="left:{{300+$loop->index*350}}px;">
     <?php echo $notice->content ?>
+    <p></br></p>
     <div style="position:absolute;left:5px;bottom:5px;width:190px;background-color:transparent;color:white;cursor: hand;display:content">
       <input type="checkbox" name="notice1" id="notice{{$notice->id}}" value="" style="width:20px;">
       <label for="notice{{$notice->id}}">오늘 하루 열지 않음 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop{{$notice->id}}'), {{$notice->id}}, document.getElementById('notice{{$notice->id}}').checked);">[닫기]</span></label>
