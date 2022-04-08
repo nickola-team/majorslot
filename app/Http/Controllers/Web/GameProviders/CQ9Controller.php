@@ -1546,7 +1546,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
                         }
                     }
-                    else
+                    else if ($href=='cqlive')
                     {
                         if ($game['gamecode'] == CQ9Controller::LIVECODE)
                         {
@@ -1557,6 +1557,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'title' =>__('gameprovider.cq9live'),
                             ];
                         }
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
