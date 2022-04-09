@@ -319,11 +319,6 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@getgamelink',
     ]);
 
-    Route::get('api/website/getgamelist', [
-        'as' => 'frontend.api.website.gamelist',
-        'uses' => 'ApiController@sitegamelist',
-    ]);
-
     Route::get('api/website/getgamelink', [
         'as' => 'frontend.api.website.gamelink',
         'uses' => 'ApiController@sitegamelink',

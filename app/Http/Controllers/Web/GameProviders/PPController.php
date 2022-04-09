@@ -1321,6 +1321,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function syncpromo()
         {
+            return;
             if (config('app.ppmode') == 'bt') // BT integration mode
             {
                 $anyuser = \VanguardLTE\User::where('role_id', 1)->where('playing_game', 'pp')->first();
