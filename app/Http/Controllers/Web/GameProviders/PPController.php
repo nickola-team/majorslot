@@ -1337,6 +1337,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gamelist = PPController::getgamelist('pp');
             $rand = mt_rand(0,10);
             $gamecode = $gamelist[$rand]['gamecode'];
+            $data = PPController::createPlayer($anyuser->id);
+            if ($data['error'] != 0) //create player failed
+            {
+                //오류
+                return ['error' => true, 'msg' => 'crete player error '];
+            }
             $url = PPController::getgamelink_pp($gamecode, $anyuser);
             if ($url['error'] == true)
             {
