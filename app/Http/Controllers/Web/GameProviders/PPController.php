@@ -821,7 +821,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     return ['error' => false, 'data' => ['url' => $data['gameURL']]];
                 }
-                return ['error' => true, 'data' => '제공사응답 오류', 'original' => $data];
+                return ['error' => true, 'data' => '제공사응답 오류', 'original' => json_encode($data)];
             }
             else // seamless integration mode
                 {
