@@ -70,7 +70,7 @@ namespace VanguardLTE\Console
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
-            $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+            // $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
