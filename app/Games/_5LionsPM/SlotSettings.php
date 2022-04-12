@@ -649,12 +649,12 @@ namespace VanguardLTE\Games\_5LionsPM
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
         }
-        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState)
+        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $isState = true)
         {
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
             {
-                $_obf_slotstate = $this->slotId . ' FG';
+                $_obf_slotstate = $this->slotId . ' Free';
             }
             else if( $slotState == 'doSpin') 
             {
@@ -689,21 +689,33 @@ namespace VanguardLTE\Games\_5LionsPM
             {
                 $cat_id = $cat->category->original_id;
             }
-            \VanguardLTE\StatGame::create([
+            if($isState == true){
+                $roundstr = $this->GetGameData($this->slotId . 'RoundID');                
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $this->playerId, 
+                    'balance' => $this->GetBalance() * $this->CurrentDenom, 
+                    'bet' => $bet * $this->CurrentDenom, 
+                    'win' => $win * $this->CurrentDenom, 
+                    'game' => $_obf_slotstate, 
+                    'percent' => $this->toGameBanks, 
+                    'percent_jps' => $this->toSysJackBanks, 
+                    'percent_jpg' => $this->toSlotJackBanks, 
+                    'profit' => $this->betProfit, 
+                    'denomination' => $this->CurrentDenom, 
+                    'shop_id' => $this->shop_id,
+                    'category_id' => $cat_id,
+                    'game_id' => $this->game->original_id,
+                    'roundid' => $roundstr
+                ]);
+            }
+        }
+        public function saveGameLog($strLog, $roundID){
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
                 'user_id' => $this->playerId, 
-                'balance' => $this->GetBalance() * $this->CurrentDenom, 
-                'bet' => $bet * $this->CurrentDenom, 
-                'win' => $win * $this->CurrentDenom, 
-                'game' => $_obf_slotstate, 
-                'percent' => $this->toGameBanks, 
-                'percent_jps' => $this->toSysJackBanks, 
-                'percent_jpg' => $this->toSlotJackBanks, 
-                'profit' => $this->betProfit, 
-                'denomination' => $this->CurrentDenom, 
+                'str' => $strLog, 
                 'shop_id' => $this->shop_id,
-                'category_id' => $cat_id,
-                'game_id' => $this->game->original_id,
-                'roundid' => 0,
+                'roundid' => $roundID
             ]);
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)

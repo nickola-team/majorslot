@@ -58,9 +58,13 @@ namespace VanguardLTE\Games\HotFiestaPM
                 ];
             }
 
+            $response = $this->toResponse($objRes);
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doFSOption'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
+            }
             $slotSettings->SaveGameData();
             \DB::commit();
-            return $this->toResponse($objRes);
+            return $response;
         }
 
         public function doInit($slotEvent, $slotSettings) {
@@ -224,6 +228,11 @@ namespace VanguardLTE\Games\HotFiestaPM
                 /* 프리스핀 구매금액은 bonus에 충전 */
                 $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
                 $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney, 0);
+                
+                $roundstr = sprintf('%.4f', microtime(TRUE));
+                $roundstr = str_replace('.', '', $roundstr);
+                $roundstr = '275' . substr($roundstr, 4, 7);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
             }
             else if ($slotEvent['slotEvent'] === 'freespin') {
                 /* 프리스핀, 텀블스핀일때 베팅금 없음 */
@@ -235,6 +244,11 @@ namespace VanguardLTE\Games\HotFiestaPM
                 
                 $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
                 $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney);
+                
+                $roundstr = sprintf('%.4f', microtime(TRUE));
+                $roundstr = str_replace('.', '', $roundstr);
+                $roundstr = '275' . substr($roundstr, 4, 7);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
             }
 
             /* 벨런스 업데이트 */
@@ -242,10 +256,11 @@ namespace VanguardLTE\Games\HotFiestaPM
 
             /* SCATTER 생성갯수  */
             $defaultScatterCount = $slotSettings->GenerateScatterCount($winType, $slotEvent['slotEvent']);  // 생성되어야할 Scatter갯수 결정;
-
+            
             /* WILD 생성갯수 */
             if ($slotEvent['slotEvent'] == 'buy_freespin') {
                 $defaultWildCount = 0;
+                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', true);
             }
             else if ($slotEvent['slotEvent'] == 'freespin') {
                 if (isset($fsStickyGen[$fs - 1]) && $fsStickyGen[$fs - 1] > 0) {
@@ -256,7 +271,8 @@ namespace VanguardLTE\Games\HotFiestaPM
                 }
             }
             else {
-                $defaultWildCount = $slotSettings->GenerateWildCount($winType);
+                $defaultWildCount = $slotSettings->GenerateWildCount($winType);                
+                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', false);
             }
 
             /* 릴배치표 생성, 2천번 시행 */
@@ -385,6 +401,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                 }, 0) * $bet;
             }
 
+            $isState = true;
             /*  */
             if ($winMoney > 0) {
                 $lmi = [];
@@ -455,6 +472,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                 /* WILD 멀티플라이어 배열 생성 */
                 $fsStickyGen = $slotSettings->GenerateFSSticky($fsmax, $slotEvent['slotEvent'] === 'buy_freespin');
                 $slotSettings->SetGameData($slotSettings->slotId . 'FSStickyGen', $fsStickyGen);
+                $isState = false;
             }
 
             /* 프리스핀 중 */
@@ -526,6 +544,7 @@ namespace VanguardLTE\Games\HotFiestaPM
 
                     /* 프리스핀 카운터 */
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSNext', $objRes['fs']);
+                    $isState = false;
                 }
                 else if ($fsmax <= $fs) {
                     /* 프리스핀 완료 */
@@ -564,7 +583,13 @@ namespace VanguardLTE\Games\HotFiestaPM
             }
             
             $_GameLog = json_encode($objRes);
-            $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $winMoney, $slotEvent['slotEvent']);
+
+            if($fsmax > 0 && $isState == true && ($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') ?? false) == true){
+                $allBet = $bet * $lines * 100;
+            }else{
+                $allBet = $bet * $lines;
+            }
+            $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $objRes['tw'], $slotEvent['slotEvent'], $isState);
             
             return $objRes;
         }
@@ -778,6 +803,33 @@ namespace VanguardLTE\Games\HotFiestaPM
             /* remove double quotes around key for javascript */
             $response = preg_replace('/"(\w+)":/i', '\1:', $response);
             return trim($response, "&");
+        }
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
         }
     }
 }

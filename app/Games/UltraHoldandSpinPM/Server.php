@@ -67,10 +67,13 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                     'stime' => floor(microtime(true) * 1000),
                 ];
             }
-
+            $response = $this->toResponse($objRes);
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
+            }
             $slotSettings->SaveGameData();
             \DB::commit();
-            return $this->toResponse($objRes);
+            return $response;
         }
 
         public function doInit($slotEvent, $slotSettings) {
@@ -184,6 +187,10 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
             $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney);
 
+            $roundstr = sprintf('%.4f', microtime(TRUE));
+            $roundstr = str_replace('.', '', $roundstr);
+            $roundstr = '275' . substr($roundstr, 4, 7);
+            $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
             /* 벨런스 업데이트 */
             $BALANCE = $slotSettings->GetBalance();
 
@@ -317,7 +324,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 /* WILD 확장릴셋이 아닌경우 본래의 릴셋 복원 */
                 $objRes['s'] = implode(",", $reels['orgFlatSymbols']);
             }
-
+            $isState = true;
             /* 코인심볼 체크 */
             $coinSymbols = $reels['coinSymbols'];
             if (count($coinSymbols) > 0) {
@@ -360,6 +367,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                     $respinCount = $slotSettings->GenerateRespinCount();
                     $slotSettings->SetGameData($slotSettings->slotId . 'RSRoundCount', $respinCount);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RSCurrentRound', 0);
+                    $isState = false;
                 }
             }
             
@@ -376,7 +384,7 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             }
 
             $_GameLog = json_encode($objRes);
-            $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $winMoney, $slotEvent['slotEvent']);
+            $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $objRes['tw'], $slotEvent['slotEvent'], $isState);
             
             return $objRes;
         }
@@ -495,15 +503,21 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
                 's' => implode(",", $coinSymbols),
             ];
 
+            $allBet = 0;
+            $isState = false;
             if ($isEnded) {
                 $objRes['tw'] = $LASTSPIN->rw;
+                $isState = true;
+                $allBet = $bet * 5;
             }
 
             /* 라운드 등록 */
             $slotSettings->SetGameData($slotSettings->slotId . 'RSCurrentRound', $curRound);
             
             $_GameLog = json_encode(array_merge($objRes, ['start_with' => $isStartSpin ? $LASTSPIN : $LASTSPIN->start_with]));
-            $slotSettings->SaveLogReport($_GameLog, 0, 0, $winMoney * $bet, $slotEvent['slotEvent']);
+
+
+            $slotSettings->SaveLogReport($_GameLog, $allBet, 0, $LASTSPIN->rw, $slotEvent['slotEvent'], $isState);
 
             return $objRes;
         }
@@ -651,6 +665,33 @@ namespace VanguardLTE\Games\UltraHoldandSpinPM
             /* remove double quotes around key for javascript */
             $response = preg_replace('/"(\w+)":/i', '\1:', $response);
             return trim($response, "&");
+        }
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
         }
     }
 }
