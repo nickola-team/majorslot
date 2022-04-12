@@ -1294,7 +1294,7 @@ namespace VanguardLTE\Console
                                     if (!$oldCategory_2) {
                                         $newCategory_2 = $category_2->replicate();
                                         $newCategory_2->shop_id = $shop->id;
-                                        $newCategory_2->parent = $newCategory->id;
+                                        $newCategory_2->parent = $oldCategory->id;
                                         $newCategory_2->save();
                                         $oldCategory_2 = $newCategory_2;
                                         $this->info('Add category ' . $category_2->original_id);
