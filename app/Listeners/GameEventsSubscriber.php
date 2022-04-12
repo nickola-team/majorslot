@@ -4,6 +4,7 @@ namespace VanguardLTE\Listeners;
 
 use VanguardLTE\Activity;
 use VanguardLTE\Events\Game\NewGame;
+use VanguardLTE\Events\Game\PPGameVerified;
 use VanguardLTE\Events\Game\GameEdited;
 use VanguardLTE\Events\Game\DeleteGame;
 use VanguardLTE\Events\User\UserEventContract;
@@ -64,6 +65,12 @@ class GameEventsSubscriber
         $this->logger->log('Delete Game / ' . $game->name . ', Shop ' . $game->shop_id);
     }
 
+    public function onPPGameVerified(PPGameVerified $event)
+    {
+        $string = $event->getEventString();
+        $this->logger->log('PP Game Verify/ ' . $string);
+    }
+
 
     /**
      * Register the listeners for the subscriber.
@@ -77,5 +84,6 @@ class GameEventsSubscriber
         $events->listen(NewGame::class, "{$class}@onNewGame");
         $events->listen(GameEdited::class, "{$class}@onGameEdited");
         $events->listen(DeleteGame::class, "{$class}@onDeleteGame");
+        $events->listen(PPGameVerified::class, "{$class}@onPPGameVerified");
     }
 }

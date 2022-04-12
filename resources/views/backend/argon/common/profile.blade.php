@@ -89,6 +89,8 @@
                     </div>
                 </div>
                 <!-- Latest Log -->
+                @if (auth()->user()->hasRole('admin'))
+
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header">
@@ -102,9 +104,7 @@
                         <thead class="thead-light">
                             <tr>
                             <th scope="col">시간</th>
-                            @if (auth()->user()->isInOutPartner())
                             <th scope="col">아이피</th>
-                            @endif
                             <th scope="col">내역</th>
                             </tr>
                         </thead>
@@ -123,6 +123,8 @@
                     </div>
                     </div>
                 </div>
+                @endif
+
             </div>
             <div class="col-xl-8 order-xl-1">
                 <div class="card">

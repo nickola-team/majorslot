@@ -1540,6 +1540,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return redirect($failed_url);
             }
+            event(new \VanguardLTE\Events\Game\PPGameVerified($user->username . ' / ' . $gamecode));
             $data = PPController::getBalance($user->id);
             if ($data['error'] == -1) {
                 //연동오류
