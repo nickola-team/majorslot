@@ -144,19 +144,6 @@
               </a>
             </li>
            
-              @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-              <li class="event-link subpg-link">
-                <a href="javascript:void(0);">
-              @else
-              <li class="event-link">
-                <a href="javascript:void(0);"  onclick="alert_error('Tôi cần đăng nhập');">
-              @endif
-                <div class="icon-cont">
-                  <img src="/frontend/winnersvi/img/icon/event.png">
-                </div>
-                <span>sự kiện</span>
-              </a>
-            </li>
            
               @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
               <li class="notice-link subpg-link">
@@ -184,7 +171,10 @@
                 </div>
                 <span>trang của tôi</span>
               </a>
-            </li>
+              </li>
+              <li>
+                <a href="http://cn.hero-sl.com/"><img src="/frontend/winnersvi/img/CN.png"></a><a href="http://vi.hero-sl.com/"><img src="/frontend/winnersvi/img/VN.png"></a>
+              </li>
           </ul>
         </div>
         <div class="bal-container">
@@ -219,7 +209,7 @@
                       </span>
                     </div>
                     <div class="info">
-                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->balance,0) }}원</p>
+                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->balance,0) }}WON</p>
                     </div>
                   </div>
                   <div class="al-cont point-info-btn" data-toggle="modal" data-target=".mypageModal">
@@ -229,7 +219,7 @@
                       </span>
                     </div>
                     <div class="info">
-                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->deal_balance,0) }}원</p>
+                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->deal_balance,0) }}WON</p>
                     </div>
                   </div>
                   <!-- <div class="al-cont point-info-btn" data-toggle="modal" data-target=".mypageModal">
@@ -344,7 +334,7 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">WINNER'S SLOT</span>
+      <span class="a_style">WINNER'S CASINO</span>
     </div>
 
     <div class="slot-container">
@@ -430,7 +420,7 @@
       </div>
     </div>
     <div class="copyright-cont">
-        <span>ⓒ COPYRIGHT  Winner's Pro  2021 ALL RIGHTS RESERVED</span>
+        <span>&copy; COPYRIGHT  Winner's Pro  {{ now()->year }} ALL RIGHTS RESERVED</span>
     </div>
 	</div>
 
@@ -670,7 +660,7 @@
 										<div class="infos">
 											<p class="player-balance">
                       @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-                      {{ number_format(Auth::user()->balance,0)}} 원
+                      {{ number_format(Auth::user()->balance,0)}} WON
                       @endif</p>
 										</div>
 									</div>
@@ -764,7 +754,7 @@
 											<p>tiền thưởng sở hữu</p>
 										</div>
 										<div class="infos">
-											<p class="info player-point">{{Auth::check()?number_format(auth()->user()->deal_balance,0) : 0}}원</p>
+											<p class="info player-point">{{Auth::check()?number_format(auth()->user()->deal_balance,0) : 0}}WON</p>
 										</div>
 									</div>
 									<div class="form-group">
@@ -775,11 +765,11 @@
                       <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
 											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="giá trị không hợp lệ" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="giá trị không hợp lệ" data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="Hạng mục nhập bắt buộc" data-parsley-min="30000" data-parsley-min-message="Tiền gửi tối thiểu 30.000 won trở lên" placeholder="Có thể từ 30.000 won tiền gửi tối thiểu (tiền gửi đơn vị 10.000 won)" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
 											<div class="btn-grp" style="margin-top: 25px;">
-												<button type="button" onclick="addAmount(4,1)">1만</button>
-												<button type="button" onclick="addAmount(4,3)">3만</button>
-												<button type="button" onclick="addAmount(4,5)">5만</button>
-												<button type="button" onclick="addAmount(4,10)">10만</button>
-												<button type="button" onclick="addAmount(4,50)">50만</button>
+												<button type="button" onclick="addAmount(4,1)">10,000</button>
+												<button type="button" onclick="addAmount(4,3)">30,000</button>
+												<button type="button" onclick="addAmount(4,5)">50,000</button>
+												<button type="button" onclick="addAmount(4,10)">100,000</button>
+												<button type="button" onclick="addAmount(4,50)">500,000</button>
 												<button type="button" onclick="resetAmount(4)">sự khởi động lại</button>
 											</div>
 										</div>
@@ -974,11 +964,11 @@
                 <div class="infos">
                   <input class="form-control w400" id="depositAmount" data-parsley-type="digits" data-parsley-type-message="giá trị không hợp lệ" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="giá trị không hợp lệ" data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="Hạng mục nhập bắt buộc" data-parsley-min="30000" data-parsley-min-message="Tiền gửi tối thiểu 30.000 won trở lên" placeholder="Có thể từ 30.000 won tiền gửi tối thiểu (tiền gửi đơn vị 10.000 won)" name="money" type="text" value="" data-parsley-id="0361"><ul class="parsley-errors-list" id="parsley-id-0361"></ul>
                   <div class="btn-grp" style="margin-top: 25px;">
-                    <button type="button" onclick="addAmount(1,1)">1만</button>
-                    <button type="button" onclick="addAmount(1,3)">3만</button>
-                    <button type="button" onclick="addAmount(1,5)">5만</button>
-                    <button type="button" onclick="addAmount(1,10)">10만</button>
-                    <button type="button" onclick="addAmount(1,50)">50만</button>
+                    <button type="button" onclick="addAmount(1,1)">10,000</button>
+                    <button type="button" onclick="addAmount(1,3)">30,000</button>
+                    <button type="button" onclick="addAmount(1,5)">50,000</button>
+                    <button type="button" onclick="addAmount(1,10)">100,000</button>
+                    <button type="button" onclick="addAmount(1,50)">500,000</button>
                     <button type="button" onclick="resetAmount(1)">sự khởi động lại</button>
                   </div>
                 </div>
@@ -1033,7 +1023,7 @@
             <div class="infos">
               <p class="player-balance">
               @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-              {{ number_format(Auth::user()->balance,0)}} 원
+              {{ number_format(Auth::user()->balance,0)}} WON
               @endif
               </p>
             </div>
@@ -1079,12 +1069,12 @@
             <div class="infos">
               <input class="form-control w400 withdrawal_amount" id="withdrawalAmount" data-parsley-type="digits" data-parsley-type-message="giá trị không hợp lệ" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="giá trị không hợp lệ" data-parsley-trigger="focus change" data-parsley-required="true" data-parsley-required-message="Hạng mục nhập bắt buộc" data-parsley-min="10000" data-parsley-min-message="Tiền rút tối thiểu trên 10.000 won" placeholder="Có thể rút tiền tối thiểu từ 10.000 won (10.000 won)" name="money" type="text" value="" data-parsley-id="5344"><ul class="parsley-errors-list" id="parsley-id-5344"></ul>
               <div class="btn-grp" style="margin-top: 25px;">
-                <button type="button" onclick="addAmount(2,1)">1만</button>
-                <button type="button" onclick="addAmount(2,3)">3만</button>
-                <button type="button" onclick="addAmount(2,5)">5만</button>
-                <button type="button" onclick="addAmount(2,10)">10만</button>
-                <button type="button" onclick="addAmount(2,50)">50만</button>
-                <button type="button" onclick="resetAmount(2)">정정</button>
+                <button type="button" onclick="addAmount(2,1)">10,000</button>
+                <button type="button" onclick="addAmount(2,3)">30,000</button>
+                <button type="button" onclick="addAmount(2,5)">50,000</button>
+                <button type="button" onclick="addAmount(2,10)">100,000</button>
+                <button type="button" onclick="addAmount(2,50)">500,000</button>
+                <button type="button" onclick="resetAmount(2)">sự khởi động lại</button>
               </div>
             </div>
           </div>
