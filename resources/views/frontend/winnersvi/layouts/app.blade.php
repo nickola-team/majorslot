@@ -348,7 +348,7 @@
             @if ($unreadmsg>0)
             <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('Hãy kiểm tra tờ giấy');">
             @else
-            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->title }}', '{{ $category->href }}', 0)">
             @endif
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('Tôi cần đăng nhập');">
@@ -361,11 +361,7 @@
                 </div>
               </div>
               <button class="name-btn">
-              @if ($category->trans)
-                {{ $category->trans->trans_title }}
-              @else
                 {{ $category->title }}
-              @endif
               </button>
               <img class="plate" src="/frontend/winnersvi/img/bg/slot-plate.png">
             </div>
