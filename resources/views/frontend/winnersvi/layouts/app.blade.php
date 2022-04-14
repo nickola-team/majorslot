@@ -395,7 +395,7 @@
               <img class="plate" src="/frontend/winnerscn/img/bg/slot-plate.png">
             </div>
             <div class="icon-cont">
-              <img src="/frontend/winnerscn/img/slot-icon2/Pragmatic Play.png" />
+              <img src="/frontend/winnerscn/img/slot-icon2/Hot.png" />
             </div>
           </a>
 			@endif
