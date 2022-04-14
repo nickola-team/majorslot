@@ -350,7 +350,7 @@ function getSlotGames(title, category) {
     $('.gamelistModal').modal('show');
     $.ajax({
         type: "POST",
-        url: "/api/getgamelist",
+        url: "/api/getgamelist_vi",
         data: formData,
         processData: false,
         contentType: false,
@@ -388,7 +388,7 @@ function getSlotGames(title, category) {
                                     <div class="info-cont">
                                     <span class="game-name">${data.games[i].name}</span>
                                     </div>
-                                    <button class="start-btn">Bắt đầu trò chơi</button>
+                                    <button class="start-btn">开始游戏</button>
                                 </div>
                             </a>`;
                     }
@@ -400,9 +400,9 @@ function getSlotGames(title, category) {
                                         <img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg">
                                         </div>
                                         <div class="info-cont">
-                                        <span class="game-name">${data.games[i].title}</span>
+                                        <span class="game-name">${data.games[i].enname}</span>
                                         </div>
-                                        <button class="start-btn">Bắt đầu trò chơi</button>
+                                        <button class="start-btn">开始游戏</button>
                                     </div>
                                 </a>`;
                     }

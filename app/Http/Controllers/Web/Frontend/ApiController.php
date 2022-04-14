@@ -400,7 +400,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $data[] = [
                     'name' => $game->name,
-                    'title' => __('gamename.' . $game->title)
+                    'title' => __('gamename.' . $game->title),
+                    'enname' => $game->title,
                 ];
             }
             return $data;
@@ -561,6 +562,34 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $selectedGames = $filtergames;
             }
             
+
+            return response()->json(['error' => false, 'games' => $selectedGames, 'others' => []]);
+        }
+
+        public function getgamelist_vi(\Illuminate\Http\Request $request){
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
+            $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
+            $categories = ['pragmatic','cq9play','virtualtech','habaneroplay','greentube'];
+            $selectedGames = [];
+            foreach ($categories as $category){
+
+                $cat1 = \VanguardLTE\Category::where([
+                    'href' => $category, 
+                    'shop_id' => $shop_id
+                ])->first();
+                if( !$cat1) 
+                {
+                    continue;
+                }
+
+                if ($cat1->view == 1)
+                {
+                    $categories = [$cat1->id];
+                    $selectedGames = array_merge($selectedGames, $this->gamelist($categories, false));
+                }
+            }
 
             return response()->json(['error' => false, 'games' => $selectedGames, 'others' => []]);
         }

@@ -371,6 +371,32 @@
 
 					@endif
 				@endforeach
+        <!-- Slot games -->
+          @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+            @if ($unreadmsg>0)
+            <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('请确认纸条');">
+            @else
+            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('Slot Games', 'comp')">
+            @endif
+          @else
+          <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('需要登陆');">
+          @endif
+            <div class="sb-inner">
+              <div class="main-cont">
+                <div class="inner">
+                  <img class="main-img" src="/frontend/winnerscn/img/slot/Pragmatic Play.jpg">
+                  <button class="start-text">开始游戏</button>
+                </div>
+              </div>
+              <button class="name-btn">
+                SlotGames
+              </button>
+              <img class="plate" src="/frontend/winnerscn/img/bg/slot-plate.png">
+            </div>
+            <div class="icon-cont">
+              <img src="/frontend/winnerscn/img/slot-icon2/Pragmatic Play.png" />
+            </div>
+          </a>
 			@endif
 
     </div>
@@ -1383,16 +1409,17 @@
 	</div>
 </div>
 
-@if ($notice!=null)
-<div class="pop1" id="pop1" >
-    <p><br/></p>
+@if (count($noticelist) > 0)
+@foreach ($noticelist as $notice)
+<div class="pop1" id="pop{{$notice->id}}" style="left:{{300+$loop->index*350}}px;">
     <?php echo $notice->content ?>
-    <p><br/></p>
+    <p></br></p>
     <div style="position:absolute;left:5px;bottom:5px;width:190px;background-color:transparent;color:white;cursor: hand;display:content">
-      <input type="checkbox" name="notice1" id="notice1" value="" style="width:20px;">
-      <label for="notice1">今天不显示 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop1'), 1, document.getElementById('notice1').checked);">[关闭]</span></label>
+      <input type="checkbox" name="notice1" id="notice{{$notice->id}}" value="" style="width:20px;">
+      <label for="notice{{$notice->id}}">今天不显示 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop{{$notice->id}}'), {{$notice->id}}, document.getElementById('notice{{$notice->id}}').checked);">[关闭]</span></label>
     </div>
   </div>
+@endforeach
 @endif
 @yield('content')
 
@@ -1400,17 +1427,13 @@
 
 <script type='text/javascript'>
 var xigame_id = '488';
-<!--
-if ( getCookie( "divpopup01" ) == "check" ) {
-	closeWin2(document.getElementById('pop1'));
-}
-if ( getCookie( "divpopup02" ) == "check" ) {
-	closeWin2(document.getElementById('pop2'));
-}
-if ( getCookie( "divpopup03" ) == "check" ) {
-	closeWin2(document.getElementById('pop3'));
-}
--->
+@if (count($noticelist) > 0)
+  @foreach ($noticelist as $notice)
+    if ( getCookie( "divpopup0{{$notice->id}}" ) == "check" ) {
+      closeWin2(document.getElementById('pop{{$notice->id}}'));
+    }
+  @endforeach
+@endif
 
   function loginSubmit() {
       
