@@ -347,10 +347,15 @@ function getSlotGames(title, category) {
     var formData = new FormData();
     formData.append("_token", $("#_token").val());
     formData.append("category", category);
+    url = "/api/getgamelist";
+    if (category == 'comp')
+    {
+        url = "/api/getgamelist_vi";
+    }
     $('.gamelistModal').modal('show');
     $.ajax({
         type: "POST",
-        url: "/api/getgamelist_vi",
+        url: url,
         data: formData,
         processData: false,
         contentType: false,
