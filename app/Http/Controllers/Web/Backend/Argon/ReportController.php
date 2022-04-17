@@ -301,7 +301,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $categories[] = $date_cat;
                 }
             }
-            return view('backend.argon.report.game', compact('totalsummary', 'categories', 'totalstatics','user'));
+
+            //merge evolution&gac per config
+            $master = auth()->user();
+            while ($master !=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            $gacmerge = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::mergeGAC_EVO($master->id);
+            
+            return view('backend.argon.report.game', compact('totalsummary', 'categories', 'totalstatics','user','gacmerge'));
 
 
         }

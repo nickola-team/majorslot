@@ -24,6 +24,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $microstr;
         }
 
+        public static function mergeGAC_EVO($masterid)
+        {
+            $query = 'SELECT * FROM w_provider_info WHERE provider="gacinfo" and user_id=' . $masterid;
+            $gac_info = \DB::select($query);
+            $merge = 0;
+            foreach ($gac_info as $info)
+            {
+                $merge = $info->config;
+            }
+            return $merge;
+        }
+
         public static function getGameObj($tableId)
         {
             $gamelist_gac = GACController::getgamelist('gac');

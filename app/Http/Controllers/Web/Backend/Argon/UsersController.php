@@ -271,7 +271,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             ];
 
             $statistics = $statistics->paginate(20);
-            return view('backend.argon.agent.deal', compact('statistics', 'total'));
+            //check if evolution+gameartcasino
+            $master = $user;
+            while ($master !=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            $gacmerge = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::mergeGAC_EVO($master->id);
+            return view('backend.argon.agent.deal', compact('statistics', 'total','gacmerge'));
         }
 
         public function agent_transaction(\Illuminate\Http\Request $request)
@@ -565,7 +572,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             ];
 
             $statistics = $statistics->paginate(20);
-            return view('backend.argon.player.game', compact('statistics', 'total'));
+
+            //check if evolution+gameartcasino
+            $master = $user;
+            while ($master !=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            $gacmerge = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::mergeGAC_EVO($master->id);
+            return view('backend.argon.player.game', compact('statistics', 'total', 'gacmerge'));
         }
 
     }
