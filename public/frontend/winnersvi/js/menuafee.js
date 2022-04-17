@@ -347,7 +347,7 @@ function getSlotGames(title, category) {
     var formData = new FormData();
     formData.append("_token", $("#_token").val());
     formData.append("category", category);
-    url = "/api/getgamelist";
+    var url = "/api/getgamelist";
     if (category == 'comp')
     {
         url = "/api/getgamelist_vi";
