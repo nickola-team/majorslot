@@ -9,6 +9,10 @@
         {
             $game = $cc[0];
         }
+        if ($gacmerge == 1)
+        {
+            $game = preg_replace('/포츈스피드바카라/', 'VIP스피드바카라', $game);
+        }
 	?>
 <td>
     @if ($stat->user)

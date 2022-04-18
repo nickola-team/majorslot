@@ -1239,6 +1239,115 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End add game session');
             });
+
+            \Artisan::command('add:fixshop {shopid}', function($shopid){
+                $this->info('Start fixing games at shop');
+                if( $shopid ) 
+                {
+                    $shop = \VanguardLTE\Shop::find($shopid);
+                    if (!$shop)
+                    {
+                        $this->info('Could not find shop');
+                    }
+                    
+                    $shopCategories = \VanguardLTE\ShopCategory::where('shop_id', $shop->id)->get();
+                    if( count($shopCategories) ) 
+                    {
+                        $shopCategories = $shopCategories->pluck('category_id')->toArray();
+                    }
+                    $superCategories = [];
+
+                    $categories = \VanguardLTE\Category::where([
+                        'shop_id' => 0, 
+                        'parent' => 0,
+                        'site_id' => 0,
+                    ])->get();
+
+                    if( count($categories) ) 
+                    {
+                        foreach( $categories as $category ) 
+                        {
+                            $oldCategory = \VanguardLTE\Category::where([
+                                'shop_id' => $shop->id, 
+                                'original_id' => $category->original_id
+                            ])->first();
+                            if (!$oldCategory){
+                                $newCategory = $category->replicate();
+                                $newCategory->shop_id = $shop->id;
+                                $newCategory->save();
+                                $oldCategory = $newCategory;
+                                $this->info('Add category ' . $category->original_id);
+                            }
+                            $superCategories[$category->original_id] = $oldCategory->id;
+                            $categories_2 = \VanguardLTE\Category::where([
+                                'shop_id' => 0, 
+                                'parent' => $category->id
+                            ])->get();
+                            if( count($categories_2) ) 
+                            {
+                                foreach( $categories_2 as $category_2 ) 
+                                {
+                                    $oldCategory_2 = \VanguardLTE\Category::where([
+                                        'shop_id' => $shop->id, 
+                                        'original_id' => $category_2->original_id
+                                    ])->first();
+                                    if (!$oldCategory_2) {
+                                        $newCategory_2 = $category_2->replicate();
+                                        $newCategory_2->shop_id = $shop->id;
+                                        $newCategory_2->parent = $oldCategory->id;
+                                        $newCategory_2->save();
+                                        $oldCategory_2 = $newCategory_2;
+                                        $this->info('Add category ' . $category_2->original_id);
+                                    }
+                                    $superCategories[$category_2->original_id] = $oldCategory_2->id;
+                                }
+                            }
+                        }
+                    }
+
+                    $game_ids = [];
+                    if( count($shopCategories) ) 
+                    {
+                        $categories = \VanguardLTE\Category::whereIn('parent', $shopCategories)->where('shop_id', 0)->pluck('id')->toArray();
+                        $categories = array_merge($categories, $shopCategories);
+                        $game_ids = \VanguardLTE\GameCategory::whereIn('category_id', $categories)->groupBy('game_id')->pluck('game_id')->toArray();
+                    }
+                    if( count($game_ids) ) 
+                    {
+                        $games = \VanguardLTE\Game::where('shop_id', 0)->whereIn('id', $game_ids)->get();
+                    }
+                    else
+                    {
+                        $games = \VanguardLTE\Game::where('shop_id', 0)->get();
+                    }
+                    if( count($games) ) 
+                    {
+                        foreach( $games as $game ) 
+                        {
+                            $oldGame = \VanguardLTE\Game::where(['shop_id' => $shop->id, 'original_id' => $game->original_id])->first();
+                            if (!$oldGame) {
+                                $newGame = $game->replicate();
+                                $newGame->original_id = $game->id;
+                                $newGame->shop_id = $shop->id;
+                                $newGame->save();
+                                $categories = \VanguardLTE\GameCategory::where('game_id', $game->id)->get();
+                                if( count($categories) && count($superCategories) ) 
+                                {
+                                    foreach( $categories as $category ) 
+                                    {
+                                        $newCategory = $category->replicate();
+                                        $newCategory->game_id = $newGame->id;
+                                        $newCategory->category_id = $superCategories[$category->category_id];
+                                        $newCategory->save();
+                                    }
+                                }
+                                $this->info('Add game ' . $game->original_id);
+                            }
+                        }
+                    }
+                    $shop->update(['pending' => 0]);
+                }
+            });
         }
     }
 

@@ -144,19 +144,6 @@
               </a>
             </li>
            
-              @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-              <li class="event-link subpg-link">
-                <a href="javascript:void(0);">
-              @else
-              <li class="event-link">
-                <a href="javascript:void(0);"  onclick="alert_error('需要登陆');">
-              @endif
-                <div class="icon-cont">
-                  <img src="/frontend/winnerscn/img/icon/event.png">
-                </div>
-                <span>活动</span>
-              </a>
-            </li>
            
               @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
               <li class="notice-link subpg-link">
@@ -184,6 +171,9 @@
                 </div>
                 <span>我的页面</span>
               </a>
+            </li>
+            <li>
+              <a href="http://cn.hero-sl.com/"><img src="/frontend/winnersvi/img/CN.png"></a><a href="http://vi.hero-sl.com/"><img src="/frontend/winnersvi/img/VN.png"></a>
             </li>
           </ul>
         </div>
@@ -219,7 +209,7 @@
                       </span>
                     </div>
                     <div class="info">
-                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->balance,0) }}元</p>
+                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->balance,0) }}WON</p>
                     </div>
                   </div>
                   <div class="al-cont point-info-btn" data-toggle="modal" data-target=".mypageModal">
@@ -229,7 +219,7 @@
                       </span>
                     </div>
                     <div class="info">
-                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->deal_balance,0) }}元</p>
+                      <p class="player-balance" style="margin:0"> {{ number_format(Auth::user()->deal_balance,0) }}WON</p>
                     </div>
                   </div>
                   <!-- <div class="al-cont point-info-btn" data-toggle="modal" data-target=".mypageModal">
@@ -381,6 +371,32 @@
 
 					@endif
 				@endforeach
+        <!-- Slot games -->
+          @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+            @if ($unreadmsg>0)
+            <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('请确认纸条');">
+            @else
+            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('Slot Games', 'comp')">
+            @endif
+          @else
+          <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('需要登陆');">
+          @endif
+            <div class="sb-inner">
+              <div class="main-cont">
+                <div class="inner">
+                  <img class="main-img" src="/frontend/winnerscn/img/slot/Pragmatic Play.jpg">
+                  <button class="start-text">开始游戏</button>
+                </div>
+              </div>
+              <button class="name-btn">
+                SlotGames
+              </button>
+              <img class="plate" src="/frontend/winnerscn/img/bg/slot-plate.png">
+            </div>
+            <div class="icon-cont">
+              <img src="/frontend/winnerscn/img/slot-icon2/Hot.png" />
+            </div>
+          </a>
 			@endif
 
     </div>
@@ -425,7 +441,7 @@
       </div>
     </div>
     <div class="copyright-cont">
-        <span>ⓒ COPYRIGHT  Winner's Pro  2021 ALL RIGHTS RESERVED</span>
+        <span>&copy; COPYRIGHT  Winner's Pro  {{ now()->year }} ALL RIGHTS RESERVED</span>
     </div>
 	</div>
 
@@ -665,7 +681,7 @@
 										<div class="infos">
 											<p class="player-balance">
                       @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-                      {{ number_format(Auth::user()->balance,0)}} 元
+                      {{ number_format(Auth::user()->balance,0)}} WON
                       @endif</p>
 										</div>
 									</div>
@@ -759,7 +775,7 @@
 											<p>携带红包</p>
 										</div>
 										<div class="infos">
-											<p class="info player-point">{{Auth::check()?number_format(auth()->user()->deal_balance,0) : 0}}元</p>
+											<p class="info player-point">{{Auth::check()?number_format(auth()->user()->deal_balance,0) : 0}}WON</p>
 										</div>
 									</div>
 									<div class="form-group">
@@ -768,13 +784,13 @@
 										</div>
 										<div class="infos">
                       <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
-											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="无效内容" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="无效内容" data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="必须输入" data-parsley-min="300" data-parsley-min-message="最小存款 3百元以上" placeholder="最小存款 3百元以上可能（百元单位）" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
+											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="无效内容" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="无效内容" data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="必须输入" data-parsley-min="300" data-parsley-min-message="最小存款 30,000WON以上" placeholder="最小存款 30,000WON以上可能（0,000WON单位）" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
 											<div class="btn-grp" style="margin-top: 25px;">
-												<button type="button" onclick="addAmount(4,1)">1百</button>
-												<button type="button" onclick="addAmount(4,3)">3百</button>
-												<button type="button" onclick="addAmount(4,5)">5百</button>
-												<button type="button" onclick="addAmount(4,10)">1千</button>
-												<button type="button" onclick="addAmount(4,50)">5千</button>
+												<button type="button" onclick="addAmount(4,1)">10,000</button>
+												<button type="button" onclick="addAmount(4,3)">30,000</button>
+												<button type="button" onclick="addAmount(4,5)">50,000</button>
+												<button type="button" onclick="addAmount(4,10)">100,000</button>
+												<button type="button" onclick="addAmount(4,50)">500,000</button>
 												<button type="button" onclick="resetAmount(4)">复位</button>
 											</div>
 										</div>
@@ -794,7 +810,7 @@
 									df.submit(function (e) {
 										var amount = parseInt($("[name=point_money]").val());
 										if (amount % 10000 > 0) {
-											alert_error('请输入存款金额（百元单位）');
+											alert_error('请输入存款金额（0,000WON单位）');
 											e.preventDefault();
 										} else {
 											$(this).parsley().validate();
@@ -967,13 +983,13 @@
                   <p>存款金币</p>
                 </div>
                 <div class="infos">
-                  <input class="form-control w400" id="depositAmount" data-parsley-type="digits" data-parsley-type-message="无效内容" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="无效内容" data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="必须输入" data-parsley-min="300" data-parsley-min-message="最小存款 3百元以上" placeholder="最小存款 3百元以上可能（百元单位）" name="money" type="text" value="" data-parsley-id="0361"><ul class="parsley-errors-list" id="parsley-id-0361"></ul>
+                  <input class="form-control w400" id="depositAmount" data-parsley-type="digits" data-parsley-type-message="无效内容" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="无效内容" data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="必须输入" data-parsley-min="300" data-parsley-min-message="最小存款 30,000WON以上" placeholder="最小存款 30,000WON以上可能（0,000WON单位）" name="money" type="text" value="" data-parsley-id="0361"><ul class="parsley-errors-list" id="parsley-id-0361"></ul>
                   <div class="btn-grp" style="margin-top: 25px;">
-                    <button type="button" onclick="addAmount(1,1)">1百</button>
-                    <button type="button" onclick="addAmount(1,3)">3百</button>
-                    <button type="button" onclick="addAmount(1,5)">5百</button>
-                    <button type="button" onclick="addAmount(1,10)">1千</button>
-                    <button type="button" onclick="addAmount(1,50)">5千</button>
+                    <button type="button" onclick="addAmount(1,1)">10,000</button>
+                    <button type="button" onclick="addAmount(1,3)">30,000</button>
+                    <button type="button" onclick="addAmount(1,5)">50,000</button>
+                    <button type="button" onclick="addAmount(1,10)">100,000</button>
+                    <button type="button" onclick="addAmount(1,50)">500,000</button>
                     <button type="button" onclick="resetAmount(1)">复位</button>
                   </div>
                 </div>
@@ -1002,7 +1018,7 @@
       df.submit(function (e) {
         var amount = parseInt($("[name=money]").val());
         if (amount % 10000 > 0) {
-          alert_error('请输入存款金额（百元单位）');
+          alert_error('请输入存款金额（0,000WON单位）');
           e.preventDefault();
         } else {
           $(this).parsley().validate();
@@ -1028,7 +1044,7 @@
             <div class="infos">
               <p class="player-balance">
               @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-              {{ number_format(Auth::user()->balance,0)}} 元
+              {{ number_format(Auth::user()->balance,0)}} WON
               @endif
               </p>
             </div>
@@ -1072,13 +1088,13 @@
               <p>之款金额</p>
             </div>
             <div class="infos">
-              <input class="form-control w400 withdrawal_amount" id="withdrawalAmount" data-parsley-type="digits" data-parsley-type-message="无效内容" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="无效内容" data-parsley-trigger="focus change" data-parsley-required="true" data-parsley-required-message="必须输入" data-parsley-min="10000" data-parsley-min-message="最小取款 100元以上" placeholder="最小取款 100元以上可能 （百元单位）" name="money" type="text" value="" data-parsley-id="5344"><ul class="parsley-errors-list" id="parsley-id-5344"></ul>
+              <input class="form-control w400 withdrawal_amount" id="withdrawalAmount" data-parsley-type="digits" data-parsley-type-message="无效内容" data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="无效内容" data-parsley-trigger="focus change" data-parsley-required="true" data-parsley-required-message="必须输入" data-parsley-min="10000" data-parsley-min-message="最小取款 100WON以上" placeholder="最小取款 100WON以上可能 （0,000WON单位）" name="money" type="text" value="" data-parsley-id="5344"><ul class="parsley-errors-list" id="parsley-id-5344"></ul>
               <div class="btn-grp" style="margin-top: 25px;">
-                <button type="button" onclick="addAmount(2,1)">1百</button>
-                <button type="button" onclick="addAmount(2,3)">3百</button>
-                <button type="button" onclick="addAmount(2,5)">5百</button>
-                <button type="button" onclick="addAmount(2,10)">1千</button>
-                <button type="button" onclick="addAmount(2,50)">5千</button>
+                <button type="button" onclick="addAmount(2,1)">10,000</button>
+                <button type="button" onclick="addAmount(2,3)">30,000</button>
+                <button type="button" onclick="addAmount(2,5)">50,000</button>
+                <button type="button" onclick="addAmount(2,10)">100,000</button>
+                <button type="button" onclick="addAmount(2,50)">500,000</button>
                 <button type="button" onclick="resetAmount(2)">复位</button>
               </div>
             </div>
@@ -1108,7 +1124,7 @@
 
         var amount = parseInt($("[name=wt_money]").val());
         if (amount % 10000 > 0) {
-          alert_error('请输入支款金额（百元单位）');
+          alert_error('请输入支款金额（0,000WON单位）');
           e.preventDefault();
         } else {
           $(this).parsley().validate();
@@ -1393,16 +1409,17 @@
 	</div>
 </div>
 
-@if ($notice!=null)
-<div class="pop1" id="pop1" >
-    <p><br/></p>
+@if (count($noticelist) > 0)
+@foreach ($noticelist as $notice)
+<div class="pop1" id="pop{{$notice->id}}" style="left:{{300+$loop->index*350}}px;">
     <?php echo $notice->content ?>
-    <p><br/></p>
+    <p></br></p>
     <div style="position:absolute;left:5px;bottom:5px;width:190px;background-color:transparent;color:white;cursor: hand;display:content">
-      <input type="checkbox" name="notice1" id="notice1" value="" style="width:20px;">
-      <label for="notice1">今天不显示 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop1'), 1, document.getElementById('notice1').checked);">[关闭]</span></label>
+      <input type="checkbox" name="notice1" id="notice{{$notice->id}}" value="" style="width:20px;">
+      <label for="notice{{$notice->id}}">今天不显示 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop{{$notice->id}}'), {{$notice->id}}, document.getElementById('notice{{$notice->id}}').checked);">[关闭]</span></label>
     </div>
   </div>
+@endforeach
 @endif
 @yield('content')
 
@@ -1410,17 +1427,13 @@
 
 <script type='text/javascript'>
 var xigame_id = '488';
-<!--
-if ( getCookie( "divpopup01" ) == "check" ) {
-	closeWin2(document.getElementById('pop1'));
-}
-if ( getCookie( "divpopup02" ) == "check" ) {
-	closeWin2(document.getElementById('pop2'));
-}
-if ( getCookie( "divpopup03" ) == "check" ) {
-	closeWin2(document.getElementById('pop3'));
-}
--->
+@if (count($noticelist) > 0)
+  @foreach ($noticelist as $notice)
+    if ( getCookie( "divpopup0{{$notice->id}}" ) == "check" ) {
+      closeWin2(document.getElementById('pop{{$notice->id}}'));
+    }
+  @endforeach
+@endif
 
   function loginSubmit() {
       

@@ -821,7 +821,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     return ['error' => false, 'data' => ['url' => $data['gameURL']]];
                 }
-                return ['error' => true, 'data' => '제공사응답 오류', 'original' => $data];
+                return ['error' => true, 'data' => '제공사응답 오류', 'original' => json_encode($data)];
             }
             else // seamless integration mode
                 {
@@ -1321,10 +1321,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function syncpromo()
         {
-            return;
             if (config('app.ppmode') == 'bt') // BT integration mode
             {
-                $anyuser = \VanguardLTE\User::where('role_id', 1)->where('playing_game', 'pp')->first();
+                $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();
             }
             else
             {
@@ -1335,12 +1334,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
-            $url = PPController::getgamelink_pp('vs5aztecgems', $anyuser);
+            $gamelist = PPController::getgamelist('pp');
+            $rand = mt_rand(0,10);
+            $gamecode = $gamelist[$rand]['gamecode'];
+            $data = PPController::createPlayer($anyuser->id);
+            if ($data['error'] != 0) //create player failed
+            {
+                //오류
+                return ['error' => true, 'msg' => 'crete player error '];
+            }
+            $url = PPController::getgamelink_pp($gamecode, $anyuser);
             if ($url['error'] == true)
             {
-                return ['error' => true, 'msg' => 'game link error'];
+                return ['error' => true, 'msg' => 'game link error ' . $url['original']];
             }
-            $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
+
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url['data']['url']);
             if ($response->status() == 302)
             {
                 $location = $response->header('location');
@@ -1363,7 +1373,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $promo = \VanguardLTE\PPPromo::create();
                 }
                 $raceIds = [];
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/active/?symbol=vs5aztecgems&' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/active/?symbol='.$gamecode.'&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->active = $response->body();
@@ -1376,34 +1386,34 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol=vs5aztecgems&' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol='.$gamecode.'&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->tournamentdetails = $response->body();
                 }
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol=vs5aztecgems&' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol='.$gamecode.'&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->racedetails = $response->body();
                 }
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/tournament/v3/leaderboard/?symbol=vs5aztecgems&' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/v3/leaderboard/?symbol='.$gamecode.'&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->tournamentleaderboard = $response->body();
                 }
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol=vs5aztecgems&' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol='.$gamecode.'&' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->raceprizes = $response->body();
                 }
 
-                $response =  Http::post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol=vs5aztecgems&' . $mgckey , ['latestIdentity' => $raceIds]);
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol='.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
                 if ($response->ok())
                 {
                     $promo->racewinners = $response->body();
                 }
 
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/minilobby/games?' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/minilobby/games?' . $mgckey );
                 if ($response->ok())
                 {
                     $promo->games = $response->body();
@@ -1530,6 +1540,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return redirect($failed_url);
             }
+            event(new \VanguardLTE\Events\Game\PPGameVerified($user->username . ' / ' . $gamecode));
             $data = PPController::getBalance($user->id);
             if ($data['error'] == -1) {
                 //연동오류
@@ -1574,7 +1585,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return redirect($failed_url);
             }
-            $response = Http::withOptions(['allow_redirects' => false])->get($url['data']['url']);
+            $response = Http::withOptions(['allow_redirects' => false, 'proxy' => config('app.ppproxy')])->get($url['data']['url']);
             if ($response->status() == 302)
             {
                 $location = $response->header('location');
@@ -1591,7 +1602,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return redirect($failed_url);
                 }
                 $cver = 99951;
-                $response =  Http::get(config('app.ppgameserver') . '/gs2c/common/games-html5/games/vs/'. $gamecode .'/desktop/bootstrap.js');
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/common/games-html5/games/vs/'. $gamecode .'/desktop/bootstrap.js');
                 if ($response->ok())
                 {
                     $content = $response->body();
@@ -1609,7 +1620,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'repeat' => 0,
                     'mgckey' => explode('=', $mgckey)[1]
                 ];
-                $response = Http::withHeaders([
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
                     'Content-Type' => 'application/x-www-form-urlencoded'
                     ])->asForm()->post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
                 if (!$response->ok())

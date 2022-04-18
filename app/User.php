@@ -1143,15 +1143,15 @@ namespace VanguardLTE
         {
             $hirechy = $this->username;
             $parent = $this;
-            do
+            while ($parent!=null && !$parent->isInoutPartner() && $parent->role_id<$maxlevel)
             {
                 $parent = $parent->referral;
                 if ($parent!=null)
                 {
                     $hirechy = $hirechy . " → " . $parent->username;
                 }
+                
             }
-            while ($parent!=null && !$parent->isInoutPartner() && $parent->role_id<$maxlevel);
             return $hirechy;
         }
 

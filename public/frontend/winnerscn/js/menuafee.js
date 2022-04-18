@@ -347,10 +347,15 @@ function getSlotGames(title, category) {
     var formData = new FormData();
     formData.append("_token", $("#_token").val());
     formData.append("category", category);
+    var url = "/api/getgamelist";
+    if (category == 'comp')
+    {
+        url = "/api/getgamelist_vi";
+    }
     $('.gamelistModal').modal('show');
     $.ajax({
         type: "POST",
-        url: "/api/getgamelist",
+        url: url,
         data: formData,
         processData: false,
         contentType: false,
@@ -400,7 +405,7 @@ function getSlotGames(title, category) {
                                         <img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg">
                                         </div>
                                         <div class="info-cont">
-                                        <span class="game-name">${data.games[i].title}</span>
+                                        <span class="game-name">${data.games[i].enname}</span>
                                         </div>
                                         <button class="start-btn">开始游戏</button>
                                     </div>

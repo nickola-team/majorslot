@@ -11,10 +11,10 @@
 <!-- 팝업메시지 -->
 @if (count($noticelist)>0)
 @foreach ($noticelist as $notice)
-<div class="modal fade in" id="liveperson{{$notice->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade in" id="liveperson{{$notice->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" >
     <div class="modal-dialog" role="document" style="padding-right: 16px; width: 768px !important; margin-top: 58px;margin-left:{{$loop->index*500}}px">
         <div class="modal-content noticecontent">
-            <div class="modal-body noticebox">
+            <div class="modal-body noticebox" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                 <?php echo $notice->content ?>
             </div>
             <div class="modal-footer noticefooter">

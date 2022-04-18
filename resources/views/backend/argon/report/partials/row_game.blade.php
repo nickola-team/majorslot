@@ -1,6 +1,13 @@
 @if ($total)
 <td>{{$user->username}}</td>
-<td>{{$stat->title}}</td>
+<?php
+    $game = $stat->title;
+    if ($gacmerge == 1)
+    {
+        $game = preg_replace('/GameArtCasino/', 'EvolutionVIP', $game);
+    }
+?>
+<td>{{$game}}</td>
 <td>{{number_format($stat->totalbet)}}</td>
 <td>{{number_format($stat->totalwin)}}</td>
 <td>{{number_format($stat->totalbet-$stat->totalwin)}}</td>
@@ -11,7 +18,14 @@
 	<tr>
 	@endif
     <td>{{$user->username}}</td>
-    <td>{{$stat['title']}}</td>
+    <?php
+        $game = $stat['title'];
+        if ($gacmerge == 1)
+        {
+            $game = preg_replace('/GameArtCasino/', 'EvolutionVIP', $game);
+        }
+    ?>
+    <td>{{$game}}</td>
     <td>{{number_format($stat['totalbet'])}}</td>
     <td>{{number_format($stat['totalwin'])}}</td>
     <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>

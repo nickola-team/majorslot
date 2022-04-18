@@ -114,6 +114,7 @@ return [
     'ppsecurelogin' =>  env('PP_SECURELOGIN', 'mjr_major'),
     'ppapi' => env('PP_API','https://api-sg0.pragmaticplay.net/IntegrationService/v3'),
     'ppgameserver' => env('PP_SERVER','https://major-sg0.pragmaticplay.net'),
+    'ppproxy' => env('PP_PROXY', ''),
     
     /*
     Booongo  keys

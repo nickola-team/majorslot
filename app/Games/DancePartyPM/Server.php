@@ -336,7 +336,7 @@ namespace VanguardLTE\Games\DancePartyPM
                     
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') == 0 ) 
                     {
-                        $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freeSpinNum);
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                         // FreeStack
@@ -387,7 +387,7 @@ namespace VanguardLTE\Games\DancePartyPM
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                     if( $isEnd == true ) 
                     {
-                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&apwa=0.00&fsmul_total=1&apt=fs_inc_mul&apv=1&fslim=60&gwm='.$bonusMpl.'&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        $spinType = 'c&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&apwa=0.00&fsmul_total=1&apt=fs_inc_mul&apv='.$slotSettings->GetGameData($slotSettings->slotId . 'IncMplValue').'&fslim=60&gwm='.$bonusMpl.'&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                     }
                     else
                     {
