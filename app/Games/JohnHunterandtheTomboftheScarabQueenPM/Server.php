@@ -70,6 +70,7 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 25);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,7,4,2,8,9,8,5,6,7,8,6,7,3,9]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -82,6 +83,9 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
+                    if (isset($lastEvent->serverResponse->RoundID)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
                     }
                     $bet = $lastEvent->serverResponse->bet;
                 }
@@ -389,6 +393,11 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '275' . substr($roundstr, 4, 7);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                 }
                 $Balance = $slotSettings->GetBalance();
                 if($winType == 'win'){
@@ -673,6 +682,7 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                 $strReelSa = $initReels['reel1'][3].','.$initReels['reel2'][3].','.$initReels['reel3'][3].','.$initReels['reel4'][3].','.$initReels['reel5'][3];
                 $strReelSb = $initReels['reel1'][-1].','.$initReels['reel2'][-1].','.$initReels['reel3'][-1].','.$initReels['reel4'][-1].','.$initReels['reel5'][-1];
                 $strFreeSpinResponse = '';
+                $isState = true;
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
                 {
                     $totalRespinMoney = $totalRespinMoney + $freemoneyTotalWin;
@@ -691,15 +701,18 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                         }else{
                             $strFreeSpinResponse = $strFreeSpinResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&prg_m=cp,acw&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&prg='. $totalRespinMoney . ',' . ($totalRespinMoney * $betline) .
                                 '&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&rs=t&rs_p=0&rs_c=1&rs_m=1&n_reel_set=1';
+                                $isState = false;
                         }
                     }
                     else
                     {
                         $strFreeSpinResponse = $strFreeSpinResponse . '&prg_m=cp,acw&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&prg='. $totalRespinMoney . ',' . ($totalRespinMoney * $betline) .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&n_reel_set=1';
+                        $isState = false;
                     }
                     if($scattersCount >=3 ){
                         $spinType = 's';
                         $strFreeSpinResponse = $strFreeSpinResponse . 'psym=1~'.$totalWin.'~'.implode(',', $_obf_scatterposes);
+                        $isState = false;
                     }
                 }else
                 {
@@ -708,7 +721,8 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
                     if($scattersCount >=3 ){
                         $spinType = 's';
-                        $strFreeSpinResponse = '&tw=' . $totalWin.'&n_reel_set=1&prg_m=cp,acw&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=0.00&fs=1&fsres=0.00&psym=1~'.$totalWin.'~'.implode(',', $_obf_scatterposes);
+                        $strFreeSpinResponse = '&tw=' . $totalWin.'&n_reel_set=1&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=0.00&fs=1&fsres=0.00&psym=1~'.$totalWin.'~'.implode(',', $_obf_scatterposes);
+                        $isState = false;
                     }else{
                         $strFreeSpinResponse = '&tw=' . $totalWin.'&n_reel_set=0';
                     }
@@ -798,10 +812,9 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . 
-                    ',"Msr":' . $moneyCollectSymbol . ',"totalRespinMoney":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalRespinMoney') . ',"MoneyValue":' . json_encode($_moneyValue) . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"ReplayGameLogs":'.json_encode($replayLog).',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
+                    ',"Msr":' . $moneyCollectSymbol. ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"totalRespinMoney":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalRespinMoney') . ',"MoneyValue":' . json_encode($_moneyValue) . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"ReplayGameLogs":'.json_encode($replayLog).',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . 
                     ',"LastReel":'.json_encode($lastReel).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $_obf_totalWin, $slotEvent['slotEvent']);
-                
+                $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin'), $slotEvent['slotEvent'], $isState);
                 if( $scattersCount >= 3 && $slotEvent['slotEvent']!='freespin') 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
@@ -810,9 +823,39 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
                 }
             }
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
+                $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
+            }
             $slotSettings->SaveGameData();
             \DB::commit();
             return $response;
+        }
+        public function saveGameLog($slotEvent, $response_log, $roundId, $slotSettings){
+            $game_log = [];
+            $game_log['roundId'] = $roundId;
+            $response_loges = explode('&', $response_log);
+            $response = [];
+            foreach( $response_loges as $param ) 
+            {
+                $_obf_arr = explode('=', $param);
+                $response[$_obf_arr[0]] = $_obf_arr[1];
+            }
+
+            $request = [];
+            foreach( $slotEvent as $index => $value ) 
+            {
+                if($index != 'slotEvent'){
+                    $request[$index] = $value;
+                }
+            }
+            $game_log['request'] = $request;
+            $game_log['response'] = $response;
+            $game_log['currency'] = 'KRW';
+            $game_log['currencySymbol'] = '₩';
+            $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
+
+            $str_gamelog = json_encode($game_log);
+            $slotSettings->saveGameLog($str_gamelog, $roundId);
         }
     }
 
