@@ -1348,6 +1348,13 @@ namespace VanguardLTE\Console
                     $shop->update(['pending' => 0]);
                 }
             });
+
+            \Artisan::command('veryfy:bet', function () {
+                set_time_limit(0);
+                $this->info("Begin pp game verify bet");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::verify_bet();
+                $this->info($res['msg']);
+            });
         }
     }
 
