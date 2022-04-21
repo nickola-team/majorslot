@@ -316,7 +316,6 @@
 			<div style="position:relative; height:660px; overflow:hidden; clear:both;">
 				<div style="position:absolute; width:1920px; left:50%; margin-left:-960px;">   
 					<div id="slider">
-						<img src="/frontend/bella/tutu/images/slideshow3.jpg" />
 						<img src="/frontend/bella/tutu/images/slideshow1.jpg" />
 						<img src="/frontend/bella/tutu/images/slideshow2.jpg" />
 					</div>
