@@ -1343,6 +1343,26 @@ namespace VanguardLTE\Console
                                 }
                                 $this->info('Add game ' . $game->original_id);
                             }
+                            else
+                            {
+                                $oldCategory = \VanguardLTE\GameCategory::where(['game_id' => $oldGame->id])->first();
+                                if (!$oldCategory)
+                                {
+                                    $categories = \VanguardLTE\GameCategory::where('game_id', $game->id)->get();
+                                    if( count($categories) && count($superCategories) ) 
+                                    {
+                                        foreach( $categories as $category ) 
+                                        {
+                                            $newCategory = $category->replicate();
+                                            $newCategory->game_id = $oldGame->id;
+                                            $newCategory->category_id = $superCategories[$category->category_id];
+                                            $newCategory->save();
+                                        }
+                                    }
+                                    $this->info('Add game category ' . $game->original_id);
+                                }
+
+                            }
                         }
                     }
                     $shop->update(['pending' => 0]);
