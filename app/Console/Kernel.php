@@ -1358,8 +1358,9 @@ namespace VanguardLTE\Console
                                             $newCategory->category_id = $superCategories[$category->category_id];
                                             $newCategory->save();
                                         }
+                                        $this->info('Add game category ' . $game->original_id);
+
                                     }
-                                    $this->info('Add game category ' . $game->original_id);
                                 }
 
                             }
