@@ -691,7 +691,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'icon' => '/frontend/Default/ico/pp/1301/Spaceman.png',
                     'type' => 'slot',
                     'gameType' => 'rng',
-                    'view' => $view
+                    'view' => 1
                 ]);
  
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
