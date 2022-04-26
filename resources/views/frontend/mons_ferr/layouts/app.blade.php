@@ -10,29 +10,29 @@
 		
 		<title>@yield('page-title')</title>
 		<meta name="viewport" content="width=1600,minimum-scale=0,maximum-scale=5,target-densitydpi=device-dpi">
-		<link rel="shortcut icon" href="/frontend/bella/images/favicon/favicon.html" type="image/x-icon">
+		<link rel="shortcut icon" href="/frontend/monster/images/favicon/favicon.html" type="image/x-icon">
 
-		<link rel="stylesheet" type="text/css" href="/frontend/bella/tutu/css/common.css">
-		<link rel="stylesheet" type="text/css" href="/frontend/bella/tutu/css/basic.css">
-		<link rel="stylesheet" type="text/css" href="/frontend/bella/tutu/css/layoutb04c.css?v=31234">
-		<link rel="stylesheet" type="text/css" href="/frontend/bella/tutu/css/animations.css">
-		<link rel="stylesheet" type="text/css" href="/frontend/bella/css/odometer-theme-default.css">
+		<link rel="stylesheet" type="text/css" href="/frontend/monster/tutu/css/common.css">
+		<link rel="stylesheet" type="text/css" href="/frontend/monster/tutu/css/basic.css">
+		<link rel="stylesheet" type="text/css" href="/frontend/monster/tutu/css/layoutb04c.css?v=31234">
+		<link rel="stylesheet" type="text/css" href="/frontend/monster/tutu/css/animations.css">
+		<link rel="stylesheet" type="text/css" href="/frontend/monster/css/odometer-theme-default.css">
 
-		<script type="text/javascript" src="/frontend/bella/tutu/js/showid.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/jquery-1.8.3.min.js"></script>
-		<script type="text/javascript" src="/frontend/bella/tutu/jq/sk_popup/sk_popup.js"></script>
-		<script type="text/javascript" src="/frontend/bella/tutu/js/sk_tab.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/sweetalert.min.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/ajax_utf_8.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/playd7cf.js?v=xxx1.2"></script>
-		<script type="text/javascript" src="/frontend/bella/js/swiper.min.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/script3860.js?v=1"></script>
-		<script type="text/javascript" src="/frontend/bella/js/paging.min.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/jsRolling.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/numeric.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/odometer.min.js"></script>
-		<script type="text/javascript" src="/frontend/bella/js/action.js"></script>
-		<script type="text/javascript" src="/frontend/bella/tutu/jq/common/common.js"></script><!-- script -->
+		<script type="text/javascript" src="/frontend/monster/tutu/js/showid.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="/frontend/monster/tutu/jq/sk_popup/sk_popup.js"></script>
+		<script type="text/javascript" src="/frontend/monster/tutu/js/sk_tab.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/sweetalert.min.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/ajax_utf_8.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/playd7cf.js?v=xxx1.2"></script>
+		<script type="text/javascript" src="/frontend/monster/js/swiper.min.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/script3860.js?v=1"></script>
+		<script type="text/javascript" src="/frontend/monster/js/paging.min.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/jsRolling.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/numeric.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/odometer.min.js"></script>
+		<script type="text/javascript" src="/frontend/monster/js/action.js"></script>
+		<script type="text/javascript" src="/frontend/monster/tutu/jq/common/common.js"></script><!-- script -->
 	</head>
 	<div class="common_ajax"></div>
 	<script type="text/javascript">
@@ -91,8 +91,8 @@
 			if(e == 'deposit'){
 				$("#realtimeWithdraw").hide();
 				$("#realtimeDeposit").show().css("display", "table");
-				$("#dp_list_btn").attr("src", "/frontend/bella/images/main_con3_1_title_on.html");
-				$("#wd_list_btn").attr("src", "/frontend/bella/images/main_con3_2_title.html");
+				$("#dp_list_btn").attr("src", "/frontend/monster/images/main_con3_1_title_on.html");
+				$("#wd_list_btn").attr("src", "/frontend/monster/images/main_con3_2_title.html");
 				$('.main_con2_title1').removeClass('taboff');
 				$('.main_con2_title2').removeClass('taboff');
 				$('.main_con2_title1').addClass('tabon');
@@ -102,8 +102,8 @@
 			}else {
 				$("#realtimeDeposit").hide();
 				$("#realtimeWithdraw").show().css("display", "table");
-				$("#dp_list_btn").attr("src", "/frontend/bella/images/main_con3_1_title.html");
-				$("#wd_list_btn").attr("src", "/frontend/bella/images/main_con3_2_title_on.html");
+				$("#dp_list_btn").attr("src", "/frontend/monster/images/main_con3_1_title.html");
+				$("#wd_list_btn").attr("src", "/frontend/monster/images/main_con3_2_title_on.html");
 
 				$('.main_con2_title1').removeClass('taboff');
 				$('.main_con2_title2').removeClass('taboff');
@@ -182,7 +182,7 @@
 		<input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
 		<div id="casino_1" class="popup_style02 popup_none">
 			<div class="popup_wrap">
-				<div class="close_box"><a href="#" class="casino_1_close"><img src="/frontend/bella/tutu/images/popup_close.png"></a></div>
+				<div class="close_box"><a href="#" class="casino_1_close"><img src="/frontend/monster/tutu/images/popup_close.png"></a></div>
 				<div class="popupbox" id="popupbox_ajax"></div>
 				</div>
 			</div>
@@ -193,7 +193,7 @@
 		<!-- 입금신청, 출금신청, 머니이동, 쿠폰신청, 콤프신청, 이벤트, 공지사항 -->
 		<div id="sub_pop1" class="popup_style02 popup_none">
 			<div class="popup_wrap">
-				<div class="close_box"><a href="#" class="sub_pop1_close"><img src="/frontend/bella/tutu/images/popup_close.png"></a></div>
+				<div class="close_box"><a href="#" class="sub_pop1_close"><img src="/frontend/monster/tutu/images/popup_close.png"></a></div>
 				<div class="popupbox">
 					<div class="popup_tab_wrap">						
 						<ul class="popup_tab popup_tab1">
@@ -224,7 +224,7 @@
 		<!-- 마이페이지, 정보수정, 입금/출금내역, 지인친구목록, 출석체크목록, 머니이동목록, 쪽지함 -->
 		<div id="sub_pop2" class="popup_style02 popup_none">
 			<div class="popup_wrap">
-				<div class="close_box"><a href="#" class="sub_pop2_close"><img src="/frontend/bella/tutu/images/popup_close.png"></a></div>
+				<div class="close_box"><a href="#" class="sub_pop2_close"><img src="/frontend/monster/tutu/images/popup_close.png"></a></div>
 				<div class="popupbox">            
 					<div class="popup_tab_wrap">
 						<ul class="popup_tab popup_tab2">
@@ -247,26 +247,26 @@
 			<div id="header_wrap">
 				<div class="header_box">
 					<div class="logo">
-						<a href="/"><img src="/frontend/bella/tutu/images/logoae52.png?v=5" style="width:250px;"></a>
+						<a href="/"><img src="/back/img/mons_ferr_logo.png?v=5" style="width:250px;"></a>
 					</div>
-					<div class="gnb">						
+					<div class="gnb">
 						
 						<ul>
 						@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-							<li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab1','charge');" data-popup-ordinal="0" id="open_34483963"><img src="/frontend/bella/tutu/images/gnb1.png" style="display: inline;"><img src="/frontend/bella/tutu/images/gnb1over.png" style="display: none;" class="mouseover3"></a></li>
-                            <li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab2','excharge');" data-popup-ordinal="1" id="open_80823455"><img src="/frontend/bella/tutu/images/gnb2.png" style="display: inline;"><img src="/frontend/bella/tutu/images/gnb2over.png" style="display: none;" class="mouseover3"></a></li>
-                            <li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab3','inoutList');" data-popup-ordinal="2" id="open_9185439"><img src="/frontend/bella/tutu/images/gnb11.png" style="display: inline;"><img src="/frontend/bella/tutu/images/gnb11over.png" style="display: none;" class="mouseover3"></a></li>
-                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab4','letterList');" data-popup-ordinal="3" id="open_59824731"><img src="/frontend/bella/tutu/images/gnb9.png" style="display: inline;"><img src="/frontend/bella/tutu/images/gnb9over.png" style="display: none;" class="mouseover3"></a></li>
-                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab5','chatList');" data-popup-ordinal="4" id="open_81567995"><img src="/frontend/bella/tutu/images/gnb8.png" style="display: inline;"><img src="/frontend/bella/tutu/images/gnb8over.png" style="display: none;" class="mouseover3"></a></li>
-                            <li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab6','noticeList');" data-popup-ordinal="5" id="open_37017382"><img src="/frontend/bella/tutu/images/gnb7.png" style="display: inline;"><img src="/frontend/bella/tutu/images/gnb7over.png" style="display: none;" class="mouseover3"></a></li>
+							<li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab1','charge');" data-popup-ordinal="0" id="open_34483963"><img src="/frontend/monster/tutu/images/gnb1.png" style="display: inline;"><img src="/frontend/monster/tutu/images/gnb1over.png" style="display: none;" class="mouseover3"></a></li>
+                            <li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab2','excharge');" data-popup-ordinal="1" id="open_80823455"><img src="/frontend/monster/tutu/images/gnb2.png" style="display: inline;"><img src="/frontend/monster/tutu/images/gnb2over.png" style="display: none;" class="mouseover3"></a></li>
+                            <li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab3','inoutList');" data-popup-ordinal="2" id="open_9185439"><img src="/frontend/monster/tutu/images/gnb11.png" style="display: inline;"><img src="/frontend/monster/tutu/images/gnb11over.png" style="display: none;" class="mouseover3"></a></li>
+                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab4','letterList');" data-popup-ordinal="3" id="open_59824731"><img src="/frontend/monster/tutu/images/gnb9.png" style="display: inline;"><img src="/frontend/monster/tutu/images/gnb9over.png" style="display: none;" class="mouseover3"></a></li>
+                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab5','chatList');" data-popup-ordinal="4" id="open_81567995"><img src="/frontend/monster/tutu/images/gnb8.png" style="display: inline;"><img src="/frontend/monster/tutu/images/gnb8over.png" style="display: none;" class="mouseover3"></a></li>
+                            <li><a href="#" class="sub_pop1_open" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionProc('tab6','noticeList');" data-popup-ordinal="5" id="open_37017382"><img src="/frontend/monster/tutu/images/gnb7.png" style="display: inline;"><img src="/frontend/monster/tutu/images/gnb7over.png" style="display: none;" class="mouseover3"></a></li>
 							
 						@else							
-							<li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/gnb1.png"><img src="/frontend/bella/tutu/images/gnb1over.png" style="display:none;" class="mouseover3"></a></li>
-                            <li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/gnb2.png"><img src="/frontend/bella/tutu/images/gnb2over.png" style="display:none;" class="mouseover3"></a></li>
-                            <li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/gnb11.png"><img src="/frontend/bella/tutu/images/gnb11over.png" style="display:none;" class="mouseover3"></a></li>
-                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/gnb9.png"><img src="/frontend/bella/tutu/images/gnb9over.png" style="display:none;" class="mouseover3"></a></li>
-                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/gnb8.png"><img src="/frontend/bella/tutu/images/gnb8over.png" style="display:none;" class="mouseover3"></a></li>
-                            <li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/gnb7.png"><img src="/frontend/bella/tutu/images/gnb7over.png" style="display:none;" class="mouseover3"></a></li>
+							<li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/gnb1.png"><img src="/frontend/monster/tutu/images/gnb1over.png" style="display:none;" class="mouseover3"></a></li>
+                            <li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/gnb2.png"><img src="/frontend/monster/tutu/images/gnb2over.png" style="display:none;" class="mouseover3"></a></li>
+                            <li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/gnb11.png"><img src="/frontend/monster/tutu/images/gnb11over.png" style="display:none;" class="mouseover3"></a></li>
+                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/gnb9.png"><img src="/frontend/monster/tutu/images/gnb9over.png" style="display:none;" class="mouseover3"></a></li>
+                            <li style="margin-left: 10px;"><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/gnb8.png"><img src="/frontend/monster/tutu/images/gnb8over.png" style="display:none;" class="mouseover3"></a></li>
+                            <li><a href="#" class="sub_pop1_open" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/gnb7.png"><img src="/frontend/monster/tutu/images/gnb7over.png" style="display:none;" class="mouseover3"></a></li>
 						@endif
 						</ul>
 						
@@ -279,9 +279,9 @@
 				<div class="login">
 				@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 					<ul>
-                        <li style="color:#222"><img src="/frontend/bella/tutu/images/5UNZI____.png" width="20">&nbsp;{{ Auth::user()->username }}님 환영합니다.</li>
-                        <li style="color:#222"><img src="/frontend/bella/tutu/images/coin.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->balance) }}</span> 원</li>
-						<li style="color:#222"><img src="/frontend/bella/tutu/images/coin_bonus.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->deal_balance) }}</span> 원</li>
+                        <li style="color:#222"><img src="/frontend/monster/tutu/images/5UNZI____.png" width="20">&nbsp;{{ Auth::user()->username }}님 환영합니다.</li>
+                        <li style="color:#222"><img src="/frontend/monster/tutu/images/coin.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->balance) }}</span> 원</li>
+						<li style="color:#222"><img src="/frontend/monster/tutu/images/coin_bonus.png" width="20">&nbsp;&nbsp;<span id="lnOwnMoney">{{ number_format(Auth::user()->deal_balance) }}</span> 원</li>
 						<li><a href="/logout"><span class="login_btn2">로그아웃</span></a></li>
                     </ul>
 				@else
@@ -296,7 +296,7 @@
 			</div> 
 			
 			<!-- ▼slideshow6▼ -->
-			<script src="/frontend/bella/tutu/jq/slideshow6/flux.js" type="text/javascript" charset="utf-8"></script>
+			<script src="/frontend/monster/tutu/jq/slideshow6/flux.js" type="text/javascript" charset="utf-8"></script>
 			<script type="text/javascript" charset="utf-8">
 				$(function(){
 					if(!flux.browser.supportsTransitions)
@@ -316,13 +316,13 @@
 			<div style="position:relative; height:660px; overflow:hidden; clear:both;">
 				<div style="position:absolute; width:1920px; left:50%; margin-left:-960px;">   
 					<div id="slider">
-						<img src="/frontend/bella/tutu/images/slideshow1.jpg" />
-						<img src="/frontend/bella/tutu/images/slideshow2.jpg" />
+						<img src="/frontend/monster/tutu/images/slideshow1.jpg" />
+						<img src="/frontend/monster/tutu/images/slideshow2.jpg" />
 					</div>
 				</div>
 			</div>
 			<!-- ▲slideshow6▲ -->
-			<script type="text/javascript" src="/frontend/bella/tutu/js/sk_table.js"></script><!-- sk_실시간입출금현황 롤링 -->
+			<script type="text/javascript" src="/frontend/monster/tutu/js/sk_table.js"></script><!-- sk_실시간입출금현황 롤링 -->
 			
 
 			<div class="main_game_wrap">
@@ -331,12 +331,12 @@
 						<ul>
 							@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 							
-							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subLive');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/bella/tutu/images/main_game1.png" style="display: inline;"><img src="/frontend/bella/tutu/images/main_game1.png" class="mouseover1" style="display: none;"></a></li>
-                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/bella/tutu/images/main_game2.png" style="display: inline;"><img src="/frontend/bella/tutu/images/main_game2.png" class="mouseover1" style="display: none;"></a></li>                
+							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subLive');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/monster/tutu/images/main_game1.png" style="display: inline;"><img src="/frontend/monster/tutu/images/main_game1.png" class="mouseover1" style="display: none;"></a></li>
+                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/monster/tutu/images/main_game2.png" style="display: inline;"><img src="/frontend/monster/tutu/images/main_game2.png" class="mouseover1" style="display: none;"></a></li>                
                                                                              
 							@else
-							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/main_game1.png"><img src="/frontend/bella/tutu/images/main_game1.png" class="mouseover1" style="display:none;"></a></li>
-							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/bella/tutu/images/main_game2.png"><img src="/frontend/bella/tutu/images/main_game2.png" class="mouseover1" style="display:none;"></a></li>                
+							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/main_game1.png"><img src="/frontend/monster/tutu/images/main_game1.png" class="mouseover1" style="display:none;"></a></li>
+							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/monster/tutu/images/main_game2.png"><img src="/frontend/monster/tutu/images/main_game2.png" class="mouseover1" style="display:none;"></a></li>                
 							@endif
 						</ul>
 					</div>
@@ -363,12 +363,12 @@
 									@else
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
 									@endif
-									@if (file_exists( public_path() . '/frontend/bella/tutu/images/slot-icon/' . $category->title.'.gif'))
-										<img src="/frontend/bella/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 252px;height: 230px;border-radius:30px">
+									@if (file_exists( public_path() . '/frontend/monster/tutu/images/slot-icon/' . $category->title.'.gif'))
+										<img src="/frontend/monster/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 252px;height: 230px;border-radius:30px">
 									@else
-										<img src="/frontend/bella/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 252px;height: 230px;border-radius:30px">
+										<img src="/frontend/monster/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 252px;height: 230px;border-radius:30px">
 									@endif
-										<img src="/frontend/bella/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
+										<img src="/frontend/monster/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
 									</a>
 								</li>
 								<?php $catcount = $catcount +1; ?>
@@ -380,8 +380,8 @@
 							@for ($i=0;$i<$comingSoon;$i++)
 							<li>
 								<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
-									<img src="/frontend/bella/tutu/images/slot-icon/coming_soon.png" style="width: 252px;height: 230px;border-radius:30px">
-									<img src="/frontend/bella/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
+									<img src="/frontend/monster/tutu/images/slot-icon/coming_soon.png" style="width: 252px;height: 230px;border-radius:30px">
+									<img src="/frontend/monster/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
 								</a>
 							</li>
 							@endfor
@@ -428,7 +428,7 @@
 					$("#strBankName").html(bank);
 				}
 				else if(pid == "subSlot"){
-					data =`<div class="game_tit"><img src="/frontend/bella/tutu/images/casino_title3.png"></div><div class="game_list_wrap"><ul>`;
+					data =`<div class="game_tit"><img src="/frontend/monster/tutu/images/casino_title3.png"></div><div class="game_list_wrap"><ul>`;
 					@if ($categories && count($categories))
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
@@ -441,12 +441,12 @@
 								@else
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 								@endif										
-								@if (file_exists( public_path() . '/frontend/bella/tutu/images/slot/' . $category->title.'.gif'))
-								data += `<img src="/frontend/bella/tutu/images/slot/{{ $category->title.'.gif' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								@if (file_exists( public_path() . '/frontend/monster/tutu/images/slot/' . $category->title.'.gif'))
+								data += `<img src="/frontend/monster/tutu/images/slot/{{ $category->title.'.gif' }}" style="width: 297px;height: 114px;  display: inline;">`;
 								@else
-								data += `<img src="/frontend/bella/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								data += `<img src="/frontend/monster/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
 								@endif
-								data += `<img src="/frontend/bella/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
+								data += `<img src="/frontend/monster/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
 								data += `</a>`;     
 								data += `</li>`;
 							@endif
@@ -458,7 +458,7 @@
 					$("#popupbox_ajax").html(data);
 				}
 				else if(pid == "subLive"){
-					data =`<div class="game_tit"><img src="/frontend/bella/tutu/images/casino_title2.png"></div><div class="game_list_wrap"><ul>`;
+					data =`<div class="game_tit"><img src="/frontend/monster/tutu/images/casino_title2.png"></div><div class="game_list_wrap"><ul>`;
 					@if ($categories && count($categories))
 						@foreach($categories AS $index=>$category)
 							@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
@@ -471,8 +471,8 @@
 								@else
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 								@endif										
-								data += `<img src="/frontend/bella/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
-								data += `<img src="/frontend/bella/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
+								data += `<img src="/frontend/monster/tutu/images/slot/{{ $category->title.'.png' }}" style="width: 297px;height: 114px;  display: inline;">`;
+								data += `<img src="/frontend/monster/tutu/images/over01.png" class="mouseover2" style="display: none; height: 114px; width: 297px;">`;
 								data += `</a>`;     
 								data += `</li>`;
 							@endif
@@ -674,8 +674,8 @@
 									<div class="money">
 										<ul>`
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/bella/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-											<li style="width:200px; text-align:left;"><img src="/frontend/bella/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											data+= `<li style="width:250px; text-align:left;"><img src="/frontend/monster/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/monster/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
 											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>`;
 										@endif	
 										data+= `</ul>
@@ -753,8 +753,8 @@
 									<div class="money">
 										<ul>`;
 										@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/bella/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-											<li style="width:200px; text-align:left;"><img src="/frontend/bella/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
+											data+=`<li style="width:250px; text-align:left;"><img src="/frontend/monster/tutu/images/ww_icon.png" height="26"> 지갑머니 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->balance) }}원</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+											<li style="width:200px; text-align:left;"><img src="/frontend/monster/tutu/images/ww_icon.png" height="26"> 보너스 : <span class="font05" id="lnMoney">{{ number_format(Auth::user()->deal_balance) }}원</span>&nbsp;&nbsp;</li>
 											<li><a href="#" onclick="javascript:convertDeal({{Auth::user()->deal_balance}});"><span class="login_btn1">보너스전환</span></a></li>  `;
 										@endif
 										data+=`</ul>

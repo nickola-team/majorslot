@@ -84,7 +84,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 1, 
                 2, 
                 3
-            ]) && (!$user->shop || $user->shop->is_blocked) ) 
+            ]) && (!$user->shop || $user->shop->is_blocked || $user->shop->pending != 0) ) 
             {
                 return response()->json(['error' => true, 'msg' => trans('app.your_shop_is_blocked')]);
             }

@@ -691,7 +691,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'icon' => '/frontend/Default/ico/pp/1301/Spaceman.png',
                     'type' => 'slot',
                     'gameType' => 'rng',
-                    'view' => $view
+                    'view' => 1
                 ]);
  
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -1335,7 +1335,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
             $gamelist = PPController::getgamelist('pp');
-            $rand = mt_rand(0,10);
+            $len = count($gamelist);
+            if ($len > 10) {$len = 10;}
+            if ($len == 0)
+            {
+                return ['error' => true, 'msg' => 'not found any available game.'];
+            }
+            $rand = mt_rand(0,$len);
+            
             $gamecode = $gamelist[$rand]['gamecode'];
             $data = PPController::createPlayer($anyuser->id);
             if ($data['error'] != 0) //create player failed
