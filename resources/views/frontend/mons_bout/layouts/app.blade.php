@@ -316,7 +316,7 @@
 			<div style="position:relative; height:660px; overflow:hidden; clear:both;">
 				<div style="position:absolute; width:1920px; left:50%; margin-left:-960px;">   
 					<div id="slider">
-						<img src="/frontend/monster/tutu/images/slideshow1.jpg" />
+						<img src="/frontend/monster/tutu/images/slideshow1_bout.jpg" />
 						<img src="/frontend/monster/tutu/images/slideshow2.jpg" />
 					</div>
 				</div>
