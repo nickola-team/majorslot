@@ -885,13 +885,17 @@ namespace VanguardLTE\Games\hitthegoldbng
                 [3,3],[2,2,2],[3,2,1],
                 [3,3,1],[3,2,2],[3,3,2]
             ];
-            return $moneyCounts[mt_rand(0, 6)];
+            return $moneyCounts[mt_rand(0, 5)];
         }
-        public function GetBonusType(){
-            if(mt_rand(0, 100) < 60){
+        public function GetBonusType($currentHill){
+            if($currentHill[0] * 10 + $currentHill[1] >= 55){
                 return 2;
             }else{
-                return 1;
+                if(mt_rand(0, 100) < 60){
+                    return 2;
+                }else{
+                    return 1;
+                }
             }
         }
         public function GetReelStrips($winType, $slotEvent, $isRespin, $defaultMoneyCounts)
