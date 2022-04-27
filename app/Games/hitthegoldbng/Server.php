@@ -695,7 +695,7 @@ namespace VanguardLTE\Games\hitthegoldbng
                     $initMoneyCounts = [];
                     $defaultMoneyCount = 0;
                     if($winType == 'bonus'){
-                        if($slotSettings->GetBonusType() == 2 && $slotEvent['slotEvent'] != 'freespin'){                        
+                        if($slotSettings->GetBonusType($currentHill) == 2 && $slotEvent['slotEvent'] != 'freespin'){                        
                             $initMoneyCounts = $slotSettings->GetMoneyCount();
                             $isrespin = true;
                             for($i = 0; $i < count($initMoneyCounts); $i++){
@@ -899,8 +899,13 @@ namespace VanguardLTE\Games\hitthegoldbng
                     if($moneyCount > 0){
                         $currentHill[1]++;
                         if($currentHill[1] >= 10){
-                            $currentHill[0]++;
-                            $currentHill[1] = 0;
+                            if($currentHill[0] < 5){
+                                $currentHill[0]++;
+                                $currentHill[1] = 0;
+                            }else{
+                                $currentHill[0] = 5;
+                                $currentHill[1] = 9;
+                            }
                         }
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
