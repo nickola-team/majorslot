@@ -91,20 +91,20 @@
         
         <script src="{{ asset('back/argon') }}/js/argon.js?v=1.0.0"></script>
         <script>
-        @if (Auth::check() && auth()->user()->isInoutPartner())
+        @if (Auth::check() )
         $( document ).ready(function() {
             @if (count($notices)>0)
             @foreach ($notices as $notice)
             var prevTime = localStorage.getItem("hidenotification" + {{$notice->id}});
             if (prevTime && Date.now() - prevTime < 24 * 3600 * 1000) {
-                $("#notification" + {{$notice->id}}).hide();
+                $("#notification{{$notice->id}}").hide();
             }
             else{
-                $("#notification" + {{$notice->id}}).show();
+                $("#notification{{$notice->id}}").show();
             }
             @endforeach
             @endif
-
+            @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";
             var timeout;
@@ -196,6 +196,7 @@
             };
 
             timeout = setTimeout(updateInOutRequest, updateTime);
+            @endif
             
         });
 
