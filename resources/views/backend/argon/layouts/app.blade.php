@@ -111,8 +111,10 @@
             var lastRequest = 0;
             var audio_in = new Audio("{{ url('/frontend/Major/major/audio/door-bell.mp3')}}");
             var audio_out = new Audio("{{ url('/frontend/Major/major/audio/camera-beep.mp3')}}");
+            var user_join = new Audio("{{ url('/frontend/Major/major/audio/user-join.mp3')}}");
             $("#in_newmark").hide();
             $("#out_newmark").hide();
+            $("#join_newmark").hide();
             var updateInOutRequest = function (callback) {
                 if (true) {
                     var timestamp = + new Date();
@@ -151,7 +153,12 @@
                             }
                             if (inouts['join'] > 0)
                             {
+                                if (inouts['rating'] > 0)
+                                {
+                                    user_join.play();
+                                }
                                 $("#user_newmark").show();
+                                $("#join_newmark").text('('+inouts['join']+'건)');
                                 $("#join_newmark").show();
                             }
                             else
