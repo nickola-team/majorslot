@@ -398,8 +398,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $partner_users = auth()->user()->availableUsers();
             $users = [];
             $joinusers = [];
+            $confirmusers = [];
             if (count($partner_users) > 0){
                 $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('users.id', $partner_users)->get();
+
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)->whereIn('users.id', $partner_users)->get();
 
                 $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->where('email','<>', '')->whereIn('id', $partner_users);
                 $total = [
@@ -410,7 +413,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             }
 
-            return view('backend.argon.player.vlist',compact('users', 'joinusers','total'));
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total'));
         }
 
         public function player_join(\Illuminate\Http\Request $request)
@@ -420,7 +423,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['권한이 없습니다.']);
             }
 
-            $user = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->where('id', $request->id)->first();
+            $user = \VanguardLTE\User::whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::JOIN, \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED])->where('id', $request->id)->first();
             if (!$user)
             {
                 return redirect()->back()->withErrors(['잘못된 요청입니다.']);
@@ -435,6 +438,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $admin = \VanguardLTE\User::where('role_id', 8)->first();
                     $user->addBalance('add',$onlineShop->join_bonus, $admin);
                 }
+            }
+            else if ($request->type == 'stand')
+            {
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED]);
             }
             else
             {

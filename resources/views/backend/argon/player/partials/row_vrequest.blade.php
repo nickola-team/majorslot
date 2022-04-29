@@ -14,6 +14,8 @@
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
     <a href="{{argon_route('argon.player.join', ['id' => $user->id, 'type'=>'allow'])}}"><button class="btn btn-success btn-sm">승인</button></a>
+@if ($join)
+    <a href="{{argon_route('argon.player.join', ['id' => $user->id, 'type'=>'stand'])}}"><button class="btn btn-info btn-sm">대기</button></a>
+@endif    
     <a href="{{argon_route('argon.player.join', ['id' => $user->id, 'type'=>'reject'])}}"><button class="btn btn-warning btn-sm">취소</button></a>
-    
 </td>
