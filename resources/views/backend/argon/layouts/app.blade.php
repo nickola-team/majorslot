@@ -22,10 +22,10 @@
         <link href="{{ asset('back/argon') }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
         <!-- Argon CSS -->
         <link type="text/css" href="{{ asset('back/argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
-        <link type="text/css" href="{{ asset('back/argon') }}/css/custom.css?v=1.0.0" rel="stylesheet">
-        
-
         @stack('css')
+        <link type="text/css" href="{{ asset('back/argon') }}/css/custom.css?v=1.0.0" rel="stylesheet">
+        <link type="text/css" href="{{ asset('back/argon') }}/css/{{$layout}}.css?v=1.0.0" rel="stylesheet">
+
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
