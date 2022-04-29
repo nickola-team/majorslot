@@ -22,10 +22,10 @@
         <link href="{{ asset('back/argon') }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
         <!-- Argon CSS -->
         <link type="text/css" href="{{ asset('back/argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
-        <link type="text/css" href="{{ asset('back/argon') }}/css/custom.css?v=1.0.0" rel="stylesheet">
-        
-
         @stack('css')
+        <link type="text/css" href="{{ asset('back/argon') }}/css/custom.css?v=1.0.0" rel="stylesheet">
+        <link type="text/css" href="{{ asset('back/argon') }}/css/{{$layout}}.css?v=1.0.0" rel="stylesheet">
+
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
@@ -91,28 +91,30 @@
         
         <script src="{{ asset('back/argon') }}/js/argon.js?v=1.0.0"></script>
         <script>
-        @if (Auth::check() && auth()->user()->isInoutPartner())
+        @if (Auth::check() )
         $( document ).ready(function() {
             @if (count($notices)>0)
             @foreach ($notices as $notice)
             var prevTime = localStorage.getItem("hidenotification" + {{$notice->id}});
             if (prevTime && Date.now() - prevTime < 24 * 3600 * 1000) {
-                $("#notification" + {{$notice->id}}).hide();
+                $("#notification{{$notice->id}}").hide();
             }
             else{
-                $("#notification" + {{$notice->id}}).show();
+                $("#notification{{$notice->id}}").show();
             }
             @endforeach
             @endif
-
+            @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";
             var timeout;
             var lastRequest = 0;
             var audio_in = new Audio("{{ url('/frontend/Major/major/audio/door-bell.mp3')}}");
             var audio_out = new Audio("{{ url('/frontend/Major/major/audio/camera-beep.mp3')}}");
+            var user_join = new Audio("{{ url('/frontend/Major/major/audio/user-join.mp3')}}");
             $("#in_newmark").hide();
             $("#out_newmark").hide();
+            $("#join_newmark").hide();
             var updateInOutRequest = function (callback) {
                 if (true) {
                     var timestamp = + new Date();
@@ -151,7 +153,12 @@
                             }
                             if (inouts['join'] > 0)
                             {
+                                if (inouts['rating'] > 0)
+                                {
+                                    user_join.play();
+                                }
                                 $("#user_newmark").show();
+                                $("#join_newmark").text('('+inouts['join']+'건)');
                                 $("#join_newmark").show();
                             }
                             else
@@ -189,6 +196,7 @@
             };
 
             timeout = setTimeout(updateInOutRequest, updateTime);
+            @endif
             
         });
 

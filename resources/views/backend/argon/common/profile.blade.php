@@ -19,7 +19,7 @@
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center">
                                     <div>
-                                        <span class="heading">{{number_format($user->balance)}}</span>
+                                        <span class="heading">{{$user->hasRole('manager')?number_format($user->shop->balance):number_format($user->balance)}}</span>
                                         <span class="description">현재 보유금</span>
                                     </div>
                                     @if (!$user->hasRole('user'))

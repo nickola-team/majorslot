@@ -39,7 +39,7 @@
                     </div>
                     
                   </form>
-                  <div class="login100-more" style="background-image: url('/back/argon/img/theme/bg-argon.png');"></div>
+                  <div class="login100-more login_bg"></div>
                 </div>
             </div>
           </div>

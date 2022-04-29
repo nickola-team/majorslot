@@ -47,6 +47,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 $users = $partners;
             }
+
+            if ($request->role != '')
+            {
+                if ($request->partner != '')
+                {
+                    $partners = \VanguardLTE\User::where('role_id',   $request->role)->whereIn('id', $users)->pluck('id')->toArray();
+                    if (count($partners) == 0)
+                    {
+                        return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
+                    }
+                    $users = $partners;
+                }
+                else
+                {
+                    $availablePartners = auth()->user()->hierarchyPartners();
+                    $partners = \VanguardLTE\User::where('role_id',   $request->role)->whereIn('id', $availablePartners)->pluck('id')->toArray();
+                    if (count($partners) == 0)
+                    {
+                        return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
+                    }
+                    $users = $partners;
+                }
+            }
             
             $start_date = date("Y-m-d");
             $end_date = date("Y-m-d");
@@ -90,6 +113,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
                 }
                 $users = $partners;
+            }
+
+            if ($request->role != '')
+            {
+                if ($request->partner != '')
+                {
+                    $partners = \VanguardLTE\User::where('role_id',   $request->role)->whereIn('id', $users)->pluck('id')->toArray();
+                    if (count($partners) == 0)
+                    {
+                        return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
+                    }
+                    $users = $partners;
+                }
+                else
+                {
+                    $availablePartners = auth()->user()->hierarchyPartners();
+                    $partners = \VanguardLTE\User::where('role_id',   $request->role)->whereIn('id', $availablePartners)->pluck('id')->toArray();
+                    if (count($partners) == 0)
+                    {
+                        return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
+                    }
+                    $users = $partners;
+                }
             }
             
             $start_date = date("Y-m-d");
@@ -215,7 +261,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($request->partner != '')
             {
                 $availablePartners = auth()->user()->hierarchyPartners();
-                $user = \VanguardLTE\User::where('username', $request->partner)->first();
+                if ($request->role != '')
+                {
+                    $user = \VanguardLTE\User::where('username', 'like', '%'. $request->partner . '%')->whereIn('id', $availablePartners)->where('role_id',$request->role)->first();
+                }
+                else
+                {
+                    $user = \VanguardLTE\User::where('username', 'like', '%'. $request->partner . '%')->whereIn('id', $availablePartners)->first();
+                }
                 if (!$user || !in_array($user->id, $availablePartners))
                 {
                     return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
