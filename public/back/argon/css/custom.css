@@ -211,3 +211,7 @@ hr.horizontal.dark {
     margin-top : .5rem!important;
     padding: 8px 20px;
 }
+
+.login_bg {
+    background-image: url('/back/argon/img/theme/bg-argon.png') !important;
+}
