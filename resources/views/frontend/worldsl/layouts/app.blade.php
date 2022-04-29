@@ -316,7 +316,6 @@
 			<div style="position:relative; height:660px; overflow:hidden; clear:both;">
 				<div style="position:absolute; width:1920px; left:50%; margin-left:-960px;">   
 					<div id="slider">
-						<img src="/frontend/worldsl/tutu/images/slideshow3.jpg" />
 						<img src="/frontend/worldsl/tutu/images/slideshow1.jpg" />
 						<img src="/frontend/worldsl/tutu/images/slideshow2.jpg" />
 					</div>
@@ -326,23 +325,7 @@
 			<script type="text/javascript" src="/frontend/worldsl/tutu/js/sk_table.js"></script><!-- sk_실시간입출금현황 롤링 -->
 			
 
-			<div class="main_game_wrap">
-				<div class="main_game_box">
-					<div class="main_game">
-						<ul>
-							@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-							
-							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/worldsl/tutu/images/main_game1.png" style="display: inline;"><img src="/frontend/worldsl/tutu/images/main_game1.png" class="mouseover1" style="display: none;"></a></li>
-                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subLive');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/worldsl/tutu/images/main_game2.png" style="display: inline;"><img src="/frontend/worldsl/tutu/images/main_game2.png" class="mouseover1" style="display: none;"></a></li>                
-                                                                             
-							@else
-							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/worldsl/tutu/images/main_game1.png"><img src="/frontend/worldsl/tutu/images/main_game1.png" class="mouseover1" style="display:none;"></a></li>
-							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/worldsl/tutu/images/main_game2.png"><img src="/frontend/worldsl/tutu/images/main_game2.png" class="mouseover1" style="display:none;"></a></li>                
-							@endif
-						</ul>
-					</div>
-				</div>
-			</div>
+			
 				<div class="main_best_wrap">
 					<div class="main_best_box">
 					<div class="main_best_title">
@@ -354,9 +337,7 @@
 						?>
 						@if ($categories && count($categories))
 							@foreach($categories AS $index=>$category)
-								@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
-								&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan" && $category->title != "New" 
-								&& $category->title != "Skywind" )
+								@if($category->type == "live" )
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
@@ -365,24 +346,24 @@
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
 									@endif
 									@if (file_exists( public_path() . '/frontend/worldsl/tutu/images/slot-icon/' . $category->title.'.gif'))
-										<img src="/frontend/worldsl/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 252px;height: 230px;border-radius:30px">
+										<img src="/frontend/worldsl/tutu/images/slot-icon/{{ $category->title.'.gif' }}" style="width: 378px;height: 345px;border-radius:30px">
 									@else
-										<img src="/frontend/worldsl/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 252px;height: 230px;border-radius:30px">
+										<img src="/frontend/worldsl/tutu/images/slot-icon/{{ $category->title.'.png' }}" style="width: 378px;height: 345px;border-radius:30px">
 									@endif
-										<img src="/frontend/worldsl/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
+										<img src="/frontend/worldsl/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 378px;">
 									</a>
 								</li>
 								<?php $catcount = $catcount +1; ?>
 								@endif
 							@endforeach
 							<?php
-								$comingSoon = (intval(($catcount-1)/5) + 1 ) * 5 - $catcount;
+								$comingSoon = (intval(($catcount-1)/2) + 1 ) * 2 - $catcount;
 							?>
 							@for ($i=0;$i<$comingSoon;$i++)
 							<li>
 								<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
-									<img src="/frontend/worldsl/tutu/images/slot-icon/coming_soon.png" style="width: 252px;height: 230px;border-radius:30px">
-									<img src="/frontend/worldsl/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 252px;">
+									<img src="/frontend/worldsl/tutu/images/slot-icon/coming_soon.png" style="width: 378px;height: 345px;border-radius:30px">
+									<img src="/frontend/worldsl/tutu/images/best_over01.png" class="mouseover2" style="display:none;width: 378px;">
 								</a>
 							</li>
 							@endfor
