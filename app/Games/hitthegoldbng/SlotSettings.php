@@ -861,16 +861,19 @@ namespace VanguardLTE\Games\hitthegoldbng
             }
             return $money_respin[1][0];
         }
-        public function GetMoneyValue($winType){
+        public function GetMoneyValue($winType,$overBank = false){
+            $money_respin = [
+                [30, 20, 15, 10, 5, 5, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
+                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 20, 50, 150]
+            ];
+            if($overBank == true){
+                return $money_respin[1][0];
+            }
             if($winType == 'bonus'){
                 $percent = rand(0, 95);   
             }else{
                 $percent = rand(0, 100);
             }
-            $money_respin = [
-                [30, 20, 15, 10, 5, 5, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
-                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 20, 50, 150]
-            ];
             $sum = $money_respin[0][0];
             for($i = 1; $i < count($money_respin[0]); $i++){
                 if($sum > $percent){
@@ -887,6 +890,9 @@ namespace VanguardLTE\Games\hitthegoldbng
             ];
             return $moneyCounts[mt_rand(0, 5)];
         }
+        public function GetMaxMoneyCount(){
+            return mt_rand(8, 13);
+        }
         public function GetBonusType($currentHill){
             if($currentHill[0] * 10 + $currentHill[1] >= 55){
                 return 2;
@@ -897,6 +903,18 @@ namespace VanguardLTE\Games\hitthegoldbng
                     return 1;
                 }
             }
+        }
+        public function GetNoSameReel(){
+            $percent = mt_rand(0, 100);
+            if($percent < 50){
+                $reelCount = 0;
+            }else if($percent < 90){
+                $reelCount = 1;
+            }else{
+                $reelCount = 2;
+            }
+            $noSameReels = $this->GetRandomNumber(1, 5, $reelCount);
+            return $noSameReels;
         }
         public function GetReelStrips($winType, $slotEvent, $isRespin, $defaultMoneyCounts)
         {
@@ -1003,6 +1021,7 @@ namespace VanguardLTE\Games\hitthegoldbng
                 }
             }
             $reel = [];
+            $noSameReels = $this->GetNoSameReel();
             foreach( $_obf_reelStripCounts as $index => $value ) 
             {
                 $key = $this->{'reelStrip' . $index};
@@ -1029,6 +1048,13 @@ namespace VanguardLTE\Games\hitthegoldbng
                         $reel[$reel_id][2] = $this->GetNoDuplicationSymbol($reel[$reel_id][0], $reel[$reel_id][1]);
                     }
                 }else{
+                    $isSame = false;
+                    for($k = 0; $k < count($noSameReels); $k++){
+                        if($index == $noSameReels[$k]){
+                            $isSame = true;
+                            break;
+                        }
+                    }
                     if(mt_rand(0, 100) < 50){
                         $start_idx = 0;
                         $end_idx = 2;
@@ -1036,48 +1062,49 @@ namespace VanguardLTE\Games\hitthegoldbng
                         $start_idx = 2;
                         $end_idx = 0;
                     }
-                    if($reel[$reel_id][$start_idx] < 5 && $reel[$reel_id][1] < 5){
-                        $reel[$reel_id][1] = $reel[$reel_id][$start_idx];
-                        if($reel[$reel_id][$end_idx] < 5 && mt_rand(0, 100) < 20){
-                            $reel[$reel_id][$end_idx] = $reel[$reel_id][$start_idx];
-                        }
-                    }else if($reel[$reel_id][$start_idx] > 5 && $reel[$reel_id][1] > 5){
-                        if($reel[$reel_id][1] < 10 && $reel[$reel_id][$start_idx] < 10){
+                    if($isSame == false){
+                        if($reel[$reel_id][$start_idx] < 5 && $reel[$reel_id][1] < 5){
                             $reel[$reel_id][1] = $reel[$reel_id][$start_idx];
-                            if($reel[$reel_id][$end_idx] > 5 && mt_rand(0, 100) < 20){
+                            if($reel[$reel_id][$end_idx] < 5 && mt_rand(0, 100) < 20){
                                 $reel[$reel_id][$end_idx] = $reel[$reel_id][$start_idx];
                             }
-                        }
-                    }else{
-                        if($reel[$reel_id][1] < 10 && $reel[$reel_id][$start_idx] < 10){
-                            if(mt_rand(0, 100) < 50){
+                        }else if($reel[$reel_id][$start_idx] > 5 && $reel[$reel_id][1] > 5){
+                            if($reel[$reel_id][1] < 10 && $reel[$reel_id][$start_idx] < 10){
                                 $reel[$reel_id][1] = $reel[$reel_id][$start_idx];
-                            }else{
-                                $reel[$reel_id][$start_idx] = $reel[$reel_id][1];
-                            }                        
-                        }else if($reel[$reel_id][1] < 10 && $reel[$reel_id][$end_idx] < 10){
-                            if(mt_rand(0, 100) < 50){
-                                $reel[$reel_id][1] = $reel[$reel_id][$end_idx];
-                            }else{
-                                $reel[$reel_id][$end_idx] = $reel[$reel_id][1];
-                            }
-                        }else if($reel[$reel_id][1] >= 10){
-                            if($reel[$reel_id][$end_idx] < 5 && $reel[$reel_id][$start_idx] < 5){
-                                if(mt_rand(0, 100) < 50){
-                                    $reel[$reel_id][$end_idx] = mt_rand(5, 8);
-                                }else{
-                                    $reel[$reel_id][$start_idx] = mt_rand(5, 8);
+                                if($reel[$reel_id][$end_idx] > 5 && mt_rand(0, 100) < 20){
+                                    $reel[$reel_id][$end_idx] = $reel[$reel_id][$start_idx];
                                 }
-                            }else if($reel[$reel_id][$end_idx] == $reel[$reel_id][$start_idx]){
-                                if($reel[$reel_id][$end_idx] < 5){
-                                    $reel[$reel_id][$end_idx] = mt_rand(5, 8);
+                            }
+                        }else{
+                            if($reel[$reel_id][1] < 10 && $reel[$reel_id][$start_idx] < 10){
+                                if(mt_rand(0, 100) < 50){
+                                    $reel[$reel_id][1] = $reel[$reel_id][$start_idx];
                                 }else{
-                                    $reel[$reel_id][$end_idx] = mt_rand(1, 4);
+                                    $reel[$reel_id][$start_idx] = $reel[$reel_id][1];
+                                }                        
+                            }else if($reel[$reel_id][1] < 10 && $reel[$reel_id][$end_idx] < 10){
+                                if(mt_rand(0, 100) < 50){
+                                    $reel[$reel_id][1] = $reel[$reel_id][$end_idx];
+                                }else{
+                                    $reel[$reel_id][$end_idx] = $reel[$reel_id][1];
+                                }
+                            }else if($reel[$reel_id][1] >= 10){
+                                if($reel[$reel_id][$end_idx] < 5 && $reel[$reel_id][$start_idx] < 5){
+                                    if(mt_rand(0, 100) < 50){
+                                        $reel[$reel_id][$end_idx] = mt_rand(5, 8);
+                                    }else{
+                                        $reel[$reel_id][$start_idx] = mt_rand(5, 8);
+                                    }
+                                }else if($reel[$reel_id][$end_idx] == $reel[$reel_id][$start_idx]){
+                                    if($reel[$reel_id][$end_idx] < 5){
+                                        $reel[$reel_id][$end_idx] = mt_rand(5, 8);
+                                    }else{
+                                        $reel[$reel_id][$end_idx] = mt_rand(1, 4);
+                                    }
                                 }
                             }
                         }
-                    }
-                    
+                    }                    
                 }
             }
             return $reel;
