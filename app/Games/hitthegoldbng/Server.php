@@ -54,6 +54,7 @@ namespace VanguardLTE\Games\hitthegoldbng
             if($slotEvent['command'] == 'login'){
                 $slotSettings->SetGameData($slotSettings->slotId . 'BalanceVersion', $BALANCE * $DENOMINATOR);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'DefaultMaskHighMoneyCount', [0,0,0,0,0,0,0,0,0,0]);
                 $user = [
                     'balance' => $BALANCE * $DENOMINATOR,
                     'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
@@ -317,13 +318,16 @@ namespace VanguardLTE\Games\hitthegoldbng
                     ];
                 }else if($action['name'] == 'bonus_init'){
                     $Counter = 0;
-                    if($betline * $LINES * 50 < $slotSettings->GetBank('bonus') && mt_rand(0, 100) < 50){
+                    $highMoneySymbolCount = $slotSettings->GetHighMoneySymbolCount();
+                    if($highMoneySymbolCount > 0){
                         $bonus_types = [300, 30];
                     }else{
                         $bonus_types = [300, 0];
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusTypes', $bonus_types);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'HighMoneySymbolCount', $highMoneySymbolCount);
                     $slotSettings->SetGameData($slotSettings->slotId . 'MaxMoneyCount', $slotSettings->GetMaxMoneyCount());
+                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentHighMoneySymbolCount', 0);
                     $board = json_decode(json_encode($LASTSPIN->context->spins->board), true);
                     $bs_count = 0;
                     for($r = 0; $r < 5; $r++){
@@ -398,6 +402,8 @@ namespace VanguardLTE\Games\hitthegoldbng
                     $Counter = 0;
                     $slotSettings->SetGameData($slotSettings->slotId . 'Hill', [0, 0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'MaxMoneyCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'HighMoneySymbolCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentHighMoneySymbolCount', 0);
                     $objRes = [
                         'command' => $slotEvent['command'],
                         'context' => [
@@ -448,7 +454,8 @@ namespace VanguardLTE\Games\hitthegoldbng
                 }else if($action['name'] == 'respin'){
                     $currentRespinGames++;
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinGame', $currentRespinGames);
-                    $maxMoneyCount = $slotSettings->GetGameData($slotSettings->slotId . 'MaxMoneyCount') ?? 8;
+                    $maxMoneyCount = $slotSettings->GetGameData($slotSettings->slotId . 'MaxMoneyCount') ?? 8;                    
+                    $highMoneySymbolCount = $slotSettings->GetGameData($slotSettings->slotId . 'HighMoneySymbolCount') ?? 0;     
                     $winType = mt_rand(0, 1);
                     $overBank = false;
                     for( $i = 0; $i <= 2000; $i++ ) {
@@ -456,7 +463,8 @@ namespace VanguardLTE\Games\hitthegoldbng
                         $moneyChangedWin = false;
                         $moneyCount = 0;
                         $reels = json_decode(json_encode($LASTSPIN->context->bonus->board), true);
-                        $moneyValues = $slotSettings->GetGameData($slotSettings->slotId . 'MoneyValue') ?? [];                        
+                        $moneyValues = $slotSettings->GetGameData($slotSettings->slotId . 'MoneyValue') ?? [];      
+                        $currentHighMoneySymbolCount = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentHighMoneySymbolCount') ?? 0;                  
                         $newMoneyPoses = [];
                         $mystery_poses = [];
                         $moneyPoses = [];
@@ -469,8 +477,9 @@ namespace VanguardLTE\Games\hitthegoldbng
                                 if($reels[$r][$k] < $MONEY){
                                     if(mt_rand(0, 100) < 14 && $winType == 1){
                                         $moneyChangedWin = true;
-                                        if($bonus_types[1] > 0 && mt_rand(0, 100) < 10){
+                                        if($currentHighMoneySymbolCount < $highMoneySymbolCount && mt_rand(0, 100) < 50){
                                             $reels[$r][$k] = 12;
+                                            $currentHighMoneySymbolCount++;
                                         }else{
                                             $reels[$r][$k] = $MONEY;
                                         }
@@ -540,6 +549,7 @@ namespace VanguardLTE\Games\hitthegoldbng
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'MoneyValue', $moneyValues);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusTypes', $bonus_types);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentHighMoneySymbolCount', $currentHighMoneySymbolCount);
                     $bs_v = [];
                     $bs_values = [];
 
