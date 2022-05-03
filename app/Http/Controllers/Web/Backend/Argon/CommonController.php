@@ -61,7 +61,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $summ = abs(str_replace(',','',$request->amount));
-            if ($summ == 0)
+            if ($summ == 0 && $request->all != '1' )
             {
                 return redirect()->back()->withErrors(['유효하지 않은 금액입니다']);
             }
@@ -350,32 +350,46 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     return redirect()->back()->withErrors(['하부 보유금이 0이 아닙니다']);
                 }
             }
-
-            $childUsers = $user->availableUsers();
-            \VanguardLTE\User::whereIn('id', $childUsers)->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
-
-            foreach ($childUsers as $cid){
-                if ($cid != 0){
-                    \VanguardLTE\Task::create([
-                        'user_id' => auth()->user()->id,
-                        'category' => 'user', 
-                        'action' => 'delete', 
-                        'item_id' => $cid
-                    ]);
-                }
+            if ($user->hasRole('user')) 
+            {
+                \VanguardLTE\Task::create([
+                    'user_id' => auth()->user()->id,
+                    'category' => 'user', 
+                    'action' => 'delete', 
+                    'item_id' => $user->id
+                ]);
+                $user->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
             }
+            else
+            {
 
-            $shop_ids = $user->availableShops();
-            \VanguardLTE\Shop::whereIn('id', $shop_ids)->update(['pending'=>2]);
+                $childUsers = $user->availableUsers();
+                \VanguardLTE\User::whereIn('id', $childUsers)->update(['status' => \VanguardLTE\Support\Enum\UserStatus::DELETED]);
 
-            foreach ($shop_ids as $shop){
-                if ($shop != 0){
-                    \VanguardLTE\Task::create([
-                        'user_id' => auth()->user()->id,
-                        'category' => 'shop', 
-                        'action' => 'delete', 
-                        'item_id' => $shop
-                    ]);
+                foreach ($childUsers as $cid){
+                    if ($cid != 0){
+                        \VanguardLTE\Task::create([
+                            'user_id' => auth()->user()->id,
+                            'category' => 'user', 
+                            'action' => 'delete', 
+                            'item_id' => $cid
+                        ]);
+                    }
+                }
+                $shop_ids = $user->availableShops();
+                \VanguardLTE\Shop::whereIn('id', $shop_ids)->update(['pending'=>2]);
+
+                foreach ($shop_ids as $shop){
+                    if ($shop != 0){
+                        \VanguardLTE\Task::create([
+                            'user_id' => auth()->user()->id,
+                            'category' => 'shop', 
+                            'action' => 'delete', 
+                            'item_id' => $shop
+                        ]);
+                        $shopInfo = \VanguardLTE\Shop::where('id', $shop)->first();
+                        event(new \VanguardLTE\Events\Shop\ShopDeleted($shopInfo));
+                    }
                 }
             }
 
