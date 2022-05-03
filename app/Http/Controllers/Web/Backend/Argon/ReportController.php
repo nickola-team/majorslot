@@ -342,6 +342,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $info['totalwin'] = $cat->totalwin;
                     $info['totaldeal'] = $cat->totaldeal;
                     $info['title'] = $cat->title;
+                    $info['category_id'] = $cat->category_id;
                     $date_cat['cat'][] = $info;
                 }
                 if ($date_cat)
@@ -364,6 +365,89 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $gacmerge = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::mergeGAC_EVO($master->id);
             
             return view('backend.argon.report.game', compact('totalsummary', 'categories', 'totalstatics','user','gacmerge'));
+        }
+
+        public function report_game_details(\Illuminate\Http\Request $request)
+        {
+            $category_id = $request->cat_id;
+
+            $statistics = \VanguardLTE\GameSummary::orderBy('game_summary.date', 'DESC')->where('category_id', $category_id);
+        
+            $totalQuery = "SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal-total_mileage) as totaldeal, name as title FROM w_game_summary WHERE w_game_summary.category_id=$category_id";
+
+            $start_date = date("Y-m-1");
+            $end_date = date("Y-m-d");
+
+            if ($request->dates != '')
+            {
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = $statistics->where('game_summary.date', '>=', $start_date);
+            $statistics = $statistics->where('game_summary.date', '<=', $end_date);
+            $totalQuery = $totalQuery . " AND w_game_summary.date>=\"$start_date\" AND w_game_summary.date<=\"$end_date\" ";
+
+            $user = auth()->user();
+
+            $statistics = $statistics->where('user_id', $user->id);
+            $totalQuery = $totalQuery . " AND w_game_summary.user_id=$user->id ";
+
+            if ($request->game != '')
+            {
+                $statistics = $statistics->where('name', 'like', '%'. $category->id .'%');
+                $totalQuery = $totalQuery . "AND w_game_summary.name like %$category->id% ";
+                $dateQuery = $dateQuery . "AND w_category_summary.category_id=$category->id ";
+            }
+            
+            $totalQuery = $totalQuery . "GROUP BY w_game_summary.game_id ORDER BY totalbet desc";
+            $statistics = $statistics->orderBy('totalbet', 'desc')->get();
+        
+            $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.totaldeal) as totaldeal FROM ($totalQuery) c";
+
+            $totalstatics = \DB::select($totalQuery);
+            $totalsummary = \DB::select($sumQuery);
+
+            $categories = [];
+            if ($statistics)
+            {
+                $last_date = null;
+                $date_cat = null;
+                foreach ($statistics as $cat)
+                {
+                    if ($cat->date != $last_date)
+                    {
+                        if ($date_cat)
+                        {
+                            //sort games per totalbet
+                            usort($date_cat['cat'], function($element1, $element2)
+                            {
+                                return $element2['totalbet'] - $element1['totalbet'];
+                            });
+                            $categories[] = $date_cat;
+                        }
+                        $last_date = $cat->date;
+                        $date_cat = [
+                            'date' => $cat->date,
+                        ];
+                    }
+                    $info['totalbet'] = $cat->totalbet;
+                    $info['totalwin'] = $cat->totalwin;
+                    $info['totaldeal'] = $cat->total_deal - $cat->total_mileage;
+                    $info['title'] = $cat->name;
+                    $date_cat['cat'][] = $info;
+                }
+                if ($date_cat)
+                {
+                    //sort games per totalbet
+                    usort($date_cat['cat'], function($element1, $element2)
+                    {
+                        return $element2['totalbet'] - $element1['totalbet'];
+                    });
+                    $categories[] = $date_cat;
+                }
+            }
+
+            return view('backend.argon.report.game_details', compact('totalsummary', 'categories', 'totalstatics','user'));
 
 
         }
