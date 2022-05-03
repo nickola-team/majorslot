@@ -394,9 +394,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             if ($request->game != '')
             {
-                $statistics = $statistics->where('name', 'like', '%'. $category->id .'%');
-                $totalQuery = $totalQuery . "AND w_game_summary.name like %$category->id% ";
-                $dateQuery = $dateQuery . "AND w_category_summary.category_id=$category->id ";
+                $statistics = $statistics->where('name', 'like', '%'. $request->game .'%');
+                $totalQuery = $totalQuery . "AND w_game_summary.name like '%$request->game%' ";
             }
             
             $totalQuery = $totalQuery . "GROUP BY w_game_summary.game_id ORDER BY totalbet desc";
