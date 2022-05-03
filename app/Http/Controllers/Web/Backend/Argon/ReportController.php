@@ -400,7 +400,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             $totalQuery = $totalQuery . "GROUP BY w_game_summary.game_id ORDER BY totalbet desc";
-            $statistics = $statistics->orderBy('totalbet', 'desc')->paginate(5);
+            $statistics = $statistics->orderBy('totalbet', 'desc')->paginate(100);
         
             $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.totaldeal) as totaldeal FROM ($totalQuery) c";
 
