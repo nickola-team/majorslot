@@ -204,6 +204,7 @@
                     </table>
                 </div>
                 <div class="card-footer py-4">
+                {{ $statistics->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
                 </div>
             </div>
         </div>
