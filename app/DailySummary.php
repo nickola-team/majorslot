@@ -36,6 +36,10 @@ namespace VanguardLTE
             return $this->belongsTo('VanguardLTE\User', 'user_id');
         }
 
+        public function prevDay()
+        {
+            return $this->hasOne('VanguardLTE\DailySummary', 'user_id', 'user_id')->where('date', date('Y-m-d', strtotime("$this->date -1 days")));        }
+
         public static function adjustment($user_id, $from, $to)
         {
             set_time_limit(0);

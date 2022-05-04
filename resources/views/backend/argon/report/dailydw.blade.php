@@ -169,6 +169,9 @@
                                 <th scope="col">롤링전환</th>
                                 <th scope="col">벳윈수익</th>
                                 <th scope="col">총보유금</th>
+                                @if (auth()->user()->hasRole('admin'))
+                                <th scope="col">전날대비 마진금</th>
+                                @endif
                                 @if(auth()->user()->isInoutPartner())
                                 <th>이익금</th>
                                 @endif
