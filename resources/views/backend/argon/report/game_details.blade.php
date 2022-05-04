@@ -2,7 +2,7 @@
         'parentSection' => 'report',
         'elementName' => 'report-game'
     ])
-@section('page-title',  '게임사별벳윈')
+@section('page-title',  '게임별벳윈')
 
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
@@ -104,29 +104,11 @@
                 <div id="collapseOne" class="collapse show">
                     <div class="card-body">
                         <form action="" method="GET" >
+                            <input class="form-control" type="hidden" value="{{Request::get('cat_id')}}" id="cat_id"  name="cat_id">
                             <div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
-                                <div class="col-md-3">
-                                    <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
-                                </div>
-                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
-                                <div class="col-md-3">
-                                    <select class="form-control" id="role" name="role">
-                                        <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
-                                        @for ($level=3;$level<auth()->user()->role_id;$level++)
-                                        <option value="{{$level}}" @if (Request::get('role') == $level) selected @endif> {{\VanguardLTE\Role::find($level)->description}}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div class="col-md-1">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-1">
-                                </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">게임사이름</label>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
                                 </div>
@@ -164,7 +146,7 @@
         <div class="col">
             <div class="card mt-4">
                 <div class="card-header border-0">
-                    <h3 class="mb-0">게임사별벳윈</h3>
+                    <h3 class="mb-0">게임별벳윈</h3>
                 </div>
                 <div class="table-responsive">
                     <table class="table align-items-center table-flush" id="gamelist">
@@ -172,7 +154,7 @@
                             <tr>
                                 <th>기간내 합계</th>
                                 <th>에이전트이름</th>
-                                <th>게임사이름</th>
+                                <th>게임이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
 								<th>벳윈</th>
@@ -187,7 +169,7 @@
                                     @else
                                         <tr>
                                     @endif
-                                    @include('backend.argon.report.partials.row_game', ['total' => true])
+                                    @include('backend.argon.report.partials.row_game_details', ['total' => true])
                                     </tr>
                                 @endforeach
                             @else
@@ -200,7 +182,7 @@
                             <tr>
                                 <th>날짜</th>
                                 <th>에이전트이름</th>
-                                <th>게임사이름</th>
+                                <th>게임이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
 								<th>벳윈</th>
@@ -212,7 +194,7 @@
                                 @foreach ($categories as $category)
                                 <tr>
                                     <td rowspan="{{count($category['cat'])}}" style="border-right: 1px solid rgb(233 236 239);"> {{ $category['date'] }}</td>
-                                        @include('backend.argon.report.partials.row_game', ['total' => false])
+                                        @include('backend.argon.report.partials.row_game_details', ['total' => false])
                                     </tr>
                                 @endforeach
                             @else
@@ -222,10 +204,10 @@
                     </table>
                 </div>
                 <div class="card-footer py-4">
+                {{ $statistics->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
                 </div>
             </div>
         </div>
     </div>
 </div>
 @stop
-

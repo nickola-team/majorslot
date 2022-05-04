@@ -238,6 +238,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'ReportController@report_game',
         ]);
 
+        Route::get('/report/gamedetails', [
+            'as' => 'argon.report.game.details',
+            'uses' => 'ReportController@report_game_details',
+        ]);
+
         /**
          * notices routes
          */

@@ -7,7 +7,13 @@
         $game = preg_replace('/GameArtCasino/', 'EvolutionVIP', $game);
     }
 ?>
-<td>{{$game}}</td>
+<td>
+@if (auth()->user()->hasRole('admin'))
+    <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat->category_id, 'dates' => Request::get('dates')])}}">{{$game}}</a>
+@else
+    {{$game}}
+@endif
+</td>
 <td>{{number_format($stat->totalbet)}}</td>
 <td>{{number_format($stat->totalwin)}}</td>
 <td>{{number_format($stat->totalbet-$stat->totalwin)}}</td>
@@ -25,7 +31,13 @@
             $game = preg_replace('/GameArtCasino/', 'EvolutionVIP', $game);
         }
     ?>
-    <td>{{$game}}</td>
+    <td>
+    @if (auth()->user()->hasRole('admin'))
+        <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat['category_id'],'dates'=>[$category['date'], $category['date']]])}}">{{$game}}</a>
+    @else
+        {{$game}}
+    @endif
+    </td>    
     <td>{{number_format($stat['totalbet'])}}</td>
     <td>{{number_format($stat['totalwin'])}}</td>
     <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>

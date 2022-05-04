@@ -689,7 +689,7 @@ namespace VanguardLTE\Console
                 $promise->wait();
 
                 foreach ($pp_users as $user) {
-                    if ( time() - $user['played_at'] > 300) //5min
+                    if ( time() - $user['played_at'] > 600) //10min
                     {
                         $this->info('terminate human user id = ' . $user['id']);
                         PPController::terminate($user['id']);
