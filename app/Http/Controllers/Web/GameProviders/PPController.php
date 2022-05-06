@@ -1630,10 +1630,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ];
             }
             try {
-                $response = Http::timeout(3)->asForm()->post(config('app.ppverify') . '/api/verify/create', $data);
+                $response = Http::timeout(10)->asForm()->post(config('app.ppverify') . '/api/verify/create', $data);
                 if (!$response->ok())
                 {
-                    redirect($failed_url);
+                    return redirect($failed_url);
                 }
                 $res = $response->json();
                 if ($res['success'])
@@ -1642,7 +1642,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    redirect($failed_url);
+                    return redirect($failed_url);
                 }
             }
             catch (\Exception $ex)
