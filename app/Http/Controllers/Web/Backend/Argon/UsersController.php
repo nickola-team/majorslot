@@ -537,8 +537,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function player_game_stat(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();
-            $availableUsers = $user->hierarchyUsersOnly();
-            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC')->whereIn('user_id', $availableUsers);
+            // $availableUsers = $user->hierarchyUsersOnly();
+            $availableShops = $user->availableShops();
+            // $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC')->whereIn('user_id', $availableUsers);
+
+            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
 
             $start_date = date("Y-m-d H:i:s", strtotime("-1 hours"));
             $end_date = date("Y-m-d H:i:s");
@@ -558,6 +561,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $statistics = $statistics->where('users.username', 'like', '%' . $request->player . '%');
             }
+
+            if ($request->shop != '')
+            {
+                $shop_ids = \VanguardLTE\Shop::where('name', 'like', '%' . $request->shop . '%')->whereIn('id', $availableShops)->pluck('id')->toArray();
+                if (count($shop_ids) > 0) 
+                {
+                    $availableShops = $shop_ids;
+                }
+                else
+                {
+                    $availableShops = [-1];
+                }
+            }
+            $statistics = $statistics->whereIn('stat_game.shop_id', $availableShops);
 
             if ($request->game != '')
             {
