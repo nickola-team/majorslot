@@ -689,7 +689,7 @@ namespace VanguardLTE\Console
                 $promise->wait();
 
                 foreach ($pp_users as $user) {
-                    if ( time() - $user['played_at'] > 300) //5min
+                    if ( time() - $user['played_at'] > 600) //10min
                     {
                         $this->info('terminate human user id = ' . $user['id']);
                         PPController::terminate($user['id']);
@@ -1343,10 +1343,38 @@ namespace VanguardLTE\Console
                                 }
                                 $this->info('Add game ' . $game->original_id);
                             }
+                            else
+                            {
+                                $oldCategory = \VanguardLTE\GameCategory::where(['game_id' => $oldGame->id])->first();
+                                if (!$oldCategory)
+                                {
+                                    $categories = \VanguardLTE\GameCategory::where('game_id', $game->id)->get();
+                                    if( count($categories) && count($superCategories) ) 
+                                    {
+                                        foreach( $categories as $category ) 
+                                        {
+                                            $newCategory = $category->replicate();
+                                            $newCategory->game_id = $oldGame->id;
+                                            $newCategory->category_id = $superCategories[$category->category_id];
+                                            $newCategory->save();
+                                        }
+                                        $this->info('Add game category ' . $game->original_id);
+
+                                    }
+                                }
+
+                            }
                         }
                     }
                     $shop->update(['pending' => 0]);
                 }
+            });
+
+            \Artisan::command('veryfy:bet', function () {
+                set_time_limit(0);
+                $this->info("Begin pp game verify bet");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::verify_bet();
+                $this->info($res['msg']);
             });
         }
     }

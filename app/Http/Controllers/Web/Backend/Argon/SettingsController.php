@@ -18,7 +18,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function create()
         {
-            foreach( glob(public_path() . '/frontend/*', GLOB_ONLYDIR) as $fileinfo ) 
+            foreach( glob(resource_path() . '/views/frontend/*', GLOB_ONLYDIR) as $fileinfo ) 
             {
                 $dirname = basename($fileinfo);
                 $frontends[$dirname] = $dirname;

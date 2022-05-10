@@ -94,7 +94,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 1, 
                 2, 
                 3
-            ]) && (!$user->shop || $user->shop->is_blocked) ) 
+            ]) && (!$user->shop || $user->shop->is_blocked || $user->shop->pending != 0) ) 
             {
                 return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('app.your_shop_is_blocked'));
             }

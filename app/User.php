@@ -1157,6 +1157,10 @@ namespace VanguardLTE
 
         public function childBalanceSum()
         {
+            if ($this->hasRole('user'))
+            {
+                return 0;
+            }
             $ids = $this->availableUsers();
             $sum = User::whereIn('id', $ids)->sum('balance');
             $sumShop = 0;

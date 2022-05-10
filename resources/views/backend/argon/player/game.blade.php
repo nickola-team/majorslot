@@ -77,6 +77,18 @@
                             <div class="col-md-1">
                             </div>
                         </div>
+                        @if (!auth()->user()->hasRole('manager'))
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="shop" class="col-md-2 col-form-label form-control-label text-center">매장이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('shop')}}" id="shop"  name="shop">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        @endif
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>

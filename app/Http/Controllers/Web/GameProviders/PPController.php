@@ -32,6 +32,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $code;
         }
 
+        public static function gameCodetoObj($code)
+        {
+            $gamelist = PPController::getgamelist('pp');
+            $gamelist_live = PPController::getgamelist('live');
+            $gamelist = array_merge_recursive($gamelist, $gamelist_live);
+            $gamename = $code;
+            if ($gamelist)
+            {
+                foreach($gamelist as $game)
+                {
+                    if ($game['gamecode'] == $code)
+                    {
+                        return $game;
+                    }
+                }
+            }
+            return null;
+        }
+
         public static function gamecodetoname($code)
         {
             $gamelist = PPController::getgamelist('pp');
@@ -691,7 +710,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'icon' => '/frontend/Default/ico/pp/1301/Spaceman.png',
                     'type' => 'slot',
                     'gameType' => 'rng',
-                    'view' => $view
+                    'view' => 1
                 ]);
  
                 \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -1335,7 +1354,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
             $gamelist = PPController::getgamelist('pp');
-            $rand = mt_rand(0,10);
+            $len = count($gamelist);
+            if ($len > 10) {$len = 10;}
+            if ($len == 0)
+            {
+                return ['error' => true, 'msg' => 'not found any available game.'];
+            }
+            $rand = mt_rand(0,$len);
+            
             $gamecode = $gamelist[$rand]['gamecode'];
             $data = PPController::createPlayer($anyuser->id);
             if ($data['error'] != 0) //create player failed
@@ -1541,10 +1567,118 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return redirect($failed_url);
             }
             event(new \VanguardLTE\Events\Game\PPGameVerified($user->username . ' / ' . $gamecode));
+
+            //마지막으로 플레이한 게임로그 얻기
+            $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
+            $ppchild_category = \VanguardLTE\Category::where('parent', $pp_category->original_id)->first();
+
+            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->whereIn('category_id', [$pp_category->original_id, $ppchild_category->original_id])->orderby('date_time', 'desc')->first();
+
+            if ($stat_game)
+            {
+                $local_game = ($stat_game->category_id == $ppchild_category->original_id);
+                $gamename = $stat_game->game_id;
+                if ($local_game)
+                {
+                    $pm_games = \VanguardLTE\Game::where('id', $stat_game->game_id)->first();
+                    $gamelist = PPController::getgamelist('pp');
+                    foreach($gamelist as $game)
+                    {
+                        $gamename = $game['name'];
+                        $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
+                        $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                        if ($gamename == $pm_games->name)
+                        {
+                            $gamename = $game['enname'];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    $game = PPController::gameCodetoObj($stat_game->game_id);
+                    if ($game){
+                        $gamename = $game['enname'];
+                    }
+                }
+                $data = [
+                    'brand_id' => config('app.stylename'),
+                    'username' => $user->username,
+                    'game_id' => $stat_game->game_id,
+                    'balance' => $stat_game->balance,
+                    'rounds' => urlencode(json_encode(
+                        [
+                            [
+                                'id' => $stat_game->roundid,
+                                'name' => $gamename,
+                                'symbol' => $stat_game->game_id,
+                                'date' => strtotime($stat_game->date_time) * 1000,
+                                'betAmount' => $stat_game->bet,
+                            ]
+                        ]
+                    ))
+                ];
+            }
+            else
+            {
+                $data = [
+                    'brand_id' => config('app.stylename'),
+                    'username' => $user->username,
+                    'game_id' => 0,
+                    'balance' => 0,
+                    'rounds' => ''
+                ];
+            }
+            try {
+                $response = Http::timeout(10)->asForm()->post(config('app.ppverify') . '/api/verify/create', $data);
+                if (!$response->ok())
+                {
+                    return redirect($failed_url);
+                }
+                $res = $response->json();
+                if ($res['success'])
+                {
+                    return redirect(config('app.ppverify') . '/verify?lang=ko&mgckey='.$res['mgckey']);
+                }
+                else
+                {
+                    return redirect($failed_url);
+                }
+            }
+            catch (\Exception $ex)
+            {
+                redirect($failed_url);
+            }               
+
+        }
+
+        public static function verify_bet(){
+            $gamecode = 'vs20doghouse';
+            if (config('app.ppmode') == 'bt') // BT integration mode
+            {
+                $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();
+            }
+            else
+            {
+                $user = \VanguardLTE\User::where('role_id', 1)->whereNotNull('api_token')->first();
+            }
+            
+            if (!$user)
+            {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+
+            //마지막으로 플레이한 게임로그 얻기
+            $is_local = false;
+            $gamename = PPController::gamecodetoname($gamecode)[0];
+            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->orderby('date_time', 'desc')->first();
+            if(isset($stat_game) && strpos($stat_game->game, '_pp') == false){
+                $is_local = true;
+            }
             $data = PPController::getBalance($user->id);
             if ($data['error'] == -1) {
                 //연동오류
-                return redirect($failed_url);
+                return ['error' => true, 'msg' => 'getBalance Error.'];
             }
             else if ($data['error'] == 17) //Player not found
             {
@@ -1552,7 +1686,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($data['error'] != 0) //create player failed
                 {
                     //오류
-                    return redirect($failed_url);
+                    return ['error' => true, 'msg' => 'createPlayer Error.'];
                 }
             }
             else if ($data['error'] == 0)
@@ -1562,28 +1696,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $data = PPController::transfer($user->id, -$data['balance']);//이미 밸런스가 있다면
                     if ($data['error'] != 0)
                     {
-                        return null;
+                        return ['error' => true, 'msg' => 'transfer init Error.'];
                     }
                 }
             }
             else //알수 없는 오류
             {
                 //오류
-                return redirect($failed_url);
+                return ['error' => true, 'msg' => 'unknown Error.'];
             }
             //밸런스 넘기기
             if ($user->balance > 0) {
                 $data = PPController::transfer($user->id, $user->balance);
                 if ($data['error'] != 0)
                 {
-                    return redirect($failed_url);
+                    return ['error' => true, 'msg' => 'transfer Error.'];
                 }
             }
             
             $url = PPController::getgamelink_pp($gamecode, $user);
             if ($url['error'] == true)
             {
-                return redirect($failed_url);
+                return ['error' => true, 'msg' => 'getgamelink Error.'];
             }
             $response = Http::withOptions(['allow_redirects' => false, 'proxy' => config('app.ppproxy')])->get($url['data']['url']);
             if ($response->status() == 302)
@@ -1599,7 +1733,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
                 if (!$mgckey){
-                    return redirect($failed_url);
+                    return ['error' => true, 'msg' => 'no mgckey Error.'];
                 }
                 $cver = 99951;
                 $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/common/games-html5/games/vs/'. $gamecode .'/desktop/bootstrap.js');
@@ -1625,14 +1759,67 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ])->asForm()->post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
                 if (!$response->ok())
                 {
-                    return redirect($failed_url);
+                    return ['error' => true, 'msg' => 'doInit Error'];
                 }
-                return redirect(config('app.ppgameserver') . '/gs2c/session/verify?lang=ko&'.$mgckey);
+
+                if($is_local == true){
+                    // 본장에 베팅하기
+                    $result = PPController::toJson($response->body());
+                    $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->where('game', 'like', $gamename . 'PM%' )->orderby('date_time', 'desc')->first();
+                    $line = (int)$result['l'] ?? 20;
+                    $bet = (float)$result['c'] ?? 100;
+                    if(isset($stat_game)){
+                        $bet = $stat_game->bet / $line;
+                    }
+                    $data = [
+                        'action' => 'doSpin',
+                        'symbol' => $gamecode,
+                        'c' => $bet,
+                        'l' => $line,
+                        'index' => 2,
+                        'counter' => 3,
+                        'repeat' => 0,
+                        'mgckey' => explode('=', $mgckey)[1]
+                    ];
+                    $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
+                        'Content-Type' => 'application/x-www-form-urlencoded'
+                        ])->asForm()->post(config('app.ppgameserver') . '/gs2c/ge/v3/gameService', $data);
+                    if (!$response->ok())
+                    {
+                        return ['error' => true, 'msg' => 'doSpin Error, Body => ' . $response->body()];
+                    }
+                    $result_bet = PPController::toJson($response->body());
+                    $win = (float)$result_bet['tw'] ?? 0;
+                    $diffMoney = $bet - $win;
+                    $data = PPController::transfer($user->id, $diffMoney);
+                    if ($data['error'] != 0)
+                    {
+                        return ['error' => true, 'msg' => 'transfer diffMoney Error'];
+                    }
+                    else
+                    {
+                        return ['error' => false, 'msg' => 'Bet Body => ' . $response->body()];
+                    }
+                }
+
+                return ['error' => false, 'msg' => 'No Bet'];
             }
             else
             {
-                return redirect($failed_url);
+                return ['error' => true, 'msg' => 'Error'];
             }
+        }
+
+        public static function toJson($data) {
+            $keys = explode('&', $data);
+            $response = [];
+            foreach($keys as $key){
+                $item_arr = explode('=', $key);
+                if(is_array($item_arr) && count($item_arr) == 2){
+                    $response[$item_arr[0]] = $item_arr[1];
+                }
+            }
+            return $response;
         }
 
         public function savesettings($ppgame, \Illuminate\Http\Request $request)

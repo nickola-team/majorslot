@@ -107,9 +107,18 @@
                             <div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
+                                </div>
+                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="role" name="role">
+                                        <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
+                                        @for ($level=3;$level<=auth()->user()->role_id;$level++)
+                                        <option value="{{$level}}" @if (Request::get('role') == $level) selected @endif> {{\VanguardLTE\Role::find($level)->description}}</option>
+                                        @endfor
+                                    </select>
                                 </div>
                                 <div class="col-md-1">
                                 </div>
@@ -160,6 +169,9 @@
                                 <th scope="col">롤링전환</th>
                                 <th scope="col">벳윈수익</th>
                                 <th scope="col">총보유금</th>
+                                @if (auth()->user()->hasRole('admin'))
+                                <th scope="col">전날대비 마진금</th>
+                                @endif
                                 @if(auth()->user()->isInoutPartner())
                                 <th>이익금</th>
                                 @endif

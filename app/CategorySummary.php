@@ -399,6 +399,7 @@ namespace VanguardLTE
                                 'name' => $update_game['name'],
                                 'updated_at' => $to,
                                 'category_id' => $update_game['category_id'],
+                                'game_id' => $update_game['game_id'],
                                 'shop_id' => $update_game['shop_id'],
                                 'totalbet' => $update_game['totalbet'],
                                 'totalwin' => $update_game['totalwin'],

@@ -55,7 +55,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
                 }
-                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::JOIN)
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::JOIN || $admin->status == \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)
                 {
                     return response()->json(['error' => true, 'msg' => '가입신청을 처리중입니다.']);
                 }
@@ -84,7 +84,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 1, 
                 2, 
                 3
-            ]) && (!$user->shop || $user->shop->is_blocked) ) 
+            ]) && (!$user->shop || $user->shop->is_blocked || $user->shop->pending != 0) ) 
             {
                 return response()->json(['error' => true, 'msg' => trans('app.your_shop_is_blocked')]);
             }

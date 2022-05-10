@@ -209,6 +209,7 @@ iframe {
     background-position: center;
     position: relative;
     z-index: 1;
+    background-image: url('/back/argon/img/theme/bg-argon.png')
 }
 
 .login100-more::before {

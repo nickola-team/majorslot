@@ -115,6 +115,7 @@ return [
     'ppapi' => env('PP_API','https://api-sg0.pragmaticplay.net/IntegrationService/v3'),
     'ppgameserver' => env('PP_SERVER','https://major-sg0.pragmaticplay.net'),
     'ppproxy' => env('PP_PROXY', ''),
+    'ppverify' => env('PP_VERIFY_SERVER',''),
     
     /*
     Booongo  keys
