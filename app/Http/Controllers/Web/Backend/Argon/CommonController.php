@@ -350,6 +350,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     return redirect()->back()->withErrors(['하부 보유금이 0이 아닙니다']);
                 }
             }
+            else if (!auth()->user()->hasRole('admin'))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 접근입니다']);
+            }
             if ($user->hasRole('user')) 
             {
                 \VanguardLTE\Task::create([
