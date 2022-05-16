@@ -308,22 +308,26 @@ namespace VanguardLTE\Games\TreasureWildPM
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
                             if($j == 4){
                                 $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
-                                $totalWin += $lineWins[$k];
-                                $winLineCount++;
-                                $strWinLine = $strWinLine . '&l'. ($winLineCount - 1).'='.$k.'~'.$lineWins[$k];
-                                for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
-                                    $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 5 + $kk);
+                                if($lineWins[$k] > 0){
+                                    $totalWin += $lineWins[$k];
+                                    $winLineCount++;
+                                    $strWinLine = $strWinLine . '&l'. ($winLineCount - 1).'='.$k.'~'.$lineWins[$k];
+                                    for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
+                                        $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 5 + $kk);
+                                    }
                                 }
                             }
                         }else{
                             if($slotSettings->Paytable[$firstEle][$lineWinNum[$k]] > 0){
                                 $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
-                                $totalWin += $lineWins[$k];
-                                $winLineCount++;
-                                $strWinLine = $strWinLine . '&l'. ($winLineCount - 1).'='.$k.'~'.$lineWins[$k];
-                                for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
-                                    $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 5 + $kk);
-                                }   
+                                if($lineWins[$k] > 0){
+                                    $totalWin += $lineWins[$k];
+                                    $winLineCount++;
+                                    $strWinLine = $strWinLine . '&l'. ($winLineCount - 1).'='.$k.'~'.$lineWins[$k];
+                                    for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
+                                        $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 5 + $kk);
+                                    }   
+                                }
 
                             }else{
                                 $lineWinNum[$k] = 0;
@@ -366,8 +370,14 @@ namespace VanguardLTE\Games\TreasureWildPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                 }
                 $strLastReel = implode(',', $lastReel);
-                $strReelSa = '7,4,6,10,10';
-                $strReelSb = '3,8,4,7,10';
+                $reelA = [];
+                $reelB = [];
+                for($i = 0; $i < 5; $i++){
+                    $reelA[$i] = mt_rand(3, 11);
+                    $reelB[$i] = mt_rand(3, 11);
+                }
+                $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
+                $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
                
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalMoneyValue', $totalMoneyValue);
