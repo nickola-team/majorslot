@@ -702,17 +702,26 @@ namespace VanguardLTE\Games\TreasureWildPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameTreasureWildStack::where([
-                    'spin_type' => $spintype,
-                    'pur_level' => $pur
-                ]);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTreasureWildStack::where('spin_type', $spintype);
+                $index = mt_rand(10000, 60000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
+                }else if($winType == 'bonus'){
+                    if($pur < 0){
+                        if(mt_rand(0, 100) > 10){
+                            $pur = mt_rand(0, 10);
+                        }
+                    }
+                    $stacks = $stacks->where('pur_level', $pur);
                 }
                 if($isLowBank == true){
-                    $stacks = $stacks->orderby('odd', 'asc')->take(5);
+                    $stacks = $stacks->orderby('odd', 'asc')->take(5)->get();
                 }else{
-                    $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    }else{
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                    }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     $isLowBank = true;
