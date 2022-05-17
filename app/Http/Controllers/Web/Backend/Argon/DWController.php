@@ -91,14 +91,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $partners = $partners->first();
                 if ($partners) {
                     $childsPartners = $partners->hierarchyPartners();
-                    if (count($childsPartners) > 0)
-                    {
-                        $in_out_logs = $in_out_logs->whereIn('user_id', $childsPartners);
-                    }
-                    else
-                    {
-                        $in_out_logs = $in_out_logs->where('user_id', -1);
-                    }
+                    $childsPartners[] = $partners->id;
+                    $in_out_logs = $in_out_logs->whereIn('user_id', $childsPartners);
                 }
                 else
                 {
