@@ -79,6 +79,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $in_out_logs = $in_out_logs->where('user_id', -1);
                 }
             }
+
+            if ($request->partner != '')
+            {
+                $availablePartners = auth()->user()->hierarchyPartners();
+                $partners = \VanguardLTE\User::whereIn('id', $availablePartners)->orderBy('role_id','desc')->where('username','like', '%' . $request->partner . '%');
+                if ($request->role != '')
+                {
+                    $partners = $partners->where('role_id', $request->role);
+                }
+                $partners = $partners->first();
+                if ($partners) {
+                    $childsPartners = $partners->hierarchyPartners();
+                    $childsPartners[] = $partners->id;
+                    $in_out_logs = $in_out_logs->whereIn('user_id', $childsPartners);
+                }
+                else
+                {
+                    $in_out_logs = $in_out_logs->where('user_id', -1);
+                }
+            }
             $total = [
                 'add' => (clone $in_out_logs)->where(['type'=>'add', 'status'=>\VanguardLTE\WithdrawDeposit::DONE])->sum('sum'),
                 'out' => (clone $in_out_logs)->where(['type'=>'out', 'status'=>\VanguardLTE\WithdrawDeposit::DONE])->sum('sum'),
