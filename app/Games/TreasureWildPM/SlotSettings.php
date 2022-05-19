@@ -697,7 +697,7 @@ namespace VanguardLTE\Games\TreasureWildPM
                 }
                 else
                 {
-                    $limitOdd = floor($winAvaliableMoney / $bet / 3);
+                    $limitOdd = floor($winAvaliableMoney / $bet / 2);
                 }
             }
             $isLowBank = false;
@@ -708,8 +708,10 @@ namespace VanguardLTE\Games\TreasureWildPM
                     $stacks = $stacks->where('odd', '>', 0);
                 }else if($winType == 'bonus'){
                     if($pur < 0){
-                        if(mt_rand(0, 100) > 10){
-                            $pur = mt_rand(0, 10);
+                        if(mt_rand(0, 100) <= 95){
+                            $pur = 0;
+                        }else{
+                            $pur = 1;
                         }
                     }
                     $stacks = $stacks->where('pur_level', $pur);
