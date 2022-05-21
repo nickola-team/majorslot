@@ -178,7 +178,7 @@
 		}	
 	</script>
 
-	<body class="overflow-x:hidden;" style="background-color: #0967c4">
+	<body class="overflow-x:hidden;" style="background-color: #000000">
 		<input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
 		<div id="casino_1" class="popup_style02 popup_none">
 			<div class="popup_wrap">
