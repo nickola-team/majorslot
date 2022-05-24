@@ -309,6 +309,43 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg'));
         }
+
+        public function startGameWithToken(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
+        {
+            $token = $request->token;
+            if ($token == '')
+            {
+                abort(404);
+            }
+            $user = \VanguardLTE\User::where(['api_token' => $token, 'role_id' => 1])->first();
+            if (!$user)
+            {
+                abort(404); //player not found
+            }
+            if (\Auth::check())
+            {
+                event(new \VanguardLTE\Events\User\LoggedOut());
+                \Auth::logout();
+            }
+            //invalidate all sessions
+            \DB::table('sessions')
+            ->where('user_id', $user->id)
+            ->delete();
+            // $sessionRepository->invalidateAllSessionsForUser($user->id);
+
+            \Auth::login($user);
+
+            $gamecode = $request->gamecode;
+
+            $game = \VanguardLTE\Game::where(['shop_id' => $user->shop_id, 'original_id' => $gamecode])->first();
+            if (!$game)
+            {
+                abort(404);
+            }
+            $url = '/game/' . $game->name;
+            return view('frontend.Default.games.apigame',compact('url'));
+        }
+
         public function server(\Illuminate\Http\Request $request, $game)
         {
             /*if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
