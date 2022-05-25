@@ -80,27 +80,28 @@ namespace VanguardLTE\Games\hitthegoldbng
                     array_push($bets, $slotSettings->Bet[$k] * $DENOMINATOR);
                 }
                 $_obf_StrResponse = '';
+                $initbetindex = 6;
                 $objRes = [
                     'command' => $slotEvent['command'],
                     'context' => [
                         'actions' => ['spin'],
                         'current' => 'spins',
                         'last_args' => [
-                            'bet_per_line' => $bets[5],
+                            'bet_per_line' => $bets[$initbetindex],
                             'lines' => $LINES,
                         ],
                         'last_win' => 0,
                         'math_version' => 'a',
                         'round_finished' => true,
                         'spins' => [
-                            'bet_per_line' => $bets[5],
+                            'bet_per_line' => $bets[$initbetindex],
                             'board' => [[11, 11, 4], [1, 8, 8], [9, 9, 9], [9, 9, 9], [11, 11, 11]],
-                            'bs_v' => [[$bets[5] * 250, "major", 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], ["minor", 125 * $bets[5], 75 * $bets[5]]],
+                            'bs_v' => [[$bets[$initbetindex] * 250, "major", 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], ["minor", 125 * $bets[$initbetindex], 75 * $bets[$initbetindex]]],
                             'bs_valuse' => [[10, 150, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [50, 5, 3]],
                             'hill' => [2, 0],
                             'feature_board' => [[3, 13, 2], [2, 12, 6], [5, 13, 2], [2, 12, 4], [3, 13, 2]],
                             'lines' => $LINES,
-                            'round_bet' => $bets[5] * $LINES,
+                            'round_bet' => $bets[$initbetindex] * $LINES,
                             'round_win' => 0,
                             'total_win' => 0,
                         ],
