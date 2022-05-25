@@ -113,6 +113,7 @@
                 <th scope="col">이름</th>
                 <th scope="col">매장</th>
                 <th scope="col">보유금</th>
+                <th scope="col">롤링금</th>
                 <th scope="col">총충전금</th>
                 <th scope="col">총환전금</th>
                 <th scope="col">상태</th>
