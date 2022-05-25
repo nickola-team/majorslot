@@ -319,6 +319,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.bogetgamelist',
         'uses' => 'ApiController@bo_getgamelist',
     ]);
+    Route::get('gamestart/endpoint', [
+        'as' => 'frontend.api.bostartgame',
+        'uses' => 'GamesController@startGameWithToken',
+    ]);
+
     Route::post('api/getgamelink', [
         'as' => 'frontend.api.getgamelink',
         'uses' => 'ApiController@getgamelink',
