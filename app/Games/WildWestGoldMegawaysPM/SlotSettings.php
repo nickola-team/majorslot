@@ -711,10 +711,8 @@ namespace VanguardLTE\Games\WildWestGoldMegawaysPM
                     $stacks = $stacks->where('odd', '>', 0);
                 }else if($winType == 'bonus'){
                     if($pur < 0){
-                        if(mt_rand(0, 100) <= 95){
+                        if(mt_rand(0, 100) <= 80){
                             $pur = 0;
-                        }else{
-                            $pur = 1;
                         }
                     }
                     $stacks = $stacks->where('pur_level', $pur);
