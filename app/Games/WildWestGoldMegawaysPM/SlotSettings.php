@@ -706,7 +706,7 @@ namespace VanguardLTE\Games\WildWestGoldMegawaysPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWestGoldMegawaysStack::where('spin_type', $spintype);
-                $index = mt_rand(1000, 20000);
+                $index = mt_rand(1000, 80000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }else if($winType == 'bonus'){
