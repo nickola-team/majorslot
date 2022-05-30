@@ -236,7 +236,6 @@ namespace VanguardLTE\Games\TreasureWildPM
                     }else{
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
                     }
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
                     $bonusMpl = 1;
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
