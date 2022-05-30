@@ -1,6 +1,6 @@
 <html lang="ko">
 <head>
-<title>@yield('page-title')</title>
+<title>KHAN-1</title>
         <!-- Required meta tags -->
         <meta charset="utf-8"><link href="https://fonts.googleapis.com/css?family=Raleway:900&amp;display=swap" rel="stylesheet">
 	    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>

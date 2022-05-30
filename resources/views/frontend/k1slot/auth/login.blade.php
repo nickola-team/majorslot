@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>K-1</title>
+<title>KHAN-1</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=1.0, user-scalable=0" />
     <!-- WEB FONT -->
