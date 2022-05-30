@@ -264,7 +264,7 @@ function depositWindow()
                     <tr>
                         <td>입금계좌번호</td>
                         <td>
-                            <a href="javascript:void(0);" onClick="javascript:window.open('acc.php','exc1111','width=500,height=200,top=100,left=300,scrollbars=yes,resizable=no')" style="color:#ffff00;font-weight:bold;font-size:16px">[계좌문의]</a>
+                            <a href="javascript:void(0);" onClick=";" style="color:#ffff00;font-weight:bold;font-size:16px;margin: 0.8em 0;">[계좌문의]</a>
                         </td>
                     </tr>
         
@@ -272,7 +272,7 @@ function depositWindow()
                 </form>
             </div>
             <div class="submit_wrap">
-                <div class="btn" onclick="fwrite.submit();document.getElementById('a1').disabled='true';">입금신청하기</div>
+                <div class="btn" onclick="alert('매장에 문의하세요');">입금신청하기</div>
             </div>
         
                                                             <br/><br/>
@@ -365,7 +365,7 @@ function withdrawWindow()
                 </form>
             </div>
             <div class="submit_wrap">
-                <div class="btn" onclick="fwrite.submit();;document.getElementById('a1').disabled='true';">출금신청하기</div>
+                <div class="btn" onclick="alert('매장에 문의하세요');">출금신청하기</div>
             </div>
                                                             <br/><br/>
                                     <table width="100%" cellpadding=0 cellspacing=1>

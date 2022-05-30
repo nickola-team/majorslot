@@ -365,6 +365,30 @@ function closeWin( popup, num, closeflag ) {
 	}
 	popup.style.display='none';
 }
+function closeWin2( popup ) {
+	popup.style.display='none';
+}
+
+function getCookie( name ) {
+
+	var nameOfCookie = name + "=";
+    var x = 0;
+
+	//alert(document.cookie);
+	while ( x <= document.cookie.length ) {
+		var y = (x+nameOfCookie.length);
+
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+	        return unescape( document.cookie.substring( y, endOfCookie ) );
+	    }
+	    x = document.cookie.indexOf( " ", x ) + 1;
+
+	    if ( x == 0 ) break;
+	}
+	return "";
+}
  
 //-->  
 </script> 
@@ -379,6 +403,10 @@ function closeWin( popup, num, closeflag ) {
 	</div>
 	<div><?php echo $ntc->content ?><p><br></p></div>
 </div>
-
+<script type='text/javascript'>
+    if ( getCookie( "divpopup{{$ntc->id}}" ) == "check" ) {
+      closeWin2(document.getElementById('pop{{$ntc->id}}'));
+    }
+</script>
 @endforeach
 @endif
