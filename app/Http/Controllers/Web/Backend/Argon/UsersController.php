@@ -483,6 +483,31 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $users = $users->paginate(20);
             return view('backend.argon.player.list', compact('users','total'));
         }
+        public function player_terminate(\Illuminate\Http\Request $request)
+        {
+            $userid = $request->id;
+            $availableUsers = auth()->user()->hierarchyUsersOnly();
+            if (!in_array($userid, $availableUsers))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+            }
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
+            }
+            if ($user->playing_game == 'pp') //프라그마틱게임 종료
+            {
+                PPController::terminate($user->id);
+            }
+            else if ($user->playing_game == 'tp') //TheplusGame
+            {
+                $user->update(['plyaing_game' => 'tpexit']);
+            }
+
+            return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);
+        }
+        
 
         public function player_transaction(\Illuminate\Http\Request $request)
         {
