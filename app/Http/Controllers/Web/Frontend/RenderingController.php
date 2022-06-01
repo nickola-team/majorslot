@@ -86,6 +86,86 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         }
 
+        public function theplusrender($gamecode, \Illuminate\Http\Request $request)
+        {
+            $lobby = $request->lobby;
+            $t = $request->t; //check timestamp if it is normal request
+            $launchRequest = \VanguardLTE\GameLaunch::where('id', $t)->first();
+            if (!$launchRequest)
+            {
+                //this is irlegal request.
+                return redirect('/');
+            }
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
+            if ($user->id != $launchRequest->user_id)
+            {
+                return redirect('/');
+            }
+
+            $launchRequest->delete();
+
+            $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObj($gamecode);
+            if (!$gameObj)
+            {
+                return redirect('/');
+            }
+            $gamename = $gameObj['name'];
+            $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
+            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+            $shop_id = \Auth::user()->shop_id;
+            $cat = \VanguardLTE\Category::where([
+                'shop_id' => $shop_id,
+                'href' => 'pragmatic',
+                'view' => 1
+            ])->first();
+
+            $pm_games = \VanguardLTE\Game::where([
+                'shop_id' => $shop_id,
+                'name' => $gamename,
+                'view' => 1,
+                ]
+            )->first();
+            
+            $alonegame = 0;
+            $url = null;
+            $data = [];
+           
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
+                $url = url('/game/' . $gamename);
+                $alonegame = 1;
+            }
+            else {
+                //게임런칭
+                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getgamelink_tp($gamecode, $user);
+                if ($data['error'] == true)
+                {
+                    $data['msg'] = 'GameLinkError';
+                    return view('frontend.Default.games.theplus', compact('data'));
+                }
+                $url = $data['data']['url'];
+            }
+
+            if ($alonegame == 0)
+            {
+                $user->update([
+                    'playing_game' => \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::TP_PROVIDER,
+                    'played_at' => time(),
+                ]);
+            }
+            if ($lobby == 'mini')
+            {
+                return redirect($url);
+            }
+            else
+            {
+                return view('frontend.Default.games.theplus', compact('url', 'alonegame', 'data'));
+            }
+        }
+
         public function pragmaticrender($gamecode, \Illuminate\Http\Request $request)
         {
             $lobby = $request->lobby;

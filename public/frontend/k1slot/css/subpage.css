@@ -9,7 +9,6 @@ select:focus,input:focus,textarea:focus{outline:0;border:1px solid #fee7b5;}
 
 p {color: #fff;}
 .logo {text-align:center; margin: 20px 0 10px 0;}
-.logo img {height: 70px;}
 .info {font-size: 14px;}
 .info p:nth-child(1) {color: #f8e521;}
 

@@ -114,9 +114,61 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             {
                 return redirect()->to('login' . $to)->withErrors(trans('app.please_confirm_your_email_first'));
             }
+            //check admin id per site
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->get();
+            $adminid = [1]; //default admin id
+            if (count($site) > 0)
+            {
+                $adminid = $site->pluck('adminid')->toArray();
+            }
+
+            $admin = $user;
+            while ($admin !=null && !$admin->isInoutPartner())
+            {
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
+                {
+                    return response()->json(['error' => true, 'msg' => '삭제된 계정입니다.']);
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::BANNED)
+                {
+                    return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::JOIN || $admin->status == \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)
+                {
+                    return response()->json(['error' => true, 'msg' => '가입신청을 처리중입니다.']);
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::REJECTED)
+                {
+                    return response()->json(['error' => true, 'msg' => '가입신청이 거부되었습니다.']);
+                }
+                $admin = $admin->referral;
+            }
+
+            if (!$admin || !in_array($admin->id, $adminid))
+            {
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
+            }
+            if (!$admin->isActive())
+            {
+                return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+            }
+
+            if( !$user->hasRole('admin') && setting('siteisclosed') ) 
+            {
+                \Auth::logout();
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off')]);
+            }
+            if( $user->hasRole([
+                1, 
+                2, 
+                3
+            ]) && (!$user->shop || $user->shop->is_blocked || $user->shop->pending != 0) ) 
+            {
+                return response()->json(['error' => true, 'msg' => trans('app.your_shop_is_blocked')]);
+            }
             if( $user->isBanned() ) 
             {
-                return redirect()->to('login' . $to)->withErrors(trans('app.your_account_is_banned'));
+                return response()->json(['error' => true, 'msg' => trans('app.your_account_is_banned')]);
             }
             // block Internet Explorer
             $ua = $request->header('User-Agent');
@@ -129,7 +181,61 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
                 $user->update(['language' => $request->lang]);
             }
             $user->update(['language' => 'ko']);
+            $sessions = $sessionRepository->getUserSessions($user->id);
+            $expiretime = env('EXPIRE_TIME_CLOSE', 600);
+            $count = count($sessions);
+            if(count($sessions) > 0 ) 
+            {
+                foreach ($sessions as $s)
+                {
+                    if ($s->last_activity->diffInSeconds(\Carbon\Carbon::now()) >  $expiretime)
+                    {
+                        $count--;
+                    }
+                }
+                if ($count > 0){
+                    return response()->json(['error' => true, 'msg' => '회원님은 이미 다른 기기에서 로그인되었습니다']);
+                }
+            }
+
+            $sessionRepository->invalidateAllSessionsForUser($user->id);
+
             \Auth::login($user, settings('remember_me') && $request->get('remember'));
+
+            
+            $api_token = $user->generateCode(36);
+            $tryCount = 0;
+            $bToken = false;
+            do{
+                $alreadyUser = \VanguardLTE\User::where('api_token', $api_token)->first();
+                if (!$alreadyUser)
+                {
+                    $bToken = true;
+                    break;
+                }
+                $api_token = $user->generateCode(36);
+                $tryCount = $tryCount + 1;
+            }
+            while ($tryCount < 20);
+            if ($bToken){
+                $user->update(['api_token' => $api_token]);
+                if ($user->playing_game != null)
+                {
+                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                    $user->update(['playing_game' => null]);
+                }
+                $user = $user->fresh();
+                if ($user->api_token != $api_token)
+                {
+                    return response()->json(['error' => true, 'msg' => '잠시후 다시 시도해주세요.']);
+                }
+            }
+            else
+            {
+                return response()->json(['error' => true, 'msg' => '잠시후 다시 시도해주세요.']);
+            }
+
+            event(new \VanguardLTE\Events\User\LoggedIn());
             if( settings('reset_authentication') && count($sessionRepository->getUserSessions(\Auth::id())) ) 
             {
                 foreach( $sessionRepository->getUserSessions($user->id) as $session ) 

@@ -103,6 +103,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'UsersController@vplayer_list',
         ]);
 
+        Route::delete('/player/terminate', [
+            'as' => 'argon.player.terminate',
+            'uses' => 'UsersController@player_terminate',
+        ]);
+
         Route::get('/player/join', [
             'as' => 'argon.player.join',
             'uses' => 'UsersController@player_join',

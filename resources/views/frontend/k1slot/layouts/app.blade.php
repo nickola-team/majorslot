@@ -1,6 +1,6 @@
 <html lang="ko">
 <head>
-<title>K-1</title>
+<title>KHAN-1</title>
         <!-- Required meta tags -->
         <meta charset="utf-8"><link href="https://fonts.googleapis.com/css?family=Raleway:900&amp;display=swap" rel="stylesheet">
 	    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
@@ -76,7 +76,7 @@
         position: absolute;
         left: 10px;
         bottom: 10px;
-        font-size: 21px;
+        font-size: 16px;
     }
 
     .main_best>ul>li>a strong {
@@ -339,7 +339,7 @@
 	<table>
 		<tr>
 			<td class="l" style="color:#fff">
-				<span class="name">K-1</span><br>
+				<span class="name">KHAN-1</span><br>
 				all right reserved.
 			</td>
 			<td class="r">

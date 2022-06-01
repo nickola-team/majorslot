@@ -194,6 +194,7 @@
                 <th scope="col">이름</th>
                 <th scope="col">추천인</th>
                 <th scope="col">보유금</th>
+                <th scope="col">롤링금</th>
                 <th scope="col">총충전금</th>
                 <th scope="col">총환전금</th>
                 <th scope="col">연락처</th>
