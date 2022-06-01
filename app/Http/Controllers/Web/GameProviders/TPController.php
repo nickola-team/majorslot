@@ -228,6 +228,31 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => $url]];
         }
 
+        public static function withdrawAll($userID)
+        {
+            $url = config('app.tp_api') . '/custom/api/user/WithdrawAll';
+            $key = config('app.tp_api_key');
+            $secret = config('app.tp_api_secret');
+            $params = [
+                'key' => $key,
+                'secret' => $secret,
+                'userID' => self::TP_PROVIDER . $userID
+            ];
+            $response = Http::post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('withdrawAll : WithdrawAll request failed. ' . $response->body());
+                return ['error'=>true, 'amount'=>0];
+            }
+            $data = $response->json();
+            if ($data==null || ($data['resultCode']!=0 )) //WithdrawAll failed
+            {
+                Log::error('withdrawAll : WithdrawAll result failed. ' . ($data==null?'null':$data['resultMessage']));
+                return ['error'=>true, 'amount'=>0];
+            }
+            return ['error'=>false, 'amount'=>$data['amount']];
+        }
+
         public static function makelink($gamecode, $userid)
         {
             $user = \VanguardLTE\User::where('id', $userid)->first();
@@ -260,20 +285,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             //withdraw all balance
-
-            $url = config('app.tp_api') . '/custom/api/user/WithdrawAll';
-            $response = Http::post($url, $params);
-            if (!$response->ok())
+            $data = TPController::withdrawAll($user->id);
+            if ($data['error'])
             {
-                Log::error('TPMakeLink : WithdrawAll request failed. ' . $response->body());
                 return null;
             }
-            $data = $response->json();
-            if ($data==null || ($data['resultCode']!=0 )) //WithdrawAll failed
-            {
-                Log::error('TPMakeLink : WithdrawAll result failed. ' . ($data==null?'null':$data['resultMessage']));
-                return null;
-            }
+            
 
             //Add balance
 
