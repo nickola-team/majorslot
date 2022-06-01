@@ -83,7 +83,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $user->update([
                         'balance' => $balance,
-                        'playing_game' => self::TP_PROVIDER,
                         'played_at' => time()
                     ]);
                 }

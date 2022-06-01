@@ -502,7 +502,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             else if ($user->playing_game == 'tp') //TheplusGame
             {
-                $user->update(['plyaing_game' => 'tpexit']);
+                $user->update(['playing_game' => 'tpexit']);
             }
 
             return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);
