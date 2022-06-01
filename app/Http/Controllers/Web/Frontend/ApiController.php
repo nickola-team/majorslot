@@ -308,7 +308,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
             //reset playing_game field to null for provider games.
             $user = auth()->user();
-            if ($user)
+            if ($res['error'] == false && $user)
             {
                 $user->update(['playing_game' => null]);
             }

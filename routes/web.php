@@ -222,6 +222,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.game.search',
         'uses' => 'GamesController@search'
     ]);
+    Route::get('providers/tp/{gamecode}', [
+        'as' => 'frontend.providers.tp.render',
+        'uses' => 'RenderingController@theplusrender'
+    ]);    
     Route::get('providers/pp/{gamecode}', [
         'as' => 'frontend.providers.pp.render',
         'uses' => 'RenderingController@pragmaticrender'
@@ -1383,6 +1387,12 @@ Route::get('playerodh5/', 'GameProviders\CQ9Controller@cq9PlayerOrder');
 Route::get('api/player_betting/search_time', 'GameProviders\CQ9Controller@searchTime');
 Route::get('api/player_betting/detail_link', 'GameProviders\CQ9Controller@detailLink');
 Route::get('api/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
+
+
+/**
+ * ThePlus Game Provider
+ */
+Route::post('/tp/signal', 'GameProviders\TPController@userSignal');
 
 /**
  * Pragmatic Play Game Provider

@@ -9,7 +9,11 @@ namespace VanguardLTE\Console
     use \VanguardLTE\Http\Controllers\Web\GameProviders\PPController;
     class Kernel extends \Illuminate\Foundation\Console\Kernel
     {
-        protected $commands = [];
+        protected $commands = [
+            \VanguardLTE\Console\Commands\TheplusLaunch::class,
+            \VanguardLTE\Console\Commands\TheplusSync::class,
+            \VanguardLTE\Console\Commands\TheplusTerminate::class,
+        ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
             //$schedule->command('queue:work --daemon')->everyMinute()->withoutOverlapping();
@@ -510,7 +514,7 @@ namespace VanguardLTE\Console
             });
 
             \Artisan::command('launch:makeurl', function () {
-                $launchRequests = \VanguardLTE\GameLaunch::where('finished', 0)->orderby('created_at', 'asc')->get();
+                $launchRequests = \VanguardLTE\GameLaunch::where(['finished'=> 0, 'provider' => 'pp'])->orderby('created_at', 'asc')->get();
                 $processed_users = [];
                 foreach ($launchRequests as $request)
                 {

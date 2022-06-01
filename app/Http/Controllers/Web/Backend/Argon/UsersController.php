@@ -541,7 +541,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $availableShops = $user->availableShops();
             // $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC')->whereIn('user_id', $availableUsers);
 
-            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
+            $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC')->orderBy('stat_game.id', 'DESC');
 
             $start_date = date("Y-m-d H:i:s", strtotime("-1 hours"));
             $end_date = date("Y-m-d H:i:s");

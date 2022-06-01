@@ -169,6 +169,15 @@ return [
     'gac_api' => env('GAC_API', ''),
     'gac_key' => env('GAC_KEY', 'test'),
 
+
+    /*
+    ThePlus Auth key
+    */
+    'tp_api' => env('TP_API', ''),
+    'tp_api_key' => env('TP_KEY', 'test'),
+    'tp_api_secret' => env('TP_SECRET', 'test'),
+
+
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
 
