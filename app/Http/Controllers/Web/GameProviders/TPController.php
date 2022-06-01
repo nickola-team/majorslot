@@ -421,7 +421,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'date_time' => $time,
                         'shop_id' => $shop->shop_id,
                         'category_id' => isset($category)?$category->id:0,
-                        'game_id' => $$gameObj['gamecode'],
+                        'game_id' => $gameObj['gamecode'],
                         'roundid' => $round['ObjectID'],
                     ]);
                     $count = $count + 1;
