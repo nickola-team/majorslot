@@ -47,14 +47,24 @@ class TheplusTerminate extends Command
             try {
                 if ($user->playing_game == TPController::TP_PROVIDER . 'exit')
                 {
-                    $balance = TPController::getuserbalance($user->id);
+                    $data = TPController::withdrawAll($user->id);
+                    if ($data['error'] == false){
                           
-                    User::lockforUpdate()
+                        User::lockforUpdate()
+                            ->where('id', $user->id)
+                            ->update([
+                                'balance' => $data['amount'], 
+                                'playing_game' => null
+                            ]);
+                    }
+                    else
+                    {
+                        User::lockforUpdate()
                         ->where('id', $user->id)
                         ->update([
-                            'balance' => $balance, 
                             'playing_game' => null
                         ]);
+                    }
                 }
                 else
                 {
