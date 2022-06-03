@@ -14,6 +14,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $record;
         }
 
+        public static function sign($random)
+        {
+            return md5(config('app.dg_agent') . config('app.dg_token') . $random);
+        }
+
+
         public function generateCode($limit){
             $code = 0;
             for($i = 0; $i < $limit; $i++) { $code .= mt_rand(0, 9); }
@@ -55,10 +61,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $microstr;
         }
 
-        public static function sign()
-        {
-            return md5(config('app.ata_toporg') . config('app.ata_org') . config('app.ata_key'));
-        }
         /*
         * FROM DG, BACK API
         */
@@ -66,7 +68,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function getBalance($agentName, \Illuminate\Http\Request $request)
         {
             $configAgent = config('app.dg_agent');
-            $configToken = config('app.dg_token');
+            $configToken = $this->sign('');
             if ($configAgent != $agentName)
             {
                 return response()->json([
@@ -108,7 +110,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function transfer($agentName, \Illuminate\Http\Request $request)
         {
             $configAgent = config('app.dg_agent');
-            $configToken = config('app.dg_token');
+            $configToken = $this->sign('');
             if ($configAgent != $agentName)
             {
                 return response()->json([
@@ -180,7 +182,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function checkTransfer($agentName, \Illuminate\Http\Request $request)
         {
             $configAgent = config('app.dg_agent');
-            $configToken = config('app.dg_token');
+            $configToken = $this->sign('');
             if ($configAgent != $agentName)
             {
                 return response()->json([
@@ -218,7 +220,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function inform($agentName, \Illuminate\Http\Request $request)
         {
             $configAgent = config('app.dg_agent');
-            $configToken = config('app.dg_token');
+            $configToken = $this->sign('');
             if ($configAgent != $agentName)
             {
                 return response()->json([
@@ -305,7 +307,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function order($agentName, \Illuminate\Http\Request $request)
         {
             $configAgent = config('app.dg_agent');
-            $configToken = config('app.dg_token');
+            $configToken = $this->sign('');
             if ($configAgent != $agentName)
             {
                 return response()->json([
@@ -334,7 +336,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function unsettle($agentName, \Illuminate\Http\Request $request)
         {
             $configAgent = config('app.dg_agent');
-            $configToken = config('app.dg_token');
+            $configToken = $this->sign('');
             if ($configAgent != $agentName)
             {
                 return response()->json([
