@@ -177,6 +177,11 @@ return [
     'tp_api_key' => env('TP_KEY', 'test'),
     'tp_api_secret' => env('TP_SECRET', 'test'),
 
+    /*
+    DreamGaming Auth key
+    */
+    'dg_agent' => env('DG_AGENT', ''),
+    'dg_token' => env('DG_TOKEN', 'test'),
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
