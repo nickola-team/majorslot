@@ -20,7 +20,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
 
-        public function generateCode($limit){
+        public static function generateCode($limit){
             $code = 0;
             for($i = 0; $i < $limit; $i++) { $code .= mt_rand(0, 9); }
             return $code;
@@ -376,77 +376,88 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
 
-            $data = [
-                'topOrg' => config('app.ata_toporg'),
-                'org' => config('app.ata_org'),
-                'sign' => ATAController::sign(),
-                'type' => $href
-            ];
-            $resultdata = null;
-            try {
-                $response = Http::asForm()->post(config('app.ata_api') . '/getGameList', $data);
-                if (!$response->ok())
-                {
-                    return [];
-                }
-                $resultdata = $response->json();
-            }
-            catch (Exception $ex)
-            {
-                return [];
-            }
-
             $gameList = [];
-            $slotgameString = ['Slot game', 'Video Slot','3-Reel Slot Machine', '5-Reel Slot Machine', 'SLOT','5x5 Grid Slot Machine','7x7 Grid Slot Machine','5x7 Grid Slot Machine','8x8 Grid Slot Machine','3x3 Grid Slot Machine','6x6 Grid Slot Machine'];
-            $exceptGames = [ 150328,150331,150332,150325,150319,150320,150316,150312,150298,150295,150294,150268,150267,150266,150265,150264,150251,150250,150249,150244,150237,150236,150235,150232,150233,150212,150207,150196,150174,150209,150206,150200,150181,150202,150215,150211,150010,150205,150012];
-            if ($resultdata['code'] == 0){
-
-                foreach ($resultdata['data'] as $game)
-                {
-                    if (in_array($game['DCGameID'], $exceptGames))
-                    {
-                        continue;
-                    }
-
-                    if (in_array($game['GameType'] , $slotgameString) && $game['GameStatus'] == 1){ // need to check the string
-                        if ($href=='nlc' && preg_match('/DX1$/',  $game['LogPara']))
-                        {
-                            continue;
-                        }
-                        if ($href=='png')
-                        {
-                            $icon_name = str_replace(' ', '_', $game['GameName']);
-                            $icon_name = str_replace(':', '_', $icon_name);
-                            // $icon_name = str_replace('\'', '_', $icon_name);
-                            $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
-                            $gameList[] = [
-                                'provider' => 'ata',
-                                'href' => $href,
-                                'gamecode' => $game['DCGameID'],
-                                'name' => $game['LogPara'],
-                                'game' => preg_replace('/\s+/', '', $game['GameName']),
-                                'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['GameName'], 'ko')?__('gameprovider.'.$game['GameName']):$game['GameName'],
-                                'icon' => '/frontend/Default/ico/png/'. $icon_name . '.jpg',
-                            ];
-                        }
-                        else
-                        {
-                            $gameList[] = [
-                                'provider' => 'ata',
-                                'href' => $href,
-                                'gamecode' => $game['DCGameID'],
-                                'name' => $game['LogPara'],
-                                'game' => preg_replace('/\s+/', '', $game['GameName']),
-                                'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['GameName'], 'ko')?__('gameprovider.'.$game['GameName']):$game['GameName'],
-                                'icon' => $href=='aux'?('/frontend/Default/ico/ata/avatarux/'. $game['DCGameID'] . '.png'):('/frontend/Default/ico/ata/'.$href.'/'. $game['DCGameID'] . '.png'),
-                            ];
-                        }
-                    }
-                }
-                \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
+            $query = 'SELECT * FROM w_provider_games WHERE provider="dg' . $href .'"';
+            $gac_games = \DB::select($query);
+            foreach ($gac_games as $game)
+            {
+                $icon_name = str_replace(' ', '_', $game->gameid);
+                $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
+                array_push($gameList, [
+                    'provider' => 'dg',
+                    'gameid' => $game->gameid,
+                    'gamecode' => $game->gamecode,
+                    'enname' => $game->name,
+                    'name' => preg_replace('/\s+/', '', $game->name),
+                    'title' => $game->title,
+                    'type' => $game->type,
+                    'href' => $href,
+                    'view' => $game->view,
+                    'icon' => '/frontend/Default/ico/dg/'. $icon_name . '.jpg',
+                    ]);
             }
+            \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
             
+        }
+
+        public static function registerMember($userId)
+        {
+            $url = config('app.dg_api') . '/user/signup/' . config('app.dg_agent');
+            $rand = DGController::generateCode(6);
+            $key = DGController::sign($rand);
+            $params = [
+                'token' => $key,
+                'random' => $rand,
+                'data' => '',
+                'member' => [
+                    'username' => self::DG_PROVIDER . $userId,
+                    'password' => DGController::sign($rand),
+                    'currencyName' => 'KRW',
+                    'winLimit' => 0
+                ]
+            ];
+            $response = Http::post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('DG : register request failed. ' . $response->body());
+                return false;
+            }
+            $data = $response->json();
+            if ($data['codeId'] == 0 || $data['codeId'] == 116)
+            {
+                return true;
+            }
+            Log::error('DG : register response failed. ' . $data['codeId']);
+            return false;
+        }
+
+        public static function login($userId)
+        {
+            $url = config('app.dg_api') . '/user/login/' . config('app.dg_agent');
+            $rand = DGController::generateCode(6);
+            $key = DGController::sign($rand);
+            $params = [
+                'token' => $key,
+                'random' => $rand,
+                'lang' => 'kr',
+                'member' => [
+                    'username' => self::DG_PROVIDER . $userId,
+                    'password' => DGController::sign($rand),
+                ]
+            ];
+            $response = Http::post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('DG : login request failed. ' . $response->body());
+                return null;
+            }
+            $data = $response->json();
+            if ($data['codeId'] != 0 )
+            {
+                Log::error('DG : login response failed. ' . $data['codeId']);
+            }
+            return $data;
         }
 
         public static function makegamelink($gamecode)
@@ -457,44 +468,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $data = [
-                'loginname' => $user->id,
-                'key' => $user->api_token,
-                'currency' => 'KRW',
-                'lang' => 'ko',
-                'gameid' => $gamecode,
-                'org' => config('app.ata_org'),
-                'home' => url('/'),
-                'fullscreen' => 'no',
-                'channel' => ($detect->isMobile() || $detect->isTablet())?'mobile':'pc',
-            ];
-
-            $resultdata = null;
-            try {
-                $response = Http::post(config('app.ata_api') . '/launchClient.html', $data);
-                if (!$response->ok())
-                {
-                    return null;
-                }
-                $resultdata = $response->json();
-            }
-            catch (Exception $ex)
+            $res = DGController::registerMember($user->id);
+            if (!$res)
             {
                 return null;
             }
-            if ($resultdata)
+            $data = DGController::login($user->id);
+            if (!$data || $data['codeId'] != 0)
             {
-                if ($resultdata['code'] == 0)
-                {
-                    return $resultdata['data']['launchurl'];
-                }
+                return null;
             }
-            return null;
+            $url = $data['list'][0] . $data['token'] . '&language=kr';
+            if ($detect->isMobile() || $detect->isTablet())
+            {
+                $url = $data['list'][1] . $data['token'] . '&language=kr';
+            }
+            return $url;                 
         }
 
         public static function getgamelink($gamecode)
         {
-            $url = ATAController::makegamelink($gamecode);
+            $url = DGController::makegamelink($gamecode);
             if ($url)
             {
                 return ['error' => false, 'data' => ['url' => $url]];

@@ -180,6 +180,7 @@ return [
     /*
     DreamGaming Auth key
     */
+    'dg_api' => env('DG_API', ''),
     'dg_agent' => env('DG_AGENT', ''),
     'dg_token' => env('DG_TOKEN', 'test'),
 
