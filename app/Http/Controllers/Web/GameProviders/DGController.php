@@ -7,7 +7,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         /*
         * UTILITY FUNCTION
         */
-        const DG_PROVIDER = 'dg';
+        const DG_PROVIDER = 'DG';
         public function checkreference($reference)
         {
             $record = \VanguardLTE\DGTransaction::Where('reference',$reference)->get()->first();
