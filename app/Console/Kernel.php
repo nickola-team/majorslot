@@ -79,7 +79,7 @@ namespace VanguardLTE\Console
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
 
-            $schedule->command('dg:sync')->everyMinutes()->withoutOverlapping()->runInBackground();
+            $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
