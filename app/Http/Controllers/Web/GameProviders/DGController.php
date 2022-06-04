@@ -404,7 +404,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'token' => $key,
                 'random' => $rand,
-                'data' => '',
+                'data' => 'E', //bet limit 4000-800000
                 'member' => [
                     'username' => self::DG_PROVIDER . $userId,
                     'password' => DGController::sign($rand),
