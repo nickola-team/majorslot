@@ -2,6 +2,7 @@
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
     class DGController extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
@@ -26,26 +27,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $code;
         }
 
-        public function getGameObj($cat4)
+        public static function getGameObj($code)
         {
-            $categories = \VanguardLTE\Category::where(['provider' => 'ata', 'shop_id' => 0, 'site_id' => 0])->get();
+            $categories = \VanguardLTE\Category::where(['provider' => 'dg', 'shop_id' => 0, 'site_id' => 0])->get();
             $gamelist = [];
             foreach ($categories as $category)
             {
-                $gamelist = ATAController::getgamelist($category->href);
+                $gamelist = DGController::getgamelist($category->href);
                 if (count($gamelist) > 0 )
                 {
                     foreach($gamelist as $game)
                     {
-                        if ($game['name'] == $cat4)
+                        if ($game['gamecode'] == $code)
                         {
-                            if (isset($game['game']))
-                            {
-                                $game['name'] = $game['game'];
-                            }
-                            $game['cat_id'] = $category->original_id;
                             return $game;
-                            break;
                         }
                     }
                 }
@@ -494,6 +489,88 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => false, 'data' => ['url' => $url]];
             }
             return ['error' => true, 'msg' => '로그인하세요'];            
+        }
+
+        public static function processGameRound()
+        {
+            $url = config('app.dg_api') . '/game/getReport/' . config('app.dg_agent');
+            $rand = DGController::generateCode(6);
+            $key = DGController::sign($rand);
+            $params = [
+                'token' => $key,
+                'random' => $rand,
+            ];
+
+            $response = Http::post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('DG : getReport request failed. ' . $response->body());
+            }
+            $data = $response->json();
+            if ($data['codeId'] != 0 )
+            {
+                Log::error('DG : getReport response failed. ' . $data['codeId']);
+            }
+
+            if (!isset($data['list']))
+            {
+                return;
+            }
+
+            $category = \VanguardLTE\Category::where(['provider' => 'dg', 'shop_id' => 0, 'href' => 'dg'])->first();
+            
+            foreach ($data['list'] as $round)
+            {
+                //calc after balance
+                $balance = $round['balanceBefore'] - $round['betPoints'] + $round['winOrLoss'];
+                $time = strtotime($round['calTime'] .' +1 hours');
+                $dateInLocal = date("Y-m-d H:i:s", $time);
+                $userid = preg_replace('/'. self::DG_PROVIDER .'(\d+)/', '$1', $round['userName']) ;
+                $userid = preg_replace('/'. strtolower(self::DG_PROVIDER) .'(\d+)/', '$1', $userid) ;
+                $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                $gameObj =  DGController::getGameObj($round['tableId']);
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $userid, 
+                    'balance' => $balance, 
+                    'bet' => $round['betPoints'], 
+                    'win' => $round['winOrLoss'], 
+                    'game' =>$gameObj['name'] . '_dg', 
+                    'type' => 'table',
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'date_time' => $dateInLocal,
+                    'shop_id' => $shop->shop_id,
+                    'category_id' => isset($category)?$category->id:0,
+                    'game_id' => $round['tableId'],
+                    'roundid' => $round['id'],
+                ]);
+            }
+
+            //mark as read
+
+            $url = config('app.dg_api') . '/game/markReport/' . config('app.dg_agent');
+            $ids = array_column($data['list'], 'id');
+            $params = [
+                'token' => $key,
+                'random' => $rand,
+                'list' => $ids
+            ];
+
+            $response = Http::post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('DG : markReport request failed. ' . $response->body());
+            }
+            $data = $response->json();
+            if ($data['codeId'] != 0 )
+            {
+                Log::error('DG : markReport response failed. ' . $data['codeId']);
+            }
+            return;
+
         }
 
     }

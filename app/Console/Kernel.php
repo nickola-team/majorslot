@@ -13,6 +13,7 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\TheplusLaunch::class,
             \VanguardLTE\Console\Commands\TheplusSync::class,
             \VanguardLTE\Console\Commands\TheplusTerminate::class,
+            \VanguardLTE\Console\Commands\DreamGamingSync::class,
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
@@ -43,6 +44,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\CQ9Transaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\ATATransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\EVOTransaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\DGTransaction::where('timestamp', '<', $_daytime)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
@@ -76,6 +78,8 @@ namespace VanguardLTE\Console
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+
+            $schedule->command('dg:sync')->everyMinutes()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
