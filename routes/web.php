@@ -1512,4 +1512,16 @@ Route::group([ 'prefix' => 'gac',], function () {
     Route::post('/betResult', 'GameProviders\GACController@betresult');
 });
 
+/**
+ * DreamGaming Game Provider
+ */
+Route::group([ 'prefix' => 'dg',], function () {
+	Route::post('/user/getBalance/{agentName}', 'GameProviders\DGController@getBalance');
+    Route::post('/account/transfer/{agentName}', 'GameProviders\DGController@transfer');
+    Route::post('/account/checkTransfer/{agentName}', 'GameProviders\DGController@checkTransfer');
+    Route::post('/account/inform/{agentName}', 'GameProviders\DGController@inform');
+    Route::post('/account/order/{agentName} ', 'GameProviders\DGController@order');
+    Route::post('/account/unsettle/{agentName}  ', 'GameProviders\DGController@unsettle');
+});
+
 
