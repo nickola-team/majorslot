@@ -1154,6 +1154,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $user = auth()->user();
+            $tp_cat = \VanguardLTE\Category::where(['href'=> TPController::TP_PP_HREF, 'shop_id' => $user->shop_id])->first();
+            if ($tp_cat && $tp_cat->view == 2) {
+                //check if the plus support this game.
+                $gameObj = TPController::getGameObjBySymbol($gamecode);
+                if ($gameObj)
+                {
+                    $data = TPController::getgamelink($gameObj['gamecode']);
+                    return $data;
+                }
+            }
             if ($user->playing_game == 'pp') //already playing game.
             {
                 PPController::terminate($user->id);
