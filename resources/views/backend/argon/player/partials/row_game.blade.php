@@ -21,6 +21,15 @@
         {{__('Unknown')}}
     @endif
 </td>
+<td>
+    @if ($stat->user)
+    <a href="#" data-toggle="tooltip" data-original-title="{{$stat->user->parents(auth()->user()->role_id)}}">
+        {{$stat->user->parents(auth()->user()->role_id-1, auth()->user()->role_id-1)}}
+    </a>
+    @else
+        {{__('Unknown')}}
+    @endif
+</td>
 <td> {{$game}} </td>
 <!-- <td> {{$stat->category->trans->trans_title}}</td> -->
 <td>{{number_format($stat->balance,0)}}</td>
