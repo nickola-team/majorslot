@@ -1139,18 +1139,26 @@ namespace VanguardLTE
             return $result;
         }
 
-        public function parents($maxlevel=999)
+        public function parents($maxlevel=999, $minlevel=0)
         {
-            $hirechy = $this->username;
+            $hirechy = '';
+            if ($minlevel <= $this->role_id){
+                $hirechy = $this->username;
+            }
             $parent = $this;
             while ($parent!=null && !$parent->isInoutPartner() && $parent->role_id<$maxlevel)
             {
                 $parent = $parent->referral;
-                if ($parent!=null)
+                if ($parent!=null && $minlevel <= $parent->role_id)
                 {
-                    $hirechy = $hirechy . " → " . $parent->username;
+                    if ($hirechy == '') {
+                        $hirechy = $parent->username;
+                    }
+                    else
+                    {
+                        $hirechy = $hirechy . " → " . $parent->username;
+                    }
                 }
-                
             }
             return $hirechy;
         }
