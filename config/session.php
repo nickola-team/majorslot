@@ -163,7 +163,7 @@ return [
     |
     */
 
-    'secure' => ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')?env('SESSION_SECURE_COOKIE', false):false),
+    'secure' => env('SESSION_SECURE_COOKIE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,6 +189,6 @@ return [
     | Supported: "lax", "strict"
     |
     */
-    'same_site' => ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' && env('SESSION_SECURE_COOKIE', false))?'none':null),
+    'same_site' => env('SESSION_SECURE_COOKIE', false)?'none':null,
 
 ];
