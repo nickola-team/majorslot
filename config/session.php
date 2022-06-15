@@ -163,7 +163,7 @@ return [
     |
     */
 
-     'secure' => (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME']==env('SESSION_SECURE_DOMAIN','')),
+     'secure' => (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST']==env('SESSION_SECURE_DOMAIN','')),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,6 +189,6 @@ return [
     | Supported: "lax", "strict"
     |
     */
-    'same_site' => (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME']==env('SESSION_SECURE_DOMAIN',''))?'none':null,
+    'same_site' => (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST']==env('SESSION_SECURE_DOMAIN',''))?'none':null,
 
 ];
