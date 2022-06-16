@@ -184,6 +184,12 @@ return [
     'dg_agent' => env('DG_AGENT', ''),
     'dg_token' => env('DG_TOKEN', 'test'),
 
+    /*
+    DreamGaming Auth key
+    */
+    'hpc_api' => env('HPC_API', ''),
+    'hpc_key' => env('HPC_KEY', ''),
+
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
 

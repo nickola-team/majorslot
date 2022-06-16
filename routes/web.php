@@ -1525,3 +1525,12 @@ Route::group([ 'prefix' => 'dg',], function () {
 });
 
 
+
+/**
+ * HPPlayCasino  Provider
+ */
+Route::group(['middleware' => 'hpc', 'prefix' => 'hpc',], function () {
+	Route::post('/debit', 'GameProviders\HPCController@debit');
+    Route::post('/credit', 'GameProviders\HPCController@credit');
+    Route::post('/balance', 'GameProviders\HPCController@balance');
+});
