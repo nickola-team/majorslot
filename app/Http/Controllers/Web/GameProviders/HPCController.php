@@ -219,13 +219,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             $gameList = [];
-            $url = config('app.hpc_api') . '/games/get';
+            $recommend = config('app.hpc_key');
+            $hpc_params = explode(':', $recommend);
             $params = [
                 'language' => 'kr'
             ];
+
+            $headers = [
+                'ag-code' => $hpc_params[0],
+                'ag-token' => $hpc_params[1]
+            ];
+            $url = config('app.hpc_api') . '/games/get';
+
             $hpc_games = [];
             try {
-                $response = Http::post($url, $params);
+                $response = Http::withHeaders($headers)->post($url, $params);
                 if (!$response->ok())
                 {
                     return [];
