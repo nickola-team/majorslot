@@ -266,6 +266,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'name' => 'HPCLobby',
                 'title' => 'lobby',
                 'type' => 'live',
+                'icon' => '/frontend/Default/ico/hpc/hpclobby.jpg',
                 'href' => $href,
                 'view' => 1,
                 ]);
