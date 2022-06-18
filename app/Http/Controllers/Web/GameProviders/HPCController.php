@@ -9,11 +9,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
         const HPC_PROVIDER = 'hpc';
-        public function checktransaction($id)
-        {
-            $record = \VanguardLTE\HPCTransaction::Where('reference',$id)->first();
-            return $record;
-        }
 
         public function microtime_string()
         {
@@ -40,173 +35,47 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         /*
-        * FROM HPPlayCasino, BACK API
-        */
-
-        public function balance(\Illuminate\Http\Request $request)
-        {
-            $data = json_decode($request->getContent(), true);
-            $site_user = $data['site_user'];
-            $userid = preg_replace('/'. self::HPC_PROVIDER .'(\d+)/', '$1', $site_user) ;
-            $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
-            if (!$user)
-            {
-                return response()->json([
-                    'status' => 0,
-                    'balance' => 0,
-                    'error' => 'INVALID_USER'
-                ]);
-            }
-            return response()->json([
-                'status' => 1,
-                'balance' => intval($user->balance),
-                'error' => null
-            ]);
-        }
-        public function debit(\Illuminate\Http\Request $request)
-        {
-            $data = json_decode($request->getContent(), true);
-            $site_user = $data['site_user'];
-            $tableName = $data['table_id'];
-            $betAmount = $data['amount'];
-            $cause = $data['cause'];
-            $txn_id = $data['txn_id'];
-            if (!$site_user || !$tableName || !$betAmount)
-            {
-                return response()->json([
-                    'status' => 0,
-                    'error' => 'INVALID_USER'
-                ]);
-            }
-            $userid = preg_replace('/'. self::HPC_PROVIDER .'(\d+)/', '$1', $site_user) ;
-            $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userid, 'role_id' => 1])->first();
-            if (!$user)
-            {
-                return response()->json([
-                    'status' => 0,
-                    'balance' => 0,
-                    'error' => 'INVALID_USER'
-                ]);
-            }
-            $record = $this->checktransaction($txn_id);
-            if ($record)
-            {
-                return response()->json([
-                    'status' => 0,
-                    'balance' => 0,
-                    'error' => 'INTERNAL ERROR'
-                ]);
-            }
-
-            $amount = abs($betAmount);
-            if ($user->balance < $amount)
-            {
-                return response()->json([
-                    'status' => 0,
-                    'balance' => 0,
-                    'error' => 'ACCESS_DENIED'
-                ]);
-            }
-            
-
-            $user->balance = $user->balance - intval($amount);
-            $user->save();
-            $user = $user->fresh();
-            \VanguardLTE\HPCTransaction::create(
-                [
-                    'reference' => $txn_id, 
-                    'data' => json_encode($data),
-                    'refund' => 0
-                ]
-            );
-            return response()->json([
-                'status' => 1,
-                'balance' => intval($user->balance),
-                'error' => null
-            ]);
-        }
-        public function credit(\Illuminate\Http\Request $request)
-        {
-            $data = json_decode($request->getContent(), true);
-            $site_user = $data['site_user'];
-            $tableName = $data['table_id'];
-            $betAmount = $data['amount'];
-            $cause = $data['cause'];
-            $txn_id = $data['txn_id'];
-            if (!$site_user || !$tableName || !$betAmount)
-            {
-                return response()->json([
-                    'status' => 0,
-                    'error' => 'INVALID_USER'
-                ]);
-            }
-            $userid = preg_replace('/'. self::HPC_PROVIDER .'(\d+)/', '$1', $site_user) ;
-            $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userid, 'role_id' => 1])->first();
-            if (!$user)
-            {
-                return response()->json([
-                    'status' => 0,
-                    'balance' => 0,
-                    'error' => 'INVALID_USER'
-                ]);
-            }
-            $record = $this->checktransaction($txn_id);
-            $bet = 0;
-            if ($record )
-            {
-                if ($record->refund == 1)
-                {
-                    return response()->json([
-                        'status' => 0,
-                        'balance' => 0,
-                        'error' => 'INVALID_USER'
-                    ]);
-                }
-                $data = json_decode($record->data);
-                $bet = $data->amount;
-                $record->update(['refund' => 1]);
-            }
-
-            $amount = abs($betAmount);
-
-            $user->balance = $user->balance + intval($amount);
-            $user->save();
-            $user = $user->fresh();
-            
-            $gameObj = $this->getGameObj($tableName);
-            if (!$gameObj)
-            {
-                $gameObj = 
-                ['name' => 'Unknown'];
-            }
-            $category = \VanguardLTE\Category::where(['provider' => 'hpc', 'shop_id' => 0, 'href' => 'hpc'])->first();
-
-            \VanguardLTE\StatGame::create([
-                'user_id' => $user->id, 
-                'balance' => $user->balance, 
-                'bet' => abs($bet), 
-                'win' => $amount, 
-                'game' =>  $gameObj['name'], 
-                'type' => 'table',
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
-                'shop_id' => $user->shop_id,
-                'category_id' => isset($category)?$category->id:0,
-                'game_id' => $tableName,
-                'roundid' => $txn_id,
-            ]);
-            return response()->json([
-                'status' => 1,
-                'balance' => intval($user->balance),
-                'error' => null
-            ]);
-        }
-        /*
         * FROM CONTROLLER, API
         */
+
+        public function userSignal(\Illuminate\Http\Request $request)
+        {
+            $user = \VanguardLTE\User::lockForUpdate()->where('id',auth()->id())->first();
+            if (!$user)
+            {
+                return response()->json([
+                    'error' => '1',
+                    'description' => 'unlogged']);
+            }
+            if ($user->playing_game != self::HPC_PROVIDER)
+            {
+                return response()->json([
+                    'error' => '1',
+                    'description' => 'Idle TimeOut']);
+            }
+
+            if ($request->name == 'exitGame')
+            {
+                $user->update([
+                    'playing_game' => self::HPC_PROVIDER . 'exit',
+                    'played_at' => time()
+                ]);
+            }
+            else
+            {
+                $balance = HPCController::getUserBalance($user);
+                if ($balance != null)
+                {
+                    $user->update([
+                        'balance' => $balance,
+                        'played_at' => time()
+                    ]);
+                }
+            }
+            return response()->json([
+                'error' => '0',
+                'description' => 'OK']);
+        }
         
         public static function getgamelist($href)
         {
@@ -219,18 +88,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             $gameList = [];
-            $recommend = config('app.hpc_key');
-            $hpc_params = explode(':', $recommend);
+            $headers = HPCController::getApiHeaderInfo(null);
+            $url = config('app.hpc_api') . '/games/get';
             $params = [
                 'language' => 'kr'
             ];
-
-            $headers = [
-                'ag-code' => $hpc_params[0],
-                'ag-token' => $hpc_params[1]
-            ];
-            $url = config('app.hpc_api') . '/games/get';
-
             $hpc_games = [];
             try {
                 $response = Http::withHeaders($headers)->post($url, $params);
@@ -264,7 +126,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'provider' => 'hpc',
                 'gamecode' => 'hpclobby',
                 'name' => 'HPCLobby',
-                'title' => 'lobby',
+                'title' => '에볼루션 로비',
                 'type' => 'live',
                 'icon' => '/frontend/Default/ico/hpc/hpclobby.jpg',
                 'href' => $href,
@@ -273,6 +135,153 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
             
+        }
+
+        public static function getApiHeaderInfo($user)
+        {
+            $recommend = config('app.hpc_key');
+            if ($user != null) {
+                $master = $user->referral;
+                while ($master!=null && !$master->isInoutPartner())
+                {
+                    $master = $master->referral;
+                }
+                if ($master == null)
+                {
+                    return [];
+                }
+                $query = 'SELECT * FROM w_provider_info WHERE provider="hpc" and user_id=' . $master->id;
+                $hpc_info = \DB::select($query);
+                foreach ($hpc_info as $info)
+                {
+                    $recommend = $info->config;
+                }
+            }
+            $hpc_params = explode(':', $recommend);
+
+            $headers = [
+                'ag-code' => $hpc_params[0],
+                'ag-token' => $hpc_params[1]
+            ];
+            return $headers;
+        }
+
+        public static function getUserBalance($user)
+        {
+            //get user balance
+            $params = [
+                'user_id' => self::HPC_PROVIDER . $user->id,
+            ];
+            $headers = HPCController::getApiHeaderInfo($user);
+
+            $url = config('app.hpc_api') . '/customer/get';
+            $response = Http::withHeaders($headers)->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('HPC : get user info request failed. ' . $response->body());
+                return 0;
+            }
+            $data = $response->json();
+            if ($data==null && $data['status']!=0)
+            {
+                return 0;
+            }
+            return $data['balance'];
+        }
+
+        public static function withdrawAll($user)
+        {
+            $balance = HPCController::getUserBalance($user);
+
+            if ($balance <= 0)
+            {
+                return ['error'=>false, 'amount'=>0];
+            }
+            //sub balance
+            $params = [
+                'user_id' => self::HPC_PROVIDER . $user->id,
+                'balance' => $balance
+            ];
+            $headers = HPCController::getApiHeaderInfo($user);
+            $url = config('app.hpc_api') . '/customer/sub_balance';
+            $response = Http::withHeaders($headers)->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('HPC : sub balance request failed. ' . $response->body());
+                return ['error'=>true, 'amount'=>0];
+            }
+            $data = $response->json();
+            if ($data==null && $data['status']!=0)
+            {
+                return ['error'=>true, 'amount'=>0];
+            }
+            return ['error'=>false, 'amount'=>$data['amount']];
+        }
+
+        public static function makelink($gamecode, $userid)
+        {
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                Log::error('HPC : Does not find user ' . $userid);
+                return null;
+            }
+            //create hpc account
+            
+            $params = [
+                'id' => self::HPC_PROVIDER . $user->id,
+                'name' => $user->username,
+                'balance' => intval($user->balance),
+                'language' => 'kr'
+            ];
+            $headers = HPCController::getApiHeaderInfo($user);
+
+            $url = config('app.hpc_api') . '/customer/user_create';
+
+            $response = Http::withHeaders($headers)->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('HPC : Create account request failed. ' . $response->body());
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || ($data['status']==0 && $data['error']!='DOUBLE_USER')) //create success or already exist
+            {
+                Log::error('HPC : Create account result failed. ' . ($data==null?'null':$data['error']));
+                return null;
+            }
+
+            if ($data['status']==0) { //already user
+                //withdraw all balance
+                $data = HPCController::withdrawAll($user);
+                if ($data['error'])
+                {
+                    return null;
+                }
+            }
+            
+
+            //Add balance
+
+            $params = [
+                'user_id' => self::HPC_PROVIDER . $user->id,
+                'balance' => intval($user->balance)
+            ];
+            $url = config('app.hpc_api') . '/customer/add_balance';
+            $response = Http::withHeaders($headers)->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('HPC : add balance request failed. ' . $response->body());
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || $data['status']==0)
+            {
+                return null;
+            }
+
+            return '/providers/hpc/'.$gamecode;
+
         }
 
         public static function makegamelink($gamecode)
@@ -287,24 +296,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $master = $user->referral;
-            while ($master!=null && !$master->isInoutPartner())
-            {
-                $master = $master->referral;
-            }
-            if ($master == null)
-            {
-                return null;
-            }
-            $recommend = config('app.hpc_key');
-            $query = 'SELECT * FROM w_provider_info WHERE provider="hpc" and user_id=' . $master->id;
-            $hpc_info = \DB::select($query);
-            foreach ($hpc_info as $info)
-            {
-                $recommend = $info->config;
-            }
-            $hpc_params = explode(':', $recommend);
-
             $params = [
                 'user' => [
                     'id' => self::HPC_PROVIDER . $user->id,
@@ -313,10 +304,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'language' => 'kr'
                 ]
             ];
-            $headers = [
-                'ag-code' => $hpc_params[0],
-                'ag-token' => $hpc_params[1]
-            ];
+            $headers = HPCController::getApiHeaderInfo($user);
             
             $url = config('app.hpc_api') . '/account/login';
             $launchurl = null;
@@ -341,12 +329,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            $url = HPCController::makegamelink($gamecode);
-            if ($url)
+            $user = auth()->user();
+            if ($user->playing_game != null) //already playing game.
             {
-                return ['error' => false, 'data' => ['url' => $url]];
+                return ['error' => true, 'data' => '이미 실행중인 게임을 종료해주세요. 이미 종료했음에도 불구하고 이 메시지가 계속 나타난다면 매장에 문의해주세요.'];
             }
-            return ['error' => true, 'msg' => '로그인하세요'];
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [self::HPC_PROVIDER, $gamecode])]];
         }
 
         public static function processRounds()

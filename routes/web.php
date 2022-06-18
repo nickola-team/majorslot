@@ -225,7 +225,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
     Route::get('providers/tp/{gamecode}', [
         'as' => 'frontend.providers.tp.render',
         'uses' => 'RenderingController@theplusrender'
-    ]);    
+    ]);
+    Route::get('providers/hpc/{gamecode}', [
+        'as' => 'frontend.providers.hpc.render',
+        'uses' => 'RenderingController@hpcrender'
+    ]);
     Route::get('providers/pp/{gamecode}', [
         'as' => 'frontend.providers.pp.render',
         'uses' => 'RenderingController@pragmaticrender'
@@ -1529,8 +1533,5 @@ Route::group([ 'prefix' => 'dg',], function () {
 /**
  * HPPlayCasino  Provider
  */
-Route::group(['middleware' => 'hpc', 'prefix' => 'hpc',], function () {
-	Route::post('/debit', 'GameProviders\HPCController@debit');
-    Route::post('/credit', 'GameProviders\HPCController@credit');
-    Route::post('/balance', 'GameProviders\HPCController@balance');
-});
+
+Route::post('/hpc/signal', 'GameProviders\HPCController@userSignal');
