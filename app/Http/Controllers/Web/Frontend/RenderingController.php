@@ -46,15 +46,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
             $frontend = 'Default';
+            $view_name = 'frontend.'.$frontend.'.games.waiting';
             if ($site)
             {
                 $frontend = $site->frontend;
+
                 if (!\View::exists('frontend.'.$frontend.'.games.waiting'))
                 {
                     $frontend = 'Default';
                 }
+                $view_name = 'frontend.'.$frontend.'.games.waiting';
+
+                if (\View::exists('frontend.Default.games.waiting_' . $provider))
+                {
+                    $view_name = 'frontend.Default.games.waiting_' . $provider;
+                }
+
             }
-            return view('frontend.'.$frontend.'.games.waiting', compact('requestId', 'prompt'));
+            return view($view_name, compact('requestId', 'prompt'));
         }
 
         public function launch($requestid, \Illuminate\Http\Request $request)
@@ -375,6 +384,31 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $url = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::makegamelink($gamecode, 'real');
             }
             return view('frontend.Default.games.booongo', compact('url', 'alonegame', 'data'));
+            
+        }
+
+        public function hpcrender($gamecode, \Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
+            $t = $request->t; //check timestamp if it is normal request
+            $launchRequest = \VanguardLTE\GameLaunch::where('id', $t)->first();
+            if (!$launchRequest)
+            {
+                //this is irlegal request.
+                return redirect('/');
+            }
+            if ($user->id != $launchRequest->user_id)
+            {
+                return redirect('/');
+            }
+
+            $launchRequest->delete();
+            $url = \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::makegamelink($gamecode);
+            return view('frontend.Default.games.hpc', compact('url'));
             
         }
     }

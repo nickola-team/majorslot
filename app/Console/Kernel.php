@@ -14,6 +14,8 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\TheplusSync::class,
             \VanguardLTE\Console\Commands\TheplusTerminate::class,
             \VanguardLTE\Console\Commands\DreamGamingSync::class,
+
+            \VanguardLTE\Console\Commands\HPCLaunch::class,
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
