@@ -72,7 +72,6 @@
         </div>
     @endif
     </body>
-    @if (isset($alonegame) && $alonegame == 0)
     <script type="text/javascript">
         window.onbeforeunload = function () {
             console.log('exiting game');
@@ -110,5 +109,4 @@
         };
         timeout = setTimeout(updateUserBalance, updateTime);
     </script>
-    @endif
 </html>
