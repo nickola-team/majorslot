@@ -407,6 +407,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $launchRequest->delete();
+            $user->update([
+                'playing_game' => \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::HPC_PROVIDER,
+                'played_at' => time(),
+            ]);
             $url = \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::makegamelink($gamecode);
             return view('frontend.Default.games.hpc', compact('url'));
             
