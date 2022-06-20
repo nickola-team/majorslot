@@ -46,9 +46,24 @@ class HPCSync extends Command
      */
     public function handle()
     {
-        $data = HPCController::processGameRound();
-        $this->info('saved ' . $data[0] . ' bet/win record.');
-        $this->info('new timepoint = ' . $data[1]);
+        $data = HPCController::processGameRound(null);
+        $this->info('saved ' . $data[0] . ' bet/win record for default master');
+        $this->info('new timepoint = ' . $data[1] . ' for default master');
+
+        $query = 'SELECT * FROM w_provider_info WHERE provider="hpc"';
+        $hpc_info = \DB::select($query);
+        foreach ($hpc_info as $info)
+        {
+            
+            $master = User::where('id', $info->user_id)->first();
+            if ($master){
+                $data = HPCController::processGameRound($master);
+                $this->info('saved ' . $data[0] . ' bet/win record for ' . $master->username);
+                $this->info('new timepoint = ' . $data[1] . '  for ' . $master->username);
+            }
+
+        }
+        
     }
 
 

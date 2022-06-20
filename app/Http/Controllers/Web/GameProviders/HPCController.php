@@ -141,7 +141,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $recommend = config('app.hpc_key');
             if ($user != null) {
-                $master = $user->referral;
+                $master = $user;
                 while ($master!=null && !$master->isInoutPartner())
                 {
                     $master = $master->referral;
@@ -337,7 +337,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [self::HPC_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($timepoint)
+        public static function gamerounds($master, $timepoint)
         {
             $pageSize = 1000;
             $params = [
@@ -345,7 +345,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'page' => 0,
                 'perPage' => $pageSize                
             ];
-            $headers = HPCController::getApiHeaderInfo(null);
+            $headers = HPCController::getApiHeaderInfo($master);
             
             $url = config('app.hpc_api') . '/agent/transaction_with_no';
             $rounds = null;
@@ -368,9 +368,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $rounds;
         }
 
-        public static function processGameRound()
+        public static function processGameRound($master)
         {
-            $tpoint = \VanguardLTE\Settings::where('key', 'HPCtimepoint')->first();
+            $idx = 0;
+            if ($master != null)
+            {
+                $idx = $master->id;
+            }
+            $tpoint = \VanguardLTE\Settings::where('key', 'HPCtimepoint' . $idx)->first();
             if ($tpoint)
             {
                 $timepoint = $tpoint->value;
@@ -383,7 +388,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //get category id
             $category = \VanguardLTE\Category::where(['provider' => self::HPC_PROVIDER, 'shop_id' => 0, 'href' => self::HPC_PROVIDER])->first();
             
-            $data = HPCController::gamerounds($timepoint);
+            $data = HPCController::gamerounds($master, $timepoint);
             $count = 0;
             if ($data && $data['status'] == 1 && $data['total_count'] > 0)
             {
@@ -450,7 +455,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    \VanguardLTE\Settings::create(['key' => 'HPCtimepoint', 'value' => $timepoint]);
+                    \VanguardLTE\Settings::create(['key' => 'HPCtimepoint' . $idx, 'value' => $timepoint]);
                 }
             }
             return [$count, $timepoint];
