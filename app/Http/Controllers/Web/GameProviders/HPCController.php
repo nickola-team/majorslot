@@ -412,7 +412,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
                     $balance = -1;
-                    $time = $round['created_at'];
+                    $time = strtotime($round['created_at'].' UTC');
+                    $dateInLocal = date("Y-m-d H:i:s", $time);
                     $userid = preg_replace('/'. self::HPC_PROVIDER .'(\d+)/', '$1', $round['site_user']) ;
                     $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                     $gameObj =  HPCController::getGameObj($round['table_id']);
@@ -434,7 +435,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'percent_jpg' => 0, 
                         'profit' => 0, 
                         'denomination' => 0, 
-                        'date_time' => $time,
+                        'date_time' => $dateInLocal,
                         'shop_id' => isset($shop)?$shop->shop_id:0,
                         'category_id' => isset($category)?$category->id:0,
                         'game_id' =>$round['table_id'],
