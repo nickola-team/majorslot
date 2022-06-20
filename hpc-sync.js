@@ -12,7 +12,7 @@ function gameround()  {
     var datetime = new Date();
     console.log('Syncing bet/win ', datetime.toLocaleString());
   
-    var child = exec("php artisan theplus:sync", (error, stdout, stderr) => {
+    var child = exec("php artisan hpc:sync", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: \n${error.message}`);
             return;
@@ -37,7 +37,7 @@ function terminateBalance()  {
     var datetime = new Date();
     console.log('Syncing exit player balance ', datetime.toLocaleString());
   
-    var child = exec("php artisan theplus:terminate", (error, stdout, stderr) => {
+    var child = exec("php artisan hpc:terminate", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: \n${error.message}`);
             return;
@@ -83,6 +83,6 @@ function makeurl() {
     })
 }
 
-// setTimeout( gameround, betwinSync);
+setTimeout( gameround, betwinSync);
 setTimeout(makeurl, launchSync);
-// setTimeout(terminateBalance, exitSync);
+setTimeout(terminateBalance, exitSync);

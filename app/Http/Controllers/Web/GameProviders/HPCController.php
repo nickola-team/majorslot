@@ -337,52 +337,123 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [self::HPC_PROVIDER, $gamecode])]];
         }
 
-        public static function processRounds()
+        public static function gamerounds($timepoint)
         {
-            $old_time = date("Y-m-d H:i:s", strtotime("-5 minutes"));
-            $records = \VanguardLTE\HPCTransaction::where('refund',0)->where('timestamp', '<', $old_time)->get();
-            foreach ($records as $r)
-            {
-                $data = json_decode($record->data);
-                $tx = $data->txn_id;
-                $site_user = $data->site_user;
-                $tableName = $data->table_id;
-                $betAmount = $data->amount;
-                $userid = preg_replace('/'. self::HPC_PROVIDER .'(\d+)/', '$1', $site_user) ;
-                $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
-                if (!$user)
+            $pageSize = 1000;
+            $params = [
+                'txn_no' => $timepoint,
+                'page' => 0,
+                'perPage' => $pageSize                
+            ];
+            $headers = HPCController::getApiHeaderInfo(null);
+            
+            $url = config('app.hpc_api') . '/agent/transaction_with_no';
+            $rounds = null;
+            try {
+                $response = Http::withHeaders($headers)->post($url, $params);
+                if (!$response->ok())
                 {
-                    $r->update(['refund' => 1]);
-                    continue;
+                    return null;
                 }
-                $amount = abs($betAmount);
-                $gameObj = $this->getGameObj($tableName);
-                if (!$gameObj)
-                {
-                    $gameObj = 
-                    ['name' => 'Unknown'];
+                $data = $response->json();
+                if ($data && $data['status'] == 1){
+                    $rounds = $data;
                 }
-                $category = \VanguardLTE\Category::where(['provider' => 'hpc', 'shop_id' => 0, 'href' => 'hpc'])->first();
-
-                \VanguardLTE\StatGame::create([
-                    'user_id' => $user->id, 
-                    'balance' => -1, 
-                    'bet' => $amount, 
-                    'win' => 0, 
-                    'game' =>  $gameObj['name'], 
-                    'type' => 'table',
-                    'percent' => 0, 
-                    'percent_jps' => 0, 
-                    'percent_jpg' => 0, 
-                    'profit' => 0, 
-                    'denomination' => 0, 
-                    'shop_id' => $user->shop_id,
-                    'category_id' => isset($category)?$category->id:0,
-                    'game_id' => $tableName,
-                    'roundid' => $tx,
-                ]);
-
             }
+            catch (\Exception $ex)
+            {
+                Log::error('HPC : transaction_with_no request failed. ' . $e->getMessage());
+                return null;
+            }
+            return $rounds;
+        }
+
+        public static function processGameRound()
+        {
+            $tpoint = \VanguardLTE\Settings::where('key', 'HPCtimepoint')->first();
+            if ($tpoint)
+            {
+                $timepoint = $tpoint->value;
+            }
+            else
+            {
+                $timepoint = 0;
+            }
+
+            //get category id
+            $category = \VanguardLTE\Category::where(['provider' => self::HPC_PROVIDER, 'shop_id' => 0, 'href' => self::HPC_PROVIDER])->first();
+            
+            $data = HPCController::gamerounds($timepoint);
+            $count = 0;
+            if ($data && $data['status'] == 1 && $data['total_count'] > 0)
+            {
+                $betrounds = array_values(array_filter($data['data'] , function($v) {
+                    return $v['type'] == 0;
+                }));
+    
+                $winrounds = array_values(array_filter($data['data'] , function($v) {
+                    return $v['type'] == 1;
+                }));
+
+                foreach ($betrounds as $round)
+                {
+                    $winIdx = array_search($round['txn_id'], array_column($winrounds,'txn_id'));
+                    $betAmount = $round['amount'];
+                    $winAmount = 0;
+                    if ($winIdx !== false)
+                    {
+                        $winAmount = $winrounds[$winIdx]['amount'];
+                    }
+
+
+                    $balance = -1;
+                    $time = $round['created_at'];
+                    $userid = preg_replace('/'. self::HPC_PROVIDER .'(\d+)/', '$1', $round['site_user']) ;
+                    $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                    $gameObj =  HPCController::getGameObj($round['table_id']);
+                    if (!$gameObj)
+                    {
+                        $gameObj= [
+                            'name'=>'Unknown'
+                        ];
+                    }
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $userid, 
+                        'balance' => $balance, 
+                        'bet' => $betAmount, 
+                        'win' => $winAmount, 
+                        'game' =>$gameObj['name'] . '_hpc', 
+                        'type' => 'table',
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'date_time' => $time,
+                        'shop_id' => isset($shop)?$shop->shop_id:0,
+                        'category_id' => isset($category)?$category->id:0,
+                        'game_id' =>$round['table_id'],
+                        'roundid' => $round['txn_id'],
+                    ]);
+                    if ($round['txn_no'] > $timepoint)
+                    {
+                        $timepoint = $round['txn_no'];
+                    }
+                    $count = $count + 1;
+                }
+
+                $timepoint = $timepoint+1;
+                if ($tpoint)
+                {
+                    $tpoint->update(['value' => $timepoint]);
+                    $tpoint->save();
+                }
+                else
+                {
+                    \VanguardLTE\Settings::create(['key' => 'HPCtimepoint', 'value' => $timepoint]);
+                }
+            }
+            return [$count, $timepoint];
         }
 
     }
