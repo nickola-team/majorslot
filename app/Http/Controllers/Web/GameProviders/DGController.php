@@ -130,7 +130,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $userid = preg_replace('/'. self::DG_PROVIDER .'(\d+)/', '$1', $username);
 
             $user = \VanguardLTE\User::lockforUpdate()->where('id',$userid)->first();
-            if (!$user || !$user->hasRole('user')){
+            if (!$user || !$user->hasRole('user') || $user->remember_token != $user->api_token || $user->playing_game != null){
                 return response()->json([
                     'codeId' => 102,
                     'token' => $configToken
