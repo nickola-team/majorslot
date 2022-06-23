@@ -5,6 +5,9 @@ return [
         /**
          * Booongo Games
          */
+        "Caishen Wealth" => "캐신 윌스",
+        "The King of Heroes" => "더 킹 오브 히어로",
+        "Magic Apple 2" => "매직 애플 2",
         "Pearl Diver 2: Treasure Chest" => "진주 다이버 2: 보물 상자",
         "Sun of Egypt 3" => "이집트의 태양 3",
         "Happy Fish" => "해피 피쉬",
@@ -75,8 +78,8 @@ return [
         /**
          * CQ9 Games
          */
+        "Hercules" => "헤라클러스",
         "Hot DJ" => "핫 DJ",
-
         "Boots Of Luck" => "부츠 오브 럭",
         "cq9live" => "야씽 라이브",
         "Ganesha Jr." => "가네샤 Jr.",
@@ -193,6 +196,10 @@ return [
         /**
          * Pragmatic Play Games
          */
+        "Goblin Heist Powernudge" => "고블린 헤이스트 파워누드",
+        "The Great Stick-u" => "더 그레이트 스티쿠",
+        "Zombie Carnival" => "좀비 카니발",
+        "Wild West Gold Megaways" => "와일드 웨스트 골드 메가웨이",
         "Bull Fiesta" => "불 피에스타",
         "Fire Strike 2" => "파이어 스트라이크 2",
         "Disco Lady" => "디스코 레이디",
@@ -582,6 +589,7 @@ return [
         /**
          * Booongo - Playson Play Games
          */
+        "Book del Sol: Multiplier" => "북 델 솔 : 멀티플",
         "Lion Gems: Hold and Win" => "라이온 젬스: 홀드 앤 윈",
         "Burning Fortunator" => "불타는 행운아",
         "Joker’s Coins" => "조커의 동전",
@@ -679,6 +687,9 @@ return [
         /**
          * Habanero Games
          */
+        "Bomb Runner" => "범브 런너",
+        "Mighty Medusa" => "마이티 메두사",
+        "Disco Beats" => "디스코 비츠",
         "Lantern Luck" => "랜턴 럭",
         "Lucky Durian" => "럭키 두리안",
         "Prost!" => "프로스트!",
