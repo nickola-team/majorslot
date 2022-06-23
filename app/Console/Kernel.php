@@ -126,10 +126,6 @@ namespace VanguardLTE\Console
             })->everyMinute();
             $schedule->call(function()
             {
-                \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::processRounds();
-            })->everyMinute();
-            $schedule->call(function()
-            {
                 $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'shop', 

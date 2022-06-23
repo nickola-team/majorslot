@@ -153,7 +153,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $provider_name = $data['provider_name'];
             $userId = $args['player']['id'];
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
-            if (!$user || !$user->hasRole('user')  || $user->playing_game == 'pp'){
+            if (!$user || !$user->hasRole('user')  || $user->playing_game != null || $user->remember_token != $user->api_token){
                 return [
                     'uid' => $uid,
                     'error' => [ 'code' => 'SESSION_CLOSED']];

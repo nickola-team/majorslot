@@ -310,7 +310,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = auth()->user();
             if ($res['error'] == false && $user)
             {
-                $user->update(['playing_game' => null]);
+                $user->update([
+                    'playing_game' => null,
+                    'remember_token' => $user->api_token
+                ]);
             }
             return response()->json($res);
         }

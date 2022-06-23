@@ -171,7 +171,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 1000,
                 ];
             }
-            if ($user->playing_game == 'pp')
+            if ($user->playing_game != null || $user->remember_token != $user->api_token)
             {
                 return [
                     'code' => 1007,

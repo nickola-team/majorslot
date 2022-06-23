@@ -159,7 +159,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
             $user = \VanguardLTE\User::lockForUpdate()->where('id',$account)->get()->first();
-            if (!$user || !$user->hasRole('user')){
+            if (!$user || !$user->hasRole('user') || $user->remember_token != $user->api_token){
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';
                 $transaction['status']['message'] = 'failed';
@@ -179,7 +179,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            if ($user->balance < $amount || $user->playing_game == 'pp')
+            if ($user->balance < $amount || $user->playing_game != null)
             {
                 $transaction['status']['endtime'] = date(DATE_RFC3339_EXTENDED);
                 $transaction['status']['status'] = 'failed';

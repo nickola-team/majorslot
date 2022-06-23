@@ -34,7 +34,7 @@ namespace VanguardLTE
             'total_in', 
             'total_out', 
             'language', 
-            'remember_token', 
+            'remember_token',  //used for game launch token
             'role_id', 
             'count_balance', 
             'count_return', 
