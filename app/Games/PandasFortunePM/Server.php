@@ -93,7 +93,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '40';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';
