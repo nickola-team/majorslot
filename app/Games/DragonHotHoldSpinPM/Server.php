@@ -121,7 +121,7 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                 }
                 else
                 {
-                    $bet = 400;
+                    $bet = 200;
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

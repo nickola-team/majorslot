@@ -109,7 +109,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
                 }
                 else
                 {
-                    $bet = 100;
+                    $bet = 50;
                 }
                 $currentReelSet = 0;
                 $spinType = 's';
