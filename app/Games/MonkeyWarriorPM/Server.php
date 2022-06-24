@@ -113,7 +113,7 @@ namespace VanguardLTE\Games\MonkeyWarriorPM
                 }
                 else
                 {
-                    $bet = 100;
+                    $bet = 40;
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

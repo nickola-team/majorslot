@@ -81,7 +81,7 @@ namespace VanguardLTE\Games\WildWestGoldMegawaysPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '50.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';
@@ -188,6 +188,8 @@ namespace VanguardLTE\Games\WildWestGoldMegawaysPM
                 $allBet = $betline * $lines;
                 if($pur >= 0 && $slotEvent['slotEvent'] != 'freespin'){
                     $allBet = $betline * $slotSettings->GetPurMul($pur);
+                }else if($bl == 1){
+                    $allBet = $betline * 25;
                 }
                 $freeStacks = []; 
                 $isGeneratedFreeStack = false;
