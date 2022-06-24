@@ -117,7 +117,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
-            if (!$user)
+            if (!$user || $user->playing_game != null || $user->remember_token != $user->api_token)
             {
                 return response()->json([
                     'result' => false,
