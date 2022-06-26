@@ -305,7 +305,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 ]); //for master
             }
             $user->update(['shop_id' => $shop->id]);
-            $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
+            //get comaster id
+            $comaster = $parent;
+            while ($comaster!=null && !$comaster->isInoutPartner())
+            {
+                $comaster = $comaster->referral;
+            }
+            $site = null;
+            if ($comaster == null){
+                $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
+            }
+            else
+            {
+                $site = \VanguardLTE\WebSite::where('adminid', $comaster->id)->first();
+            }
             \VanguardLTE\Task::create([
                 'category' => 'shop', 
                 'action' => 'create', 
