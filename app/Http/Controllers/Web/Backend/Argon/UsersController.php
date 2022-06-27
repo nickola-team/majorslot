@@ -158,12 +158,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 
                 $user->update(['shop_id' => $shop->id]);
                 $site = null;
-                if ($$parent == null){
+                if ($parent == null){
                     $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
                 }
                 else
                 {
-                    $site = \VanguardLTE\WebSite::where('adminid', $$parent->id)->first();
+                    $site = \VanguardLTE\WebSite::where('adminid', $parent->id)->first();
                 }
                 \VanguardLTE\Task::create([
                     'category' => 'shop', 
