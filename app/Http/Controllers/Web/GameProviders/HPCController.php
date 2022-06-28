@@ -231,7 +231,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'id' => self::HPC_PROVIDER . $user->id,
                 'name' => $user->username,
-                'balance' => intval($user->balance),
+                'balance' => 0,
                 'language' => 'kr'
             ];
             $headers = HPCController::getApiHeaderInfo($user);
