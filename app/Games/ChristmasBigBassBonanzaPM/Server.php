@@ -135,7 +135,7 @@ namespace VanguardLTE\Games\ChristmasBigBassBonanzaPM
                 {
                     $betline = $slotSettings->Bet[0];
                 }
-                $lines = 20;      
+                $lines = 10;      
                 $allBet = $betline * $lines;
                 $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
