@@ -50,7 +50,7 @@ namespace VanguardLTE\Games\AztecGemsPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                 $slotSettings->SetGameData($slotSettings->slotId . 'GWM', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
-                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 20);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 5);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [7,4,9,7,4,9,7,4,9]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\AztecGemsPM
                 {
                     $betline = $slotSettings->Bet[0];
                 }
-                $lines = 20;      
+                $lines = 5;      
                 $allBet = $betline * $lines;
                 $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
