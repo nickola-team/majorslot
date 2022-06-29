@@ -262,22 +262,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
 
             //Add balance
-
-            $params = [
-                'user_id' => self::HPC_PROVIDER . $user->id,
-                'balance' => intval($user->balance)
-            ];
-            $url = config('app.hpc_api') . '/customer/add_balance';
-            $response = Http::withHeaders($headers)->post($url, $params);
-            if (!$response->ok())
-            {
-                Log::error('HPC : add balance request failed. ' . $response->body());
-                return null;
-            }
-            $data = $response->json();
-            if ($data==null || $data['status']==0)
-            {
-                return null;
+            if ($user->balance > 0) {
+                $params = [
+                    'user_id' => self::HPC_PROVIDER . $user->id,
+                    'balance' => intval($user->balance)
+                ];
+                $url = config('app.hpc_api') . '/customer/add_balance';
+                $response = Http::withHeaders($headers)->post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('HPC : add balance request failed. ' . $response->body());
+                    return null;
+                }
+                $data = $response->json();
+                if ($data==null || $data['status']==0)
+                {
+                    return null;
+                }
             }
 
             return '/providers/hpc/'.$gamecode;
