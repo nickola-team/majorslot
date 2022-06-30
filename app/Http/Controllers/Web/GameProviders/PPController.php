@@ -1582,9 +1582,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             //마지막으로 플레이한 게임로그 얻기
             $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
-            $ppchild_category = \VanguardLTE\Category::where('parent', $pp_category->original_id)->first();
+            $ppchild_category = \VanguardLTE\Category::where('parent', $pp_category->original_id)->get();
+            $cat_ids = [];
+            if ($pp_category)
+            {
+                $cat_ids[] = $pp_category->original_id;
+            }
+            foreach ($ppchild_category as $child)
+            {
+                $cat_ids[] = $child->original_id;
+            }
 
-            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->whereIn('category_id', [$pp_category->original_id, $ppchild_category->original_id])->orderby('date_time', 'desc')->first();
+            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->whereIn('category_id', $cat_ids)->orderby('date_time', 'desc')->first();
 
             if ($stat_game)
             {
