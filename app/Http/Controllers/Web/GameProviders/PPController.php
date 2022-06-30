@@ -1597,7 +1597,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($stat_game)
             {
-                $local_game = ($stat_game->category_id != $pp_category->original_id);
+                $stat_cat = \VanguardLTE\Category::where('id', $stat_game->category_id)->first();
+                $local_game = ($stat_cat->provider == null);
                 $gamename = $stat_game->game_id;
                 if ($local_game)
                 {
@@ -1617,9 +1618,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    $game = PPController::gameCodetoObj($stat_game->game_id);
-                    if ($game){
-                        $gamename = $game['enname'];
+                    if ($stat_cat->provider == 'pp') {
+                        $game = PPController::gameCodetoObj($stat_game->game_id);
+                        if ($game){
+                            $gamename = $game['enname'];
+                        }
+                    }
+                    else //theplus
+                    {
+                        $game = TPController::getGameObjBySymbol($stat_game->game_id);
+                        if ($game){
+                            $gamename = $game['enname'];
+                        }
                     }
                 }
                 $data = [
