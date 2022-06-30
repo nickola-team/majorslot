@@ -284,14 +284,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
 
-            //withdraw all balance
-            $data = TPController::withdrawAll($user->id);
-            if ($data['error'])
+            if ($data['resultCode']==89)
             {
-                return null;
+                //withdraw all balance
+                $data = TPController::withdrawAll($user->id);
+                if ($data['error'])
+                {
+                    return null;
+                }
             }
-            
-
             //Add balance
 
             $url = config('app.tp_api') . '/custom/api/user/Deposit';
