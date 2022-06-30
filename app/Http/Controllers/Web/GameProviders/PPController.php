@@ -1597,7 +1597,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($stat_game)
             {
-                $local_game = ($stat_game->category_id == $ppchild_category->original_id);
+                $local_game = ($stat_game->category_id != $pp_category->original_id);
                 $gamename = $stat_game->game_id;
                 if ($local_game)
                 {
