@@ -1626,7 +1626,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     else //theplus
                     {
-                        $game = TPController::getGameObjBySymbol($stat_game->game_id);
+                        $game = TPController::getGameObj($stat_game->game_id);
                         if ($game){
                             $gamename = $game['enname'];
                         }
