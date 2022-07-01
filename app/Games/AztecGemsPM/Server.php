@@ -75,7 +75,7 @@ namespace VanguardLTE\Games\AztecGemsPM
                 }
                 else
                 {
-                    $bet = '200.00';
+                    $bet = '100.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
