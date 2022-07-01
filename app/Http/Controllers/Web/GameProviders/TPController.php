@@ -347,13 +347,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try {
                 $response = Http::post($url, $params);
             } catch (\Exception $e) {
-                Log::error('TPGameRoudns : GameRounds request failed. ' . $e->getMessage());
+                Log::error('TPGameRounds : GameRounds request failed. ' . $e->getMessage());
                 return null;
             }
 
             if (!$response->ok())
             {
-                Log::error('TPGameRoudns : GameRounds request failed. ' . $response->body());
+                Log::error('TPGameRounds : GameRounds request failed. ' . $response->body());
                 return null;
             }
 
