@@ -1582,13 +1582,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             //마지막으로 플레이한 게임로그 얻기
             $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
-            $ppchild_category = \VanguardLTE\Category::where('parent', $pp_category->original_id)->first();
+            $ppchild_category = \VanguardLTE\Category::where('parent', $pp_category->original_id)->get();
+            $cat_ids = [];
+            if ($pp_category)
+            {
+                $cat_ids[] = $pp_category->original_id;
+            }
+            foreach ($ppchild_category as $child)
+            {
+                $cat_ids[] = $child->original_id;
+            }
 
-            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->whereIn('category_id', [$pp_category->original_id, $ppchild_category->original_id])->orderby('date_time', 'desc')->first();
+            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->whereIn('category_id', $cat_ids)->orderby('date_time', 'desc')->first();
 
             if ($stat_game)
             {
-                $local_game = ($stat_game->category_id == $ppchild_category->original_id);
+                $stat_cat = \VanguardLTE\Category::where('id', $stat_game->category_id)->first();
+                $local_game = ($stat_cat->provider == null);
                 $gamename = $stat_game->game_id;
                 if ($local_game)
                 {
@@ -1608,9 +1618,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    $game = PPController::gameCodetoObj($stat_game->game_id);
-                    if ($game){
-                        $gamename = $game['enname'];
+                    if ($stat_cat->provider == 'pp') {
+                        $game = PPController::gameCodetoObj($stat_game->game_id);
+                        if ($game){
+                            $gamename = $game['enname'];
+                        }
+                    }
+                    else //theplus
+                    {
+                        $game = TPController::getGameObj($stat_game->game_id);
+                        if ($game){
+                            $gamename = $game['enname'];
+                        }
                     }
                 }
                 $data = [

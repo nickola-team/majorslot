@@ -2,7 +2,7 @@ const { exec } = require("child_process");
 
 
 let betwinSync = 10000;
-let exitSync = 2000;
+let exitSync = 1000;
 let launchSync = 300;
 
 console.log('======= Starting HPC bet/win synchronization thread =============');

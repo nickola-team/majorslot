@@ -284,14 +284,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
 
-            //withdraw all balance
-            $data = TPController::withdrawAll($user->id);
-            if ($data['error'])
+            if ($data['resultCode']==89)
             {
-                return null;
+                //withdraw all balance
+                $data = TPController::withdrawAll($user->id);
+                if ($data['error'])
+                {
+                    return null;
+                }
             }
-            
-
             //Add balance
 
             $url = config('app.tp_api') . '/custom/api/user/Deposit';
@@ -346,13 +347,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try {
                 $response = Http::post($url, $params);
             } catch (\Exception $e) {
-                Log::error('TPGameRoudns : GameRounds request failed. ' . $e->getMessage());
+                Log::error('TPGameRounds : GameRounds request failed. ' . $e->getMessage());
                 return null;
             }
 
             if (!$response->ok())
             {
-                Log::error('TPGameRoudns : GameRounds request failed. ' . $response->body());
+                Log::error('TPGameRounds : GameRounds request failed. ' . $response->body());
                 return null;
             }
 
