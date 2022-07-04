@@ -142,6 +142,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $alonegame = 0;
             $url = null;
             $data = [];
+
+            if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor'))
+            {
+                return redirect('/');
+            }
            
             if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
                 $url = url('/game/' . $gamename);
