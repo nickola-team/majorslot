@@ -79,7 +79,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             else
             {
                 $balance = TPController::getuserbalance($user->id);
-                if ($balance != null)
+                if ($balance >= 0)
                 {
                     $user->update([
                         'balance' => $balance,
@@ -106,7 +106,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     
             $response = Http::post($url, $params);
             
-            $balance = null;
+            $balance = -1;
             if ($response->ok()) {
                 $res = $response->json();
     
