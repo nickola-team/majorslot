@@ -64,7 +64,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             else
             {
                 $balance = HPCController::getUserBalance($user);
-                if ($balance != null)
+                if ($balance >= 0)
                 {
                     $user->update([
                         'balance' => $balance,
@@ -179,12 +179,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$response->ok())
             {
                 Log::error('HPC : get user info request failed. ' . $response->body());
-                return 0;
+                return -1;
             }
             $data = $response->json();
             if ($data==null && $data['status']!=0)
             {
-                return 0;
+                return -1;
             }
             return $data['balance'];
         }
