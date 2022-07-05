@@ -312,7 +312,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             if ($data==null || ($data['resultCode']!=0 )) //Deposit failed
             {
-                Log::error('TPMakeLink : Deposit result failed. ' . ($data==null?'null':$data['resultMessage']));
+                Log::error('TPMakeLink : Deposit result failed. ' . ($data==null?'null':$data['resultMessage']) . ' for user id ' . $user->id . ', balance=' . $user->balance);
                 return null;
             }
              
