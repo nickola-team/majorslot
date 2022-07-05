@@ -295,25 +295,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             //Add balance
 
-            $url = config('app.tp_api') . '/custom/api/user/Deposit';
-            $params = [
-                'key' => $key,
-                'secret' => $secret,
-                'userID' => self::TP_PROVIDER . $user->id,
-                'amount' => (int)$user->balance
-            ];
+            if ($user->balance > 0)
+                {
 
-            $response = Http::post($url, $params);
-            if (!$response->ok())
-            {
-                Log::error('TPMakeLink : Deposit request failed. ' . $response->body());
-                return null;
-            }
-            $data = $response->json();
-            if ($data==null || ($data['resultCode']!=0 )) //Deposit failed
-            {
-                Log::error('TPMakeLink : Deposit result failed. ' . ($data==null?'null':$data['resultMessage']) . ' for user id ' . $user->id . ', balance=' . $user->balance);
-                return null;
+                $url = config('app.tp_api') . '/custom/api/user/Deposit';
+                $params = [
+                    'key' => $key,
+                    'secret' => $secret,
+                    'userID' => self::TP_PROVIDER . $user->id,
+                    'amount' => (int)$user->balance
+                ];
+
+                $response = Http::post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('TPMakeLink : Deposit request failed. ' . $response->body());
+                    return null;
+                }
+                $data = $response->json();
+                if ($data==null || ($data['resultCode']!=0 )) //Deposit failed
+                {
+                    Log::error('TPMakeLink : Deposit result failed. ' . ($data==null?'null':$data['resultMessage']) . ' for user id ' . $user->id . ', balance=' . $user->balance);
+                    return null;
+                }
             }
              
             return '/providers/tp/'.$gamecode;
