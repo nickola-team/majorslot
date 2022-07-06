@@ -401,10 +401,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = config('app.dg_api') . '/user/signup/' . config('app.dg_agent');
             $rand = DGController::generateCode(6);
             $key = DGController::sign($rand);
+            $betLimit = 'R';//bet limit 1000-5000000, refer to KRW Currency.pdf
             $params = [
                 'token' => $key,
                 'random' => $rand,
-                'data' => 'E', //bet limit 4000-800000
+                'data' => $betLimit, 
                 'member' => [
                     'username' => self::DG_PROVIDER . $userId,
                     'password' => DGController::sign($rand),
@@ -419,8 +420,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return false;
             }
             $data = $response->json();
-            if ($data['codeId'] == 0 || $data['codeId'] == 116)
+            if ($data['codeId'] == 0)
             {
+                return true;
+            }
+            if ($data['codeId'] == 116) //exist player?
+            {
+                // change bet limit.
+                $params = [
+                    'token' => $key,
+                    'random' => $rand,
+                    'data' => $betLimit, 
+                    'member' => [
+                        'username' => self::DG_PROVIDER . $userId,
+                    ]
+                ];
+                $url = config('app.dg_api') . '/game/updateLimit/' . config('app.dg_agent');
+                $response = Http::post($url, $params);
                 return true;
             }
             Log::error('DG : register response failed. ' . $data['codeId']);
