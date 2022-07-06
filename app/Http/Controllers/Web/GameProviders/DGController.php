@@ -509,7 +509,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             if ($data['codeId'] != 0 )
             {
-                Log::error('DG : getReport response failed. ' . $data['codeId']);
+                // Log::error('DG : getReport response failed. ' . $data['codeId']);
             }
 
             if (!isset($data['list']))
