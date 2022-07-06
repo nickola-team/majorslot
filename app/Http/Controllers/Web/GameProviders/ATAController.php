@@ -658,6 +658,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return null;
                 }
                 $resultdata = $response->json();
+                if (!$resultdata || $resultdata['code'] != 0)
+                {
+                    Log::error('ATA : makegamelink response failed. ' . json_encode($data) . '||' . $response->body());
+
+                }
             }
             catch (Exception $ex)
             {
@@ -671,6 +676,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return $resultdata['data']['launchurl'];
                 }
             }
+            
             return null;
         }
 
