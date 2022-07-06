@@ -6,7 +6,7 @@ function startGame(gamename) {
 
     window.open(
         "/game/" + gamename,
-        gamename,
+        "game",
         "width=1280, height=742, left=100, top=50"
     );
 }
