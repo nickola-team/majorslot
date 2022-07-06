@@ -79,7 +79,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             else
             {
                 $balance = TPController::getuserbalance($user->id);
-                if ($balance != null)
+                if ($balance >= 0)
                 {
                     $user->update([
                         'balance' => $balance,
@@ -106,7 +106,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     
             $response = Http::post($url, $params);
             
-            $balance = null;
+            $balance = -1;
             if ($response->ok()) {
                 $res = $response->json();
     
@@ -284,35 +284,40 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
 
-            //withdraw all balance
-            $data = TPController::withdrawAll($user->id);
-            if ($data['error'])
+            if ($data['resultCode']==89)
             {
-                return null;
+                //withdraw all balance
+                $data = TPController::withdrawAll($user->id);
+                if ($data['error'])
+                {
+                    return null;
+                }
             }
-            
-
             //Add balance
 
-            $url = config('app.tp_api') . '/custom/api/user/Deposit';
-            $params = [
-                'key' => $key,
-                'secret' => $secret,
-                'userID' => self::TP_PROVIDER . $user->id,
-                'amount' => (int)$user->balance
-            ];
+            if ($user->balance > 0)
+                {
 
-            $response = Http::post($url, $params);
-            if (!$response->ok())
-            {
-                Log::error('TPMakeLink : Deposit request failed. ' . $response->body());
-                return null;
-            }
-            $data = $response->json();
-            if ($data==null || ($data['resultCode']!=0 )) //Deposit failed
-            {
-                Log::error('TPMakeLink : Deposit result failed. ' . ($data==null?'null':$data['resultMessage']));
-                return null;
+                $url = config('app.tp_api') . '/custom/api/user/Deposit';
+                $params = [
+                    'key' => $key,
+                    'secret' => $secret,
+                    'userID' => self::TP_PROVIDER . $user->id,
+                    'amount' => (int)$user->balance
+                ];
+
+                $response = Http::post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('TPMakeLink : Deposit request failed. ' . $response->body());
+                    return null;
+                }
+                $data = $response->json();
+                if ($data==null || ($data['resultCode']!=0 )) //Deposit failed
+                {
+                    Log::error('TPMakeLink : Deposit result failed. ' . ($data==null?'null':$data['resultMessage']) . ' for user id ' . $user->id . ', balance=' . $user->balance);
+                    return null;
+                }
             }
              
             return '/providers/tp/'.$gamecode;
@@ -346,13 +351,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try {
                 $response = Http::post($url, $params);
             } catch (\Exception $e) {
-                Log::error('TPGameRoudns : GameRounds request failed. ' . $e->getMessage());
+                Log::error('TPGameRounds : GameRounds request failed. ' . $e->getMessage());
                 return null;
             }
 
             if (!$response->ok())
             {
-                Log::error('TPGameRoudns : GameRounds request failed. ' . $response->body());
+                Log::error('TPGameRounds : GameRounds request failed. ' . $response->body());
                 return null;
             }
 

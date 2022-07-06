@@ -64,7 +64,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             else
             {
                 $balance = HPCController::getUserBalance($user);
-                if ($balance != null)
+                if ($balance >= 0)
                 {
                     $user->update([
                         'balance' => $balance,
@@ -179,12 +179,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$response->ok())
             {
                 Log::error('HPC : get user info request failed. ' . $response->body());
-                return 0;
+                return -1;
             }
             $data = $response->json();
             if ($data==null && $data['status']!=0)
             {
-                return 0;
+                return -1;
             }
             return $data['balance'];
         }
@@ -231,7 +231,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'id' => self::HPC_PROVIDER . $user->id,
                 'name' => $user->username,
-                'balance' => intval($user->balance),
+                'balance' => 0,
                 'language' => 'kr'
             ];
             $headers = HPCController::getApiHeaderInfo($user);
@@ -262,22 +262,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
 
             //Add balance
-
-            $params = [
-                'user_id' => self::HPC_PROVIDER . $user->id,
-                'balance' => intval($user->balance)
-            ];
-            $url = config('app.hpc_api') . '/customer/add_balance';
-            $response = Http::withHeaders($headers)->post($url, $params);
-            if (!$response->ok())
-            {
-                Log::error('HPC : add balance request failed. ' . $response->body());
-                return null;
-            }
-            $data = $response->json();
-            if ($data==null || $data['status']==0)
-            {
-                return null;
+            if ($user->balance > 0) {
+                $params = [
+                    'user_id' => self::HPC_PROVIDER . $user->id,
+                    'balance' => intval($user->balance)
+                ];
+                $url = config('app.hpc_api') . '/customer/add_balance';
+                $response = Http::withHeaders($headers)->post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('HPC : add balance request failed. ' . $response->body());
+                    return null;
+                }
+                $data = $response->json();
+                if ($data==null || $data['status']==0)
+                {
+                    return null;
+                }
             }
 
             return '/providers/hpc/'.$gamecode;

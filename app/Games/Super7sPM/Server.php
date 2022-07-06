@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\AztecGemsPM
+namespace VanguardLTE\Games\Super7sPM
 {
     class Server
     {
@@ -48,10 +48,9 @@ namespace VanguardLTE\Games\AztecGemsPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
-                $slotSettings->SetGameData($slotSettings->slotId . 'GWM', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 5);
-                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [7,4,9,7,4,9,7,4,9]);
+                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [8,7,4,9,8,6,7,4,9,8,3,7,7,6,6]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
@@ -64,7 +63,6 @@ namespace VanguardLTE\Games\AztecGemsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $lastEvent->serverResponse->currentFreeGames);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $lastEvent->serverResponse->totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'GWM', $lastEvent->serverResponse->GWM);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
@@ -79,12 +77,8 @@ namespace VanguardLTE\Games\AztecGemsPM
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
-                $strOtherResponse = '';
-                if($slotSettings->GetGameData($slotSettings->slotId . 'GWM') > 0){
-                    $strOtherResponse = '&gwm=' . $slotSettings->GetGameData($slotSettings->slotId . 'GWM');
-                }
                 $Balance = $slotSettings->GetBalance();
-                $response = 'def_s=7,4,9,7,4,9,7,4,9&balance='. $Balance .'&cfgs=3677&reel1=4,4,4,9,9,9,7,7,7,7,7,7,2,2,2,8,8,8,9,7,7,4,7,7,5,5,5,5,5,6,6,6,9,2,3,3,3,9,9,9,8,5,8,9,5,3,6,4&ver=2&reel0=8,8,8,8,7,7,7,6,6,6,6,6,8,8,4,4,4,4,8,6,5,5,5,7,8,8,6,9,9,9,9,9,8,6,8,4,3,3,3,3,9,8,9,4,3,2,2,2,9,5,2,2,6,6,7&index=1&balance_cash='. $Balance .'&def_sb=4,4,4&def_sa=8,8,8&reel2=4,4,4,4,8,8,8,9,9,9,9,7,7,7,7,5,5,5,3,3,3,7,7,3,8,9,5,3,8,4,9,7,9,5,5,9,9,6,6,6,6,7,2,2,2,9,2&balance_bonus=0.00&na='. $spinType.$strOtherResponse.'&aw=3&scatters=1~0,0,0~0,0,0~1,1,1&gmb=0,0,0&rt=d&base_aw=m~1;m~2;m~3;m~5;m~10;m~15&stime=' . floor(microtime(true) * 1000) .'&sa=8,8,8&sb=4,4,4&sc='. implode(',', $slotSettings->Bet) .'&defc=100.00&def_aw=3&sh=3&wilds=2~25,0,0~1,1,1&bonuses=0&fsbonus=&c='.$bet.'&sver=5&counter=2&paytable=0,0,0;0,0,0;0,0,0;20,0,0;15,0,0;12,0,0;10,0,0;8,0,0;5,0,0;2,0,0&l=5&rtp=96.52&s='.$lastReelStr.'&awt=6rl';
+                $response = 'def_s=8,7,4,9,8,6,7,4,9,8,3,7,7,6,6&balance='. $Balance .'&cfgs=2740&reel1=8,3,6,6,6,7,7,7,4,4,4,3,4,7,5,1,7,8,6,9,9,9,8,9,9,4,4&ver=2&reel0=8,8,8,7,7,7,4,6,6,6,5,7,6,1,4,3,6,8,9,8,7,9&index=1&balance_cash='. $Balance .'&def_sb=9,9,9,5,6&def_sa=8,8,8,7,7&reel3=6,6,6,9,9,9,7,6,6,8,8,8,4,8,3,5,3,9,9,9,6,6,5,4,8,1&reel2=4,9,9,9,9,8,8,8,3,6,8,9,5,4,7,8,5,6,1,7,6,8,7,8&reel4=9,9,9,5,6,6,6,3,9,6,9,3,5,6,7,8,8,8,6,3,1,8,6,8,4,4&balance_bonus=0.00&na='. $spinType.'&scatters=1~250,50,10,0,0~0,0,0,0,0~1,1,1,1,1&gmb=0,0,0&rt=d&stime=1654220530969&sa=8,8,8,7,7&sb=9,9,9,5,6&sc='. implode(',', $slotSettings->Bet) .'&defc=200.00&sh=3&wilds=2~0,0,0~1,1,1&bonuses=0&fsbonus=&c='.$bet.'&sver=5&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;5000,1000,100,0,0;1000,200,50,0,0;1000,200,50,0,0;200,50,20,0,0;200,50,20,0,0;200,40,20,0,0;200,40,20,5,0&l=5&s='.$lastReelStr;
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
@@ -127,11 +121,11 @@ namespace VanguardLTE\Games\AztecGemsPM
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
                 $linesId = [];
-                $linesId[0] = [2,2,2];
-                $linesId[1] = [1,1,1];
-                $linesId[2] = [3,3,3];
-                $linesId[3] = [1,2,3];
-                $linesId[4] = [3,2,1];
+                $linesId[0] = [2,2,2,2,2];
+                $linesId[1] = [1,1,1,1,1];
+                $linesId[2] = [3,3,3,3,3];
+                $linesId[3] = [1,2,3,2,1];
+                $linesId[4] = [3,2,1,2,3];
                 $lastEvent = $slotSettings->GetHistory();
                 $slotEvent['slotBet'] = $slotEvent['c'];
                 $slotEvent['slotLines'] = 5;
@@ -169,9 +163,6 @@ namespace VanguardLTE\Games\AztecGemsPM
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
-                if($winType == 'bonus'){
-                    $winType = 'win';
-                }
                 $allBet = $betline * $lines;
                 $freeStacks = []; 
                 $isGeneratedFreeStack = false;
@@ -208,7 +199,6 @@ namespace VanguardLTE\Games\AztecGemsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
                 }
                 
-                $wild = '2';
                 $scatter = '1';
                 $Balance = $slotSettings->GetBalance();
                 $totalWin = 0;
@@ -216,12 +206,12 @@ namespace VanguardLTE\Games\AztecGemsPM
                 $lineWinNum = [];
                 $strWinLine = '';
                 $winLineCount = 0;
+                $scatterposes = [];
+                $scattersCount = 0;
+                $scattersWin = 0;
                 if($isGeneratedFreeStack == true){
                     $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 1];
                     $lastReel = explode(',', $stack['reel']);
-                    $com = $stack['com'];
-                    $aw = $stack['aw'];
-                    $gwm = $stack['gwm'];
                 }else{
                     $stack = $slotSettings->GetReelStrips($winType, $betline * $lines);
                     if($stack == null){
@@ -229,49 +219,59 @@ namespace VanguardLTE\Games\AztecGemsPM
                         exit( $response );
                     }
                     $lastReel = explode(',', $stack[0]['reel']);
-                    $com = $stack[0]['com'];
-                    $aw = $stack[0]['aw'];
-                    $gwm = $stack[0]['gwm'];
                 }
                 $reels = [];
-                for($i = 0; $i < 3; $i++){
+                for($i = 0; $i < 5; $i++){
                     $reels[$i] = [];
                     for($j = 0; $j < 3; $j++){
-                        $reels[$i][$j] = $lastReel[$j * 3 + $i];
+                        $reels[$i][$j] = $lastReel[$j * 5 + $i];
+                        if($reels[$i][$j] == $scatter){
+                            $scattersCount++;
+                            $scatterposes[] = $j * 5 + $i;
+                        }
                     }
                 }
-
+                $_obf_winCount = 0;
                 for( $k = 0; $k < $lines; $k++ ) 
                 {
                     $_lineWin = '';
                     $firstEle = $reels[0][$linesId[$k][0] - 1];
                     $lineWinNum[$k] = 1;
                     $lineWins[$k] = 0;
-                    for($j = 1; $j < 3; $j++){
+                    for($j = 1; $j < 5; $j++){
                         $ele = $reels[$j][$linesId[$k][$j] - 1];
-                        if($firstEle == $wild){
-                            $firstEle = $ele;
+                        if($ele == $firstEle){
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                        }else if($ele == $firstEle || $ele == $wild){
-                            $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                        }
-                        
-                        if($lineWinNum[$k] == 3){
-                            $mul = $gwm;
-                            if($mul == 0){
-                                $mul = 1;
-                            }
-                            $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline * $mul;
-                            if($lineWins[$k] > 0){
+                            if($j == 4){
+                                $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
                                 $totalWin += $lineWins[$k];
-                                $winLineCount++;
-                                $strWinLine = $strWinLine . '&l'. ($winLineCount - 1).'='.$k.'~'.$lineWins[$k];
+                                $_obf_winCount++;
+                                $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$k.'~'.$lineWins[$k];
                                 for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
-                                    $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 3 + $kk);
+                                    $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 5 + $kk);
                                 }
                             }
+                        }else{
+                            if($slotSettings->Paytable[$firstEle][$lineWinNum[$k]] > 0){
+                                $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
+                                $totalWin += $lineWins[$k];
+                                $_obf_winCount++;
+                                $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$k.'~'.$lineWins[$k];
+                                for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
+                                    $strWinLine = $strWinLine . '~' . (($linesId[$k][$kk] - 1) * 5 + $kk);
+                                }   
+
+                            }else{
+                                $lineWinNum[$k] = 0;
+                            }
+                            break;
                         }
                     }
+                }
+                if($scattersCount >= 3){
+                    $scatterPaytable = [0,0,0,50,250,1250];
+                    $scattersWin = $betline * $scatterPaytable[$scattersCount];
+                    $totalWin = $totalWin + $scattersWin;
                 }
                 $spinType = 's';
                 if( $totalWin > 0) 
@@ -292,14 +292,10 @@ namespace VanguardLTE\Games\AztecGemsPM
                 $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
                
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
-                $slotSettings->SetGameData($slotSettings->slotId . 'GWM', $gwm);
                 
                 $strOtherResponse = '';
-                if($com != ""){
-                    $strOtherResponse = '&com='. $com;
-                }
-                if($gwm > 0){
-                    $strOtherResponse = $strOtherResponse . '&gwm='. $gwm;
+                if($scattersCount >= 3){
+                    $strOtherResponse = '&psym=1~' . $scattersWin . '~' . implode(',', $scatterposes);
                 }
                 $isState = true;
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
@@ -327,7 +323,7 @@ namespace VanguardLTE\Games\AztecGemsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance .'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&aw='. $aw .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=5&s='.$strLastReel.'&w='.$totalWin . '&awt=6rl';
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance .'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=5&s='.$strLastReel.'&w='.$totalWin;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -346,7 +342,7 @@ namespace VanguardLTE\Games\AztecGemsPM
                 //------------ *** ---------------
 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID')  . ',"GWM":' . $slotSettings->GetGameData($slotSettings->slotId . 'GWM') .',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
                 $allBet = $betline * $lines;
                 $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
             }
