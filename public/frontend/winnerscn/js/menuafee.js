@@ -399,7 +399,7 @@ function getSlotGames(title, category) {
                     }
                     else
                     {
-                    strHtml += ` <a href="javascript:void(0);" class="game-btn" onClick="startGame('${data.games[i].name}');">
+                    strHtml += ` <a href="javascript:void(0);" class="game-btn" onClick="startGameByProvider(null,'${data.games[i].name}');">
                                     <div class="inner">
                                         <div class="img-cont">
                                         <img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg">

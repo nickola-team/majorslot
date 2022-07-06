@@ -115,7 +115,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
 
-            $launchRequest->delete();
+            // $launchRequest->delete();
+            //delete all user's request
+            \VanguardLTE\GameLaunch::where('user_id', $user->id)->delete();
 
             $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObj($gamecode);
             if (!$gameObj)
