@@ -114,7 +114,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'gender' => 'M',
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'balance' => floatval($user->balance),
                     'currency' => 'KRW',
@@ -142,7 +142,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [
                 'code' => 0,
                 'data' => [
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
@@ -185,7 +185,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 0,
                     'data' => [
                         'gender' => 'M',
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -240,7 +240,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'gender' => 'M',
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'balance' => floatval($user->balance),
                     'currency' => 'KRW',
@@ -269,7 +269,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [
                     'code' => 0,
                     'data' => [
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -308,7 +308,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [
                 'code' => 0,
                 'data' => [
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'balance' => floatval($user->balance),
                     'currency' => 'KRW',
@@ -341,7 +341,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [
                     'code' => 0,
                     'data' => [
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -391,7 +391,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'organization' => config('app.ata_org'),
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
@@ -426,7 +426,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [
                     'code' => 0,
                     'data' => [
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -474,7 +474,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'organization' => config('app.ata_org'),
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
@@ -531,7 +531,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'organization' => config('app.ata_org'),
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
@@ -638,7 +638,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $data = [
-                'loginname' => $user->id,
+                'loginname' => strval($user->id),
                 'key' => $user->api_token,
                 'currency' => 'KRW',
                 'lang' => 'ko',
