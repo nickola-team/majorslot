@@ -2,6 +2,7 @@
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
     class ATAController extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
@@ -653,12 +654,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::post(config('app.ata_api') . '/launchClient.html', $data);
                 if (!$response->ok())
                 {
+                    Log::error('ATA : makegamelink request failed. ' . json_encode($data));
                     return null;
                 }
                 $resultdata = $response->json();
             }
             catch (Exception $ex)
             {
+                Log::error('ATA : makegamelink request failed. ' . json_encode($data) . $e->getMessage());
                 return null;
             }
             if ($resultdata)
