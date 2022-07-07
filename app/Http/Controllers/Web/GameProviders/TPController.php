@@ -253,6 +253,33 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error'=>false, 'amount'=>$data['amount']];
         }
 
+        public static function createPlayer($userid)
+        {
+            //create theplus account
+            $url = config('app.tp_api') . '/custom/api/user/Create';
+            $key = config('app.tp_api_key');
+            $secret = config('app.tp_api_secret');
+            $params = [
+                'key' => $key,
+                'secret' => $secret,
+                'userID' => self::TP_PROVIDER . $userid
+            ];
+
+            $response = Http::post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('TPMakeLink : Create account request failed. ' . $response->body());
+                return -1;
+            }
+            $data = $response->json();
+            if ($data==null || ($data['resultCode']!=0 && $data['resultCode']!=89)) //create success or already exist
+            {
+                Log::error('TPMakeLink : Create account result failed. ' . ($data==null?'null':$data['resultMessage']));
+                return -1;
+            }
+            return $data['resultCode'];
+        }
+
         public static function makelink($gamecode, $userid)
         {
             $user = \VanguardLTE\User::where('id', $userid)->first();
@@ -261,30 +288,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('TPMakeLink : Does not find user ' . $userid);
                 return null;
             }
-            //create theplus account
-            $url = config('app.tp_api') . '/custom/api/user/Create';
+
             $key = config('app.tp_api_key');
             $secret = config('app.tp_api_secret');
-            $params = [
-                'key' => $key,
-                'secret' => $secret,
-                'userID' => self::TP_PROVIDER . $user->id
-            ];
 
-            $response = Http::post($url, $params);
-            if (!$response->ok())
+            //create theplus account
+            $createdId = TPController::createPlayer($user->id);
+            if ($createdId < 0)
             {
-                Log::error('TPMakeLink : Create account request failed. ' . $response->body());
-                return null;
-            }
-            $data = $response->json();
-            if ($data==null || ($data['resultCode']!=0 && $data['resultCode']!=89)) //create success or already exist
-            {
-                Log::error('TPMakeLink : Create account result failed. ' . ($data==null?'null':$data['resultMessage']));
                 return null;
             }
 
-            if ($data['resultCode']==89)
+            if ($createdId==89)
             {
                 //withdraw all balance
                 $data = TPController::withdrawAll($user->id);
@@ -296,8 +311,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //Add balance
 
             if ($user->balance > 0)
-                {
-
+            {
                 $url = config('app.tp_api') . '/custom/api/user/Deposit';
                 $params = [
                     'key' => $key,
@@ -433,6 +447,115 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             return [$count, $timepoint];
+        }
+
+        public static function syncpromo()
+        {
+            $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
+            if (!$anyuser)
+            {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+            $gamelist = TPController::getgamelist(self::TP_PP_HREF);
+            $len = count($gamelist);
+            if ($len > 10) {$len = 10;}
+            if ($len == 0)
+            {
+                return ['error' => true, 'msg' => 'not found any available game.'];
+            }
+            $rand = mt_rand(0,$len);
+            
+            $gamecode = $gamelist[$rand]['gamecode'];
+            $code = TPController::createPlayer($anyuser->id);
+            if ($code < 0) //create player failed
+            {
+                //오류
+                return ['error' => true, 'msg' => 'crete player error '];
+            }
+            $url = TPController::getgamelink_tp($gamecode, $anyuser);
+            if ($url['error'] == true)
+            {
+                return ['error' => true, 'msg' => 'game link error ' . $url['original']];
+            }
+
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url['data']['url']);
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                        break;
+                    }
+                }
+                if (!$mgckey){
+                    return ['error' => true, 'msg' => 'could not find mgckey value'];
+                }
+                
+                $promo = \VanguardLTE\PPPromo::take(1)->first();
+                if (!$promo)
+                {
+                    $promo = \VanguardLTE\PPPromo::create();
+                }
+                $raceIds = [];
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/active/?symbol='.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->active = $response->body();
+                    $json_data = $response->json();
+                    if (isset($json_data['races']))
+                    {
+                        foreach ($json_data['races'] as $race)
+                        {
+                            $raceIds[$race['id']] = null;
+                        }
+                    }
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol='.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentdetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol='.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->racedetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/v3/leaderboard/?symbol='.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentleaderboard = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol='.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->raceprizes = $response->body();
+                }
+
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol='.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
+                if ($response->ok())
+                {
+                    $promo->racewinners = $response->body();
+                }
+
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/minilobby/games?' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->games = $response->body();
+                }
+
+                $promo->save();
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
+            }
+            else
+            {
+                return ['error' => true, 'msg' => 'server response is not 302.'];
+            }
+            
         }
 
     }
