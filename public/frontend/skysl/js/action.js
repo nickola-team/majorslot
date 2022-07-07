@@ -268,11 +268,7 @@ function tabActionSlot(plat, pid, platcode, platidx) {
     });
 }
 function startGame(gamename) {   
-    window.open(
-        "/game/" + gamename,
-        gamename,
-        "width=1280, height=742, left=100, top=50"
-    );
+    startGameByProvider(null, gamename);
 }
 
 function startGameByProvider(provider, gamecode) {

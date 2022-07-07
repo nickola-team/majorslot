@@ -2,6 +2,7 @@
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
     class ATAController extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
@@ -113,7 +114,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'gender' => 'M',
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'balance' => floatval($user->balance),
                     'currency' => 'KRW',
@@ -141,7 +142,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [
                 'code' => 0,
                 'data' => [
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
@@ -184,7 +185,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'code' => 0,
                     'data' => [
                         'gender' => 'M',
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -239,7 +240,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'gender' => 'M',
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'balance' => floatval($user->balance),
                     'currency' => 'KRW',
@@ -268,7 +269,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [
                     'code' => 0,
                     'data' => [
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -307,7 +308,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [
                 'code' => 0,
                 'data' => [
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'organization' => config('app.ata_org'),
                     'balance' => floatval($user->balance),
                     'currency' => 'KRW',
@@ -340,7 +341,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [
                     'code' => 0,
                     'data' => [
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -390,7 +391,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'organization' => config('app.ata_org'),
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
@@ -425,7 +426,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [
                     'code' => 0,
                     'data' => [
-                        'playerId' => $user->id,
+                        'playerId' => strval($user->id),
                         'organization' => config('app.ata_org'),
                         'balance' => floatval($user->balance),
                         'currency' => 'KRW',
@@ -473,7 +474,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'organization' => config('app.ata_org'),
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
@@ -530,7 +531,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'code' => 0,
                 'data' => [
                     'organization' => config('app.ata_org'),
-                    'playerId' => $user->id,
+                    'playerId' => strval($user->id),
                     'currency' => 'KRW',
                     'applicableBonus' => 0,
                     'homeCurrency' => 'KRW',
@@ -637,7 +638,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $data = [
-                'loginname' => $user->id,
+                'loginname' => strval($user->id),
                 'key' => $user->api_token,
                 'currency' => 'KRW',
                 'lang' => 'ko',
@@ -653,12 +654,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::post(config('app.ata_api') . '/launchClient.html', $data);
                 if (!$response->ok())
                 {
+                    Log::error('ATA : makegamelink request failed. ' . json_encode($data));
                     return null;
                 }
                 $resultdata = $response->json();
+                if (!$resultdata || $resultdata['code'] != 0)
+                {
+                    Log::error('ATA : makegamelink response failed. ' . json_encode($data) . '||' . $response->body());
+
+                }
             }
             catch (Exception $ex)
             {
+                Log::error('ATA : makegamelink request failed. ' . json_encode($data) . $e->getMessage());
                 return null;
             }
             if ($resultdata)
@@ -668,6 +676,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return $resultdata['data']['launchurl'];
                 }
             }
+            
             return null;
         }
 

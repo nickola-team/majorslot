@@ -115,7 +115,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
 
-            $launchRequest->delete();
+            // $launchRequest->delete();
+            //delete all user's request
+            \VanguardLTE\GameLaunch::where('user_id', $user->id)->delete();
 
             $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObj($gamecode);
             if (!$gameObj)
@@ -142,6 +144,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $alonegame = 0;
             $url = null;
             $data = [];
+
+            if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor'))
+            {
+                return redirect('/');
+            }
            
             if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
                 $url = url('/game/' . $gamename);

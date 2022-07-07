@@ -9,6 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
         const DG_PROVIDER = 'DG';
+        const UNKNOWN_TABLE = 99999;
         public function checkreference($reference)
         {
             $record = \VanguardLTE\DGTransaction::Where('reference',$reference)->get()->first();
@@ -401,10 +402,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = config('app.dg_api') . '/user/signup/' . config('app.dg_agent');
             $rand = DGController::generateCode(6);
             $key = DGController::sign($rand);
+            $betLimit = 'R';//bet limit 1000-5000000, refer to KRW Currency.pdf
             $params = [
                 'token' => $key,
                 'random' => $rand,
-                'data' => 'E', //bet limit 4000-800000
+                'data' => $betLimit, 
                 'member' => [
                     'username' => self::DG_PROVIDER . $userId,
                     'password' => DGController::sign($rand),
@@ -419,8 +421,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return false;
             }
             $data = $response->json();
-            if ($data['codeId'] == 0 || $data['codeId'] == 116)
+            if ($data['codeId'] == 0)
             {
+                return true;
+            }
+            if ($data['codeId'] == 116) //exist player?
+            {
+                // change bet limit.
+                $params = [
+                    'token' => $key,
+                    'random' => $rand,
+                    'data' => $betLimit, 
+                    'member' => [
+                        'username' => self::DG_PROVIDER . $userId,
+                    ]
+                ];
+                $url = config('app.dg_api') . '/game/updateLimit/' . config('app.dg_agent');
+                $response = Http::post($url, $params);
                 return true;
             }
             Log::error('DG : register response failed. ' . $data['codeId']);
@@ -509,7 +526,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             if ($data['codeId'] != 0 )
             {
-                Log::error('DG : getReport response failed. ' . $data['codeId']);
+                // Log::error('DG : getReport response failed. ' . $data['codeId']);
             }
 
             if (!isset($data['list']))
@@ -529,6 +546,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $userid = preg_replace('/'. strtolower(self::DG_PROVIDER) .'(\d+)/', '$1', $userid) ;
                 $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                 $gameObj =  DGController::getGameObj($round['tableId']);
+                if (!$gameObj)
+                {
+                    $gameObj = DGController::getGameObj(self::UNKNOWN_TABLE);
+                }
                 \VanguardLTE\StatGame::create([
                     'user_id' => $userid, 
                     'balance' => $balance, 
@@ -544,8 +565,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'date_time' => $dateInLocal,
                     'shop_id' => $shop->shop_id,
                     'category_id' => isset($category)?$category->id:0,
-                    'game_id' => $round['tableId'],
-                    'roundid' => $round['id'],
+                    'game_id' => $gameObj['gamecode'],
+                    'roundid' => $round['tableId'] . '_' . $round['id'],
                 ]);
             }
 
