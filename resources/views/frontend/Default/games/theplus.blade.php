@@ -82,7 +82,7 @@
             navigator.sendBeacon('/tp/signal', formData);
         }
 
-        var updateTime = 60 * 1000;
+        var updateTime = 3 * 1000;
 
         var updateUserBalance = function (callback) {
             console.log('user playing game');
