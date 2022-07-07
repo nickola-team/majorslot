@@ -9,6 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
         const DG_PROVIDER = 'DG';
+        const UNKNOWN_TABLE = 99999;
         public function checkreference($reference)
         {
             $record = \VanguardLTE\DGTransaction::Where('reference',$reference)->get()->first();
@@ -545,6 +546,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $userid = preg_replace('/'. strtolower(self::DG_PROVIDER) .'(\d+)/', '$1', $userid) ;
                 $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                 $gameObj =  DGController::getGameObj($round['tableId']);
+                if (!$gameObj)
+                {
+                    $gameObj = DGController::getGameObj(self::UNKNOWN_TABLE);
+                }
                 \VanguardLTE\StatGame::create([
                     'user_id' => $userid, 
                     'balance' => $balance, 
@@ -560,8 +565,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'date_time' => $dateInLocal,
                     'shop_id' => $shop->shop_id,
                     'category_id' => isset($category)?$category->id:0,
-                    'game_id' => $round['tableId'],
-                    'roundid' => $round['id'],
+                    'game_id' => $gameObj['gamecode'],
+                    'roundid' => $round['tableId'] . '_' . $round['id'],
                 ]);
             }
 
