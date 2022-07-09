@@ -696,14 +696,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             }
             $limitOdd = 0;
             if($winType != 'none'){
-                if ($this->happyhouruser)
-                {
-                    $limitOdd = floor($winAvaliableMoney / $bet);
-                }
-                else
-                {
-                    $limitOdd = floor($winAvaliableMoney / $bet / 2);
-                }
+                $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
             while(true){
@@ -715,7 +708,10 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                     $stacks = $stacks->where('pur_level', $ind);
                 }
                 if($isLowBank == true){
-                    $stacks = $stacks->orderby('odd', 'asc')->take(5)->get();
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 5);    
+                    }
+                    $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($winType == 'bonus'){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
