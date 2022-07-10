@@ -586,7 +586,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('DG : markReport request failed. ' . $response->body());
             }
             $data = $response->json();
-            if ($data['codeId'] != 0 )
+            if ($data==null || $data['codeId'] != 0 )
             {
                 Log::error('DG : markReport response failed. ' . $data['codeId']);
             }
