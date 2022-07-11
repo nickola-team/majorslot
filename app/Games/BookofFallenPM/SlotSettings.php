@@ -711,10 +711,11 @@ namespace VanguardLTE\Games\BookofFallenPM
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($pur_level >= 0){
-                        $index = mt_rand(0, 30000);
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    }else{
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                     }
-                    $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     $isLowBank = true;

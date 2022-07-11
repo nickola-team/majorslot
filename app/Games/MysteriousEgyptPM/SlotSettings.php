@@ -696,7 +696,7 @@ namespace VanguardLTE\Games\MysteriousEgyptPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfAztecKingStack::where('spin_type', $spintype);
-                $index = 0; //mt_rand(0, 40000);
+                $index = mt_rand(0, 30000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }else if($winType == 'bonus'){
