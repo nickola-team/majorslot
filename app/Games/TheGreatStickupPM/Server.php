@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\TheGreatStickUpPM
+namespace VanguardLTE\Games\TheGreatStickupPM
 {
     class Server
     {

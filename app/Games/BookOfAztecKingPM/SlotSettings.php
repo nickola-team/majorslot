@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\BookofAztecKingPM
+namespace VanguardLTE\Games\BookOfAztecKingPM
 {
     class SlotSettings
     {
