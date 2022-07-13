@@ -183,7 +183,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return -1;
             }
             $data = $response->json();
-            if ($data==null && $data['status']!=0)
+            if ($data==null || $data['status']!=1)
             {
                 return -1;
             }
@@ -276,7 +276,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return null;
                 }
                 $data = $response->json();
-                if ($data==null || $data['status']==0)
+                if ($data==null || $data['status']!=1)
                 {
                     return null;
                 }
