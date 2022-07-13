@@ -84,7 +84,7 @@ namespace VanguardLTE\Games\BookofFallenPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '200.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

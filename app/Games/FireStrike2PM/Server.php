@@ -78,7 +78,7 @@ namespace VanguardLTE\Games\FireStrike2PM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '200.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';
