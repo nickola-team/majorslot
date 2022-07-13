@@ -65,6 +65,13 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'monitor_game' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/monitor.log'),
+        ],
     ],
+
+    
 
 ];

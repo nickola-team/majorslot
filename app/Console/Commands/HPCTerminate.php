@@ -48,8 +48,8 @@ class HPCTerminate extends Command
                 if ($user->playing_game == HPCController::HPC_PROVIDER . 'exit')
                 {
                     $data = HPCController::withdrawAll($user);
+                    Log::channel('monitor_game')->info(HPCController::HPC_PROVIDER . ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
                     if ($data['error'] == false){
-                          
                         User::lockforUpdate()
                             ->where('id', $user->id)
                             ->update([

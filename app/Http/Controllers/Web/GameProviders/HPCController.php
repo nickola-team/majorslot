@@ -56,6 +56,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($request->name == 'exitGame')
             {
+                Log::channel('monitor_game')->info(self::HPC_PROVIDER . ' : ' . $user->id . ' is exiting game');
                 $user->update([
                     'playing_game' => self::HPC_PROVIDER . 'exit',
                     'played_at' => time()
@@ -208,12 +209,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$response->ok())
             {
                 Log::error('HPC : sub balance request failed. ' . $response->body());
-                return ['error'=>true, 'amount'=>0];
+                return ['error'=>true, 'amount'=>-1];
             }
             $data = $response->json();
-            if ($data==null && $data['status']!=0)
+            if ($data==null || $data['status']!=0)
             {
-                return ['error'=>true, 'amount'=>0];
+                return ['error'=>true, 'amount'=>-1];
             }
             return ['error'=>false, 'amount'=>$data['amount']];
         }
