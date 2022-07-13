@@ -521,12 +521,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response = Http::post($url, $params);
             if (!$response->ok())
             {
-                Log::error('DG : getReport request failed. ' . $response->body());
+                // Log::error('DG : getReport request failed. ' . $response->body());
+                return;
             }
             $data = $response->json();
-            if ($data['codeId'] != 0 )
+            if ($data==null && $data['codeId'] != 0 )
             {
                 // Log::error('DG : getReport response failed. ' . $data['codeId']);
+                return;
             }
 
             if (!isset($data['list']))
