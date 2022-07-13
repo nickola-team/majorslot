@@ -403,6 +403,19 @@ namespace VanguardLTE\Games\StarlightPrincessPM
 
                 /* 생성된 릴배치표 검사 */
                 if ($overtry) {
+                    if(count($this->winLines) > 0){
+                        /* 스핀 당첨금 */
+                        $winMoney = array_reduce($this->winLines, function($carry, $winLine) {
+                            $carry += $winLine['Money']; 
+                            return $carry;
+                        }, 0) * $bet;
+
+                        /* 지난 텀블당첨금 */
+                        $lastTumbleWin = $isTumble ? ($LASTSPIN->tmb_win ?? 0) : 0;
+                        
+                        /* 텀블당첨금이 한도이상일때 스킵 */
+                        $multiplier = $this->getTumbleMultiplier($reels);
+                    }
                     break;
                 }
                 else if( $try > 1500 ) 

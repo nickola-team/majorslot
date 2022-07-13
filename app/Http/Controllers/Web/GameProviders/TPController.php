@@ -247,7 +247,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             if ($data==null || ($data['resultCode']!=0 )) //WithdrawAll failed
             {
-                Log::error('withdrawAll : WithdrawAll result failed. ' . ($data==null?'null':$data['resultMessage']));
+                Log::error('withdrawAll : WithdrawAll result failed. ' . self::TP_PROVIDER . $userID . ':' .($data==null?'null':$data['resultMessage']));
                 return ['error'=>true, 'amount'=>0];
             }
             return ['error'=>false, 'amount'=>$data['amount']];
