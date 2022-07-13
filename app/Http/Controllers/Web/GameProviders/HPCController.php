@@ -420,9 +420,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $gameObj =  HPCController::getGameObj($round['table_id']);
                     if (!$gameObj)
                     {
-                        $gameObj= [
-                            'name'=>'Unknown'
-                        ];
+                        //try again.
+                        \Illuminate\Support\Facades\Redis::del(self::HPC_PROVIDER . 'list');
+                        $gameObj =  HPCController::getGameObj($round['table_id']);
+                        if (!$gameObj)
+                        {
+                            $gameObj= [
+                                'name'=>'Unknown'
+                            ];
+                        }
                     }
                     \VanguardLTE\StatGame::create([
                         'user_id' => $userid, 
