@@ -212,7 +212,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error'=>true, 'amount'=>-1, 'msg' => $response->body()];
             }
             $data = $response->json();
-            if ($data==null || $data['status']!=0)
+            if ($data==null || $data['status']!=1)
             {
                 return ['error'=>true, 'amount'=>-1, 'msg' => $response->body()];
             }
