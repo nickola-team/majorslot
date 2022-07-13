@@ -59,6 +59,7 @@ class HPCTerminate extends Command
                     }
                     else
                     {
+                        Log::channel('monitor_game')->info(HPCController::HPC_PROVIDER . ' : ' . $user->id . ' close game error. msg = ' . $data['msg']);
                         User::lockforUpdate()
                         ->where('id', $user->id)
                         ->update([

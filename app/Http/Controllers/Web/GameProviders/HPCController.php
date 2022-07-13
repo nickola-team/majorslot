@@ -209,12 +209,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$response->ok())
             {
                 Log::error('HPC : sub balance request failed. ' . $response->body());
-                return ['error'=>true, 'amount'=>-1];
+                return ['error'=>true, 'amount'=>-1, 'msg' => $response->body()];
             }
             $data = $response->json();
             if ($data==null || $data['status']!=0)
             {
-                return ['error'=>true, 'amount'=>-1];
+                return ['error'=>true, 'amount'=>-1, 'msg' => $response->body()];
             }
             return ['error'=>false, 'amount'=>$data['amount']];
         }
