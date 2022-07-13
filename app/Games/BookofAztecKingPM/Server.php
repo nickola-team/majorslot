@@ -203,6 +203,7 @@ namespace VanguardLTE\Games\BookofAztecKingPM
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
+                // $winType = 'bonus';
                 $allBet = $betline * $lines;
                 if($pur >= 0 && $slotEvent['slotEvent'] != 'freespin'){
                     $allBet = $betline * $slotSettings->GetPurMul($pur);
@@ -476,7 +477,7 @@ namespace VanguardLTE\Games\BookofAztecKingPM
                     if($scatterCount >= 3 ){
                         $isState = false;
                         $spinType = 'm';
-                        $strOtherResponse = '&fsmul=1&mb=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fs=1&fsres=0.00';
+                        $strOtherResponse = '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fs=1&fsres=0.00';
                         
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $stack);
                         $slotSettings->SetGameData($slotSettings->slotId . 'MysteryScatter', 1);
@@ -488,12 +489,14 @@ namespace VanguardLTE\Games\BookofAztecKingPM
                 }
                 
                 if($isMystery == true){
-                    $strOtherResponse = $strOtherResponse . '&me='. implode(';', $me_arr) .'&mes='.implode(',', $mes_arr);
+                    $strOtherResponse = $strOtherResponse . '&me='. implode(';', $me_arr) .'&mes='.implode(';', $mes_arr);
                 }
                 if(count($psym_arr) > 0){
-                    $strOtherResponse = $strOtherResponse .'&psym='. implode(',', $psym_arr);
+                    $strOtherResponse = $strOtherResponse .'&psym='. implode(';', $psym_arr);
                 }
-                $strOtherResponse = $strOtherResponse  .'&ms='. implode(',', $bonusSymbol);
+                if(count($bonusSymbol) > 0){
+                    $strOtherResponse = $strOtherResponse  .'&ms='. implode(',', $bonusSymbol);
+                }
 
                 $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .$strWinLine .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&reel_set='.$currentReelSet.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&s='.$strLastReel.'&w='.$totalWin;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
@@ -545,7 +548,7 @@ namespace VanguardLTE\Games\BookofAztecKingPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'MysteryScatter', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusSymbol', $bonusSymbol);
 
-                $response = 'fsmul=1&balance='.$Balance.'&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&ms='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusSymbol') . '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&reel_set=0&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=1&fsres=0.00&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                $response = 'balance='.$Balance. '&ms='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusSymbol') . '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
                     $response = $response .'&purtr=1&puri=0';
                 }
