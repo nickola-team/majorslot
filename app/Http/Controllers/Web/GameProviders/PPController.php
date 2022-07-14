@@ -642,81 +642,88 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'secureLogin' => config('app.ppsecurelogin'),
             ];
             $data['hash'] = PPController::calcHash($data);
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/x-www-form-urlencoded'
-                ])->get(config('app.ppapi') . '/http/CasinoGameAPI/getCasinoGames/', $data);
-            if (!$response->ok())
-            {
-                return [];
-            }
-            $data = $response->json();
-            // $newgames = \VanguardLTE\NewGame::where('provider', $href)->get()->toArray();
-            if ($data['error'] == "0"){
-                $gameList = [];
-                foreach ($data['gameList'] as $game)
+            try {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->get(config('app.ppapi') . '/http/CasinoGameAPI/getCasinoGames/', $data);
+                if (!$response->ok())
                 {
-                    if ($game['gameTypeID'] == 'r2') //exclude fishing game
+                    return [];
+                }
+                $data = $response->json();
+                // $newgames = \VanguardLTE\NewGame::where('provider', $href)->get()->toArray();
+                if ($data['error'] == "0"){
+                    $gameList = [];
+                    foreach ($data['gameList'] as $game)
                     {
-                        continue;
-                    }
-                    else if (str_contains($game['platform'], 'WEB'))
-                    {
-                        $bExclude = ($href == 'live')  ^ ($game['gameTypeID'] == 'lg');
-                        if ($bExclude == false){
-                            if ($game['gameID'] == 'r2lobby') //exclusive games
-                            {
-                                array_push($gameList, [
-                                    'provider' => 'pp',
-                                    'gamecode' => $game['gameID'],
-                                    'enname' => $game['gameName'],
-                                    'name' => preg_replace('/\s+/', '', $game['gameName']),
-                                    'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['gameName'])? __('gameprovider.'.$game['gameName']):$game['gameName'],
-                                    'icon' => '/frontend/Default/ico/pp/'. $game['gameID'] . '/' . $game['gameID'] . '.png',
-                                    'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc" || $game['gameTypeID']=="r2")?'slot':'table',
-                                    'gameType' => $game['gameTypeID'],
-                                ]);
-                            }
-                            else
-                            {
-                                $view = 1;
-                                if ($href == 'live' && $game['gameID'] != 101)
+                        if ($game['gameTypeID'] == 'r2') //exclude fishing game
+                        {
+                            continue;
+                        }
+                        else if (str_contains($game['platform'], 'WEB'))
+                        {
+                            $bExclude = ($href == 'live')  ^ ($game['gameTypeID'] == 'lg');
+                            if ($bExclude == false){
+                                if ($game['gameID'] == 'r2lobby') //exclusive games
                                 {
-                                    $view = 0;
+                                    array_push($gameList, [
+                                        'provider' => 'pp',
+                                        'gamecode' => $game['gameID'],
+                                        'enname' => $game['gameName'],
+                                        'name' => preg_replace('/\s+/', '', $game['gameName']),
+                                        'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['gameName'])? __('gameprovider.'.$game['gameName']):$game['gameName'],
+                                        'icon' => '/frontend/Default/ico/pp/'. $game['gameID'] . '/' . $game['gameID'] . '.png',
+                                        'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc" || $game['gameTypeID']=="r2")?'slot':'table',
+                                        'gameType' => $game['gameTypeID'],
+                                    ]);
                                 }
-                                array_push($gameList, [
-                                    'provider' => 'pp',
-                                    'gamecode' => $game['gameID'],
-                                    'enname' => $game['gameName'],
-                                    'name' => preg_replace('/\s+/', '', $game['gameName']),
-                                    'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['gameName'])? __('gameprovider.'.$game['gameName']):$game['gameName'],
-                                    'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
-                                    'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc" || $game['gameTypeID']=="r2")?'slot':'table',
-                                    'gameType' => $game['gameTypeID'],
-                                    'view' => $view
-                                ]);
+                                else
+                                {
+                                    $view = 1;
+                                    if ($href == 'live' && $game['gameID'] != 101)
+                                    {
+                                        $view = 0;
+                                    }
+                                    array_push($gameList, [
+                                        'provider' => 'pp',
+                                        'gamecode' => $game['gameID'],
+                                        'enname' => $game['gameName'],
+                                        'name' => preg_replace('/\s+/', '', $game['gameName']),
+                                        'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$game['gameName'])? __('gameprovider.'.$game['gameName']):$game['gameName'],
+                                        'icon' => config('app.ppgameserver') . '/game_pic/rec/325/'. $game['gameID'] . '.png',
+                                        'type' => ($game['gameTypeID']=="vs" || $game['gameTypeID']=="cs" || $game['gameTypeID']=="sc" || $game['gameTypeID']=="r2")?'slot':'table',
+                                        'gameType' => $game['gameTypeID'],
+                                        'view' => $view
+                                    ]);
+                                }
+                                
+                                
                             }
-                            
-                            
                         }
                     }
+                    //add manually spaceman game
+                    if ($href == 'pp') {
+                        array_unshift($gameList, [
+                            'provider' => 'pp',
+                            'gamecode' => '1301',
+                            'enname' => 'Spaceman',
+                            'name' => 'Spaceman',
+                            'title' => __('gameprovider.Spaceman'),
+                            'icon' => '/frontend/Default/ico/pp/1301/Spaceman.png',
+                            'type' => 'table',
+                            'gameType' => 'rng',
+                            'view' => 1
+                        ]);
+                    }
+    
+                    \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
+                    return $gameList;
                 }
-                //add manually spaceman game
-                if ($href == 'pp') {
-                    array_unshift($gameList, [
-                        'provider' => 'pp',
-                        'gamecode' => '1301',
-                        'enname' => 'Spaceman',
-                        'name' => 'Spaceman',
-                        'title' => __('gameprovider.Spaceman'),
-                        'icon' => '/frontend/Default/ico/pp/1301/Spaceman.png',
-                        'type' => 'table',
-                        'gameType' => 'rng',
-                        'view' => 1
-                    ]);
-                }
- 
-                \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
-                return $gameList;
+                return [];
+            }
+            catch (\Exception $ex)
+            {
+                return [];
             }
             return [];
         }
