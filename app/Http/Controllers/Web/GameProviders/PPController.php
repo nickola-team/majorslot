@@ -1589,7 +1589,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             //마지막으로 플레이한 게임로그 얻기
             $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
-            $tp_category = \VanguardLTE\Category::where('href', 'tp')->first();
+            $tp_category = \VanguardLTE\Category::where('href', 'tp_pp')->first();
             $cat_ids = [];
             if ($pp_category)
             {
