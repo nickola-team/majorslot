@@ -125,8 +125,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
             $gamename = $gameObj['name'];
-            $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
-            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+            $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
+            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
             $shop_id = \Auth::user()->shop_id;
             $cat = \VanguardLTE\Category::where([
                 'shop_id' => $shop_id,
@@ -205,8 +205,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $launchRequest->delete();
 
             $gamename = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::gamecodetoname($gamecode)[0];
-            $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
-            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+            $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
+            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
             $shop_id = \Auth::user()->shop_id;
             $cat = \VanguardLTE\Category::where([
                 'shop_id' => $shop_id,
