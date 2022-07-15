@@ -1516,9 +1516,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return response()->json([ ]);
             }
-            $gamename = PPController::gamecodetoname($symbol)[0];
-            $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
-            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+            // $gamename = PPController::gamecodetoname($symbol)[0];
+            $game = TPController::getGameObjBySymbol($symbol);
+            if (!$game)
+            {
+                return response()->json([ ]);
+            }
+            $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $game['name']) . 'PM';
+            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
             $shop_id = $user->shop_id;
             $pm_games = \VanguardLTE\Game::where([
                 'shop_id' => $shop_id,
