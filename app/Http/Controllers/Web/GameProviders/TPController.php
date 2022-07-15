@@ -477,83 +477,89 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => true, 'msg' => 'game link error ' . $url['original']];
             }
-
-            //emulate client
-            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url['data']['url']);
-            if ($response->status() == 302)
-            {
-                $location = $response->header('location');
-                $keys = explode('&', $location);
-                $mgckey = null;
-                foreach ($keys as $key){
-                    if (str_contains( $key, 'mgckey='))
-                    {
-                        $mgckey = $key;
-                        break;
-                    }
-                }
-                if (!$mgckey){
-                    return ['error' => true, 'msg' => 'could not find mgckey value'];
-                }
-                
-                $promo = \VanguardLTE\PPPromo::take(1)->first();
-                if (!$promo)
+            try{
+                //emulate client
+                $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url['data']['url']);
+                if ($response->status() == 302)
                 {
-                    $promo = \VanguardLTE\PPPromo::create();
-                }
-                $raceIds = [];
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/active/?symbol='.$gamecode.'&' . $mgckey );
-                if ($response->ok())
-                {
-                    $promo->active = $response->body();
-                    $json_data = $response->json();
-                    if (isset($json_data['races']))
-                    {
-                        foreach ($json_data['races'] as $race)
+                    $location = $response->header('location');
+                    $keys = explode('&', $location);
+                    $mgckey = null;
+                    foreach ($keys as $key){
+                        if (str_contains( $key, 'mgckey='))
                         {
-                            $raceIds[$race['id']] = null;
+                            $mgckey = $key;
+                            break;
                         }
                     }
-                }
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol='.$gamecode.'&' . $mgckey );
-                if ($response->ok())
-                {
-                    $promo->tournamentdetails = $response->body();
-                }
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol='.$gamecode.'&' . $mgckey );
-                if ($response->ok())
-                {
-                    $promo->racedetails = $response->body();
-                }
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/v3/leaderboard/?symbol='.$gamecode.'&' . $mgckey );
-                if ($response->ok())
-                {
-                    $promo->tournamentleaderboard = $response->body();
-                }
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol='.$gamecode.'&' . $mgckey );
-                if ($response->ok())
-                {
-                    $promo->raceprizes = $response->body();
-                }
+                    if (!$mgckey){
+                        return ['error' => true, 'msg' => 'could not find mgckey value'];
+                    }
+                    
+                    $promo = \VanguardLTE\PPPromo::take(1)->first();
+                    if (!$promo)
+                    {
+                        $promo = \VanguardLTE\PPPromo::create();
+                    }
+                    $raceIds = [];
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/active/?symbol='.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->active = $response->body();
+                        $json_data = $response->json();
+                        if (isset($json_data['races']))
+                        {
+                            foreach ($json_data['races'] as $race)
+                            {
+                                $raceIds[$race['id']] = null;
+                            }
+                        }
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/details/?symbol='.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->tournamentdetails = $response->body();
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/details/?symbol='.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->racedetails = $response->body();
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/tournament/v3/leaderboard/?symbol='.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->tournamentleaderboard = $response->body();
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/promo/race/prizes/?symbol='.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->raceprizes = $response->body();
+                    }
 
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol='.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
-                if ($response->ok())
-                {
-                    $promo->racewinners = $response->body();
-                }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post(config('app.ppgameserver') . '/gs2c/promo/race/winners/?symbol='.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
+                    if ($response->ok())
+                    {
+                        $promo->racewinners = $response->body();
+                    }
 
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/minilobby/games?' . $mgckey );
-                if ($response->ok())
-                {
-                    $promo->games = $response->body();
-                }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/minilobby/games?' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->games = $response->body();
+                    }
 
-                $promo->save();
-                return ['error' => false, 'msg' => 'synchronized successfully.'];
+                    $promo->save();
+                    return ['error' => false, 'msg' => 'synchronized successfully.'];
+                }
+                else
+                {
+                    return ['error' => true, 'msg' => 'server response is not 302.'];
+                }
             }
-            else
+            catch (\Exception $ex)
             {
-                return ['error' => true, 'msg' => 'server response is not 302.'];
+                return ['error' => true, 'msg' => 'server exception.'];
+                
             }
             
         }
