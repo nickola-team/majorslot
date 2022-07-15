@@ -1589,7 +1589,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             //마지막으로 플레이한 게임로그 얻기
             $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
-            $tp_category = \VanguardLTE\Category::where('href', 'tp')->first();
+            $tp_category = \VanguardLTE\Category::where('href', 'tp_pp')->first();
             $cat_ids = [];
             if ($pp_category)
             {
@@ -1616,12 +1616,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($local_game)
                 {
                     $pm_games = \VanguardLTE\Game::where('id', $stat_game->game_id)->first();
-                    $gamelist = PPController::getgamelist('pp');
-                    foreach($gamelist as $game)
+                    //$gamelist = PPController::getgamelist('pp');
+                    $gamelist1 = TPController::getgamelist('tp_pp');
+                    foreach($gamelist1 as $game)
                     {
                         $gamename = $game['name'];
-                        $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'PM';
-                        $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                        $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
+                        $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
                         if ($gamename == $pm_games->name)
                         {
                             $gamename = $game['enname'];
