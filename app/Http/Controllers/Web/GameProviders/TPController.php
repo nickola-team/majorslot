@@ -475,7 +475,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = TPController::getgamelink_tp($gamecode, $anyuser);
             if ($url['error'] == true)
             {
-                return ['error' => true, 'msg' => 'game link error ' . $url['original']];
+                return ['error' => true, 'msg' => 'game link error '];
             }
             try{
                 //emulate client
