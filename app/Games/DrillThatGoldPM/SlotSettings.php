@@ -73,9 +73,9 @@ namespace VanguardLTE\Games\DrillThatGoldPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,50,100,250];
+            $this->Paytable[3] = [0,0,0,0,0,0];
             $this->Paytable[4] = [0,0,0,50,100,250];
             $this->Paytable[5] = [0,0,0,40,80,140];
             $this->Paytable[6] = [0,0,0,30,60,120];
@@ -695,20 +695,22 @@ namespace VanguardLTE\Games\DrillThatGoldPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameFireStrike2PMStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameDrillThatGoldStack::where('spin_type', $spintype);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
-                    $stacks = $stacks->orderby('odd', 'asc')->take(5)->get();
-                }else{
-                    if($spintype == 1){
-                        $index = mt_rand(0, 80000);
-                    }else{
-                        $index = mt_rand(0, 110000);
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 5);    
                     }
-                    $index = 0;
-                    $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                    $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
+                }else{
+                    $index = mt_rand(0, 38000);
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    }else{
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                    }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     $isLowBank = true;
