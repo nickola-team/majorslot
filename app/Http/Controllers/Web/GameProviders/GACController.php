@@ -2,6 +2,7 @@
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
     class GACController extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
@@ -324,6 +325,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::timeout(10)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
                 if (!$response->ok())
                 {
+                    Log::error('GAC : getLobbyUrl response failed. ' . $response->body());
                     return null;
                 }
                 $data = $response->json();
@@ -333,6 +335,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             catch (\Exception $ex)
             {
+                Log::error('GAC : getLobbyUrl request failed. ' . $ex->getMessage());
                 return null;
             }
             return $url;
