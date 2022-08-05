@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
+namespace VanguardLTE\Games\CashPatrolPM
 {
     class Server
     {
@@ -392,7 +392,7 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                         if(count($initReel) > 0 && $mo_tv > 0 && ($msr == 15 || $msr == 16)){
                             $reels[$i][$j] = $initReel[$j * 5 + $i];
                         }else{
-                            $reels[$i][$j] = $lastReel[$j * 5 + $i];
+                             $reels[$i][$j] = $lastReel[$j * 5 + $i];
                         }
                         if($reels[$i][$j] == $scatter){
                             $scatterCount++;
