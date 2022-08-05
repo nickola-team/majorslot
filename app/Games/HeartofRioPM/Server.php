@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
+namespace VanguardLTE\Games\HeartofRioPM
 {
     class Server
     {

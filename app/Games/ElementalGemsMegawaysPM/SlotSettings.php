@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
+namespace VanguardLTE\Games\ElementalGemsMegawaysPM
 {
     class SlotSettings
     {
@@ -73,24 +73,15 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1]  = [0,0,0,0,0,0];
-            $this->Paytable[2]  = [0,0,0,0,0,0];
-            $this->Paytable[3]  = [0,0,0,10,50,800];
-            $this->Paytable[4]  = [0,0,0,5,30,175];
-            $this->Paytable[5]  = [0,0,0,5,25,150];
-            $this->Paytable[6]  = [0,0,0,5,25,125];
-            $this->Paytable[7]  = [0,0,0,5,20,100];
-            $this->Paytable[8]  = [0,0,0,5,10,100];
-            $this->Paytable[9]  = [0,0,0,5,10,100];
-            $this->Paytable[10] = [0,0,0,5,10,100];
-            $this->Paytable[11] = [0,0,0,0,0,0];
-            $this->Paytable[12] = [0,0,0,0,0,0];
-            $this->Paytable[13] = [0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0];
-            $this->Paytable[16] = [0,0,0,0,0,0];
-            $this->Paytable[17] = [0,0,0,0,0,0];
-            $this->Paytable[18] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0];
+            $this->Paytable[2] = [0,0,0,50];
+            $this->Paytable[3] = [0,0,0,30];
+            $this->Paytable[4] = [0,0,0,20];
+            $this->Paytable[5] = [0,0,0,12];
+            $this->Paytable[6] = [0,0,0,5];
+            $this->Paytable[7] = [0,0,0,4];
+            $this->Paytable[8] = [0,0,0,2];
+            $this->Paytable[9] = [0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -105,11 +96,11 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[8.00,16.00,24.00,32.00,40.00,80.00,120.00,160.00,200.00,300.00,400.00,600.00,1000.00,2000.00,3000.00,4000.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 25,000,000.00
+            // $game->rezerv => 10,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -387,11 +378,11 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
             }
             else
             {
-                if( $bonus_systemmoney > 0 ) 
-                {
-                    $sum -= $bonus_systemmoney;
-                    $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
-                }
+                // if( $bonus_systemmoney > 0 ) 
+                // {
+                //     $sum -= $bonus_systemmoney;
+                //     $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
+                // }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -680,15 +671,14 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
         
         public function GetPurMul($pur)
         {
-            $purmuls = [1000];
+            $purmuls = [2000];
             return $purmuls[$pur];
         }
         public function GetReelStrips($winType, $bet)
         {
             $spintype = 0;
             if($winType == 'bonus'){
-                $winAvaliableMoney = $this->GetBank('bonus');
-                $spintype = 1;
+                $winAvaliableMoney = $this->GetBank('');
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -699,12 +689,12 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
-            $index = mt_rand(0, 45000);
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashPatrolStack::where('spin_type', $spintype);
-                
-                if($winType == 'win'){
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameElementalGemsMegawaysStack::where('spin_type', $spintype);
+                $index = mt_rand(0, 29000);
+                if($winType == 'win' || $winType == 'bonus'){
                     $stacks = $stacks->where('odd', '>', 0);
+                    $index = mt_rand(0, 70000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
@@ -713,7 +703,7 @@ namespace VanguardLTE\Games\JohnHunterandtheTomboftheScarabQueenPM
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                     }else{
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                     }
