@@ -1389,6 +1389,14 @@ namespace VanguardLTE\Console
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::verify_bet();
                 $this->info($res['msg']);
             });
+
+            \Artisan::command('gp:genTrend {gameid}', function ($gameid) {
+                set_time_limit(0);
+                $this->info("Begin genTrend");
+                $today = date('Y-m-d', time());
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $gameid);
+                $this->info("End genTrend");
+            });
         }
     }
 
