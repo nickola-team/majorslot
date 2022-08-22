@@ -368,7 +368,7 @@ namespace VanguardLTE\Games\WildBeachPartyPM
                     {
                         if($reels[$j][$k] == $scatter){
                             continue;
-                        }else if(strpos($this->strCheckSymbol, $j . '-' . $k) == false){
+                        }else if(strpos($this->strCheckSymbol, '<' . $j . '-' . $k.'>') == false){
                             $this->repeatCount = 1;
                             $this->strWinLinePos = ($k * 7 + $j);
                             $this->strCheckSymbol = $this->strCheckSymbol . ';<' . $j . '-' . $k.'>';

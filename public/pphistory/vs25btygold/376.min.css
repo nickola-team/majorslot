@@ -1,0 +1,152 @@
+:root {
+    --slot-item-width: 52px
+}
+
+.LinesSlot .ReelsSlot {
+    --reel-height: 144px;
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: none
+}
+
+.MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+.MoneyScatter__Label {
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    background-color: unset;
+    line-height: normal;
+    margin-bottom: 1px
+}
+
+.Respin .Slots {
+    display: grid;
+    gap: 15px;
+    grid-template-areas: "base       matrix_2" "matrix_3   matrix_4"
+}
+
+.Respin .Slots .base {
+    grid-area: base
+}
+
+.Respin .Slots .matrix_2 {
+    grid-area: matrix_2
+}
+
+.Respin .Slots .matrix_3 {
+    grid-area: matrix_3
+}
+
+.Respin .Slots .matrix_4 {
+    grid-area: matrix_4
+}
+
+.Respin .Slots .ReelsSlot {
+    --reel-height: 105px;
+    --reel-width: 40px
+}
+
+.Respin .Slots .ReelsSlot__ItemImg {
+    object-fit: scale-down
+}
+
+.Respin .Slots .ReelsSlot .MoneyScatter__Label {
+    margin-bottom: 0
+}
+
+.Respin .Slots .SlotWrap__Field {
+    margin-top: 0
+}
+
+.Respin .Slots .MoneySlotHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+}
+
+.Respin .Slots.Level_5 .MoneySlotHeader {
+    justify-content: center
+}
+
+.Respin .Slots.Level_5 .MoneySlotHeader__Wins {
+    display: none
+}
+
+.Respin .Slots .LinesSlot.closed .ReelsSlot:before {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: "";
+    background-size: cover;
+    background-image: -webkit-image-set(url(src/assets/images/vs25btygold/slotClosed.png) 1x, url(src/assets/images/vs25btygold/slotClosed@2x.png) 2x)
+}
+
+.RespinProgress {
+    width: 80px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center
+}
+
+.RespinProgress__Img {
+    position: absolute;
+    top: 0;
+    left: 0
+}
+
+.RespinProgress__Label,
+.RespinProgress__Value {
+    position: relative;
+    font-size: .79rem
+}
+
+.RespinProgress__Btm,
+.RespinProgress__Top {
+    position: relative;
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly
+}
+
+.RespinProgress__Top {
+    height: 57px
+}
+
+.RespinProgress__Top .RespinProgress__Label {
+    margin-top: 15px
+}
+
+.RespinProgress__Btm {
+    display: none;
+    height: 74px
+}
+
+.RespinProgress__Btm .RespinProgress__Label {
+    margin-top: 20px
+}
+
+.RespinProgress.Level_5 .RespinProgress__Btm {
+    display: inherit
+}
+
+.Fiery .MoneyScatter__LabelWrap {
+    width: calc(100% - 12px);
+    text-align: left;
+    margin-right: 10px
+}
+
+.Fiery .MoneyScatter__Label {
+    line-height: 14px
+}
