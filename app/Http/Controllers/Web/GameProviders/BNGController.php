@@ -34,8 +34,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function gamecodetoname($code)
         {
-            $gamelist = CQ9Controller::getgamelist('booongo');
-            $gamelist1 = CQ9Controller::getgamelist('playson');
+            $gamelist = BNGController::getgamelist('booongo');
+            $gamelist1 = BNGController::getgamelist('playson');
             if ($gamelist1){
                 $gamelist = array_merge_recursive($gamelist, $gamelist1);
             }

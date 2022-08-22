@@ -18,6 +18,7 @@ namespace VanguardLTE
             'sl',
             'PartialResultTime'
         ];
+        public $timestamps = false;
         public static function boot()
         {
             parent::boot();

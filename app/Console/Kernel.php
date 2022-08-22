@@ -78,6 +78,8 @@ namespace VanguardLTE\Console
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
+            $schedule->command('gp:genTrend taixiu')->dailyAt('08:00')->runInBackground();
+
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
@@ -1392,10 +1394,17 @@ namespace VanguardLTE\Console
 
             \Artisan::command('gp:genTrend {gameid}', function ($gameid) {
                 set_time_limit(0);
-                $this->info("Begin genTrend");
-                $today = date('Y-m-d', time());
+                $today = date('Y-m-d', strtotime("+1 days"));
+                $this->info("Begin genTrend of " . $today);
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $gameid);
                 $this->info("End genTrend");
+            });
+
+            \Artisan::command('gp:processTrend {gameid}', function ($gameid) {
+                set_time_limit(0);
+                $this->info("Begin processTrend");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($gameid);
+                $this->info("End processTrend");
             });
         }
     }
