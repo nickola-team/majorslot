@@ -1,0 +1,22 @@
+:root {
+    --slot-item-height: 47px;
+    --slot-item-width: 52px
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: none
+}
+
+.Spin {
+    flex-direction: column
+}
+
+.SuperX .Progress {
+    margin-bottom: -5px
+}
+
+.MiniLabel__AnteBet {
+    display: none
+}
