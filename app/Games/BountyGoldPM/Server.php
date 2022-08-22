@@ -151,8 +151,13 @@ namespace VanguardLTE\Games\BountyGoldPM
                     if($pw > 0){
                         $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
                     }
-                    if($apv > 0){
-                        $strOtherResponse = $strOtherResponse . '&apwa='.($apv * $bet * 25).'&apt=bet_mul&apv=' . $apv ;
+                    if($apv != 0){
+                        $arr_apv = explode(',', $apv);
+                        $arr_apwa = [];
+                        for($k = 0; $k < count($arr_apv); $k++){
+                            $arr_apwa[$k] = $arr_apv[$k] * $bet * 25;
+                        }
+                        $strOtherResponse = $strOtherResponse . '&apwa='.implode(',', $arr_apwa).'&apt=bet_mul&apv=' . implode(',', $arr_apv) ;
                     }
                     if($str_accm != ''){
                         $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm;
@@ -399,8 +404,11 @@ namespace VanguardLTE\Games\BountyGoldPM
                                 $totalWin += $mo_tw;
                             }
                         }
-                        if($apv > 0){
-                            $totalWin += $apv * $betline * $lines;
+                        if($apv != 0){
+                            $arr_apv = explode(',', $apv);
+                            for($k = 0; $k < count($arr_apv); $k++){
+                                $totalWin += $arr_apv[$k] * $betline * $lines;
+                            }
                         }
                     }
                 }else{
@@ -537,9 +545,13 @@ namespace VanguardLTE\Games\BountyGoldPM
                 if($pw > 0){
                     $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
                 }
-                
-                if($apv > 0){
-                    $strOtherResponse = $strOtherResponse . '&apwa='.($apv * $betline * $lines).'&apt=bet_mul&apv=' . $apv ;
+                if($apv != 0){
+                    $arr_apv = explode(',', $apv);
+                    $arr_apwa = [];
+                    for($k = 0; $k < count($arr_apv); $k++){
+                        $arr_apwa[$k] = $arr_apv[$k] * $betline * $lines;
+                    }
+                    $strOtherResponse = $strOtherResponse . '&apwa='.implode(',', $arr_apwa).'&apt=bet_mul&apv=' . implode(',', $arr_apv) ;
                 }
                 if($str_accm != ''){
                     $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm;
