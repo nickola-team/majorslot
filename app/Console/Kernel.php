@@ -1392,9 +1392,13 @@ namespace VanguardLTE\Console
                 $this->info($res['msg']);
             });
 
-            \Artisan::command('gp:genTrend {gameid}', function ($gameid) {
+            \Artisan::command('gp:genTrend {gameid} {date=next}', function ($gameid, $date) {
                 set_time_limit(0);
-                $today = date('Y-m-d', strtotime("+1 days"));
+                $today = $date;
+                if ($date == 'next')
+                {
+                    $today = date('Y-m-d', strtotime("+1 days"));
+                }
                 $this->info("Begin genTrend of " . $today);
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $gameid);
                 $this->info("End genTrend");
