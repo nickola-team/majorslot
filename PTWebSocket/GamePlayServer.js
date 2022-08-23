@@ -20,7 +20,7 @@ signalR.hub('gamehub',{
 });
 setInterval(function () {
 
-	var gameURL = serverConfig.prefix+serverConfig.host+"/REST/GameCore/trendInfo?game=taixiu";
+	var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?game=taixiu";
 	var result = syncrequest('POST', gameURL);
 	var data = JSON.parse(result.getBody());
 	if (data.s == 1)
@@ -65,7 +65,7 @@ setInterval(function () {
 
 function proxyGetFunc(req, res) 
 {
-	var gameURL = `${serverConfig.prefix}${serverConfig.host}${req.originalUrl}`;
+	var gameURL = `${serverConfig.prefix}${serverConfig.origin_host}${req.originalUrl}`;
 	console.log(gameURL);
 	var result = syncrequest('GET', gameURL, {
 		headers: {       
@@ -78,7 +78,7 @@ function proxyGetFunc(req, res)
 }
 function proxyPostFormFunc(req, res) 
 {
-	var gameURL = `${serverConfig.prefix}${serverConfig.host}${req.originalUrl}`;
+	var gameURL = `${serverConfig.prefix}${serverConfig.origin_host}${req.originalUrl}`;
 	var result = syncrequest('POST', gameURL, {
 		headers: {       
 		'content-type': 'application/x-www-form-urlencoded'
@@ -92,7 +92,7 @@ function proxyPostFormFunc(req, res)
 
 function proxyPostJsonFunc(req, res) 
 {
-	var gameURL = `${serverConfig.prefix}${serverConfig.host}${req.originalUrl}`;
+	var gameURL = `${serverConfig.prefix}${serverConfig.origin_host}${req.originalUrl}`;
 	
 	let data = '';
 	req.on('data', chunk => {
