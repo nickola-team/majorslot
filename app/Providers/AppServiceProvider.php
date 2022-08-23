@@ -21,6 +21,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\URL;
 use VanguardLTE\Http\Middleware\ThrottleSimultaneousRequests;
 class AppServiceProvider extends ServiceProvider
 {
