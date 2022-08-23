@@ -114,7 +114,7 @@ function proxyPostJsonFunc(req, res)
 
 var server = express();
 var corsOptions = {
-	origin: `${serverConfig.prefix}${serverConfig.host}`,
+	origin: `${serverConfig.prefix}${serverConfig.origin_host}`,
 	credentials: true,
   }
 server.use(cors(corsOptions));
