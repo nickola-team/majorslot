@@ -32,10 +32,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // if (Request::server('HTTP_X_FORWARDED_PROTO') == 'https')
-        // {
+        if (env('FORCE_HTTPS') === 'true')
+        {
             URL::forceScheme('https');
-        // }
+        }
         Carbon::setLocale(config('app.locale'));
         config(['app.name' => settings('app_name')]);
         \Illuminate\Database\Schema\Builder::defaultStringLength(191);
