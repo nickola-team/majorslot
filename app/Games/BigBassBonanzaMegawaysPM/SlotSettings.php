@@ -703,17 +703,21 @@ namespace VanguardLTE\Games\BigBassBonanzaMegawaysPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassBonanzaMegawaysStack::where('spin_type', 0);
                 }
-                $index =  mt_rand(0, 60000);
+                $index =  mt_rand(0, 40000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 11);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    }else{
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                    }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     $isLowBank = true;
