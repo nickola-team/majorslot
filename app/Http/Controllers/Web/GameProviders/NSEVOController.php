@@ -248,7 +248,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $last = \VanguardLTE\StatGame::where('category_id', 33)->orderby('date_time', 'desc')->first();
             if ($last)
             {
-                $last_time = gmdate('Y-m-d H:i:s',strtotime($last->date_time));
+                $last_time = gmdate('Y-m-d H:i:s',strtotime($last->date_time . ' +1 seconds'));
             }
             try {
                 $param = [
