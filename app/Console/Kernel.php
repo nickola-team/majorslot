@@ -85,8 +85,9 @@ namespace VanguardLTE\Console
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+            $schedule->command('nsevo:processRound')->everyMinute()->withoutOverlapping()->runInBackground();
 
-            $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
+            // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
@@ -1409,6 +1410,14 @@ namespace VanguardLTE\Console
                 $this->info("Begin processTrend");
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($gameid);
                 $this->info("End processTrend");
+            });
+
+            \Artisan::command('nsevo:processRound', function () {
+                set_time_limit(0);
+                $this->info("Begin process NSEVORound");
+                $msg  = \VanguardLTE\Http\Controllers\Web\GameProviders\NSEVOController::getgameround();
+                $this->info($msg );
+                $this->info("End  process NSEVORound");
             });
         }
     }

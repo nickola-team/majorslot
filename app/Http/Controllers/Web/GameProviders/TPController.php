@@ -456,28 +456,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
-            $gamelist = TPController::getgamelist(self::TP_PP_HREF);
-            $len = count($gamelist);
-            if ($len > 10) {$len = 10;}
-            if ($len == 0)
-            {
-                return ['error' => true, 'msg' => 'not found any available game.'];
-            }
-            $rand = mt_rand(0,$len);
-            
-            $gamecode = $gamelist[$rand]['gamecode'];
-            $code = TPController::createPlayer($anyuser->id);
-            if ($code < 0) //create player failed
-            {
-                //오류
-                return ['error' => true, 'msg' => 'crete player error '];
-            }
-            $url = TPController::getgamelink_tp($gamecode, $anyuser);
-            if ($url['error'] == true)
-            {
-                return ['error' => true, 'msg' => 'game link error '];
-            }
             try{
+                $gamelist = TPController::getgamelist(self::TP_PP_HREF);
+                $len = count($gamelist);
+                if ($len > 10) {$len = 10;}
+                if ($len == 0)
+                {
+                    return ['error' => true, 'msg' => 'not found any available game.'];
+                }
+                $rand = mt_rand(0,$len);
+                
+                $gamecode = $gamelist[$rand]['gamecode'];
+                $code = TPController::createPlayer($anyuser->id);
+                if ($code < 0) //create player failed
+                {
+                    //오류
+                    return ['error' => true, 'msg' => 'crete player error '];
+                }
+                $url = TPController::getgamelink_tp($gamecode, $anyuser);
+                if ($url['error'] == true)
+                {
+                    return ['error' => true, 'msg' => 'game link error '];
+                }
+            
                 //emulate client
                 $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url['data']['url']);
                 if ($response->status() == 302)
