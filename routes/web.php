@@ -1535,3 +1535,29 @@ Route::group([ 'prefix' => 'dg',], function () {
  */
 
 Route::post('/hpc/signal', 'GameProviders\HPCController@userSignal');
+
+
+/**
+ * GamePlay Games
+ */
+
+Route::post('/REST/GameEngine/Livebetpool', 'GameProviders\GamePlayController@Livebetpool');
+Route::post('/REST/GameEngine/GetMemberDrawResult', 'GameProviders\GamePlayController@GetMemberDrawResult');
+Route::post('/REST/GameEngine/HistoryBet', 'GameProviders\GamePlayController@HistoryBet');
+Route::post('/REST/GameEngine/MultiLimit', 'GameProviders\GamePlayController@MultiLimit');
+Route::post('/REST/GameEngine/GameSetting', 'GameProviders\GamePlayController@GameSetting');
+Route::post('/REST/GameEngine/DrawResult', 'GameProviders\GamePlayController@DrawResult');
+Route::post('/REST/GameEngine/WinLose', 'GameProviders\GamePlayController@WinLose');
+Route::get('/REST/GameEngine/OpenBet3', 'GameProviders\GamePlayController@OpenBet3');
+Route::get('/REST/GameEngine/ServerTime', 'GameProviders\GamePlayController@ServerTime');
+Route::post('/REST/GameEngine/UserInfo', 'GameProviders\GamePlayController@UserInfo');
+Route::post('/REST/GameEngine/SpreadBet', 'GameProviders\GamePlayController@SpreadBet');
+Route::post('/REST/GameEngine/Trend', 'GameProviders\GamePlayController@Trend');
+
+Route::post('/REST/GameConfig/GetActiveProductsByVendor', 'GameProviders\GamePlayController@GetActiveProductsByVendor');
+
+Route::get('/REST/TrialPromo/GetTrialPromotionInfo', 'GameProviders\GamePlayController@GetTrialPromotionInfo');
+
+//from node server
+
+Route::post('/REST/GameCore/trendInfo', 'GameProviders\GamePlayController@processCurrentTrend');

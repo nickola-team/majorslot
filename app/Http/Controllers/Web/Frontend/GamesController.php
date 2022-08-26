@@ -264,12 +264,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->route('frontend.auth.login');
             }
+            $slot = null;
             $object = '\VanguardLTE\Games\\' . $game . '\SlotSettings';
-            if (!class_exists($object))
+            if (class_exists($object))
             {
-                return redirect()->route('frontend.auth.login');
+                $slot = new $object($game, $userId);
+                // return redirect()->route('frontend.auth.login');
             }
-            $slot = new $object($game, $userId);
             $game = \VanguardLTE\Game::where([
                 'name' => $game, 
                 'shop_id' => \Illuminate\Support\Facades\Auth::user()->shop_id

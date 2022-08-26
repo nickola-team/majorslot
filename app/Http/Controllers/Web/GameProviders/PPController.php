@@ -703,15 +703,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     //add manually spaceman game
                     if ($href == 'pp') {
+                        //vs20farmfest
                         array_unshift($gameList, [
                             'provider' => 'pp',
-                            'gamecode' => '1301',
-                            'enname' => 'Spaceman',
-                            'name' => 'Spaceman',
-                            'title' => __('gameprovider.Spaceman'),
-                            'icon' => '/frontend/Default/ico/pp/1301/Spaceman.png',
-                            'type' => 'table',
-                            'gameType' => 'rng',
+                            'gamecode' => 'vs20farmfest',
+                            'enname' => 'Barn Festival',
+                            'name' => 'BarnFestival',
+                            'title' => 'BarnFestival',
+                            'icon' => config('app.ppgameserver') . '/game_pic/rec/325/vs20farmfest.png',
+                            'type' => 'slot',
+                            'gameType' => 'r2',
+                            'view' => 1
+                        ]);
+                        //vs20farmfest
+                        array_unshift($gameList, [
+                            'provider' => 'pp',
+                            'gamecode' => 'vs40samurai3',
+                            'enname' => 'Rise of Samurai 3',
+                            'name' => 'RiseofSamurai3',
+                            'title' => 'RiseofSamurai3',
+                            'icon' => config('app.ppgameserver') . '/game_pic/rec/325/vs40samurai3.png',
+                            'type' => 'slot',
+                            'gameType' => 'r2',
                             'view' => 1
                         ]);
                     }

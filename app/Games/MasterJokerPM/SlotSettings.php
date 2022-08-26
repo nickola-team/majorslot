@@ -73,15 +73,15 @@ namespace VanguardLTE\Games\MasterJokerPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,0,100,1000,5000];
-            $this->Paytable[4] = [0,0,0,50,200,1000];
-            $this->Paytable[5] = [0,0,0,50,200,1000];
-            $this->Paytable[6] = [0,0,0,20,50,200];
-            $this->Paytable[7] = [0,0,0,20,50,200];
-            $this->Paytable[8] = [0,0,0,20,40,200];
-            $this->Paytable[9] = [0,0,5,20,40,200];
+            $this->Paytable[1] = [0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0];
+            $this->Paytable[3] = [0,0,15,50,100];
+            $this->Paytable[4] = [0,0,10,25,50];
+            $this->Paytable[5] = [0,0,8,15,25];
+            $this->Paytable[6] = [0,0,5,10,15];
+            $this->Paytable[7] = [0,0,4,8,12];
+            $this->Paytable[8] = [0,0,2,5,10];
+            $this->Paytable[9] = [0,0,1,3,8];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -96,7 +96,7 @@ namespace VanguardLTE\Games\MasterJokerPM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[200.00,400.00,600.00,800.00,1000.00,2000.00,3000.00,4000.00,5000.00,7500.00,10000.00,15000.00,25000.00,50000.00,75000.00,100000.00]; 
+            $this->Bet = explode(',', $game->bet); //[200.00,300.00,400.00,500.00,700.00,800.00,1000.00,1250.00,1500.00,1750.00,2000.00,2250.00,2500.00,2750.00,3000.00,4000.00,4500.00,5000.00,8000.00,10000.00,15000.00,20000.00,25000.00,35000.00,50000.00,100000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -694,7 +694,7 @@ namespace VanguardLTE\Games\MasterJokerPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameJokersJewelsStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameMasterJokerStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 100000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

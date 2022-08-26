@@ -78,13 +78,16 @@ namespace VanguardLTE\Console
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
+            $schedule->command('gp:genTrend taixiu')->dailyAt('08:00')->runInBackground();
+
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+            $schedule->command('nsevo:processRound')->everyMinute()->withoutOverlapping()->runInBackground();
 
-            $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
+            // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
@@ -1388,6 +1391,33 @@ namespace VanguardLTE\Console
                 $this->info("Begin pp game verify bet");
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::verify_bet();
                 $this->info($res['msg']);
+            });
+
+            \Artisan::command('gp:genTrend {gameid} {date=next}', function ($gameid, $date) {
+                set_time_limit(0);
+                $today = $date;
+                if ($date == 'next')
+                {
+                    $today = date('Y-m-d', strtotime("+1 days"));
+                }
+                $this->info("Begin genTrend of " . $today);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $gameid);
+                $this->info("End genTrend");
+            });
+
+            \Artisan::command('gp:processTrend {gameid}', function ($gameid) {
+                set_time_limit(0);
+                $this->info("Begin processTrend");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($gameid);
+                $this->info("End processTrend");
+            });
+
+            \Artisan::command('nsevo:processRound', function () {
+                set_time_limit(0);
+                $this->info("Begin process NSEVORound");
+                $msg  = \VanguardLTE\Http\Controllers\Web\GameProviders\NSEVOController::getgameround();
+                $this->info($msg );
+                $this->info("End  process NSEVORound");
             });
         }
     }
