@@ -32,9 +32,17 @@ document.location.href='../../';
 </script>
 
 <body style="margin:0px;width:100%;background-color:black;overflow:hidden">
+<?php
+$platform = 'HTML5';
+$detect = new \Detection\MobileDetect();
 
+if( $detect->isMobile() || $detect->isTablet() ) 
+{
+    $platform = 'Mobile';
+}
+?>
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/TaiXiuGP/game/TaiXiu/HTML5/?lang=ko-kr&mode=True&t={{auth()->user()->api_token}}' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/TaiXiuGP/game/TaiXiu/{{$platform}}/?lang=ko-kr&mode=True&t={{auth()->user()->api_token}}' allowfullscreen>
 
 
 </iframe>

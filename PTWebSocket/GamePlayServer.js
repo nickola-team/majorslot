@@ -20,7 +20,7 @@ signalR.hub('gamehub',{
 });
 setInterval(function () {
 
-	var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?game=taixiu";
+	var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?p=12";
 	var result = syncrequest('POST', gameURL);
 	var data = JSON.parse(result.getBody());
 	if (data.s == 1)
