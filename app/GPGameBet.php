@@ -11,6 +11,7 @@ namespace VanguardLTE
             'dno', 
             'bet_id',
             'rt', 
+            'o',
             'amount',
             'win',
             'status'
