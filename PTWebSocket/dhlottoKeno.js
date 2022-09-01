@@ -12,7 +12,12 @@ const crypto = require('crypto');
 
 */
 
-var KenRoundData = {};
+var KenRoundData = {
+    NowRound : 0,
+    LastSeconds : 0,
+    PrevWinNumbers : [],
+    PrevWinSum : 0,
+};
 var DHCookies = {};
 
 var CurrentUserIdx = -1;
