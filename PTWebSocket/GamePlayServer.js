@@ -5,7 +5,10 @@ var cors = require('cors');
 
 var fs = require('fs');
 var serverConfig = JSON.parse(fs.readFileSync('../public/socket_config_gp.json', 'utf8'));
-var clients = {};
+var clients = {
+	12 : [],
+	13 : []
+};
 
 var signalR = SignalRJS();
 signalR.hub('gamehub',{
