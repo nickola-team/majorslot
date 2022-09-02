@@ -7,14 +7,14 @@ namespace VanguardLTE\Games\XocDiaGP
         public  $GAMEID = 13;
         public  $GAMENAME = 'xocdia';
         public  $RATE = [
-            1 => 1.95,
-            2 => 1.95,
-            3 => 1.98,
-            4 => 1.98,
-            5 => 15,
-            6 => 15,
-            7 => 3.8,
-            8 => 3.8,
+            1 => 1.95, //odd
+            2 => 1.95,  //even
+            3 => 1.98,  //big
+            4 => 1.98,  //small
+            5 => 15,  //white4
+            6 => 15,  //red4
+            7 => 3.8, //white3
+            8 => 3.8, //red3
         ];
         public  $MULTILIMIT = [
             [
@@ -127,6 +127,21 @@ namespace VanguardLTE\Games\XocDiaGP
                     $bet->update([
                         'win' => $bet->amount * $bet->o
                     ]);
+                }
+
+                //process special case
+                if ($rts[0] == 2 && $rts[2] == 0) //red2,white2
+                {
+                    $specialBets = \VanguardLTE\GPGameBet::where([
+                        'p' => $currentTrend->p,
+                        'dno' => $currentTrend->dno,
+                        'status' => 0,
+                    ])->groupby('user_id')->selectRaw('user_id, GROUP_CONCAT(rt SEPARATOR  ",") as grt')->get();
+                    foreach ($specialBets as $bet)
+                    {
+                        $user_bets = explode(',', $bet->grt);
+                        
+                    }
                 }
 
                 //update user balance and add game_stat
