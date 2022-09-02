@@ -12,7 +12,12 @@ const crypto = require('crypto');
 
 */
 
-var KenRoundData = {};
+var KenRoundData = {
+    NowRound : 0,
+    LastSeconds : 0,
+    PrevWinNumbers : [],
+    PrevWinSum : 0,
+};
 var DHCookies = {};
 
 var CurrentUserIdx = -1;
@@ -138,7 +143,7 @@ function requestKenoData(query, callback)
 
             result = _queryStringToJSON(r);
             decdata = decrypt(result.q);
-            // console.log(decdata);
+            console.log(decdata);
             result = _queryStringToJSON(decdata);
             callback(result);
             return;
@@ -152,7 +157,22 @@ function requestKenoData(query, callback)
 
 function KenoData()
 {
+    currTime = new Date();
+    sixDate = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 06, 00, 00);
+    
+    deltaTime = sixDate.getTime() - currTime.getTime();
+    if (deltaTime > 1000 * 60 )
+    {
+        console.log('Idle Time.');
+        setTimeout(KenoData, 1000 * 60);
+        return;
+    }
     requestKenoData(`cmd=GETLOTTOINFO&lotto_code=KENO&userid=${UserInfo[CurrentUserIdx].id}&etc=&end=E`, (data) => {
+        if (data.result_code == 99) // no sale time, Idle Time
+        {
+            setTimeout(KenoData, 1000 * 60);
+            return;
+        }
         if (data.result_code != 0)
         {
             console.log('Result code is ' + data.result_code);
