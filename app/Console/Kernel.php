@@ -1425,7 +1425,7 @@ namespace VanguardLTE\Console
                 $this->info($res['msg']);
             });
 
-            \Artisan::command('gp:genTrend {gameid} {date=next}', function ($gameid, $date) {
+            \Artisan::command('gp:genTrend {date=next}', function ($date) {
                 set_time_limit(0);
                 $today = $date;
                 if ($date == 'next')
@@ -1433,14 +1433,15 @@ namespace VanguardLTE\Console
                     $today = date('Y-m-d', strtotime("+1 days"));
                 }
                 $this->info("Begin genTrend of " . $today);
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $gameid);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
                 $this->info("End genTrend");
             });
 
-            \Artisan::command('gp:processTrend {gameid}', function ($gameid) {
+            \Artisan::command('gp:processTrend', function () {
                 set_time_limit(0);
                 $this->info("Begin processTrend");
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($gameid);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
                 $this->info("End processTrend");
             });
 
