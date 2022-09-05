@@ -2,105 +2,84 @@ var express = require('express');
 var SignalRJS = require('signalrjs');
 var syncrequest = require('sync-request');
 var cors = require('cors');
-const redis = require('redis');
-const redisClient = redis.createClient();
 
 var fs = require('fs');
 var serverConfig = JSON.parse(fs.readFileSync('../public/socket_config_gp.json', 'utf8'));
+global.clients = {
+	12 : [],
+	13 : []
+};
 
 var signalR = SignalRJS();
 signalR.hub('gamehub',{
 	auth : function(userName,message){
 		console.log('auth:'+userName + ", p : " + message);
 		// clients[message].push(userName);
-		var sig = this;
-		redisClient.get('players').then(function(strValue){
-			clients = JSON.parse(strValue);
-		
-			if (message in clients)
+		if (message in clients)
+		{
+			if (!global.clients[message].includes(userName))
 			{
-				if (!clients[message].includes(userName))
-				{
-					clients[message].push(userName);
-				}
+				global.clients[message].push(userName);
 			}
-			else
-			{
-				clients[message] = [userName];
-			}
+		}
+		else
+		{
+			global.clients[message] = [userName];
+		}
 
-			console.log(clients);
-
-			redisClient.set('players', JSON.stringify(clients)).then();
-			signalR.sendToUser(userName,{
-				H:'gameHub', M:'commandMessage',
-					A:['Auth','OK']
-			});
-		});
+		this.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
 	}
 });
 setInterval(function () {
-	redisClient.get('players').then(function(strValue){
-		clients = JSON.parse(strValue);
-		console.log('clients = ');
-		console.log(clients);
-		Object.entries(clients).forEach(entry => {
-			const [game, players] = entry;
-			var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?p=" + game;
-			var result = syncrequest('POST', gameURL);
-			var data = JSON.parse(result.getBody());
-			players.forEach(player => {
-				if (data.s == 1)
-				{
-					signalR.sendToUser(player, {
-						H:'gameHub', M:'livePool',
-						A:[JSON.stringify({
-							p:game,a:1,
-							data : [],
-							r:0.0
-						})]
-					});
-					signalR.sendToUser(player, {
-						H:'gameHub', M:'broadcastMessage',
-						A:[JSON.stringify({
-							cmd : 'Trend',
-							data : {
-								draw : [data.old]
-							}
-						})]
-					});
+	console.log('client=');
+	console.log(global.clients);
+	Object.entries(global.clients).forEach(entry => {
+		const [game, players] = entry;
+		var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?p=" + game;
+		var result = syncrequest('POST', gameURL);
+		var data = JSON.parse(result.getBody());
+		players.forEach(player => {
+			if (data.s == 1)
+			{
+				signalR.sendToUser(player, {
+					H:'gameHub', M:'livePool',
+					A:[JSON.stringify({
+						p:game,a:1,
+						data : [],
+						r:0.0
+					})]
+				});
+				signalR.sendToUser(player, {
+					H:'gameHub', M:'broadcastMessage',
+					A:[JSON.stringify({
+						cmd : 'Trend',
+						data : {
+							draw : [data.old]
+						}
+					})]
+				});
 
-					signalR.sendToUser(player, {
-						H:'gameHub', M:'broadcastMessage',
-						A:[JSON.stringify({
-							cmd : 'Trend',
-							data : {
-								draw : [data.new]
-							}
-						})]
-					});
-					
-				}
-				else
-				{
-					signalR.sendToUser(player, {
-						H:'gameHub', M:'livePool',
-						A:[JSON.stringify(data.live)]
-					});
-				}
-			});
+				signalR.sendToUser(player, {
+					H:'gameHub', M:'broadcastMessage',
+					A:[JSON.stringify({
+						cmd : 'Trend',
+						data : {
+							draw : [data.new]
+						}
+					})]
+				});
+				
+			}
+			else
+			{
+				signalR.sendToUser(player, {
+					H:'gameHub', M:'livePool',
+					A:[JSON.stringify(data.live)]
+				});
+			}
 		});
 	});
 },1000);
-
-//init redis
-redisClient.connect().then(function(){
-	redisClient.set('players', JSON.stringify({
-		12 : [],
-		13 : []
-	})).then();
-	
-});
 
 var server = express();
 var corsOptions = {
