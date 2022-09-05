@@ -31,9 +31,8 @@ signalR.hub('gamehub',{
 
 			console.log(clients);
 
-			redisClient.set('players', JSON.stringify(clients)).then(function(v){
-				sig.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
-			});
+			redisClient.set('players', JSON.stringify(clients)).then();
+			sig.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
 		});
 	}
 });
