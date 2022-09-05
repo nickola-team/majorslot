@@ -32,7 +32,10 @@ signalR.hub('gamehub',{
 			console.log(clients);
 
 			redisClient.set('players', JSON.stringify(clients)).then();
-			sig.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
+			signalR.sendToUser(userName,{
+				H:'gameHub', M:'commandMessage',
+					A:['Auth','OK']
+			});
 		});
 	}
 });
