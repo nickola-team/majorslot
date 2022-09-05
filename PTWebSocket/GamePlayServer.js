@@ -31,6 +31,8 @@ signalR.hub('gamehub',{
 	}
 });
 setInterval(function () {
+	console.log('clients = ');
+	console.log(clients);
 	Object.entries(clients).forEach(entry => {
 		const [game, players] = entry;
 		var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?p=" + game;
