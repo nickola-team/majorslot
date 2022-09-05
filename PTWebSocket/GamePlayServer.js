@@ -13,24 +13,27 @@ signalR.hub('gamehub',{
 	auth : function(userName,message){
 		console.log('auth:'+userName + ", p : " + message);
 		// clients[message].push(userName);
-		clients = JSON.parse(redisClient.get('players'));
+		redisClient.get('players').then(function(strValue){
+			clients = JSON.parse(strValue);
 		
-		if (message in clients)
-		{
-			if (!clients[message].includes(userName))
+			if (message in clients)
 			{
-				clients[message].push(userName);
+				if (!clients[message].includes(userName))
+				{
+					clients[message].push(userName);
+				}
 			}
-		}
-		else
-		{
-			clients[message] = [userName];
-		}
+			else
+			{
+				clients[message] = [userName];
+			}
 
-		redisClient.set('players', JSON.stringify(clients)).then(function(v){
-			this.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
+			console.log(clients);
+
+			redisClient.set('players', JSON.stringify(clients)).then(function(v){
+				this.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
+			});
 		});
-
 	}
 });
 setInterval(function () {
