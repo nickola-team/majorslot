@@ -12,20 +12,15 @@ global.clients = {
 
 var signalR = SignalRJS();
 signalR.hub('gamehub',{
-	auth : function(userName,message){
-		console.log('auth:'+userName + ", p : " + message);
-		// clients[message].push(userName);
-		if (message in clients)
-		{
-			if (!global.clients[message].includes(userName))
-			{
-				global.clients[message].push(userName);
-			}
-		}
-		else
-		{
-			global.clients[message] = [userName];
-		}
+	auth : function(userName,gametype){
+		console.log('auth:'+userName + ", p : " + gametype);
+		//remove old userName from clients
+		Object.keys(global.clients).forEach(g => {
+			global.clients[g] = global.clients[g].filter(item => item !== userName);
+		});
+
+		global.clients[gametype].push(userName);
+
 
 		this.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
 	}
@@ -80,6 +75,7 @@ setInterval(function () {
 		});
 	});
 },1000);
+
 
 var server = express();
 var corsOptions = {

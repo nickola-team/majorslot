@@ -78,7 +78,7 @@ namespace VanguardLTE\Console
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
-            $schedule->command('gp:genTrend taixiu')->dailyAt('08:00')->runInBackground();
+            $schedule->command('gp:genTrend')->dailyAt('08:00')->runInBackground();
 
             $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
