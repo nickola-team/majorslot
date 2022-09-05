@@ -13,6 +13,7 @@ signalR.hub('gamehub',{
 	auth : function(userName,message){
 		console.log('auth:'+userName + ", p : " + message);
 		// clients[message].push(userName);
+		var sig = this;
 		redisClient.get('players').then(function(strValue){
 			clients = JSON.parse(strValue);
 		
@@ -31,7 +32,7 @@ signalR.hub('gamehub',{
 			console.log(clients);
 
 			redisClient.set('players', JSON.stringify(clients)).then(function(v){
-				this.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
+				sig.clients.user(userName).invoke('commandMessage').withArgs(['Auth','OK']);
 			});
 		});
 	}
