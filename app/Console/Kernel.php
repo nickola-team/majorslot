@@ -1432,7 +1432,13 @@ namespace VanguardLTE\Console
                 {
                     $today = date('Y-m-d', strtotime("+1 days"));
                 }
+                $Oldtoday = date('Y-m-d', strtotime("-7 days"));
                 $this->info("Begin genTrend of " . $today);
+                //remove all old date
+                $from_sl = $Oldtoday . 'T00:00:00';
+                $to_sl = $Oldtoday . 'T23:59:59';
+                \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
+                
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today);
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
                 $this->info("End genTrend");
