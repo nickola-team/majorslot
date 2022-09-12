@@ -559,7 +559,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             catch (\Exception $ex)
             {
-                return ['error' => true, 'msg' => 'server exception.'];
+                return ['error' => true, 'msg' => 'server exception.' . $ex->getMessage()];
                 
             }
             
