@@ -1,6 +1,6 @@
 var express = require('express');
 var SignalRJS = require('signalrjs');
-var syncrequest = require('sync-request');
+const request = require('request');
 var cors = require('cors');
 
 var fs = require('fs');
@@ -26,53 +26,57 @@ signalR.hub('gamehub',{
 	}
 });
 setInterval(function () {
-	console.log('client=');
-	console.log(global.clients);
+	// console.log('client=');
+	// console.log(global.clients);
 	Object.entries(global.clients).forEach(entry => {
 		const [game, players] = entry;
 		var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?p=" + game;
-		var result = syncrequest('POST', gameURL);
-		var data = JSON.parse(result.getBody());
-		players.forEach(player => {
-			if (data.s == 1)
-			{
-				signalR.sendToUser(player, {
-					H:'gameHub', M:'livePool',
-					A:[JSON.stringify({
-						p:game,a:1,
-						data : [],
-						r:0.0
-					})]
-				});
-				signalR.sendToUser(player, {
-					H:'gameHub', M:'broadcastMessage',
-					A:[JSON.stringify({
-						cmd : 'Trend',
-						data : {
-							draw : [data.old]
-						}
-					})]
-				});
+		var result = request.post(gameURL, function(error, response, body)
+		{
+			var data = JSON.parse(body);
+			players.forEach(player => {
+				if (data.s == 1)
+				{
+					signalR.sendToUser(player, {
+						H:'gameHub', M:'livePool',
+						A:[JSON.stringify({
+							p:game,a:1,
+							data : [],
+							r:0.0
+						})]
+					});
+					signalR.sendToUser(player, {
+						H:'gameHub', M:'broadcastMessage',
+						A:[JSON.stringify({
+							cmd : 'Trend',
+							data : {
+								draw : [data.old]
+							}
+						})]
+					});
 
-				signalR.sendToUser(player, {
-					H:'gameHub', M:'broadcastMessage',
-					A:[JSON.stringify({
-						cmd : 'Trend',
-						data : {
-							draw : [data.new]
-						}
-					})]
-				});
-				
-			}
-			else
-			{
-				signalR.sendToUser(player, {
-					H:'gameHub', M:'livePool',
-					A:[JSON.stringify(data.live)]
-				});
-			}
-		});
+					signalR.sendToUser(player, {
+						H:'gameHub', M:'broadcastMessage',
+						A:[JSON.stringify({
+							cmd : 'Trend',
+							data : {
+								draw : [data.new]
+							}
+						})]
+					});
+					
+				}
+				else
+				{
+					signalR.sendToUser(player, {
+						H:'gameHub', M:'livePool',
+						A:[JSON.stringify(data.live)]
+					});
+				}
+			});
+		}
+		);
+		
 	});
 },1000);
 
