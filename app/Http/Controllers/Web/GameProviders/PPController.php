@@ -1282,6 +1282,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public function promoactive(\Illuminate\Http\Request $request)
         {
+            $user = auth()->user();
             $promo = \VanguardLTE\PPPromo::take(1)->first();
             if ($promo){
                 $data = $promo->active;
@@ -1291,14 +1292,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $tour_count = count($json_data['tournaments']);
                     for ($i = 0; $i < $tour_count; $i++ )
                     {
-                        $json_data['tournaments'][$i]['optin'] = true;
+                        $isChoice = false;
+                        if(isset($user)){
+                            $promo_choice = \VanguardLTE\PPPromoChoice::where(['user_id' => $user->id, 'promo_id' => $json_data['tournaments'][$i]['id']])->first();
+                            if(isset($promo_choice)){
+                                $isChoice = true;
+                            }
+                        }
+                        $json_data['tournaments'][$i]['optin'] = $isChoice;
                     }
                 }
                 if (isset($json_data['races'])){
                     $race_count = count($json_data['races']);
                     for ($i = 0; $i < $race_count; $i++ )
                     {
-                        $json_data['races'][$i]['optin'] = true;
+                        $isChoice = false;
+                        if(isset($user)){
+                            $promo_choice = \VanguardLTE\PPPromoChoice::where(['user_id' => $user->id, 'promo_id' => $json_data['races'][$i]['id']])->first();
+                            if(isset($promo_choice)){
+                                $isChoice = true;
+                            }
+                        }
+                        $json_data['races'][$i]['optin'] = $isChoice;
                     }
                 }
                 $data = json_encode($json_data);
@@ -1364,12 +1379,55 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return response($data, 200)->header('Content-Type', 'application/json');
         }
-        public function promochoice(\Illuminate\Http\Request $request)
+        public function promotournamentchoice(\Illuminate\Http\Request $request)
         {
-            $data = '{"error":0,"description":"OK"}';
+            $user = auth()->user();
+            $promo = \VanguardLTE\PPPromo::take(1)->first();
+            if ($promo && $user){
+                $data = $promo->active;
+                $json_data = json_decode($data, true);
+                $json_data['serverTime'] = time();
+                if (isset($json_data['tournaments'])){
+                    $tour_count = count($json_data['tournaments']);
+                    for ($i = 0; $i < $tour_count; $i++ )
+                    {
+                        $promo_choice = \VanguardLTE\PPPromoChoice::where(['user_id' => $user->id, 'promo_id' => $json_data['tournaments'][$i]['id']])->first();
+                        if(!isset($promo_choice)){
+                            \VanguardLTE\PPPromoChoice::create(['user_id' => $user->id, 'promo_id' => $json_data['tournaments'][$i]['id']]);
+                        }
+                    }
+                }
+                $data = '{"error":0,"description":"OK"}';
+            }
+            else{
+                $data = '';
+            }
             return response($data, 200)->header('Content-Type', 'application/json');
         }
-
+        public function promoracechoice(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $promo = \VanguardLTE\PPPromo::take(1)->first();
+            if ($promo && $user){
+                $data = $promo->active;
+                $json_data = json_decode($data, true);
+                if (isset($json_data['races'])){
+                    $race_count = count($json_data['races']);
+                    for ($i = 0; $i < $race_count; $i++ )
+                    {
+                        $promo_choice = \VanguardLTE\PPPromoChoice::where(['user_id' => $user->id, 'promo_id' => $json_data['races'][$i]['id']])->first();
+                        if(!isset($promo_choice)){
+                            \VanguardLTE\PPPromoChoice::create(['user_id' => $user->id, 'promo_id' => $json_data['races'][$i]['id']]);
+                        }
+                    }
+                }
+                $data = '{"error":0,"description":"OK"}';
+            }
+            else{
+                $data = '';
+            }
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
         public static function syncpromo()
         {
             if (config('app.ppmode') == 'bt') // BT integration mode
