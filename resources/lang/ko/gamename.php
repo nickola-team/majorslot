@@ -792,5 +792,7 @@ return [
     "5Treasures" => "5 트레져 다복이",
     "88Fortune" => "88포츈 다복이",
     "DancingDrum" => "댄싱드럼 다복이",
+    "TaiXiu" => "타이시유",
+    "xocdia" => "소크디아"
 
 ];

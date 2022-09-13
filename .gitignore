@@ -29,6 +29,7 @@ resources/lang/ko.zip
 public/frontend/Major.zip
 app/Games/Games.zip
 /PTWebSocket/node_modules
+/PTWebSocket/package-lock.json
 /PTWebSocket/bower_components
 bootstrap/cache/packages.php
 composer.lock

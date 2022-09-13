@@ -3,6 +3,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.18.1",
+    "redis": "^4.3.0",
     "request": "^2.88.2",
     "request-cookies": "^1.1.0",
     "signalrjs": "^0.2.2",
