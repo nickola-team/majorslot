@@ -1438,7 +1438,16 @@ namespace VanguardLTE\Console
                 $from_sl = $Oldtoday . 'T00:00:00';
                 $to_sl = $Oldtoday . 'T23:59:59';
                 \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
-                
+                // $totalResult = \VanguardLTE\Games\XocDiaGP\Server::genResultList();
+                // foreach ($totalResult as $key=>$values )
+                // {
+                //     $this->info($key . ' => [' );
+                //     foreach ($values as $v)
+                //     {
+                //         $this->info('"'.$v.'",' );
+                //     }
+                //     $this->info('],' );
+                // }
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today);
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
                 $this->info("End genTrend");
