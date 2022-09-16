@@ -88,21 +88,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function game_update(\Illuminate\Http\Request $request)
         {
             $gameid = $request->game_id;
-            $status = $request->status;
+            $value = $request->value;
             $userid = $request->user_id;
+            $field = $request->field;
+
             $user = \VanguardLTE\User::where('id',$userid)->first();
             if (!$user)
             {
                 return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
             }
             $shops = $user->shops(true);
+            if ($user->hasRole('admin'))
+            {
+                $shops[] = 0;
+            }
             if (count($shops) == 0)
             {
                 return redirect()->back()->withErrors(['하부매장이 없습니다']);
             }
-            \VanguardLTE\Game::where('original_id', $gameid)->whereIn('shop_id', $shops)->update(['view' => $status]);
+            \VanguardLTE\Game::where('original_id', $gameid)->whereIn('shop_id', $shops)->update([$field => $value]);
             return redirect()->back()->withSuccess(['게임상태를 업데이트했습니다']);
         }
+
+
 
         public function game_game(\Illuminate\Http\Request $request)
         {
