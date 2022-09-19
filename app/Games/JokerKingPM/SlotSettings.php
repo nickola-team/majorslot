@@ -704,7 +704,7 @@ namespace VanguardLTE\Games\JokerKingPM
             }
             $isLowBank = false;
             while(true){
-                $index = 0; //mt_rand(0, 45000);
+                $index = mt_rand(0, 38000);
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameJokerKingStack::where('spin_type', $spintype);
                 
                 if($winType == 'win'){

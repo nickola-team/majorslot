@@ -686,7 +686,7 @@ namespace VanguardLTE\Games\EyeoftheStormPM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGameEyeoftheStormStack::where('id', 370)->first();
+            //     $stack = \VanguardLTE\PPGameStackModel\PPGameEyeoftheStormStack::where('id', 1225)->first();
             //     return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -704,11 +704,12 @@ namespace VanguardLTE\Games\EyeoftheStormPM
             }
             $isLowBank = false;
             while(true){
-                $index = 0; //mt_rand(0, 45000);
+                $index = mt_rand(0, 24000);
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameEyeoftheStormStack::where('spin_type', $spintype);
                 
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
+                    $index = mt_rand(0, 150000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
