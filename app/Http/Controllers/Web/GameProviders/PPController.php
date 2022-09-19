@@ -1664,23 +1664,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             event(new \VanguardLTE\Events\Game\PPGameVerified($user->username . ' / ' . $gamecode));
 
             //마지막으로 플레이한 게임로그 얻기
-            $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
-            $tp_category = \VanguardLTE\Category::where('href', 'tp_pp')->first();
+            // $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
+            // $tp_category = \VanguardLTE\Category::where('href', 'tp_pp')->first();
             $cat_ids = [];
-            if ($pp_category)
-            {
-                $cat_ids[] = $pp_category->original_id;
-            }
-            if ($tp_category)
-            {
-                $cat_ids[] = $tp_category->original_id;
-            }
-            $ppchild_category = \VanguardLTE\Category::whereIn('parent', $cat_ids)->get();
+            // if ($pp_category)
+            // {
+            //     $cat_ids[] = $pp_category->original_id;
+            // }
+            // if ($tp_category)
+            // {
+            //     $cat_ids[] = $tp_category->original_id;
+            // }
+            $pm_category = \VanguardLTE\Category::where('href', 'pragmatic')->first();
+            $cat_ids[] = $pm_category->original_id;
+            // $ppchild_category = \VanguardLTE\Category::whereIn('parent', $cat_ids)->get();
             
-            foreach ($ppchild_category as $child)
-            {
-                $cat_ids[] = $child->original_id;
-            }
+            // foreach ($ppchild_category as $child)
+            // {
+            //     $cat_ids[] = $child->original_id;
+            // }
 
             $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->whereIn('category_id', $cat_ids)->orderby('date_time', 'desc')->first();
 
