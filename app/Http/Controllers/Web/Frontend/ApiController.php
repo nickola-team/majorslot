@@ -414,7 +414,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $data[] = [
                     'name' => $game->name,
-                    'title' => __('gamename.' . $game->title),
+                    'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
                     'enname' => $game->title,
                 ];
             }
