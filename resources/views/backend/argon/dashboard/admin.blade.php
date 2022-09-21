@@ -219,9 +219,9 @@
     $cat_bet = [];
 
     foreach($monthcategory AS $cat){
-        $label = $cat->category->trans->trans_title;
+        $label = $cat->title;
         $cat_labels[] = $label;
-        $cat_bet[] = $cat->bet;
+        $cat_bet[] = $cat->totalbet;
     }
 
     

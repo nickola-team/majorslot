@@ -14,6 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function index()
         {
+            $user = auth()->user();
             $ids = auth()->user()->hierarchyUsersOnly();
             $availableShops = auth()->user()->availableShops();
             $start_date = date("Y-m-d", strtotime("-30 days"));
@@ -33,7 +34,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if (count($availableShops) > 0){
                 $monthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->get();
                 $thismonthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $this_date)->get();
-                $monthcategory = \VanguardLTE\CategorySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('category_id')->selectRaw('category_id, sum(totalbet) as bet, sum(totalwin) as win')->orderby('bet','desc')->limit(5)->get();
+
+                $totalQuery = 'SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+                $totalQuery = $totalQuery . "w_category_summary.date>=\"$start_date\" AND w_category_summary.date<=\"$end_date\" ";
+                $totalQuery = $totalQuery . "AND w_category_summary.user_id=$user->id ";
+                $totalQuery = $totalQuery . "GROUP BY w_category_summary.category_id ORDER BY totalbet desc";
+                if (!auth()->user()->hasRole('admin'))
+                {
+                    $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin,  a.parent AS category_id, b.trans_title as title FROM ($totalQuery) a JOIN w_categories_trans_kr as b on b.category_id=a.parent  GROUP BY a.parent ORDER BY totalbet desc";
+                }
+                $monthcategory = \DB::select($totalQuery);
+
+                // $monthcategory = \VanguardLTE\CategorySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('category_id')->selectRaw('category_id, sum(totalbet) as bet, sum(totalwin) as win')->orderby('bet','desc')->limit(5)->get();
                 $todaysummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', $end_date)->first();
                 if ($todaysummary){
                     $todaybetwin = $todaysummary->totalbet - $todaysummary->totalwin;
