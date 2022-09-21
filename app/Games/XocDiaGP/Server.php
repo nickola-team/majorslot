@@ -141,13 +141,12 @@ namespace VanguardLTE\Games\XocDiaGP
             }
             return $totalResult;
         }
-        public function generateResult($betStats=null)
+        public function generateResult($totalBet=0, $betStats=null)
         {
             $rts = array_keys($this->RESULT_LIST);
             if ($betStats != null)
             {
                 $balance = [];
-                $max_balance = 0;
                 foreach ($rts as $c)
                 {
                     $wr = explode('|', $c);
@@ -157,10 +156,6 @@ namespace VanguardLTE\Games\XocDiaGP
                         $sum = $sum + $betStats[$r];
                     }
                     $balance[$c] =$sum;
-                    if ($max_balance < $sum)
-                    {
-                        $max_balance = $sum;
-                    }
                 }
                 
 
@@ -170,7 +165,7 @@ namespace VanguardLTE\Games\XocDiaGP
                     $new_rts = [];
                     foreach ($rts as $c)
                     {
-                        if ($balance[$c] < $max_balance)
+                        if ($balance[$c] < $totalBet) //win amount must be less than totalBet
                         {
                             $new_rts[] = $c;
                         }
@@ -211,12 +206,12 @@ namespace VanguardLTE\Games\XocDiaGP
                         'p' => $currentTrend->p,
                         'dno' => $currentTrend->dno,
                         'status' => 0,
-                    ])->groupby('rt')->selectRaw('rt, sum(amount * o) as payout')->get();
+                    ])->groupby('rt')->selectRaw('rt, sum(amount) as amount, sum(amount * o) as payout')->get();
                     foreach ($totalBets as $stat)
                     {
                         $betStat[$stat->rt] = $stat->payout;
                     }
-                    $trendResult = $this->generateResult($betStat);
+                    $trendResult = $this->generateResult($totalBets->sum('amount'), $betStat);
                 }
                 else{
                     $trendResult = $this->generateResult();
