@@ -239,3 +239,15 @@ hr.horizontal.dark {
 {
     background:linear-gradient(87deg,rgb(70, 83, 112),rgb(22, 27, 36))!important
 }
+
+.btn-primary, .btn-primary:hover
+{
+    background-color: #212529;
+    border-color: #212529;
+}
+
+.btn-success, .btn-success:hover
+{
+    background-color: #4b5e4d;
+    border-color: #4b5e4d;
+}
