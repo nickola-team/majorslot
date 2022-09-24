@@ -45,7 +45,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 else
                 {
-                    $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin,  a.parent AS category_id, b.trans_title as title FROM ($totalQuery) a JOIN w_categories_trans_kr as b on b.category_id=a.parent  ORDER BY totalbet desc";
+                    $totalQuery = "SELECT a.totalbet AS totalbet, a.totalwin AS totalwin,  a.parent AS category_id, b.trans_title as title FROM ($totalQuery) a JOIN w_categories_trans_kr as b on b.category_id=a.parent  ORDER BY totalbet desc";
                 }
                 $monthcategory = \DB::select($totalQuery);
 
