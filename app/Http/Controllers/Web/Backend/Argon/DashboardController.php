@@ -43,6 +43,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin,  a.parent AS category_id, b.trans_title as title FROM ($totalQuery) a JOIN w_categories_trans_kr as b on b.category_id=a.parent  GROUP BY a.parent ORDER BY totalbet desc";
                 }
+                else
+                {
+                    $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin,  a.parent AS category_id, b.trans_title as title FROM ($totalQuery) a JOIN w_categories_trans_kr as b on b.category_id=a.parent  ORDER BY totalbet desc";
+                }
                 $monthcategory = \DB::select($totalQuery);
 
                 // $monthcategory = \VanguardLTE\CategorySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('category_id')->selectRaw('category_id, sum(totalbet) as bet, sum(totalwin) as win')->orderby('bet','desc')->limit(5)->get();
