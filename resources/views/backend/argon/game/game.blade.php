@@ -22,6 +22,7 @@
                 <th scope="col">게임이름</th>
                 <th scope="col">활성된 매장</th>
                 <th scope="col">비활성된 매장</th>
+                <th scope="col">밸런스</th>
                 <th class="text-right">일괄적용</th>
                 </tr>
             </thead>

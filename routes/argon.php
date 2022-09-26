@@ -377,6 +377,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'GameController@game_update',
         ]);
 
+
         Route::get('game/transaction', [
             'as' => 'argon.game.transaction',
             'uses' => 'GameController@game_transaction',

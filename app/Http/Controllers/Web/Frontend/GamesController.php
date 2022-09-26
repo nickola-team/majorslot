@@ -21,7 +21,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $title = trans('app.games');
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
             $frontend = 'Default';
-            $excat = ['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan', 'habaneroplay', 'cq9play','bngplay'];
+            $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan', 'habaneroplay', 'cq9play','bngplay'];
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
             $adminid = 1;
             if ($site)

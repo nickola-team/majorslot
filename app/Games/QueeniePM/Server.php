@@ -280,7 +280,7 @@ namespace VanguardLTE\Games\QueeniePM
 
                 $allBet = $betline * $lines;
                 if($pur >= 0 && $slotEvent['slotEvent'] != 'freespin'){
-                    $allBet = $betline * $lines * 80;
+                    $allBet = $betline * $lines * 100;
                 }
                 $freeStacks = []; 
                 $isGeneratedFreeStack = false;

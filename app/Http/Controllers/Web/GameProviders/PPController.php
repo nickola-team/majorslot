@@ -1664,64 +1664,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             event(new \VanguardLTE\Events\Game\PPGameVerified($user->username . ' / ' . $gamecode));
 
             //마지막으로 플레이한 게임로그 얻기
-            $pp_category = \VanguardLTE\Category::where('href', 'pp')->first();
-            $tp_category = \VanguardLTE\Category::where('href', 'tp_pp')->first();
-            $cat_ids = [];
-            if ($pp_category)
-            {
-                $cat_ids[] = $pp_category->original_id;
-            }
-            if ($tp_category)
-            {
-                $cat_ids[] = $tp_category->original_id;
-            }
-            $ppchild_category = \VanguardLTE\Category::whereIn('parent', $cat_ids)->get();
-            
-            foreach ($ppchild_category as $child)
-            {
-                $cat_ids[] = $child->original_id;
-            }
+            $pm_category = \VanguardLTE\Category::where('href', 'pragmatic')->first();
+            $cat_id = $pm_category->original_id;
 
-            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->whereIn('category_id', $cat_ids)->orderby('date_time', 'desc')->first();
+            $stat_game = \VanguardLTE\StatGame::where('user_id', $user->id)->where('category_id', $cat_id)->orderby('date_time', 'desc')->first();
 
             if ($stat_game)
             {
-                $stat_cat = \VanguardLTE\Category::where('id', $stat_game->category_id)->first();
-                $local_game = ($stat_cat->provider == null);
                 $gamename = $stat_game->game_id;
-                if ($local_game)
+
+                $pm_games = \VanguardLTE\Game::where('id', $stat_game->game_id)->first();
+                $gamelist1 = TPController::getgamelist('tp_pp');
+                foreach($gamelist1 as $game)
                 {
-                    $pm_games = \VanguardLTE\Game::where('id', $stat_game->game_id)->first();
-                    //$gamelist = PPController::getgamelist('pp');
-                    $gamelist1 = TPController::getgamelist('tp_pp');
-                    foreach($gamelist1 as $game)
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
+                    if ($gamename == $pm_games->name)
                     {
-                        $gamename = $game['name'];
-                        $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
-                        $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
-                        if ($gamename == $pm_games->name)
-                        {
-                            $gamename = $game['enname'];
-                            break;
-                        }
+                        $gamename = $game['enname'];
+                        break;
                     }
                 }
-                else
-                {
-                    if ($stat_cat->provider == 'pp') {
-                        $game = PPController::gameCodetoObj($stat_game->game_id);
-                        if ($game){
-                            $gamename = $game['enname'];
-                        }
-                    }
-                    else //theplus
-                    {
-                        $game = TPController::getGameObj($stat_game->game_id);
-                        if ($game){
-                            $gamename = $game['enname'];
-                        }
-                    }
-                }
+            
                 $data = [
                     'brand_id' => config('app.stylename'),
                     'username' => $user->username,
