@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\PirateGoldDeluxePM
+namespace VanguardLTE\Games\_5LionsDancePM
 {
     class SlotSettings
     {
@@ -73,22 +73,20 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1]  = [0,0,0,0,0,0];
-            $this->Paytable[2]  = [0,0,0,0,0,0];
-            $this->Paytable[3]  = [0,0,2,10,50,250];
-            $this->Paytable[4]  = [0,0,2,10,50,250];
-            $this->Paytable[5]  = [0,0,1,10,25,150];
-            $this->Paytable[6]  = [0,0,1,10,25,150];
-            $this->Paytable[7]  = [0,0,1,6,20,100];
-            $this->Paytable[8]  = [0,0,1,6,20,100];
-            $this->Paytable[9]  = [0,0,0,4,10,40];
-            $this->Paytable[10] = [0,0,0,4,10,40];
-            $this->Paytable[11] = [0,0,0,4,8,20];
-            $this->Paytable[12] = [0,0,0,4,8,20];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,0,20,80,400];
+            $this->Paytable[4] = [0,0,0,10,60,160];
+            $this->Paytable[5] = [0,0,0,10,60,160];
+            $this->Paytable[6] = [0,0,0,8,30,80];
+            $this->Paytable[7] = [0,0,0,8,30,80];
+            $this->Paytable[8] = [0,0,0,4,20,60];
+            $this->Paytable[9] = [0,0,0,4,20,60];
+            $this->Paytable[10] = [0,0,0,2,8,40];
+            $this->Paytable[11] = [0,0,0,2,8,40];
+            $this->Paytable[12] = [0,0,0,2,8,40];
             $this->Paytable[13] = [0,0,0,0,0,0];
             $this->Paytable[14] = [0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0];
-            $this->Paytable[16] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -454,9 +452,9 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'doBonus' ) 
+            else if( $slotState == 'slotGamble' ) 
             {
-                $slotstate = $this->slotId . ' BS';
+                $slotstate = $this->slotId . ' DG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -678,14 +676,14 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
         
         public function GetPurMul($pur)
         {
-            $purmuls = [2000];
+            $purmuls = [100];
             return $purmuls[$pur];
         }
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $ind = -1)
         {
             // if($winType == 'bonus'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('id', 16620)->first();
-            //     return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\PPGameStackModel\PPGame5LionsDanceStack::where('id', 74)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
@@ -696,21 +694,23 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             }else{
                 $winAvaliableMoney = 0;
             }
+            if($ind > -1){
+                $spintype = 1;
+            }
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('spin_type', $spintype);
-                $index =  mt_rand(0, 29000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsDanceStack::where('spin_type', $spintype);
+                $index =  mt_rand(0, 45000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 95000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

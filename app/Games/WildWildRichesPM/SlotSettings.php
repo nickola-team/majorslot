@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\PirateGoldDeluxePM
+namespace VanguardLTE\Games\WildWildRichesPM
 {
     class SlotSettings
     {
@@ -73,22 +73,19 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1]  = [0,0,0,0,0,0];
-            $this->Paytable[2]  = [0,0,0,0,0,0];
-            $this->Paytable[3]  = [0,0,2,10,50,250];
-            $this->Paytable[4]  = [0,0,2,10,50,250];
-            $this->Paytable[5]  = [0,0,1,10,25,150];
-            $this->Paytable[6]  = [0,0,1,10,25,150];
-            $this->Paytable[7]  = [0,0,1,6,20,100];
-            $this->Paytable[8]  = [0,0,1,6,20,100];
-            $this->Paytable[9]  = [0,0,0,4,10,40];
-            $this->Paytable[10] = [0,0,0,4,10,40];
-            $this->Paytable[11] = [0,0,0,4,8,20];
-            $this->Paytable[12] = [0,0,0,4,8,20];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,0,50,75,200];
+            $this->Paytable[4] = [0,0,0,20,50,100];
+            $this->Paytable[5] = [0,0,0,10,25,50];
+            $this->Paytable[6] = [0,0,0,8,10,25];
+            $this->Paytable[7] = [0,0,0,4,8,20];
+            $this->Paytable[8] = [0,0,0,4,8,15];
+            $this->Paytable[9] = [0,0,0,2,5,10];
+            $this->Paytable[10] = [0,0,0,2,5,10];
+            $this->Paytable[11] = [0,0,0,2,5,10];
+            $this->Paytable[12] = [0,0,0,0,0,0];
             $this->Paytable[13] = [0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0];
-            $this->Paytable[16] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -103,7 +100,7 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); //[8.00,16.00,24.00,32.00,40.00,80.00,120.00,160.00,200.00,300.00,400.00,600.00,1000.00,2000.00,3000.00,4000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -454,9 +451,9 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'doBonus' ) 
+            else if( $slotState == 'slotGamble' ) 
             {
-                $slotstate = $this->slotId . ' BS';
+                $slotstate = $this->slotId . ' DG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -678,14 +675,14 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
         
         public function GetPurMul($pur)
         {
-            $purmuls = [2000];
+            $purmuls = [100];
             return $purmuls[$pur];
         }
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $ind = -1)
         {
             // if($winType == 'bonus'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('id', 16620)->first();
-            //     return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesStack::where('id', 225)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
@@ -696,21 +693,23 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             }else{
                 $winAvaliableMoney = 0;
             }
+            if($ind > -1){
+                $spintype = 1;
+            }
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('spin_type', $spintype);
-                $index =  mt_rand(0, 29000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesStack::where('spin_type', $spintype);
+                $index = 0; //  mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 95000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
