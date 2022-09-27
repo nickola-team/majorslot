@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\PirateGoldDeluxePM
+namespace VanguardLTE\Games\EmeraldKingPM
 {
     class SlotSettings
     {
@@ -73,22 +73,21 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1]  = [0,0,0,0,0,0];
-            $this->Paytable[2]  = [0,0,0,0,0,0];
-            $this->Paytable[3]  = [0,0,2,10,50,250];
-            $this->Paytable[4]  = [0,0,2,10,50,250];
-            $this->Paytable[5]  = [0,0,1,10,25,150];
-            $this->Paytable[6]  = [0,0,1,10,25,150];
-            $this->Paytable[7]  = [0,0,1,6,20,100];
-            $this->Paytable[8]  = [0,0,1,6,20,100];
-            $this->Paytable[9]  = [0,0,0,4,10,40];
-            $this->Paytable[10] = [0,0,0,4,10,40];
-            $this->Paytable[11] = [0,0,0,4,8,20];
-            $this->Paytable[12] = [0,0,0,4,8,20];
-            $this->Paytable[13] = [0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0];
-            $this->Paytable[16] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,50,100,500];
+            $this->Paytable[3] = [0,0,0,50,100,500];
+            $this->Paytable[4] = [0,0,0,30,50,100];
+            $this->Paytable[5] = [0,0,0,20,30,50];
+            $this->Paytable[6] = [0,0,0,10,20,30];
+            $this->Paytable[7] = [0,0,0,10,20,30];
+            $this->Paytable[8] = [0,0,0,5,10,20];
+            $this->Paytable[9] = [0,0,0,5,10,20];
+            $this->Paytable[10] = [0,0,0,400,0,0];
+            $this->Paytable[11] = [0,0,0,300,0,0];
+            $this->Paytable[12] = [0,0,0,200,0,0];
+            $this->Paytable[13] = [0,0,0,0,0,0,0];
+            $this->Paytable[14] = [0,0,0,0,0,0,0];
+            $this->Paytable[15] = [0,0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -684,12 +683,12 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('id', 16620)->first();
-            //     return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameEmeraldKingStack::where('id', 125)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
-                $winAvaliableMoney = $this->GetBank('bonus');
+                $winAvaliableMoney = $this->GetBank('win');
                 $spintype = 1;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
@@ -701,13 +700,13 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
+            $count = 0;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('spin_type', $spintype);
-                $index =  mt_rand(0, 29000);
-                if($winType == 'win'){
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameEmeraldKingStack::where('spin_type', $spintype)->where('pur_level', $this->GetGameData($this->slotId . 'Wmv'));
+                $index = mt_rand(0, 75000); 
+                if($winType == 'win' && $count < 300){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 95000);
-                }
+                }               
                 if($isLowBank == true){
                     if($winType == 'bonus'){
                         $stacks = $stacks->where('odd', '<=', 5);    
@@ -725,6 +724,7 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
                 }else{
                     break;
                 }
+                $count++;
             }
             $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
             return json_decode($stack, true);

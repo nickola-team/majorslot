@@ -1,0 +1,104 @@
+:root {
+    --slot-item-size: 33px
+}
+
+.vs20goldfever .ReelsSlot__ItemImg,
+.WinLines-Group .ReelsSlot__ItemImg {
+    height: calc(100% - 7px);
+    width: calc(100% - 7px);
+    position: relative
+}
+
+.vs20goldfever .ReelsSlot,
+.WinLines-Group .ReelsSlot {
+    overflow: hidden;
+    position: relative
+}
+
+.vs20goldfever .DynamicSymbol__Rotate,
+.WinLines-Group .DynamicSymbol__Rotate {
+    position: absolute
+}
+
+.vs20goldfever .Progress,
+.WinLines-Group .Progress {
+    height: 120px
+}
+
+.vs20goldfever .Progress__ActiveWrap,
+.WinLines-Group .Progress__ActiveWrap {
+    bottom: 36px;
+    height: 72px
+}
+
+.vs20goldfever .Progress__ActiveBar,
+.WinLines-Group .Progress__ActiveBar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: hidden
+}
+
+.vs20goldfever .Progress__ActiveImg,
+.WinLines-Group .Progress__ActiveImg {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    width: 72px;
+    height: 72px
+}
+
+.vs20goldfever .PendingFeatures,
+.WinLines-Group .PendingFeatures {
+    order: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: .79rem;
+    color: #6d7179;
+    margin-left: 20px;
+    max-width: 200px
+}
+
+.vs20goldfever .ProgressWrap,
+.WinLines-Group .ProgressWrap {
+    order: 1;
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+}
+
+.vs20goldfever .ProgressWrap__Text,
+.WinLines-Group .ProgressWrap__Text {
+    color: #6d7179;
+    font-size: .79rem;
+    margin-top: 5px;
+    text-align: center
+}
+
+.vs20goldfever .Feature__Title,
+.WinLines-Group .Feature__Title {
+    color: #6d7179;
+    font-size: .79rem
+}
+
+.vs20goldfever .ColossalOverlay,
+.WinLines-Group .ColossalOverlay {
+    background-color: #20272b;
+    height: 100%;
+    width: 100%
+}
+
+.vs20goldfever .Animation,
+.WinLines-Group .Animation {
+    --animation--infiniteRotate-duration: 0.8s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation-direction: reverse
+}
