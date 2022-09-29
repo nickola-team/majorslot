@@ -11,9 +11,57 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         const TP_PROVIDER = 'tp';
         const TP_PP_HREF = 'tp_pp';
-        public static function getGameObjBySymbol($sym)
+        const TP_GAME_IDENTITY = [
+            'tp_bbtec' => 6,
+            'tp_pp' => 8,
+            'tp_isoft' => 10,
+            'tp_star' => 11,
+            'tp_pgsoft' => 14,
+            'tp_bbin' => 15,
+            'tp_rtg' => 19,
+            'tp_mg' => 21,
+            'tp_cq9' => 23,
+            'tp_hbn' => 24,
+            'tp_playstar' => 29,
+            'tp_gameart' => 30,
+            'tp_ttg' => 32,
+            'tp_genesis' => 33,
+            'tp_tpg' => 34,
+            'tp_playson' => 36,
+            'tp_bng' => 37,
+            'tp_evoplay' => 40,
+            'tp_dreamtech' => 41,
+            'tp_ag' => 44,
+            'tp_theshow' => 47,
+            'tp_png' => 51,
+        ];
+        const TP_IDENTITY_GAME = [
+            6  => 'tp_bbtec'      ,
+            8  => 'tp_pp'         ,
+            10 => 'tp_isoft'      ,
+            11 => 'tp_star'       ,
+            14 => 'tp_pgsoft'     ,
+            15 => 'tp_bbin'       ,
+            19 => 'tp_rtg'        ,
+            21 => 'tp_mg'         ,
+            23 => 'tp_cq9'        ,
+            24 => 'tp_hbn'        ,
+            29 => 'tp_playstar'   ,
+            30 => 'tp_gameart'    ,
+            32 => 'tp_ttg'        ,
+            33 => 'tp_genesis'    ,
+            34 => 'tp_tpg'        ,
+            36 => 'tp_playson'    ,
+            37 => 'tp_bng'        ,
+            40 => 'tp_evoplay'    ,
+            41 => 'tp_dreamtech'  ,
+            44 => 'tp_ag'         ,
+            47 => 'tp_theshow'    ,
+            51 => 'tp_png'        ,
+        ];
+        public static function getGameObjBySymbol($thirdparty, $sym)
         {
-            $gamelist = TPController::getgamelist(self::TP_PP_HREF);
+            $gamelist = TPController::getgamelist(self::TP_IDENTITY_GAME[$thirdparty]);
             if ($gamelist)
             {
                 foreach($gamelist as $game)
@@ -29,15 +77,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public static function getGameObj($uuid)
         {
-            $gamelist = TPController::getgamelist(self::TP_PP_HREF);
-            if ($gamelist)
-            {
-                foreach($gamelist as $game)
+            foreach (self::TP_IDENTITY_GAME as $href){
+                $gamelist = TPController::getgamelist($href);
+                if ($gamelist)
                 {
-                    if ($game['gamecode'] == $uuid)
+                    foreach($gamelist as $game)
                     {
-                        return $game;
-                        break;
+                        if ($game['gamecode'] == $uuid)
+                        {
+                            return $game;
+                            break;
+                        }
                     }
                 }
             }
@@ -133,10 +183,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $key = config('app.tp_api_key');
             $secret = config('app.tp_api_secret');
 
-            $category = 8; //only use pragmatic
-            if ($href == self::TP_PP_HREF) {
-                $category = 8;
-            }
+            $category = self::TP_GAME_IDENTITY[$href];
 
             $params = [
                 'key' => $key,
@@ -159,7 +206,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     array_push($gameList, [
                         'provider' => self::TP_PROVIDER,
-                        'symbol' => $game['symbol'],
+                        'href' => $href,
+                        'symbol' => isset($game['symbol'])?$game['symbol']:$game['uuid'],
                         'gamecode' => $game['uuid'],
                         'enname' => $game['name'],
                         'name' => preg_replace('/\s+/', '', $game['name']),
@@ -169,6 +217,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'view' => 1
                     ]);
                 }
+                //add Unknown Game item
+                array_push($gameList, [
+                    'provider' => self::TP_PROVIDER,
+                    'href' => $href,
+                    'symbol' => 'Unknown',
+                    'gamecode' => $href,
+                    'enname' => 'UnknownGame',
+                    'name' => 'UnknownGame',
+                    'title' => 'UnknownGame',
+                    'icon' => '',
+                    'type' => 'slot',
+                    'view' => 0
+                ]);
             }
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
@@ -392,7 +453,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             //get category id
-            $category = \VanguardLTE\Category::where(['provider' => self::TP_PROVIDER, 'shop_id' => 0, 'href' => self::TP_PP_HREF])->first();
             
             $data = TPController::gamerounds($timepoint);
             $count = 0;
@@ -418,19 +478,34 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if ($round['Status'] == 'WIN') {
                         $bet = 0;
                         $win = $round['Amount'];
+                        if ($win  == 0) //skip record
+                        {
+                            continue;
+                        }
                     }
+
+                    $category = \VanguardLTE\Category::where(['provider' => self::TP_PROVIDER, 'shop_id' => 0, 'href' => self::TP_IDENTITY_GAME[$round['ThirdParty']]])->first();
 
                     $balance = $round['Balance'];
                     $time = $round['Date'];
                     $userid = preg_replace('/'. self::TP_PROVIDER .'(\d+)/', '$1', $round['PlayerID']) ;
                     $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
-                    $gameObj =  TPController::getGameObjBySymbol($round['GameID']);
+                    $gameName = $round['GameID'];
+                    $gameObj =  TPController::getGameObjBySymbol($round['ThirdParty'], $round['GameID']);
+                    if ($gameObj == null)
+                    {
+                        $gameObj = TPController::getGameObjBySymbol($round['ThirdParty'], 'Unknown');
+                    }
+                    else
+                    {
+                        $gameName = $gameObj['name'];
+                    }
                     \VanguardLTE\StatGame::create([
                         'user_id' => $userid, 
                         'balance' => $balance, 
                         'bet' => $bet, 
                         'win' => $win, 
-                        'game' =>$gameObj['name'] . '_tp', 
+                        'game' =>$gameName . '_tp', 
                         'type' => 'slot',
                         'percent' => 0, 
                         'percent_jps' => 0, 
@@ -438,10 +513,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'profit' => 0, 
                         'denomination' => 0, 
                         'date_time' => $time,
-                        'shop_id' => $shop->shop_id,
+                        'shop_id' => $shop?$shop->shop_id:0,
                         'category_id' => isset($category)?$category->id:0,
                         'game_id' => $gameObj['gamecode'],
-                        'roundid' => $round['ObjectID'],
+                        'roundid' => $round['GameID'] . '_' . $round['ObjectID'],
                     ]);
                     $count = $count + 1;
                 }

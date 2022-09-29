@@ -145,7 +145,8 @@
                 <tr>
                 <th scope="col">플레이어</th>
                 <th scope="col">소속</th>
-                <th scope="col">게임</th>
+                <th scope="col">게임사</th>
+                <th scope="col">게임명</th>
                 <th scope="col">보유금</th>
                 <th scope="col">배팅금</th>
                 <th scope="col">당첨금</th>

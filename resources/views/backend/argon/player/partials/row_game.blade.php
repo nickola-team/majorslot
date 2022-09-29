@@ -30,8 +30,18 @@
         {{__('Unknown')}}
     @endif
 </td>
+<td> 
+    @if ($stat->category)
+        @if ($stat->category->trans)
+            {{$stat->category->trans->trans_title}}
+        @else
+            {{$stat->category->title}}
+        @endif
+    @else
+    {{__('Unknown')}}
+    @endif
+</td>
 <td> {{$game}} </td>
-<!-- <td> {{$stat->category->trans->trans_title}}</td> -->
 <td>{{number_format($stat->balance,0)}}</td>
 <td>{{number_format($stat->bet,0)}}</td>
 <td>{{number_format($stat->win,0)}}</td>
