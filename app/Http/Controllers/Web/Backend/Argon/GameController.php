@@ -83,8 +83,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             // $category->update(['view' => $status]);
 
             $site_id = $category->site_id;
-            \VanguardLTE\Category::where('site_id', $site_id)->update(['view' => $status]);
-            
+            \VanguardLTE\Category::where(['site_id' => $site_id, 'original_id' => $category->original_id])->update(['view' => $status]);
+
             return redirect()->back()->withSuccess(['게임상태를 업데이트했습니다']);
 
         }
