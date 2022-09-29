@@ -358,7 +358,7 @@
 								&& $category->title != "Skywind" )
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
 									
 									@else
 									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">
@@ -436,7 +436,7 @@
 							&& $category->title != "Skywind"  && $category->type == "slot")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
+								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">`;
 								
 								@else
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
@@ -466,7 +466,7 @@
 							&& $category->title != "Skywind"  && $category->type == "live")
 							data += `<li>`;
 								@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">`;
+								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">`;
 								
 								@else
 								data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;

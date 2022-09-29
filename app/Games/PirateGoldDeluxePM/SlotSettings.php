@@ -684,7 +684,7 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('id', 4)->first();
+            //     $stack = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('id', 16620)->first();
             //     return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -703,7 +703,7 @@ namespace VanguardLTE\Games\PirateGoldDeluxePM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGamePirateGoldDeluxeStack::where('spin_type', $spintype);
-                $index = 0; // mt_rand(0, 29000);
+                $index =  mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     $index = mt_rand(0, 95000);

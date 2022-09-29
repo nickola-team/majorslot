@@ -124,22 +124,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect('/');
             }
-            $gamename = $gameObj['name'];
-            $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
-            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
-            $shop_id = \Auth::user()->shop_id;
-            $cat = \VanguardLTE\Category::where([
-                'shop_id' => $shop_id,
-                'href' => 'pragmatic',
-                'view' => 1
-            ])->first();
+            $cat = null;
+            $pm_games = null;
+            if ($gameObj['href'] == \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::TP_PP_HREF) {
+                $gamename = $gameObj['name'];
+                $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
+                $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
+                $shop_id = \Auth::user()->shop_id;
+                $cat = \VanguardLTE\Category::where([
+                    'shop_id' => $shop_id,
+                    'href' => 'pragmatic',
+                    'view' => 1
+                ])->first();
 
-            $pm_games = \VanguardLTE\Game::where([
-                'shop_id' => $shop_id,
-                'name' => $gamename,
-                'view' => 1,
-                ]
-            )->first();
+                $pm_games = \VanguardLTE\Game::where([
+                    'shop_id' => $shop_id,
+                    'name' => $gamename,
+                    'view' => 1,
+                    ]
+                )->first();
+            }
             
             $alonegame = 0;
             $url = null;

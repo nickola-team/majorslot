@@ -210,7 +210,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {  
             $data = json_decode($request->getContent());
             $p = $data->p;
-            $result = $this->livebet($p, false);
+            $result = $this->livebet($p, true);
             return response()->json(json_encode($result));
         }
         public function GetMemberDrawResult(\Illuminate\Http\Request $request)
