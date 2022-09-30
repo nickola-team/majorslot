@@ -5,14 +5,14 @@ let betwinSync = 10000;
 let exitSync = 1000;
 let launchSync = 300;
 
-console.log('======= Starting HPC bet/win synchronization thread =============');
+console.log('======= Starting Game Launch  thread =============');
 console.log(' Bet/Win Sync = %d seconds', betwinSync / 1000);
 console.log(' LaunchSync Sync = %d seconds', launchSync / 1000);
 function gameround()  {
     var datetime = new Date();
     console.log('Syncing bet/win ', datetime.toLocaleString());
   
-    var child = exec("php artisan hpc:sync", (error, stdout, stderr) => {
+    var child = exec("php artisan game:sync", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: \n${error.message}`);
             return;
@@ -37,7 +37,7 @@ function terminateBalance()  {
     var datetime = new Date();
     console.log('Syncing exit player balance ', datetime.toLocaleString());
   
-    var child = exec("php artisan hpc:terminate", (error, stdout, stderr) => {
+    var child = exec("php artisan game:terminate", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: \n${error.message}`);
             return;
@@ -62,7 +62,7 @@ function makeurl() {
     var datetime = new Date();
     console.log('making launch', datetime.toLocaleString());
   
-    var child =  exec("php artisan hpc:launch", (error, stdout, stderr) => {
+    var child =  exec("php artisan game:launch", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: \n${error.message}`);
             return;

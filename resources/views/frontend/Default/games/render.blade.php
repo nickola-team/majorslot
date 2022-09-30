@@ -77,7 +77,7 @@
             console.log('exiting game');
             var formData = new FormData();
             formData.append("name", "exitGame");
-            navigator.sendBeacon('/hpc/signal', formData);
+            navigator.sendBeacon('/{{$provider}}/signal', formData);
         }
 
         var updateTime = 5 * 1000;
@@ -87,7 +87,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/hpc/signal",
+                url: "/{{$provider}}/signal",
                 data: {'name':'playing'},
                 processData: false,
                 contentType: false,
