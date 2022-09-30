@@ -85,7 +85,6 @@ namespace VanguardLTE\Console
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
-            $schedule->command('nsevo:processRound')->everyMinute()->withoutOverlapping()->runInBackground();
 
             // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
