@@ -1460,13 +1460,6 @@ namespace VanguardLTE\Console
                 $this->info("End processTrend");
             });
 
-            \Artisan::command('nsevo:processRound', function () {
-                set_time_limit(0);
-                $this->info("Begin process NSEVORound");
-                $msg  = \VanguardLTE\Http\Controllers\Web\GameProviders\NSEVOController::getgameround();
-                $this->info($msg );
-                $this->info("End  process NSEVORound");
-            });
         }
     }
 
