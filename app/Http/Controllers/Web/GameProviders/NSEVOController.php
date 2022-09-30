@@ -8,8 +8,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
-        const APIKEY='3F25E8248-F8091926E';
-        const APIURL='https://evo0-gaming.com:8000';
+        const PROVIDER = 'nsevo';
         const tableName = [
             0=>"코리안스피드바카라A",
             1=>"코리안스피드바카라B",
@@ -53,36 +52,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             41=>"바카라컨트롤스퀴즈"
         ];
 
-        public static function microtime_string()
-        {
-            $microstr = sprintf('%.4f', microtime(TRUE));
-            $microstr = str_replace('.', '', $microstr);
-            return $microstr;
-        }
-
-        public static function getGameObj($code)
-        {
-
-            $gamelist = EVOController::getgamelist('evo');
-
-            if ($gamelist)
-            {
-                foreach($gamelist as $game)
-                {
-                    if ($game['gamecode'] == $code)
-                    {
-                        return $game;
-                        break;
-                    }
-                    if (isset($game['gamecode1']) && ($game['gamecode1'] == $code))
-                    {
-                        return $game;
-                        break;
-                    }
-                }
-            }
-            return null;
-        }
 
 
         /*
@@ -100,16 +69,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             $gameList = [];
-            
+            foreach (self::tableName as $key=>$table)
+            {
+                array_push($gameList, [
+                    'provider' => self::PROVIDER,
+                    'gamecode' => $key,
+                    'name' => $table,
+                    'title' => $table,
+                    'type' => 'table',
+                    'href' => $href,
+                    'view' => 0,
+                    ]);
+            }
             array_unshift($gameList, [
-                'provider' => 'nsevo',
+                'provider' => self::PROVIDER,
                 'gameid' => 'lobby',
                 'gamecode' => 'nslobby',
                 'enname' => 'lobby',
                 'name' => 'lobby',
-                'title' => '뉴캐슬 에볼로비',
+                'title' => '에볼로비',
                 'type' => 'table',
-                'href' => 'nsevo',
+                'href' => self::PROVIDER,
                 'view' => 1,
                 'icon' => '/frontend/Default/ico/gac/gvo/117.jpg',
             ]);
@@ -118,19 +98,74 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $gameList;
         }
 
-        public static function makegamelink($gamecode)
+        public static function getUserBalance($user)
         {
-            //create user
+            //get user balance
+            $param = [
+                'apiKey' => config('app.nsevo_key'),
+                'user_id' => self::PROVIDER . '#' . $user->id,
+            ];
+            $url = config('app.nsevo_api') . '/api/user/balance_new';
 
+            $response = Http::timeout(10)->post($url, $param);
+
+            if (!$response->ok())
+            {
+                return -1;
+            }
+            $data = $response->json();
+            if ($data['error'] != 0) {
+                return -1;
+            }
+            return $data['data']['amount'];
+        }
+
+        public static function withdrawAll($user)
+        {
+            $balance = NSEVOController::getUserBalance($user);
+
+            if ($balance <= 0)
+            {
+                return ['error'=>false, 'amount'=>0];
+            }
+            //sub balance
+            $param = [
+                'apiKey' => config('app.nsevo_key'),
+                'user_id' => self::PROVIDER . '#' . $user->id,
+                'amount' => $balance
+            ];
+            $url = config('app.nsevo_api') . '/api/user/transaction_new/withdraw';
+            $response = Http::timeout(10)->post($url, $param);
+            if (!$response->ok())
+            {
+                return ['error' => true, 'amount'=>-1,'msg' => $response->body()];
+            }
+            $data = $response->json();
+            if ($data['error'] != 0) {
+                return ['error' => true, 'amount'=>-1, 'msg' => $response->body()];
+            }
+
+            return ['error'=>false, 'amount'=>abs($data['data']['amount'])];
+        }
+
+        public static function makelink($gamecode, $userid)
+        {
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                Log::error('NSEVO : Does not find user ' . $userid);
+                return null;
+            }
+            //create user
             $url = null;
             try {
                 $param = [
-                    'apiKey' => self::APIKEY,
-                    'userId' => auth()->user()->username,
+                    'apiKey' => config('app.nsevo_key'),
+                    'userId' => self::PROVIDER . '#' . $user->id,
                     'password' => '111111',
                     'type' => 1
                 ];
-                $response = Http::timeout(10)->post(self::APIURL . '/api/user/login_new', $param);
+                $response = Http::timeout(10)->post(config('app.nsevo_api') . '/api/user/login_new', $param);
                 if (!$response->ok())
                 {
                     return ['error' => true, 'data' => $response->body()];
@@ -142,129 +177,110 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             catch (\Exception $ex)
             {
-                return ['error' => true, 'data' => 'request failed'];
+                return null;
             }
 
             //user balance
             try {
-                $param = [
-                    'apiKey' => self::APIKEY,
-                    'user_id' => auth()->user()->username,
-                ];
-                $response = Http::timeout(10)->post(self::APIURL . '/api/user/balance_new', $param);
-                if (!$response->ok())
+                $data = NSEVOController::withdrawAll($user);
+                if ($data['error'])
                 {
-                    return ['error' => true, 'data' => $response->body()];
+                    return null;
                 }
-                $data = $response->json();
-                if ($data['error'] != 0) {
-                    return ['error' => true, 'data' => $response->body()];
-                }
-                if ($data['data']['amount'] > 0)
+                //deposit
+                if ($user->balance > 0)
                 {
-                    //withdraw
                     $param = [
-                        'apiKey' => self::APIKEY,
-                        'user_id' => auth()->user()->username,
-                        'amount' => $data['data']['amount']
+                        'apiKey' => config('app.nsevo_key'),
+                        'user_id' => self::PROVIDER . '#' . $user->id,
+                        'amount' => $user->balance
                     ];
-                    $response = Http::timeout(10)->post(self::APIURL . '/api/user/transaction_new/withdraw', $param);
+                    $response = Http::timeout(10)->post(config('app.nsevo_api') . '/api/user/transaction_new/deposit', $param);
                     if (!$response->ok())
                     {
-                        return ['error' => true, 'data' => $response->body()];
+                        return null;
                     }
                     $data = $response->json();
                     if ($data['error'] != 0) {
-                        return ['error' => true, 'data' => $response->body()];
+                        return null;
                     }
                 }
-                //deposit
-                $param = [
-                    'apiKey' => self::APIKEY,
-                    'user_id' => auth()->user()->username,
-                    'amount' => auth()->user()->balance
-                ];
-                $response = Http::timeout(10)->post(self::APIURL . '/api/user/transaction_new/deposit', $param);
-                if (!$response->ok())
-                {
-                    return ['error' => true, 'data' => $response->body()];
-                }
-                $data = $response->json();
-                if ($data['error'] != 0) {
-                    return ['error' => true, 'data' => $response->body()];
-                }
-
             }
             catch (\Exception $ex)
             {
-                return ['error' => true, 'data' => 'request failed'];
+                return null;
             }
 
+            return '/followgame/nsevo/'.$gamecode;
+        }
+        public static function makegamelink($gamecode)
+        {
             //run
-            //create user
-
-            $url = null;
+             $url = null;
             try {
                 $param = [
-                    'agentKey' => self::APIKEY,
-                    'user_id' => auth()->user()->username,
+                    'agentKey' => config('app.nsevo_key'),
+                    'user_id' => self::PROVIDER . '#' . auth()->user()->id,
                     'password' => '111111',
                 ];
-                $response = Http::timeout(10)->post(self::APIURL . '/api/game/launch_new', $param);
+                $response = Http::timeout(10)->post(config('app.nsevo_api') . '/api/game/launch_new', $param);
                 if (!$response->ok())
                 {
-                    return ['error' => true, 'data' => $response->body()];
+                    return null;
                 }
                 $data = $response->json();
                 if ($data['error'] != 0) {
-                    return ['error' => true, 'data' => $response->body()];
+                    return null;
                 }
                 $url = $data['data']['url'];
             }
             catch (\Exception $ex)
             {
-                return ['error' => true, 'data' => 'request failed'];
+                return null;
             }
-
-
-            return ['error' => false, 'data' => ['url' => $url]];
+            return $url;
         }
 
         public static function getgamelink($gamecode)
         {
-            $data = NSEVOController::makegamelink($gamecode);
-            if ($data['error'] == true)
+            $user = auth()->user();
+            if ($user->playing_game != null) //already playing game.
             {
-                $data['msg'] = '로그인하세요';
+                return ['error' => true, 'data' => '이미 실행중인 게임을 종료해주세요. 이미 종료했음에도 불구하고 이 메시지가 계속 나타난다면 매장에 문의해주세요.'];
             }
-            return $data;
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [self::PROVIDER, $gamecode])]];
         }
 
-        public static function getgameround()
+        public static function processGameRound()
         {
             $start_time = gmdate('Y-m-d H:i:s'); 
             $last_time = gmdate('Y-m-d H:i:s',strtotime('-2 day'));
             $limit = 1000;
-            $last = \VanguardLTE\StatGame::where('category_id', 33)->orderby('date_time', 'desc')->first();
+            $category = \VanguardLTE\Category::where('provider', self::PROVIDER)->first();
+            if ($category == null)
+            {
+                return [0, -1];
+            }
+            $last = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
             if ($last)
             {
                 $last_time = gmdate('Y-m-d H:i:s',strtotime($last->date_time . ' +1 seconds'));
             }
             try {
                 $param = [
-                    'apiKey' => self::APIKEY,
+                    'apiKey' => config('app.nsevo_key'),
                     'start_date' => $last_time,
                     'end_date' => $start_time,
                     'limit' => $limit,
                 ];
-                $response = Http::timeout(10)->post(self::APIURL . '/api/user/history_new/bet', $param);
+                $response = Http::timeout(10)->post(config('app.nsevo_api') .  '/api/user/history_new/bet', $param);
                 if (!$response->ok())
                 {
-                    return 'Error : ' . $response->body();
+                    return [0, -1];
                 }
                 $data = $response->json();
                 if ($data['error'] != 0) {
-                    return 'Error : ' . $data['error'];
+                    return [0, -1];
                 }
                 foreach ($data['data'] as $round)
                 {
@@ -275,34 +291,32 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $bet_time = date('Y-m-d H:i:s', strtotime($round['bet_time'] . " +9 hour"));
                     $user_balance = $round['after_bet_balance'];
 
-                    $user = \VanguardLTE\User::where('username', $round['user_id'])->first();
-                    if ($user){
-                        \VanguardLTE\StatGame::create([
-                            'user_id' => $user->id, 
-                            'balance' => $user_balance, 
-                            'bet' => $bet, 
-                            'win' => $win, 
-                            'game' =>self::tableName[$round['table_index']], 
-                            'type' => 'table',
-                            'percent' => 0, 
-                            'percent_jps' => 0, 
-                            'percent_jpg' => 0, 
-                            'profit' => 0, 
-                            'denomination' => 0, 
-                            'date_time' => $bet_time,
-                            'shop_id' => $user->shop_id,
-                            'category_id' => 33,
-                            'game_id' => $round['table_index'],
-                            'roundid' => $round['game_id'],
-                        ]);
-                    }
+                    $userid = preg_replace('/'. self::PROVIDER .'#(\d+)/', '$1', $round['user_id']) ;
+                    $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $userid, 
+                        'balance' => $user_balance, 
+                        'bet' => $bet, 
+                        'win' => $win, 
+                        'game' =>self::tableName[$round['table_index']], 
+                        'type' => 'table',
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'date_time' => $bet_time,
+                        'shop_id' => $shop?$shop->shop_id:0,
+                        'category_id' => $category->original_id,
+                        'game_id' => $round['table_index'],
+                        'roundid' => $round['game_id'],
+                    ]);
                 }
-
-                return 'process : ' . count($data['data']);
+                return [count($data['data']), $start_time];
             }
             catch (\Exception $ex)
             {
-                return 'Error : ' . $ex->getMessage();
+                return [0, -1];
             }
         }
 

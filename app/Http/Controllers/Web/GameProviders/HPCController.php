@@ -282,7 +282,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
 
-            return '/providers/hpc/'.$gamecode;
+            return '/followgame/hpc/'.$gamecode;
 
         }
 
@@ -370,7 +370,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $rounds;
         }
 
-        public static function processGameRound($master)
+        public static function processGameRound($master=null)
         {
             $idx = 0;
             if ($master != null)

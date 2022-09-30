@@ -398,7 +398,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             
         }
 
-        public function hpcrender($gamecode, \Illuminate\Http\Request $request)
+        public function gamerender($provider, $gamecode, \Illuminate\Http\Request $request)
         {
             $user = auth()->user();
             if (!$user)
@@ -418,12 +418,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $launchRequest->delete();
+            $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
+            if (!class_exists($object))
+            {
+                return redirect('/');
+            }
+
             $user->update([
-                'playing_game' => \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::HPC_PROVIDER,
+                'playing_game' => strtolower($provider),
                 'played_at' => time(),
             ]);
-            $url = \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::makegamelink($gamecode);
-            return view('frontend.Default.games.hpc', compact('url'));
+            $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode);
+            return view('frontend.Default.games.render', compact('provider','url'));
             
         }
     }
