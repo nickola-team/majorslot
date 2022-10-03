@@ -362,7 +362,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $rounds = $data;
                 }
             }
-            catch (\Exception $ex)
+            catch (\Exception $e)
             {
                 Log::error('HPC : transaction_with_no request failed. ' . $e->getMessage());
                 return null;
