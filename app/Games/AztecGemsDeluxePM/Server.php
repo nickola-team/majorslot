@@ -139,10 +139,18 @@ namespace VanguardLTE\Games\AztecGemsDeluxePM
                         }else if($bgt == 21){
                             $strOtherResponse = $strOtherResponse . '&wins=' . $str_wins . '&coef='. ($bet * 9) .'&level='. $level .'&status='. $str_wins_status .'&lifes='. $lifes .'&wins_mask='. $str_wins_mask .'&wp='. $wp;
                         }else if($bgt == 42){
-                            $strOtherResponse = $strOtherResponse . '&wof_status='. $str_wof_status .'&wof_mask='. $str_wof_status .'&wof_set='. $str_wof_set .'&coef='. ($bet * 9) .'&level='. $level .'&lifes='. $lifes .'&wp='. $wp;
+                            $strOtherResponse = $strOtherResponse . '&wof_status='. $str_wof_status .'&wof_mask='. $str_wof_mask .'&wof_set='. $str_wof_set .'&level='. $level .'&lifes='. $lifes .'&wp='. $wp;
+                            if($bgid == 2){
+                                $strOtherResponse = $strOtherResponse  .'&coef='. ($bet * 9);
+                            }else{
+                                $strOtherResponse = $strOtherResponse  .'&coef='. ($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') - $rw);
+                            }
                         }
                         if($str_na == 'cb'){
                             $spinType = 's';
+                        }
+                        if($wof_wi > -1){
+                            $strOtherResponse = $strOtherResponse . '&wof_wi=' . $wof_wi;
                         }
                     }
                 }                
@@ -531,7 +539,15 @@ namespace VanguardLTE\Games\AztecGemsDeluxePM
                 }else if($bgt == 21){
                     $strOtherResponse = $strOtherResponse . '&wins=' . $str_wins . '&coef='. ($betline * $lines) .'&level='. $level .'&status='. $str_wins_status .'&lifes='. $lifes .'&wins_mask='. $str_wins_mask .'&wp='. $wp;
                 }else if($bgt == 42){
-                    $strOtherResponse = $strOtherResponse . '&wof_status='. $str_wof_status .'&wof_mask='. $str_wof_status .'&wof_set='. $str_wof_set .'&coef='. ($betline * $lines) .'&level='. $level .'&lifes='. $lifes .'&wp='. $wp;
+                    $strOtherResponse = $strOtherResponse . '&wof_status='. $str_wof_status .'&wof_mask='. $str_wof_mask .'&wof_set='. $str_wof_set .'&level='. $level .'&lifes='. $lifes .'&wp='. $wp;
+                    if($bgid == 2){
+                        $strOtherResponse = $strOtherResponse  .'&coef='. ($betline * $lines);
+                    }else{
+                        $strOtherResponse = $strOtherResponse  .'&coef='. ($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') - $rw);
+                    }
+                }
+                if($wof_wi > -1){
+                    $strOtherResponse = $strOtherResponse . '&wof_wi=' . $wof_wi;
                 }
 
                 $response = $strOtherResponse .'&balance='. $Balance .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType .'&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);

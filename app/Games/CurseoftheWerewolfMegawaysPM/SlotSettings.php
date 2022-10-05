@@ -688,8 +688,8 @@ namespace VanguardLTE\Games\CurseoftheWerewolfMegawaysPM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGameCurseoftheWerewolfMegawaysStack::where('id', 30)->first();
-            //     return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameCurseoftheWerewolfMegawaysStack::where('id', 28847)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -709,7 +709,7 @@ namespace VanguardLTE\Games\CurseoftheWerewolfMegawaysPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameCurseoftheWerewolfMegawaysStack::where('spin_type', 0);
                 }
-                $index = 0; // mt_rand(0, 50000);
+                $index =  mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
