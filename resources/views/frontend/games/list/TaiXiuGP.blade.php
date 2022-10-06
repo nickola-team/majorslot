@@ -131,7 +131,7 @@ if( $detect->isMobile() || $detect->isTablet() )
 ?>
 <div id="html5content">
     <div style="position: absolute; top: 0px; left: 0px; color: #4bff4b; background: rgba(0,0,0,0.5); display: none; pointer-events: none; padding: 2px " id="debug"></div>
-    <iframe id='gameframe' src='/games/TaiXiuGP/game/TaiXiu/{{$platform}}/?lang=vi-vn&mode=True&t={{auth()->user()->api_token}}' frameborder="0"></iframe>
+    <iframe id='gameframe' src='/games/TaiXiuGP/game/TaiXiu/{{$platform}}/?lang=ko-kr&mode=True&t={{auth()->user()->api_token}}' frameborder="0"></iframe>
 </div>
 
 <script type="text/javascript">
