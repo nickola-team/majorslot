@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ko">
 <head>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <base href='/games/WinPowerBallGP/'>
 <meta charset="utf-8">
 <meta http-equiv="imagetoolbar" content="no">
