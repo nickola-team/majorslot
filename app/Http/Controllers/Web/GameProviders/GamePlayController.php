@@ -669,6 +669,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'code' => -107,
                     ], 200);
                 }
+                if ($bet->amt == 0)
+                {
+                    continue;
+                }
 
                 if ($user->balance < $bet->amt)
                 {
