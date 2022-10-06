@@ -1565,3 +1565,5 @@ Route::get('/REST/TrialPromo/GetTrialPromotionInfo', 'GameProviders\GamePlayCont
 //from node server
 
 Route::post('/REST/GameCore/trendInfo', 'GameProviders\GamePlayController@processCurrentTrend');
+
+Route::get('/GamePlay/WinPowerBall', 'GameProviders\GamePlayController@powerball');

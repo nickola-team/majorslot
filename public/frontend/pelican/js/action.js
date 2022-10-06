@@ -290,11 +290,11 @@ function tabActionSlot(plat, pid, platcode, platidx) {
         }
     });
 }
-function startGame(gamename) {   
-    startGameByProvider(null, gamename);
+function startGame(gamename, winparam="default") {   
+    startGameByProvider(null, gamename, winparam);
 }
 
-function startGameByProvider(provider, gamecode) {
+function startGameByProvider(provider, gamecode, winparam="default") {
     var formData = new FormData();
     formData.append("provider", provider);
     formData.append("gamecode", gamecode);
@@ -311,7 +311,16 @@ function startGameByProvider(provider, gamecode) {
             alert(data.msg + data.data);
             return;
         }
-        window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+        
+        if (winparam=='default')
+        {
+            winparam = 'width=1280, height=720, left=100, top=50';
+        }
+        else if (winparam=='max')
+        {
+            winparam = "width="+screen.availWidth+",height="+screen.availHeight;
+        }
+        window.open(data.data.url, "game", winparam);
     }
     });
     
