@@ -1,4 +1,7 @@
 <html>
+<head>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
 	<body style="margin:0;">
 		<script src="/games/WinPowerBallGP/js/jquery.min.js"></script>
 		<iframe id="iframe" src="{{$videourl}}" width="1200" height="800" scrolling="no" frameborder="0" style="overflow:hidden;" allow="autoplay;"></iframe>
