@@ -497,6 +497,11 @@
   });
   
   var doBetting = function(){
+	if (amount == 0)
+	{
+		msg('베팅금액을 입력하세요', 'error');
+		return;
+	}
 	$('#bet_bt').unbind('click');
 	
 	$.ajax({
