@@ -7,7 +7,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     {
         const GPGameList = [
             12 => 'TaiXiu',
-            13 => 'XocDia'
+            13 => 'XocDia',
+            90 => 'WinPowerBall'
         ];
         //utility function
         public static function gamePlayTimeFormat($t=0)
@@ -35,11 +36,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             foreach (self::GPGameList as $p => $name)
             {
+                $object = '\VanguardLTE\Games\\' . $name . 'GP\Server';
+                if (!class_exists($object))
+                {
+                    continue;
+                }
+                $gameObject = new $object();
+                if ($gameObject->SELF_GEN_TREND)
+                {
+                    continue;
+                }
+
                 //create
                 $from_ts = strtotime($from_sl);
                 $to_ts = strtotime($to_sl);
                 $i = 0;
-                for ($ts = $from_ts; $ts < $to_ts; $ts += 30, $i=$i+1)
+                for ($ts = $from_ts; $ts < $to_ts; $ts += $gameObject->GAME_TIME, $i=$i+1)
                 { 
                     $currnt = time();
                     $dno = substr(str_replace('-', '', $date),2) . sprintf('%06d', $i);
@@ -79,12 +91,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     continue;
                 }
                 $gameObject = new $object();
-                $trendResult = $gameObject->generateResult();
-                $trend->update([
-                    'rno' => $trendResult['rno'],
-                    'rt' => $trendResult['rt'],
-                    's' => 1,
-                ]);
+                if (!$gameObject->SELF_GEN_TREND)
+                {
+                    $trendResult = $gameObject->generateResult();
+                    $trend->update([
+                        'rno' => $trendResult['rno'],
+                        'rt' => $trendResult['rt'],
+                        's' => 1,
+                    ]);
+                }
+                else
+                {
+                    $trend->update([
+                        's' => 9,
+                    ]);
+                }
             }
         }
 
@@ -126,6 +147,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function livebet($game_p, $fake=false)
         {
             $trend = \VanguardLTE\GPGameTrend::where('s',0)->where('p', $game_p)->orderby('sl')->first();
+            if (!$trend)
+            {
+                return [
+                    'p' => $game_p,
+                    'a' => 1,
+                    'data' => null,
+                    'r' => 1
+                ];
+            }
             $totalBets = \VanguardLTE\GPGameBet::where([
                 'p' => $game_p,
                 'dno' => $trend->dno,
@@ -268,22 +298,35 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ], 200);
             }
-            $start_date = GamePlayController::dateTimeFromGPTime($start);
-            $end_date = GamePlayController::dateTimeFromGPTime($end);
-            $userHistory = \VanguardLTE\GPGameBet::where([
-                'user_id' => $user->id,
-                'p' => $p,
-                'status' => 1,
-            ])->where('created_at','>=', $start_date)->where('created_at','<=', $end_date)->orderby('created_at', 'desc')->get()->toArray();
+            $totalpg = 1;
+            if ($pg == 0) $pg = 1;
+            if ($start ==0 || $end == 0)
+            {
+                $userHistory = \VanguardLTE\GPGameBet::where([
+                    'user_id' => $user->id,
+                    'p' => $p,
+                ])->orderby('created_at', 'desc')->limit(10)->get()->toArray();
+            }
+            else
+            {
+                $start_date = GamePlayController::dateTimeFromGPTime($start);
+                $end_date = GamePlayController::dateTimeFromGPTime($end);
+                $userHistory = \VanguardLTE\GPGameBet::where([
+                    'user_id' => $user->id,
+                    'p' => $p,
+                    'status' => 1,
+                ])->where('created_at','>=', $start_date)->where('created_at','<=', $end_date)->orderby('created_at', 'desc')->skip(($pg-1) * 10)->take(10)->get()->toArray();
+
+                $totalpg = \VanguardLTE\GPGameBet::where([
+                    'user_id' => $user->id,
+                    'p' => $p,
+                    'status' => 1,
+                ])->where('created_at','>=', $start_date)->where('created_at','<=', $end_date)->get()->count();
+            }
             $totalCount = count($userHistory);
             $bets = [];
-            if ($pg == 0) $pg = 1;
-            for ($i = ($pg-1) * 10; $i < 10 * $pg; $i++)
+            for ($i = 0; $i < $totalCount; $i++)
             {
-                if ($i >= $totalCount)
-                {
-                    break;
-                }
                 $trend = \VanguardLTE\GPGameTrend::where(
                     [
                         'p' => $p,
@@ -304,7 +347,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     "bundleId"=> (string)($userHistory[$i]['id']),
                     "returnAmount"=> round($userHistory[$i]['win'],2),
                     "rt"=> (string)($userHistory[$i]['rt'])
-
                 ];
 
             }
@@ -313,7 +355,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data'  => [
                     'p' => $p,
                     'bet' => $bets,
-                    'totalpg' => (int)(($totalCount / 10) + 1),
+                    'totalpg' => (int)(($totalpg / 10) + 1),
                 ]
             ], 200);
 
@@ -602,17 +644,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             foreach ($data->data as $bet )
             {
-                $currentTrend = \VanguardLTE\GPGameTrend::where('s',0)->where('p', $bet->p)->orderby('sl')->first();
-                $currTime = GamePlayController::gamePlayTimeFormat();
-                if ($currentTrend->e - $currTime  < 3)
+                // $currentTrend = \VanguardLTE\GPGameTrend::where('s',0)->where('p', $bet->p)->orderby('sl')->first();
+                $currentTrend = \VanguardLTE\GPGameTrend::where('s',0)->where('p', $bet->p)->where('dno', $bet->dno)->first();
+                if (!$currentTrend)
                 {
-                    return response()->json([
-                        'code' => -107,
-                    ], 200);
+                    continue;
                 }
-                //check if dno is correct??
-                //currently no
-                //create bet record
+
+                $currTime = GamePlayController::gamePlayTimeFormat();
+                
                 $object = '\VanguardLTE\Games\\' . self::GPGameList[$bet->p] . 'GP\Server';
                 if (!class_exists($object))
                 {
@@ -622,6 +662,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
 
                 $gameObject = new $object();
+
+                if ($gameObject->LAST_LIMIT_TIME>0 && $currentTrend->e - $currTime  < $gameObject->LAST_LIMIT_TIME)
+                {
+                    return response()->json([
+                        'code' => -107,
+                    ], 200);
+                }
+
+                if ($user->balance < $bet->amt)
+                {
+                    break;
+                }
+                $user->balance = $user->balance - abs($bet->amt);
                 $bet_id = substr(date('YmdHis', time()),2);
                 $brecord = \VanguardLTE\GPGameBet::create(
                     [
@@ -644,8 +697,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $totalBet = $totalBet + $bet->amt;
                 $res_bets[] = "$bet_id|$bet->p|1|$bet->dno|$bet->amt|$bet->amt|1|$bet->id";
             }
-            $user->balance = $user->balance - abs($totalBet);
+
             $user->save();
+            if (count($res_bets) == 0)
+            {
+                return response()->json([
+                    'code' => -107,
+                ], 200);
+            }
 
             return response()->json([
                 'code' => 0,
@@ -694,6 +753,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'cont' => 'DATA NOT FOUND!'
                     ]
             ], 200);
+        }
+
+        public function powerball(\Illuminate\Http\Request $request)
+        {
+            $p = $request->p;
+            $object = '\VanguardLTE\Games\\' . self::GPGameList[$p] . 'GP\Server';
+            if (!class_exists($object))
+            {
+                abort(404);
+            }
+
+            $gameObject = new $object();
+            $videourl = $gameObject->VIDEO_URL;
+            return view('frontend.Default.games.winpowerball', compact('videourl'));
         }
     }
 }

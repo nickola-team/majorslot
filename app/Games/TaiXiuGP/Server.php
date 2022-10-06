@@ -6,6 +6,9 @@ namespace VanguardLTE\Games\TaiXiuGP
     {
         public  $GAMEID = 12;
         public  $GAMENAME = 'taixiu';
+        public  $SELF_GEN_TREND = false;
+        public  $GAME_TIME = 30;
+        public  $LAST_LIMIT_TIME = 3;
         public  $RATE = [
             1 => 1.98,
             2 => 1.98

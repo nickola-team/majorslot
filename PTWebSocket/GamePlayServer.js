@@ -7,7 +7,8 @@ var fs = require('fs');
 var serverConfig = JSON.parse(fs.readFileSync('../public/socket_config_gp.json', 'utf8'));
 global.clients = {
 	12 : [],
-	13 : []
+	13 : [],
+	90 : []
 };
 
 var signalR = SignalRJS();

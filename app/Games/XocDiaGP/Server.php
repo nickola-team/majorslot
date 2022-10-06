@@ -6,6 +6,9 @@ namespace VanguardLTE\Games\XocDiaGP
     {
         public  $GAMEID = 13;
         public  $GAMENAME = 'xocdia';
+        public  $SELF_GEN_TREND = false;
+        public  $GAME_TIME = 30;
+        public  $LAST_LIMIT_TIME = 3;
         public  $RATE = [
             1 => 1.95, //odd
             2 => 1.95,  //even
