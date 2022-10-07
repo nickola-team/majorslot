@@ -10,6 +10,7 @@ global.clients = {
 	13 : [],
 	90 : [],
 	91 : [],
+	92 : [],
 };
 
 var signalR = SignalRJS();

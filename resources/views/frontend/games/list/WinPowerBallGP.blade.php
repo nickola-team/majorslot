@@ -374,28 +374,36 @@
 					old_betlist = data.data.bet;
 					
 					list = '';
-					$.each( old_betlist, function( key, val ) {
-						bettime = val['date'] +  1356969600;
-						dt=new Date(bettime * 1000).toLocaleString();
-						list += '<li>';
-						list += '<div class="time">'+dt+'</div>';
-						list += '<div class="bet_list-round">'+val['dno'].substring(6)+'회차</div>';
-						list += '<div class="sel">'+bet_string[val['rt']]+'</div>';
-						list += '<div class="benefit">'+val['o']+'</div>';
-						list += '<div class="amount">'+numberWithCommas(val['amt'])+'</div>';
-						list += '<div class="amount">'+numberWithCommas(val['returnAmount'])+'</div>';
+					if (old_betlist.length == 0)
+					{
+						list += '<li><div class="result">베팅내역이 없습니다.</div></li>';
+					}
+					else
+					{
+						$.each( old_betlist, function( key, val ) {
+							bettime = val['date'] +  1356969600;
+							dt=new Date(bettime * 1000).toLocaleString();
+							list += '<li>';
+							list += '<div class="time">'+dt+'</div>';
+							list += '<div class="bet_list-round">'+val['dno'].substring(6)+'회차</div>';
+							list += '<div class="sel">'+bet_string[val['rt']]+'</div>';
+							list += '<div class="benefit">'+val['o']+'</div>';
+							list += '<div class="amount">'+numberWithCommas(val['amt'])+'</div>';
+							list += '<div class="amount">'+numberWithCommas(val['returnAmount'])+'</div>';
 
-						if(val['result'] == null) list += '<div class="result">대기중</div>';
-						else if(val['returnAmount'] == 0)
-						{
-							list += '<div class="result lose">낙첨</div>';
-						} 
-						else 
-						{
-							list += '<div class="result win">당첨</div>';
-						}
-						list += '</li>';
-					});
+							if(val['result'] == null) list += '<div class="result">대기중</div>';
+							else if(val['returnAmount'] == 0)
+							{
+								list += '<div class="result lose">낙첨</div>';
+							} 
+							else 
+							{
+								list += '<div class="result win">당첨</div>';
+							}
+							list += '</li>';
+						});
+					}
+
 					$('#cart_bet_list').html(list);
 				}
 			}			

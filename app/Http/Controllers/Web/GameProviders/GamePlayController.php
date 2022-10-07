@@ -10,6 +10,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             13 => 'XocDia',
             90 => 'WinPowerBall',
             91 => 'EOSPowerBall5',
+            92 => 'EOSPowerBall3',
         ];
         //utility function
         public static function gamePlayTimeFormat($t=0)
