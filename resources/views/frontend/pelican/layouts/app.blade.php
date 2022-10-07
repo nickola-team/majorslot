@@ -487,7 +487,30 @@
 				}
 				else if(pid == "subPowerball"){
 					data =`<div class="game_tit"><img src="/frontend/pelican/tutu/images/casino_title1.png"></div><div class="game_list_wrap"><ul>`;
-					///// currently show only WinPowerball
+
+					//5min EOS
+					data += `<li>`;
+					@if(Auth::check())
+					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGame('EOSPowerBall5GP', 'max');">`;
+					@else
+					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
+					@endif										
+					data += `<img src="/frontend/Default/ico/EOSPowerBall5GP.jpg" style="width: 200px;height: 140px;  display: inline;">`;
+					data += `<img src="/frontend/pelican/tutu/images/over01.png" class="mouseover2" style="display: none; height: 140px; width: 200px;">`;
+					data += `</a>`;     
+					data += `</li>`;
+
+					//3min EOS
+					data += `<li>`;
+					@if(Auth::check())
+					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGame('EOSPowerBall3GP', 'max');">`;
+					@else
+					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
+					@endif										
+					data += `<img src="/frontend/Default/ico/EOSPowerBall3GP.jpg" style="width: 200px;height: 140px;  display: inline;">`;
+					data += `<img src="/frontend/pelican/tutu/images/over01.png" class="mouseover2" style="display: none; height: 140px; width: 200px;">`;
+					data += `</a>`;     
+					data += `</li>`;
 
 					data += `<li>`;
 					@if(Auth::check())

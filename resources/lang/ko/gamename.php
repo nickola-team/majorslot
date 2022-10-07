@@ -794,6 +794,8 @@ return [
     "DancingDrum" => "댄싱드럼 다복이",
     "TaiXiu" => "타이시유",
     "xocdia" => "소크디아",
-    "winpowerball" => "Win파워볼"
+    "winpowerball" => "Win파워볼",
+    "eospowerball5" => "EOS 5분파워볼",
+    "eospowerball3" => "EOS 3분파워볼",
 
 ];
