@@ -1,19 +1,19 @@
 <?php 
-namespace VanguardLTE\Games\WinPowerBallGP
+namespace VanguardLTE\Games\EOSPowerBall5GP
 {
     use VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController;
     use Illuminate\Support\Facades\Http;
     class Server
     {
-        public  $GAMEID = 90;
-        public  $GAMENAME = 'winpgb';
-        public  $SELF_GEN_TREND = true;
-        public  $GAME_TIME = 270;
-        public  $GAME_PERIOD = 270;
-        public  $LAST_LIMIT_TIME = 1;
-        public  $VIDEO_URL = 'http://pow-9.com/';
-        public  $VIDEO_WIDTH = 1200;
-        public  $TREND_URL = 'http://pow-9.com/ajax.process_powerball.php';
+        public  $GAMEID = 91;
+        public  $GAMENAME = 'eospgb5';
+        public  $SELF_GEN_TREND = false;
+        public  $GAME_TIME = 294;
+        public  $GAME_PERIOD = 300;
+        public  $LAST_LIMIT_TIME = 10;
+        public  $VIDEO_URL = 'https://ntry.com/scores/eos_powerball/5min/main.php';
+        public  $VIDEO_WIDTH = 900;
+        public  $TREND_URL = 'https://ntry.com/data/json/games/eos_powerball/5min/recent_result.json';
         public  $RATE = [
             1 => 1.95, //파홀
             2 => 1.95,  //파짝
@@ -63,6 +63,14 @@ namespace VanguardLTE\Games\WinPowerBallGP
         ];
 
         public  $AFMT = '4x1';
+
+        public function generateResult()
+        {
+            return [
+                'rno' => null,
+                'rt' => null,
+            ];
+        }
 
 
         public function getRT($trendResult)
@@ -214,50 +222,47 @@ namespace VanguardLTE\Games\WinPowerBallGP
             return $rt;
         }
 
-        public function getCurrentTrend()
+        public function getRecentTrend()
         {
             $response = Http::get($this->TREND_URL);
             if ($response->ok()) {
                 $data = $response->json();
-                if ($data['error'] == 'OK') {
-                    return $data;
-                }
+                return $data;
             }
             return null;
         }
         public function processCurrentTrend()
         {
-            $data = $this->getCurrentTrend();
-            if ($data!=null)
-            {
-                $dno = substr(date('Ymd'), 2) . $data['round'];
-                $currentTrend = \VanguardLTE\GPGameTrend::where('p',$this->GAMEID)->where('dno',$dno)->first();
-                if ($currentTrend) {
-                    $bResult = false;
-                    if ($currentTrend->s == 0)
+            $currTime = time();
+            $game = \VanguardLTE\Game::where('name', 'EOSPowerBall5GP')->where('shop_id', 0)->first();
+
+            $pendingTrends = \VanguardLTE\GPGameTrend::where('s',0)->where('p',$this->GAMEID)->where('e', '<', GamePlayController::gamePlayTimeFormat($currTime))->orderby('sl')->get();
+            if (count($pendingTrends) > 0) {
+                $data = $this->getRecentTrend();
+                if ($data!=null)
+                {
+                    foreach ($pendingTrends as $trend)
                     {
-                        foreach ($data['list'] as $ga)
+                        foreach ($data as $ga)
                         {
-                            if (substr($currentTrend->dno, 6) == $ga['ga_no'])
+                            $dno = substr(date('Ymd'), 2) . sprintf('%06d', $ga['date_round']);
+                            if ($trend->dno == $dno)
                             {
-                                $game = \VanguardLTE\Game::where('name', 'WinPowerBallGP')->where('shop_id', 0)->first();
                                 //process this round
-                                $trendResult = $ga['ga_result_1'] .'|'.$ga['ga_result_2'] .'|' .$ga['ga_result_3'] .'|' .$ga['ga_result_4'] .'|'.$ga['ga_result_5'] .'|'.$ga['ga_result_6'];
+                                $trendResult = $ga['ball_1'] .'|'.$ga['ball_2'] .'|' .$ga['ball_3'] .'|' .$ga['ball_4'] .'|'.$ga['ball_5'] .'|'.$ga['powerball'];
                                 $rt = $this->getRT($trendResult);
-                                $currentTrend->update([
+                                $trend->update([
                                     'rno' => $trendResult,
                                     'rt' => $rt,
                                     's' => 1,
-                                    'PartialResultTime' => $data['bar'],
+                                    'PartialResultTime' => 0,
                                 ]);
-
-                                $currentTrend = $currentTrend->fresh();
 
                                 $rts = explode('|', $rt);
 
                                 $totalBets = \VanguardLTE\GPGameBet::where([
-                                    'p' => $currentTrend->p,
-                                    'dno' => $currentTrend->dno,
+                                    'p' => $trend->p,
+                                    'dno' => $trend->dno,
                                     'status' => 0,
                                 ])->whereIn('rt', $rts)->get();
                                 $users = [];
@@ -270,8 +275,8 @@ namespace VanguardLTE\Games\WinPowerBallGP
 
                                 //update user balance and add game_stat
                                 $totalBets = \VanguardLTE\GPGameBet::where([
-                                    'p' => $currentTrend->p,
-                                    'dno' => $currentTrend->dno,
+                                    'p' => $trend->p,
+                                    'dno' => $trend->dno,
                                     'status' => 0,
                                 ])->groupby('user_id')->selectRaw('user_id, sum(amount) as bet, sum(win) as win')->get();
                                 $category = \VanguardLTE\Category::where(['provider' => null, 'shop_id' => 0, 'href' => 'gameplay'])->first();
@@ -290,7 +295,7 @@ namespace VanguardLTE\Games\WinPowerBallGP
                                             'balance' => intval($user->balance), 
                                             'bet' => $bet->bet, 
                                             'win' => $bet->win, 
-                                            'game' =>  $currentTrend->game_id, 
+                                            'game' =>  $trend->game_id, 
                                             'type' => 'table',
                                             'percent' => 0, 
                                             'percent_jps' => 0, 
@@ -300,55 +305,33 @@ namespace VanguardLTE\Games\WinPowerBallGP
                                             'shop_id' => $user->shop_id,
                                             'category_id' => isset($category)?$category->id:0,
                                             'game_id' => $game->original_id,
-                                            'roundid' => $currentTrend->p . '_' . $currentTrend->dno,
+                                            'roundid' => $trend->p . '_' . $trend->dno,
                                         ]);
                                     }
                                 }
 
 
                                 $totalBets = \VanguardLTE\GPGameBet::where([
-                                    'game_id' => $currentTrend->game_id,
-                                    'dno' => $currentTrend->dno,
+                                    'game_id' => $trend->game_id,
+                                    'dno' => $trend->dno,
                                     'status' => 0,
                                 ])->update(['status' => 1]);
-                                $currentTrend->s = 6; // ???
-                                $bResult = true;
                                 break;
                             }
                         }
                     }
-
-                    if ($bResult == false)
-                    {
-                        $currTime = time();
-                        $ets = $currTime + $data['bar']/2;
-                        $currentTrend->update([
-                            'e' => GamePlayController::gamePlayTimeFormat($ets),
-                            'PartialResultTime' => $data['bar']
-                        ]);
-                    }
+                    
                 }
-                else
+            }
+            else
+            {
+                //update PartialResultTime
+                $currentTrend = \VanguardLTE\GPGameTrend::where('s',0)->where('p',$this->GAMEID)->where('e','>', GamePlayController::gamePlayTimeFormat($currTime))->orderby('sl')->first();
+                if ($currentTrend)
                 {
-                    //create new trend
-                    $currTime = time();
-                    $ets = $currTime + $this->GAME_TIME;
-                    \VanguardLTE\GPGameTrend::create(
-                        [
-                            'game_id' => strtolower($this->GAMENAME),
-                            'p' => $this->GAMEID,
-                            'a' => 1,
-                            'dno' => $dno,
-                            'e' => GamePlayController::gamePlayTimeFormat($ets),
-                            'sl' => GamePlayController::gamePlayTimeFormat($currTime),
-                            'rno' => null,
-                            'rt' => null,
-                            's' => 0,
-                            'sDate' => explode('.',date(DATE_RFC3339_EXTENDED, $currTime))[0],
-                            'eDate' => explode('.',date(DATE_RFC3339_EXTENDED, $ets))[0],
-                            'PartialResultTime' => $data['bar']
-                        ]
-                    );
+                    $currentTrend->update([
+                        'PartialResultTime' => ($currentTrend->e - GamePlayController::gamePlayTimeFormat($currTime)) * 2
+                    ]);
                 }
             }
             return null;

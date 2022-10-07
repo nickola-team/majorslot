@@ -66,23 +66,27 @@
 					<div class="col-game">
 						<div class="game-box">
 							<div class="page-title">
-                                <span class="title">WIN 파워볼 </span>
+                                <span class="title">{{$title??'WIN 파워볼'}} </span>
 							</div>
-							<div class="instants-game-div">
-								<div class="broadcast-div" style="width:830px;height:560px;margin:0 auto;overflow:hidden;">
+							<div class="instants-game-div" style="margin-left:10px;">
+								<div class="broadcast-div" style="width:830px;height:580px;margin:0 auto;overflow:hidden;">
 									<div style="position:absolute;top:80px;">
-										<iframe id="iframevideo" src="/GamePlay/WinPowerBall?p=90" width="830" height="560" scrolling="no" frameborder="0" style="overflow:hidden;" allow="autoplay;"></iframe>
+										<iframe id="iframevideo" src="/GamePlay/WinPowerBall?p={{$p??90}}" width="830" height="600" scrolling="no" frameborder="0" style="overflow:hidden;" allow="autoplay;"></iframe>
 									</div>
 								</div>
-								<div class="page-title" style="width:830px;height:406px;margin:0 auto;">
-									<button type="button" class="ifm-view" data-selected="" data-num="4">일반볼합계 언오</button>
-									<button type="button" class="ifm-view" data-selected="" data-num="3">일반볼합계 홀짝</button>
-									<button type="button" class="ifm-view" data-selected="" data-num="2">파워볼 언오</button>
-									<button type="button" class="ifm-view" data-selected="selected" data-num="1">파워볼 홀짝</button>
-									<iframe id="iframe_result" src="http://pow-9.com/powerball_odd.php" width="830" height="400" scrolling="yes" frameborder="0" style="overflow:hidden;"></iframe>
-								</div>
+							</div>
+							<div style="width:100%;display:inline-flex;">
+								<div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
+								<span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">최근 베팅내역</span>
+								<div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
+							</div>
+							<div class="">
+								<ul id="cart_bet_list">
+								<li><div class="result">베팅내역이 없습니다.</div></li>
+								</ul>
 							</div>
 						</div>
+						
 					</div>
 					<div class="col-cart">
 						<div class="cart-box">
@@ -277,9 +281,7 @@
 
 					</div>
 				</div>
-				<div class="">
-					<ul id="cart_bet_list"></ul>
-				</div>
+				
 			</div>	
 			<div style="clear:both"></div>
 			</div>
@@ -338,7 +340,7 @@
 			data : {
 				token : '{{auth()->user()->api_token}}',
 				init : false,
-				p : 90
+				p : {{$p??90}}
 			},
 			success: function(data) {			
 				if( data.cmd == 'UserInfo' )					
@@ -358,7 +360,7 @@
 			contentType: 'application/json',
 			data: JSON.stringify({
 				token : '{{auth()->user()->api_token}}',
-				p : 90,
+				p : {{$p??90}},
 				s : 0,
 				e : 0,
 				pg : 0
@@ -372,28 +374,36 @@
 					old_betlist = data.data.bet;
 					
 					list = '';
-					$.each( old_betlist, function( key, val ) {
-						bettime = val['date'] +  1356969600;
-						dt=new Date(bettime * 1000).toLocaleString();
-						list += '<li>';
-						list += '<div class="time">'+dt+'</div>';
-						list += '<div class="bet_list-round">'+val['dno'].substring(6)+'회차</div>';
-						list += '<div class="sel">'+bet_string[val['rt']]+'</div>';
-						list += '<div class="benefit">'+val['o']+'</div>';
-						list += '<div class="amount">'+numberWithCommas(val['amt'])+'</div>';
-						list += '<div class="amount">'+numberWithCommas(val['returnAmount'])+'</div>';
+					if (old_betlist.length == 0)
+					{
+						list += '<li><div class="result">베팅내역이 없습니다.</div></li>';
+					}
+					else
+					{
+						$.each( old_betlist, function( key, val ) {
+							bettime = val['date'] +  1356969600;
+							dt=new Date(bettime * 1000).toLocaleString();
+							list += '<li>';
+							list += '<div class="time">'+dt+'</div>';
+							list += '<div class="bet_list-round">'+val['dno'].substring(6)+'회차</div>';
+							list += '<div class="sel">'+bet_string[val['rt']]+'</div>';
+							list += '<div class="benefit">'+val['o']+'</div>';
+							list += '<div class="amount">'+numberWithCommas(val['amt'])+'</div>';
+							list += '<div class="amount">'+numberWithCommas(val['returnAmount'])+'</div>';
 
-						if(val['result'] == null) list += '<div class="result">대기중</div>';
-						else if(val['returnAmount'] == 0)
-						{
-							list += '<div class="result lose">낙첨</div>';
-						} 
-						else 
-						{
-							list += '<div class="result win">당첨</div>';
-						}
-						list += '</li>';
-					});
+							if(val['result'] == null) list += '<div class="result">대기중</div>';
+							else if(val['returnAmount'] == 0)
+							{
+								list += '<div class="result lose">낙첨</div>';
+							} 
+							else 
+							{
+								list += '<div class="result win">당첨</div>';
+							}
+							list += '</li>';
+						});
+					}
+
 					$('#cart_bet_list').html(list);
 				}
 			}			
@@ -422,7 +432,7 @@
 
 		// Current Round
 		$.ajax({
-			url: '/REST/GameEngine/Trend?p=90',
+			url: '/REST/GameEngine/Trend?p={{$p??90}}',
 			type : 'post',
 			dataType: 'json',
 			async: true,
@@ -437,6 +447,18 @@
 					}
 					currdraw = draws[0];
 
+					for (i=0;i<draws.length;i++)
+					{
+						if (draws[i].s == 0)
+						{
+							currdraw = draws[i];
+						}
+						else
+						{
+							break;
+						}
+					}
+
 					if(iround != currdraw.dno)
 					{
 						iround = currdraw.dno;
@@ -445,7 +467,7 @@
 					
 					$('.round').text(currdraw.dno.substring(6) + '회');
 					
-					$(".bar").width( (currdraw.PartialResultTime * 10 / 54)+'%');
+					$(".bar").width( (currdraw.PartialResultTime * 100 /  ({{$gtime??270}} * 2))+'%');
 					bar_minute = Math.floor((currdraw.PartialResultTime / 2) / 60);
 					bar_second = (currdraw.PartialResultTime / 2) % 60;
 					$('.bar-time').text('베팅 마감       ' +  String(bar_minute).padStart(2, '0') + ':' + String(bar_second).padStart(2, '0'));
@@ -513,7 +535,7 @@
 			token : '{{auth()->user()->api_token}}',
 			data : [
 				{
-					p : 90,
+					p : {{$p??90}},
 					dno : iround,
 					id : selbetid,
 					amt : amount,
@@ -591,16 +613,6 @@
 	  $('#cart_amount').val(numberWithCommas(amount));
 	}
 	
-	$('.ifm-view').click(function() {	
-		var btns = $('.ifm-view');
-	  $(btns).attr('data-selected', '');
-	  $(this).attr('data-selected', 'selected');
-	  
-	  if( $(this).attr('data-num') == '1' ) $('#iframe_result').attr('src', 'http://pow-9.com/powerball_odd.php');
-	  else if( $(this).attr('data-num') == '2' ) $('#iframe_result').attr('src', 'http://pow-9.com/powerball_uo.php');
-  	else if( $(this).attr('data-num') == '3' ) $('#iframe_result').attr('src', 'http://pow-9.com/nomal_odd.php');
-  	else if( $(this).attr('data-num') == '4' ) $('#iframe_result').attr('src', 'http://pow-9.com/nomal_uo.php');
-	});
 </script>
 						
 
