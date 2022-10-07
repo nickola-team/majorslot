@@ -8,7 +8,8 @@ var serverConfig = JSON.parse(fs.readFileSync('../public/socket_config_gp.json',
 global.clients = {
 	12 : [],
 	13 : [],
-	90 : []
+	90 : [],
+	91 : [],
 };
 
 var signalR = SignalRJS();
