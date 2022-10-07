@@ -1433,29 +1433,15 @@ namespace VanguardLTE\Console
                 }
                 $Oldtoday = date('Y-m-d', strtotime("-7 days"));
                 $this->info("Begin genTrend of " . $today);
-                //remove all old date
-                $from_sl = $Oldtoday . 'T00:00:00';
-                $to_sl = $Oldtoday . 'T23:59:59';
-                \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
-                // $totalResult = \VanguardLTE\Games\XocDiaGP\Server::genResultList();
-                // foreach ($totalResult as $key=>$values )
-                // {
-                //     $this->info($key . ' => [' );
-                //     foreach ($values as $v)
-                //     {
-                //         $this->info('"'.$v.'",' );
-                //     }
-                //     $this->info('],' );
-                // }
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $p);
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
                 $this->info("End genTrend");
             });
 
-            \Artisan::command('gp:processTrend', function () {
+            \Artisan::command('gp:processTrend {p=0}', function ($p) {
                 set_time_limit(0);
                 $this->info("Begin processTrend");
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
                 $this->info("End processTrend");
             });
 

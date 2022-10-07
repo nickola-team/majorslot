@@ -34,7 +34,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //remove all old date
             $from_sl = $date . 'T00:00:00';
             $to_sl = $date . 'T23:59:59';
-            \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
+            if ($game != 0)
+            {
+                \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->where('p',$game)->delete();
+            }
+            else
+            {
+                \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
+            }
 
             foreach (self::GPGameList as $p => $name)
             {
@@ -80,10 +87,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
         }
 
-        public static function processOldTrends()
+        public static function processOldTrends($game)
         {
             $currTime = time();
-            $oldTrends = \VanguardLTE\GPGameTrend::where('s',0)->where('e', '<', GamePlayController::gamePlayTimeFormat($currTime))->get();
+            if ($game==0)
+            {
+                $oldTrends = \VanguardLTE\GPGameTrend::where('s',0)->where('e', '<', GamePlayController::gamePlayTimeFormat($currTime))->get();
+            }
+            else
+            {
+                $oldTrends = \VanguardLTE\GPGameTrend::where('s',0)->where('e', '<', GamePlayController::gamePlayTimeFormat($currTime))->where('p', $game)->get();
+            }
             if (count($oldTrends) == 0)
             {
                 return;
