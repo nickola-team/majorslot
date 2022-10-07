@@ -13,7 +13,7 @@ namespace VanguardLTE\Games\EOSPowerBall3GP
         public  $LAST_LIMIT_TIME = 10;
         public  $VIDEO_URL = 'https://ntry.com/scores/eos_powerball/3min/main.php';
         public  $VIDEO_WIDTH = 900;
-        public  $TREND_URL = 'https://ntry.com/data/json/games/eos_powerball/3min/recent_result.json';
+        public  $TREND_URL = '/data/json/games/eos_powerball/3min/recent_result.json';
         public  $RATE = [
             1 => 1.95, //파홀
             2 => 1.95,  //파짝
@@ -224,7 +224,8 @@ namespace VanguardLTE\Games\EOSPowerBall3GP
 
         public function getRecentTrend()
         {
-            $response = Http::get($this->TREND_URL);
+            $server = env('NTRY_PROXY', 'http://ntry.com');
+            $response = Http::get($server . $this->TREND_URL);
             if ($response->ok()) {
                 $data = $response->json();
                 return $data;
