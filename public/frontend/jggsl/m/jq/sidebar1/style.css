@@ -1,9 +1,0 @@
-@charset "utf-8";
-
-div.quick_wrap{width:320px; float:left; z-index:3; position:fixed; right:-320px; top:0px; background:rgba(0,0,0,0.8);} /* width:화살표가로값을 뺀 컨텐츠 가로값; right:화살표가로값을 뺀 컨텐츠 가로값; */
-span.open {position:absolute; right:5px; top:0px; cursor:pointer;} /* left:화살표가로값; top:화살표가 컨텐츠에서 떨어지는값 */
-span.close{position:absolute; left:137px; top:10px; cursor:pointer;} /* left:화살표가로값; top:화살표가 컨텐츠에서 떨어지는값 */
-span.open{z-index:2}
-span.close{z-index:1}
-
-.sidebar1 {padding-top:0px;}
