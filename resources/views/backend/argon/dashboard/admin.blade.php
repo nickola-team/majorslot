@@ -13,9 +13,9 @@
                         <div class="row">
                             <div class="col-6">
                                 <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 배팅금</h5>
-                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary->totalbet)}}</span>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary?$todaysummary->totalbet:0)}}</span>
                                 <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 당첨금</h5>
-                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary->totalwin)}}</span>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary?$todaysummary->totalwin:0)}}</span>
                             </div>
                             <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
                                 <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 벳윈수익</h5>
@@ -42,9 +42,9 @@
                         <div class="row">
                             <div class="col-6">
                                 <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충전금</h5>
-                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary->totalin)}}</span>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary?$todaysummary->totalin:0)}}</span>
                                 <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 환전금</h5>
-                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary->totalout)}}</span>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary?$todaysummary->totalout:0)}}</span>
                             </div>
                             <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
                                 <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충환수익</h5>
