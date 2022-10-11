@@ -251,3 +251,17 @@ hr.horizontal.dark {
     background-color: #4b5e4d;
     border-color: #4b5e4d;
 }
+
+.navbar-nav .nav-item .nav-link .badges {
+    position: absolute;
+    top: -8px;
+    display: block;
+    background: #00acac;
+    line-height: 12px;
+    font-weight: 600;
+    color: #fff;
+    padding: 3px 6px;
+    font-size: 10.5px;
+    border-radius: 30px;
+    right: 3px;
+}

@@ -262,22 +262,24 @@
                     </div>
                 </li>
                 @endif -->
-                @if (auth()->user()->isInoutPartner())
+                
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link  {{(isset($parentSection) && $parentSection == 'customer') ? 'active' : '' }}" href="#navbar-customer" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
                         <i class="ni ni-headphones text-white"></i>
                         <span class="nav-link-text text-white">고객센터</span>
                     </a>
-
+                    
                     <div class="collapse  {{(isset($parentSection) && $parentSection == 'customer') ? 'show' : '' }}" id="navbar-customer">
                         <ul class="nav nav-sm flex-column">
+                            @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.notice.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     공지
                                 </a>
                             </li>
+                            @endif
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.msg.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
@@ -288,7 +290,7 @@
                         </ul>
                     </div>
                 </li>
-                @endif
+                
 
                 @if (auth()->user()->hasRole('admin'))
                 <hr class="my-0 sidebar-hr">

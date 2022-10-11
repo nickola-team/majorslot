@@ -69,6 +69,29 @@
                 @include('backend.argon.layouts.headers.auth')
             @endauth
             @yield('content')
+            @if (Auth::check() )
+            <!-- for message dialog -->
+            <div class="modal fade" id="openMsgModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title">쪽지내용</h4>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <span id="msgContent"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary"  data-dismiss="modal">확인</button>
+                        </div>
+                </div>
+            </div>
+            </div>
+            @endif
         </div>
 
         @include('backend.argon.layouts.footers.guest')
@@ -233,7 +256,31 @@
 
             $("#" + notice).hide();
         }
+
+        $(function() {
+            $('.viewMsg').click(function(event){
+                if( $(event.target).is('.newMsg') ){
+                    var content = $(event.target).attr('data-msg');
+                    var idx = $(event.target).attr('data-id');
+                }else{
+                    var content = $(event.target).parents('.newMsg').attr('data-msg');
+                    var idx = $(event.target).parents('.newMsg').attr('data-id');
+                }
+                $.ajax({
+					url: "api/readMsg",
+					type: "POST",
+					data: {'id': idx },
+					dataType: 'json',
+					success: function (data) {
+                    }
+				});
+                $('#msgContent').html(content);
+                
+            });
+        });
         @endif
+
+
 
     </script>
     </body>
