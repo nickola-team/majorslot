@@ -1285,7 +1285,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $game = \VanguardLTE\Game::where('label', $gamecode)->first();
                 if ($game)
                 {
-                    return redirect(url('/game/' . $gamename));
+                    return redirect(url('/game/' . $game->name));
                 }
                 else
                 {
