@@ -19,21 +19,21 @@
                 @if (auth()->user()->isInoutPartner())
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-primary" href="{{argon_route('argon.player.vlist')}}">
+                        <a class="nav-link btn btn-primary" href="{{argon_route('argon.player.vlist')}}">
                             신규가입<span id="join_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addmanage')}}">
+                        <a class="nav-link  btn btn-success" href="{{argon_route('argon.dw.addmanage')}}">
                             충전관리<span id="in_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outmanage')}}">
+                        <a class="nav-link  btn btn-warning" href="{{argon_route('argon.dw.outmanage')}}">
                             환전관리<span id="out_newmark" style="color:white;">(0건)</span>
                         </a>
                         </div>
@@ -60,14 +60,14 @@
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">
+                        <a class="nav-link btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">
                             충전신청
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outrequest')}}">
+                        <a class="nav-link btn btn-warning" href="{{argon_route('argon.dw.outrequest')}}">
                             환전신청
                         </a>
                         </div>
