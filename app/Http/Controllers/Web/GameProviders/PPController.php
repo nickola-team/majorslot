@@ -1179,7 +1179,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $tp_cat = \VanguardLTE\Category::where(['href'=> TPController::TP_PP_HREF, 'shop_id' => $user->shop_id])->first();
             if ($tp_cat && $tp_cat->view == 2) {
                 //check if the plus support this game.
-                $gameObj = TPController::getGameObjBySymbol($gamecode);
+                $gameObj = TPController::getGameObjBySymbol(8, $gamecode);
                 if ($gameObj)
                 {
                     $data = TPController::getgamelink($gameObj['gamecode']);
@@ -1588,7 +1588,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response()->json([ ]);
             }
             // $gamename = PPController::gamecodetoname($symbol)[0];
-            $game = TPController::getGameObjBySymbol($symbol);
+            $game = TPController::getGameObjBySymbol(8, $symbol);
             if (!$game)
             {
                 return response()->json([ ]);
