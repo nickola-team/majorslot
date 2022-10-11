@@ -1277,7 +1277,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function minilobby_start(\Illuminate\Http\Request $request)
         {
             $gamecode = $request->gameSymbol;
-            return redirect(route('frontend.providers.waiting', ['pp', $gamecode]). '?lobby=mini');
+            return redirect(route('frontend.providers.waiting', ['tp', $gamecode]). '?lobby=mini');
         }
         
         public function promoactive(\Illuminate\Http\Request $request)
