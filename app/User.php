@@ -940,6 +940,11 @@ namespace VanguardLTE
                             //error
                             return ;
                         }
+                        if ($deal_balance == $deal_mileage)
+                        {
+                            //no more insert data
+                            break;
+                        }
                         $deal_data[] = [
                             'user_id' => $this->id, 
                             'partner_id' => $partner->id,
