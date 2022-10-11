@@ -1277,6 +1277,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function minilobby_start(\Illuminate\Http\Request $request)
         {
             $gamecode = $request->gameSymbol;
+            //from API then, do not launch theplus
+            $api_username = auth()->user()->username;
+            $api_user = (explode('#', auth()->user()->username) >= 2);
+            if ($api_user)
+            {
+                $game = \VanguardLTE\Game::where('label', $gamecode)->first();
+                if ($game)
+                {
+                    return redirect(url('/game/' . $gamename));
+                }
+                else
+                {
+                    return redirect(url('/'));
+                }
+            }
             return redirect(route('frontend.providers.waiting', ['tp', $gamecode]). '?lobby=mini');
         }
         
