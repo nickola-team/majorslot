@@ -19,6 +19,8 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\GameLaunchCommand::class,
             \VanguardLTE\Console\Commands\GameSyncCommand::class,
             \VanguardLTE\Console\Commands\GameTerminateCommand::class,
+
+            \VanguardLTE\Console\Commands\MonitorBetWin::class,
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
@@ -85,6 +87,8 @@ namespace VanguardLTE\Console
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+
+            $schedule->command('monitor:betwin')->cron('0 * * * *'); //every hour
 
             // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
@@ -1444,6 +1448,8 @@ namespace VanguardLTE\Console
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
                 $this->info("End processTrend");
             });
+
+            
 
         }
     }

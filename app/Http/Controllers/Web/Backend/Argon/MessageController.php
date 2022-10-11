@@ -14,9 +14,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $msgs = \VanguardLTE\Message::all();
             }
-            else 
+            else if (auth()->user()->isInoutPartner())
             {
-                $msgs = \VanguardLTE\Message::where('writer_id', auth()->user()->id)->get();
+                $msgs = \VanguardLTE\Message::where('writer_id', auth()->user()->id)->orWhere('user_id', auth()->user()->id)->get();
+            }
+            else
+            {
+                $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get();
             }
             return view('backend.argon.messages.list', compact('msgs'));
         }
@@ -33,7 +37,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($request->user != '')
             {
                 $user = \VanguardLTE\User::where('username', $request->user)->first();
-                if (!$user || !$user->hasRole('user'))
+                if (!$user)
                 {
                     return redirect()->back()->withErrors('발송할 회원을 찾을수 없습니다.');
                 }
