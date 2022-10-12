@@ -459,9 +459,9 @@ namespace VanguardLTE\Games\BarnFestivalPM
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'slotGamble' ) 
+            else if( $slotState == 'respin' ) 
             {
-                $slotstate = $this->slotId . ' DG';
+                $slotstate = $this->slotId . ' doRespin';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
