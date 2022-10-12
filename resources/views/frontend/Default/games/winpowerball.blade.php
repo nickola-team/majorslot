@@ -1,10 +1,13 @@
 <html>
+<head>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
 	<body style="margin:0;">
 		<script src="/games/WinPowerBallGP/js/jquery.min.js"></script>
-		<iframe id="iframe" src="{{$videourl}}" width="1200" height="800" scrolling="no" frameborder="0" style="overflow:hidden;" allow="autoplay;"></iframe>
+		<iframe id="iframe" src="{{$videourl}}" width="{{$width??1200}}" height="{{$height??800}}" scrolling="no" frameborder="0" style="overflow:hidden;" allow="autoplay;"></iframe>
 		<script>
 			window.onload=function(){
-			var $photoBox = $('#iframe'), adjust = 0, boxWidth = 1200 + adjust;			
+			var $photoBox = $('#iframe'), adjust = 0, boxWidth = {{$width??1200}} + adjust;			
 			function boxScale(){   		    
 				var currentWidth = document.documentElement.clientWidth;   		    
 					if(currentWidth<boxWidth)

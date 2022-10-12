@@ -8,7 +8,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const GPGameList = [
             12 => 'TaiXiu',
             13 => 'XocDia',
-            90 => 'WinPowerBall'
+            90 => 'WinPowerBall',
+            91 => 'EOSPowerBall5',
+            92 => 'EOSPowerBall3',
         ];
         //utility function
         public static function gamePlayTimeFormat($t=0)
@@ -27,58 +29,75 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return date('Y-m-d H:i:s', $servertime);
         }
 
-        public static function generateGameTrend($date)
+        public static function generateGameTrend($date, $game)
         {
             //remove all old date
             $from_sl = $date . 'T00:00:00';
             $to_sl = $date . 'T23:59:59';
-            \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
+            if ($game != 0)
+            {
+                \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->where('p',$game)->delete();
+            }
+            else
+            {
+                \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
+            }
 
             foreach (self::GPGameList as $p => $name)
             {
-                $object = '\VanguardLTE\Games\\' . $name . 'GP\Server';
-                if (!class_exists($object))
-                {
-                    continue;
-                }
-                $gameObject = new $object();
-                if ($gameObject->SELF_GEN_TREND)
-                {
-                    continue;
-                }
+                if ($game==0 || $game==$p) {
+                    $object = '\VanguardLTE\Games\\' . $name . 'GP\Server';
+                    if (!class_exists($object))
+                    {
+                        continue;
+                    }
+                    $gameObject = new $object();
+                    if ($gameObject->SELF_GEN_TREND)
+                    {
+                        continue;
+                    }
 
-                //create
-                $from_ts = strtotime($from_sl);
-                $to_ts = strtotime($to_sl);
-                $i = 0;
-                for ($ts = $from_ts; $ts < $to_ts; $ts += $gameObject->GAME_TIME, $i=$i+1)
-                { 
-                    $currnt = time();
-                    $dno = substr(str_replace('-', '', $date),2) . sprintf('%06d', $i);
-                    $ets = $ts + 20;
-                    \VanguardLTE\GPGameTrend::create(
-                        [
-                            'game_id' => strtolower($name),
-                            'p' => $p,
-                            'a' => 1,
-                            'dno' => $dno,
-                            'e' => GamePlayController::gamePlayTimeFormat($ets),
-                            'sl' => GamePlayController::gamePlayTimeFormat($ts),
-                            'rno' => null,
-                            'rt' => null,
-                            's' => 0,
-                            'sDate' => explode('.',date(DATE_RFC3339_EXTENDED, $ts))[0],
-                            'eDate' => explode('.',date(DATE_RFC3339_EXTENDED, $ets))[0],
-                            'PartialResultTime' => 0
-                        ]
-                    );
-                }}
+                    //create
+                    $from_ts = strtotime($from_sl);
+                    $to_ts = strtotime($to_sl);
+                    $i = 1;
+                    for ($ts = $from_ts; $ts < $to_ts; $ts += $gameObject->GAME_PERIOD, $i=$i+1)
+                    { 
+                        $currnt = time();
+                        $dno = substr(str_replace('-', '', $date),2) . sprintf('%06d', $i);
+                        $ets = $ts + $gameObject->GAME_TIME;
+                        \VanguardLTE\GPGameTrend::create(
+                            [
+                                'game_id' => strtolower($name),
+                                'p' => $p,
+                                'a' => 1,
+                                'dno' => $dno,
+                                'e' => GamePlayController::gamePlayTimeFormat($ets),
+                                'sl' => GamePlayController::gamePlayTimeFormat($ts),
+                                'rno' => null,
+                                'rt' => null,
+                                's' => 0,
+                                'sDate' => explode('.',date(DATE_RFC3339_EXTENDED, $ts))[0],
+                                'eDate' => explode('.',date(DATE_RFC3339_EXTENDED, $ets))[0],
+                                'PartialResultTime' => 0
+                            ]
+                        );
+                    }
+                }
+            }
         }
 
-        public static function processOldTrends()
+        public static function processOldTrends($game)
         {
             $currTime = time();
-            $oldTrends = \VanguardLTE\GPGameTrend::where('s',0)->where('e', '<', GamePlayController::gamePlayTimeFormat($currTime))->get();
+            if ($game==0)
+            {
+                $oldTrends = \VanguardLTE\GPGameTrend::where('s',0)->where('e', '<', GamePlayController::gamePlayTimeFormat($currTime))->get();
+            }
+            else
+            {
+                $oldTrends = \VanguardLTE\GPGameTrend::where('s',0)->where('e', '<', GamePlayController::gamePlayTimeFormat($currTime))->where('p', $game)->get();
+            }
             if (count($oldTrends) == 0)
             {
                 return;
@@ -669,6 +688,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'code' => -107,
                     ], 200);
                 }
+                if ($bet->amt == 0)
+                {
+                    continue;
+                }
 
                 if ($user->balance < $bet->amt)
                 {
@@ -766,7 +789,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $gameObject = new $object();
             $videourl = $gameObject->VIDEO_URL;
-            return view('frontend.Default.games.winpowerball', compact('videourl'));
+            $width = $gameObject->VIDEO_WIDTH;
+            $height = 800;
+            return view('frontend.Default.games.winpowerball', compact('videourl','width','height'));
         }
     }
 }

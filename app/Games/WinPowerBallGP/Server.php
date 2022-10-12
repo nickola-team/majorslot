@@ -9,8 +9,10 @@ namespace VanguardLTE\Games\WinPowerBallGP
         public  $GAMENAME = 'winpgb';
         public  $SELF_GEN_TREND = true;
         public  $GAME_TIME = 270;
+        public  $GAME_PERIOD = 270;
         public  $LAST_LIMIT_TIME = 1;
         public  $VIDEO_URL = 'http://pow-9.com/';
+        public  $VIDEO_WIDTH = 1200;
         public  $TREND_URL = 'http://pow-9.com/ajax.process_powerball.php';
         public  $RATE = [
             1 => 1.95, //파홀

@@ -19,21 +19,21 @@
                 @if (auth()->user()->isInoutPartner())
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-primary" href="{{argon_route('argon.player.vlist')}}">
+                        <a class="nav-link btn btn-primary" href="{{argon_route('argon.player.vlist')}}">
                             신규가입<span id="join_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addmanage')}}">
+                        <a class="nav-link  btn btn-success" href="{{argon_route('argon.dw.addmanage')}}">
                             충전관리<span id="in_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outmanage')}}">
+                        <a class="nav-link  btn btn-warning" href="{{argon_route('argon.dw.outmanage')}}">
                             환전관리<span id="out_newmark" style="color:white;">(0건)</span>
                         </a>
                         </div>
@@ -60,14 +60,14 @@
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">
+                        <a class="nav-link btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">
                             충전신청
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outrequest')}}">
+                        <a class="nav-link btn btn-warning" href="{{argon_route('argon.dw.outrequest')}}">
                             환전신청
                         </a>
                         </div>
@@ -89,6 +89,59 @@
                     </a>
                 </li>
                 @endif
+                <?php
+                    if (auth()->user()->hasRole('admin'))
+                    {
+                        $msgs = \VanguardLTE\Message::where('writer_id', 0)->orderby('created_at', 'desc')->get(); //system message
+                        $unreadmsgs = $msgs;
+                    }
+                    else
+                    {
+                        $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->orderby('created_at', 'desc')->get();
+                        $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get(); //unread message
+                    }
+                ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bell tada text-dark" style="font-size:16px"></i>
+                        <span class="badges">{{count($unreadmsgs)}}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
+                        <!-- Dropdown header -->
+                        <div class="px-3 py-3">
+                            <h6 class="text-sm text-muted m-0">총 <strong class="text-primary">{{count($msgs)}}</strong> 개의 쪽지가 있습니다</h6>
+                        </div>
+                        <!-- List group -->
+                        @foreach ($msgs as $index=>$m)
+                        @if ($index<5)
+                        <?php
+                            if ($m->writer_id == 0) //system message
+                            {
+                                $m->content = preg_replace('/replace_with_backend/',config('app.admurl'),$m->content);
+                            }
+                        ?>
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action newMsg viewMsg" data-toggle="modal" data-id="{{$m->id}}" data-target="#openMsgModal" data-msg="{{ $m->content }}">
+                                <div class="row align-items-center">
+                                    <div class="col ml--2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="mb-0 text-sm">{{$m->title}}</h4>
+                                            </div>
+                                            <div class="text-right text-muted">
+                                                <small>{{$m->writer_id==0?'시스템':($m->writer->username)}}</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm mb-0">{{$m->created_at}}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        @endif
+                        @endforeach
+                        <!-- View all -->
+                        <a href="{{argon_route('argon.msg.list')}}" class="dropdown-item text-center text-primary font-weight-bold py-3">모두보기</a>
+                    </div>
             </ul>
             <ul class="navbar-nav align-items-center ml-auto ml-md-0">
                 <li class="nav-item dropdown">

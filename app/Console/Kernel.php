@@ -19,6 +19,8 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\GameLaunchCommand::class,
             \VanguardLTE\Console\Commands\GameSyncCommand::class,
             \VanguardLTE\Console\Commands\GameTerminateCommand::class,
+
+            \VanguardLTE\Console\Commands\MonitorBetWin::class,
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
@@ -85,6 +87,8 @@ namespace VanguardLTE\Console
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+
+            $schedule->command('monitor:betwin')->cron('0 * * * *'); //every hour
 
             // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
@@ -1424,7 +1428,7 @@ namespace VanguardLTE\Console
                 $this->info($res['msg']);
             });
 
-            \Artisan::command('gp:genTrend {date=next}', function ($date) {
+            \Artisan::command('gp:genTrend {date=next} {p=0}', function ($date, $p) {
                 set_time_limit(0);
                 $today = $date;
                 if ($date == 'next')
@@ -1433,31 +1437,19 @@ namespace VanguardLTE\Console
                 }
                 $Oldtoday = date('Y-m-d', strtotime("-7 days"));
                 $this->info("Begin genTrend of " . $today);
-                //remove all old date
-                $from_sl = $Oldtoday . 'T00:00:00';
-                $to_sl = $Oldtoday . 'T23:59:59';
-                \VanguardLTE\GPGameTrend::where('sDate','>=', $from_sl)->where('sDate','<', $to_sl)->delete();
-                // $totalResult = \VanguardLTE\Games\XocDiaGP\Server::genResultList();
-                // foreach ($totalResult as $key=>$values )
-                // {
-                //     $this->info($key . ' => [' );
-                //     foreach ($values as $v)
-                //     {
-                //         $this->info('"'.$v.'",' );
-                //     }
-                //     $this->info('],' );
-                // }
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today);
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $p);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
                 $this->info("End genTrend");
             });
 
-            \Artisan::command('gp:processTrend', function () {
+            \Artisan::command('gp:processTrend {p=0}', function ($p) {
                 set_time_limit(0);
                 $this->info("Begin processTrend");
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends();
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
                 $this->info("End processTrend");
             });
+
+            
 
         }
     }

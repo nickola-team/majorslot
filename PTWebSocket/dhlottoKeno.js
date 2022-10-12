@@ -265,6 +265,13 @@ loginToDHLotto();
 
 var server = express();
 server.get('/dhlotto/keno', function(req, res){
+    var apikey = req.query.key;
+    if (apikey != 'major33456')
+    {
+        res.json({
+            Msg : 'Need api key'
+        });
+    }
     res.json(KenRoundData);
 });
 server.get('/', function(req, res){
