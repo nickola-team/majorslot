@@ -707,9 +707,10 @@ namespace VanguardLTE\Games\ThreeStarFortunePM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameThreeStarFortuneStack::where('spin_type', '<', 2);
-                $index = 0; //mt_rand(0, 45000);
-                if($winType == 'win'){
+                $index = mt_rand(0, 29000);
+                if($winType == 'win' || $winType == 'bonus'){
                     $stacks = $stacks->where('odd', '>', 0);
+                    $index = mt_rand(0, 100000);
                 }
                 if($isLowBank == true){
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();

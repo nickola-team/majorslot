@@ -74,14 +74,18 @@ namespace VanguardLTE\Games\TheWildMachinePM
             $this->scaleMode = 0;
             $this->numFloat = 0;
             $this->Paytable[1]  = [0,0,0,0];
-            $this->Paytable[2]  = [0,0,0,0];
-            $this->Paytable[3]  = [0,0,0,88];
-            $this->Paytable[4]  = [0,0,0,58];
-            $this->Paytable[5]  = [0,0,0,28];
-            $this->Paytable[6]  = [0,0,0,18];
-            $this->Paytable[7]  = [0,0,0,8];
-            $this->Paytable[8]  = [0,0,0,0];
-            $this->Paytable[9]  = [0,0,0,0];
+            $this->Paytable[2]  = [0,0,0,25,200,500,0,3500];
+            $this->Paytable[3]  = [0,0,0,25,100,500,0,3500];
+            $this->Paytable[4]  = [0,0,0,10,75,250,0,1000];
+            $this->Paytable[5]  = [0,0,0,10,50,125,0,750];
+            $this->Paytable[6]  = [0,0,0,5,25,100,0,600];
+            $this->Paytable[7]  = [0,0,0,5,18,85,0,450];
+            $this->Paytable[8]  = [0,0,0,5,12,75,0,375];
+            $this->Paytable[9]  = [0,0,0,2,8,50,0,250];
+            $this->Paytable[10]  = [0,0,0,2,8,50,0,250];
+            $this->Paytable[11]  = [0,0,0,2,8,50,0,250];
+            $this->Paytable[12]  = [0,0,0,2,8,50,0,250];
+            $this->Paytable[13]  = [0,0,0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -674,16 +678,19 @@ namespace VanguardLTE\Games\TheWildMachinePM
             $purmuls = [2000];
             return $purmuls[$pur];
         }
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $ind=-1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameAztecGemsDeluxeStack::where('id', 4751)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheWildMachineStack::where('id', 11671)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
-            if($winType == 'bonus'){
+            if($ind >= 0){
                 $winAvaliableMoney = $this->GetBank('bonus');
                 $spintype = 1;
+            }else if($winType == 'bonus'){
+                $winAvaliableMoney = $this->GetBank('');
+                $spintype = 2;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -695,19 +702,22 @@ namespace VanguardLTE\Games\TheWildMachinePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameAztecGemsDeluxeStack::where('spin_type', $spintype);
-                $index =  mt_rand(0, 29000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheWildMachineStack::where('spin_type', $spintype);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index =  mt_rand(0, 70000);
+                    // $index =  mt_rand(0, 70000);
+                }
+                if($ind >= 0){
+                    $stacks = $stacks->where('pur_level', $ind);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                    if($ind >= 0){
+                        $stacks = $stacks->where('odd', '<=', 10);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($winType == 'bonus'){
+                    if($ind >= 0){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                     }else{
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
