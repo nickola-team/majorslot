@@ -940,31 +940,29 @@ namespace VanguardLTE
                             //error
                             return ;
                         }
-                        if ($deal_balance == $deal_mileage)
+                        if ($deal_balance > $deal_mileage)
                         {
-                            //no more insert data
-                            break;
+                            $deal_data[] = [
+                                'user_id' => $this->id, 
+                                'partner_id' => $partner->id,
+                                'balance_before' => 0, 
+                                'balance_after' => 0, 
+                                'bet' => abs($stat_game->bet),
+                                'win' => abs($stat_game->win),
+                                'deal_profit' => $deal_balance,
+                                'game' => $game,
+                                'shop_id' => $this->shop_id,
+                                'type' => 'partner',
+                                'deal_percent' => $deal_percent,
+                                'mileage' => $deal_mileage,
+                                'ggr_profit' => $ggr_profit,
+                                'ggr_mileage' => $ggr_mileage,
+                                'ggr_percent' => $ggr_percent,
+                                'date_time' => $date_time, 
+                                'category_id' => $category_id,
+                                'game_id' => $game_id,
+                            ];
                         }
-                        $deal_data[] = [
-                            'user_id' => $this->id, 
-                            'partner_id' => $partner->id,
-                            'balance_before' => 0, 
-                            'balance_after' => 0, 
-                            'bet' => abs($stat_game->bet),
-                            'win' => abs($stat_game->win),
-                            'deal_profit' => $deal_balance,
-                            'game' => $game,
-                            'shop_id' => $this->shop_id,
-                            'type' => 'partner',
-                            'deal_percent' => $deal_percent,
-                            'mileage' => $deal_mileage,
-                            'ggr_profit' => $ggr_profit,
-                            'ggr_mileage' => $ggr_mileage,
-                            'ggr_percent' => $ggr_percent,
-                            'date_time' => $date_time, 
-                            'category_id' => $category_id,
-                            'game_id' => $game_id,
-                        ];
                     }
                     $partner = $partner->referral;
                 }
