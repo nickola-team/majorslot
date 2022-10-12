@@ -73,7 +73,7 @@ namespace VanguardLTE\Games\FruitRainbowPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
             $this->Paytable[2] = [0,0,0,100,1000,2000];
             $this->Paytable[3] = [0,0,0,90,500,2000];
             $this->Paytable[4] = [0,0,0,50,200,600];
@@ -695,9 +695,10 @@ namespace VanguardLTE\Games\FruitRainbowPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameFruitRainbowStack::where('spin_type', $spintype);
-                $index = 0; // mt_rand(0, 39000);
+                $index =mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
+                    $index =mt_rand(0, 75000);
                 }
                 if($isLowBank == true){
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
