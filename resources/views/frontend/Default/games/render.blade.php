@@ -80,7 +80,7 @@
             navigator.sendBeacon('/{{$provider}}/signal', formData);
         }
 
-        var updateTime = 5 * 1000;
+        var updateTime = {{$rqtime}} * 1000;
 
         var updateUserBalance = function (callback) {
             console.log('user playing game');

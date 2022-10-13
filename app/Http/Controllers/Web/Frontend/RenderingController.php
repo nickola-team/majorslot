@@ -424,12 +424,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
 
+            $rqtime = 5; //default 5s
+
             if ($provider == 'bnn')
             {
                 $user->update([
                     'playing_game' => strtolower($provider) . '_' . $gamecode,
                     'played_at' => time(),
                 ]);
+                $rqtime = 30; //default 5s
             }
             else
             {
@@ -439,7 +442,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
             }
             $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode);
-            return view('frontend.Default.games.render', compact('provider','url'));
+            return view('frontend.Default.games.render', compact('provider','url','rqtime'));
             
         }
     }
