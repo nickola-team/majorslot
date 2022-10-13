@@ -57,13 +57,14 @@ class GameTerminateCommand extends Command
                         $extra = explode('_', $user->playing_game);
                         if (count($extra) >= 2){
                             $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $extra[1], $user);
+                            Log::channel('monitor_game')->info($provider .'-' .$extra[1]. ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
                         }
                         else
                         {
                             $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $user);
+                            Log::channel('monitor_game')->info($provider . ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
                         }
-                        // $data = HPCController::withdrawAll($user);
-                        Log::channel('monitor_game')->info($provider . ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
+                        
                         if ($data['error'] == false){
                             User::lockforUpdate()
                                 ->where('id', $user->id)
@@ -74,7 +75,7 @@ class GameTerminateCommand extends Command
                         }
                         else
                         {
-                            Log::channel('monitor_game')->info($provider . ' : ' . $user->id . ' close game error. msg = ' . $data['msg']);
+                            Log::channel('monitor_game')->info($provider . ' : ' . $user->id . ' close game error. msg = ' . (isset($data['msg'])?$data['msg']:''));
                             User::lockforUpdate()
                             ->where('id', $user->id)
                             ->update([

@@ -35,52 +35,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * FROM CONTROLLER, API
         */
 
-        public function userSignal(\Illuminate\Http\Request $request)
-        {
-            $user = \VanguardLTE\User::lockForUpdate()->where('id',auth()->id())->first();
-            if (!$user)
-            {
-                return response()->json([
-                    'error' => '1',
-                    'description' => 'unlogged']);
-            }
-            $providers = explode('_', $user->playing_game);
-            if (count($providers) < 2)
-            {
-                return response()->json([
-                    'error' => '1',
-                    'description' => 'no playing bnn game']);
-            }
-            if ($providers[0] != self::BNN_PROVIDER)
-            {
-                return response()->json([
-                    'error' => '1',
-                    'description' => 'Idle TimeOut']);
-            }
-
-            if ($request->name == 'exitGame')
-            {
-                $user->update([
-                    'playing_game' => self::BNN_PROVIDER .  '_' . $providers[1] . '_exit',
-                    'played_at' => time()
-                ]);
-            }
-            else
-            {
-                $balance = BNNController::getuserbalance($providers[1], $user->id);
-                if ($balance >= 0)
-                {
-                    $user->update([
-                        'balance' => $balance,
-                        'played_at' => time()
-                    ]);
-                }
-            }
-            return response()->json([
-                'error' => '0',
-                'description' => 'OK']);
-        }
-
+        
         public static function getuserbalance($gid, $userID) {
             $url = config('app.bnn_api') . '/v1/user-money';
             $key = config('app.bnn_key');
@@ -113,6 +68,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
+                else
+                {
+                    Log::error('BNNgetuserbalance : return failed. ' . $res['msg']);
+                }
+            }
+            else
+            {
+                Log::error('BNNgetuserbalance : response is not okay. ');
             }
             return $balance;
         }
@@ -195,7 +158,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if (!$response->ok())
             {
-                return ['error'=>false, 'amount'=>0];
+                return ['error'=>true, 'amount'=>0, 'msg'=>'response not ok'];
             }
             $data = $response->json();
 
@@ -220,6 +183,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $key = config('app.bnn_key');
 
             $balance = BNNController::getuserbalance($gamecode, $user->id);
+            if ($balance == -1)
+            {
+                return null;
+            }
             if ($balance != $user->balance)
             {
                 //withdraw all balance
