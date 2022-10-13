@@ -424,10 +424,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
 
-            $user->update([
-                'playing_game' => strtolower($provider),
-                'played_at' => time(),
-            ]);
+            if ($provider == 'bnn')
+            {
+                $user->update([
+                    'playing_game' => strtolower($provider) . '_' . $gamecode,
+                    'played_at' => time(),
+                ]);
+            }
+            else
+            {
+                $user->update([
+                    'playing_game' => strtolower($provider),
+                    'played_at' => time(),
+                ]);
+            }
             $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode);
             return view('frontend.Default.games.render', compact('provider','url'));
             

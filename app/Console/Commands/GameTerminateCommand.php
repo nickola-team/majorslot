@@ -52,9 +52,16 @@ class GameTerminateCommand extends Command
             
             foreach ($gameUsers as $user) {
                 try {
-                    if ($user->playing_game == strtolower($provider) . 'exit')
+                    if (str_contains($user->playing_game ,'exit'))
                     {
-                        $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $user);
+                        $extra = explode('_', $user->playing_game);
+                        if (count($extra) >= 2){
+                            $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $extra[1], $user);
+                        }
+                        else
+                        {
+                            $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $user);
+                        }
                         // $data = HPCController::withdrawAll($user);
                         Log::channel('monitor_game')->info($provider . ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
                         if ($data['error'] == false){

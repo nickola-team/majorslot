@@ -196,6 +196,13 @@ return [
     'nsevo_api' => env('NSEVO_API', ''),
     'nsevo_key' => env('NSEVO_KEY', ''),
 
+
+    /*
+    BANANA Auth key
+    */
+    'bnn_api' => env('BNN_API', ''),
+    'bnn_key' => env('BNN_KEY', ''),
+
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
 
