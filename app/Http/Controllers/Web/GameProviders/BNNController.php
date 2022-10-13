@@ -75,7 +75,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else
             {
-                Log::error('BNNgetuserbalance : response is not okay. ');
+                Log::error('BNNgetuserbalance : response is not okay. ' . $response->body());
             }
             return $balance;
         }
@@ -137,10 +137,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url;
         }
 
-        public static function withdrawAll($gid, $userID)
+        public static function withdrawAll($gid, $user)
         {
 
-            $balance = BNNController::getuserbalance($gid, $userID);
+            $balance = BNNController::getuserbalance($gid, $user->id);
             if ($balance == 0)
             {
                 return ['error'=>false, 'amount'=>$balance];
@@ -150,7 +150,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     
             $params = [
                 'key' => $key,
-                'uid' => self::BNN_PROVIDER . $userID,
+                'uid' => self::BNN_PROVIDER . $user->id,
                 'gid' => $gid,
                 'money' => $balance
             ];
@@ -164,7 +164,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($data==null || ($data['ret']!=1 )) //WithdrawAll failed
             {
-                Log::error('withdrawAll : WithdrawAll result failed. ' . self::BNN_PROVIDER . $userID . ':' .($data==null?'null':$data['msg']));
+                Log::error('withdrawAll : WithdrawAll result failed. ' . self::BNN_PROVIDER . $user->id . ':' .($data==null?'null':$data['msg']));
                 return ['error'=>true, 'amount'=>0];
             }
             return ['error'=>false, 'amount'=>$balance];
@@ -190,37 +190,38 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance)
             {
                 //withdraw all balance
-                $data = BNNController::withdrawAll($gamecode, $user->id);
+                $data = BNNController::withdrawAll($gamecode, $user);
                 if ($data['error'])
                 {
                     return null;
                 }
-            }
-            //Add balance
+                //Add balance
 
-            if ($user->balance > 0)
-            {
-                $url = config('app.bnn_api') . '/v1/deposit';
-                $params = [
-                    'key' => $key,
-                    'gid' => $gamecode,
-                    'uid' => self::BNN_PROVIDER . $user->id,
-                    'money' => (int)$user->balance
-                ];
+                if ($user->balance > 0)
+                {
+                    $url = config('app.bnn_api') . '/v1/deposit';
+                    $params = [
+                        'key' => $key,
+                        'gid' => $gamecode,
+                        'uid' => self::BNN_PROVIDER . $user->id,
+                        'money' => (int)$user->balance
+                    ];
 
-                $response = Http::get($url, $params);
-                if (!$response->ok())
-                {
-                    Log::error('BNNMakeLink : Deposit request failed. ' . $response->body());
-                    return null;
-                }
-                $data = $response->json();
-                if ($data==null || ($data['ret']!=1 )) //Deposit failed
-                {
-                    Log::error('BNNMakeLink : Deposit result failed. ' . ($data==null?'null':$data['msg']) . ' for user id ' . $user->id . ', balance=' . $user->balance);
-                    return null;
+                    $response = Http::get($url, $params);
+                    if (!$response->ok())
+                    {
+                        Log::error('BNNMakeLink : Deposit request failed. ' . $response->body());
+                        return null;
+                    }
+                    $data = $response->json();
+                    if ($data==null || ($data['ret']!=1 )) //Deposit failed
+                    {
+                        Log::error('BNNMakeLink : Deposit result failed. ' . ($data==null?'null':$data['msg']) . ' for user id ' . $user->id . ', balance=' . $user->balance);
+                        return null;
+                    }
                 }
             }
+            
             return '/followgame/bnn/'.$gamecode;
 
         }

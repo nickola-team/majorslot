@@ -92,7 +92,7 @@ class GameTerminateCommand extends Command
                     }
                 }
                 catch (Exception $exception) {
-                    Log::info('Exception while terminating game : ' . $user->id);
+                    Log::info('Exception while terminating game : ' . $user->id . $exception->getMessage());
                 }
             }
         }
