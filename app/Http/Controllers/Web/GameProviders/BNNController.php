@@ -36,13 +36,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         
-        public static function getuserbalance($gid, $userID) {
+        public static function getuserbalance($gid, $user) {
             $url = config('app.bnn_api') . '/v1/user-money';
             $key = config('app.bnn_key');
     
             $params = [
                 'key' => $key,
-                'uid' => self::BNN_PROVIDER . $userID,
+                'uid' => self::BNN_PROVIDER . $user->id,
                 'gid' => $gid
             ];
     
@@ -55,7 +55,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($res['ret'] == 1) {
                     foreach ($res['data'] as $data )
                     {
-                        if ($data['uid'] == self::BNN_PROVIDER . $userID)
+                        if ($data['uid'] == self::BNN_PROVIDER . $user->id)
                         {
                             foreach ($data['money'] as $money)
                             {
@@ -140,7 +140,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function withdrawAll($gid, $user)
         {
 
-            $balance = BNNController::getuserbalance($gid, $user->id);
+            $balance = BNNController::getuserbalance($gid, $user);
             if ($balance == 0)
             {
                 return ['error'=>false, 'amount'=>$balance];
@@ -182,7 +182,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $key = config('app.bnn_key');
 
-            $balance = BNNController::getuserbalance($gamecode, $user->id);
+            $balance = BNNController::getuserbalance($gamecode, $user);
             if ($balance == -1)
             {
                 return null;
