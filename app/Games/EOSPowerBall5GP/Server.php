@@ -248,7 +248,7 @@ namespace VanguardLTE\Games\EOSPowerBall5GP
                         {
                             // $dno = substr(date('Ymd'), 2) . sprintf('%06d', $ga['date_round']);
                             $d = explode('-', $ga['reg_date']);
-                            $dt = sprint('%04d%02d%02d', $d[0], $d[1], $d[2]);
+                            $dt = sprintf('%04d%02d%02d', $d[0], $d[1], $d[2]);
                             $dno = substr($dt, 2)  . sprintf('%06d', $ga['date_round']);
                             if ($trend->dno == $dno)
                             {
