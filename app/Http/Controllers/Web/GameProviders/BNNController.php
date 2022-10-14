@@ -99,8 +99,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'gamecode' => $href,
                 'enname' => $href . '_Casino',
                 'name' => $href . '_Casino',
-                'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$href)? __('gameprovider.'.$href):'Lobby',
-                'icon' => '',
+                'title' => \Illuminate\Support\Facades\Lang::has('gameprovider.'.$href)? __('gameprovider.'.$href):__('gameprovider.Lobby'),
+                'icon' => '/frontend/Default/ico/bnn/bnn_Casino.jpg',
                 'type' => 'table',
                 'view' => 1
             ]);
