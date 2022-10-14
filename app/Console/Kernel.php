@@ -13,6 +13,7 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\TheplusLaunch::class,
             \VanguardLTE\Console\Commands\TheplusSync::class,
             \VanguardLTE\Console\Commands\TheplusTerminate::class,
+            \VanguardLTE\Console\Commands\TheplusWithdrawAll::class,
 
             \VanguardLTE\Console\Commands\DreamGamingSync::class,
 
