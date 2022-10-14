@@ -314,6 +314,13 @@
                                     접속로그
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.system.statistics')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    시스템상황
+                                </a>
+                            </li>
                             
                         </ul>
                     </div>
