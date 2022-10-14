@@ -156,7 +156,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else
             {
-                $result = $this->livebet($p, true);
+                $result = $this->livebet($p, $p<90);
                 return response()->json([
                     's' => 0,
                     'live' => $result
