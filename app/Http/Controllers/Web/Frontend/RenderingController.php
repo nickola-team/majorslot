@@ -155,6 +155,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
            
             if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
+                //you must withdraw user balance
+                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::withdrawAll(auth()->user()->id);
+                if ($data['error'] == true)
+                {
+                    $data['msg'] = 'Withdraw Error';
+                    return view('frontend.Default.games.theplus', compact('data'));
+                }
                 $url = url('/game/' . $gamename);
                 $alonegame = 1;
             }
