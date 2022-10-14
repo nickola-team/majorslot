@@ -79,7 +79,7 @@ if (! function_exists('server_stat')) {
             $totalconnections = `netstat -ntu | grep :80 | grep -v LISTEN | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -rn | grep -v 127.0.0.1 | wc -l`; 
         }
 
-        $memusage = round(($memavailable/$memtotal)*100);
+        $memusage = round(($memused/$memtotal)*100);
 
 
 
