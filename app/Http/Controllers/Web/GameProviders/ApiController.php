@@ -14,7 +14,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error' => '1',
                     'description' => 'unlogged']);
             }
-            if ($user->playing_game != strtolower($provider))
+            $providers = explode('_', $user->playing_game);
+            if (count($providers) >= 2)
+            {
+                if ($providers[0] != strtolower($provider))
+                {
+                    return response()->json([
+                        'error' => '1',
+                        'description' => 'no playing this game']);
+                }
+            }
+            else if ($user->playing_game != strtolower($provider))
             {
                 return response()->json([
                     'error' => '1',
@@ -24,15 +34,31 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($request->name == 'exitGame')
             {
                 Log::channel('monitor_game')->info(strtoupper($provider) . ' : ' . $user->id . ' is exiting game');
-                $user->update([
-                    'playing_game' => strtolower($provider) . 'exit',
-                    'played_at' => time()
-                ]);
+                if (count($providers) >= 2)
+                {
+                    $user->update([
+                        'playing_game' => $providers[0] .  '_' . $providers[1] . '_exit',
+                        'played_at' => time()
+                    ]);
+                }
+                else
+                {
+                    $user->update([
+                        'playing_game' => strtolower($provider) . 'exit',
+                        'played_at' => time()
+                    ]);
+                }
             }
             else
             {
-                $balance = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getUserBalance', $user);
-                // $balance = HPCController::getUserBalance($user);
+                if (count($providers) >= 2)
+                {
+                    $balance = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getUserBalance', $providers[1], $user);
+                }
+                else
+                {
+                    $balance = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getUserBalance', $user);
+                }
                 if ($balance >= 0)
                 {
                     $user->update([

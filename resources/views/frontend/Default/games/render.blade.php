@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
     <style>
         body {
@@ -80,7 +81,7 @@
             navigator.sendBeacon('/{{$provider}}/signal', formData);
         }
 
-        var updateTime = 5 * 1000;
+        var updateTime = {{$rqtime}} * 1000;
 
         var updateUserBalance = function (callback) {
             console.log('user playing game');
