@@ -247,7 +247,7 @@ namespace VanguardLTE\Games\EOSPowerBall5GP
                         foreach ($data as $ga)
                         {
                             $dno = substr(date('Ymd'), 2) . sprintf('%06d', $ga['date_round']);
-                            if ($trend->dno == $dno)
+                            if ($trend->dno == $dno && $ga['reg_date']==date('Y-m-d'))
                             {
                                 //process this round
                                 $trendResult = $ga['ball_1'] .'|'.$ga['ball_2'] .'|' .$ga['ball_3'] .'|' .$ga['ball_4'] .'|'.$ga['ball_5'] .'|'.$ga['powerball'];
