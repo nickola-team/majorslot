@@ -345,6 +345,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         ]);
 
         /**
+         * System Statistic
+         */
+
+        Route::get('system/statistics', [
+            'as' => 'argon.system.statistics',
+            'uses' => 'SettingsController@system_values',
+        ]);
+
+        /**
          * Game routes
          */
         Route::get('game/category', [

@@ -1517,6 +1517,9 @@ Route::group([ 'prefix' => 'gac',], function () {
     Route::get('/balance/{userid}', 'GameProviders\GACController@balance');
     Route::post('/placeBet', 'GameProviders\GACController@placebet');
     Route::post('/betResult', 'GameProviders\GACController@betresult');
+
+    //for rendering
+    Route::get('/golobby', 'GameProviders\GACController@embedGACgame');
 });
 
 /**

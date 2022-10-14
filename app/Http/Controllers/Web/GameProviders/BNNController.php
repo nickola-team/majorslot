@@ -338,6 +338,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return [$count, $timepoint];
         }
+
+        public static function getAgentBalance()
+        {
+            $url = config('app.bnn_api') . '/v1/agent-money';
+            $key = config('app.bnn_key');
+            $params = [
+                'key' => $key,
+            ];
+            $response = null;
+
+            try {
+                $response = Http::get($url, $params);
+                $data = $response->json();
+                return $data['money'];
+            } catch (\Exception $e) {
+                Log::error('BNNAgentMoney : request failed. ' . $e->getMessage());
+                return -1;
+            }
+        }
     }
 
 }

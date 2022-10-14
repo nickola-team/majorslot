@@ -344,11 +344,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $url = GACController::makegamelink($gamecode);
+            // $url = '/gac/golobby?code=' . $gamecode;
             if ($url)
             {
                 return ['error' => false, 'data' => ['url' => $url]];
             }
             return ['error' => true, 'msg' => '로그인하세요'];
+        }
+
+        public function embedGACgame(\Illuminate\Http\Request $request)
+        {
+            $gamecode = $request->code;
+            $url = GACController::makegamelink($gamecode);
+            if ($url)
+            {
+                return view('frontend.Default.games.apigame',compact('url'));
+            }
+            else
+            {
+                abort(404);
+            }
+
+
         }
 
     }

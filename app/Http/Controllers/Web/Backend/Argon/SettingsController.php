@@ -192,6 +192,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors([trans('app.no_permission')]);
             }
         }
+        public function system_values(\Illuminate\Http\Request $request)
+        {
+            if( !auth()->user()->hasRole('admin') ) 
+            {
+                return redirect()->back()->withErrors([trans('app.no_permission')]);
+            }
+            $serverstat = server_stat();
+            $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
+            $tpnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getAgentBalance();
+
+            $agents = [
+                'bnn' => $bnnmoney,
+                'tp' => $tpnmoney
+            ];
+            $strinternallog = '';
+            if ( file_exists(storage_path('logs/laravel.log') ) )
+            {
+                $strinternallog = file_get_contents(storage_path('logs/laravel.log'));
+            }
+            
+            return view('backend.argon.setting.system', compact('serverstat','agents','strinternallog'));
+        }
+
     }
 
 }

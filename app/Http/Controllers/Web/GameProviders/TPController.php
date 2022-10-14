@@ -640,6 +640,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
+        public static function getAgentBalance()
+        {
+
+            $url = config('app.tp_api') . '/custom/api/agent/GetCurrentEgg';
+            $key = config('app.tp_api_key');
+            $secret = config('app.tp_api_secret');
+            $params = [
+                'key' => $key,
+                'secret' => $secret,
+            ];
+            $response = null;
+
+            try {
+                $response = Http::post($url, $params);
+                $data = $response->json();
+                return $data['currentEgg'];
+            } catch (\Exception $e) {
+                Log::error('TPAgentMoney : request failed. ' . $e->getMessage());
+                return -1;
+            }
+
+        }
+
     }
 
 }
