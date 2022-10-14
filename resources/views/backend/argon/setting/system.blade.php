@@ -1,6 +1,6 @@
 @extends('backend.argon.layouts.app',[
-        'parentSection' => 'dashboard',
-        'elementName' => 'dashboard'
+        'parentSection' => 'setting',
+        'elementName' => 'statistics'
     ])
 @section('page-title',  '시스템상황' )
 @section('content-header')
