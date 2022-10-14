@@ -343,7 +343,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            $url = '/gac/golobby?code=' . $gamecode;
+            $url = GACController::makegamelink($gamecode);
+            // $url = '/gac/golobby?code=' . $gamecode;
             if ($url)
             {
                 return ['error' => false, 'data' => ['url' => $url]];
