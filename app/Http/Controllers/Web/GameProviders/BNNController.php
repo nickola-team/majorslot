@@ -351,7 +351,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try {
                 $response = Http::get($url, $params);
                 $data = $response->json();
-                return $data['money'];
+                return $data['money_ro'];
             } catch (\Exception $e) {
                 Log::error('BNNAgentMoney : request failed. ' . $e->getMessage());
                 return -1;
