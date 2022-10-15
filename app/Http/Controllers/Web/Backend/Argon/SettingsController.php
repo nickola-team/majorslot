@@ -211,6 +211,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $strinternallog = file_get_contents(storage_path('logs/laravel.log'));
             }
+            else
+            {
+                $strinternallog = 'Could not find log file';
+            }
             
             return view('backend.argon.setting.system', compact('serverstat','agents','strinternallog'));
         }
