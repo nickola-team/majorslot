@@ -117,6 +117,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'key' => $key,
                 'uid' => self::BNN_PROVIDER . auth()->user()->id,
                 'gid' => $gamecode,
+                'min' => 10000,
+                'max' => 3000000
             ];
 
             $response = Http::get($url, $params);
