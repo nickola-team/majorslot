@@ -339,6 +339,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
                 \Auth::login($user);
             }
+
+            $user->update([
+                'playing_game' => null,
+                'remember_token' => $user->api_token
+            ]);
       
             // $sessionRepository->invalidateAllSessionsForUser($user->id);
 
