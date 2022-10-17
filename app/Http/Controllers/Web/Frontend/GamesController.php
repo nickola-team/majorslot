@@ -339,6 +339,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             \Auth::login($user);
 
             $gamecode = $request->gamecode;
+            $available_provider_cats = \VanguardLTE\Category::where('shop_id', $user->shop_id)->whereNotNull('provider')->where('view',1)->get();
+            foreach ($available_provider_cats as $ct)
+            {
+                $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
+                if ($res['error'] == false)
+                {
+                    return redirect($res['data']['url']);
+                }
+            }
 
             $game = \VanguardLTE\Game::where(['shop_id' => $user->shop_id, 'original_id' => $gamecode])->first();
             if (!$game)
