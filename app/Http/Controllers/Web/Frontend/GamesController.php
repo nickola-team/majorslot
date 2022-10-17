@@ -325,15 +325,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404); //player not found
             }
-            if (\Auth::check())
+            if (\Auth::check() && $user->id != auth()->user()->id)
             {
                 event(new \VanguardLTE\Events\User\LoggedOut());
                 \Auth::logout();
+                \DB::table('sessions')
+                ->where('user_id', $user->id)
+                ->delete();
             }
-            //invalidate all sessions
-            \DB::table('sessions')
-            ->where('user_id', $user->id)
-            ->delete();
+      
             // $sessionRepository->invalidateAllSessionsForUser($user->id);
 
             \Auth::login($user);
