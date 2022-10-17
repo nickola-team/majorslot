@@ -325,18 +325,23 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404); //player not found
             }
-            if (\Auth::check() && $user->id != auth()->user()->id)
+            if (!\Auth::check())
+            {
+                \Auth::login($user);
+            }
+            else if ($user->id != auth()->user()->id)
             {
                 event(new \VanguardLTE\Events\User\LoggedOut());
                 \Auth::logout();
                 \DB::table('sessions')
                 ->where('user_id', $user->id)
                 ->delete();
+
+                \Auth::login($user);
             }
       
             // $sessionRepository->invalidateAllSessionsForUser($user->id);
 
-            \Auth::login($user);
 
             $gamecode = $request->gamecode;
             $available_provider_cats = \VanguardLTE\Category::where('shop_id', $user->shop_id)->whereNotNull('provider')->where('view',1)->get();
