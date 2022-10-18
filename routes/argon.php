@@ -123,6 +123,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.player.gamehistory',
             'uses' => 'UsersController@player_game_stat',
         ]);
+
+        Route::get('/player/gamedetail', [
+            'as' => 'argon.player.gamedetail',
+            'uses' => 'UsersController@player_game_detail',
+        ]);
         
         /// Common
 
