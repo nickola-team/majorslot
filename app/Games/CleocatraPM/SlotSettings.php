@@ -681,10 +681,10 @@ namespace VanguardLTE\Games\CleocatraPM
         }
         public function GetReelStrips($winType, $bet)
         {
-            if($winType == 'bonus'){
-                $stack = \VanguardLTE\PPGameStackModel\PPGameCleocatraStack::where('id', 3)->first();
-                return json_decode($stack->spin_stack, true);
-            }
+            // if($winType == 'bonus'){
+            //     $stack = \VanguardLTE\PPGameStackModel\PPGameCleocatraStack::where('id', 3)->first();
+            //     return json_decode($stack->spin_stack, true);
+            // }
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
