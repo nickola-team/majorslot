@@ -700,7 +700,7 @@ namespace VanguardLTE\Games\GreekGodsPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameGreekGodsStack::where('spin_type', $spintype);
-                $index = 0; // mt_rand(0, 28000);
+                $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }

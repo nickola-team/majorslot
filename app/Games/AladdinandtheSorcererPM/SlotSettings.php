@@ -701,7 +701,7 @@ namespace VanguardLTE\Games\AladdinandtheSorcererPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameAladdinandtheSorcererStack::where('spin_type', $spintype);
-                $index = 0; //mt_rand(0, 39000);
+                $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
