@@ -638,6 +638,59 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.player.game', compact('statistics', 'total', 'gacmerge'));
         }
 
+        public function player_game_detail(\Illuminate\Http\Request $request)
+        {
+            $statid = $request->statid;
+            $statgame = \VanguardLTE\StatGame::where('id', $statid)->first();
+            if (!$statgame)
+            {
+                abort(404);
+            }
+            $ct = $statgame->category;
+            $res = null;
+            
+            if ($ct->provider != null)
+            {
+                if (function_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail'))
+                {
+                    $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
+                }
+                else
+                {
+                    
+                }
+            }
+            else //local game
+            {
+                $game = $statgame->game_item;
+                if ($game)
+                {
+                    $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
+                    if (!class_exists($object))
+                    {
+                        abort(404);
+                    }
+                    $gameObject = new $object();
+                    if (method_exists($gameObject, 'gameDetail'))
+                    {
+                        $res = $gameObject->gameDetail($statgame);
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+                else
+                {
+                    abort(404);
+                }
+
+            }
+            return view('backend.argon.player.gamedetail', compact('res'));
+
+            
+        }
+
     }
 
 }

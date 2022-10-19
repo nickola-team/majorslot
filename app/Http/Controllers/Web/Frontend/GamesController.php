@@ -325,20 +325,39 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404); //player not found
             }
-            if (\Auth::check())
+            if (!\Auth::check())
+            {
+                \Auth::login($user);
+            }
+            else if ($user->id != auth()->user()->id)
             {
                 event(new \VanguardLTE\Events\User\LoggedOut());
                 \Auth::logout();
+                \DB::table('sessions')
+                ->where('user_id', $user->id)
+                ->delete();
+
+                \Auth::login($user);
             }
-            //invalidate all sessions
-            \DB::table('sessions')
-            ->where('user_id', $user->id)
-            ->delete();
+
+            $user->update([
+                'playing_game' => null,
+                'remember_token' => $user->api_token
+            ]);
+      
             // $sessionRepository->invalidateAllSessionsForUser($user->id);
 
-            \Auth::login($user);
 
             $gamecode = $request->gamecode;
+            $available_provider_cats = \VanguardLTE\Category::where('shop_id', $user->shop_id)->whereNotNull('provider')->where('view',1)->get();
+            foreach ($available_provider_cats as $ct)
+            {
+                $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
+                if ($res['error'] == false)
+                {
+                    return redirect($res['data']['url']);
+                }
+            }
 
             $game = \VanguardLTE\Game::where(['shop_id' => $user->shop_id, 'original_id' => $gamecode])->first();
             if (!$game)

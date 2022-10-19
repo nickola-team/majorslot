@@ -207,12 +207,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'tp' => $tpnmoney
             ];
             $strinternallog = '';
-            if ( file_exists(storage_path('logs/laravel.log') ) )
+            $filesize = 0;
+            $laravel = storage_path('logs/laravel.log');
+            if ( file_exists($laravel) )
             {
-                $strinternallog = file_get_contents(storage_path('logs/laravel.log'));
+                $filesize = filesize($laravel);
+                $operating_system = PHP_OS_FAMILY;
+                if ($operating_system === 'Windows') {
+                    $strinternallog = file_get_contents($laravel);
+                }
+                else
+                {
+                    $strinternallog = `tail -50 $laravel`;
+                }
+
+            }
+            else
+            {
+                $strinternallog = 'Could not find log file';
             }
             
-            return view('backend.argon.setting.system', compact('serverstat','agents','strinternallog'));
+            return view('backend.argon.setting.system', compact('serverstat','agents','strinternallog', 'filesize'));
         }
 
     }

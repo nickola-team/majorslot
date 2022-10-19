@@ -246,7 +246,10 @@ namespace VanguardLTE\Games\EOSPowerBall3GP
                     {
                         foreach ($data as $ga)
                         {
-                            $dno = substr(date('Ymd'), 2) . sprintf('%06d', $ga['date_round']);
+                            // $dno = substr(date('Ymd'), 2) . sprintf('%06d', $ga['date_round']);
+                            $d = explode('-', $ga['reg_date']);
+                            $dt = sprintf('%04d%02d%02d', $d[0], $d[1], $d[2]);
+                            $dno = substr($dt, 2)  . sprintf('%06d', $ga['date_round']);
                             if ($trend->dno == $dno)
                             {
                                 //process this round
@@ -336,6 +339,29 @@ namespace VanguardLTE\Games\EOSPowerBall3GP
                 }
             }
             return null;
+
+        }
+        public function gameDetail(\VanguardLTE\StatGame $stat)
+        {
+            $rounds = explode('_',$stat->roundid);
+            $dno = $rounds[1];
+            $userbets = \VanguardLTE\GPGameBet::where([
+                'p' => $this->GAMEID,
+                'dno' => $dno,
+                'user_id' => $stat->user_id
+            ])->get();
+            $trend = \VanguardLTE\GPGameTrend::where(
+                [
+                    'p' => $this->GAMEID,
+                    'dno' => $dno
+                ]
+            )->first();
+            return [
+                'type' => 'powerball',
+                'result' => $trend,
+                'bets' => $userbets,
+                'stat' => $stat
+            ];
 
         }
     }

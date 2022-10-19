@@ -132,6 +132,7 @@
                 <div class="card-body">
                     <!-- Chart -->
                     <div>
+                        <p>파일사이즈 - {{number_format($filesize/1000)}}KB</p>
                     <textarea id="content" name="content" rows="10" cols="150" style="width:100%;">{{$strinternallog}}</textarea>
                     </div>
                 </div>

@@ -46,3 +46,6 @@
 <td>{{number_format($stat->bet,0)}}</td>
 <td>{{number_format($stat->win,0)}}</td>
 <td>{{ $stat->date_time }}</td>
+<td>
+<a href="{{argon_route('argon.player.gamedetail', ['statid' => $stat->id])}}" onclick="window.open(this.href,'newwindow','width=1000,height=800'); return false;"><button class="btn btn-success btn-sm">상세보기</button></a>
+</td>
