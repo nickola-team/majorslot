@@ -76,7 +76,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
-                'data' => []
+                'data' => [
+                    'min' => 10000,
+                    'max' => 2000000
+                ]
             ]);
         }
         public function balance($userid, \Illuminate\Http\Request $request)
