@@ -73,160 +73,108 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'data' => []
                 ]);
             }
+            $betlimit = null;
+            $userlimit = null;
+            $default_config = \VanguardLTE\ProviderInfo::where('user_id', 0)->first();
+            if (!$default_config)
+            {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'Not found default config',
+                    'data' => []
+                ]);
+            }
+            $betlimitD = json_decode($default_config->config, true);
+            $betlimit = $betlimitD;
+            $parent = $user;
+            while ($parent && !$parent->isInoutPartner())
+            {
+                $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->first();
+                if ($user_config)
+                {
+                    $userlimit = json_decode($user_config->config, true);
+                    break;
+                }
+                $parent = $parent->referral;
+            }
+            if ($userlimit)
+            {
+                foreach ($betlimitD as $idx => $limit)
+                {
+                    foreach ($limit['BetLimit'] as $k => $v)
+                    {
+                        //bacmin, bacmax, scmin, scmax, dtmin, dtmax, rlmin, rlmax
+                        if ($k=='Baccarat_Min') 
+                        {
+                            if (isset($userlimit['bacmin']))
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmin'];
+                            }
+                        }
+                        else if (isset($userlimit['bacmax']) && str_contains($k,'Baccarat_'))
+                        {
+                            if (str_contains($k,'Pair'))
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'] / 10;
+                            }
+                            else
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'];
+                            }
+                        }
+
+                        //Dragon&Tiger
+                        else if ($k=='DragonTiger_Min')
+                        {
+                            if (isset($userlimit['dtmin']))
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['dtmin'];
+                            }
+                        }
+                        else if (isset($userlimit['dtmax']) && str_contains($k,'DragonTiger_'))
+                        {
+                            $betlimit[$idx]['BetLimit'][$k] = $userlimit['dtmax'];
+                        }
+
+                        //SicBo
+                        else if ($k=='SicBo_Min')
+                        {
+                            if (isset($userlimit['scmin']))
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['scmin'];
+                            }
+                        }
+                        else if (isset($userlimit['scmax']) && str_contains($k,'SicBo_'))
+                        {
+                            $betlimit[$idx]['BetLimit'][$k] = $userlimit['scmax'];
+                        }
+
+                        //Roulette
+                        else if ($k=='Roulette_Min')
+                        {
+                            if (isset($userlimit['rlmin']))
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['rlmin'];
+                            }
+                        }
+                        else if (isset($userlimit['rlmax']) && str_contains($k,'Roulette_'))
+                        {
+                            $betlimit[$idx]['BetLimit'][$k] = $userlimit['rlmax'];
+                        }
+                        
+
+                    }
+                }
+                
+            }
+
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
                 'data' => json_encode([[
-                    "GameType"=> 31,
-                    "Limits"=> [[
-                        "tableIds"=> ["default"],
-                        "BetLimit"=> [
-                            "Baccarat_Min"=> 1000,
-                            "Baccarat_PlayerPair"=> 1000000,
-                            "Baccarat_Player"=> 30000000,
-                            "Baccarat_Tie"=> 1000000,
-                            "Baccarat_Banker"=> 30000000,
-                            "Baccarat_BankerPair"=> 1000000,
-                            "Baccarat_PlayerBonus"=> 1000000,
-                            "Baccarat_BankerBonus"=> 1000000,
-                            "Baccarat_PerfectPair"=> 1000000,
-                            "Baccarat_EitherPair"=> 1000000,
-                            "Baccarat_SuperSix"=> 2500000,
-                            "DragonTiger_Min"=> 1000,
-                            "DragonTiger_Dragon"=> 5000000,
-                            "DragonTiger_Tiger"=> 5000000,
-                            "DragonTiger_Tie"=> 500000,
-                            "DragonTiger_SuitedTie"=> 50000,
-                            "Roulette_Min"=> 1000,
-                            "Roulette_Straight"=> 100000,
-                            "Roulette_Split"=> 200000,
-                            "Roulette_Street"=> 300000,
-                            "Roulette_Corner"=> 400000,
-                            "Roulette_Line"=> 600000,
-                            "Roulette_Column"=> 1200000,
-                            "Roulette_Dozen"=> 1200000,
-                            "Roulette_Red"=> 2000000,
-                            "Roulette_Black"=> 2000000,
-                            "Roulette_Even"=> 2000000,
-                            "Roulette_Odd"=> 2000000,
-                            "Roulette_Low"=> 2000000,
-                            "Roulette_High"=> 2000000,
-                            "SicBo_Min"=> 1000,
-                            "SicBo_Big"=> 2500000,
-                            "SicBo_Small"=> 2500000,
-                            "SicBo_Even"=> 2500000,
-                            "SicBo_Odd"=> 2500000,
-                            "SicBo_Triple"=> 250000,
-                            "SicBo_Total4"=> 50000,
-                            "SicBo_Total5"=> 100000,
-                            "SicBo_Total6"=> 250000,
-                            "SicBo_Total7"=> 500000,
-                            "SicBo_Total8"=> 500000,
-                            "SicBo_Total9"=> 500000,
-                            "SicBo_Total10"=> 500000,
-                            "SicBo_Total11"=> 500000,
-                            "SicBo_Total12"=> 500000,
-                            "SicBo_Total13"=> 500000,
-                            "SicBo_Total14"=> 500000,
-                            "SicBo_Total15"=> 250000,
-                            "SicBo_Total16"=> 100000,
-                            "SicBo_Total17"=> 50000,
-                            "SicBo_1"=> 250000,
-                            "SicBo_2"=> 250000,
-                            "SicBo_3"=> 250000,
-                            "SicBo_4"=> 250000,
-                            "SicBo_5"=> 250000,
-                            "SicBo_6"=> 250000,
-                            "SicBo_Double1"=> 250000,
-                            "SicBo_Double2"=> 250000,
-                            "SicBo_Double3"=> 250000,
-                            "SicBo_Double4"=> 250000,
-                            "SicBo_Double5"=> 250000,
-                            "SicBo_Double6"=> 250000,
-                            "SicBo_Triple1"=> 250000,
-                            "SicBo_Triple2"=> 250000,
-                            "SicBo_Triple3"=> 250000,
-                            "SicBo_Triple5"=> 250000,
-                            "SicBo_Triple4"=> 250000,
-                            "SicBo_Triple6"=> 250000,
-                            "SicBo_Combo1And2"=> 500000,
-                            "SicBo_Combo1And3"=> 500000,
-                            "SicBo_Combo1And4"=> 500000,
-                            "SicBo_Combo1And5"=> 500000,
-                            "SicBo_Combo1And6"=> 500000,
-                            "SicBo_Combo2And3"=> 500000,
-                            "SicBo_Combo2And4"=> 500000,
-                            "SicBo_Combo2And5"=> 500000,
-                            "SicBo_Combo2And6"=> 500000,
-                            "SicBo_Combo3And4"=> 500000,
-                            "SicBo_Combo3And5"=> 500000,
-                            "SicBo_Combo3And6"=> 500000,
-                            "SicBo_Combo4And5"=> 500000,
-                            "SicBo_Combo4And6"=> 500000,
-                            "SicBo_Combo5And6"=> 500000
-                        ]
-                    ], [
-                        "tableIds"=> ["p63cmvmwagteemoy", "onokyd4wn7uekbjx", "qgdk6rtpw6hax4fe"],
-                        "BetLimit"=> [
-                            "Baccarat_Min"=> 1000,
-                            "Baccarat_PlayerPair"=> 500000,
-                            "Baccarat_Player"=> 30000000,
-                            "Baccarat_Tie"=> 1000000,
-                            "Baccarat_Banker"=> 30000000,
-                            "Baccarat_BankerPair"=> 500000,
-                            "Baccarat_PlayerBonus"=> 1000000,
-                            "Baccarat_BankerBonus"=> 1000000,
-                            "Baccarat_PerfectPair"=> 100000,
-                            "Baccarat_EitherPair"=> 1000000,
-                            "Baccarat_SuperSix"=> 2500000
-                        ]
-                    ], [
-                        "tableIds"=> ["qgqrucipvltnvnvq", "oytmvb9m1zysmc44", "60i0lcfx5wkkv3sy", "ndgvs3tqhfuaadyg", "peekbaccarat0001", "ndgvz5mlhfuaad6e", "obj64qcnqfunjelj", "qgqrv4asvltnvuty", "nmwde3fd7hvqhq43", "ocye2ju2bsoyq6vv", "ovu5eja74ccmyoiq", "nmwdzhbg7hvqh6a7", "ndgv45bghfuaaebf", "ovu5h6b3ujb4y53w", "ndgvwvgthfuaad3q", "qgqrhfvsvltnueqf", "leqhceumaq6qfoug", "qgonc7t4ucdiel4o", "pwsaqk24fcz5qpcr", "o4kymodby2fa2c7g", "nxpkul2hgclallno", "o4kyj7tgpwqqy4m4", "o4kylkahpwqqy57w", "ndgv76kehfuaaeec", "ocye5hmxbsoyrcii", "lv2kzclunt2qnxo5", "puu43e6c5uvrfikr", "ovu5cwp54ccmymck", "ovu5dsly4ccmynil", "ovu5fzje4ccmyqnr", "qgqrrnuqvltnvejx", "ovu5fbxm4ccmypmb", "nxpj4wumgclak2lx", "puu4yfymic3reudn", "k2oswnib7jjaaznw", "zixzea8nrf1675oh"],
-                        "BetLimit"=> [
-                            "Baccarat_Min"=> 1000,
-                            "Baccarat_PlayerPair"=> 500000,
-                            "Baccarat_Player"=> 10000000,
-                            "Baccarat_Tie"=> 1000000,
-                            "Baccarat_Banker"=> 10000000,
-                            "Baccarat_BankerPair"=> 500000,
-                            "Baccarat_PlayerBonus"=> 1000000,
-                            "Baccarat_BankerBonus"=> 1000000,
-                            "Baccarat_PerfectPair"=> 100000,
-                            "Baccarat_EitherPair"=> 1000000,
-                            "Baccarat_SuperSix"=> 2500000
-                        ]
-                    ], [
-                        "tableIds"=> ["rng-gwbaccarat00", "gwbaccarat000001"],
-                        "BetLimit"=> [
-                            "Baccarat_Min"=> 1000,
-                            "Baccarat_PlayerPair"=> 1000000,
-                            "Baccarat_Player"=> 5000000,
-                            "Baccarat_Tie"=> 500000,
-                            "Baccarat_Banker"=> 5000000,
-                            "Baccarat_BankerPair"=> 1000000,
-                            "Baccarat_PlayerBonus"=> 1000000,
-                            "Baccarat_BankerBonus"=> 1000000,
-                            "Baccarat_PerfectPair"=> 100000,
-                            "Baccarat_EitherPair"=> 1000000,
-                            "Baccarat_SuperSix"=> 2500000
-                        ]
-                    ], [
-                        "tableIds"=> ["LightningBac0001"],
-                        "BetLimit"=> [
-                            "Baccarat_Min"=> 1000,
-                            "Baccarat_PlayerPair"=> 500000,
-                            "Baccarat_Player"=> 10000000,
-                            "Baccarat_Tie"=> 500000,
-                            "Baccarat_Banker"=> 10000000,
-                            "Baccarat_BankerPair"=> 500000,
-                            "Baccarat_PlayerBonus"=> 1000000,
-                            "Baccarat_BankerBonus"=> 1000000,
-                            "Baccarat_PerfectPair"=> 100000,
-                            "Baccarat_EitherPair"=> 1000000,
-                            "Baccarat_SuperSix"=> 2500000
-                        ]
-                    ]]
-                ]])
+                    'GameType' => self::GACGVO,
+                    "Limits" => $betlimit
+                    ]])
             ]);
         }
         public function balance($userid, \Illuminate\Http\Request $request)
