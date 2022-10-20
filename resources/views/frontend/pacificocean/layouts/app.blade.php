@@ -313,7 +313,7 @@
 				@foreach($categories AS $index=>$category)
           @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false))
 
-					<a class="slot-btn gl-title-click" onclick="showGamesPopup('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+					<a class="slot-btn gl-title-click" onclick="showGamesPopup('{{ $category->title }}', '{{ $category->href }}', 0)">
 						<div class="inner">
 						<img
 							class="slot-bg"
