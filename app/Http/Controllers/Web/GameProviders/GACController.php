@@ -406,12 +406,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $recommend = config('app.gac_key');
-            $query = 'SELECT * FROM w_provider_info WHERE provider="gac" and user_id=' . $master->id;
-            $gac_info = \DB::select($query);
-            foreach ($gac_info as $info)
-            {
-                $recommend = $info->config;
-            }
             $data = [
                 'userId' => strval($user->id),
                 'userName' => $user->username,
