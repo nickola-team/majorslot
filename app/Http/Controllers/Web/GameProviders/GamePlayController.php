@@ -195,6 +195,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameObject = new $object();
 
             $data = [];
+            $maxbet = 10000;
+            foreach ($totalBets as $bet)
+            {
+                $t = [
+                    'playerCount' => $bet->players,
+                    'id' => $bet->rt,
+                    'cont' => null,
+                    'a' => $bet->bet,
+                    'o' => 0,
+                    'm' => null
+                ];
+                if ($bet->bet > $maxbet)
+                {
+                    $maxbet = $bet->bet;
+                }
+                
+                $data[] = $t;
+            }
             if ($fake)
             {
                 foreach ($gameObject->RATE as $id=>$o){
@@ -210,30 +228,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         ];
                         $cur = GamePlayController::gamePlayTimeFormat();
                         $deltaTime = $cur - $trend->sl;
-                        $multiplier = 1;
                         for ($i = 0;$i < $deltaTime;$i++)
                         {
-                            $multiplier += mt_rand(0,2);
+                            $c = mt_rand(0,2);
+                            $t['playerCount'] = $t['playerCount'] + $c;
+                            $t['a'] = $t['a'] + $c * mt_rand($maxbet, $maxbet * 10);
                         }
-                        $t['playerCount'] = $t['playerCount'] + $multiplier;
-                        $t['a'] = $t['a'] + $multiplier * mt_rand($gameObject->MULTILIMIT[2]['lo'],$gameObject->MULTILIMIT[2]['lo'] * 100);
                         $data[] = $t;
                     }
                 }
             }
-            foreach ($totalBets as $bet)
-            {
-                $t = [
-                    'playerCount' => $bet->players,
-                    'id' => $bet->rt,
-                    'cont' => null,
-                    'a' => $bet->bet,
-                    'o' => 0,
-                    'm' => null
-                ];
-                
-                $data[] = $t;
-            }
+            
             $result = [
                 'p' => $game_p,
                 'a' => 1,
