@@ -202,7 +202,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'playerCount' => $bet->players,
                     'id' => $bet->rt,
                     'cont' => null,
-                    'a' => $bet->bet,
+                    'a' => intval($bet->bet),
                     'o' => 0,
                     'm' => null
                 ];
