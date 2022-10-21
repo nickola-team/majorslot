@@ -75,7 +75,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $betlimit = null;
             $userlimit = null;
-            $default_config = \VanguardLTE\ProviderInfo::where('user_id', 0)->first();
+            $default_config = \VanguardLTE\ProviderInfo::where('user_id', 0)->where('provider', 'gac')->first();
             if (!$default_config)
             {
                 return response()->json([
@@ -89,7 +89,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $parent = $user;
             while ($parent && !$parent->isInoutPartner())
             {
-                $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->first();
+                $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'gac')->first();
                 if ($user_config)
                 {
                     $userlimit = json_decode($user_config->config, true);
