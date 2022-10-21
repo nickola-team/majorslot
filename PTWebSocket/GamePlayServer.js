@@ -99,7 +99,7 @@ function startPing() {
 
 var server = express();
 var corsOptions = {
-	origin: `${serverConfig.prefix}${serverConfig.origin_host}`,
+	origin: "*",
 	credentials: true,
   }
 server.use(cors(corsOptions));
