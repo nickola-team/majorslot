@@ -213,39 +213,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $multiplier = 1;
                         for ($i = 0;$i < $deltaTime;$i++)
                         {
-                            $multiplier += mt_rand(0,1);
+                            $multiplier += mt_rand(0,2);
                         }
                         $t['playerCount'] = $t['playerCount'] + $multiplier;
-                        $t['a'] = $t['a'] + $multiplier * mt_rand($gameObject->MULTILIMIT[1]['lo'],$gameObject->MULTILIMIT[1]['lo'] * 10);
+                        $t['a'] = $t['a'] + $multiplier * mt_rand($gameObject->MULTILIMIT[2]['lo'],$gameObject->MULTILIMIT[2]['lo'] * 100);
                         $data[] = $t;
                     }
                 }
             }
             foreach ($totalBets as $bet)
             {
-                $bfound = 0;
-                for ($i=0;$i<count($data);$i++)
-                {
-                    if ($data[$i]['id'] == $bet->rt)
-                    {
-                        $bfound = 1;
-                        $data[$i]['playerCount'] = $data[$i]['playerCount'] + $bet->players;
-                        $data[$i]['a'] = $data[$i]['a'] + $bet->bet;
-                        break;
-                    }
-                }
-                if ($bfound == 0){
-                    $t = [
-                        'playerCount' => $bet->players,
-                        'id' => $bet->rt,
-                        'cont' => null,
-                        'a' => $bet->bet,
-                        'o' => 0,
-                        'm' => null
-                    ];
-                    
-                    $data[] = $t;
-                }
+                $t = [
+                    'playerCount' => $bet->players,
+                    'id' => $bet->rt,
+                    'cont' => null,
+                    'a' => $bet->bet,
+                    'o' => 0,
+                    'm' => null
+                ];
+                
+                $data[] = $t;
             }
             $result = [
                 'p' => $game_p,
