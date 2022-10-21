@@ -210,8 +210,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $maxbet = $bet->bet;
                 }
-                
-                $data[] = $t;
+                array_unshift($data, $t);
             }
             if ($fake)
             {
@@ -234,7 +233,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $t['playerCount'] = $t['playerCount'] + $c;
                             $t['a'] = $t['a'] + $c * mt_rand($maxbet, $maxbet * 10);
                         }
-                        $data[] = $t;
+                        array_unshift($data, $t);
                     }
                 }
             }
