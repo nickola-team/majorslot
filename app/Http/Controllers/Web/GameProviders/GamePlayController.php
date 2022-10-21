@@ -215,7 +215,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($fake)
             {
                 foreach ($gameObject->RATE as $id=>$o){
-                    $split = mt_rand(1,2);
+                    $split = 1;//mt_rand(1,2);
                     for ($n=0;$n<$split;$n++){
                         $t = [
                             'playerCount' => 0,
@@ -229,9 +229,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $deltaTime = $cur - $trend->sl;
                         for ($i = 0;$i < $deltaTime;$i++)
                         {
-                            $c = mt_rand(0,2);
+                            $c = mt_rand(2,4);
                             $t['playerCount'] = $t['playerCount'] + $c;
-                            $t['a'] = $t['a'] + $c * mt_rand($maxbet, $maxbet * 10);
+                            $t['a'] = $t['a'] + $c * mt_rand($maxbet, $maxbet * 2);
                         }
                         array_unshift($data, $t);
                     }
