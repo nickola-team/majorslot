@@ -87,7 +87,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betlimitD = json_decode($default_config->config, true);
             $betlimit = $betlimitD;
             $parent = $user;
-            while ($parent && !$parent->isInoutPartner())
+            while ($parent)
             {
                 $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'gac')->first();
                 if ($user_config)
