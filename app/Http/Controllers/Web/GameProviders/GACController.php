@@ -104,7 +104,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     foreach ($limit['BetLimit'] as $k => $v)
                     {
                         //bacmin, bacmax, scmin, scmax, dtmin, dtmax, rlmin, rlmax
-                        if ($k=='Baccarat_Min') 
+                        if (isset($userlimit[$k])) 
+                        {
+                            $betlimit[$idx]['BetLimit'][$k] = $userlimit[$k];
+                        }
+                        else if ($k=='Baccarat_Min') 
                         {
                             if (isset($userlimit['bacmin']))
                             {
