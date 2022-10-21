@@ -585,7 +585,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
-            $categories = ['pragmatic','cq9play','virtualtech','habaneroplay','greentube'];
+            $categories = ['pragmatic'];
             $selectedGames = [];
             foreach ($categories as $category){
 
