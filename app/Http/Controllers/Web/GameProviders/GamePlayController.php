@@ -216,7 +216,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $multiplier += mt_rand(0,1);
                         }
                         $t['playerCount'] = $t['playerCount'] + $multiplier;
-                        $t['a'] = $t['a'] + $multiplier * mt_rand($gameObject->MULTILIMIT[0]['lo'],$gameObject->MULTILIMIT[0]['lo'] * 10);
+                        $t['a'] = $t['a'] + $multiplier * mt_rand($gameObject->MULTILIMIT[1]['lo'],$gameObject->MULTILIMIT[1]['lo'] * 10);
                         $data[] = $t;
                     }
                 }
