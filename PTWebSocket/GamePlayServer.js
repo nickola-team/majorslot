@@ -31,7 +31,7 @@ signalR.hub('gamehub',{
 function gamePing(game)
 {
 	var gameURL = serverConfig.prefix+serverConfig.origin_host+"/REST/GameCore/trendInfo?p=" + game;
-	console.log(gameURL);
+	// console.log(gameURL);
 	return new Promise(resolve =>{
 		 request.post(gameURL, function(error, response, body)
 			{
@@ -96,13 +96,25 @@ function startPing() {
 	});
 }
 
-
+var corsOptionsDelegate = function (req, callback) {
+	var corsOptions;
+	if (req.header('Origin') !== undefined) 
+	{ 
+	  corsOptions = { origin: req.header('Origin'), credentials: true } // reflect (enable) the requested origin in the CORS response
+	} else {
+	  corsOptions = { origin: false } // disable CORS for this request
+	}
+	callback(null, corsOptions) // callback expects two parameters: error and options
+  }
+  
 var server = express();
 var corsOptions = {
-	origin: "*",
+	origin: function (origin, cb) {
+		cb(null, true);
+    },
 	credentials: true,
   }
-server.use(cors(corsOptions));
+server.use(cors(corsOptionsDelegate));
 server.use(express.static(__dirname));
 server.use(signalR.createListener());
 server.listen(serverConfig.listen);
