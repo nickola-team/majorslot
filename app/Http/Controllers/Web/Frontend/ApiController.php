@@ -201,14 +201,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function postJoin(\Illuminate\Http\Request $request)
         {
-            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
-            $admin = null;
-            if ($site)
-            {
-                $admin = \VanguardLTE\User::where([
-                    'id' => $site->adminid, 
-                ])->first();
-            }
+            $comasters = \VanguardLTE\WebSite::where('domain', $request->root())->pluck('adminid')->toArray();
+            // $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            // $admin = null;
+            // if ($site)
+            // {
+            //     $admin = \VanguardLTE\User::where([
+            //         'id' => $site->adminid, 
+            //     ])->first();
+            // }
 
             $friend = $request->friend;
             $parent = \VanguardLTE\User::where([
@@ -225,7 +226,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $checkp = $checkp->referral;
             }
 
-            if (!$admin || !$checkp || $admin->id != $checkp->id)
+            if (!$checkp || !in_array($checkp->id, $comasters))
             {
                 return response()->json(['error' => true, 'msg' => '추천인아이디가 정확하지 않습니다']);
             }
