@@ -8,7 +8,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('auth');
             $this->middleware('permission:access.admin.panel');
             $this->middleware( function($request,$next) {
-                if (!auth()->user()->hasRole('admin'))
+                if (!auth()->user()->isInOutPartner())
                 {
                     return response('허용되지 않은 접근입니다.', 401);
                 }
@@ -460,14 +460,74 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
             return view('backend.argon.game.bank', compact('gamebank','bonusbank', 'minslot','maxslot','minbonus','maxbonus','reset_bank'));
         }
-    }
+        public function game_betlimit(\Illuminate\Http\Request $request)
+        {
+            $betConfig = null;
+            $default = false;
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $betConfig = \VanguardLTE\ProviderInfo::where('user_id', auth()->user()->id)->where('provider', 'gac')->first();
+            }
+            if (!$betConfig)
+            {
+                $default = true;
+                $betConfig = \VanguardLTE\ProviderInfo::where('user_id', 0)->where('provider', 'gac')->first();
+            }
+            if (!$betConfig)
+            {
+                return redirect()->back()->withErrors(['배팅한도 설정을 찾을수 없습니다.']);
+            }
+            $betLimits = json_decode($betConfig->config, true);
+            if ($default)
+            {
+                $betLimits = $betLimits[0]['BetLimit'];
+            }
+            
+            return view('backend.argon.game.betlimit', compact('betLimits'));
+        }
 
-}
-namespace 
-{
-    function onkXppk3PRSZPackRnkDOJaZ9()
-    {
-        return 'OkBM2iHjbd6FHZjtvLpNHOc3lslbxTJP6cqXsMdE4evvckFTgS';
+        public function game_betlimitupdate(\Illuminate\Http\Request $request)
+        {
+            $data = $request->all();
+            if (auth()->user()->hasRole('admin'))
+            {
+                $betConfig = \VanguardLTE\ProviderInfo::where('user_id', 0)->where('provider', 'gac')->first();
+                if (!$betConfig)
+                {
+                    abort(500);
+                }
+                else
+                {
+                    $betConfig->update(['config' => json_encode(
+                        [
+                            [
+                                'tableIds' => ['default'],
+                                'BetLimit' => $data
+                            ]
+                        ]
+                    )]);
+                }
+            }
+            else
+            {
+
+                $betConfig = \VanguardLTE\ProviderInfo::where('user_id', auth()->user()->id)->where('provider', 'gac')->first();
+                if (!$betConfig)
+                {
+                    \VanguardLTE\ProviderInfo::create([
+                        'user_id' => auth()->user()->id,
+                        'provider' => 'gac',
+                        'config' => json_encode($data)
+                    ]);
+                }
+                else
+                {
+                    $betConfig->update(['config' => json_encode($data)]);
+                }
+            }
+            
+            return redirect()->back()->withSuccess(['배팅한도가 업데이트되었습니다']);
+        }
     }
 
 }

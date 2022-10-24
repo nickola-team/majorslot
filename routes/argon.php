@@ -417,6 +417,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'GameController@gamebanks_setting',
         ]);
 
+        Route::get('game/betlimit', [
+            'as' => 'argon.game.betlimit',
+            'uses' => 'GameController@game_betlimit',
+        ]);
+        Route::post('game/betlimit', [
+            'as' => 'argon.game.betlimitupdate',
+            'uses' => 'GameController@game_betlimitupdate',
+        ]);
+
         /**
          * Happyhours routes
          */
