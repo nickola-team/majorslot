@@ -66,7 +66,7 @@
 					<div class="col-game">
 						<div class="game-box">
 							<div class="page-title">
-                                <span class="title">{{$title??'WIN 파워볼'}} </span>
+                                <span class="title">{{isset($title)?__('powerball.'.$title,[],$pagelang):__('powerball.WINPowerBall',[],$pagelang)}} </span>
 							</div>
 							<div class="instants-game-div" style="margin-left:10px;">
 								<div class="broadcast-div" style="width:830px;height:580px;margin:0 auto;overflow:hidden;">
@@ -77,12 +77,12 @@
 							</div>
 							<div style="width:100%;display:inline-flex;">
 								<div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
-								<span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">최근 베팅내역</span>
+								<span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">{{__('powerball.LastBetHistory',[],$pagelang)}}</span>
 								<div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
 							</div>
 							<div class="">
 								<ul id="cart_bet_list">
-								<li><div class="result">베팅내역이 없습니다.</div></li>
+								<li><div class="result">{{__('powerball.EmptyHistory',[],$pagelang)}}</div></li>
 								</ul>
 							</div>
 						</div>
@@ -105,48 +105,48 @@
                                             <ul class="game-group">
                                                 <div class="title">
                                                     <div class="date">====-==-==</div>
-                                                    <div class="round">------회</div>
+                                                    <div class="round">------{{__('powerball.Round',[],$pagelang)}}</div>
                                                 </div>
                                             </ul>
                                     </div>
 									<div class="game-list  ht330">
                                     <div style="width:100%;display:inline-flex;">
                                         <div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
-                                        <span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">파워볼</span>
+                                        <span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">{{__('powerball.Powerball',[],$pagelang)}}</span>
                                         <div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
                                     </div>
 										<ul>
 											<li class="">
-												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="파워볼(홀)" data-betid="1">
-													<span class="icon">홀</span><span class="title">파워</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}})" data-betid="1">
+													<span class="icon">{{__('powerball.Odd',[],$pagelang)}}</span><span class="title">{{__('powerball.Power',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
-												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="파워볼(짝)" data-betid="2">
-													<span class="icon">짝</span><span class="title">파워</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}})" data-betid="2">
+													<span class="icon">{{__('powerball.Even',[],$pagelang)}}</span><span class="title">{{__('powerball.Power',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
-												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="파워볼(언더)" data-betid="3">
-													<span class="icon">언</span><span class="title">파워</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Under',[],$pagelang)}})" data-betid="3">
+													<span class="icon">{{__('powerball.Under',[],$pagelang)}}</span><span class="title">{{__('powerball.Power',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
-												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="파워볼(오버)" data-betid="4">
-													<span class="icon">오</span><span class="title">파워</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Over',[],$pagelang)}})" data-betid="4">
+													<span class="icon">{{__('powerball.Over',[],$pagelang)}}</span><span class="title">{{__('powerball.Power',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
 												<div class="close remain-time-con"></div>
 											</li>
                                             <li class="">
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="4.0" data-seltxt="파워볼(홀/언더)" data-betid="5">
-													<div class="topgroup"> <span class="title">파워</span><span class="benefit">4.0</span></div>
-													<div class="icongroup"> <span class="icon2 bg_blue2">홀</span><span class="icon3 bg_blue2">언</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="4.0" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})" data-betid="5">
+													<div class="topgroup"> <span class="title">{{__('powerball.Power',[],$pagelang)}}</span><span class="benefit">4.0</span></div>
+													<div class="icongroup"> <span class="icon2 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon3 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.0" data-seltxt="파워볼(홀/오버)" data-betid="6">
-													<div class="topgroup"> <span class="title">파워</span><span class="benefit">3.0</span></div>
-													<div class="icongroup"> <span class="icon2 bg_blue2">홀</span><span class="icon3 bg_red2">오</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.0" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})" data-betid="6">
+													<div class="topgroup"> <span class="title">{{__('powerball.Power',[],$pagelang)}}</span><span class="benefit">3.0</span></div>
+													<div class="icongroup"> <span class="icon2 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon3 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.0" data-seltxt="파워볼(짝/언더)" data-betid="7">
-													<div class="topgroup"> <span class="title">파워</span><span class="benefit">3.0</span></div>
-													<div class="icongroup"> <span class="icon2 bg_red2">짝</span><span class="icon3 bg_blue2">언</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.0" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})" data-betid="7">
+													<div class="topgroup"> <span class="title">{{__('powerball.Power',[],$pagelang)}}</span><span class="benefit">3.0</span></div>
+													<div class="icongroup"> <span class="icon2 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon3 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="4.0" data-seltxt="파워볼(짝/오버)" data-betid="8">
-													<div class="topgroup"> <span class="title">파워</span><span class="benefit">4.0</span></div>
-													<div class="icongroup"> <span class="icon2 bg_red2">짝</span><span class="icon3 bg_red2">오</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="4.0" data-seltxt="{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})" data-betid="8">
+													<div class="topgroup"> <span class="title">{{__('powerball.Power',[],$pagelang)}}</span><span class="benefit">4.0</span></div>
+													<div class="icongroup"> <span class="icon2 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon3 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span></div>
 												</div>
 												<div class="close remain-time-con"></div>
 											</li>
@@ -154,41 +154,41 @@
                                     </ul>
                                     <div style="width:100%;display:inline-flex;">
                                         <div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
-                                        <span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">일반볼</span>
+                                        <span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">{{__('powerball.Normalball',[],$pagelang)}}</span>
                                         <div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
                                     </div>
 										<ul>
 											<li class="">
-												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="일반볼(홀)" data-betid="9">
-													<span class="icon">홀</span><span class="title">일반</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}})" data-betid="9">
+													<span class="icon">{{__('powerball.Odd',[],$pagelang)}}</span><span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
-												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="일반볼(짝)" data-betid="10">
-													<span class="icon">짝</span><span class="title">일반</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}})" data-betid="10">
+													<span class="icon">{{__('powerball.Even',[],$pagelang)}}</span><span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
-												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="일반볼(언더)" data-betid="11">
-													<span class="icon">언</span><span class="title">일반</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn home blue" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Under',[],$pagelang)}})" data-betid="11">
+													<span class="icon">{{__('powerball.Under',[],$pagelang)}}</span><span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
-												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="일반볼(오버)" data-betid="12">
-													<span class="icon">오</span><span class="title">일반</span><br><span class="benefit">1.95</span>
+												<div class="team_sel_btn away red" data-seltype="" data-rate="1.95" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Over',[],$pagelang)}})" data-betid="12">
+													<span class="icon">{{__('powerball.Over',[],$pagelang)}}</span><span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><br><span class="benefit">1.95</span>
 												</div>
 												<div class="close remain-time-con"></div>
 											</li>
 											<li class="">
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="일반볼(홀/언더)" data-betid="13">
-													<div class="topgroup"> <span class="title">일반</span><span class="benefit">3.70</span></div>
-													<div class="icongroup"> <span class="icon2 bg_blue2">홀</span><span class="icon3 bg_blue2">언</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})" data-betid="13">
+													<div class="topgroup"> <span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><span class="benefit">3.70</span></div>
+													<div class="icongroup"> <span class="icon2 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon3 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="일반볼(홀/오버)" data-betid="14">
-													<div class="topgroup"> <span class="title">일반</span><span class="benefit">3.70</span></div>
-													<div class="icongroup"> <span class="icon2 bg_blue2">홀</span><span class="icon3 bg_red2">오</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})" data-betid="14">
+													<div class="topgroup"> <span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><span class="benefit">3.70</span></div>
+													<div class="icongroup"> <span class="icon2 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon3 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="일반볼(짝/언더)" data-betid="15">
-													<div class="topgroup"> <span class="title">일반</span><span class="benefit">3.70</span></div>
-													<div class="icongroup"> <span class="icon2 bg_red2">짝</span><span class="icon3 bg_blue2">언</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})" data-betid="15">
+													<div class="topgroup"> <span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><span class="benefit">3.70</span></div>
+													<div class="icongroup"> <span class="icon2 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon3 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="일반볼(짝/오버)" data-betid="16">
-													<div class="topgroup"> <span class="title">일반</span><span class="benefit">3.70</span></div>
-													<div class="icongroup"> <span class="icon2 bg_red2">짝</span><span class="icon3 bg_red2">오</span></div>
+												<div class="team_sel_btn mix green" data-seltype="" data-rate="3.70" data-seltxt="{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})" data-betid="16">
+													<div class="topgroup"> <span class="title">{{__('powerball.Normal',[],$pagelang)}}</span><span class="benefit">3.70</span></div>
+													<div class="icongroup"> <span class="icon2 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon3 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span></div>
 												</div>
 												<div class="close remain-time-con"></div>
 											</li>
@@ -196,42 +196,52 @@
                                             </ul>
                                         <div style="width:100%;display:inline-flex;">
                                             <div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
-                                            <span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">조 합</span>
+                                            <span style="margin:0 0 10px 0px;text-align:center;font-size:18px;">{{__('powerball.Combball',[],$pagelang)}}</span>
                                             <div style="width:35%;height:2px;background: linear-gradient(135deg, #000 0%,#555 23%,rgba(239,239,239,1) 49%,#666 73%,#000 100%);margin:10px auto"></div>
                                         </div>
                                             <ul>
 											<li class="">
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(홀/언더/파홀)" data-betid="17">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">홀</span><span class="icon4 bg_blue2">언</span><span class="icon4 bg_blue2" style="font-size:15px;">파홀</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})" data-betid="17">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon4 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(홀/오버/파짝)" data-betid="18">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">홀</span><span class="icon4 bg_blue2">언</span><span class="icon4 bg_red2" style="font-size:15px;">파짝</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})" data-betid="18">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon4 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(홀/언더/파홀)" data-betid="19">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">홀</span><span class="icon4 bg_red2">오</span><span class="icon4 bg_blue2" style="font-size:15px;">파홀</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})" data-betid="19">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon4 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(홀/오버/파짝)" data-betid="20">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">홀</span><span class="icon4 bg_red2">오</span><span class="icon4 bg_red2" style="font-size:15px;">파짝</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})" data-betid="20">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2">{{__('powerball.Odd',[],$pagelang)}}</span><span class="icon4 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(짝/언더/파홀)" data-betid="21">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">짝</span><span class="icon4 bg_blue2">언</span><span class="icon4 bg_blue2" style="font-size:15px;">파홀</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})" data-betid="21">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon4 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(짝/오버/파짝)" data-betid="22">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">짝</span><span class="icon4 bg_blue2">언</span><span class="icon4 bg_red2" style="font-size:15px;">파짝</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})" data-betid="22">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon4 bg_blue2">{{__('powerball.Under',[],$pagelang)}}</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(짝/언더/파홀)" data-betid="23">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">짝</span><span class="icon4 bg_red2">오</span><span class="icon4 bg_blue2" style="font-size:15px;">파홀</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})" data-betid="23">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon4 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_blue2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}}</span></div>
 												</div>
-												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="조합(짝/오버/파짝)" data-betid="24">
-													<div class="topgroup"> <span class="title">조합</span><span class="benefit">7.0</span></div>
-													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">짝</span><span class="icon4 bg_red2">오</span><span class="icon4 bg_red2" style="font-size:15px;">파짝</span></div>
+												<div class="team_sel_btn mixnp yellow" data-seltype="" data-rate="7.0" data-seltxt="{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})" data-betid="24">
+													<div class="topgroup"> <span class="title">{{__('powerball.Comb',[],$pagelang)}}</span><span class="benefit">7.0</span></div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> <span class="icon4 bg_red2">{{__('powerball.Even',[],$pagelang)}}</span><span class="icon4 bg_red2">{{__('powerball.Over',[],$pagelang)}}</span>
+													</div>
+													<div class="icongroup" style="text-align: center;margin-top:5px;"> 
+													<span class="icon4 bg_red2" style="font-size:15px;">{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}}</span></div>
 												</div>
 												<div class="close remain-time-con"></div>
 											</li>
@@ -243,16 +253,16 @@
 								<div class="inputs">
 									<ul class="bet-info">
 										<li>
-										 <span class="info-header">아이디</span><input type="text" id="mb_name" value="" readonly>
-										 <span class="info-header">보유머니</span><input type="text" id="mb_money" class="mb_money" value="0" readonly>
+										 <span class="info-header">{{__('powerball.Id',[],$pagelang)}}</span><input type="text" id="mb_name" value="" readonly>
+										 <span class="info-header">{{__('powerball.Balance',[],$pagelang)}}</span><input type="text" id="mb_money" class="mb_money" value="0" readonly>
 										</li>
 										<li>
-										 <span class="info-header">선택경기</span><input type="text" id="cart_sel_text" value="" readonly>
-										 <span class="info-header">적중예상</span><input type="text" id="cart_result_amount" class="input2" value="0" readonly>
+										 <span class="info-header">{{__('powerball.Selectgame',[],$pagelang)}}</span><input type="text" id="cart_sel_text" value="" readonly>
+										 <span class="info-header">{{__('powerball.Winamount',[],$pagelang)}}</span><input type="text" id="cart_result_amount" class="input2" value="0" readonly>
 										</li>
 										<li>
-										 <span class="info-header">총배당률</span><input type="text" id="cart_total_benefit" value="0" readonly>
-			 							 <span class="info-header fc_yellow2 fb">베팅금액</span><input type="text" id="cart_amount" value="0" class="fc_yellow2 fs16 fb input2"> 
+										 <span class="info-header">{{__('powerball.Rate',[],$pagelang)}}</span><input type="text" id="cart_total_benefit" value="0" readonly>
+			 							 <span class="info-header fc_yellow2 fb">{{__('powerball.Betbalance',[],$pagelang)}}</span><input type="text" id="cart_amount" value="0" class="fc_yellow2 fs16 fb input2"> 
 										</li>
 										 <input type="hidden" id="cart_sel_type" value="" readonly>
 										 <input type="hidden" id="cart_odnum2" value="" readonly>
@@ -270,8 +280,8 @@
 										<button class="money-btn-4 amount" type="button" data-amount="500000">+ 500,000</button>
 																	
 										<button class="money-btn-4 amount" type="button" data-amount="MAX">MAX</button>
-										<button class="money-btn-4 amount" type="button" data-amount="0">초기화</button>
-										<button class="bet money-btn-1" type="button" id="bet_bt">베팅하기</button>
+										<button class="money-btn-4 amount" type="button" data-amount="0">{{__('powerball.Init',[],$pagelang)}}</button>
+										<button class="bet money-btn-1" type="button" id="bet_bt">{{__('powerball.Betting',[],$pagelang)}}</button>
 									</div>
 								</div>
 								<div class="footer">
@@ -302,30 +312,30 @@
 	
 	var bet_string = [
 		'',  //0
-		'파워볼(홀)',//01
-		'파워볼(짝)',//02
-		'파워볼(언더)',//03
-		'파워볼(오버)',//04
-		'파워볼(홀/언더)',//05
-		'파워볼(홀/오버)',//06
-		'파워볼(짝/언더)',//07
-		'파워볼(짝/오버)',//08
-		'일반볼(홀)',//09
-		'일반볼(짝)',//10
-		'일반볼(언더)',//11
-		'일반볼(오버)',//12
-		'일반볼(홀/언더)',//13
-		'일반볼(홀/오버)',//14
-		'일반볼(짝/언더)',//15
-		'일반볼(짝/오버)',//16
-		'조합(홀/언더/파홀)',//17
-		'조합(홀/오버/파짝)',//18
-		'조합(홀/언더/파홀)',//19
-		'조합(홀/오버/파짝)',//20
-		'조합(짝/언더/파홀)',//21
-		'조합(짝/오버/파짝)',//22
-		'조합(짝/언더/파홀)',//23
-		'조합(짝/오버/파짝)',//24
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}})',//01
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}})',//02
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Under',[],$pagelang)}})',//03
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Over',[],$pagelang)}})',//04
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})',//05
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})',//06
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})',//07
+		'{{__('powerball.Powerball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})',//08
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}})',//09
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}})',//10
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Under',[],$pagelang)}})',//11
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Over',[],$pagelang)}})',//12
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})',//13
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})',//14
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}})',//15
+		'{{__('powerball.Normalball',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}})',//16
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})',//17
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})',//18
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})',//19
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Odd',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})',//20
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})',//21
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})',//22
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Under',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Odd',[],$pagelang)}})',//23
+		'{{__('powerball.Comb',[],$pagelang)}}({{__('powerball.Even',[],$pagelang)}}/{{__('powerball.Over',[],$pagelang)}}/{{__('powerball.P',[],$pagelang)}}{{__('powerball.Even',[],$pagelang)}})',//24
 	];
 	var process_history = function ()
 	{
@@ -376,7 +386,7 @@
 					list = '';
 					if (old_betlist.length == 0)
 					{
-						list += '<li><div class="result">베팅내역이 없습니다.</div></li>';
+						list += '<li><div class="result">{{__('powerball.EmptyHistory',[],$pagelang)}}</div></li>';
 					}
 					else
 					{
@@ -385,20 +395,20 @@
 							dt=new Date(bettime * 1000).toLocaleString();
 							list += '<li>';
 							list += '<div class="time">'+dt+'</div>';
-							list += '<div class="bet_list-round">'+val['dno'].substring(6)+'회차</div>';
+							list += '<div class="bet_list-round">'+val['dno'].substring(6)+'{{__('powerball.Roundum',[],$pagelang)}}</div>';
 							list += '<div class="sel">'+bet_string[val['rt']]+'</div>';
 							list += '<div class="benefit">'+val['o']+'</div>';
 							list += '<div class="amount">'+numberWithCommas(val['amt'])+'</div>';
 							list += '<div class="amount">'+numberWithCommas(val['returnAmount'])+'</div>';
 
-							if(val['result'] == null) list += '<div class="result">대기중</div>';
+							if(val['result'] == null) list += '<div class="result">{{__('powerball.Wait',[],$pagelang)}}</div>';
 							else if(val['returnAmount'] == 0)
 							{
-								list += '<div class="result lose">낙첨</div>';
+								list += '<div class="result lose">{{__('powerball.Lose',[],$pagelang)}}</div>';
 							} 
 							else 
 							{
-								list += '<div class="result win">당첨</div>';
+								list += '<div class="result win">{{__('powerball.Win',[],$pagelang)}}</div>';
 							}
 							list += '</li>';
 						});
@@ -465,12 +475,12 @@
 						$('#iframe_result').attr('src', $('#iframe_result').attr('src'));
 					}
 					
-					$('.round').text(currdraw.dno.substring(6) + '회');
+					$('.round').text(currdraw.dno.substring(6) + '{{__('powerball.Round',[],$pagelang)}}');
 					
 					$(".bar").width( (currdraw.PartialResultTime * 100 /  ({{$gtime??270}} * 2))+'%');
 					bar_minute = Math.floor((currdraw.PartialResultTime / 2) / 60);
 					bar_second = (currdraw.PartialResultTime / 2) % 60;
-					$('.bar-time').text('베팅 마감       ' +  String(bar_minute).padStart(2, '0') + ':' + String(bar_second).padStart(2, '0'));
+					$('.bar-time').text('{{__('powerball.Endbet',[],$pagelang)}}       ' +  String(bar_minute).padStart(2, '0') + ':' + String(bar_second).padStart(2, '0'));
 					
 					if(currdraw.PartialResultTime == 0)
 					{
@@ -490,7 +500,7 @@
 						$('.game-list li').eq(2).removeClass('bet-closed');
 						$('.game-list li').eq(3).removeClass('bet-closed');
 						$('.game-list li').eq(4).removeClass('bet-closed');
-						$('#bet_bt').removeClass('money-btn-0').text('베팅하기');
+						$('#bet_bt').removeClass('money-btn-0').text('{{__('powerball.Betting',[],$pagelang)}}');
 						$('#bet_bt').unbind('click');
 						$('#bet_bt').bind('click', function() {  	
 							doBetting();
@@ -521,7 +531,7 @@
   var doBetting = function(){
 	if (amount == 0)
 	{
-		msg('베팅금액을 입력하세요', 'error');
+		msg('{{__('powerball.Invalidbetbalance',[],$pagelang)}}', 'error');
 		return;
 	}
 	$('#bet_bt').unbind('click');
@@ -557,11 +567,11 @@
 				$('.mb_money').val(numberWithCommas(mb_money));
 				amount = 0;
 				cal();
-				msg('베팅이 접수되었습니다', 'success');			
+				msg('{{__('powerball.Betaccepted',[],$pagelang)}}', 'success');			
 			}
 			else
 			{							
-				msg('베팅오류. ' + data.code, 'error');			
+				msg('{{__('powerball.Beterror',[],$pagelang)}}' + data.code, 'error');			
 			}				
 		}
 		
