@@ -1,6 +1,6 @@
 @include('frontend.games.list.WinPowerBallGP',[
         'p' => 91,
-		    'title' => 'EOS 5분파워볼',
+		    'title' => 'EOSPowerBall5',
         'gtime' => 294
 
     ])

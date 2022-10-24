@@ -310,7 +310,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $cq_loadimg = $cq_promo->promoid;
                 }
             }
-            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg'));
+            $pagelang = 'ko';
+            $parent = auth()->user()->referral;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $pagelang = $parent->language;
+            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
         }
 
         public function startGameWithToken(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
