@@ -108,7 +108,8 @@
                         </ul>
                     </div>
                 </li>
-                @if (auth()->user()->hasRole('admin') )
+                @if (auth()->user()->isInOutPartner() )
+                
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link {{ (isset($parentSection) && $parentSection == 'game') ? 'active' : '' }}" href="#navbar-games" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
@@ -118,6 +119,7 @@
 
                     <div class="collapse {{ (isset($parentSection) && $parentSection == 'game') ? 'show' : '' }}" id="navbar-games">
                         <ul class="nav nav-sm flex-column">
+                            @if (auth()->user()->hasRole('admin') )
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.domain')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
@@ -146,6 +148,13 @@
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.transaction')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     환수금내역
+                                </a>
+                            </li>
+                            @endif
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.betlimit')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    에볼루션 배팅한도
                                 </a>
                             </li>
                         </ul>

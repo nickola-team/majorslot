@@ -75,7 +75,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $betlimit = null;
             $userlimit = null;
-            $default_config = \VanguardLTE\ProviderInfo::where('user_id', 0)->first();
+            $default_config = \VanguardLTE\ProviderInfo::where('user_id', 0)->where('provider', 'gac')->first();
             if (!$default_config)
             {
                 return response()->json([
@@ -87,9 +87,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betlimitD = json_decode($default_config->config, true);
             $betlimit = $betlimitD;
             $parent = $user;
-            while ($parent && !$parent->isInoutPartner())
+            while ($parent)
             {
-                $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->first();
+                $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'gac')->first();
                 if ($user_config)
                 {
                     $userlimit = json_decode($user_config->config, true);
@@ -406,12 +406,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $recommend = config('app.gac_key');
-            $query = 'SELECT * FROM w_provider_info WHERE provider="gac" and user_id=' . $master->id;
-            $gac_info = \DB::select($query);
-            foreach ($gac_info as $info)
-            {
-                $recommend = $info->config;
-            }
             $data = [
                 'userId' => strval($user->id),
                 'userName' => $user->username,
