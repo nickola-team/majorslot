@@ -444,8 +444,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => true, 'msg' => '게임이 없습니다'];
             }
-            // $url = GACController::makegamelink($gamecode);
-            $url = '/gac/golobby?code=' . $gamecode;
+            $url = GACController::makegamelink($gamecode);
+            // $url = '/gac/golobby?code=' . $gamecode;
             if ($url)
             {
                 return ['error' => false, 'data' => ['url' => $url]];
