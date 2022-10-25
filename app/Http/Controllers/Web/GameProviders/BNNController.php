@@ -138,23 +138,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             return $url;
         }
-
-        public static function withdrawAll($gid, $user)
+        public static function withdrawAll($user)
         {
-
-            $balance = BNNController::getuserbalance($gid, $user);
-            if ($balance == 0)
-            {
-                return ['error'=>false, 'amount'=>$balance];
-            }
-            $url = config('app.bnn_api') . '/v1/withdrawal';
+            $url = config('app.bnn_api') . '/v1/withdrawal-all';
             $key = config('app.bnn_key');
     
             $params = [
                 'key' => $key,
                 'uid' => self::BNN_PROVIDER . $user->id,
-                'gid' => $gid,
-                'money' => $balance
             ];
             $response = Http::get($url, $params);
 
@@ -169,9 +160,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('withdrawAll : WithdrawAll result failed. ' . self::BNN_PROVIDER . $user->id . ':' .($data==null?'null':$data['msg']));
                 return ['error'=>true, 'amount'=>0];
             }
-            return ['error'=>false, 'amount'=>$balance];
+            return ['error'=>false, 'amount'=>$data['money']];
         }
-
 
         public static function makelink($gamecode, $userid)
         {
@@ -192,7 +182,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance)
             {
                 //withdraw all balance
-                $data = BNNController::withdrawAll($gamecode, $user);
+                $data = BNNController::withdrawAll($user);
                 if ($data['error'])
                 {
                     return null;

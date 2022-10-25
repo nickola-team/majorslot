@@ -20,6 +20,7 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\GameLaunchCommand::class,
             \VanguardLTE\Console\Commands\GameSyncCommand::class,
             \VanguardLTE\Console\Commands\GameTerminateCommand::class,
+            \VanguardLTE\Console\Commands\GameWithdrawAll::class,
 
             \VanguardLTE\Console\Commands\MonitorBetWin::class,
         ];
