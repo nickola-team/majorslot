@@ -512,7 +512,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId){
+            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId, $userId){
                 return ($k['gameId'] == $gameId) && ($k['userId'] == $userId);
             }));
             
