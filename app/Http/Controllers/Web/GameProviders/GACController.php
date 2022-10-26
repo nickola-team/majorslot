@@ -245,6 +245,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = $user->balance - intval($amount);
             $user->save();
             $user = $user->fresh();
+            \VanguardLTE\PNGTransaction::create([
+                'transactionId' => $user->username, 
+                'timestamp' => $this->microtime_string(),
+                'data' => json_encode($data),
+                'response' => $user->balance
+            ]);
             // $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => 'gac'])->first();
 
             // \VanguardLTE\StatGame::create([
@@ -444,8 +450,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => true, 'msg' => '게임이 없습니다'];
             }
-            $url = GACController::makegamelink($gamecode);
-            // $url = '/gac/golobby?code=' . $gamecode;
+            // $url = GACController::makegamelink($gamecode);
+            $url = '/gac/golobby?code=' . $gamecode;
             if ($url)
             {
                 return ['error' => false, 'data' => ['url' => $url]];
