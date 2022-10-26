@@ -402,15 +402,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $master = $user->referral;
-            while ($master!=null && !$master->isInoutPartner())
-            {
-                $master = $master->referral;
-            }
-            if ($master == null)
-            {
-                return null;
-            }
+
             $recommend = config('app.gac_key');
             $data = [
                 'userId' => strval($user->id),
@@ -473,6 +465,83 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
 
+        }
+
+        public static function getgamedetail(\VanguardLTE\StatGame $stat)
+        {
+            $betId = explode('-',$stat->roundid)[0];
+            $recommend = config('app.gac_key');
+            $param = [
+                'betId' => intval($betId) - 1,
+                'recommend' => $recommend,
+                'pageSize' => 100,
+                'pageNumber' => 1
+            ];
+
+            $data = null;
+            try {
+                $response = Http::timeout(10)->post(config('app.gac_api') . '/wallet/api/getBetHistoryByRecommend', $param);
+                if (!$response->ok())
+                {
+                    Log::error('GAC : getgamedetail response failed. ' . $response->body());
+                    return null;
+                }
+                $data = $response->json();
+                if ($data==null || $data['returnCode']!=0)
+                {
+                    return null;
+                }
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('GAC : getLobbyUrl request failed. ' . $ex->getMessage());
+                return null;
+            }
+            $gameId = '';
+            foreach ($data['betHistories'] as $bet)
+            {
+                if ($bet['id'] == $betId)
+                {
+                    $gameId = $bet['gameId'];
+                    break;
+                }
+            }
+            if ($gameId == '')
+            {
+                return null;
+            }
+            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId){
+                return $k['gameId'] == $gameId;
+            }));
+            
+            $gametype = 'Baccarat';
+            if ($userbets[0]['gameKind'] == 1)
+            {
+                $gametype = 'Baccarat';
+                $result = [
+                    'tableName' => $userbets[0]['tableName'],
+                    'type' => $gametype,
+                    'gameNumber' => $userbets[0]['gameNumber'],
+                    'regdate' => $userbets[0]['regdate'],
+                    'bankerScore' => $userbets[0]['bankerScore'],
+                    'playerScore' => $userbets[0]['playerScore'],
+                    'bankerHand' => $userbets[0]['bankerHand'],
+                    'playerHand' => $userbets[0]['playerHand'],
+                    'result' => $userbets[0]['result'],
+                ];
+            }
+            else
+            {
+                return null;
+            }
+            
+
+            return [
+                'type' => 'baccarat',
+                'result' => $result,
+                'bets' => $userbets,
+                'stat' => $stat
+            ];
         }
 
     }
