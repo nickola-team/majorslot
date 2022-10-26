@@ -200,7 +200,7 @@ namespace VanguardLTE\Games\_5LionsGoldPM
                                 $arr_wins_mask[1] = $old_wins_mask[1];
                             }      
                             if($end == 1){
-                                $bonusType = $arr_wins_mask[0];
+                                $bonusType = $old_wins_mask[0];
                             }
                         }else if($bgt == 18){                            
                             for($k=0; $k<9; $k++){
@@ -457,13 +457,9 @@ namespace VanguardLTE\Games\_5LionsGoldPM
                 $scatterCount = 0;
                 $scatterPoses = [];
                 $scatterWin = 0;
-                for($i = 0; $i < 5; $i++){
-                    $reels[$i] = [];
-                    for($j = 0; $j < 3; $j++){
-                        $reels[$i][$j] = $lastReel[$j * 5 + $i];
-                        if($lastReel[$j * 5 + $i] == 1){
-                            $scatterCount++;
-                        }
+                for($i = 0; $i < 15; $i++){
+                    if($lastReel[$i] == 1){
+                        $scatterCount++;
                     }
                 }
                 if($str_win_line != ''){

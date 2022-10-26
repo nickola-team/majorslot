@@ -352,9 +352,6 @@ namespace VanguardLTE\Games\SuperJokerPM
                     $currentReelSet = $stack[0]['reel_set'];
                 }
 
-                if(count($lastReel) < 9){
-                    return implode(',', $lastReel);
-                }
                 $reels = [];
                 for($i = 0; $i < 3; $i++){
                     $reels[$i] = [];
