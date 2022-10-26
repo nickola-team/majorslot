@@ -400,9 +400,14 @@ namespace VanguardLTE\Games\GoldPartyPM
                     $arr_g['gp']['mo_tw'] ='' . $moneyWin;
                 }
                 if($arr_g != null && isset($arr_g['gp']['apv'])){
-                    $extraWin = $arr_g['gp']['apv'] * $betline;
-                    $arr_g['gp']['apwa'] = '' .$extraWin;
-                    $totalWin = $extraWin;
+                    $arr_apv = explode(',', $arr_g['gp']['apv']);
+                    $arr_apwa = [];
+                    for($k = 0; $k < count($arr_apv); $k++){
+                        $extraWin = $arr_apv[$k] * $betline;
+                        $arr_apwa[$k] = '' .$extraWin;
+                        $totalWin = $totalWin + $extraWin;
+                    }
+                    $arr_g['gp']['apwa'] = implode(',', $arr_apwa);
                 }
                 if($fsmore == 0 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) 
                 {
