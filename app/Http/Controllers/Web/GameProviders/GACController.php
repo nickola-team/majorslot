@@ -510,9 +510,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $userbets = array_filter($data['betHistories'], function($k) use ($gameId){
+            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId){
                 return $k['gameId'] == $gameId;
-            });
+            }));
             
             $gametype = 'Baccarat';
             if ($userbets[0]['gameKind'] == 1)
