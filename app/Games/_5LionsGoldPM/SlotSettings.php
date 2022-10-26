@@ -578,11 +578,11 @@ namespace VanguardLTE\Games\_5LionsGoldPM
             $grantbonus_count = $game->{'garant_bonus' . $granttype . $linecount};
             $winbonus_count = $game->{'winbonus' . $granttype . $linecount};
             $winline_count = $game->{'winline' . $granttype . $linecount};
-            $grantwin_count+=3;
+            $grantwin_count+=1;
             if($isdoublechance == 1){
                 $grantbonus_count+=2;
             }else{
-                $grantbonus_count+=10;
+                $grantbonus_count+=1;
             }
             $return = [
                 'none', 
@@ -704,14 +704,13 @@ namespace VanguardLTE\Games\_5LionsGoldPM
             }
             $isLowBank = false;
             while(true){
-                $index = 0; //  mt_rand(0, 19000);
+                $index =  mt_rand(0, 65000);
                 if($ind > -1){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsGoldPMStack::where(['spin_type' => 1, 'pur_level' => $ind]);
                 }else if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsGoldPMStack::where('spin_type', 2);
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsGoldPMStack::where('spin_type', 0);
-                    // $index = mt_rand(0, 50000);
                 }
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
