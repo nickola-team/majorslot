@@ -220,7 +220,7 @@ namespace VanguardLTE\Games\_5LionsGoldPM
                         $arr_lines = explode('&', $str_win_line);
                         for($k = 0; $k < count($arr_lines); $k++){
                             $arr_sub_lines = explode('~', $arr_lines[$k]);
-                            $arr_sub_lines[1] = $arr_sub_lines[1] / $original_bet * $bet;
+                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
                             $arr_lines[$k] = implode('~', $arr_sub_lines);
                         }
                         $str_win_line = implode('&', $arr_lines);
@@ -466,7 +466,7 @@ namespace VanguardLTE\Games\_5LionsGoldPM
                     $arr_lines = explode('&', $str_win_line);
                     for($k = 0; $k < count($arr_lines); $k++){
                         $arr_sub_lines = explode('~', $arr_lines[$k]);
-                        $arr_sub_lines[1] = $arr_sub_lines[1] / $original_bet * $betline;
+                        $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
                         $totalWin = $totalWin + $arr_sub_lines[1];
                         $arr_lines[$k] = implode('~', $arr_sub_lines);
                     }
