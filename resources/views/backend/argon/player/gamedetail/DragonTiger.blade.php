@@ -36,14 +36,14 @@
             </thead>
             <tr>
                 <td align="center">
-                    $hand = $res['result']['dragonHand'];
-                    <?php $cardnum= substr($hand,0,1); $cardtype=$cardpic[substr($hand,1)];?>
+                    
+                    <?php $hand = $res['result']['dragonHand']; $cardnum= substr($hand,0,1); $cardtype=$cardpic[substr($hand,1)];?>
                     <div class="cardFrame"><div class="font_red number">{{$cardnum=='T'?'10':$cardnum}}</div><div class="font_red patten">{{$cardtype}}</div></div>
                     <span>{{$res['result']?$res['result']['dragonScore']:'0'}}</span>
                 </td>
                 <td>
-                    $hand = $res['result']['tigerHand'];
-                    <?php $cardnum= substr($hand,0,1); $cardtype=$cardpic[substr($hand,1)];?>
+                    
+                    <?php $hand = $res['result']['tigerHand']; $cardnum= substr($hand,0,1); $cardtype=$cardpic[substr($hand,1)];?>
                     <div class="cardFrame"><div class="font_black number">{{$cardnum=='T'?'10':$cardnum}}</div><div class="font_black  patten">{{$cardtype}}</div></div>
                     <span>{{$res['result']?$res['result']['tigerScore']:'0'}}</span>
                 </td>
