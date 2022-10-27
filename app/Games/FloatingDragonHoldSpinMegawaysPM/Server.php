@@ -498,6 +498,8 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                         $arr_lines[$k] = implode('~', $arr_sub_lines);
                     }
                     $str_wlc_v = implode(';', $arr_lines);
+                }
+                if($rs_p >= 0){
                     $isNewTumb = true;
                 }
                 $money_win = 0;
