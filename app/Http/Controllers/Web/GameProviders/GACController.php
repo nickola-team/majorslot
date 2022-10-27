@@ -540,10 +540,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'type' => $gametype,
                     'gameNumber' => $userbets[0]['gameNumber'],
                     'regdate' => $userbets[0]['regdate'],
-                    'dragonScore' => $userbets[0]['bankerScore'],
-                    'tigerScore' => $userbets[0]['playerScore'],
-                    'dragonHand' => $userbets[0]['bankerHand'],
-                    'tigerHand' => $userbets[0]['playerHand'],
+                    'dragonScore' => $userbets[0]['dragonScore'],
+                    'tigerScore' => $userbets[0]['tigerScore'],
+                    'dragonHand' => $userbets[0]['dragonHand'],
+                    'tigerHand' => $userbets[0]['tigerHand'],
                     'result' => $userbets[0]['result'],
                 ];
             }
