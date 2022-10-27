@@ -218,7 +218,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 else
                 {
-                    $strinternallog = `tail -50 $laravel`;
+                    $strinternallog = `tail -100 $laravel`;
                 }
 
             }
