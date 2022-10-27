@@ -231,7 +231,7 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                             $arr_lines = explode(';', $str_wlc_v);
                             for($k = 0; $k < count($arr_lines); $k++){
                                 $arr_sub_lines = explode('~', $arr_lines[$k]);
-                                $arr_sub_lines[1] = $arr_sub_lines[1] / $original_bet * $bet;
+                                $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
                                 $arr_lines[$k] = implode('~', $arr_sub_lines);
                             }
                             $str_wlc_v = implode(';', $arr_lines);
@@ -493,7 +493,7 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                     $arr_lines = explode(';', $str_wlc_v);
                     for($k = 0; $k < count($arr_lines); $k++){
                         $arr_sub_lines = explode('~', $arr_lines[$k]);
-                        $arr_sub_lines[1] = $arr_sub_lines[1] / $original_bet * $betline;
+                        $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
                         $totalWin = $totalWin + $arr_sub_lines[1];
                         $arr_lines[$k] = implode('~', $arr_sub_lines);
                     }
