@@ -54,6 +54,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\ATATransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\EVOTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\DGTransaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\PNGTransaction::where('timestamp', '<', $_daytime)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
