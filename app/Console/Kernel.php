@@ -75,6 +75,9 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
                 \VanguardLTE\WithdrawDeposit::where('created_at', '<', $start_date)->delete();
 
+                $start_date = date("Y-m-d H:i:s",strtotime("-1 hours"));
+                \VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->delete();
+
                 // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
             })->dailyAt('08:00');
