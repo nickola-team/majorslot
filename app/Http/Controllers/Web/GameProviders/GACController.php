@@ -532,6 +532,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'result' => $userbets[0]['result'],
                 ];
             }
+            else if ($userbets[0]['gameKind'] == 2)
+            {
+                $gametype = 'DragonTiger';
+                $result = [
+                    'tableName' => $userbets[0]['tableName'],
+                    'type' => $gametype,
+                    'gameNumber' => $userbets[0]['gameNumber'],
+                    'regdate' => $userbets[0]['regdate'],
+                    'dragonScore' => $userbets[0]['bankerScore'],
+                    'tigerScore' => $userbets[0]['playerScore'],
+                    'dragonHand' => $userbets[0]['bankerHand'],
+                    'tigerHand' => $userbets[0]['playerHand'],
+                    'result' => $userbets[0]['result'],
+                ];
+            }
             else
             {
                 return null;
@@ -539,7 +554,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
 
             return [
-                'type' => 'baccarat',
+                'type' => $gametype,
                 'result' => $result,
                 'bets' => $userbets,
                 'stat' => $stat
