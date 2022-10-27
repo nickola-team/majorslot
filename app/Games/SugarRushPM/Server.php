@@ -372,11 +372,9 @@ namespace VanguardLTE\Games\SugarRushPM
                     $arr_lines = explode('&', $strWinLine);
                     for($k = 0; $k < count($arr_lines); $k++){
                         $arr_sub_lines = explode('~', $arr_lines[$k]);
-                        if(count($arr_sub_lines) > 0){
-                            $arr_sub_lines[1] = $arr_sub_lines[1] / $original_bet * $betline;
-                            $totalWin = $totalWin + $arr_sub_lines[1];
-                            $arr_lines[$k] = implode('~', $arr_sub_lines);
-                        }
+                        $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
+                        $totalWin = $totalWin + $arr_sub_lines[1];
+                        $arr_lines[$k] = implode('~', $arr_sub_lines);
                     }
                     $strWinLine = implode('&', $arr_lines);
                     $isNewTumb = true;
