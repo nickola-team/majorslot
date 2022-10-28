@@ -484,9 +484,6 @@ namespace VanguardLTE\Games\TheWildMachinePM
                                     $lineWins[$k] = $wildWin;
                                     $lineWinNum[$k] = $wildWinNum;
                                 }
-                                if($wmv > 1){
-                                    $lineWins[$k] = $lineWins[$k] * $wmv;
-                                }
                                 if($lineWins[$k] > 0){
                                     $totalWin += $lineWins[$k];
                                     $_obf_winCount++;

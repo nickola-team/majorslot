@@ -54,6 +54,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\ATATransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\EVOTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\DGTransaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\PNGTransaction::where('timestamp', '<', $_daytime)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
@@ -73,6 +74,9 @@ namespace VanguardLTE\Console
                 \VanguardLTE\ShopStat::where('date_time', '<', $start_date)->delete();
                 \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
                 \VanguardLTE\WithdrawDeposit::where('created_at', '<', $start_date)->delete();
+
+                $start_date = date("Y-m-d H:i:s",strtotime("-1 hours"));
+                \VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->delete();
 
                 // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 

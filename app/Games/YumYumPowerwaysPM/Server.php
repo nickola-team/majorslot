@@ -453,6 +453,7 @@ namespace VanguardLTE\Games\YumYumPowerwaysPM
                             $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                             $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
                             
+                            $isState = false;
                             $stack = $slotSettings->GetReelStrips('bonus', 12, $betline * $lines);
                             if($stack == null){
                                 $response = 'unlogged';
@@ -499,7 +500,7 @@ namespace VanguardLTE\Games\YumYumPowerwaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }
                 if($isNewTumb == false){
-                    if( $slotEvent['slotEvent'] != 'freespin' && $scatterCount >= 4) 
+                    if( $slotEvent['slotEvent'] != 'freespin' && $scatterCount >= 3) 
                     {
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);

@@ -38,14 +38,14 @@
                 <td align="center">
                     @foreach ($res['result']['bankerHand'] as $idx=>$hand)
                     <?php $cardnum= substr($hand,0,1); $cardtype=$cardpic[substr($hand,1)];?>
-                    <div class="cardFrame"><div class="{{$idx%2==0?'font_red':'font_black'}} number">{{$cardnum}}</div><div class="{{$idx%2==0?'font_red':'font_black'}}  patten">{{$cardtype}}</div></div>
+                    <div class="cardFrame"><div class="{{$idx%2==0?'font_red':'font_black'}} number">{{$cardnum=='T'?'10':$cardnum}}</div><div class="{{$idx%2==0?'font_red':'font_black'}}  patten">{{$cardtype}}</div></div>
                     @endforeach
                     <span>{{$res['result']?$res['result']['bankerScore']:'0'}}</span>
                 </td>
                 <td>
                     @foreach ($res['result']['playerHand'] as $idx=>$hand)
                     <?php $cardnum= substr($hand,0,1); $cardtype=$cardpic[substr($hand,1)];?>
-                    <div class="cardFrame"><div class="{{$idx%2==0?'font_red':'font_black'}} number">{{$cardnum}}</div><div class="{{$idx%2==0?'font_red':'font_black'}}  patten">{{$cardtype}}</div></div>
+                    <div class="cardFrame"><div class="{{$idx%2==0?'font_red':'font_black'}} number">{{$cardnum=='T'?'10':$cardnum}}</div><div class="{{$idx%2==0?'font_red':'font_black'}}  patten">{{$cardtype}}</div></div>
                     @endforeach
                     <span>{{$res['result']?$res['result']['playerScore']:'0'}}</span>
                 </td>

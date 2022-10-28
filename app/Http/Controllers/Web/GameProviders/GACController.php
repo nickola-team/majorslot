@@ -498,11 +498,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $gameId = '';
+            $userId = '';
             foreach ($data['betHistories'] as $bet)
             {
                 if ($bet['id'] == $betId)
                 {
                     $gameId = $bet['gameId'];
+                    $userId = $bet['userId'];
                     break;
                 }
             }
@@ -510,8 +512,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId){
-                return $k['gameId'] == $gameId;
+            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId, $userId){
+                return ($k['gameId'] == $gameId) && ($k['userId'] == $userId);
             }));
             
             $gametype = 'Baccarat';
@@ -563,7 +565,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
 
             return [
-                'type' => 'baccarat',
+                'type' => $gametype,
                 'result' => $result,
                 'bets' => $userbets,
                 'stat' => $stat
