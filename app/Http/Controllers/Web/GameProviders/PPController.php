@@ -1603,17 +1603,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response()->json([ ]);
             }
             // $gamename = PPController::gamecodetoname($symbol)[0];
-            $game = TPController::getGameObjBySymbol(8, $symbol);
-            if (!$game)
-            {
-                return response()->json([ ]);
-            }
-            $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $game['name']) . 'PM';
-            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
+            // $game = TPController::getGameObjBySymbol(8, $symbol);
+            // if (!$game)
+            // {
+            //     return response()->json([ ]);
+            // }
+            // $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $game['name']) . 'PM';
+            // $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
             $shop_id = $user->shop_id;
             $pm_games = \VanguardLTE\Game::where([
                 'shop_id' => $shop_id,
-                'name' => $gamename,
+                'label' => $symbol,
                 ]
             )->first();
             $data = [];
@@ -1693,9 +1693,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 foreach($gamelist1 as $game)
                 {
                     $gamename = $game['name'];
-                    $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
-                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
-                    if ($gamename == $pm_games->name)
+                    // $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
+                    // $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
+                    if ($game['symbol'] == $pm_games->label)
                     {
                         $gamename = $game['enname'];
                         break;
