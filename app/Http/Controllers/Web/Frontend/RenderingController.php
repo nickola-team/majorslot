@@ -139,7 +139,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
                 $pm_games = \VanguardLTE\Game::where([
                     'shop_id' => $shop_id,
-                    'label' => $$gameObj['symbol'],
+                    'label' => $gameObj['symbol'],
                     'view' => 1,
                     ]
                 )->first();
