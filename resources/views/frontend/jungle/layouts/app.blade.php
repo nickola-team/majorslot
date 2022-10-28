@@ -312,7 +312,11 @@
           ?>
               @foreach($livecats AS $index=>$category)
               @if (Auth::check())
-              <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', '{{$category->href}}');">
+                @if ($category->provider=='gac')
+                <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', 'gvolobby');">
+                @else
+                <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', '{{$category->href}}');">
+                @endif
               @else
               <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="showLoginAlert();">
               @endif
