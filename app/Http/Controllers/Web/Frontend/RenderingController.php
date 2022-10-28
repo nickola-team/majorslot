@@ -127,9 +127,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $cat = null;
             $pm_games = null;
             if ($gameObj['href'] == \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::TP_PP_HREF) {
-                $gamename = $gameObj['name'];
-                $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
-                $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
+                // $gamename = $gameObj['name'];
+                // $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
+                // $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
                 $shop_id = \Auth::user()->shop_id;
                 $cat = \VanguardLTE\Category::where([
                     'shop_id' => $shop_id,
@@ -139,7 +139,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
                 $pm_games = \VanguardLTE\Game::where([
                     'shop_id' => $shop_id,
-                    'name' => $gamename,
+                    'label' => $gamecode,
                     'view' => 1,
                     ]
                 )->first();
@@ -162,7 +162,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $data['msg'] = 'Withdraw Error';
                     return view('frontend.Default.games.theplus', compact('data'));
                 }
-                $url = url('/game/' . $gamename);
+                $url = url('/game/' . $pm_games->name);
                 $alonegame = 1;
             }
             else {
