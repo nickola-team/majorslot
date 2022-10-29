@@ -6,6 +6,7 @@
 </td>
 <td>{{$user->referral->username}}</td>
 <td>{{number_format($user->balance)}}</td>
+<td>{{number_format($user->deal_balance)}}</td>
 <td>{{number_format($user->total_in)}}</td>
 <td>{{number_format($user->total_out)}}</td>
 <td>{{$user->phone}}</td>
