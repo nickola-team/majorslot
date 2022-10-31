@@ -410,7 +410,7 @@ namespace VanguardLTE\Games\ChilliHeatMegawaysPM
                         $reels[$i] = [];
                         for($j = 0; $j < 8; $j++){
                             $reels[$i][$j] = $lastReel[$j * 6 + $i];
-                            if($lastReel[$j * 6 + $i] == $scatter){
+                            if($lastReel[$j * 6 + $i] == $scatter || $lastReel[$j * 6 + $i] == 23){
                                 $scatterCount++;
                                 $scatterPoses[] = $j * 6 + $i;
                             }
