@@ -409,5 +409,29 @@ namespace VanguardLTE\Games\TaiXiuGP
             return null;
 
         }
+
+        public function gameDetail(\VanguardLTE\StatGame $stat)
+        {
+            $rounds = explode('_',$stat->roundid);
+            $dno = $rounds[1];
+            $userbets = \VanguardLTE\GPGameBet::where([
+                'p' => $this->GAMEID,
+                'dno' => $dno,
+                'user_id' => $stat->user_id
+            ])->get();
+            $trend = \VanguardLTE\GPGameTrend::where(
+                [
+                    'p' => $this->GAMEID,
+                    'dno' => $dno
+                ]
+            )->first();
+            return [
+                'type' => 'taixiu',
+                'result' => $trend,
+                'bets' => $userbets,
+                'stat' => $stat
+            ];
+
+        }
     }
 }
