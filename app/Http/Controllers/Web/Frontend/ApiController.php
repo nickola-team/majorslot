@@ -481,6 +481,55 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return response()->json(['error' => false, 'games' => $selectedGames]);
         }
 
+        public function bo_getgamedetail(\Illuminate\Http\Request $request)
+        {
+            $statid = $request->statid;
+            $statgame = \VanguardLTE\StatGame::where('id', $statid)->first();
+            if (!$statgame)
+            {
+                abort(404);
+            }
+            $ct = $statgame->category;
+            $res = null;
+            
+            if ($ct->provider != null)
+            {
+                if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
+                {
+                    $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
+                }
+                else
+                {
+                    
+                }
+            }
+            else //local game
+            {
+                $game = $statgame->game_item;
+                if ($game)
+                {
+                    $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
+                    if (!class_exists($object))
+                    {
+                        abort(404);
+                    }
+                    $gameObject = new $object();
+                    if (method_exists($gameObject, 'gameDetail'))
+                    {
+                        $res = $gameObject->gameDetail($statgame);
+                    }
+                    else
+                    {
+                    }
+                }
+                else
+                {
+                    abort(404);
+                }
+            }
+            return response()->json(['error' => false, 'res' => $res]);
+        }
+
         public function getgamelist(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
@@ -580,6 +629,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             return response()->json(['error' => false, 'games' => $selectedGames, 'others' => []]);
         }
+
+        
 
         public function getgamelist_vi(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {

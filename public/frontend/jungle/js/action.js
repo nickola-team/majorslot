@@ -1,4 +1,4 @@
-function showLoginPopup() {
+function showLoginPopup(logo='jungle') {
     if (loginYN === 'Y') {
         alert("로그아웃후 이용가능합니다.");
         return;
@@ -14,7 +14,7 @@ function showLoginPopup() {
                         </div>
                         <div class="login_box_wrap">
                             <div class="login_tit">
-                                <img src="/frontend/jungle/images/logo_02.png">
+                                <img src="/frontend/${logo}/images/logo_02.png">
                             </div>
                             <div class="login">
                                 <form name="mainLogin_form" id="mainLogin_form" method="post">
