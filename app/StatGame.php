@@ -126,7 +126,7 @@ namespace VanguardLTE
             {
                 return $model;
             }
-            if ($model->bet > 0 || $model->win > 0) {
+            if ($model->bet > 0) {
                 $user = \VanguardLTE\User::where('id',$model->user_id)->first();
                 if ($user){
                     $user->processBetDealerMoney_Queue($model);
