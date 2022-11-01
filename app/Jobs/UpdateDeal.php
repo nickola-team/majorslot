@@ -32,7 +32,6 @@ class UpdateDeal implements ShouldQueue
         \VanguardLTE\DealLog::insert($this->deal_data);
         foreach ($this->deal_data as $index => $deal)
         {
-            $partner = \VanguardLTE\User::lockForUpdate()->where('id',$deal['partner_id'])->first();
             if ($deal['type'] == 'shop')
             {
                 $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$deal['shop_id'])->first();
@@ -47,6 +46,7 @@ class UpdateDeal implements ShouldQueue
             }
             else
             {
+                $partner = \VanguardLTE\User::lockForUpdate()->where('id',$deal['partner_id'])->first();
                 $partner->update([
                     'count_deal_balance' => $partner->count_deal_balance + $deal['deal_profit'], 
                     'count_mileage' => $partner->count_mileage +  $deal['mileage'],
