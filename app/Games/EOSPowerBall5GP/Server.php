@@ -224,6 +224,7 @@ namespace VanguardLTE\Games\EOSPowerBall5GP
 
         public function getRecentTrend()
         {
+            return null;
             $server = env('NTRY_PROXY', 'http://ntry.com');
             $response = Http::get($server . $this->TREND_URL);
             if ($response->ok()) {
