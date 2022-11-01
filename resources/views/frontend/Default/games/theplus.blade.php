@@ -98,6 +98,7 @@
                 success: function (data) {
                     if (data.error != 0)
                     {
+                        alert('오류가 발생하였습니다. 게임을 다시 시작해주세요');
                         window.close();
                     }
                     timeout = setTimeout(updateUserBalance, updateTime);
