@@ -194,7 +194,10 @@ namespace VanguardLTE\Games\XocDiaGP
             $currentTrend = \VanguardLTE\GPGameTrend::where('s',0)->where('p',$this->GAMEID)->orderby('sl')->first();
             if ($currentTrend && GamePlayController::gamePlayTimeFormat($currTime) > $currentTrend->e) {
                 $game = \VanguardLTE\Game::where('name', 'XocDiaGP')->where('shop_id', 0)->first();
-                if ($game->rezerv != 0){ //black result
+                $_obf_grantwin_count = $game->garant_win10;
+                $_obf_winline_count = $game->winline10;
+                $_obf_grantwin_count++;
+                if ($game->rezerv != 0 && $_obf_winline_count <= $_obf_grantwin_count){ //black result
                     $betStat = [
                         0 => 0,
                         1 => 0,
@@ -216,10 +219,16 @@ namespace VanguardLTE\Games\XocDiaGP
                         $betStat[$stat->rt] = $stat->payout;
                     }
                     $trendResult = $this->generateResult($totalBets->sum('amount'), $betStat);
+
+                    $_obf_grantwin_count = 0;
+                    $game->winline10 = $this->getNewSpin($game);
                 }
                 else{
                     $trendResult = $this->generateResult();
                 }
+                $game->garant_win10 = $_obf_grantwin_count;
+                $game->save();
+
                 $currentTrend->update([
                     'rno' => $trendResult['rno'],
                     'rt' => $trendResult['rt'],
@@ -306,6 +315,14 @@ namespace VanguardLTE\Games\XocDiaGP
 
             return null;
 
+        }
+
+        public function getNewSpin($game)
+        {
+            $_obf_linecount = 10;
+            $win = explode(',', $game->game_win->winline10);
+            $number = rand(0, count($win) - 1);
+            return $win[$number];
         }
     }
 }

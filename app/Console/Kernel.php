@@ -60,6 +60,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
                 \VanguardLTE\PPGameLog::where('time', '<', $start_date)->delete();
                 
+                
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
@@ -77,6 +78,9 @@ namespace VanguardLTE\Console
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-1 hours"));
                 \VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->delete();
+
+                $start_date = date("Y-m-d",strtotime("-7 days")) . 'T00:00:00';
+                \VanguardLTE\GPGameTrend::where('sDate','<', $start_date)->delete();
 
                 // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
