@@ -697,7 +697,7 @@ namespace VanguardLTE\Games\MasterChensFortunePM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameMasterChensFortuneStack::where('spin_type', $spintype);
-                $index = 0; // mt_rand(0, 49000);
+                $index = mt_rand(0, 49000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index =  mt_rand(0, 70000);
