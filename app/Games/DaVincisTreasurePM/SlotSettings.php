@@ -681,20 +681,33 @@ namespace VanguardLTE\Games\DaVincisTreasurePM
             return $win[$number];
         }
         
-        public function GetPurMul($pur)
+        public function winGameble($winMoney, $ind)
         {
-            $purmuls = [2000];
-            return $purmuls[$pur];
+            $muls = [2,3,4,5];
+            $winType = 'none';
+            if(mt_rand(0, ($muls[$ind] * 10)) < 10){
+                $winType = 'win';
+            }
+            $winAvaliableMoney = $this->GetBank('bonus');
+            if($winMoney * ($muls[$ind] - 1) > $winAvaliableMoney){
+                $winType = 'none';
+            }
+            if($winType == 'win'){
+                return ($muls[$ind] - 1);
+            }else{
+                return 0;
+            }
         }
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameLeprechaunCarolStack::where('id', 451)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameDaVincisTreasureStack::where('id', 1773)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
+                $spintype = 1;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -706,8 +719,8 @@ namespace VanguardLTE\Games\DaVincisTreasurePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameLeprechaunCarolStack::where('spin_type', $spintype);
-                $index = 0; //mt_rand(0, 39000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameDaVincisTreasureStack::where('spin_type', $spintype);
+                $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }

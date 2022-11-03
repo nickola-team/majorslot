@@ -695,6 +695,7 @@ namespace VanguardLTE\Games\LeprechaunCarolPM
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
+                $spintype = 1;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -707,7 +708,7 @@ namespace VanguardLTE\Games\LeprechaunCarolPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameLeprechaunCarolStack::where('spin_type', $spintype);
-                $index = 0; //mt_rand(0, 39000);
+                $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }

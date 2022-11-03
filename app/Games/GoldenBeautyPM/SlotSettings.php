@@ -703,13 +703,16 @@ namespace VanguardLTE\Games\GoldenBeautyPM
             }else{
                 $winAvaliableMoney = 0;
             }
-            $limitOdd = 0;
-            if($winType != 'none'){
+            // $limitOdd = 0;
+            // if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
-            }
+                if($fsmax <= 0){
+                    $limitOdd = $limitOdd / 10;
+                }
+            // }
             $isLowBank = false;
             while(true){
-                $index =  mt_rand(0, 19000);
+                $index =  mt_rand(0, 14000);
                 if($fsmax > 0){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldenBeautyStack::where(['spin_type' => 1, 'pur_level' => $ind, 'fsmax' => $fsmax]);
                 }else if($winType == 'bonus'){
@@ -718,8 +721,8 @@ namespace VanguardLTE\Games\GoldenBeautyPM
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldenBeautyStack::where('spin_type', 0);
                     // $index = mt_rand(0, 50000);
                 }
-                if($winType == 'win'){
-                    $stacks = $stacks->where('odd', '>', 0);
+                if($fsmax <= 0 && $limitOdd < 0.5){
+                    $limitOdd = 0.5;
                 }
                 if($isLowBank == true){
                     if($fsmax > 0){
