@@ -56,6 +56,8 @@ class TheplusTerminate extends Command
                                 'balance' => $data['amount'], 
                                 'playing_game' => null
                             ]);
+
+                        Log::channel('monitor_game')->info(TPController::TP_PROVIDER . ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
                     }
                     else
                     {
