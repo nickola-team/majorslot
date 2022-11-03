@@ -497,6 +497,10 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                             $slotSettings->SetGameData($slotSettings->slotId . 'Status', $status);
                             $strOtherResponse = $strOtherResponse . '&bgid=0&wins=10,14,18,22&coef='.($betline * $lines).'&level=0&status='. implode(',', $status) .'&bgt=35&lifes=1&bw=1&wins_mask=nff,nff,nff,nff&wp=0&end=0';
                             $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 35);
+                        }else{
+                            if($slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') > 0){
+                                $spinType = 'c';
+                            }
                         }
                         if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                             $strOtherResponse = $strOtherResponse . '&purtr=1&puri=' . $pur;
