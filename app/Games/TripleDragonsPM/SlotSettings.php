@@ -697,10 +697,10 @@ namespace VanguardLTE\Games\TripleDragonsPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameTripleDragonsStack::where('spin_type', $spintype);
-                $index = 0; // mt_rand(0, 49000);
+                $index = mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index =  mt_rand(0, 70000);
+                    $index =  mt_rand(0, 160000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
