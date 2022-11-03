@@ -5,34 +5,19 @@ namespace VanguardLTE\Games\PekingLuckPM
     {
         public $playerId = null;
         public $splitScreen = null;
-        public $reelStrip1 = null;
-        public $reelStrip2 = null;
-        public $reelStrip3 = null;
-        public $reelStrip4 = null;
-        public $reelStrip5 = null;
-        public $reelStrip6 = null;
-        public $reelStripBonus1 = null;
-        public $reelStripBonus2 = null;
-        public $reelStripBonus3 = null;
-        public $reelStripBonus4 = null;
-        public $reelStripBonus5 = null;
-        public $reelStripBonus6 = null;
         public $slotId = '';
         public $slotDBId = '';
         public $Line = null;
         public $scaleMode = null;
         public $numFloat = null;
-        public $gameLine = null;
         public $Bet = null;
         public $isBonusStart = null;
         public $Balance = null;
-        public $SymbolGame = null;
         public $GambleType = null;
         public $Jackpots = [];
         public $keyController = null;
         public $slotViewState = null;
         public $hideButtons = null;
-        public $slotReelsConfig = null;
         public $slotFreeCount = null;
         public $slotFreeMpl = null;
         public $slotWildMpl = null;
@@ -47,7 +32,6 @@ namespace VanguardLTE\Games\PekingLuckPM
         private $Bank = null;
         private $Percent = null;
         private $WinLine = null;
-        private $WinGamble = null;
         private $Bonus = null;
         private $shop_id = null;
         public $licenseDK = null;
@@ -55,207 +39,61 @@ namespace VanguardLTE\Games\PekingLuckPM
         public $user = null;
         public $game = null;
         public $shop = null;
-        public function __construct($sid, $playerId)
+        public $credits = null;
+        public $happyhouruser = null;
+        public $gamesession = null; // session table
+        public function __construct($sid, $playerId, $credits = null)
         {
-           /* if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
-            {
-                return false;
-            }
-            if( md5_file(base_path() . '/app/Lib/LicenseDK.php') != '3c5aece202a4218a19ec8c209817a74e' ) 
-            {
-                return false;
-            }
-            if( md5_file(base_path() . '/config/LicenseDK.php') != '951a0e23768db0531ff539d246cb99cd' ) 
-            {
-                return false;
-            }
-            $this->licenseDK = true;
-            $checked = new \VanguardLTE\Lib\LicenseDK();
-            $license_notifications_array = $checked->aplVerifyLicenseDK(null, 0);
-            if( $license_notifications_array['notification_case'] != 'notification_license_ok' ) 
-            {
-                $this->licenseDK = false;
-            }*/
+           
             $this->slotId = $sid;
             $this->playerId = $playerId;
+            $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                // 'time' => date('G')
+            ])->first();
+            $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
-            $game = \VanguardLTE\Game::where([
+            $game = \VanguardLTE\Game::lockForUpdate()->where([
                 'name' => $this->slotId, 
                 'shop_id' => $this->shop_id
-            ])->lockForUpdate()->first();
+            ])->first();
+            if (!$game)
+            {
+                exit('unlogged');
+            }
             $this->shop = \VanguardLTE\Shop::find($this->shop_id);
             $this->game = $game;
             $this->increaseRTP = rand(0, 1);
+
+
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [
-                0, 
-                0, 
-                1, 
-                3, 
-                10, 
-                250
-            ];
-            $this->Paytable[2] = [
-                0, 
-                0, 
-                20, 
-                500, 
-                4000, 
-                10000
-            ];
-            $this->Paytable[3] = [
-                0, 
-                0, 
-                2, 
-                30, 
-                125, 
-                750
-            ];
-            $this->Paytable[4] = [
-                0, 
-                0, 
-                2, 
-                25, 
-                100, 
-                500
-            ];
-            $this->Paytable[5] = [
-                0, 
-                0, 
-                0, 
-                20, 
-                80, 
-                400
-            ];
-            $this->Paytable[6] = [
-                0, 
-                0, 
-                0, 
-                15, 
-                75, 
-                300
-            ];
-            $this->Paytable[7] = [
-                0, 
-                0, 
-                0, 
-                15, 
-                60, 
-                250
-            ];
-            $this->Paytable[8] = [
-                0, 
-                0, 
-                0, 
-                10, 
-                50, 
-                200
-            ];
-            $this->Paytable[9] = [
-                0, 
-                0, 
-                0, 
-                10, 
-                40, 
-                150
-            ];
-            $this->Paytable[10] = [
-                0, 
-                0, 
-                0, 
-                5, 
-                30, 
-                125
-            ];
-            $this->Paytable[11] = [
-                0, 
-                0, 
-                0, 
-                5, 
-                30, 
-                100
-            ];
-            $this->Paytable[12] = [
-                0, 
-                0, 
-                0, 
-                5, 
-                25, 
-                100
-            ];
-            $this->Paytable[13] = [
-                0, 
-                0, 
-                2, 
-                5, 
-                25, 
-                100
-            ];
-            $reel = new GameReel();
-            foreach( [
-                'reelStrip1', 
-                'reelStrip2', 
-                'reelStrip3', 
-                'reelStrip4', 
-                'reelStrip5', 
-                'reelStrip6'
-            ] as $reelStrip ) 
-            {
-                if( count($reel->reelsStrip[$reelStrip]) ) 
-                {
-                    $this->$reelStrip = $reel->reelsStrip[$reelStrip];
-                }
-            }
-            foreach( [
-                'reelStripBonus1', 
-                'reelStripBonus2', 
-                'reelStripBonus3', 
-                'reelStripBonus4', 
-                'reelStripBonus5', 
-                'reelStripBonus6'
-            ] as $reelStrip ) 
-            {
-                if( count($reel->reelsStripBonus[$reelStrip]) ) 
-                {
-                    $this->$reelStrip = $reel->reelsStripBonus[$reelStrip];
-                }
-            }
-            $this->keyController = [
-                '13' => 'uiButtonSpin,uiButtonSkip', 
-                '49' => 'uiButtonInfo', 
-                '50' => 'uiButtonCollect', 
-                '51' => 'uiButtonExit2', 
-                '52' => 'uiButtonLinesMinus', 
-                '53' => 'uiButtonLinesPlus', 
-                '54' => 'uiButtonBetMinus', 
-                '55' => 'uiButtonBetPlus', 
-                '56' => 'uiButtonGamble', 
-                '57' => 'uiButtonRed', 
-                '48' => 'uiButtonBlack', 
-                '189' => 'uiButtonAuto', 
-                '187' => 'uiButtonSpin'
-            ];
-            $this->slotReelsConfig = [
-                [
-                    266, 
-                    297, 
-                    1
-                ], 
-                [
-                    559, 
-                    297, 
-                    1
-                ], 
-                [
-                    848, 
-                    297, 
-                    1
-                ]
-            ];
+            $this->Paytable[0] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,2,40,200,500];
+            $this->Paytable[3] = [0,0,2,40,200,400];
+            $this->Paytable[4] = [0,0,0,30,100,300];
+            $this->Paytable[5] = [0,0,0,20,80,200];
+            $this->Paytable[6] = [0,0,0,20,80,200];
+            $this->Paytable[7] = [0,0,0,8,40,150];
+            $this->Paytable[8] = [0,0,0,8,40,150];
+            $this->Paytable[9] = [0,0,0,4,10,100];
+            $this->Paytable[10] = [0,0,0,4,10,100];
+            $this->Paytable[11] = [0,0,0,4,10,100];
+            $this->Paytable[12] = [0,0,0,0,0,0];
+            $this->Paytable[13] = [0,0,2,40,200,500];
+            $this->Paytable[14] = [0,0,2,40,200,500];
+            $this->Paytable[15] = [0,0,2,40,200,500];
+            $this->Paytable[16] = [0,0,0,0,0,0];
+            $this->Paytable[17] = [0,0,0,0,0,0];
+            $this->Paytable[18] = [0,0,0,0,0,0];
+            $this->Paytable[19] = [0,0,0,0,0,0];
+            $this->Paytable[20] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -263,63 +101,33 @@ namespace VanguardLTE\Games\PekingLuckPM
             $this->slotGamble = false;
             $this->slotFastStop = 1;
             $this->slotExitUrl = '/';
-            $this->slotWildMpl = 2;
+            $this->slotWildMpl = 1;
             $this->GambleType = 1;
-            $this->slotFreeCount = 15;
-            $this->slotFreeMpl = 3;
+            $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->gameLine = [
-                1, 
-                2, 
-                3, 
-                4, 
-                5, 
-                6, 
-                7, 
-                8, 
-                9, 
-                10, 
-                11, 
-                12, 
-                13, 
-                14, 
-                15
-            ];
-            $this->Bet = explode(',', $game->bet);
+            $this->Bet = explode(',', $game->bet); //[8.00,16.00,24.00,32.00,40.00,80.00,120.00,160.00,200.00,300.00,400.00,600.00,1000.00,2000.00,3000.00,4000.00]; 
             $this->Balance = $user->balance;
-            $this->SymbolGame = [
-                '2', 
-                '3', 
-                '4', 
-                '5', 
-                '6', 
-                '7', 
-                '8', 
-                '9', 
-                '10', 
-                '11', 
-                '12', 
-                '13'
-            ];
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            $this->WinGamble = $game->rezerv;
+            // $game->rezerv => 10,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
-            if( $user->count_balance == 0 ) 
+            // session table 
+            $game_session = \VanguardLTE\GameSession::lockForUpdate()->where([
+                'user_id' => $this->playerId, 
+                'game_id' => $this->slotDBId
+            ])->first();
+            if( !isset($game_session) || strlen($game_session->session) <= 0 ) 
             {
-                $this->Percent = 100;
-                $this->slotJackPercent = 0;
-                $this->slotJackPercent0 = 0;
+                $this->gameData = [];
+            }else{
+                $this->gameData = json_decode($game_session->session, true);
+                $this->gamesession = $game_session;
             }
-            if( !isset($this->user->session) || strlen($this->user->session) <= 0 ) 
-            {
-                $this->user->session = serialize([]);
-            }
-            $this->gameData = unserialize($this->user->session);
+
             if( count($this->gameData) > 0 ) 
             {
                 foreach( $this->gameData as $key => $vl ) 
@@ -333,9 +141,9 @@ namespace VanguardLTE\Games\PekingLuckPM
         }
         public function SetGameData($key, $value)
         {
-            $_obf_0D040604031A0C332A392C0F2E0C1018072E3C1C1B3C32 = 86400;
+            $expire = strtotime(date('Y-m-d 8:0:0', strtotime("+7 days +16 hours")));
             $this->gameData[$key] = [
-                'timelife' => time() + $_obf_0D040604031A0C332A392C0F2E0C1018072E3C1C1B3C32, 
+                'timelife' => $expire, 
                 'payload' => $value
             ];
         }
@@ -347,19 +155,19 @@ namespace VanguardLTE\Games\PekingLuckPM
             }
             else
             {
-                return 0;
+                return null;
             }
         }
         public function FormatFloat($num)
         {
-            $_obf_0D1D2F06402E3626070611230F2F2405170110213D0932 = explode('.', $num);
-            if( isset($_obf_0D1D2F06402E3626070611230F2F2405170110213D0932[1]) ) 
+            $str0 = explode('.', $num);
+            if( isset($str0[1]) ) 
             {
-                if( strlen($_obf_0D1D2F06402E3626070611230F2F2405170110213D0932[1]) > 4 ) 
+                if( strlen($str0[1]) > 4 ) 
                 {
                     return round($num * 100) / 100;
                 }
-                else if( strlen($_obf_0D1D2F06402E3626070611230F2F2405170110213D0932[1]) > 2 ) 
+                else if( strlen($str0[1]) > 2 ) 
                 {
                     return floor($num * 100) / 100;
                 }
@@ -375,27 +183,37 @@ namespace VanguardLTE\Games\PekingLuckPM
         }
         public function SaveGameData()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
+            // session table 
+            $game_session = $this->gamesession;
+            if($game_session == null){
+                $game_session = \VanguardLTE\GameSession::create([
+                    'user_id' => $this->playerId, 
+                    'game_id' => $this->slotDBId,
+                    'session' => json_encode($this->gameData)
+                ]);
+            }else{
+                $game_session->session = json_encode($this->gameData);
+                $game_session->save();
+                $game_session->refresh();
+            }
         }
         public function CheckBonusWin()
         {
-            $_obf_0D250A3827310B5B0C0D121C1303111534020E0F181C01 = 0;
-            $_obf_0D1003233B2728340337151E14011404193D37332A1301 = 0;
+            $ratioCount = 0;
+            $totalPayRatio = 0;
             foreach( $this->Paytable as $vl ) 
             {
-                foreach( $vl as $_obf_0D0F161E053D31023119151106020D370C340240140611 ) 
+                foreach( $vl as $payRatio ) 
                 {
-                    if( $_obf_0D0F161E053D31023119151106020D370C340240140611 > 0 ) 
+                    if( $payRatio > 0 ) 
                     {
-                        $_obf_0D250A3827310B5B0C0D121C1303111534020E0F181C01++;
-                        $_obf_0D1003233B2728340337151E14011404193D37332A1301 += $_obf_0D0F161E053D31023119151106020D370C340240140611;
+                        $ratioCount++;
+                        $totalPayRatio += $payRatio;
                         break;
                     }
                 }
             }
-            return $_obf_0D1003233B2728340337151E14011404193D37332A1301 / $_obf_0D250A3827310B5B0C0D121C1303111534020E0F181C01;
+            return $totalPayRatio / $ratioCount;
         }
         public function HasGameData($key)
         {
@@ -410,89 +228,42 @@ namespace VanguardLTE\Games\PekingLuckPM
         }
         public function GetHistory()
         {
-            $history = \VanguardLTE\GameLog::whereRaw('game_id=? and user_id=? ORDER BY id DESC LIMIT 10', [
+            $history = \VanguardLTE\GameLog::whereRaw('game_id=? and user_id=? ORDER BY id DESC LIMIT 1', [
                 $this->slotDBId, 
                 $this->playerId
             ])->get();
             $this->lastEvent = 'NULL';
             foreach( $history as $log ) 
             {
-                $_obf_0D1F212D1B1A262C271C2C331110342F041A3014182301 = json_decode($log->str);
-                if( $_obf_0D1F212D1B1A262C271C2C331110342F041A3014182301->responseEvent != 'gambleResult' ) 
+                $jsonLog = json_decode($log->str);
+                if( $jsonLog->responseEvent != 'gambleResult' ) 
                 {
                     $this->lastEvent = $log->str;
                     break;
                 }
             }
-            if( isset($_obf_0D1F212D1B1A262C271C2C331110342F041A3014182301) ) 
+            if( isset($jsonLog) ) 
             {
-                return $_obf_0D1F212D1B1A262C271C2C331110342F041A3014182301;
+                return $jsonLog;
             }
             else
             {
                 return 'NULL';
             }
         }
-        public function UpdateJackpots($bet)
+        public function ClearJackpot($jid)
         {
-            $bet = $bet * $this->CurrentDenom;
-            $count_balance = $this->GetCountBalanceUser();
-            $_obf_0D0E13392A1E352D293108251212135B0D022529241422 = [];
-            $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = 0;
-            for( $i = 0; $i < count($this->jpgs); $i++ ) 
-            {
-                if( $count_balance == 0 ) 
-                {
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $this->jpgs[$i]->balance;
-                }
-                else if( $count_balance < $bet ) 
-                {
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $count_balance / 100 * $this->jpgs[$i]->percent + $this->jpgs[$i]->balance;
-                }
-                else
-                {
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $bet / 100 * $this->jpgs[$i]->percent + $this->jpgs[$i]->balance;
-                }
-                if( $this->jpgs[$i]->pay_sum < $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] && $this->jpgs[$i]->pay_sum > 0 ) 
-                {
-                    $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = $this->jpgs[$i]->pay_sum / $this->CurrentDenom;
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] - $this->jpgs[$i]->pay_sum;
-                    $this->SetBalance($this->jpgs[$i]->pay_sum / $this->CurrentDenom);
-                    if( $this->jpgs[$i]->pay_sum > 0 ) 
-                    {
-                        \VanguardLTE\StatGame::create([
-                            'user_id' => $this->playerId, 
-                            'balance' => $this->Balance * $this->CurrentDenom, 
-                            'bet' => 0, 
-                            'win' => $this->jpgs[$i]->pay_sum, 
-                            'game' => $this->game->name . ' JPG ' . $this->jpgs[$i]->id, 
-                            'percent' => 0, 
-                            'percent_jps' => 0, 
-                            'percent_jpg' => 0, 
-                            'profit' => 0, 
-                            'shop_id' => $this->shop_id
-                        ]);
-                    }
-                }
-                $this->jpgs[$i]->update(['balance' => $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i]]);
-                $this->jpgs[$i] = $this->jpgs[$i]->refresh();
-                if( $this->jpgs[$i]->balance < $this->jpgs[$i]->start_balance ) 
-                {
-                    $summ = $this->jpgs[$i]->start_balance;
-                    if( $summ > 0 ) 
-                    {
-                        $this->jpgs[$i]->add_jps(false, $summ);
-                    }
-                }
-            }
-            if( $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 > 0 ) 
-            {
-                $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = sprintf('%01.2f', $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22);
-                $this->Jackpots['jackPay'] = $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22;
-            }
+            $game = $this->game;
+            $game->{'jp_' . ($jid + 1)} = sprintf('%01.4f', 0);
+            $game->save();
         }
         public function GetBank($slotState = '')
         {
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
@@ -512,29 +283,26 @@ namespace VanguardLTE\Games\PekingLuckPM
         }
         public function GetCountBalanceUser()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
             return $this->user->count_balance;
         }
         public function InternalError($errcode)
         {
-            $_obf_0D280A1516183F171D1809285B36091811040F26391C11 = '';
-            $_obf_0D280A1516183F171D1809285B36091811040F26391C11 .= "\n";
-            $_obf_0D280A1516183F171D1809285B36091811040F26391C11 .= ('{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}');
-            $_obf_0D280A1516183F171D1809285B36091811040F26391C11 .= "\n";
-            $_obf_0D280A1516183F171D1809285B36091811040F26391C11 .= ' ############################################### ';
-            $_obf_0D280A1516183F171D1809285B36091811040F26391C11 .= "\n";
-            $_obf_0D05022C0626351A3C1C5B0D0A2D1A1B0D061C05380332 = '';
+            $strlog = '';
+            $strlog .= "\n";
+            $strlog .= date("Y-m-d H:i:s") . ' ';
+            $strlog .= ('{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}');
+            $strlog .= "\n";
+            $strlog .= ' ############################################### ';
+            $strlog .= "\n";
+            $strinternallog = '';
             if( file_exists(storage_path('logs/') . $this->slotId . 'Internal.log') ) 
             {
-                $_obf_0D05022C0626351A3C1C5B0D0A2D1A1B0D061C05380332 = file_get_contents(storage_path('logs/') . $this->slotId . 'Internal.log');
+                $strinternallog = file_get_contents(storage_path('logs/') . $this->slotId . 'Internal.log');
             }
-            file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_0D05022C0626351A3C1C5B0D0A2D1A1B0D061C05380332 . $_obf_0D280A1516183F171D1809285B36091811040F26391C11);
-            exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
+            file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $strinternallog . $strlog);
+            //exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
-        public function SetBank($slotState = '', $sum, $slotEvent = '')
+        public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -544,60 +312,92 @@ namespace VanguardLTE\Games\PekingLuckPM
             {
                 $slotState = '';
             }
-            if( $this->GetBank($slotState) + $sum < 0 ) 
-            {
-                $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
-            }
+
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
-            $_obf_0D16300411093D18353F3F2A1D5C1D3E3D25372E3D0411 = 0;
-            if( $sum > 0 && $slotEvent == 'bet' ) 
+            if($isFreeSpin == true){
+                $game->set_gamebank($sum, 'inc', 'bonus');
+                $game->save();
+                return $game;
+            }
+            if( $this->GetBank($slotState) + $sum < 0 ) 
+            {
+                if($slotState == 'bonus'){
+                    $diffMoney = $this->GetBank($slotState) + $sum;
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {
+                        $normalbank = $game->get_gamebank('');
+                        if ($normalbank + $diffMoney < 0)
+                        {
+                            $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                        }
+                        $game->set_gamebank($diffMoney, 'inc', '');
+                    }
+                    $sum = $sum - $diffMoney;
+                }else{
+                    if ($sum < 0){
+                        $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
+                    }
+                }
+            }
+            $bonus_systemmoney = 0;
+            if( $sum > 0 && $slotEvent == 'bet') 
             {
                 $this->toGameBanks = 0;
                 $this->toSlotJackBanks = 0;
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
-                $_obf_0D03242C3B012A362E1A1A28031B25022E0E073B353922 = $this->GetPercent();
-                $_obf_0D111A0318183C030C5C320E1D02182D23063522273322 = 10;
+                $currentpercent = $this->GetPercent();
+                $bonus_percent = $currentpercent / 3;
                 $count_balance = $this->GetCountBalanceUser();
-                $_obf_0D16380F3724101637270127352E0C1A06122840150932 = $sum / $this->GetPercent() * 100;
-                if( $count_balance < $_obf_0D16380F3724101637270127352E0C1A06122840150932 && $count_balance > 0 ) 
+                $_allBets = $sum / $this->GetPercent() * 100;
+                /*if( $count_balance < $_allBets && $count_balance > 0 ) 
                 {
-                    $_obf_0D3B1F2B0C113B290D023E032B1D115B5C150109370B32 = $count_balance;
-                    $_obf_0D1D235B2128121127373D391B112E3B281D023C5B3722 = $_obf_0D16380F3724101637270127352E0C1A06122840150932 - $_obf_0D3B1F2B0C113B290D023E032B1D115B5C150109370B32;
-                    $_obf_0D1A310E2B25282C1A01072A06330C1A173E3437092622 = $_obf_0D3B1F2B0C113B290D023E032B1D115B5C150109370B32 / 100 * $this->GetPercent();
-                    $sum = $_obf_0D1A310E2B25282C1A01072A06330C1A173E3437092622 + $_obf_0D1D235B2128121127373D391B112E3B281D023C5B3722;
-                    $_obf_0D16300411093D18353F3F2A1D5C1D3E3D25372E3D0411 = $_obf_0D3B1F2B0C113B290D023E032B1D115B5C150109370B32 / 100 * $_obf_0D111A0318183C030C5C320E1D02182D23063522273322;
+                    $_subCountBalance = $count_balance;
+                    $diff_money = $_allBets - $_subCountBalance;
+                    $subavaliable_balance = $_subCountBalance / 100 * $this->GetPercent();
+                    $sum = $subavaliable_balance + $diff_money;
+                    $bonus_systemmoney = $_subCountBalance / 100 * $bonus_percent;
                 }
                 else if( $count_balance > 0 ) 
-                {
-                    $_obf_0D16300411093D18353F3F2A1D5C1D3E3D25372E3D0411 = $_obf_0D16380F3724101637270127352E0C1A06122840150932 / 100 * $_obf_0D111A0318183C030C5C320E1D02182D23063522273322;
-                }
+                {*/
+                    $bonus_systemmoney = $_allBets / 100 * $bonus_percent;
+                //}
                 for( $i = 0; $i < count($this->jpgs); $i++ ) 
                 {
-                    if( $count_balance < $_obf_0D16380F3724101637270127352E0C1A06122840150932 && $count_balance > 0 ) 
+                    if( $count_balance < $_allBets && $count_balance > 0 ) 
                     {
                         $this->toSysJackBanks += ($count_balance / 100 * $this->jpgs[$i]->percent);
                     }
                     else if( $count_balance > 0 ) 
                     {
-                        $this->toSysJackBanks += ($_obf_0D16380F3724101637270127352E0C1A06122840150932 / 100 * $this->jpgs[$i]->percent);
+                        $this->toSysJackBanks += ($_allBets / 100 * $this->jpgs[$i]->percent);
                     }
                 }
                 $this->toGameBanks = $sum;
-                $this->betProfit = $_obf_0D16380F3724101637270127352E0C1A06122840150932 - $this->toGameBanks - $this->toSlotJackBanks - $this->toSysJackBanks;
+                $this->betProfit = $_allBets - $this->toGameBanks - $this->toSlotJackBanks - $this->toSysJackBanks;
             }
             if( $sum > 0 ) 
             {
                 $this->toGameBanks = $sum;
             }
-            if( $_obf_0D16300411093D18353F3F2A1D5C1D3E3D25372E3D0411 > 0 ) 
+            if ($this->happyhouruser)
             {
-                $sum -= $_obf_0D16300411093D18353F3F2A1D5C1D3E3D25372E3D0411;
-                $game->set_gamebank($_obf_0D16300411093D18353F3F2A1D5C1D3E3D25372E3D0411, 'inc', 'bonus');
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
             }
-            $game->set_gamebank($sum, 'inc', $slotState);
-            $game->save();
+            else
+            {
+                if( $bonus_systemmoney > 0 ) 
+                {
+                    $sum -= $bonus_systemmoney;
+                    $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
+                }
+                $game->set_gamebank($sum, 'inc', $slotState);
+                $game->save();
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -605,6 +405,7 @@ namespace VanguardLTE\Games\PekingLuckPM
             if( $this->GetBalance() + $sum < 0 ) 
             {
                 $this->InternalError('Balance_   ' . $sum);
+                exit( '{"responseEvent":"error","responseType":"balane is low to add ' . $sum . '","serverResponse":"InternalError"}' );
             }
             $sum = $sum * $this->CurrentDenom;
             $user = $this->user;
@@ -617,10 +418,6 @@ namespace VanguardLTE\Games\PekingLuckPM
             }
             $user->balance = $user->balance + $sum;
             $user->balance = $this->FormatFloat($user->balance);
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
             if( $user->balance == 0 ) 
             {
                 $user->update([
@@ -647,35 +444,27 @@ namespace VanguardLTE\Games\PekingLuckPM
         }
         public function GetBalance()
         {
-            $this->user->session = serialize($this->gameData);
-            $this->user->save();
-            $this->user->refresh();
-            $this->gameData = unserialize($this->user->session);
             $user = $this->user;
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
         }
-        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState)
+        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $isState = true)
         {
-            $_obf_0D172C04372D1A2A3C2B33260B34083837222A08343211 = $this->slotId . ' ' . $slotState;
-            if( $slotState == 'freespin' ) 
+            $slotstate = $this->slotId . ' ' . $slotState;
+            if( $slotState == 'respin' ) 
             {
-                $_obf_0D172C04372D1A2A3C2B33260B34083837222A08343211 = $this->slotId . ' FG';
+                $slotstate = $this->slotId . ' Free';
             }
-            else if( $slotState == 'doSpin' ) 
+            else if( $slotState == 'bet' ) 
             {
-                $_obf_0D172C04372D1A2A3C2B33260B34083837222A08343211 = $this->slotId . '';
-            }
-            else if( $slotState == 'freespin' ) 
-            {
-                $_obf_0D172C04372D1A2A3C2B33260B34083837222A08343211 = $this->slotId . ' RS';
+                $slotstate = $this->slotId . '';
             }
             else if( $slotState == 'slotGamble' ) 
             {
-                $_obf_0D172C04372D1A2A3C2B33260B34083837222A08343211 = $this->slotId . ' DG';
+                $slotstate = $this->slotId . ' DG';
             }
             $game = $this->game;
-            $game->increment('stat_in', $bet * $lines * $this->CurrentDenom);
+            $game->increment('stat_in', $bet * $this->CurrentDenom);
             $game->increment('stat_out', $win * $this->CurrentDenom);
             if( !isset($this->betProfit) ) 
             {
@@ -697,97 +486,149 @@ namespace VanguardLTE\Games\PekingLuckPM
                 'str' => $spinSymbols, 
                 'shop_id' => $this->shop_id
             ]);
-            \VanguardLTE\StatGame::create([
+            if($isState == true){
+                $roundstr = $this->GetGameData($this->slotId . 'RoundID');
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $this->playerId, 
+                    'balance' => $this->GetBalance() * $this->CurrentDenom, 
+                    'bet' => $bet * $this->CurrentDenom, 
+                    'win' => $win * $this->CurrentDenom, 
+                    'game' => $slotstate, 
+                    'percent' => $this->toGameBanks, 
+                    'percent_jps' => $this->toSysJackBanks, 
+                    'percent_jpg' => $this->toSlotJackBanks, 
+                    'profit' => $this->betProfit, 
+                    'denomination' => $this->CurrentDenom, 
+                    'shop_id' => $this->shop_id,
+                    'roundid' => $roundstr,
+                ]);
+            }
+        }
+        public function saveGameLog($strLog, $roundID){
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
                 'user_id' => $this->playerId, 
-                'balance' => $this->Balance * $this->CurrentDenom, 
-                'bet' => $bet * $lines * $this->CurrentDenom, 
-                'win' => $win * $this->CurrentDenom, 
-                'game' => $_obf_0D172C04372D1A2A3C2B33260B34083837222A08343211, 
-                'percent' => $this->toGameBanks, 
-                'percent_jps' => $this->toSysJackBanks, 
-                'percent_jpg' => $this->toSlotJackBanks, 
-                'profit' => $this->betProfit, 
-                'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
             ]);
         }
-        public function GetSpinSettings($garantType = 'doSpin', $bet, $lines)
+        public function GetFreeStack($betLine)
         {
-            $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 10;
-            switch( $lines ) 
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = 35;
+            if ($this->happyhouruser)
             {
-                case 10:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 3;
-                    break;
-                case 1:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 1;
-                    break;
-                default:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 10;
-                    break;
-            }
-            if( $garantType != 'doSpin' ) 
-            {
-                $_obf_0D3C140A17381D2305073B293E5C232901062730391001 = '_bonus';
+                $limitOdd = floor($winAvaliableMoney / $betLine);
             }
             else
             {
-                $_obf_0D3C140A17381D2305073B293E5C232901062730391001 = '';
+                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+                if($limitOdd < 35){
+                    $limitOdd = 35;
+                }else if($limitOdd > 100){
+                    $limitOdd = 100;
+                }
+            }
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $this->game->original_id, 
+                $limitOdd,
+                $this->playerId
+            ])->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+            }else{
+                \VanguardLTE\PPGameFreeStackLog::where([
+                    'user_id' => $this->playerId,
+                    'game_id' => $this->game->original_id
+                    ])->where('odd', '<=', $limitOdd)->delete();
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                        $this->game->original_id, 
+                        $limitOdd,
+                        $this->playerId
+                    ])->get();
+                    if (count($freeStacks) > 0) {
+                        $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
+                    }else{
+                        $freeStack = null;
+                    }
+            }
+            if($freeStack){
+                \VanguardLTE\PPGameFreeStackLog::create([
+                    'game_id' => $this->game->original_id, 
+                    'user_id' => $this->playerId, 
+                    'freestack_id' => $freeStack->id, 
+                    'odd' => $freeStack->odd, 
+                    'free_spin_count' => $freeStack->free_spin_count
+                ]);
+                return json_decode($freeStack->free_spin_stack, true);
+            }else{
+                return [];
+            }
+        }
+        public function GetSpinSettings($garantType = 'doSpin', $bet, $lines, $isdoublechance = 0)
+        {
+            $linecount = 10;
+            if( $garantType != 'doSpin' ) 
+            {
+                $granttype = '_bonus';
+            }
+            else
+            {
+                $granttype = '';
             }
             $bonusWin = 0;
             $spinWin = 0;
             $game = $this->game;
-            $_obf_0D331D3E332C132334050318121E19121A1515392E0B01 = $game->{'garant_win' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22};
-            $_obf_0D363F0A050A0E103B2D12271D2309312440072D250A01 = $game->{'garant_bonus' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22};
-            $_obf_0D2C3D3B244034312B3327351C2725302F062531213511 = $game->{'winbonus' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22};
-            $_obf_0D0A36071E073714332F351C5C36185C2527222F381911 = $game->{'winline' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22};
-            $_obf_0D331D3E332C132334050318121E19121A1515392E0B01++;
-            $_obf_0D363F0A050A0E103B2D12271D2309312440072D250A01++;
+            $grantwin_count = $game->{'garant_win' . $granttype . $linecount};
+            $grantbonus_count = $game->{'garant_bonus' . $granttype . $linecount};
+            $winbonus_count = $game->{'winbonus' . $granttype . $linecount};
+            $winline_count = $game->{'winline' . $granttype . $linecount};
+            $grantwin_count++;
+            if($isdoublechance == 1){
+                $grantbonus_count+=2;
+            }else{
+                $grantbonus_count++;
+            }
             $return = [
                 'none', 
                 0
             ];
-            if( $_obf_0D2C3D3B244034312B3327351C2725302F062531213511 <= $_obf_0D363F0A050A0E103B2D12271D2309312440072D250A01 ) 
+            if( $winbonus_count <= $grantbonus_count ) 
             {
                 $bonusWin = 1;
-                $_obf_0D363F0A050A0E103B2D12271D2309312440072D250A01 = 0;
-                $game->{'winbonus' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22} = $this->getNewSpin($game, 0, 1, $lines, $garantType);
+                $grantbonus_count = 0;
+                $game->{'winbonus' . $granttype . $linecount} = $this->getNewSpin($game, 0, 1, $lines, $garantType);
             }
-            else if( $_obf_0D0A36071E073714332F351C5C36185C2527222F381911 <= $_obf_0D331D3E332C132334050318121E19121A1515392E0B01 ) 
+            else if( $winline_count <= $grantwin_count ) 
             {
                 $spinWin = 1;
-                $_obf_0D331D3E332C132334050318121E19121A1515392E0B01 = 0;
-                $game->{'winline' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22} = $this->getNewSpin($game, 1, 0, $lines, $garantType);
+                $grantwin_count = 0;
+                $game->{'winline' . $granttype . $linecount} = $this->getNewSpin($game, 1, 0, $lines, $garantType);
             }
-            $game->{'garant_win' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22} = $_obf_0D331D3E332C132334050318121E19121A1515392E0B01;
-            $game->{'garant_bonus' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22} = $_obf_0D363F0A050A0E103B2D12271D2309312440072D250A01;
+            $game->{'garant_win' . $granttype . $linecount} = $grantwin_count;
+            $game->{'garant_bonus' . $granttype . $linecount} = $grantbonus_count;
             $game->save();
+            // if ($this->happyhouruser)
+            // {
+            //     $bonus_spin = rand(1, 10);
+            //     $spin_percent = 5;
+            //     if ($garantType == 'freespin')
+            //     {
+            //         $spin_percent = 3;
+            //     }
+            //     $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
+            // }
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
                 $garantType = 'bonus';
-                $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032 = $this->GetBank($garantType);
+                $currentbank = $this->GetBank($garantType);
                 $return = [
                     'bonus', 
-                    $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032
+                    $currentbank
                 ];
-                if( $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032 < ($this->CheckBonusWin() * $bet) ) 
+                if( $currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 
@@ -797,21 +638,21 @@ namespace VanguardLTE\Games\PekingLuckPM
             }
             else if( $spinWin == 1 || $bonusWin == 1 && !$this->slotBonus ) 
             {
-                $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032 = $this->GetBank($garantType);
+                $currentbank = $this->GetBank($garantType);
                 $return = [
                     'win', 
-                    $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032
+                    $currentbank
                 ];
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
-                $_obf_0D1215151A36223F3D321A1D2E2D37075C041605215B01 = rand(1, 2);
-                if( $_obf_0D1215151A36223F3D321A1D2E2D37075C041605215B01 == 1 ) 
+                $rand = rand(1, 2);
+                if( $rand == 1 ) 
                 {
-                    $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032 = $this->GetBank('');
+                    $currentbank = $this->GetBank('');
                     $return = [
                         'win', 
-                        $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032
+                        $currentbank
                     ];
                 }
             }
@@ -819,179 +660,77 @@ namespace VanguardLTE\Games\PekingLuckPM
         }
         public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'doSpin')
         {
-            $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 10;
-            switch( $lines ) 
-            {
-                case 10:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 3;
-                    break;
-                case 1:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 1;
-                    break;
-                default:
-                    $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22 = 10;
-                    break;
-            }
+            $linecount = 10;
             if( $garantType != 'doSpin' ) 
             {
-                $_obf_0D3C140A17381D2305073B293E5C232901062730391001 = '_bonus';
+                $granttype = '_bonus';
             }
             else
             {
-                $_obf_0D3C140A17381D2305073B293E5C232901062730391001 = '';
+                $granttype = '';
             }
             if( $spinWin ) 
             {
-                $win = explode(',', $game->game_win->{'winline' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22});
+                $win = explode(',', $game->game_win->{'winline' . $granttype . $linecount});
             }
             if( $bonusWin ) 
             {
-                $win = explode(',', $game->game_win->{'winbonus' . $_obf_0D3C140A17381D2305073B293E5C232901062730391001 . $_obf_0D1A192E211F3F0B162A3E2A101410120A5C1725025B22});
+                $win = explode(',', $game->game_win->{'winbonus' . $granttype . $linecount});
             }
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        public function GetRandomScatterPos($rp)
+        
+        public function GetPurMul($pur)
         {
-            $_obf_0D27292617142A0F131C2A07024013320B242130093D01 = [];
-            for( $i = 0; $i < count($rp); $i++ ) 
-            {
-                if( $rp[$i] == '1' ) 
-                {
-                    if( $this->slotReelsConfig[0][2] == 4 ) 
-                    {
-                        if( isset($rp[$i + 1]) && isset($rp[$i + 2]) && isset($rp[$i + 3]) ) 
-                        {
-                            array_push($_obf_0D27292617142A0F131C2A07024013320B242130093D01, $i);
-                        }
-                        if( isset($rp[$i - 1]) && isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                        {
-                            array_push($_obf_0D27292617142A0F131C2A07024013320B242130093D01, $i - 1);
-                        }
-                        if( isset($rp[$i - 2]) && isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                        {
-                            array_push($_obf_0D27292617142A0F131C2A07024013320B242130093D01, $i - 2);
-                        }
-                        if( isset($rp[$i - 3]) && isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                        {
-                            array_push($_obf_0D27292617142A0F131C2A07024013320B242130093D01, $i - 3);
-                        }
-                    }
-                    else
-                    {
-                        if( isset($rp[$i + 1]) && isset($rp[$i + 2]) ) 
-                        {
-                            array_push($_obf_0D27292617142A0F131C2A07024013320B242130093D01, $i);
-                        }
-                        if( isset($rp[$i - 1]) && isset($rp[$i + 1]) ) 
-                        {
-                            array_push($_obf_0D27292617142A0F131C2A07024013320B242130093D01, $i - 1);
-                        }
-                        if( isset($rp[$i - 2]) && isset($rp[$i - 1]) ) 
-                        {
-                            array_push($_obf_0D27292617142A0F131C2A07024013320B242130093D01, $i - 2);
-                        }
-                    }
-                }
-            }
-            shuffle($_obf_0D27292617142A0F131C2A07024013320B242130093D01);
-            if( !isset($_obf_0D27292617142A0F131C2A07024013320B242130093D01[0]) ) 
-            {
-                $_obf_0D27292617142A0F131C2A07024013320B242130093D01[0] = rand(2, count($rp) - 3);
-            }
-            return $_obf_0D27292617142A0F131C2A07024013320B242130093D01[0];
+            $purmuls = [2000];
+            return $purmuls[$pur];
         }
-        public function GetGambleSettings()
+        public function GetReelStrips($winType, $bet)
         {
-            $spinWin = rand(1, $this->WinGamble);
-            return $spinWin;
-        }
-        public function GetReelStrips($winType)
-        {
-            if( $winType != 'bonus' ) 
-            {
-                $_obf_0D101228330A351D340513401F3F211B060F0E1A191822 = [];
-                foreach( [
-                    'reelStrip1', 
-                    'reelStrip2', 
-                    'reelStrip3', 
-                    'reelStrip4', 
-                    'reelStrip5', 
-                    'reelStrip6'
-                ] as $index => $reelStrip ) 
-                {
-                    if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
-                    {
-                        $_obf_0D101228330A351D340513401F3F211B060F0E1A191822[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+            // if($winType == 'bonus'){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGamePekingLuckStack::where('id', 126)->first();
+                // return json_decode($stack->spin_stack, true);
+            // }
+            $spintype = 0;
+            if($winType == 'bonus'){
+                $winAvaliableMoney = $this->GetBank('bonus');
+            }else if($winType == 'win'){
+                $winAvaliableMoney = $this->GetBank('');
+            }else{
+                $winAvaliableMoney = 0;
+            }
+            $limitOdd = 0;
+            if($winType != 'none'){
+                $limitOdd = floor($winAvaliableMoney / $bet);
+            }
+            $isLowBank = false;
+            while(true){
+                $stacks = \VanguardLTE\PPGameStackModel\PPGamePekingLuckStack::where('spin_type', $spintype);
+                $index = mt_rand(0, 39000);
+                if($winType == 'win'){
+                    $stacks = $stacks->where('odd', '>', 0);
+                }
+                if($isLowBank == true){
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 5);    
+                    }
+                    $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
+                }else{
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    }else{
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                     }
                 }
-            }
-            else
-            {
-                $_obf_0D340F1A341017095B37324005163D02312C041E262632 = [];
-                foreach( [
-                    'reelStrip1', 
-                    'reelStrip2', 
-                    'reelStrip3', 
-                    'reelStrip4', 
-                    'reelStrip5', 
-                    'reelStrip6'
-                ] as $index => $reelStrip ) 
-                {
-                    if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
-                    {
-                        $_obf_0D101228330A351D340513401F3F211B060F0E1A191822[$index + 1] = $this->GetRandomScatterPos($this->$reelStrip);
-                        $_obf_0D340F1A341017095B37324005163D02312C041E262632[] = $index + 1;
-                    }
-                }
-                $_obf_0D360F0E1F1A363935363D35280B0F3F053D272F233C11 = rand(3, count($_obf_0D340F1A341017095B37324005163D02312C041E262632));
-                shuffle($_obf_0D340F1A341017095B37324005163D02312C041E262632);
-                for( $i = 0; $i < count($_obf_0D340F1A341017095B37324005163D02312C041E262632); $i++ ) 
-                {
-                    if( $i < $_obf_0D360F0E1F1A363935363D35280B0F3F053D272F233C11 ) 
-                    {
-                        $_obf_0D101228330A351D340513401F3F211B060F0E1A191822[$_obf_0D340F1A341017095B37324005163D02312C041E262632[$i]] = $this->GetRandomScatterPos($this->{'reelStrip' . $_obf_0D340F1A341017095B37324005163D02312C041E262632[$i]});
-                    }
-                    else
-                    {
-                        $_obf_0D101228330A351D340513401F3F211B060F0E1A191822[$_obf_0D340F1A341017095B37324005163D02312C041E262632[$i]] = rand(0, count($this->{'reelStrip' . $_obf_0D340F1A341017095B37324005163D02312C041E262632[$i]}) - 3);
-                    }
+                if(!isset($stacks) || count($stacks) == 0){
+                    $isLowBank = true;
+                }else{
+                    break;
                 }
             }
-            $reel = [
-                'rp' => []
-            ];
-            foreach( $_obf_0D101228330A351D340513401F3F211B060F0E1A191822 as $index => $value ) 
-            {
-                $key = $this->{'reelStrip' . $index};
-                $rc = count($key);
-                $key[-1] = $key[$rc - 1];
-                $key[$rc] = $key[0];
-                $reel['reel' . $index][-1] = $key[$value - 1];
-                $reel['reel' . $index][0] = $key[$value];
-                $reel['reel' . $index][1] = $key[$value + 1];
-                $reel['reel' . $index][2] = $key[$value + 2];
-                $reel['reel' . $index][3] = $key[$value + 3];
-                $reel['rp'][] = $value;
-            }
-            return $reel;
+            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
+            return json_decode($stack, true);
         }
     }
-
 }
