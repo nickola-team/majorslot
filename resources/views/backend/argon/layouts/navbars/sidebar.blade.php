@@ -31,7 +31,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ (isset($parentSection) && $parentSection == 'agent') ? 'active' : '' }}" href="#navbar-agents" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-agents">
                         <i class="ni ni-single-02 text-white"></i>
-                        <span class="nav-link-text text-white">에이전트</span>
+                        <span class="nav-link-text text-white">파트너</span>
                     </a>
                     <div class="collapse {{  (isset($parentSection) && $parentSection == 'agent') ? 'show' : '' }}" id="navbar-agents">
                     <ul class="nav nav-sm flex-column">
@@ -39,13 +39,13 @@
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{{argon_route('argon.agent.create')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                <span class="nav-link-text text-white">에이전트생성</span>
+                                <span class="nav-link-text text-white">파트너생성</span>
                             </a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link text-white" href="{{argon_route('argon.agent.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                <span class="nav-link-text text-white">에이전트목록</span>
+                                <span class="nav-link-text text-white">파트너목록</span>
                             </a>
                         </li>
                     @endif
@@ -67,7 +67,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ (isset($parentSection) && $parentSection == 'player') ? 'active' : '' }}" href="#navbar-players" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
                         <i class="ni ni-user-run text-white"></i>
-                        <span class="nav-link-text text-white">플레이어</span>
+                        <span class="nav-link-text text-white">유저</span>
                     </a>
 
                     <div class="collapse {{ (isset($parentSection) && $parentSection == 'player') ? 'show' : '' }}" id="navbar-players">
@@ -75,21 +75,21 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.create')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    플레이어생성
+                                    유저생성
                                 </a>
                             </li>
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.vlist')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    개인플레이어목록
+                                    개인유저목록
                                 </a>
                             </li>
                             @endif
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    플레이어목록
+                                    유저목록
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -129,7 +129,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.category')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    에이전트별 게임관리
+                                    파트너별 게임관리
                                 </a>
                             </li>
                             <li class="nav-item">

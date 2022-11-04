@@ -153,7 +153,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>기간내 합계</th>
-                                <th>에이전트이름</th>
+                                <th>파트너이름</th>
                                 <th>게임이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
@@ -181,7 +181,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>날짜</th>
-                                <th>에이전트이름</th>
+                                <th>파트너이름</th>
                                 <th>게임이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>

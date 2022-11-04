@@ -2,7 +2,7 @@
         'parentSection' => 'player',
         'elementName' => 'player-transaction'
     ])
-@section('page-title',  '플레이어 지급내역')
+@section('page-title',  '유저 지급내역')
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -64,7 +64,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">플레이어이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">유저이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
@@ -124,14 +124,14 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">플레이어 지급내역</h3>
+        <h3 class="mb-0">유저 지급내역</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush">
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">플레이어</th>
+                <th scope="col">유저</th>
                 <th scope="col">지급자</th>
                 <th scope="col">지급자보유금</th>
                 <th scope="col">변동전 금액</th>

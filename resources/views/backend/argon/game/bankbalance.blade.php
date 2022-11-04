@@ -24,7 +24,7 @@
                     <input type="hidden" value="" name="balancetype" id="balancetype">
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                            에이전트이름
+                            파트너이름
                         </div>
                         <div class="col-7">
                             {{$bankinfo['name']}}
