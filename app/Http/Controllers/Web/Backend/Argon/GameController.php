@@ -528,6 +528,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             return redirect()->back()->withSuccess(['배팅한도가 업데이트되었습니다']);
         }
+        public function game_missrole(\Illuminate\Http\Request $request)
+        {
+            return view('backend.argon.game.missrole');
+        }
     }
+    
 
 }

@@ -426,6 +426,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'GameController@game_betlimitupdate',
         ]);
 
+        Route::get('game/missrole', [
+            'as' => 'argon.game.missrole',
+            'uses' => 'GameController@game_missrole',
+        ]);
+        Route::post('game/missrole', [
+            'as' => 'argon.game.missroleupdate',
+            'uses' => 'GameController@game_missroleupdate',
+        ]);
+
         /**
          * Happyhours routes
          */
