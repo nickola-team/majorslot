@@ -2,7 +2,7 @@
         'parentSection' => 'player',
         'elementName' => 'player-list'
     ])
-@section('page-title',  '플레이어 목록')
+@section('page-title',  '유저 목록')
 
 @section('content-header')
 <div class="row">
@@ -11,7 +11,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-success mb-0 ">총 플레이어</h3>
+                        <h3 class="card-title text-success mb-0 ">총 유저</h3>
                         <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['count'])}}</span>
                     </div>
                     <div class="col-auto">
@@ -71,7 +71,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">플레이어이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">유저이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
@@ -103,7 +103,7 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">플레이어 목록</h3>
+        <h3 class="mb-0">유저 목록</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush" id="datalist">

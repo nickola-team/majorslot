@@ -32,7 +32,7 @@
     <a class="dropdown-item" href="{{argon_route('argon.player.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.terminate', ['id' => $user->id])}}" data-method="DELETE"
                                 data-confirm-title="확인"
-                                data-confirm-text="플레이어의 게임을 종료하시겠습니까? 종료버튼클릭후 진행한 배팅은 무시됩니다."
+                                data-confirm-text="유저의 게임을 종료하시겠습니까? 종료버튼클릭후 진행한 배팅은 무시됩니다."
                                 data-confirm-delete="확인"
                                 data-confirm-cancel="취소">게임종료</a>
 </div>

@@ -2,7 +2,7 @@
         'parentSection' => 'player',
         'elementName' => 'player-create'
     ])
-@section('page-title',  '플레이어 생성')
+@section('page-title',  '유저 생성')
 
 @section('content')
 <div class="container-fluid">
@@ -12,7 +12,7 @@
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">플레이어 생성</h3>
+                                <h3 class="mb-0">유저 생성</h3>
                             </div>
                         </div>
                     </div>

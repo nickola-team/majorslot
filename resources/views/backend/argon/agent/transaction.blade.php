@@ -2,7 +2,7 @@
         'parentSection' => 'agent',
         'elementName' => 'agent-transaction'
     ])
-@section('page-title',  '에이전트 지급내역')
+@section('page-title',  '파트너 지급내역')
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -100,7 +100,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
@@ -139,7 +139,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="role" name="role">
                                     <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
@@ -182,14 +182,14 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">에이전트 지급내역</h3>
+        <h3 class="mb-0">파트너 지급내역</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush">
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">에이전트</th>
+                <th scope="col">파트너</th>
                 <th scope="col">지급자</th>
                 <th scope="col">지급자보유금</th>
                 <th scope="col">변동전 금액</th>

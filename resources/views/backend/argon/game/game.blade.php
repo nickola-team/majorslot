@@ -18,7 +18,7 @@
         <table class="table align-items-center table-flush" id="agentlist">
             <thead class="thead-light">
                 <tr>
-                <th scope="col">에이전트/게임사</th>
+                <th scope="col">파트너/게임사</th>
                 <th scope="col">게임이름</th>
                 <th scope="col">활성된 매장</th>
                 <th scope="col">비활성된 매장</th>

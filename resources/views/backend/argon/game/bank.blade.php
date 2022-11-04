@@ -90,7 +90,7 @@
                 <thead class="thead-light">
                     <tr>
                     <th scope="col">번호</th>
-                    <th scope="col">에이전트이름</th>
+                    <th scope="col">파트너이름</th>
                     <th scope="col">환수율%</th>
                     <th scope="col">환수금</th>
                     <th scope="col"><a href="{{argon_route('argon.game.bankbalance', ['batch'=>1,'type'=>'slots','id'=>0])}}">일괄수정 <i class="fa fa-arrow-circle-right"></i></a></th>
@@ -130,7 +130,7 @@
                 <thead class="thead-light">
                     <tr>
                     <th scope="col">번호</th>
-                    <th scope="col">에이전트이름</th>
+                    <th scope="col">파트너이름</th>
                     <th scope="col">게임갯수</th>
                     <th scope="col">환수금 합계</th>
                     </tr>
