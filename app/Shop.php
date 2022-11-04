@@ -9,9 +9,9 @@ namespace VanguardLTE
             'alias',
             'balance', 
             'percent', 
-            'count_deal_balance', 
+            'garant_deal', 
             'mileage', 
-            'count_mileage', 
+            'miss_deal', 
             'deal_balance',
             'deal_percent',
             'table_deal_percent',
@@ -160,6 +160,12 @@ namespace VanguardLTE
             }
             return implode(', ', $cats);
         }
+
+        public function info()
+        {
+            return $this->hasMany('VanguardLTE\InfoShop', 'shop_id');
+        }
+
     }
 
 }

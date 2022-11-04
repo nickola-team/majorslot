@@ -51,7 +51,19 @@
                             </div>
                             <div class="col-md-1">
                             </div>
-                        </div>                        
+                        </div>   
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="times" class="col-md-2 col-form-label form-control-label text-center">공배팅 적용시간</label>
+                            <div class="col-md-2">
+                            <input class="form-control" type="time" value="{{Request::get('times')[0]??date('H:i:s', strtotime('-1 hours'))}}" id="times" name="times[]">
+                            </div>
+                            <label for="times" class="col-form-label form-control-label" >~</label>
+                            <div class="col-md-2">
+                            <input class="form-control" type="time" value="{{Request::get('times')[1]??date('H:i:s')}}" id="times" name="times[]">
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>

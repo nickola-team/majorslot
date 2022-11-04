@@ -17,6 +17,14 @@ namespace VanguardLTE
         {
             return $this->belongsTo('VanguardLTE\Shop');
         }
+        public function info()
+        {
+            return $this->belongsTo('VanguardLTE\Info');
+        }
+        public function dealinfo()
+        {
+            return $this->hasOne('VanguardLTE\Info')->where('roles', 'deal');
+        }
     }
 
 }
