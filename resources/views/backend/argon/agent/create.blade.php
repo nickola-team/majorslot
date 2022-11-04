@@ -2,7 +2,7 @@
         'parentSection' => 'agent',
         'elementName' => 'agent-create'
     ])
-@section('page-title',  '에이전트 생성')
+@section('page-title',  '파트너 생성')
 
 @section('content')
 <div class="container-fluid">
@@ -12,7 +12,7 @@
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">에이전트 생성</h3>
+                                <h3 class="mb-0">파트너 생성</h3>
                             </div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group{{ $errors->has('parent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="parent">상위에이전트</label>
+                                    <label class="form-control-label" for="parent">상위파트너</label>
                                     <input type="text" name="parent" id="parent" class="form-control{{ $errors->has('parent') ? ' is-invalid' : '' }}" value="{{auth()->user()->username}}" required>
                                 </div>
                                 <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">

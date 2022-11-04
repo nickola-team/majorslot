@@ -55,7 +55,7 @@
     </td>
 </tr>
 <tr>
-    <td>플레이어</td>
+    <td>유저</td>
     <td>{{$res['stat']->user?$res['stat']->user->username:'Unknown'}}</td>
 </tr>
 <tr>

@@ -107,11 +107,11 @@
                             <div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
                                 </div>
-                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
+                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                                 <div class="col-md-3">
                                     <select class="form-control" id="role" name="role">
                                         <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
@@ -171,7 +171,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>기간내 합계</th>
-                                <th>에이전트이름</th>
+                                <th>파트너이름</th>
                                 <th>게임사이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
@@ -199,7 +199,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>날짜</th>
-                                <th>에이전트이름</th>
+                                <th>파트너이름</th>
                                 <th>게임사이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>

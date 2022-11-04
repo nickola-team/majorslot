@@ -139,7 +139,7 @@ namespace VanguardLTE\Games\BiggerBassBonanzaPM
                         $strOtherResponse = $strOtherResponse . '&stf=' . $str_stf;
                     }
                     if($str_trail != ''){
-                        $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
+                        $strOtherResponse = $strOtherResponse . '&srf=&trail=' . $str_trail;
                     }
                     $strOtherResponse = $strOtherResponse . '&action=doSpin&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 || $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') > 0)
@@ -506,7 +506,7 @@ namespace VanguardLTE\Games\BiggerBassBonanzaPM
                     $strOtherResponse = $strOtherResponse . '&stf=' . $str_stf;
                 }
                 if($str_trail != ''){
-                    $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
+                    $strOtherResponse = $strOtherResponse . '&srf=&trail=' . $str_trail;
                 }
                 if($mo_tv > 0){
                     $strOtherResponse = $strOtherResponse . '&mo_tv=' . $mo_tv . '&mo_tw=' . $moneyWin;
