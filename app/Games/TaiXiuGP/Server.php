@@ -16,16 +16,16 @@ namespace VanguardLTE\Games\TaiXiuGP
         ];
         public  $MULTILIMIT = [
             [
-                'lo' => 150,
-                'hi' => 150000,
+                'lo' => 1500,
+                'hi' => 3000000,
             ],
             [
                 'lo' => 7500,
-                'hi' => 1500000,
+                'hi' => 7500000,
             ],
             [
                 'lo' => 15000,
-                'hi' => 3000000,
+                'hi' => 10000000,
             ]
         ];
 
