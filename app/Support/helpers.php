@@ -19,6 +19,33 @@ if (! function_exists('settings')) {
         return app('anlutro\LaravelSettings\SettingStore')->get($key, $default);
     }
 }
+if (! function_exists('rand_region_numbers')) {
+    function rand_region_numbers($max, $count)
+    {
+        if ($max < $count)
+        {
+            return [$count];
+        }
+        $nums = [];
+        $total = $max; // totalcount
+        for ($i=0;$i<$count-1;$i++)
+        {
+            $c = rand(1, $total/($count-1-$i));
+            $nums[] = $c;
+            $total = $total - $c;
+        }
+        if ($total == 0)
+        {
+            $nums[] = 1;
+        }
+        else
+        {
+            $nums[] = $total;
+        }
+        return $nums;
+    }
+}
+
 if (! function_exists('argon_route')) {
     function argon_route($name, $parameters = [], $absolute = true)
     {

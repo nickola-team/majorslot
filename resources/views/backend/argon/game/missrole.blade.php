@@ -23,17 +23,17 @@
             <hr class="my-1">
             <div id="collapseOne" class="collapse show">
                 <div class="card-body">
-                    <form action="{{argon_route('argon.game.banksetting')}}" method="POST" >
+                    <form action="{{argon_route('argon.game.missroleupdate')}}" method="POST" >
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="minslot" class="col-md-2 col-form-label form-control-label text-center">슬롯 총배팅수</label>
+                            <label for="slot_total_deal" class="col-md-2 col-form-label form-control-label text-center">슬롯 총배팅수</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="minslot" value="" placeholder="">
+                                <input type="text" class="form-control" name="slot_total_deal" value="{{$data['slot_total_deal']}}" placeholder="">
                             </div>
-                            <label for="maxslot" class="col-md-2 col-form-label form-control-label text-center">슬롯 공배팅수</label>
+                            <label for="slot_total_miss" class="col-md-2 col-form-label form-control-label text-center">슬롯 공배팅수</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="maxslot" value="" placeholder="">
+                                <input type="text" class="form-control" name="slot_total_miss" value="{{$data['slot_total_miss']}}" placeholder="">
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -41,29 +41,17 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="minbonus" class="col-md-2 col-form-label form-control-label text-center">카지노 총배팅수</label>
+                            <label for="table_total_deal" class="col-md-2 col-form-label form-control-label text-center">라이브 총배팅수</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="minbonus" value="" placeholder="">
+                                <input type="text" class="form-control" name="table_total_deal" value="{{$data['table_total_deal']}}" placeholder="">
                             </div>
-                            <label for="maxbonus" class="col-md-2 col-form-label form-control-label text-center">카지노 공배팅수</label>
+                            <label for="table_total_miss" class="col-md-2 col-form-label form-control-label text-center">라이브 공배팅수</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="maxbonus" value="" placeholder="">
+                                <input type="text" class="form-control" name="table_total_miss" value="{{$data['table_total_miss']}}" placeholder="">
                             </div>
                             <div class="col-md-1">
                             </div>
                         </div>   
-                        <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
-                            <label for="times" class="col-md-2 col-form-label form-control-label text-center">공배팅 적용시간</label>
-                            <div class="col-md-2">
-                            <input class="form-control" type="time" value="{{Request::get('times')[0]??date('H:i:s', strtotime('-1 hours'))}}" id="times" name="times[]">
-                            </div>
-                            <label for="times" class="col-form-label form-control-label" >~</label>
-                            <div class="col-md-2">
-                            <input class="form-control" type="time" value="{{Request::get('times')[1]??date('H:i:s')}}" id="times" name="times[]">
-                            </div>
-                        </div>
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
@@ -91,19 +79,33 @@
                 <thead class="thead-light">
                     <tr>
                     <th scope="col">번호</th>
-                    <th scope="col">에이전트이름</th>
+                    <th scope="col">매장이름</th>
                     <th scope="col">슬롯롤링%</th>
                     <th scope="col">라이브롤링%</th>
-                    <th scope="col"></th>
+                    @if (auth()->user()->hasRole('admin'))
+                    <th scope="col">슬롯난수</th>
+                    <th scope="col">카지노난수</th>
+                    @endif
+                    <th scope="col">슬롯공배팅상태</th>
+                    <th scope="col">라이브공배팅상태</th>
                     </tr>
                 </thead>
                 <tbody class="list">
+                @if (count($shops) > 0)
+                    @foreach ($shops as $shop)
+                        <tr>
+                            @include('backend.argon.game.partials.row_missrole')
+                        </tr>
+                    @endforeach
+                @else
                     <tr><td colspan="5">{{__('No Data')}}</td></tr>
+                @endif
                 </tbody>
                 </table>
         </div>
         <!-- Card footer -->
          <div class="card-footer py-4">
+            {{ $shops->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
         </div> 
         </div>
     </div>

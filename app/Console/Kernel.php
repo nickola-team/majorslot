@@ -263,6 +263,77 @@ namespace VanguardLTE\Console
                             }
                         }
                     }
+                    //miss role
+                    //direct find master
+                    $masterid = $shop->getUsersByRole('master');
+                    $master = \VanguardLTE\User::whereIn('ids',$masterid)->first();
+                    if ($master)
+                    {
+                        $comaster = $master->referral;
+                        if ($comaster)
+                        {
+                            $info = $comaster->info;
+                            $slotinf = null;
+                            $tableinf = null;
+
+                            foreach ($info as $inf)
+                            {
+                                if ($inf->roles =='slot')
+                                {
+                                    $slotinf = $inf;
+                                }
+                                if ($inf->roles =='table')
+                                {
+                                    $tableinf = $inf;
+                                }
+                            }
+                            if ($slotinf)
+                            {
+                                $shopslotinf = \VanguardLTE\Info::create(
+                                    [
+                                        'link' => $slotinf->link,
+                                        'title' => $slotinf->title,
+                                        'roles' => 'slot',
+                                        'text' => implode(',', rand_region_numbers($slotinf->title,$slotinf->link)),
+                                        'user_id' => $comaster->id
+                                    ]
+                                    );
+                                \VanguardLTE\InfoShop::create(
+                                    [
+                                        'shop_id' => $shop->id,
+                                        'info_id' => $shopslotinf->id
+                                    ]
+                                    );
+                                if ($slotinf->link>0)
+                                {
+                                    $shop->update(['slot_miss_deal' => 1]);
+                                }
+                            }
+                            if ($tableinf)
+                            {
+                                $shoptableinf = \VanguardLTE\Info::create(
+                                    [
+                                        'link' => $tableinf->link,
+                                        'title' => $tableinf->title,
+                                        'roles' => 'table',
+                                        'text' => implode(',', rand_region_numbers($tableinf->title,$tableinf->link)),
+                                        'user_id' => $comaster->id
+                                    ]
+                                    );
+                                \VanguardLTE\InfoShop::create(
+                                    [
+                                        'shop_id' => $shop->id,
+                                        'info_id' => $shoptableinf->id
+                                    ]
+                                    );
+                                if ($tableinf->link>0)
+                                {
+                                    $shop->update(['table_miss_deal' => 1]);
+                                }
+                            }
+                        }
+
+                    }
                     $shop->update(['pending' => 0]);
                 }
             })->everyMinute();

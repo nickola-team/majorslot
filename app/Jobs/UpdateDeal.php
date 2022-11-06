@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
+use Log;
 class UpdateDeal implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -22,37 +22,55 @@ class UpdateDeal implements ShouldQueue
         $this->deal_data = $data;
     }
 
+    public function log($errcode)
+    {
+        $strlog = '';
+        $strlog .= "\n";
+        $strlog .= date("Y-m-d H:i:s") . ' ' . $errcode;
+        $strlog .= ' ############################################### ';
+        $strlog .= "\n";
+        $strinternallog = '';
+        if( file_exists(storage_path('logs/') . 'dealInternal.log') ) 
+        {
+            $strinternallog = file_get_contents(storage_path('logs/') . 'dealInternal.log');
+        }
+        file_put_contents(storage_path('logs/') . 'dealInternal.log', $strinternallog . $strlog);
+    }
+
     /**
      * Execute the job.
      *
      * @return void
      */
-    public function getNewDealCount($shop)
+    public function getNewDealCount($shop, $type)
     {
-        if (!$shop->info)
+
+        $infoshop = $shop->info;
+        if (count($infoshop) == 0)
+        {
+            return 0;
+        }
+        $inf = null;
+        foreach ($infoshop as $info)
+        {
+            $inf = $info->info;
+            if ($inf && $inf->roles == $type)
+            {
+                break;
+            }
+        }
+        if ($inf == null)
         {
             return 0;
         }
         
-        $inf = $shop->info->dealinfo;
-        if (!$inf)
-        {
-            return 0;
-        }
-
         $win = explode(',', $inf->text);
-        if (count($win) == 0)
+        if ($inf->text == '')
         {
             //generate new deal counts
             $totaldeal = $inf->title; // totalcount
             $totalmiss = $inf->link; // total miss
-            for ($i=0;$i<$totalmiss-1;$i++)
-            {
-                $c = rand(0, $totaldeal);
-                $win[] = $c;
-                $totaldeal = $totaldeal - $c;
-            }
-            $win[] = $totaldeal;
+            $win = rand_region_numbers($totaldeal, $totalmiss);
         }
         
         $number = rand(0, count($win) - 1);
@@ -78,15 +96,17 @@ class UpdateDeal implements ShouldQueue
         {
             if ($deal['type'] == 'shop')
             {
-                $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$deal['shop_id'])->first();
+                $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$deal['shop_id'])->first();               
                 //check miss deal
-                $garant_deal = $shop->garant_deal;
-                $count_miss = $shop->miss_deal;
+
+                $type = ($shop->deal_percent==$deal['deal_percent'])?'slot':'table';
+                $garant_deal = $shop->{$type .'_garant_deal'};
+                $count_miss = $shop->{$type.'_miss_deal'};
                 $garant_deal++;
                 if ($count_miss>0 && $count_miss <= $garant_deal){ //miss deal
                     $shop->update([
-                        'count_miss' => $this->getNewDealCount($shop),
-                        'garant_deal' => 0
+                        $type . '_miss_deal' => $this->getNewDealCount($shop, $type),
+                        $type . '_garant_deal' => 0
                     ]);
                     return;
                 }
@@ -96,7 +116,7 @@ class UpdateDeal implements ShouldQueue
                     'mileage' => $shop->mileage +  $deal['mileage'],
                     'ggr_balance' => $shop->ggr_balance + $deal['ggr_profit'], 
                     'ggr_mileage' => $shop->ggr_mileage +  $deal['ggr_mileage'],
-                    'garant_deal' => $shop->garant_deal + 1
+                    $type . '_garant_deal' => (($count_miss>0)?$garant_deal:0)
                 ]);
             }
             else
@@ -112,5 +132,9 @@ class UpdateDeal implements ShouldQueue
 
         }
         \VanguardLTE\DealLog::insert($this->deal_data);
+    }
+    public function failed(\Exception $exception)
+    {
+        Log::channel('monitor_game')->info($exception->getMessage());
     }
 }

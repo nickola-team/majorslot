@@ -530,7 +530,182 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function game_missrole(\Illuminate\Http\Request $request)
         {
-            return view('backend.argon.game.missrole');
+            $user = auth()->user();
+            $info = $user->info;
+            $data = [
+                'slot_total_deal' => 0,
+                'slot_total_miss' => 0,
+                'table_total_deal' => 0,
+                'table_total_miss' => 0,
+
+            ];
+            foreach ($info as $inf)
+            {
+                if ($inf->roles =='slot')
+                {
+                    $data['slot_total_deal'] = $inf->title;
+                    $data['slot_total_miss'] = $inf->link;
+                }
+                if ($inf->roles =='table')
+                {
+                    $data['table_total_deal'] = $inf->title;
+                    $data['table_total_miss'] = $inf->link;
+                }
+            }
+            $shops = [];
+            $shopIds = $user->availableShops();
+            if (count($shopIds)>0)
+            {
+                $shops = \VanguardLTE\Shop::whereIn('id', $shopIds)->paginate(10);
+            }
+
+            return view('backend.argon.game.missrole', compact('data', 'shops'));
+        }
+        public function game_missrolestatus(\Illuminate\Http\Request $request)
+        {
+            $shopId = $request->id;
+            $status = $request->status;
+            $type = $request->type;
+            $shop = \VanguardLTE\Shop::where('id', $shopId)->first();
+            $availableShops = auth()->user()->availableShops();
+            if (!in_array($shopId, $availableShops) || !$shop)
+            {
+                return redirect()->back()->withErrors(['매장을 찾을수 없습니다']);
+            }
+            $shop->update([
+                $type . '_miss_deal' => $status,
+                $type . '_garant_deal' => 0,
+            ]);
+            return redirect()->back()->withSuccess(['매장의 공배팅상태를 업데이트했습니다']);
+        }
+
+        public function game_missroleupdate(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $info = $user->info;
+            $data = $request->all();
+            $slotinf = null;
+            $tableinf = null;
+
+            foreach ($info as $inf)
+            {
+                if ($inf->roles =='slot')
+                {
+                    $inf->title = $data['slot_total_deal'];
+                    $inf->link = $data['slot_total_miss'];
+                    $slotinf = $inf;
+                    $inf->save();
+                }
+                if ($inf->roles =='table')
+                {
+                    $inf->title = $data['table_total_deal'];
+                    $inf->link = $data['table_total_miss'];
+                    $tableinf = $inf;
+                    $inf->save();
+                }
+            }
+            if ($slotinf==null)//create
+            {
+                \VanguardLTE\Info::create(
+                    [
+                        'link' => $data['slot_total_miss'],
+                        'title' => $data['slot_total_deal'],
+                        'roles' => 'slot',
+                        'user_id' => $user->id
+                    ]
+                    );
+            }
+            if ($tableinf==null)//create
+            {
+                \VanguardLTE\Info::create(
+                    [
+                        'link' => $data['table_total_miss'],
+                        'title' => $data['slot_total_deal'],
+                        'roles' => 'table',
+                        'user_id' => $user->id
+                    ]
+                    );
+            }
+
+            //create all info about child shops
+            $shopIds = $user->availableShops();
+            if (count($shopIds)>0)
+            {
+                $shops = \VanguardLTE\Shop::whereIn('id', $shopIds)->get();
+                foreach ($shops as $shop)
+                {
+                    $infoShop = \VanguardLTE\InfoShop::where('shop_id', $shop->id)->get();
+                    $slotinf = null;
+                    $tableinf = null;
+                    foreach ($infoShop as $info)
+                    {
+                        $inf = $info->info;
+                        if ($inf->roles =='slot')
+                        {
+                            $inf->title = $data['slot_total_deal'];
+                            $inf->link = $data['slot_total_miss'];
+                            $inf->text = implode(',', rand_region_numbers($data['slot_total_deal'],$data['slot_total_miss']));
+                            $slotinf = $inf;
+                            $inf->save();
+                        }
+                        if ($inf->roles =='table')
+                        {
+                            $inf->title = $data['table_total_deal'];
+                            $inf->link = $data['table_total_miss'];
+                            $inf->text = implode(',', rand_region_numbers($data['table_total_deal'],$data['table_total_miss']));
+                            $tableinf = $inf;
+                            $inf->save();
+                        }
+                    }
+                    if ($slotinf==null)//create
+                    {
+                        $slotinf = \VanguardLTE\Info::create(
+                            [
+                                'link' => $data['slot_total_miss'],
+                                'title' => $data['slot_total_deal'],
+                                'roles' => 'slot',
+                                'text' => implode(',', rand_region_numbers($data['slot_total_deal'],$data['slot_total_miss'])),
+                                'user_id' => $user->id
+                            ]
+                            );
+                        \VanguardLTE\InfoShop::create(
+                            [
+                                'shop_id' => $shop->id,
+                                'info_id' => $slotinf->id
+                            ]
+                            );
+                    }
+                    if ($tableinf==null)//create
+                    {
+                        $tableinf = \VanguardLTE\Info::create(
+                            [
+                                'link' => $data['table_total_miss'],
+                                'title' => $data['table_total_deal'],
+                                'roles' => 'table',
+                                'text' => implode(',', rand_region_numbers($data['table_total_deal'],$data['table_total_miss'])),
+                                'user_id' => $user->id
+                            ]
+                            );
+                        \VanguardLTE\InfoShop::create(
+                            [
+                                'shop_id' => $shop->id,
+                                'info_id' => $tableinf->id
+                            ]
+                            );
+                    }
+                    $init_table_miss = ($data['table_total_miss']==0||$data['table_total_deal']==0)?0:1;
+                    $init_slot_miss = ($data['slot_total_miss']==0||$data['slot_total_deal']==0)?0:1;
+
+                    $shop->update([
+                        'slot_miss_deal' => $init_slot_miss,
+                        'slot_garant_deal' => 0,
+                        'table_miss_deal' => $init_table_miss,
+                        'table_garant_deal' => 0,
+                    ]);
+
+                }
+            }
+            return redirect()->back()->withSuccess(['공배팅설정이 업데이트되었습니다']);
         }
     }
     
