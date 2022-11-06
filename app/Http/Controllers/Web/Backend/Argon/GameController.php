@@ -556,7 +556,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $shopIds = $user->availableShops();
             if (count($shopIds)>0)
             {
-                $shops = \VanguardLTE\Shop::whereIn('id', $shopIds)->paginate(10);
+                $shops = \VanguardLTE\Shop::whereIn('id', $shopIds);
+                if ($request->shopname != '')
+                {
+                    $shops = $shops->where('name', 'like', '%'.$request->shopname.'%');
+                }
+                $shops = $shops->paginate(10);
+
             }
 
             return view('backend.argon.game.missrole', compact('data', 'shops'));

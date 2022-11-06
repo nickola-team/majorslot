@@ -68,6 +68,47 @@
 
     <div class="row">
     <div class="col">
+        <div class="card">
+            <div class="card-header border-0" id="headingOne">
+                <div class="row align-items-center box">
+                    <div class="col-8">
+                        <h3 class="mb-0">검색</h3>
+                    </div>
+                    <div class="col-4 text-right box-tools">
+                        <a class="box-button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1">
+            <div id="collapseOne" class="collapse show">
+                <div class="card-body">
+                    <form action="{{argon_route('argon.game.missroleupdate')}}" >
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="slot_total_deal" class="col-md-2 col-form-label form-control-label text-center">매장이름</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="shopname" value="{{Request::get('shopname')??''}}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <button type="submit" class="btn btn-primary col-md-10">검색</button>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="row">
+    <div class="col">
         <div class="card mt-4">
         <!-- Light table -->
         <!-- Card header -->
