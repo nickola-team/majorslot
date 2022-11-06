@@ -266,7 +266,7 @@ namespace VanguardLTE\Console
                     //miss role
                     //direct find master
                     $masterid = $shop->getUsersByRole('master');
-                    $master = \VanguardLTE\User::whereIn('ids',$masterid)->first();
+                    $master = \VanguardLTE\User::whereIn('id',$masterid)->first();
                     if ($master)
                     {
                         $comaster = $master->referral;
