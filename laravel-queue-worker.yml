@@ -14,4 +14,5 @@ apps:
     instances: 1
     args:
       - queue:work 
-      - --queue=deal --tries=1
+      - --queue=deal
+      - --tries=1
