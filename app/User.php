@@ -1177,7 +1177,7 @@ namespace VanguardLTE
             $sumShop = 0;
             if (!$this->hasRole('manager')){
                 $shops = $this->availableShops();
-                $sumShop = Shop::where('id', $shops)->sum('balance');
+                $sumShop = Shop::whereIn('id', $shops)->sum('balance');
             }
             return $sum + $sumShop - $this->balance;
         }
@@ -1199,6 +1199,11 @@ namespace VanguardLTE
                 'badge-info',
                 'badge-warning',
             ];
+        }
+
+        public function info()
+        {
+            return $this->hasMany('VanguardLTE\Info', 'user_id');
         }
 
 

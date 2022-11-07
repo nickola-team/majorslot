@@ -9,9 +9,7 @@ namespace VanguardLTE
             'alias',
             'balance', 
             'percent', 
-            'count_deal_balance', 
             'mileage', 
-            'count_mileage', 
             'deal_balance',
             'deal_percent',
             'table_deal_percent',
@@ -24,8 +22,10 @@ namespace VanguardLTE
             'ggr_percent',
             'ggr_balance',
             'ggr_mileage',
-            'reset_days',
-            'last_reset_at'
+            'slot_garant_deal', 
+            'slot_miss_deal', 
+            'table_garant_deal',
+            'table_miss_deal'
         ];
         public static $values = [
             'currency' => [
@@ -93,6 +93,11 @@ namespace VanguardLTE
                 ShopCategory::where('shop_id', $model->id)->delete();
                 ShopStat::where('shop_id', $model->id)->delete();
                 ShopUser::where('shop_id', $model->id)->delete();
+                $infoIds = InfoShop::where('shop_id', $model->id)->pluck('info_id')->toArray();
+                if (count($infoIds) > 0)
+                {
+                    Info::whereIn('id', $infoIds)->delete();
+                }
                 InfoShop::where('shop_id', $model->id)->delete();
             });
         }
@@ -160,6 +165,12 @@ namespace VanguardLTE
             }
             return implode(', ', $cats);
         }
+
+        public function info()
+        {
+            return $this->hasMany('VanguardLTE\InfoShop', 'shop_id');
+        }
+
     }
 
 }

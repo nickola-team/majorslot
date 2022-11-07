@@ -14,7 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checktransaction($id)
         {
-            $record = \VanguardLTE\GACTransaction::Where('transactionId',$id)->first();
+            $record = \VanguardLTE\EVOTransaction::Where('transactionId',$id)->first();
             return $record;
         }
 
@@ -245,8 +245,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->balance = $user->balance - intval($amount);
             $user->save();
             $user = $user->fresh();
-            \VanguardLTE\PNGTransaction::create([
-                'transactionId' => $user->username, 
+            \VanguardLTE\EVOTransaction::create([
+                'transactionId' => 'placebet_' . $user->username, 
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($data),
                 'response' => $user->balance
@@ -296,6 +296,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
             if (!$user)
             {
@@ -307,9 +308,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            $record = $this->checktransaction($betId);
+            if ($record)
+            {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'duplicated betid',
+                    'data' => [
+                        'balance' => 0,
+                    ]
+                ]);
+            }
+
             $user->balance = $user->balance + intval(abs($winAmount));
             $user->save();
-
+            
+            \VanguardLTE\EVOTransaction::create(
+                [
+                    'transactionId' => $betId,
+                    'timestamp' => $this->microtime_string(),
+                    'data' => json_encode($data),
+                    'response' => $user->balance
+                ]
+            );
 
             $gameObj = GACController::getGameObj($tableName);
             if (!$gameObj)

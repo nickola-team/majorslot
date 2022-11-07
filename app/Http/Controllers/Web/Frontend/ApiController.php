@@ -316,6 +316,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error'=>false,'data' => ['url' => '/game/' . $gamecode]]);
             }
+            if ($provider == '')
+            {
+                return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
+            }
             //reset playing_game field to null for provider games.
             if ($user)
             {

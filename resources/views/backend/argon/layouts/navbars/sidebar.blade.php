@@ -157,6 +157,12 @@
                                     에볼루션 배팅한도
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.missrole')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    공배팅
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
