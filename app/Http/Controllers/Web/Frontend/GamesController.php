@@ -22,21 +22,35 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
             $frontend = 'Default';
             $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan', 'habaneroplay', 'cq9play','bngplay'];
-            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $sites = \VanguardLTE\WebSite::where('domain', $request->root())->get();
             $adminid = 1;
-            if ($site)
+            if (count($sites) > 0)
             {
+                $site = $sites->first();
+
                 $frontend = $site->frontend;
                 $title = $site->title;
                 $adminid = $site->adminid;
-                if ($frontend != 'Default') {
-                    // $excat[] = 'virtualtech';
-                    $excat[] = 'skywind';
+                if (count($sites) > 1)
+                {
+                    $adminid = -1;
                 }
             }
             else
             {
                 return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
+            }
+
+            if ($shop_id != 0)
+            {
+                $parent = auth()->user()->referral;
+                
+                while($parent!=null && !$parent->isInOutPartner())
+                {
+                    $parent = $parent->referral;
+
+                }
+                $adminid = $parent->id;
             }
 
             if ($shop_id == 0)
@@ -64,96 +78,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             $hotgames = [];
 
-            $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');
+            $ppgames = [];
             $livegames = [];
-            if (\VanguardLTE\Category::where('shop_id' , $shop_id)->where('href','live')->first())
-            {
-                $pplivegames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('live');
-                $gameid = [413,201,101,104,518,513,512,224];
-                foreach ($pplivegames as $l)
-                {
-                    if (in_array($l['gamecode'], $gameid))
-                    {
-                        $livegames[] = $l;
-                    }
-                }
-            }
-
-            if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
-            {
-                if (count($ppgames) > 0){
-                    $newgames = \VanguardLTE\NewGame::where('provider', 'pp')->get()->pluck('gameid')->toArray();
-                    foreach ($ppgames as $game)
-                    {
-                        if (in_array($game['gamecode'] , $newgames))
-                        {
-                            $hotgames[] = $game;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                $pmId = \VanguardLTE\Category::where([
-                    'href' => 'pragmatic', 
-                    'shop_id' => 0
-                ])->first();
-                $games = \VanguardLTE\Game::select('games.*')->where('shop_id', 0)->orderBy('name', 'ASC');
-                $games = $games->join('game_categories', 'game_categories.game_id', '=', 'games.id');
-                $games = $games->where('game_categories.category_id', $pmId->id);
-                $ppgamenames = $games->get()->pluck('name')->toArray();
-                if (count($ppgames) > 0){
-                    foreach ($ppgames as $pg)
-                    {
-                        $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $pg['name']) . 'PM';
-                        if (in_array($gamename, $ppgamenames))
-                        {
-                            $hotgames[] = $pg;
-                        }
-                    }
-                }
-                $hotgames[] = ['name' => 'DuoFuDuoCai5Treasures', 'title' => '5트레저 다복이'];
-                $hotgames[] = ['name' => 'DuoFuDuoCai88Fortune', 'title' => '88포츈 다복이'];
-                $hotgames[] = ['name' => 'DuoFuDuoCaiDancingDrum', 'title' => '댄싱드럼 다복이'];
-                //$hotgames[] = ['name' => 'BlackjackSurrenderPT', 'title' => '블랙 잭 써랜더'];
-                //$hotgames[] = ['name' => 'BlackJackAM', 'title' => '블랙 잭'];
-            }
-
-            //add bng hot games
-            $bnggames = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::getgamelist('booongo');
-            if (count($bnggames) > 0){
-                $newgames = \VanguardLTE\NewGame::where('provider', 'bng')->get()->pluck('gameid')->toArray();
-                foreach ($bnggames as $game)
-                {
-                    if (in_array($game['gamecode'] , $newgames))
-                    {
-                        $hotgames[] = $game;
-                    }
-                }
-            }
-            if (count($hotgames) % 4 > 0)
-            {
-                $len = 4 - count($hotgames) % 4;
-                if (count($ppgames) > 0){
-                    for ($i=0;$i<$len;$i++)
-                    {
-                        $exist = false;
-                        do {
-                            $idx = mt_rand(0, count($ppgames)-1);
-                            $exist = false;
-                            foreach ($hotgames as $game)
-                            {
-                                if (isset($game['gamecode']) && $game['gamecode'] == $ppgames[$idx]['gamecode'])
-                                {
-                                    $exist = true;
-                                }
-                            }
-                        } while ($exist);
-                        $hotgames[] = $ppgames[$idx];
-                    }
-                }
-            }
-            shuffle($hotgames);
+            
 
             $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
             $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for admin's popup
