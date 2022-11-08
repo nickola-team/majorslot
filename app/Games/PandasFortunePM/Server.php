@@ -240,9 +240,10 @@ namespace VanguardLTE\Games\PandasFortunePM
                 {
                     $slotSettings->UpdateJackpots($betline * $lines);
                 }
-                // if($winType == 'win'){
-                //     $test = 1;
-                // }
+                $init_ScatterCount = 0;
+                if($winType == 'bonus'){
+                    $init_ScatterCount = $slotSettings->GenerateFreeSpinCount();
+                }
                 for( $i = 0; $i <= 2000; $i++ ) 
                 {
                     $totalWin = 0;
@@ -275,7 +276,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                         }
                     }else{
                         $bonusSymbol = rand(2, 13);
-                        $initReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline);
+                        $initReels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline, $init_ScatterCount);
                         for($r = 0; $r < 5; $r++){
                             $lastReels['reel' . ($r+1)] = [];
                             for( $k = 0; $k < 3; $k++ ) 
@@ -431,7 +432,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                             break;
                         }
                         
-                        if( $scattersCount >= 3 && $winType != 'bonus' ) 
+                        if( $scattersCount >= 3 && ($winType != 'bonus' || $scattersCount != $init_ScatterCount) ) 
                         {
                         }
                         else if ($scattersCount == 5)
