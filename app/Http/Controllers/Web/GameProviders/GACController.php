@@ -14,7 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checktransaction($id)
         {
-            $record = \VanguardLTE\EVOTransaction::Where('transactionId',$id)->first();
+            $record = \VanguardLTE\EVOTransaction::where('transactionId','betResult_' . $id)->first();
             return $record;
         }
 
@@ -325,7 +325,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             \VanguardLTE\EVOTransaction::create(
                 [
-                    'transactionId' => $betId,
+                    'transactionId' => 'betResult_' . $betId,
                     'timestamp' => $this->microtime_string(),
                     'data' => json_encode($data),
                     'response' => $user->balance
