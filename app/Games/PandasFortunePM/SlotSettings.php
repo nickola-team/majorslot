@@ -946,19 +946,24 @@ namespace VanguardLTE\Games\PandasFortunePM
             // return true;
         }
         public function GenerateFreeSpinCount(){
-            $garantFSCount = $this->GetGameData($this->slotId . 'garantFSCount', 0);
-            $garantFSMax = $this->GetGameData($this->slotId . 'garantFSMax', rand(20, 40));
+            if($this->GetGameData($this->slotId . 'garantFSCount') == 0){
+                $garantFSCount = 1;
+                $garantFSMax = rand(3, 10);
+            }else{
+                $garantFSCount = $this->GetGameData($this->slotId . 'garantFSCount');
+                $garantFSMax = $this->GetGameData($this->slotId . 'garantFSMax');
+            }
 
             $count = 3;
-            if($garantFSCount <= $garantFSMax){
-                $garantFSCount = $garantFSCount + 1;
-                $count = 3;
-            }else { // if($sum <= 100){
-                $garantFSMax = rand(20, 40);
-                $garantFSCount = 0;
+            if($garantFSCount >= $garantFSMax){
                 $count = 4;
-            // }else{ //not appear 
-            //     return 5;
+                $garantFSMax = 11;
+            }
+            if($garantFSCount >= 10){
+                $garantFSCount = 1;
+                $garantFSMax = rand(3, 10);
+            }else{
+                $garantFSCount++;
             }
             $this->SetGameData($this->slotId . 'garantFSCount', $garantFSCount);
             $this->SetGameData($this->slotId . 'garantFSMax', $garantFSMax);
@@ -1285,7 +1290,7 @@ namespace VanguardLTE\Games\PandasFortunePM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
-        public function GetReelStrips($winType, $slotEvent, $betline)
+        public function GetReelStrips($winType, $slotEvent, $betline, $scattercount)
         {
             $isScatter = false;
             if($slotEvent=='freespin'){
@@ -1330,7 +1335,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                         4, 
                         5
                     ];
-                    $scattercount = $this->GenerateFreeSpinCount($slotEvent);
+                    // $scattercount = $this->GenerateFreeSpinCount($slotEvent);
                     $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
@@ -1378,7 +1383,7 @@ namespace VanguardLTE\Games\PandasFortunePM
                         4, 
                         5
                     ];
-                    $scattercount = $this->GenerateFreeSpinCount($slotEvent);
+                    // $scattercount = $this->GenerateFreeSpinCount($slotEvent);
                     $scatterStripReelNumber = $this->GetRandomNumber(0, 4, $scattercount);
                     for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
                     {
