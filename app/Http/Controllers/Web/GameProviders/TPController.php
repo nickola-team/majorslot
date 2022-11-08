@@ -122,7 +122,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($request->name == 'exitGame')
             {
                 $user->update([
-                    'playing_game' => self::TP_PROVIDER . 'exit',
+                    'playing_game' => self::TP_PROVIDER . '_exit',
                     'played_at' => time()
                 ]);
             }
