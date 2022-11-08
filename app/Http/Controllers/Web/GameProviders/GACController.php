@@ -219,6 +219,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            //Dragon maintenance
+            if (in_array($tableName , ['puu47n7mic3rfd7y','DragonTiger00001']))
+            {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'DragonTiger is in maintenance',
+                    'data' => [
+                        'balance' => 0,
+                    ]
+                ]);
+            }
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
             if (!$user || $user->playing_game != null || $user->remember_token != $user->api_token)
             {
@@ -292,6 +303,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'result' => false,
                     'message' => 'No Parameter',
                     'data' => [
+                        
                         'balance' => 0,
                     ]
                 ]);
