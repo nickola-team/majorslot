@@ -249,7 +249,21 @@ namespace VanguardLTE\Console
                             $newGame = $game->replicate();
                             $newGame->original_id = $game->id;
                             $newGame->shop_id = $shop->id;
+                            //random generate win10, bonus10
+                            if ($game->game_win)
+                            {
+                                $win = explode(',', $game->game_win->winline10);
+                                $number = rand(0, count($win) - 1);
+                                $newGame->win10 = $win[$number];
+
+                                $bonus = explode(',', $game->game_win->winbonus10);
+                                $number = rand(0, count($bonus) - 1);
+
+                                $newGame->winbonus10 = $bonus[$number];
+                            }
                             $newGame->save();
+                            
+
                             $categories = \VanguardLTE\GameCategory::where('game_id', $game->id)->get();
                             if( count($categories) && count($superCategories) ) 
                             {
