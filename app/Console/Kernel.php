@@ -254,7 +254,7 @@ namespace VanguardLTE\Console
                             {
                                 $win = explode(',', $game->game_win->winline10);
                                 $number = rand(0, count($win) - 1);
-                                $newGame->win10 = $win[$number];
+                                $newGame->winline10 = $win[$number];
 
                                 $bonus = explode(',', $game->game_win->winbonus10);
                                 $number = rand(0, count($bonus) - 1);
