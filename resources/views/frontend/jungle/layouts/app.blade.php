@@ -390,13 +390,14 @@
           </div>
          </div>
          <div>
-        @if ($notice != null)
-        <div class="pop01_popup1 draggable02" id="notification" style="position: absolute; top: 0px; left: 0px; z-index: 1000;">
+        @if ($noticelist != null && count($noticelist) > 0)          
+        @foreach ($noticelist as $ntc)
+        <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($loop->index*510)}}px; z-index: 1000;">
           <div class="pop01_popup_wrap">
               <div class="pop01_popup_btn_wrap">
                   <ul>
-                      <li><a href="#" onclick="closeNotification(false);"><span class="pop01_popup_btn">8시간동안 창을 열지 않음</span></a></li>
-                      <li><a href="#" onclick="closeNotification(true);"><span class="pop01_popup_btn">닫기 X</span></a></li>
+                      <li><a href="#" onclick="closeNotification({{$ntc->id}}, false);"><span class="pop01_popup_btn">8시간동안 창을 열지 않음</span></a></li>
+                      <li><a href="#" onclick="closeNotification({{$ntc->id}}, true);"><span class="pop01_popup_btn">닫기 X</span></a></li>
                   </ul>
               </div>
               <div class="pop01_popup_box">
@@ -404,7 +405,7 @@
                     <span class="pop01_popup_font1" style="border-bottom: 2px solid rgb(255, 255, 255); margin-bottom: 15px;"></span>
                     <span class="pop01_popup_font2">
                           <div>
-                              <?php echo $notice->content ?>
+                              <?php echo $ntc->content ?>
                           </div>
                     </span>
                   </div>
@@ -412,6 +413,7 @@
           </div>
         </div>
         </div>
+        @endforeach
         @endif
       </div>
     </div>
@@ -439,10 +441,15 @@
 	@endif
 
   $(document).ready(function() {
-    var prevTime = localStorage.getItem("hide_notification");
+@if ($noticelist!=null && count($noticelist) >0)
+@foreach ($noticelist as $ntc)    
+    var prevTime = localStorage.getItem("{{$ntc->id}}hide_notification");
     if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-      $("#notification").hide();
+      $("#{{$ntc->id}}notification").hide();
     }
+@endforeach				
+@endif				
+
 
     $(".lightSlider").slick({
       // normal options...

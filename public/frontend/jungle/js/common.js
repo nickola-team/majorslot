@@ -542,15 +542,15 @@ function changeHeaderWorldList(world) {
     );
 }
 
-function closeNotification(onlyOnce) {
+function closeNotification(idx, onlyOnce) {
     if (onlyOnce) {
         
     }
     else {
-        localStorage.setItem("hide_notification", Date.now());
+        localStorage.setItem(idx + "hide_notification", Date.now());
     }
 
-    $("#notification").hide();
+    $(`#${idx}notification`).hide();
 }
 
 //-->
