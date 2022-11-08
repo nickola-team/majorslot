@@ -313,7 +313,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return response()->json([
                     'result' => false,
-                    'message' => 'duplicated betid',
+                    'message' => 'duplicated betid - ' . $betId,
                     'data' => [
                         'balance' => 0,
                     ]
