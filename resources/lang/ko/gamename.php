@@ -980,4 +980,16 @@ return [
         "LeprechaunSong" => "레퍼러쳔 송",
         "MadameDestiny" =>  "마담 데스티니",
         "Asgard" => "아스가드",
+
+        "Fire88" => "파이어 88",
+        "ChilliHeat" => "칠리 히트",
+        "GoldRush" => "골드 러쉬",
+        "LuckyNewYear" => "럭키 뉴 이어",
+        "TripleTigers" => "트리플 타이거",
+        "MonkeyMadness" => "몽키 메드니스",
+        "Santa" => "산타",
+        "7Piggies" => "7 피그스",
+        "888Dragons" => "888 드레곤",
+        "JohnHunterAndTheMayanGods" => "존 헌터 앤드 더 마얀 가드",
+        
 ];
