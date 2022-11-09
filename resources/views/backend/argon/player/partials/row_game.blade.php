@@ -42,7 +42,13 @@
     @endif
 </td>
 <td> {{$game}} </td>
-<td>{{number_format($stat->balance,0)}}</td>
+<td>
+    @if ($stat->category->href == 'habaneroplay')
+    -1
+    @else
+    {{number_format($stat->balance,0)}}
+    @endif
+</td>
 <td>{{number_format($stat->bet,0)}}</td>
 <td>{{number_format($stat->win,0)}}</td>
 <td>{{ $stat->date_time }}</td>
