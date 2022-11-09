@@ -125,7 +125,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
             $cat = null;
-            $pm_games = null;
+            $embed_games = null;
             if ($gameObj['href'] == \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::TP_PP_HREF) {
                 // $gamename = $gameObj['name'];
                 // $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
@@ -137,9 +137,27 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'view' => 1
                 ])->first();
 
-                $pm_games = \VanguardLTE\Game::where([
+                $embed_games = \VanguardLTE\Game::where([
                     'shop_id' => $shop_id,
                     'label' => $gameObj['symbol'],
+                    'view' => 1,
+                    ]
+                )->first();
+            }
+
+            if ($gameObj['href'] == 'tp_hbn') {
+                $gamename = $gameObj['name'];
+                $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
+                $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                $shop_id = \Auth::user()->shop_id;
+                $cat = \VanguardLTE\Category::where([
+                    'shop_id' => $shop_id,
+                    'href' => 'habaneroplay',
+                    'view' => 1
+                ])->first();
+                $embed_games = \VanguardLTE\Game::where([
+                    'shop_id' => $shop_id,
+                    'name' => 'SGThe' . $gamename,
                     'view' => 1,
                     ]
                 )->first();
@@ -154,7 +172,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return redirect('/');
             }
            
-            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $embed_games && $cat) {
                 //you must withdraw user balance
                 $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::withdrawAll(auth()->user()->id);
                 if ($data['error'] == true)
@@ -162,7 +180,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $data['msg'] = 'Withdraw Error';
                     return view('frontend.Default.games.theplus', compact('data'));
                 }
-                $url = url('/game/' . $pm_games->name);
+                $url = url('/game/' . $embed_games->name);
                 $alonegame = 1;
             }
             else {
