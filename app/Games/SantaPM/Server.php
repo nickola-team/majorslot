@@ -502,8 +502,13 @@ namespace VanguardLTE\Games\SantaPM
                 }
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
-                $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                while(true){
+                    $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                    if($stack['wins'] != ''){
+                        break;
+                    }
+                }
                                
                 $str_wins = $stack['wins'];
                 $str_status = $stack['wins_status'];

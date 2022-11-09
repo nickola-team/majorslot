@@ -578,7 +578,7 @@ namespace VanguardLTE\Games\GoldenBeautyPM
             $grantbonus_count = $game->{'garant_bonus' . $granttype . $linecount};
             $winbonus_count = $game->{'winbonus' . $granttype . $linecount};
             $winline_count = $game->{'winline' . $granttype . $linecount};
-            $grantwin_count+=3;
+            $grantwin_count++;
             if($isdoublechance == 1){
                 $grantbonus_count+=2;
             }else{

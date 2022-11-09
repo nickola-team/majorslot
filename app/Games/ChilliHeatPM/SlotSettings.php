@@ -681,7 +681,7 @@ namespace VanguardLTE\Games\ChilliHeatPM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'win'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameChilliHeatStack::where('id', 10)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameChilliHeatStack::where('id', 21688)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -700,7 +700,7 @@ namespace VanguardLTE\Games\ChilliHeatPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameChilliHeatStack::where('spin_type', $spintype);
-                $index = 0; // mt_rand(0, 28000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
