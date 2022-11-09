@@ -476,14 +476,19 @@ namespace VanguardLTE\Games\ChilliHeatPM
             }else if( $slotEvent['slotEvent'] == 'doBonus' ){
                 $lastEvent = $slotSettings->GetHistory();
                 $betline = $lastEvent->serverResponse->bet;
+                $lastReel = $lastEvent->serverResponse->LastReel;
                 $lines = 25;
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
-                $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                while(true){
+                    $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                    if($stack['mo'] != ''){
+                        break;
+                    }
+                }
                                
                 $str_lastReel = $stack['reel'];
-                $lastReel = explode(',', $str_lastReel);
                 $str_mo = $stack['mo'];
                 $str_mo_t = $stack['mo_t'];
                 $str_rsb_s = $stack['rsb_s'];

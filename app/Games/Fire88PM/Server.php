@@ -164,9 +164,9 @@ namespace VanguardLTE\Games\Fire88PM
                         }
                         $strOtherResponse = $strOtherResponse . '&wins=' . implode(',', $arr_wins) . '&status=' . implode(',', $arr_status) . '&wins_mask=' . implode(',', $arr_wins_mask);
                     }
-                    if($str_bg_i != ''){
-                        $strOtherResponse = $strOtherResponse . '&bg_i=' . $str_bg_i . '&bg_i_mask=' . $str_bg_i_mask;
-                    }
+                    // if($str_bg_i != ''){
+                    //     $strOtherResponse = $strOtherResponse . '&bg_i=' . $str_bg_i . '&bg_i_mask=' . $str_bg_i_mask;
+                    // }
                     if($strWinLine != ''){
                         $arr_lines = explode('&', $strWinLine);
                         for($k = 0; $k < count($arr_lines); $k++){
@@ -198,11 +198,9 @@ namespace VanguardLTE\Games\Fire88PM
                             $spinType = 's';
                         }
                     }
-                }else{
-                    $strOtherResponse = $strOtherResponse . '&bg_i=888,88,38&bg_i_mask=pw,pw,pw';
                 }
                 $Balance = $slotSettings->GetBalance();
-                $response = 'def_s=5,7,5,8,6,2,4,3,3&bgid=0&balance='. $Balance . $strOtherResponse .'&cfgs=2235&reel1=2,4,7,5,6,4,8,6,6,7,7,6,2,5,5,7,6,8,4,7,3,6,7,7&ver=2&reel0=3,8,7,2,6,6,6,4,4,8,8,7,8,6,5,7,8,8,8,4,7&index=1&balance_cash='. $Balance . '&def_sb=3,4,7&def_sa=3,8,7&reel2=3,4,7,5,8,3,8,8,7,2,8,6,5,5,8,5,5,8,8,3,8,6&bonusInit=[{bgid:0,bgt:18,bg_i:"888,88,38",bg_i_mask:"pw,pw,pw"}]&balance_bonus=0.00&na='. $spinType.'&scatters=1~0,0,0~0,0,0~1,1,1&gmb=0,0,0&rt=d&stime=' . floor(microtime(true) * 1000) .'&bgt=18&sa=3,8,7&sb=3,4,7&sc='. implode(',', $slotSettings->Bet) .'&defc=30.00&sh=3&wilds=2~250,0,0~1,1,1&bonuses=0&fsbonus=&c='.$bet.'&sver=5&counter=2&paytable=0,0,0;0,0,0;0,0,0;100,0,0;60,0,0;30,0,0;15,0,0;6,0,0;3,0,0&l=7&s='.$lastReelStr;
+                $response = 'def_s=5,7,5,8,6,2,4,3,3&bgid=0&balance='. $Balance . $strOtherResponse .'&cfgs=2235&reel1=2,4,7,5,6,4,8,6,6,7,7,6,2,5,5,7,6,8,4,7,3,6,7,7&ver=2&reel0=3,8,7,2,6,6,6,4,4,8,8,7,8,6,5,7,8,8,8,4,7&index=1&balance_cash='. $Balance . '&def_sb=3,4,7&def_sa=3,8,7&reel2=3,4,7,5,8,3,8,8,7,2,8,6,5,5,8,5,5,8,8,3,8,6&bonusInit=[{bgid:0,bgt:18,bg_i:"888,88,38",bg_i_mask:"pw,pw,pw"}]&balance_bonus=0.00&na='. $spinType.'&scatters=1~0,0,0~0,0,0~1,1,1&gmb=0,0,0&rt=d&stime=' . floor(microtime(true) * 1000) .'&bg_i=888,88,38&bg_i_mask=pw,pw,pw&bgt=18&sa=3,8,7&sb=3,4,7&sc='. implode(',', $slotSettings->Bet) .'&defc=30.00&sh=3&wilds=2~250,0,0~1,1,1&bonuses=0&fsbonus=&c='.$bet.'&sver=5&counter=2&paytable=0,0,0;0,0,0;0,0,0;100,0,0;60,0,0;30,0,0;15,0,0;6,0,0;3,0,0&l=7&s='.$lastReelStr;
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {

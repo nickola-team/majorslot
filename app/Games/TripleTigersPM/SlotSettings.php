@@ -691,8 +691,8 @@ namespace VanguardLTE\Games\TripleTigersPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameTripleTigersStack::where('spin_type', $spintype);
-                $index = 0; //mt_rand(0, 29000);
-                if($winType == 'win'){
+                $index = mt_rand(0, 29000);
+                if($winType == 'win' && $limitOdd > 10){
                     $stacks = $stacks->where('odd', '>', 0);
                     $index = mt_rand(0, 90000);
                 }
