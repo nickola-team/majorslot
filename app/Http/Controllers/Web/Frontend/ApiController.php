@@ -491,7 +491,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $statgame = \VanguardLTE\StatGame::where('id', $statid)->first();
             if (!$statgame)
             {
-                abort(404);
+                return response()->json(['error' => true, 'res' => null]);
             }
             $ct = $statgame->category;
             $res = null;
@@ -515,7 +515,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
                     if (!class_exists($object))
                     {
-                        abort(404);
+                        return response()->json(['error' => true, 'res' => null]);
                     }
                     $gameObject = new $object();
                     if (method_exists($gameObject, 'gameDetail'))
@@ -528,7 +528,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 else
                 {
-                    abort(404);
+                    return response()->json(['error' => true, 'res' => null]);
                 }
             }
             return response()->json(['error' => false, 'res' => $res]);
