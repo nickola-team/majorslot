@@ -220,7 +220,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             //Dragon maintenance
-            if (in_array($tableName , ['puu47n7mic3rfd7y','DragonTiger00001']))
+            if (in_array($tableName , ['puu47n7mic3rfd7y','DragonTiger00001','SuperSicBo000001']))
             {
                 return response()->json([
                     'result' => false,
