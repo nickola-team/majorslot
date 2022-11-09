@@ -204,6 +204,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 foreach ($data['data'] as $game)
                 {
+                    if (in_array($href,['tp_bng','tp_playson']) && str_contains($game['uuid'],'_mob'))
+                    {
+                        continue;
+                    }
                     array_push($gameList, [
                         'provider' => self::TP_PROVIDER,
                         'href' => $href,
