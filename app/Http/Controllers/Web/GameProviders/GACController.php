@@ -14,7 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checktransaction($id)
         {
-            $record = \VanguardLTE\EVOTransaction::Where('transactionId',$id)->first();
+            $record = \VanguardLTE\EVOTransaction::where('transactionId','betResult_' . $id)->first();
             return $record;
         }
 
@@ -219,6 +219,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            // //Dragon maintenance
+            // if (in_array($tableName , ['puu47n7mic3rfd7y','DragonTiger00001','SuperSicBo000001']))
+            // {
+            //     return response()->json([
+            //         'result' => false,
+            //         'message' => 'DragonTiger is in maintenance',
+            //         'data' => [
+            //             'balance' => 0,
+            //         ]
+            //     ]);
+            // }
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
             if (!$user || $user->playing_game != null || $user->remember_token != $user->api_token)
             {
@@ -292,6 +303,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'result' => false,
                     'message' => 'No Parameter',
                     'data' => [
+                        
                         'balance' => 0,
                     ]
                 ]);
@@ -313,7 +325,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return response()->json([
                     'result' => false,
-                    'message' => 'duplicated betid',
+                    'message' => 'duplicated betid - ' . $betId,
                     'data' => [
                         'balance' => 0,
                     ]
@@ -325,7 +337,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             \VanguardLTE\EVOTransaction::create(
                 [
-                    'transactionId' => $betId,
+                    'transactionId' => 'betResult_' . $betId,
                     'timestamp' => $this->microtime_string(),
                     'data' => json_encode($data),
                     'response' => $user->balance

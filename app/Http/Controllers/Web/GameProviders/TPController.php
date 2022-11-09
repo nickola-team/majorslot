@@ -122,7 +122,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($request->name == 'exitGame')
             {
                 $user->update([
-                    'playing_game' => self::TP_PROVIDER . 'exit',
+                    'playing_game' => self::TP_PROVIDER . '_exit',
                     'played_at' => time()
                 ]);
             }
@@ -204,6 +204,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 foreach ($data['data'] as $game)
                 {
+                    if (in_array($href,['tp_bng','tp_playson']) && str_contains($game['uuid'],'_mob'))
+                    {
+                        continue;
+                    }
                     array_push($gameList, [
                         'provider' => self::TP_PROVIDER,
                         'href' => $href,

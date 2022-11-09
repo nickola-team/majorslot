@@ -502,13 +502,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
             }
-            if ($user->playing_game == 'pp') //프라그마틱게임 종료
+            if ($user->playing_game != null)
             {
-                PPController::terminate($user->id);
-            }
-            else if ($user->playing_game == 'tp') //TheplusGame
-            {
-                $user->update(['playing_game' => 'tpexit']);
+                $user->update(['playing_game' => $user->playing_game . '_exit']);
             }
 
             return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);

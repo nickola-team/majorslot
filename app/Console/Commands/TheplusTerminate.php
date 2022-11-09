@@ -45,7 +45,7 @@ class TheplusTerminate extends Command
         
         foreach ($tpUsers as $user) {
             try {
-                if ($user->playing_game == TPController::TP_PROVIDER . 'exit')
+                if ($user->playing_game == TPController::TP_PROVIDER . '_exit')
                 {
                     $data = TPController::withdrawAll($user->id);
                     if ($data['error'] == false){

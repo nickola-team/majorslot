@@ -433,7 +433,7 @@ namespace VanguardLTE\Games\TaiXiuGP
                 ]
             )->first();
             return [
-                'type' => 'taixiu',
+                'type' => 'gameplay',
                 'result' => $trend,
                 'bets' => $userbets,
                 'stat' => $stat
