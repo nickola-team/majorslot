@@ -199,12 +199,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors([trans('app.no_permission')]);
             }
             $serverstat = server_stat();
+
             $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
             $tpnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getAgentBalance();
+            $kuzanmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KUZAController::getAgentBalance();
 
             $agents = [
                 'bnn' => $bnnmoney,
-                'tp' => $tpnmoney
+                'tp' => $tpnmoney,
+                'kuza' => $kuzanmoney
             ];
             $strinternallog = '';
             $filesize = 0;

@@ -93,6 +93,7 @@
                 <div >
                     <p><span class="description">🌡️ 더플러스 보유금:</span> <span class="result">{{number_format($agents['tp'])}} 원</span></p>
                     <p><span class="description">🌡️ 바나나 보유금:</span> <span class="result">{{number_format($agents['bnn'])}} 원</span></p>
+                    <p><span class="description">🌡️ 아레나(KUZA) 보유금:</span> <span class="result">{{number_format($agents['kuza'])}} 원</span></p>
                     </div>
                 </div>
             </div>
