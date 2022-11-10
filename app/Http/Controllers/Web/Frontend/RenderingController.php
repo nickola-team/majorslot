@@ -122,7 +122,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObj($gamecode);
             if (!$gameObj)
             {
-                return redirect('/');
+                $gameObj = TPController::getGameObjBySymbol(8, $gamecode);
+                if (!$gameObj)
+                {
+                    return redirect('/');
+                }
             }
             $cat = null;
             $embed_games = null;
