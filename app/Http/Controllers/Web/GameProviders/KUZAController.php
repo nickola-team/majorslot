@@ -309,7 +309,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $win = $bet + $round['award'];
                     }
 
-                    $bet_time = date('Y-m-d H:i:s', strtotime($round['resultDate'] . " +9 hour"));
+                    $bet_time = date('Y-m-d H:i:s', strtotime($round['resultDate']));
                     $user_balance = -1;
 
                     $userid = preg_replace('/'. self::PROVIDER .'(\d+)/', '$1', $round['username']) ;
