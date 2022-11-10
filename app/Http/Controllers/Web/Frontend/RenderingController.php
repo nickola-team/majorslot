@@ -115,11 +115,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 abort(404);
             }
 
-            $launchRequest->update([
-                'finished' => $launchRequest->finished + 1
-            ]);
-            //delete all user's request
-            // \VanguardLTE\GameLaunch::where('user_id', $user->id)->delete();
+            
 
             $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObj($gamecode);
             if (!$gameObj)
@@ -201,6 +197,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 $url = $data['data']['url'];
             }
+
+            $launchRequest->update([
+                'finished' => $launchRequest->finished + 1
+            ]);
+            //delete all user's request
+            // \VanguardLTE\GameLaunch::where('user_id', $user->id)->delete();
+            
 
             if ($alonegame == 0)
             {
