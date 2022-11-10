@@ -122,7 +122,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObj($gamecode);
             if (!$gameObj)
             {
-                return redirect('/');
+                $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObjBySymbol(8, $gamecode);
+                if (!$gameObj)
+                {
+                    return redirect('/');
+                }
             }
             $cat = null;
             $embed_games = null;
@@ -185,7 +189,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else {
                 //게임런칭
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getgamelink_tp($gamecode, $user);
+                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getgamelink_tp($gameObj['gamecode'], $user);
                 if ($data['error'] == true)
                 {
                     $data['msg'] = 'GameLinkError';

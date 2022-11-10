@@ -1278,10 +1278,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $gamecode = $request->gameSymbol;
             //from API then, do not launch theplus
-            $api_username = auth()->user()->username;
-            $api_user = (explode('#', auth()->user()->username) >= 2);
-            if ($api_user)
-            {
+            // $api_user = (count(explode('#', auth()->user()->username)) >= 2);
+            // if ($api_user)
+            // {
                 $game = \VanguardLTE\Game::where('label', $gamecode)->first();
                 if ($game)
                 {
@@ -1291,8 +1290,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     return redirect(url('/'));
                 }
-            }
-            return redirect(route('frontend.providers.waiting', ['tp', $gamecode]). '?lobby=mini');
+            // }
+            // return redirect(route('frontend.providers.waiting', ['tp', $gamecode]). '?lobby=mini');
         }
         
         public function promoactive(\Illuminate\Http\Request $request)
