@@ -419,7 +419,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function makegamelink($gamecode)
         {
-            $detect = new \Detection\MobileDetect();
             $user = auth()->user();
             if ($user == null)
             {
@@ -475,8 +474,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => true, 'msg' => '게임이 없습니다'];
             }
-            // $url = GACController::makegamelink($gamecode);
-            $url = '/gac/golobby?code=' . $gamecode;
+            $detect = new \Detection\MobileDetect();
+            if ($detect->isiOS() || $detect->isiPadOS())
+            {
+                $url = GACController::makegamelink($gamecode);
+            }
+            else
+            {
+                $url = '/gac/golobby?code=' . $gamecode;
+            }
             if ($url)
             {
                 return ['error' => false, 'data' => ['url' => $url]];
