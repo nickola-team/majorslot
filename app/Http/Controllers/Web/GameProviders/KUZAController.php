@@ -166,6 +166,32 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     Log::error('KUZA makelink create user : response is not success. ' . $data['message']);
                     return null;
                 }
+                //bet limit
+                $url = config('app.kuza_api') . '/api/user/limit/update';
+                $param = [
+                    'username' => self::PROVIDER . $user->id,
+                    'pMax' => 1000000,
+                    'pMin' => 10000,
+                    'bMax' => 1000000,
+                    'bMin' => 10000,
+                    'tMax' => 100000,
+                    'tMin' => 10000,
+                    'ppMax' => 100000,
+                    'ppMin' => 10000,
+                    'bpMax' => 100000,
+                    'bpMin' => 10000,
+                ];
+                $response = Http::timeout(10)->asForm()->withHeaders($header)->post($url, $param);
+                if (!$response->ok())
+                {
+                    Log::error('KUZA makelink betlimit  : response is not 200. ');
+                    return null;
+                }
+                $data = $response->json();
+                if ($data['result'] != 'SUCCESS') {
+                    Log::error('KUZA makelink bet limit : response is not success. ' . $data['message']);
+                    return null;
+                }
             }
             catch (\Exception $ex)
             {
