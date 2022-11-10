@@ -1288,7 +1288,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    return redirect(url('/'));
+                    abort(404);
                 }
             // }
             // return redirect(route('frontend.providers.waiting', ['tp', $gamecode]). '?lobby=mini');
