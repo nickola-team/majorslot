@@ -276,7 +276,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user = auth()->user();
             if ($user->playing_game != null) //already playing game.
             {
-                return ['error' => true, 'data' => '이미 실행중인 게임을 종료해주세요. 이미 종료했음에도 불구하고 이 메시지가 계속 나타난다면 매장에 문의해주세요.'];
+            return ['error' => true, 'data' => '이미 실행중인 게임을 종료해주세요. 이미 종료했음에도 불구하고 이 메시지가 계속 나타난다면 매장에 문의해주세요.'];
             }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [self::PROVIDER, $gamecode])]];
         }
@@ -366,6 +366,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return [0, -1];
             }
+        }
+
+        public static function getAgentBalance()
+        {
+
+            $header = [
+                'Authorization' => 'Bearer ' . config('app.kuza_key'),
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ];
+            $url = config('app.kuza_api') . '/api/v1/partner/info';
+
+            try {
+                $response = Http::timeout(10)->asForm()->withHeaders($header)->post($url);
+                $data = $response->json();
+                return $data['data']['balance'];
+            } catch (\Exception $e) {
+                Log::error('KUZA Agent money : request failed. ' . $e->getMessage());
+                return -1;
+            }
+
         }
 
     }
