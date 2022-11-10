@@ -196,6 +196,11 @@ return [
     'nsevo_api' => env('NSEVO_API', ''),
     'nsevo_key' => env('NSEVO_KEY', ''),
 
+/*
+    KUZA Auth key
+    */
+    'kuza_api' => env('KUZA_API', ''),
+    'kuza_key' => env('KUZA_KEY', ''),
 
     /*
     BANANA Auth key

@@ -28,7 +28,7 @@ class GameLaunchCommand extends Command
 
     const GAME_PROVIDERS = [
         // 'HPC',
-        // 'NSEVO',
+        'KUZA',
         'BNN'
     ];
 
