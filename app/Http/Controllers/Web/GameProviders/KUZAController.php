@@ -167,7 +167,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return null;
                 }
                 //bet limit
-                $url = config('app.kuza_api') . '/api/user/limit/update';
+                $url = config('app.kuza_api') . '/api/v1/user/limit/update';
                 $param = [
                     'username' => self::PROVIDER . $user->id,
                     'pMax' => 1000000,
