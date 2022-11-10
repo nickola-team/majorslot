@@ -682,6 +682,8 @@ namespace VanguardLTE\Games\MagiciansSecretsPM
         }
         public function GetReelStrips($winType, $pur, $bet, $ind = -1)
         {
+            // $stack = \VanguardLTE\PPGameStackModel\PPGameMagiciansSecretsStack::where('id', 19853)->first();
+            //     return json_decode($stack->spin_stack, true);
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
