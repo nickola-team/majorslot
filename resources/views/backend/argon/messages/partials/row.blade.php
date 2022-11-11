@@ -9,6 +9,12 @@
     <td>{{$msg->writer?$msg->writer->username:'알수없음'}}</td>
     @endif
     <td class="text-right">
+    <?php
+        if ($msg->writer_id == 0) //system message
+        {
+            $msg->content = preg_replace('/replace_with_backend/',config('app.admurl'),$msg->content);
+        }
+    ?>
         <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" >
             <button class="btn btn-success btn-sm">보기</button>
         </a>

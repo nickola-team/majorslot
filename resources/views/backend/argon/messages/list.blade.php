@@ -7,12 +7,67 @@
 
 @section('content')
 <div class="container-fluid">
+	@if (auth()->user()->hasRole('admin'))
+	<!-- Search -->
+    <div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header border-0" id="headingOne">
+                <div class="row align-items-center box">
+                    <div class="col-8">
+                        <h3 class="mb-0">알림 설정</h3>
+                    </div>
+                    <div class="col-4 text-right box-tools">
+                        <a class="box-button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1">
+            <div id="collapseOne" class="collapse show">
+                <div class="card-body">
+                    <form action="{{argon_route('argon.msg.monitor')}}" method="POST" >
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="max_odd" class="col-md-2 col-form-label form-control-label text-center">고배당 당첨 알림</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="max_odd" value="{{$data['MaxOdd']}}" placeholder="">
+                            </div>
+                            <label for="max_win" class="col-md-2 col-form-label form-control-label text-center">고액 당첨 알림</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="max_win" value="{{$data['MaxWin']}}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <button type="submit" class="btn btn-primary col-md-10">설정</button>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+	@endif
 	<div class="row">
         <div class="col">
             <div class="card mt-4">
                 <div class="card-header border-0">
                     <div class="pull-right">
 					@if (auth()->user()->isInoutPartner())
+					<a href="{{ argon_route('argon.msg.deleteall') }}"
+						data-method="DELETE"
+						data-confirm-title="확인"
+						data-confirm-text="모든 쪽지를 삭제하시겠습니까?"
+						data-confirm-delete="확인"
+						data-confirm-cancel="취소">
+						<button type="button" class="btn btn-warning btn-sm">모두삭제</button>
+					</a>
 						<a href="{{ argon_route('argon.msg.create') }}" class="btn btn-primary btn-sm">보내기</a>
 					@endif
 					</div>
@@ -22,7 +77,7 @@
 					<table class="table align-items-center table-flush">
 						<thead class="thead-light">
 						<tr>
-							<th scope="col">회원아이디</th>
+							<th scope="col">수신아이디</th>
 							<th scope="col">제목</th>
 							<th scope="col">등록날짜</th>
 							<th scope="col">읽은날짜</th>

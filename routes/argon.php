@@ -293,6 +293,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.msg.create',
             'uses' => 'MessageController@create',
         ]);
+        Route::post('messages/monitor', [
+            'as' => 'argon.msg.monitor',
+            'uses' => 'MessageController@updatemonitor',
+        ]);
         Route::post('messages/create', [
             'as' => 'argon.msg.store',
             'uses' => 'MessageController@store',
@@ -300,6 +304,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::delete('messages/{message}/delete', [
             'as' => 'argon.msg.delete',
             'uses' => 'MessageController@delete',
+        ]);
+        Route::delete('messages/deleteall', [
+            'as' => 'argon.msg.deleteall',
+            'uses' => 'MessageController@deleteall',
         ]);
         /**
          * websites routes
