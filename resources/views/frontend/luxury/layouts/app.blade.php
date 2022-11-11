@@ -227,7 +227,7 @@
                   href="{{Request::root()}}"
                   class="bs-logo"
                   style="display: block"
-                  ><img src="/frontend/bigbang/images/logo_02.png"
+                  ><img src="/frontend/luxury/images/logo_02.png"
                 /></a>
                 <div class="util_right">
                 @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
@@ -295,7 +295,7 @@
             </div>
           </div>
           <div class="visual_ling_2"></div>
-          <div class="visual_wrap" style="background: url(/frontend/bigbang/images/visual_bg.jpg) center top no-repeat;!important;">
+          <div class="visual_wrap" style="background: url(/frontend/luxury/images/visual_bg.jpg) center top no-repeat;!important;">
           <div id="wrap-casino" style=" text-align: right; padding: 10px; margin-right:450px;">
           @if ($categories && count($categories))
           <?php 
@@ -386,7 +386,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/jungle/images/partner.png" /><br /><br />Copyright ⓒ
-            2022~2023 DI  All rights reserved.
+            2022~2023 Luxury  All rights reserved.
           </div>
          </div>
          <div>
