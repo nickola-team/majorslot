@@ -1279,23 +1279,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([$result['message']]);
             }
             //currently user is playing games with balance transfer mode.
-            if ($user->playing_game != null)
-            {
-                if ($data['type'] == 'add')
-                {
-                    $summ = abs($summ);
-                }
-                else
-                {
-                    $summ = -abs($summ);
-                }
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($user->id, $summ);
-                if ($data['error'] == -1) //밸런스 전송시 오류, 게임사게임 종료시킬것
-                {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
-                    $user->update(['playing_game' => null]);
-                }
-            }
+            
             return redirect()->back()->withSuccess($result['message']);
         }
         public function statistics(\VanguardLTE\User $user, \Illuminate\Http\Request $request)

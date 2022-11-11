@@ -180,7 +180,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = auth()->user();
             if ($user)
             {
-                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
                 $user->update(['playing_game' => null]);
             }
             if (str_contains($user->username, 'testfor'))

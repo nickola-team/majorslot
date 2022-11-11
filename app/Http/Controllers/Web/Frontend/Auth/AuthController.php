@@ -221,7 +221,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
                 $user->update(['api_token' => $api_token]);
                 if ($user->playing_game != null)
                 {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                    // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
                     $user->update(['playing_game' => null]);
                 }
                 $user = $user->fresh();
