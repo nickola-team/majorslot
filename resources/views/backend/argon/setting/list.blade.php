@@ -20,6 +20,7 @@
 					<table class="table align-items-center table-flush">
 						<thead class="thead-light">
 							<tr>
+								<th scope="col">아이디</th>
 								<th scope="col">도메인</th>
 								<th scope="col">제목</th>
 								<th scope="col">페이지디자인</th>
