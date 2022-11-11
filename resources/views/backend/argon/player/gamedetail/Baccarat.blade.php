@@ -77,7 +77,13 @@
             <tr>
                 <td>{{$bet['betValue']}}</td>
                 <td>{{$bet['odds']}}</td>
-                <td>{{$bet['betAmount']}}</td>
+                <td>
+                    {{$bet['betAmount']}}
+                    @if (isset($bet['betfee']) && $bet['betfee']==0)
+                    + {{$bet['betfee']}}
+                    @endif
+
+                </td>
                 <td>{{$bet['winAmount']}}</td>
                 <td><span class='text-green'>{{$bet['status']}}</span></td>
             </tr>
