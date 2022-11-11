@@ -448,7 +448,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $url = null;
             try {
-                $response = Http::timeout(10)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
+                $response = Http::timeout(20)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
                 if (!$response->ok())
                 {
                     Log::error('GAC : getLobbyUrl response failed. ' . $response->body());
