@@ -108,19 +108,42 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div >
-                    <p><span class="description">🌡️ RAM Total:</span> <span class="result"><?php echo $serverstat['ramtotal']; ?> GB</span></p>
-                    <p><span class="description">🌡️ RAM Used:</span> <span class="result"><?php echo $serverstat['ramused']; ?> GB</span></p>
-                    <p><span class="description">🌡️ RAM Available:</span> <span class="result"><?php echo $serverstat['ramavailable']; ?> GB</span></p>
-                    <hr>
-                    <p><span class="description">💽 Hard Disk Free:</span> <span class="result"><?php echo $serverstat['diskfree']; ?> GB</span></p>
-                    <p><span class="description">💽 Hard Disk Used:</span> <span class="result"><?php echo $serverstat['diskused']; ?> GB</span></p>
-                    <p><span class="description">💽 Hard Disk Total:</span> <span class="result"><?php echo $serverstat['disktotal']; ?> GB</span></p>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><span class="description">🌡️ RAM Total:</span> <span class="result"><?php echo $serverstat['ramtotal']; ?> GB</span></p>
+                            <p><span class="description">🌡️ RAM Used:</span> <span class="result"><?php echo $serverstat['ramused']; ?> GB</span></p>
+                            <p><span class="description">🌡️ RAM Available:</span> <span class="result"><?php echo $serverstat['ramavailable']; ?> GB</span></p>
+                        </div>
+                        <div class="col-6">
+                            <p><span class="description">💽 Hard Disk Free:</span> <span class="result"><?php echo $serverstat['diskfree']; ?> GB</span></p>
+                            <p><span class="description">💽 Hard Disk Used:</span> <span class="result"><?php echo $serverstat['diskused']; ?> GB</span></p>
+                            <p><span class="description">💽 Hard Disk Total:</span> <span class="result"><?php echo $serverstat['disktotal']; ?> GB</span></p>
+                        </div>
                         
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h2 class="mb-0">알림</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                <div >
+                    <p><span class="description">🌡️ 더플러스 보유금:</span> <span class="result">{{number_format($agents['tp'])}} 원</span></p>
+                    <p><span class="description">🌡️ 바나나 보유금:</span> <span class="result">{{number_format($agents['bnn'])}} 원</span></p>
+                    <p><span class="description">🌡️ 아레나(KUZA) 보유금:</span> <span class="result">{{number_format($agents['kuza'])}} 원</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-12">
             <div class="card   shadow">
                 <div class="card-header bg-transparent">
