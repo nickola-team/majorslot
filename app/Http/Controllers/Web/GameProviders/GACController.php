@@ -14,7 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function checktransaction($id)
         {
-            $record = \VanguardLTE\EVOTransaction::where('transactionId','betResult_' . $id)->first();
+            $record = \VanguardLTE\EVOTransaction::where('transactionId',$id)->first();
             return $record;
         }
 
@@ -209,7 +209,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $tableName = $data['tableName'];
             $betAmount = $data['betAmount'];
             $type = $data['betInfo'];
-            if (!$userId || !$tableName || !$betAmount)
+            $gameId = $data['gameId'];
+            if (!$userId || !$tableName || !$betAmount || !$gameId)
             {
                 return response()->json([
                     'result' => false,
@@ -222,16 +223,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             // Dragon maintenance
             // 'puu47n7mic3rfd7y','DragonTiger00001',
             //'SuperSicBo000001'
-            if (in_array($tableName , ['peekbaccarat0001']))
-            {
-                return response()->json([
-                    'result' => false,
-                    'message' => 'DragonTiger is in maintenance',
-                    'data' => [
-                        'balance' => 0,
-                    ]
-                ]);
-            }
+            // if (in_array($tableName , ['peekbaccarat0001']))
+            // {
+            //     return response()->json([
+            //         'result' => false,
+            //         'message' => 'This table is in maintenance',
+            //         'data' => [
+            //             'balance' => 0,
+            //         ]
+            //     ]);
+            // }
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
             if (!$user || $user->playing_game != null || $user->remember_token != $user->api_token)
             {
@@ -243,7 +244,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            $amount = ($type==1)?(abs($betAmount)) : (-1 * abs($betAmount));
+            $amount = abs($betAmount);
+            
+            if ($type == 2) //additional betting
+            {
+                $record = $this->checktransaction('placebet_' . $gameId . '_' . $userId . '_1');
+                if ($record)
+                {
+                    $main_data = json_decode($record->data,true);
+                    $main_amount = abs($main_data['betAmount']);
+                    if ($amount < $main_amount)
+                    {
+                        return response()->json([
+                            'result' => false,
+                            'message' => 'Main amount must large than additional bet amount. main=' . $main_amount . ', addamount=' . $amount,
+                            'data' => [
+                                'balance' => $user->balance,
+                            ]
+                        ]);
+                    }
+                    $amount = $amount - $main_amount;
+                }
+            }
+
             if ($user->balance < $amount)
             {
                 return response()->json([
@@ -259,7 +282,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->save();
             $user = $user->fresh();
             \VanguardLTE\EVOTransaction::create([
-                'transactionId' => 'placebet_' . $user->username, 
+                'transactionId' => 'placebet_' . $gameId . '_' . $userId . '_' . $type, 
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($data),
                 'response' => $user->balance
@@ -322,7 +345,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            $record = $this->checktransaction($betId);
+            $record = $this->checktransaction('betResult_' . $betId);
             if ($record)
             {
                 return response()->json([
