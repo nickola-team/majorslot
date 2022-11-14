@@ -246,7 +246,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             if ($type == 2) //additional betting
             {
-                $record = $this->checktransaction('placebet_' . $gameId . '_' . $userId);
+                $record = $this->checktransaction('placebet_' . $gameId . '_' . $userId . '_1');
                 if ($record)
                 {
                     $main_data = json_decode($record->data,true);
@@ -280,7 +280,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user->save();
             $user = $user->fresh();
             \VanguardLTE\EVOTransaction::create([
-                'transactionId' => 'placebet_' . $gameId . '_' . $userId, 
+                'transactionId' => 'placebet_' . $gameId . '_' . $userId . '_' . $type, 
                 'timestamp' => $this->microtime_string(),
                 'data' => json_encode($data),
                 'response' => $user->balance
