@@ -321,7 +321,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $winAmount = $data['winAmount'];
             $betId = $data['betId'];
             $gameId = $data['gameId'];
-            if (!$userId || !$tableName || !$betAmount || !isset($data['winAmount']) || !$gameId))
+            if (!$userId || !$tableName || !$betAmount || !isset($data['winAmount']) || !$gameId)
             {
                 return response()->json([
                     'result' => false,
