@@ -322,13 +322,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betAmount = $data['betAmount'];
             $winAmount = $data['winAmount'];
             $betId = $data['betId'];
-            if (!$userId || !$tableName || !$betAmount || !isset($data['winAmount']))
+            $gameId = $data['gameId'];
+            if (!$userId || !$tableName || !$betAmount || !isset($data['winAmount']) || !$gameId)
             {
                 return response()->json([
                     'result' => false,
                     'message' => 'No Parameter',
                     'data' => [
                         
+                        'balance' => 0,
+                    ]
+                ]);
+            }
+            if ($betId == 0)
+            {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'betid is 0',
+                    'data' => [
                         'balance' => 0,
                     ]
                 ]);
@@ -345,6 +356,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            $betrecord = $this->checktransaction('placebet_' . $gameId . '_' . $userId . '_1');
+            if (!$betrecord)
+            {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'No placebet exist',
+                    'data' => [
+                        'balance' => 0,
+                    ]
+                ]);
+            }
+
             $record = $this->checktransaction('betResult_' . $betId);
             if ($record)
             {
