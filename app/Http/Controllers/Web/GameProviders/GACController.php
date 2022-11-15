@@ -205,11 +205,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function placebet(\Illuminate\Http\Request $request)
         {
             $data = json_decode($request->getContent(), true);
-            $userId = $data['userId'];
-            $tableName = $data['tableName'];
-            $betAmount = $data['betAmount'];
-            $type = $data['betInfo'];
-            $gameId = $data['gameId'];
+            $userId = isset($data['userId'])?$data['userId']:0;
+            $tableName = isset($data['tableName'])?$data['tableName']:'';
+            $betAmount = isset($data['betAmount'])?$data['betAmount']:0;
+            $type = isset($data['betInfo'])?$data['betInfo']:0;
+            $gameId = isset($data['gameId'])?$data['gameId']:0;
             if (!$userId || !$tableName || !$betAmount || !$gameId)
             {
                 return response()->json([
@@ -315,12 +315,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function betresult(\Illuminate\Http\Request $request)
         {
             $data = json_decode($request->getContent(), true);
-            $userId = $data['userId'];
-            $tableName = $data['tableName'];
-            $betAmount = $data['betAmount'];
-            $winAmount = $data['winAmount'];
-            $betId = $data['betId'];
-            $gameId = $data['gameId'];
+            $userId = isset($data['userId'])?$data['userId']:0;
+            $tableName = isset($data['tableName'])?$data['tableName']:'';
+            $betAmount = isset($data['betAmount'])?$data['betAmount']:0;
+            $winAmount = isset($data['winAmount'])?$data['winAmount']:0;
+            $betId = isset($data['betId'])?$data['betId']:0;
+            $gameId = isset($data['gameId'])?$data['gameId']:0;
             if (!$userId || !$tableName || !$betAmount || !isset($data['winAmount']) || !$gameId)
             {
                 return response()->json([
