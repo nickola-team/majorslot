@@ -800,7 +800,7 @@ return [
 
         //pragmatic
         "GreatRhino" => "그레이트라이노",
-        "Panda Fortune 2" =>  "판다스포츈",
+        "Panda Fortune 2" =>  "판다스포츈2",
         "TheDogHouse" =>    "더도그하우스",
         "MustangGold" =>    "머스탕골드",
         "JohnHunterandtheTomboftheScarabQueen" =>   "존헌터 앤드 더 톰보 오브더 스크랩 퀸",
@@ -991,5 +991,17 @@ return [
         "7Piggies" => "7 피그스",
         "888Dragons" => "888 드레곤",
         "JohnHunterAndTheMayanGods" => "존 헌터 앤드 더 마얀 가드",
+
+        "VegasNights" => "베가스 나이츠",
+        "WildSpells" => "와일드 스펠즈",
+        "DiamondStrike" => "다이아몬드 스트라이크",
+        "PandasFortune" => "판다스포츈",
+        "SwordofAres" => "스워드 오브 아레스",
+        "WildHopDrop" => "와일드 홉 & 드랍",
+        "BookofGoldenSands" => "북 오브 골든 샌즈",
+        "SnakesLaddersSnakeEyes" => "스네이크 & 래더즈",
+        "LegendofHeroesMegaways" => "레전드 오브 히어로즈",
+        "OldGoldMinerMegaways" => "올드 골드 마이너 메가웨이즈",
+        "StrikingHot5" => "스트라이킹 핫 5",
         
 ];
