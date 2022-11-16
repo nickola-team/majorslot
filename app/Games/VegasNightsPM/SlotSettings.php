@@ -701,7 +701,7 @@ namespace VanguardLTE\Games\VegasNightsPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameVegasNightsStack::where('spin_type', $spintype);
-                $index = 0; //mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
