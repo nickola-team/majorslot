@@ -487,6 +487,7 @@ namespace VanguardLTE\Games\OldGoldMinerMegawaysPM
                     if($isNewTumb == false){
                         if($scatterCount >= 3){
                             $isState = false;
+                            $spinType = 's';
                             $strOtherResponse = $strOtherResponse . '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fsres=0.00&fs=1&psym=1~'. $scatterWin .'~' . implode(',', $scatterPoses);
                         }else{
                             if($slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') > 0){

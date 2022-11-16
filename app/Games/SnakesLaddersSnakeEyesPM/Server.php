@@ -410,6 +410,7 @@ namespace VanguardLTE\Games\SnakesLaddersSnakeEyesPM
                 if($rs_p >= 0){
                     $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_c=' . $rs_c . '&rs_m=' . $rs_m;
                     $isState = false;
+                    $spinType = 's';
                 }else if($rs_t > 0){
                     $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t;
                     $isState = true;
