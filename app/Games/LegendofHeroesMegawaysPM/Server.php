@@ -479,7 +479,7 @@ namespace VanguardLTE\Games\LegendofHeroesMegawaysPM
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 22);
                             $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                             $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
-                            
+                            $spinType = 's';
                             $isState = false;
                             $stack = $slotSettings->GetReelStrips('bonus', 22, $betline * $lines);
                             if($stack == null){
