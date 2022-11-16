@@ -704,13 +704,13 @@ namespace VanguardLTE\Games\WildSpellsPM
                 if($ind > -1){
                     $stacks = $stacks->where('pur_level', $ind); 
                 }
-                $index = 0; //mt_rand(0, 39000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
                     if($ind > -1){
-                        $stacks = $stacks->where('odd', '<=', 30);    
+                        $stacks = $stacks->where('odd', '<=', 5);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
