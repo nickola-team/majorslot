@@ -644,6 +644,17 @@ namespace VanguardLTE\Console
                         }
                         else{
                             $data['shop_id'] = $id;
+                            if ($buffgame->game_win)
+                            {
+                                $win = explode(',', $buffgame->game_win->winline10);
+                                $number = rand(0, count($win) - 1);
+                                $data['winline10'] = $win[$number];
+
+                                $bonus = explode(',', $buffgame->game_win->winbonus10);
+                                $number = rand(0, count($bonus) - 1);
+
+                                $data['winbonus10'] = $bonus[$number];
+                            }
                             $game = \VanguardLTE\Game::create($data);
                             $cat = \VanguardLTE\Category::where(['shop_id' => $id, 'original_id' => $categoryid])->first();
                             if ($cat){
