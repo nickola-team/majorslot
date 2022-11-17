@@ -3,7 +3,7 @@
     $table = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getGameObj($statdata['tableName']);
     if ($table == null)
     {
-        $table = $statdata['tableName'];
+        $table = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getGameObj('unknowntable');
     }
 ?>
 <td>
