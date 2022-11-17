@@ -638,6 +638,42 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.player.game', compact('statistics', 'total', 'gacmerge'));
         }
 
+        public function player_game_pending(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+            if (count($availableUsers) == 0)
+            {
+                return redirect()->back()->withErrors(['유저가 없습니다']);
+            }
+
+
+            $statistics = \VanguardLTE\GACTransaction::whereIn('user_id', $availableUsers)->where(['gactransaction.type'=>1,'gactransaction.status'=>0])->orderBy('date_time', 'DESC');
+
+
+            $statistics = $statistics->paginate(20);
+
+
+            return view('backend.argon.player.pending', compact('statistics'));
+        }
+
+        public function player_game_cancel(\Illuminate\Http\Request $request)
+        {
+            $gacid = $request->id;
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+            if (count($availableUsers) == 0)
+            {
+                return redirect()->back()->withErrors(['유저가 없습니다']);
+            }
+
+
+            \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::cancelResult($gacid);
+
+            return redirect()->back()->withSuccess(['취소처리 되었습니다']);
+
+        }
+
         public function player_game_detail(\Illuminate\Http\Request $request)
         {
             $statid = $request->statid;
