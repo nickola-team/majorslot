@@ -92,6 +92,20 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
+                            <label for="shop" class="col-md-2 col-form-label form-control-label text-center">게임타입</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="role" name="role">
+                                    <option value="" @if (Request::get('gametype') == '') selected @endif>@lang('app.all')</option>
+                                    <option value="table" @if (Request::get('gametype') == 'live') selected @endif>라이브</option>
+                                    <option value="slot" @if (Request::get('gametype') == 'slot') selected @endif>슬롯</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
                             <label for="win_from" class="col-md-2 col-form-label form-control-label text-center">최소당첨금</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('win_from')}}" id="win_from"  name="win_from">
