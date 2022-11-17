@@ -1263,35 +1263,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $promo = \VanguardLTE\PPPromo::take(1)->first();
             if ($promo){
-                $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
-                $gIds = $ownCats->games->pluck('game_id')->toArray();
-                $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->get();
-
                 $data = $promo->games;
                 $json_data = json_decode($data, true);
                 $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
-                //disable not own games
-                $lobbyCats = $json_data['lobbyCategories'];
-                $filteredCats = [];
-                foreach ($lobbyCats as $cat)
-                {
-                    $lobbyGames = $cat['lobbyGames'];
-                    $filteredGames = [];
-                    foreach ($lobbyGames as $game)
-                    {
-                        foreach ($ownGames as $og)
-                        {
-                            if ($og->label == $game['symbol'])
-                            {
-                                $filteredGames[] = $game;
-                                break;
-                            }
-                        }
-                    }
-                    $cat['lobbyGames'] = $filteredGames;
-                    $filteredCats[] = $cat;
-                }
-                $json_data['lobbyCategories'] = $filteredCats;
                 $data = json_encode($json_data);
             }
             else{
