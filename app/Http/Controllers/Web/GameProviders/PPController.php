@@ -1264,7 +1264,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $promo = \VanguardLTE\PPPromo::take(1)->first();
             if ($promo){
                 $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
-                $ownGames = $ownCats->games->game;
+                $gIds = $ownCats->games->pluck('game_id')->toArray();
+                $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->get();
 
                 $data = $promo->games;
                 $json_data = json_decode($data, true);
