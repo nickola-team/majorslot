@@ -413,8 +413,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'response' => $user->balance,
                 'status' => 1
             ]);
-            
-            VanguardLTE\GACTransaction::whereIn('id', $betrecords->pluck('id')->toArray())->update(['status' => 1]);
+
+            \VanguardLTE\GACTransaction::whereIn('id', $betrecords->pluck('id')->toArray())->update(['status' => 1]);
 
 
             return response()->json([
