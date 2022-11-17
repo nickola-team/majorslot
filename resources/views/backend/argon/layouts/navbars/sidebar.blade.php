@@ -108,7 +108,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.gamepending')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    미결중 배팅내역
+                                    미결중 게임내역
                                 </a>
                             </li>
 
