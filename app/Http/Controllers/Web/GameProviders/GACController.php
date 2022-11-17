@@ -397,7 +397,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betrecords = \VanguardLTE\GACTransaction::where([
                 'user_id' => $userId,
                 'game_id' => $gameId,
-                'type' => 1
+                'type' => 1,
+                'status' => 0
                 ])->get();
             if (count($betrecords) == 0)
             {

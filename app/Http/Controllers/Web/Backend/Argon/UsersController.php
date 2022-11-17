@@ -660,11 +660,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function player_game_cancel(\Illuminate\Http\Request $request)
         {
             $gacid = $request->id;
-            $user = auth()->user();
-            $availableUsers = $user->hierarchyUsersOnly();
-            if (count($availableUsers) == 0)
+            if (!auth()->user()->hasRole('admin'))
             {
-                return redirect()->back()->withErrors(['유저가 없습니다']);
+                return redirect()->back()->withErrors(['허용되지 않은 접근입니다.']);
             }
 
 
