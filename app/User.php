@@ -195,8 +195,26 @@ namespace VanguardLTE
             $users = User::where(['id' => $this->id])->get();
             if( $this->hasRole(['admin']) ) 
             {
+                $groups = User::where([
+                    'role_id' => 8, 
+                ])->get();
+                $comasters = User::where('role_id' , 7)->whereIn('parent_id',$groups->pluck('id')->toArray())->get(); 
+                $masters = User::where('role_id' , 6)->whereIn('parent_id',$comasters->pluck('id')->toArray())->get(); 
+                $agents = User::where('role_id', 5)->whereIn('parent_id' , $masters->pluck('id')->toArray())->get();
+                $distributors = User::where('role_id', 4)->whereIn('parent_id' , $agents->pluck('id')->toArray())->get();
+                $other = User::where('role_id', '<=', 3)->whereIn('shop_id', $this->availableShops())->get();
+                $users = $users->merge($groups);
+                $users = $users->merge($comasters);
+                $users = $users->merge($masters);
+                $users = $users->merge($agents);
+                $users = $users->merge($distributors);
+                $users = $users->merge($other);
+            }
+            if( $this->hasRole(['group']) ) 
+            {
                 $comasters = User::where([
                     'role_id' => 7, 
+                    'parent_id' => $this->id
                 ])->get();
                 $masters = User::where('role_id' , 6)->whereIn('parent_id',$comasters->pluck('id')->toArray())->get(); 
                 $agents = User::where('role_id', 5)->whereIn('parent_id' , $masters->pluck('id')->toArray())->get();
@@ -351,13 +369,7 @@ namespace VanguardLTE
         public function availableShops()
         {
             $shops = [$this->shop_id];
-            if( $this->hasRole([
-                'admin', 
-                'comaster',
-                'master',
-                'agent', 
-                'distributor'
-            ]) ) 
+            if( !$this->hasRole(['manager']) ) 
             {
                 //if( !$this->shop_id ) 
                 //{
@@ -438,6 +450,12 @@ namespace VanguardLTE
             if( $this->hasRole('admin') ) 
             {
                 $shops = Shop::all()->pluck('id');
+            }
+            else if( $this->hasRole('group') ) 
+            {
+                $partners = $this->childPartners();
+                $comasters = User::whereIn('parent_id', $partners)->get()->pluck('id')->toArray();
+                $shops = ShopUser::whereIn('user_id', $partners)->pluck('shop_id');
             }
             else if( $this->hasRole('comaster') ) 
             {
@@ -640,7 +658,7 @@ namespace VanguardLTE
                     ]);
                 }
             }
-            if(/* ($payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager')) && */$payeer->hasRole(['comaster','master','agent','distributor']) && $type == 'add' && $payeer->balance < $summ ) 
+            if(/* ($payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager')) && */$payeer->hasRole(['comaster','group', 'master','agent','distributor']) && $type == 'add' && $payeer->balance < $summ ) 
             {
                 return json_encode([
                     'status' => 'error', 
@@ -753,7 +771,7 @@ namespace VanguardLTE
             }
             $payer_balance = 0;
             if(/* $payeer->hasRole('agent') && ($this->hasRole('distributor') || $this->hasRole('user'))|| $payeer->hasRole('distributor') && $this->hasRole('manager') */
-                $payeer->hasRole(['comaster','master','agent','distributor'])) 
+                $payeer->hasRole(['group','comaster','master','agent','distributor'])) 
             {
                 $payeer->update(['balance' => $payeer->balance - $summ]);
                 $payeer = $payeer->fresh();
@@ -1080,7 +1098,7 @@ namespace VanguardLTE
 
         public function isInoutPartner()
         {
-            if ($this->hasRole(['admin', 'comaster']))
+            if ($this->hasRole(['admin', 'group', 'comaster']))
             {
                 return true;
             }

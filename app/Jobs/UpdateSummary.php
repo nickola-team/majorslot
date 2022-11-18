@@ -205,7 +205,7 @@ class UpdateSummary implements ShouldQueue
             //update game summary table if admin
             if ($index == 0)
             {
-                $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                $admin = \VanguardLTE\User::where('role_id', 9)->first();
                 $game_summary = \VanguardLTE\GameSummary::lockForUpdate()->where([
                     'user_id' => $admin->id, 
                     'category_id' => $deal['category_id'],

@@ -441,7 +441,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
                 if ($onlineShop) //it is online users
                 {
-                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $admin = \VanguardLTE\User::where('role_id', 9)->first();
                     $user->addBalance('add',$onlineShop->join_bonus, $admin);
                 }
             }
