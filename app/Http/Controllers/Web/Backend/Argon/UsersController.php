@@ -648,7 +648,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
 
-            $statistics = \VanguardLTE\GACTransaction::whereIn('user_id', $availableUsers)->where(['gactransaction.type'=>1,'gactransaction.status'=>0])->orderBy('date_time', 'DESC');
+            $statistics = \VanguardLTE\GACTransaction::whereIn('user_id', $availableUsers)->where(['gactransaction.type'=>1,'gactransaction.status'=>0])->orderBy('date_time', 'ASC');
 
 
             $statistics = $statistics->paginate(20);
