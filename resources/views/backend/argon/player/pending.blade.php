@@ -34,14 +34,14 @@
                 @if (count($statistics) > 0)
                     @foreach ($statistics as $stat)
                         <?php
-                            $warnigclass = "";
+                            $warningclass = "";
                             $warningtime = strtotime("-5 minutes");
                             if ($warningtime > strtotime($stat->date_time))
                             {
-                                $warnigclass = "background-color : orange;";
+                                $warningclass = "background-color : orange;";
                             }
                         ?>
-                        <tr style="{{$warnigclass}}">
+                        <tr style="{{$warningclass}}">
                             @include('backend.argon.player.partials.row_pending')
                         </tr>
                     @endforeach
