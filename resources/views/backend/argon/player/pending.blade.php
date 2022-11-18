@@ -33,7 +33,15 @@
             <tbody class="list">
                 @if (count($statistics) > 0)
                     @foreach ($statistics as $stat)
-                        <tr>
+                        <?php
+                            $warnigclass = "";
+                            $warningtime = strtotime("-5 minutes");
+                            if ($warningtime > strtotime($stat->date_time))
+                            {
+                                $warnigclass = "background-color : orange;";
+                            }
+                        ?>
+                        <tr style="{{$warnigclass}}">
                             @include('backend.argon.player.partials.row_pending')
                         </tr>
                     @endforeach
