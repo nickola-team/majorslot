@@ -453,9 +453,9 @@ namespace VanguardLTE
             }
             else if( $this->hasRole('group') ) 
             {
-                $partners = $this->childPartners();
-                $comasters = User::whereIn('parent_id', $partners)->get()->pluck('id')->toArray();
-                $shops = ShopUser::whereIn('user_id', $partners)->pluck('shop_id');
+                $groups = $this->childPartners();
+                $comasters = User::whereIn('parent_id', $groups)->get()->pluck('id')->toArray();
+                $shops = ShopUser::whereIn('user_id', $comasters)->pluck('shop_id');
             }
             else if( $this->hasRole('comaster') ) 
             {
