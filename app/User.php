@@ -1216,6 +1216,7 @@ namespace VanguardLTE
                 'badge-success',
                 'badge-info',
                 'badge-warning',
+                'badge-info',
             ];
         }
 
