@@ -33,6 +33,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $in_out_logs = \VanguardLTE\WithdrawDeposit::whereIn('status', [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->orderBy('created_at','desc');
             }
+            else if (auth()->user()->hasRole('group'))
+            {
+                $comasters = auth()->user()->childPartners();
+                $in_out_logs = \VanguardLTE\WithdrawDeposit::whereIn('payeer_id', $comasters)->whereIn('status', [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->orderBy('created_at','desc');
+            }
             else if (auth()->user()->isInoutPartner())
             {
                 $in_out_logs = \VanguardLTE\WithdrawDeposit::where('payeer_id', auth()->user()->id)->whereIn('status', [\VanguardLTE\WithdrawDeposit::DONE, \VanguardLTE\WithdrawDeposit::CANCEL])->orderBy('created_at','desc');
