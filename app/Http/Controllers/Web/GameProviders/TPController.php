@@ -625,7 +625,35 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get(config('app.ppgameserver') . '/gs2c/minilobby/games?' . $mgckey );
                     if ($response->ok())
                     {
-                        $promo->games = $response->body();
+                        $json_data = $response->json();
+                        //disable not own games
+                        $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
+                        $gIds = $ownCats->games->pluck('game_id')->toArray();
+                        $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->get();
+
+                        $lobbyCats = $json_data['lobbyCategories'];
+                        $filteredCats = [];
+                        foreach ($lobbyCats as $cat)
+                        {
+                            $lobbyGames = $cat['lobbyGames'];
+                            $filteredGames = [];
+                            foreach ($lobbyGames as $game)
+                            {
+                                foreach ($ownGames as $og)
+                                {
+                                    if ($og->label == $game['symbol'])
+                                    {
+                                        $filteredGames[] = $game;
+                                        break;
+                                    }
+                                }
+                            }
+                            $cat['lobbyGames'] = $filteredGames;
+                            $filteredCats[] = $cat;
+                        }
+                        $json_data['lobbyCategories'] = $filteredCats;
+                        $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                        $promo->games = json_encode($json_data);
                     }
 
                     $promo->save();
