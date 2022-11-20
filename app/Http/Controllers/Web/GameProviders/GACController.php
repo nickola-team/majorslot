@@ -326,10 +326,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => $gameObj['href']])->first();
 
-
+            $old_balance = $record->response + abs($betAmount);
+            
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
-                'balance' => intval($user->balance), 
+                'balance' => intval($old_balance), 
                 'bet' => $betAmount, 
                 'win' => $betAmount, 
                 'game' =>  $gameObj['name'] . '_' . $gameObj['href'], 
