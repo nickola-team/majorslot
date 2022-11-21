@@ -24,7 +24,15 @@
 <td>
     @if ($stat->user)
     <a href="#" data-toggle="tooltip" data-original-title="{{$stat->user->parents(auth()->user()->role_id)}}">
-        {{$stat->user->parents(auth()->user()->role_id-1, auth()->user()->role_id-1)}}
+        <?php
+            $roleid = auth()->user()->role_id;
+            if (auth()->user()->hasRole('admin'))
+            {
+                $roleid = $roleid - 1;
+            }
+
+        ?>
+        {{$stat->user->parents($roleid-1, $roleid-1)}}
     </a>
     @else
         {{__('Unknown')}}
