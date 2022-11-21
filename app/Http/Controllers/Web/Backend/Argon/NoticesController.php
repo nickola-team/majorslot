@@ -14,6 +14,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $notices = \VanguardLTE\Notice::all();
             }
+            else if (auth()->user()->hasRole('group'))
+            {
+                $comasters = auth()->user()->childPartners();
+                $notices = \VanguardLTE\Notice::whereIn('user_id', $comasters)->get();
+            }
             else 
             {
                 $notices = \VanguardLTE\Notice::where('user_id', auth()->user()->id)->get();

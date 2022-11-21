@@ -119,7 +119,7 @@ namespace VanguardLTE
             {
                 $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
             }
-            else if ($user->hasRole('comaster'))
+            else if ($user->hasRole(['comaster','group']))
             {
                 if (settings('enable_master_deal'))
                 {

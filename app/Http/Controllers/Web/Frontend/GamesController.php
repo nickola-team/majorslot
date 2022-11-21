@@ -82,7 +82,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $livegames = [];
             
 
-            $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
+            $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for admin's popup
             $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
             $msgs = [];

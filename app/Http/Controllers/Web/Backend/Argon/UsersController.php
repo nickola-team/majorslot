@@ -213,7 +213,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             foreach ($usersum as $u)
             {
                 $sum = $sum + $u->childBalanceSum();
-                $count = $count + count($u->hierarchyPartners());
+                if ($u->role_id > 3)
+                {
+                    $count = $count + count($u->hierarchyPartners());
+                }
             }
 
             $total = [
@@ -441,7 +444,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
                 if ($onlineShop) //it is online users
                 {
-                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $admin = \VanguardLTE\User::where('role_id', 9)->first();
                     $user->addBalance('add',$onlineShop->join_bonus, $admin);
                 }
             }

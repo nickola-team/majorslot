@@ -14,7 +14,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $msgs = \VanguardLTE\Message::all();
             }
-            else if (auth()->user()->isInoutPartner())
+            else if (auth()->user()->hasRole('group'))
+            {
+                $comasters = auth()->user()->childPartners();
+                $msgs = \VanguardLTE\Message::whereIn('writer_id', $comasters)->orWhereIn('user_id', $comasters)->get();
+            }
+            else if (auth()->user()->hasRole('comaster'))
             {
                 $msgs = \VanguardLTE\Message::where('writer_id', auth()->user()->id)->orWhere('user_id', auth()->user()->id)->get();
             }
