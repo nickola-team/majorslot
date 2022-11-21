@@ -508,7 +508,7 @@ namespace VanguardLTE\Console
             \Artisan::command('daily:gamesummary {date=today}', function ($date) {
                 $this->info("Begin daily game summary adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     if ($date == 'today') {
@@ -529,7 +529,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin today's game adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     \VanguardLTE\CategorySummary::summary_today($admin->id);
@@ -541,7 +541,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin summary daily adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     if ($date == 'today') {
@@ -562,7 +562,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin today's adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     \VanguardLTE\DailySummary::summary_today($admin->id);
@@ -574,7 +574,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin summary monthly adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     if ($month == 'today') {
@@ -1011,7 +1011,7 @@ namespace VanguardLTE\Console
                 $gamebanks = \VanguardLTE\GameBank::all();
                 foreach ($gamebanks as $bank)
                 {
-                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $admin = \VanguardLTE\User::where('role_id', 9)->first();
                     try {
                         $old = $bank->slots;
                         if ($minslot && $bank->slots < $minslot->value)

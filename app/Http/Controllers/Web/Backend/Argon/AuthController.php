@@ -58,7 +58,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $admin = $user;
-            if (!$admin->hasRole('admin'))
+            if (!$admin->hasRole(['admin','group']))
             {
 
                 while ($admin !=null && !$admin ->hasRole('comaster'))
@@ -85,7 +85,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
-            if( !$user->hasRole('admin') && setting('siteisclosed') ) 
+            if( !$user->hasRole(['admin','group']) && setting('siteisclosed') ) 
             {
                 \Auth::logout();
                 return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('app.site_is_turned_off'));
