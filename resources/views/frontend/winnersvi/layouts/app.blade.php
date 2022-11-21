@@ -295,7 +295,7 @@
           <div class="text-cont">
             <div class="inner">
               <p class="title">Chào mừng các bạn đến với </p>
-              <p class="sub">Winner's Pro.</p>
+              <p class="sub">WARRIOR</p>
             </div>
           </div>
         </div>
@@ -311,7 +311,7 @@
           <div class="text-cont">
             <div class="inner">
               <p class="title">Jackpot nổ mỗi ngày!</p>
-              <p class="sub"> Cùng với Winner's Pro!</p>
+              <p class="sub"> Cùng với WARRIOR!</p>
             </div>
           </div>
         </div>
@@ -331,7 +331,7 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">WINNER'S CASINO</span>
+      <span class="a_style">WARRIOR'S CASINO</span>
     </div>
 
     <div class="slot-container">
@@ -445,7 +445,7 @@
       </div>
     </div>
     <div class="copyright-cont">
-        <span>&copy; COPYRIGHT  Winner's Pro  {{ now()->year }} ALL RIGHTS RESERVED</span>
+        <span>&copy; COPYRIGHT  WARRIOR  {{ now()->year }} ALL RIGHTS RESERVED</span>
     </div>
 	</div>
 
