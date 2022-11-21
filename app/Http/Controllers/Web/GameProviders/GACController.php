@@ -645,7 +645,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $userId = '';
             foreach ($data['betHistories'] as $bet)
             {
-                if ($bet['id'] == $betId)
+                if (isset($bet['id']) && ($bet['id'] == $betId))
                 {
                     $gameId = $bet['gameId'];
                     $userId = $bet['userId'];
