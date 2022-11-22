@@ -677,10 +677,10 @@ namespace VanguardLTE\Games\GoblinHeistPowernudgePM
         }
         public function GetReelStrips($winType, $pur, $bet, $ind = -1)
         {
-            if($pur >= 0){
-                $stack = \VanguardLTE\PPGameStackModel\PPGameGoblinHeistPowernudgeStack::where('id', 16)->first();
-                return json_decode($stack->spin_stack, true);
-            }
+            // if($pur >= 0){
+            //     $stack = \VanguardLTE\PPGameStackModel\PPGameGoblinHeistPowernudgeStack::where('id', 16)->first();
+            //     return json_decode($stack->spin_stack, true);
+            // }
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
