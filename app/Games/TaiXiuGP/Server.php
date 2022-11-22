@@ -289,7 +289,20 @@ namespace VanguardLTE\Games\TaiXiuGP
 
         public function generateResult($betStats=null)
         {
-            $rt = mt_rand(0,2);
+            $selPercentage = mt_rand(0,100);
+            if ($selPercentage < 10)
+            {
+                $rt = 0;
+            }
+            else if ($selPercentage < 55)
+            {
+                $rt = 1;
+            }
+            else
+            {
+                $rt = 2;
+            }
+            // $rt = mt_rand(0,2);
             if ($betStats != null)
             {
                 if ($betStats[1] > $betStats[2])
@@ -302,10 +315,11 @@ namespace VanguardLTE\Games\TaiXiuGP
                 }
                 else //equal
                 {
-                    $rt = mt_rand(0,2);
+                    // $rt = mt_rand(0,2);
                 }
             }
             $lenResult = count($this->RESULT_LIST[$rt]);
+
             $selResult = mt_rand(0,$lenResult-1);
             $result = $this->RESULT_LIST[$rt][$selResult];
             return [
