@@ -290,11 +290,11 @@ namespace VanguardLTE\Games\TaiXiuGP
         public function generateResult($betStats=null)
         {
             $selPercentage = mt_rand(0,100);
-            if ($selPercentage < 10)
+            if ($selPercentage < 2)
             {
                 $rt = 0;
             }
-            else if ($selPercentage < 55)
+            else if ($selPercentage < 51)
             {
                 $rt = 1;
             }
