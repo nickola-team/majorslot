@@ -179,7 +179,26 @@ namespace VanguardLTE\Games\XocDiaGP
                     }
                 }
             }
-            $rt = $rts[mt_rand(0,count($rts)-1)];
+
+            $cc = [];
+            $total = 0;
+            foreach ($rts as $t)
+            {
+                $c = count($this->RESULT_LIST[$t]);
+                $total = $total + $c;
+                $cc[] = $total;
+            }
+            $rand = mt_rand(0, $total);
+            $sel_idx = 0;
+            foreach ($cc as $idx => $c)
+            {
+                if ($rand < $c)
+                {
+                    $sel_idx = $idx;
+                    break;
+                }
+            }
+            $rt = $rts[$sel_idx];
             $results = $this->RESULT_LIST[$rt];
             $result = $results[mt_rand(0,count($results)-1)];
             return [
