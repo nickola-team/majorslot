@@ -421,7 +421,7 @@ namespace VanguardLTE\Games\GoldenBeautyPM
                     $currentReelSet = $stack['reel_set'];
                 }else{
                 
-                    $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
+                    $_spinSettings = $slotSettings->GetSpinSettings('doSpin', $betline * $lines, $lines);
                     $winType = $_spinSettings[0];
     
                     // $winType = 'bonus';

@@ -328,6 +328,9 @@ namespace VanguardLTE\Games\_5LionsGoldPM
                     }
                 }
 
+                
+                $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
+                $winType = $_spinSettings[0];
                 $allBet = $betline * $lines;
                 $tumbAndFreeStacks = []; 
                 $isGeneratedFreeStack = false;
@@ -420,9 +423,6 @@ namespace VanguardLTE\Games\_5LionsGoldPM
                     $str_bg_i_mask = $stack['bg_i_mask'];
                     $str_win_line = $stack['win_line'];
                 }else{
-                
-                    $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
-                    $winType = $_spinSettings[0];
     
                     // $winType = 'bonus';
                     $stack = $slotSettings->GetReelStrips($winType, $betline * $lines);
