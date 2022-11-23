@@ -117,7 +117,7 @@ namespace VanguardLTE\Games\MadameDestinyPM
                         $arr_psyms = explode('&', $str_psym);
                         for($k = 0; $k < count($arr_psyms); $k++){
                             $arr_sub_psyms = explode('~', $arr_psyms[$k]);
-                            $arr_sub_psyms[1] = str_replace(',', '', $arr_sub_psyms[1]) / $original_bet * $betline;
+                            $arr_sub_psyms[1] = str_replace(',', '', $arr_sub_psyms[1]) / $original_bet * $bet;
                             $arr_psyms[$k] = implode('~', $arr_sub_psyms);
                         }
                         $str_psym = implode('&', $arr_lines);
