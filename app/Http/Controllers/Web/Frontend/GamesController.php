@@ -110,6 +110,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ]
                 );
             }
+            if (!\View::exists('frontend.' . $frontend . '.games.list')) { 
+                abort(404);
+             }
+
             return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'noticelist','msgs','unreadmsg', 'ppgames', 'trhistory'));
         }
         public function setpage(\Illuminate\Http\Request $request)
