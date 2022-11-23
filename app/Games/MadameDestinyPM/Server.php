@@ -120,7 +120,7 @@ namespace VanguardLTE\Games\MadameDestinyPM
                             $arr_sub_psyms[1] = str_replace(',', '', $arr_sub_psyms[1]) / $original_bet * $bet;
                             $arr_psyms[$k] = implode('~', $arr_sub_psyms);
                         }
-                        $str_psym = implode('&', $arr_lines);
+                        $str_psym = implode('&', $arr_psyms);
                         $strOtherResponse = $strOtherResponse . '&psym=' . $str_psym;
                     }
                     $strOtherResponse = $strOtherResponse . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
