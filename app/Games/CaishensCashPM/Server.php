@@ -326,6 +326,9 @@ namespace VanguardLTE\Games\CaishensCashPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'Wins', []);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Status', []);
 
+                $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
+                $winType = $_spinSettings[0];
+                
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
@@ -418,10 +421,6 @@ namespace VanguardLTE\Games\CaishensCashPM
                     $fsmore = $stack['fsmore'];
                     $fsmax = $stack['fsmax'];
                 }else{
-                
-                    $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
-                    $winType = $_spinSettings[0];
-    
                     // $winType = 'bonus';
                     $stack = $slotSettings->GetReelStrips($winType, $betline * $lines);
                     if($stack == null){
