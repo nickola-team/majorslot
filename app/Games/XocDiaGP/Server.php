@@ -185,7 +185,7 @@ namespace VanguardLTE\Games\XocDiaGP
             foreach ($rts as $t)
             {
                 $c = count($this->RESULT_LIST[$t]);
-                $total = $total + $c;
+                $total = $total + $c * $c;
                 $cc[] = $total;
             }
             $rand = mt_rand(0, $total);
