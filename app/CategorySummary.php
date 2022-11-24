@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE
 {
+    use Illuminate\Support\Facades\Log;
     class CategorySummary extends \Illuminate\Database\Eloquent\Model
     {
         protected $table = 'category_summary';
@@ -61,7 +62,14 @@ namespace VanguardLTE
                 ];
                 if ($cat->provider != null)
                 {
-                    $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist', $cat->href);
+                    $games = null;
+                    try {
+                        $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist', $cat->href);
+                    }
+                    catch (\Exception $e)
+                    {
+                        Log::error('getgamelist at category adjustment error');
+                    }
                     if ($games){
                         foreach ($games as $game)
                         {

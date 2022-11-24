@@ -199,11 +199,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors([trans('app.no_permission')]);
             }
             $serverstat = server_stat();
+            $bnnmoney = -1;
+            $tpnmoney = -1;
+            $kuzanmoney = -1;
+            try
+            {
+                $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
+                $tpnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getAgentBalance();
+                $kuzanmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KUZAController::getAgentBalance();
 
-            $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
-            $tpnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getAgentBalance();
-            $kuzanmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KUZAController::getAgentBalance();
+            }
+            catch (\Exception $e)
+            {
 
+            }
             $agents = [
                 'bnn' => $bnnmoney,
                 'tp' => $tpnmoney,
