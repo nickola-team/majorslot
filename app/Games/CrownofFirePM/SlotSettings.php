@@ -678,7 +678,7 @@ namespace VanguardLTE\Games\CrownofFirePM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameStrikingHot5Stack::where('id', 180)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameCrownofFireStack::where('id', 477)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -693,11 +693,11 @@ namespace VanguardLTE\Games\CrownofFirePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameStrikingHot5Stack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameCrownofFireStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index =  mt_rand(0, 75000);
+                    $index =  mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
