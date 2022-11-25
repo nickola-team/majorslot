@@ -699,7 +699,11 @@ namespace VanguardLTE\Games\SmugglersCovePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameSmugglersCoveStack::where('spin_type', '>=' , $spintype);
+                if($spintype == 0){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameSmugglersCoveStack::where('spin_type', $spintype);
+                }else{
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameSmugglersCoveStack::where('spin_type', '>=' , $spintype);
+                }
                 $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
