@@ -103,7 +103,7 @@ namespace VanguardLTE\Games\ChilliHeatMegawaysPM
                     $str_mo_t = $stack['mo_t'];
                     $str_mo_wpos = $stack['mo_wpos'];
                     $mo_tv = $stack['mo_tv'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $str_accm = $stack['accm'];
                     $acci = $stack['acci'];
                     $str_accv = $stack['accv'];
@@ -349,7 +349,7 @@ namespace VanguardLTE\Games\ChilliHeatMegawaysPM
                     $str_mo_t = $stack['mo_t'];
                     $str_mo_wpos = $stack['mo_wpos'];
                     $mo_tv = $stack['mo_tv'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $str_accm = $stack['accm'];
                     $acci = $stack['acci'];
                     $str_accv = $stack['accv'];

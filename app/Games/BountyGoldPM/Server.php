@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\BountyGoldPM
                     $rs_c = $stack['rs_c'];
                     $rs_m = $stack['rs_m'];
                     $rs_t = $stack['rs_t'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $apv = $stack['apv'];
                     $str_accm = $stack['accm'];
                     $arr_g = null;
@@ -357,7 +357,7 @@ namespace VanguardLTE\Games\BountyGoldPM
                     $rs_c = $stack['rs_c'];
                     $rs_m = $stack['rs_m'];
                     $rs_t = $stack['rs_t'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $apv = $stack['apv'];
                     $str_accm = $stack['accm'];
                     if($stack['g'] != ''){
