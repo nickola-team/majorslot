@@ -707,7 +707,11 @@ namespace VanguardLTE\Games\GoldPartyPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldPartyStack::where('spin_type', '>=' , $spintype);
+                if($spintype == 0){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldPartyStack::where('spin_type', $spintype);
+                }else{
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldPartyStack::where('spin_type', '>=' , $spintype);
+                }
                 $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
