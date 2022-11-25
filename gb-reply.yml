@@ -1,0 +1,9 @@
+apps:
+    - name: queue-gb-replay
+      script: artisan
+      exec_mode: fork
+      interpreter: php
+      instances: 1
+      args:
+        - queue:work 
+        - --queue=default
