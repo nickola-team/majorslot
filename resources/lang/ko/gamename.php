@@ -1004,4 +1004,14 @@ return [
         "OldGoldMinerMegaways" => "올드 골드 마이너 메가웨이즈",
         "StrikingHot5" => "스트라이킹 핫 5",
         
+        "MuertosMultiplierMegaways" => "무에르토스 멀티플러 메가웨이즈",
+        "CrownofFire" => "크라운 오브 파이어",
+        "CandyStars" => "캔디 스타즈",
+        "BlackBull" => "블랙 불",
+        "WildmanSuperBonanza" => "와일드맨 슈퍼 보난자",
+        "MagicMoneyMaze" => "매직 머니 메이즈",
+        "DowntheRails" => "다운 더 레일즈",
+        "GreedyWolf" => "그리디 울프",
+        "FireHot40" => "파이어 핫 40",
+        "FireHot100" => "파이어 핫 100",
 ];
