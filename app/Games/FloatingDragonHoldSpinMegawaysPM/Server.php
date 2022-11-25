@@ -122,7 +122,7 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                     $str_mo_wpos = $stack['mo_wpos'];
                     $str_stf = $stack['stf'];
                     $str_wlc_v = $stack['wlc_v'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $bw = $stack['bw'];
 
                     if($rs_p >= 0){
@@ -693,7 +693,7 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                 }
                 $str_mo = $stack['mo'];
                 $str_mo_t = $stack['mo_t'];
-                $pw = $stack['pw'];
+                $pw = str_replace(',', '', $stack['pw']);
                 if($pw > 0){
                     $pw = $pw / $original_bet * $betline;
                 }

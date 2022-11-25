@@ -98,7 +98,7 @@ namespace VanguardLTE\Games\EmptytheBankPM
                     $rs_c = $stack['rs_c'];
                     $rs_m = $stack['rs_m'];
                     $rs_t = $stack['rs_t'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $currentReelSet = $stack['reel_set'];
                     $arr_g = null;
                     if($stack['g'] != ''){
@@ -324,7 +324,7 @@ namespace VanguardLTE\Games\EmptytheBankPM
                     $rs_c = $stack['rs_c'];
                     $rs_m = $stack['rs_m'];
                     $rs_t = $stack['rs_t'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $currentReelSet = $stack['reel_set'];
                     if($stack['g'] != ''){
                         $arr_g = $stack['g'];

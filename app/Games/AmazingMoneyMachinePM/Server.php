@@ -102,7 +102,7 @@ namespace VanguardLTE\Games\AmazingMoneyMachinePM
                         $currentReelSet = $stack['reel_set'];
                     }
                     $str_msr = $stack['msr'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $str_ls = $stack['ls'];
                     $str_mo = $stack['mo'];
                     $str_mo_t = $stack['mo_t'];
@@ -433,7 +433,7 @@ namespace VanguardLTE\Games\AmazingMoneyMachinePM
                     $str_initReel = $stack['initReel'];
                     $currentReelSet = $stack['reel_set'];
                     $str_msr = $stack['msr'];
-                    $pw = $stack['pw'];
+                    $pw = str_replace(',', '', $stack['pw']);
                     $str_ls = $stack['ls'];
                     $str_mo = $stack['mo'];
                     $str_mo_t = $stack['mo_t'];
