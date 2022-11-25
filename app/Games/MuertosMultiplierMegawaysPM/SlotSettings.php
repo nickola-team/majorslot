@@ -733,6 +733,7 @@ namespace VanguardLTE\Games\MuertosMultiplierMegawaysPM
             }
             $isLowBank = false;
             while(true){
+                $index = mt_rand(0, 55000);
                 if($fsmax > 0){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameMuertosMultiplierMegawaysStack::where([
                         'fsmax' => $fsmax,
@@ -740,17 +741,15 @@ namespace VanguardLTE\Games\MuertosMultiplierMegawaysPM
                     ]);
                 }else if($fsmax == 0 && $winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameMuertosMultiplierMegawaysStack::where('spin_type', 2);
+                    $index = mt_rand(0, 9500);
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameMuertosMultiplierMegawaysStack::where('spin_type', 0);
                 }
-                $index = 0; // mt_rand(0, 50000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
-                    if($fsmax >= 10){
-                        $stacks = $stacks->where('odd', '<=', 35);    
-                    }else if($fsmax > 0){
+                    if($fsmax > 0){
                         $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
