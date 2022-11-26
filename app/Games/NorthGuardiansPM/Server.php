@@ -45,6 +45,7 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                 $_obf_StrResponse = '';
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'LastFsmore', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -76,6 +77,9 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $lastEvent->serverResponse->BuyFreeSpin);
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
+                    }
+                    if (isset($lastEvent->serverResponse->LastFsmore)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'LastFsmore', $lastEvent->serverResponse->LastFsmore); //ReplayLog
                     }
                     if (isset($lastEvent->serverResponse->FreeStacks)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
@@ -279,6 +283,7 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                     $bonusMpl = 1;
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'LastFsmore', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur);
@@ -443,7 +448,9 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                     }
                 }
                 if($fsmore > 0 && $isCalcWinLine == false && $slotEvent['slotEvent'] == 'freespin'){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $fsmore);
+                    $diff_more = $fsmore - $slotSettings->GetGameData($slotSettings->slotId . 'LastFsmore');
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $diff_more);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'LastFsmore', $fsmore);
                 }
 
                 $strLastReel = implode(',', $lastReel);
@@ -563,7 +570,7 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                     $str_g =',"Str_g":' . json_encode($arr_g);
                 }
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"BonusState":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusState') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'). ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')  . $str_g . ',"Trail":"' . $str_trail . '","Stf":"' . $str_stf . '","InitReel":"' . $str_initReel  . '","BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"BonusState":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusState') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"LastFsmore":' . $slotSettings->GetGameData($slotSettings->slotId . 'LastFsmore') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'). ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')  . $str_g . ',"Trail":"' . $str_trail . '","Stf":"' . $str_stf . '","InitReel":"' . $str_initReel  . '","BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
                 $allBet = $betline * $lines;
                 if($slotEvent['slotEvent'] == 'freespin' && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $allBet = $allBet * 100;
