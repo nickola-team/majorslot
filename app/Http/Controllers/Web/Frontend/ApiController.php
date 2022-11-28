@@ -1284,7 +1284,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $user = auth()->user();
 
-            if($user->role_id > 1 && ($user->bank_name == null || $user->bank_name == '')){
+            if(($user->bank_name == null || $user->bank_name == '')){
                 return response()->json([
                     'error' => true, 
                     'msg' => '계좌정보를 입력해주세요',
@@ -1372,12 +1372,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
-                $user->update([
-                    'recommender' => $request->accountName,
-                    'bank_name' => $request->bank,
-                    'account_no' => $request->no
-                ]);
-                $user =  $user->fresh();
+                // $user->update([
+                //     'recommender' => $request->accountName,
+                //     'bank_name' => $request->bank,
+                //     'account_no' => $request->no
+                // ]);
+                // $user =  $user->fresh();
             }
 
 

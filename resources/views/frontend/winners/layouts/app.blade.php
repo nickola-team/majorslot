@@ -1061,6 +1061,14 @@
               <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()? auth()->user()->recommender:''}}" data-parsley-id="0017" disabled><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
             </div>
           </div>
+          <div class="form-group">
+            <div class="labels">
+              <p>출금비밀번호</p>
+            </div>
+            <div class="infos">
+              <input id="confirmation_token" class="form-control"  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="password" value="" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0019"></ul>
+            </div>
+          </div>
 
           <div class="form-group">
             <div class="labels">
