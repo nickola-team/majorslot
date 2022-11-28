@@ -447,6 +447,7 @@ namespace VanguardLTE\Games\ChristmasBigBassBonanzaPM
                             $strOtherResponse = '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&fsmore=10';
 
                             $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $_bonusMuls[floor($freeWildCount / 4)]);
+                            $isState = false;
                         }else{
                             $spinType = 'c';
                             $isEnd = true;
