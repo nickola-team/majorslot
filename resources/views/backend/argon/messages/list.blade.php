@@ -77,13 +77,12 @@
 					<table class="table align-items-center table-flush">
 						<thead class="thead-light">
 						<tr>
-							<th scope="col">수신아이디</th>
+							<th scope="col">발신자</th>
+                            <th scope="col">수신자</th>
+                            <th scope="col">타입</th>
 							<th scope="col">제목</th>
-							<th scope="col">등록날짜</th>
-							<th scope="col">읽은날짜</th>
-							@if (auth()->user()->hasRole('admin'))
-							<th scope="col">작성자</th>
-							@endif
+							<th scope="col">작성시간</th>
+							<th scope="col">읽은시간</th>
 							<th scope="col"></th>
 						</tr>
 						</thead>

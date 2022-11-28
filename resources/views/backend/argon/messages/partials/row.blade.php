@@ -1,14 +1,45 @@
-<tr>        
+<tr>
     <td>
-        {{$msg->user_id==0?'전체회원':($msg->user?$msg->user->username:'삭제된회원')}}
+        @if ($msg->writer_id == 0)
+            시스템
+        @elseif ($msg->writer)
+            @if ($msg->writer->role_id > auth()->user()->role_id)
+                총본사
+            @else
+                {{$msg->writer->username}}
+            @endif
+        @else
+        '알수없음'
+        @endif
     </td>
-    <td>{{$msg->title}}</td>
+    <td>
+        @if ($msg->user_id == 0)
+            시스템
+        @elseif ($msg->user)
+            @if ($msg->user->role_id > auth()->user()->role_id)
+                총본사
+            @else
+                {{$msg->user->username}}
+            @endif
+        @else
+        '알수없음'
+        @endif
+    </td>
+    <td>
+        @if (auth()->user()->id == $msg->user_id)
+        <span class="badge badge-success">수신</span>
+        @else
+        <span class="badge badge-primary">발신</span>
+        @endif
+    </td>
+    <td>
+        <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" >
+            {{$msg->title}}
+        </a>
+    </td>
 	<td>{{ $msg->created_at }}</td>
     <td>{{ $msg->read_at??'읽지않음' }}</td>
-    @if (auth()->user()->hasRole('admin'))
-    <td>{{$msg->writer?$msg->writer->username:'알수없음'}}</td>
-    @endif
-    <td class="text-right">
+    <td >
     <?php
         if ($msg->writer_id == 0) //system message
         {

@@ -19,14 +19,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $comasters = auth()->user()->childPartners();
                 $msgs = \VanguardLTE\Message::whereIn('writer_id', $comasters)->orWhereIn('user_id', $comasters)->get();
             }
-            else if (auth()->user()->hasRole('comaster'))
+            else //if (auth()->user()->hasRole('comaster'))
             {
                 $msgs = \VanguardLTE\Message::where('writer_id', auth()->user()->id)->orWhere('user_id', auth()->user()->id)->get();
             }
-            else
-            {
-                $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get();
-            }
+            // else
+            // {
+            //     $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get();
+            // }
             $odd = \VanguardLTE\Settings::where('key', 'MaxOdd')->first();
             $win = \VanguardLTE\Settings::where('key', 'MaxWin')->first();
             $data = [
