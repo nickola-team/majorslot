@@ -1562,15 +1562,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $symbol = $request->symbol;
             $usertoken = $request->token;
-            $user = \Auth()->user();
-            if (!$user)
-            {
-                return redirect()->back();
-            }
-            if ($user->hasRole('user'))
-            {
-                $usertoken = $user->api_token;
-            }
+            $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();
+            // if (!$user)
+            // {
+            //     return redirect()->back();
+            // }
+            // if ($user->hasRole('user'))
+            // {
+            //     $usertoken = $user->api_token;
+            // }
             
             $hash = $user->generateCode(8);
             return view('frontend.Default.games.pp.history', compact('usertoken','hash', 'symbol'));
