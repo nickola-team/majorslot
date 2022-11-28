@@ -702,6 +702,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $game = $statgame->game_item;
                 if ($game)
                 {
+                    //check game category
+                    $gameCats = $game->categories;
+                    foreach ($gameCats as $gcat)
+                    {
+                        if ($gcat->category->href == 'pragmatic') //pragmatic game history
+                        {
+                            if ($statgame->user)
+                            {
+                                return redirect('/gs2c/lastGameHistory.do?symbol='.$game->label.'&token='.$statgame->user->api_token.'-'.$statgame->id);
+                            }
+                        }
+                    }
+
                     $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
                     if (!class_exists($object))
                     {
