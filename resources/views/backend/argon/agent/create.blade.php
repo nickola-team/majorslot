@@ -42,7 +42,20 @@
                                 </div>
 				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="deal_percent">롤링%</label>
-                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="">
+                                    <table>
+                                        <tr>
+                                            <th>슬롯</th>
+                                            <th>라이브</th>
+                                            <th>파워볼단폴</th>
+                                            <th>파워볼조합</th>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" name="deal_percent" id="deal_percent" class="form-control" value=""></td>
+                                            <td><input type="text" name="table_deal_percent" id="deal_percent" class="form-control" value=""></td>
+                                            <td><input type="text" name="deal_percent" id="deal_percent" class="form-control" value=""></td>
+                                            <td><input type="text" name="deal_percent" id="deal_percent" class="form-control" value=""></td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>

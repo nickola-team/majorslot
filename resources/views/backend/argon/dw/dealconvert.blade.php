@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                            롤링%
+                            슬롯롤링%
                         </div>
                         <div class="col-7">
                             @if (auth()->user()->hasRole('manager'))

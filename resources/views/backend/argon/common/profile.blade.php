@@ -186,7 +186,7 @@
                                 @endif
 
 				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="deal_percent">롤링%</label>
+                                    <label class="form-control-label" for="deal_percent">슬롯롤링%</label>
                                     <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="{{ old('deal_percent', $user->hasRole('manager')?$user->shop->deal_percent:$user->deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
                                 </div>
                                 <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">

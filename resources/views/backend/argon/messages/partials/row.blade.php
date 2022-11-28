@@ -1,3 +1,6 @@
+<?php 
+    $badge_class = \VanguardLTE\User::badgeclass();
+?>
 <tr>
     <td>
         @if ($msg->writer_id == 0)
@@ -6,7 +9,9 @@
             @if ($msg->writer->role_id > auth()->user()->role_id)
                 총본사
             @else
-                {{$msg->writer->username}}
+            <a href="#" data-toggle="tooltip" data-original-title="{{$msg->writer->parents(auth()->user()->role_id-1)}}">
+                {{$msg->writer->username}} <span class="badge {{$badge_class[$msg->writer->role_id]}}">{{$msg->writer->role->description}}</span>
+            </a>
             @endif
         @else
         '알수없음'
@@ -19,7 +24,9 @@
             @if ($msg->user->role_id > auth()->user()->role_id)
                 총본사
             @else
-                {{$msg->user->username}}
+            <a href="#" data-toggle="tooltip" data-original-title="{{$msg->user->parents(auth()->user()->role_id-1)}}">
+                {{$msg->user->username}}<span class="badge {{$badge_class[$msg->user->role_id]}}">{{$msg->user->role->description}}</span>
+            </a>
             @endif
         @else
         '알수없음'
