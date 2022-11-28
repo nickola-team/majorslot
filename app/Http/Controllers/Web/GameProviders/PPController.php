@@ -1562,7 +1562,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $symbol = $request->symbol;
             $usertoken = $request->token;
-            // $user = \Auth()->user();
+            $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();
             // if (!$user)
             // {
             //     return redirect()->back();
