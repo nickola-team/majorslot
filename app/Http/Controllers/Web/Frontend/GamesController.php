@@ -266,17 +266,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if (!\Auth::check())
             {
                 \Auth::login($user);
+                event(new \VanguardLTE\Events\User\LoggedIn());
             }
             else if ($user->id != auth()->user()->id)
             {
                 event(new \VanguardLTE\Events\User\LoggedOut());
-                \Auth::logout();
-                \DB::table('sessions')
-                ->where('user_id', $user->id)
-                ->delete();
-
+                // \Auth::logout();
+                // \DB::table('sessions')
+                // ->where('user_id', $user->id)
+                // ->delete();
                 \Auth::login($user);
+                event(new \VanguardLTE\Events\User\LoggedIn());
             }
+            
 
             $user->update([
                 'playing_game' => null,
