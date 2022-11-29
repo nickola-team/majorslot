@@ -27,7 +27,7 @@ class UserStatus
     {
         return
         [
-            self::ACTIVE => 'bg-success',
+            self::ACTIVE => 'bg-primary',
             self::BANNED => 'bg-danger',
             self::DELETED => 'bg-warning',
             self::REJECTED => 'bg-primary',

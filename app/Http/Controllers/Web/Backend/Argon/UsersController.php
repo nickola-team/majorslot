@@ -414,6 +414,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)->whereIn('users.id', $partner_users)->get();
 
                 $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->where('email','<>', '')->whereIn('id', $partner_users);
+                $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+                
+                if ($request->user != '')
+                {
+                    $users = $users->where('username', 'like', '%' . $request->user . '%');
+                }
+                if ($request->shop != '')
+                {
+                    $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shop.'%')->whereIn('id', auth()->user()->availableShops())->pluck('id')->toArray();
+                    if (count($shops) > 0){
+                        $users = $users->whereIn('shop_id',$shops);
+                    }
+                    else
+                    {
+                        $users = $users->where('shop_id',-1); //show nothing
+                    }
+                }
                 $total = [
                     'count' => $users->count(),
                     'balance' => $users->sum('balance'),
@@ -472,6 +489,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $users = $users->where('username', 'like', '%' . $request->user . '%');
             }
 
+            $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+            $onlieUsers = \VanguardLTE\Session::whereIn('user_id', $availableUsers)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
+            if ($request->online == 1)
+            {
+                $users = $users->whereIn('id',$onlieUsers);
+            }
+
             if ($request->shop != '')
             {
                 $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shop.'%')->whereIn('id', auth()->user()->availableShops())->pluck('id')->toArray();
@@ -487,6 +511,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $total = [
                 'count' => $users->count(),
                 'balance' => $users->sum('balance'),
+                'online' => count($onlieUsers)
             ];
             
             $users = $users->paginate(20);

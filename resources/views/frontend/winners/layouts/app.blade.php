@@ -1601,14 +1601,16 @@ var userName = "";
 
 
   $(document).ready(function() {
-    var prevTime = localStorage.getItem("hide_notification");
-    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-      $("#notification").hide();
-    }
+      var prevTime = localStorage.getItem("hide_notification");
+      if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+        $("#notification").hide();
+      }
+  @if ($unreadmsg>0)
+      alert_ok('새로운 쪽지가 도착했습니다');
+  @endif
   });
 
   
-<!--
 function setCookie( name, value, expiredays ) {
     var todayDate = new Date();
     todayDate.setDate( todayDate.getDate() + expiredays );

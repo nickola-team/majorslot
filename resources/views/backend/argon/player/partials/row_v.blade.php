@@ -12,8 +12,13 @@
 <td>{{$user->phone}}</td>
 <td>
 <span class="badge badge-dot mr-4">
-    <i class="{{$status_class[$user->status]}}"></i>
-    <span class="status">{{$statuses[$user->status]}}</span>
+    @if ($user->isLoggedIn())
+        <i class="bg-success"></i>
+        <span class="status">온라인</span>
+    @else
+        <i class="{{$status_class[$user->status]}}"></i>
+        <span class="status">{{$statuses[$user->status]}}</span>
+    @endif
 </span>
 </td>
 <td>{{ $user->created_at }}</td>

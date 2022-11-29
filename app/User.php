@@ -1242,6 +1242,13 @@ namespace VanguardLTE
             return $this->hasMany('VanguardLTE\Info', 'user_id');
         }
 
+        public function isLoggedIn()
+        {
+            $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+            $session = \VanguardLTE\Session::where('user_id', $this->id)->where('last_activity', '>=', $validTimestamp)->first();
+            return $session!=null;
+        }
+
 
 
     }
