@@ -1561,12 +1561,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function ppHistory(\Illuminate\Http\Request $request)
         {
             $symbol = $request->symbol;
-            $user = \Auth()->user();
-            if (!$user)
-            {
-                return redirect()->back();
-            }
-            $usertoken = $user->api_token;
+            $usertoken = $request->token;
+            $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();
+            // if (!$user)
+            // {
+            //     return redirect()->back();
+            // }
+            // if ($user->hasRole('user'))
+            // {
+            //     $usertoken = $user->api_token;
+            // }
+            
             $hash = $user->generateCode(8);
             return view('frontend.Default.games.pp.history', compact('usertoken','hash', 'symbol'));
         }
@@ -1596,6 +1601,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $symbol = $request->symbol;
             $token = $request->token;
+            $tokens = explode('-', $token);
+            $gameid = -1;
+            if (count($tokens) > 1)
+            {
+                $token = $tokens[0];
+                $gameid = $tokens[1];
+            }
             $user = \VanguardLTE\User::where('api_token', $token)->first();
             if (!$user )
             {
@@ -1618,7 +1630,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = [];
             if ($pm_games)
             {
-                $stat_games = \VanguardLTE\StatGame::where(['user_id'=>$user->id, 'game_id'=>$pm_games->original_id])->orderby('date_time', 'desc')->take(100)->get();
+                
+                
+                if ($gameid > 0)
+                {
+                    $stat_games = \VanguardLTE\StatGame::where('id', $gameid)->get();
+                }
+                else
+                {
+                    $stat_games = \VanguardLTE\StatGame::where(['user_id'=>$user->id, 'game_id'=>$pm_games->original_id])->orderby('date_time', 'desc')->take(100)->get();
+                }
+                
                 foreach ($stat_games as $stat)
                 {
                     $data[] = 
@@ -1644,7 +1666,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $id = $request->id;
             $token = $request->token;
             $symbol = $request->symbol;
-            $token = $request->token;
+            $tokens = explode('-', $token);
+            $gameid = -1;
+            if (count($tokens) > 1)
+            {
+                $token = $tokens[0];
+                $gameid = $tokens[1];
+            }
             $user = \VanguardLTE\User::where('api_token', $token)->first();
             if (!$user )
             {

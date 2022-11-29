@@ -469,7 +469,7 @@ namespace VanguardLTE\Games\PhoenixForgePM
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
                     }
                     else if($fsmore > 0 && $slotEvent['slotEvent'] == 'freespin'){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $fsmore);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $fsmore);
                     }
                 }
                 $reelA = [];

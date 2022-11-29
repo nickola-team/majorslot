@@ -109,7 +109,14 @@ namespace VanguardLTE\Games\ChristmasBigBassBonanzaPM
                     $strOtherResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=0.00&fsmul=1';
                     $currentReelSet = 3;
                     $_bonusMuls = [1, 2, 3, 10];
-                    $strOtherResponse = $strOtherResponse . '&accm=cp;cp~mp&acci=0;1&accv='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusState') .';'. $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') .'~4';
+                    $bonusIndex = 1;
+                    for($k = 0; $k < 4; $k++){
+                        if($_bonusMuls[$k] == $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl')){
+                            $bonusIndex = $k + 1;
+                            break;
+                        }
+                    }
+                    $strOtherResponse = $strOtherResponse . '&accm=cp;cp~mp&acci=0;1&accv='. $slotSettings->GetGameData($slotSettings->slotId . 'BonusState') .';'. $bonusIndex .'~4';
                 }
                 if($isMoney == true){
                     $strOtherResponse = $strOtherResponse . '&mo=' . implode(',', $moneyValue) . '&mo_t=' . implode(',', $CurrentMoneyText);
@@ -440,6 +447,7 @@ namespace VanguardLTE\Games\ChristmasBigBassBonanzaPM
                             $strOtherResponse = '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&fsmore=10';
 
                             $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $_bonusMuls[floor($freeWildCount / 4)]);
+                            $isState = false;
                         }else{
                             $spinType = 'c';
                             $isEnd = true;
@@ -452,7 +460,14 @@ namespace VanguardLTE\Games\ChristmasBigBassBonanzaPM
                         $strOtherResponse = $strOtherResponse . '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                         $spinType = 's';
                     }
-                    $strOtherResponse = $strOtherResponse . '&accm=cp;cp~mp&acci=0;1&accv='. $freeWildCount .';'. $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') .'~4';
+                    $bonusIndex = 1;
+                    for($k = 0; $k < 4; $k++){
+                        if($_bonusMuls[$k] == $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl')){
+                            $bonusIndex = $k + 1;
+                            break;
+                        }
+                    }
+                    $strOtherResponse = $strOtherResponse . '&accm=cp;cp~mp&acci=0;1&accv='. $freeWildCount .';'. $bonusIndex .'~4';
                     if($initReel != ''){
                         $strOtherResponse = $strOtherResponse . '&is=' . $initReel;
                     }

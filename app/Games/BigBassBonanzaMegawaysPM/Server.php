@@ -392,6 +392,9 @@ namespace VanguardLTE\Games\BigBassBonanzaMegawaysPM
                     $totalWin += $money_normalwin;
                     $wlc_vs[] = $money_normalwinLine;
                 }
+                if($isNewTumb == false && isset($g) && isset($g['reg']) && isset($g['reg']['tmb']) && $g['reg']['tmb'] != ''){
+                    $isNewTumb = true;
+                }
                 if($slotEvent['slotEvent'] == 'freespin' && $mo_tv > 0){
                     $fishwin =$mo_tv * $betline * $wmv;
                     if($fishwildcount > 1){
@@ -496,7 +499,7 @@ namespace VanguardLTE\Games\BigBassBonanzaMegawaysPM
                     $strOtherResponse = $strOtherResponse . '&rs=mc&tmb_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . '&rs_p=' . ($slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') - 1) . '&rs_c=1&rs_m=1';
                 }
                 else if($isTumb == true){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $scatterCount < 3){
                         $spinType = 'c';
                         $isState = true;
                     }
