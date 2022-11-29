@@ -42,6 +42,16 @@
             }
             $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notices = \VanguardLTE\Notice::where(['active' => 1])->whereIn('type', ['all','partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
+            if (auth()->user()->hasRole('admin'))
+            {
+                $msgs = \VanguardLTE\Message::where('writer_id', 0)->orderby('created_at', 'desc')->get(); //system message
+                $unreadmsgs = $msgs;
+            }
+            else
+            {
+                $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->orderby('created_at', 'desc')->get();
+                $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get(); //unread message
+            }
         ?>
         @if (count($notices)>0)
             @foreach ($notices as $notice)
@@ -146,6 +156,9 @@
             }
             @endforeach
             @endif
+            @if (count($unreadmsgs) > 0)
+                $("#msgbutton").click();
+            @endif
             @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";
@@ -224,6 +237,12 @@
                             {
                                 $('#rateText').text('');
                             }
+
+                            if (inouts['msg'] > 0)
+                            {
+                                $("#msgbutton").click();
+                            }
+                            $("#unreadmsgcount").text(inouts['msg']);
                             timeout = setTimeout(updateInOutRequest, updateTime);
                             if (callback != null) callback();
                         },

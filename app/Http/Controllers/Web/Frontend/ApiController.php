@@ -446,7 +446,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'type' => 'out',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                 'payeer_id' => $request->id]);
+            $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get();
             $res['join'] = 0;
+            $res['msg'] = count($unreadmsgs);
             if (auth()->user()->isInOutPartner()) {
                 $shops = auth()->user()->availableShops();
                 $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('shop_id', $shops);

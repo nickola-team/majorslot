@@ -89,56 +89,45 @@
                     </a>
                 </li>
                 @endif
-                <?php
-                    if (auth()->user()->hasRole('admin'))
-                    {
-                        $msgs = \VanguardLTE\Message::where('writer_id', 0)->orderby('created_at', 'desc')->get(); //system message
-                        $unreadmsgs = $msgs;
-                    }
-                    else
-                    {
-                        $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->orderby('created_at', 'desc')->get();
-                        $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get(); //unread message
-                    }
-                ?>
+                
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link" id="msgbutton" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell tada text-dark" style="font-size:16px"></i>
                         <span class="badges" id="unreadmsgcount">{{count($unreadmsgs)}}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
                         <!-- Dropdown header -->
                         <div class="px-3 py-3">
-                            <h6 class="text-sm text-muted m-0">총 <strong class="text-primary">{{count($msgs)}}</strong> 개의 쪽지가 있습니다</h6>
+                            <h6 class="text-sm text-muted m-0"><strong class="text-primary">{{count($unreadmsgs)}}</strong> 개의 새로운 쪽지가 있습니다</h6>
                         </div>
                         <!-- List group -->
-                        @foreach ($msgs as $index=>$m)
-                        @if ($index<5)
-                        <?php
-                            if ($m->writer_id == 0) //system message
-                            {
-                                $m->content = preg_replace('/replace_with_backend/',config('app.admurl'),$m->content);
-                            }
-                        ?>
-                        <div class="list-group list-group-flush">
-                            <a href="#" class="list-group-item list-group-item-action newMsg viewMsg" data-toggle="modal" data-id="{{$m->id}}" data-target="#openMsgModal" data-msg="{{ $m->content }}" data-writer="{{$m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->username}}" data-parent="{{$m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->parents(auth()->user()->role_id-1)}}" data-title="{{$m->title}}" onClick="viewMsg(this);">
-                                <div class="row align-items-center">
-                                    <div class="col ml--2">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h4 class="mb-0 text-sm">{{$m->title}}</h4>
+                        <!-- @foreach ($msgs as $index=>$m)
+                            @if ($index<5)
+                            <?php
+                                if ($m->writer_id == 0) //system message
+                                {
+                                    $m->content = preg_replace('/replace_with_backend/',config('app.admurl'),$m->content);
+                                }
+                            ?>
+                            <div class="list-group list-group-flush">
+                                <a href="#" class="list-group-item list-group-item-action newMsg viewMsg" data-toggle="modal" data-id="{{$m->id}}" data-target="#openMsgModal" data-msg="{{ $m->content }}" data-writer="{{$m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->username}}" data-parent="{{$m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->parents(auth()->user()->role_id-1)}}" data-title="{{$m->title}}" onClick="viewMsg(this);">
+                                    <div class="row align-items-center">
+                                        <div class="col ml--2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h4 class="mb-0 text-sm">{{$m->title}}</h4>
+                                                </div>
+                                                <div class="text-right text-muted">
+                                                    <small>{{$m->writer_id==0?'시스템':($m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->username)}}</small>
+                                                </div>
                                             </div>
-                                            <div class="text-right text-muted">
-                                                <small>{{$m->writer_id==0?'시스템':($m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->username)}}</small>
-                                            </div>
+                                            <p class="text-sm mb-0">{{$m->created_at}}</p>
                                         </div>
-                                        <p class="text-sm mb-0">{{$m->created_at}}</p>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                        @endif
-                        @endforeach
+                                </a>
+                            </div>
+                            @endif
+                        @endforeach -->
                         <!-- View all -->
                         <a href="{{argon_route('argon.msg.list')}}" class="dropdown-item text-center text-primary font-weight-bold py-3">모두보기</a>
                     </div>
