@@ -104,7 +104,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell tada text-dark" style="font-size:16px"></i>
-                        <span class="badges">{{count($unreadmsgs)}}</span>
+                        <span class="badges" id="unreadmsgcount">{{count($unreadmsgs)}}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
                         <!-- Dropdown header -->

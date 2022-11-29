@@ -112,23 +112,11 @@
 <script src="{{ asset('back/argon') }}/js/jquery.treetable.js"></script>
 <script>
     var table = $("#msglist");
+
     $("#msglist").treetable({ 
-        expandable: true ,
-        onNodeCollapse: function() {
-            var node = this;
-            table.treetable("unloadBranch", node);
-        },
-        onNodeExpand: function() {
-            var node = this;
-            table.treetable("unloadBranch", node);
-            $.ajax({
-                async: true,
-                url: "{{argon_route('argon.msg.child')}}?id="+node.id
-                }).done(function(html) {
-                    var rows = $(html).filter("tr");
-                    table.treetable("loadBranch", node, rows);
-            });
-        }
+        expandable: true
         });
+
+    $("#msglist").treetable("expandAll");
 </script>
 @endpush

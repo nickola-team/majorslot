@@ -40,12 +40,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $msgs = $msgs->paginate(20);
             return view('backend.argon.messages.list', compact('msgs','data'));
         }
-        public function child(\Illuminate\Http\Request $request)
-        {
-            $child_id = $request->id;
-            $msgs = \VanguardLTE\Message::where('ref_id', $child_id)->orderby('created_at','desc')->get();
-            return view('backend.argon.messages.partials.childs', compact('msgs', 'child_id'));
-        }
         public function create(\Illuminate\Http\Request $request)
         {
             $ref = $request->ref;
