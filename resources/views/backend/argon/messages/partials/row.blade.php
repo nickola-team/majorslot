@@ -9,7 +9,7 @@
             @if ($msg->writer->role_id > auth()->user()->role_id)
                 총본사
             @else
-            <a href="#" data-toggle="tooltip" data-original-title="{{$msg->writer->parents(auth()->user()->role_id-1)}}">
+            <a href="{{argon_route('argon.common.profile', ['id'=>$msg->writer->id])}}" data-toggle="tooltip" data-original-title="{{$msg->writer->parents(auth()->user()->role_id-1)}}">
                 {{$msg->writer->username}} <span class="badge {{$badge_class[$msg->writer->role_id]}}">{{$msg->writer->role->description}}</span>
             </a>
             @endif
@@ -25,7 +25,7 @@
             @if ($msg->user->role_id > auth()->user()->role_id)
                 총본사
             @else
-            <a href="#" data-toggle="tooltip" data-original-title="{{$msg->user->parents(auth()->user()->role_id-1)}}">
+            <a href="{{argon_route('argon.common.profile', ['id'=>$msg->user->id])}}" data-toggle="tooltip" data-original-title="{{$msg->user->parents(auth()->user()->role_id-1)}}">
                 {{$msg->user->username}}<span class="badge {{$badge_class[$msg->user->role_id]}}">{{$msg->user->role->description}}</span>
             </a>
             @endif

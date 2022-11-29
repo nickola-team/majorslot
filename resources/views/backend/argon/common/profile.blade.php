@@ -157,7 +157,7 @@
                                     @php
                                         $banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
                                     @endphp
-                                    {!! Form::select('bank_name', $banks, $user->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name', 'disabled' => !auth()->user()->isInoutPartner()]) !!}		
+                                    {!! Form::select('bank_name', $banks, $user->bank_name ? $user->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name', 'disabled' => !auth()->user()->isInoutPartner()]) !!}		
                                 </div>
                                 <?php
                                     $accno = $user->account_no;
