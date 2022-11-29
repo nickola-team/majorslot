@@ -46,7 +46,7 @@
     </td>
 	<td>{{ $msg->created_at }}</td>
     <td>{{ $msg->read_at??'읽지않음' }}</td>
-    <td >
+    <td class="text-right">
     <?php
         if ($msg->writer_id == 0) //system message
         {

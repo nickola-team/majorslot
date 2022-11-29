@@ -37,7 +37,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function create()
         {
-            return view('backend.argon.messages.add');
+            $msgtemps = \VanguardLTE\MsgTemp::where('writer_id', auth()->user()->id)->orderBy('order','desc')->get();
+            return view('backend.argon.messages.add', compact('msgtemps'));
         }
         public function store(\Illuminate\Http\Request $request)
         {

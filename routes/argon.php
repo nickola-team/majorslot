@@ -293,6 +293,38 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.notice.delete',
             'uses' => 'NoticesController@delete',
         ]);
+
+
+        /**
+         * template routes
+         */
+
+        Route::get('msgtemp', [
+            'as' => 'argon.msgtemp.list',
+            'uses' => 'MsgTempController@index',
+        ]);
+        Route::get('msgtemp/create', [
+            'as' => 'argon.msgtemp.create',
+            'uses' => 'MsgTempController@create',
+        ]);
+        Route::post('msgtemp/create', [
+            'as' => 'argon.msgtemp.store',
+            'uses' => 'MsgTempController@store',
+        ]);
+        Route::get('msgtemp/{msgtemp}/edit', [
+            'as' => 'argon.msgtemp.edit',
+            'uses' => 'MsgTempController@edit',
+        ]);
+        Route::post('msgtemp/{msgtemp}/update', [
+            'as' => 'argon.msgtemp.update',
+            'uses' => 'MsgTempController@update',
+        ]);
+        Route::delete('msgtemp/{msgtemp}/delete', [
+            'as' => 'argon.msgtemp.delete',
+            'uses' => 'MsgTempController@delete',
+        ]);
+
+
         /**
          * messages routes
          */

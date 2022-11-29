@@ -305,6 +305,12 @@
                                     공지
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msgtemp.list')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    템플릿
+                                </a>
+                            </li>
                             @endif
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.msg.list')}}">
