@@ -1,8 +1,8 @@
 <?php 
     $badge_class = \VanguardLTE\User::badgeclass();
 ?>
-<tr>
     <td>
+    <span  class="{{count($msg->refs)>0?'partner':'shop'}}">
         @if ($msg->writer_id == 0)
             시스템
         @elseif ($msg->writer)
@@ -16,6 +16,7 @@
         @else
         '알수없음'
         @endif
+    </span>
     </td>
     <td>
         @if ($msg->user_id == 0)
@@ -40,12 +41,19 @@
         @endif
     </td>
     <td>
-        <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" >
+        <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" data-id="{{$msg->id}}" data-writer="{{$msg->writer->role_id>auth()->user()->role_id?'총본사':$msg->writer->username}}" data-parent="{{$msg->writer->role_id>auth()->user()->role_id?'총본사':$msg->writer->parents(auth()->user()->role_id-1)}}" data-title="{{$msg->title}}" onclick="viewMsg(this);">
             {{$msg->title}}
         </a>
     </td>
 	<td>{{ $msg->created_at }}</td>
     <td>{{ $msg->read_at??'읽지않음' }}</td>
+    <td>
+        @if (count($msg->refs)>0)
+        <span class="text-green">답변함</span>
+        @else
+        <span class="text-red">답변없음</span>
+        @endif
+    </td>
     <td class="text-right">
     <?php
         if ($msg->writer_id == 0) //system message
@@ -53,9 +61,11 @@
             $msg->content = preg_replace('/replace_with_backend/',config('app.admurl'),$msg->content);
         }
     ?>
-        <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" >
-            <button class="btn btn-success btn-sm">보기</button>
+        @if (auth()->user()->isInOutPartner() && $msg->user_id==auth()->user()->id)
+        <a  href="{{argon_route('argon.msg.create', ['ref' => $msg->id])}}" >
+            <button class="btn btn-primary btn-sm">답변</button>
         </a>
+        @endif
         <a href="{{ argon_route('argon.msg.delete', $msg->id) }}"
             data-method="DELETE"
             data-confirm-title="확인"
@@ -65,4 +75,3 @@
             <button type="button" class="btn btn-warning btn-sm">삭제</button>
         </a>
     </td>
-</tr>

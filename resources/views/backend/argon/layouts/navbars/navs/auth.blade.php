@@ -121,7 +121,7 @@
                             }
                         ?>
                         <div class="list-group list-group-flush">
-                            <a href="#" class="list-group-item list-group-item-action newMsg viewMsg" data-toggle="modal" data-id="{{$m->id}}" data-target="#openMsgModal" data-msg="{{ $m->content }}">
+                            <a href="#" class="list-group-item list-group-item-action newMsg viewMsg" data-toggle="modal" data-id="{{$m->id}}" data-target="#openMsgModal" data-msg="{{ $m->content }}" data-writer="{{$m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->username}}" data-parent="{{$m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->parents(auth()->user()->role_id-1)}}" data-title="{{$m->title}}" onClick="viewMsg(this);">
                                 <div class="row align-items-center">
                                     <div class="col ml--2">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -129,7 +129,7 @@
                                                 <h4 class="mb-0 text-sm">{{$m->title}}</h4>
                                             </div>
                                             <div class="text-right text-muted">
-                                                <small>{{$m->writer_id==0?'시스템':($m->writer->username)}}</small>
+                                                <small>{{$m->writer_id==0?'시스템':($m->writer->role_id>auth()->user()->role_id?'총본사':$m->writer->username)}}</small>
                                             </div>
                                         </div>
                                         <p class="text-sm mb-0">{{$m->created_at}}</p>

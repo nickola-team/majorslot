@@ -157,7 +157,7 @@
                                     @php
                                         $banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
                                     @endphp
-                                    {!! Form::select('bank_name', $banks, $user->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name', 'disabled' => $user->id == auth()->user()->id]) !!}		
+                                    {!! Form::select('bank_name', $banks, $user->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name', 'disabled' => !auth()->user()->isInoutPartner()]) !!}		
                                 </div>
                                 <?php
                                     $accno = $user->account_no;
@@ -177,11 +177,11 @@
                                 ?>
                                 <div class="form-group{{ $errors->has('account_no') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="account_no">계좌번호</label>
-                                    <input type="text" name="account_no" id="account_no" class="form-control{{ $errors->has('account_no') ? ' is-invalid' : '' }}" value="{{ $accno }}"  {{$user->id == auth()->user()->id?'disabled':''}}>
+                                    <input type="text" name="account_no" id="account_no" class="form-control{{ $errors->has('account_no') ? ' is-invalid' : '' }}" value="{{ $accno }}"  {{auth()->user()->isInoutPartner()?'':'disabled'}}>
                                 </div>
                                 <div class="form-group{{ $errors->has('recommender') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="recommender">예금주명</label>
-                                    <input type="text" name="recommender" id="recommender" class="form-control{{ $errors->has('recommender') ? ' is-invalid' : '' }}" value="{{ $recommender }}"  {{$user->id == auth()->user()->id?'disabled':''}}>
+                                    <input type="text" name="recommender" id="recommender" class="form-control{{ $errors->has('recommender') ? ' is-invalid' : '' }}" value="{{ $recommender }}"  {{auth()->user()->isInoutPartner()?'':'disabled'}}>
                                 </div>
                                 @endif
 

@@ -11,8 +11,7 @@
 		@if (count($msgtemps))
 			@foreach ($msgtemps as $msgtemp)
 				<tr>
-					<td><a href="#" onClick="addTemplate($('#temp{{$msgtemp->id}}').text());"><button type="button" class="btn btn-warning btn-sm"><<</button>
-    </a></td>
+					<td><a href="#" onClick="addTemplate($('#temp{{$msgtemp->id}}').text());"><button type="button" class="btn btn-warning btn-sm"><<</button></a></td>
 					<td>{{$msgtemp->title}}</td>
 					<td style="display:none;" id="temp{{$msgtemp->id}}">{{$msgtemp->content}}</td>
 				</tr>

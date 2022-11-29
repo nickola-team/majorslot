@@ -120,7 +120,8 @@ namespace VanguardLTE
                 '펀드온라인코리아', 
                 '케이티비투자증권',
                 'PAYWIN',
-                'JUNCOIN'
+                'JUNCOIN',
+                'MESSAGE'
             ],
             'reset_days' => [
                 '',

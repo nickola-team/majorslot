@@ -7,6 +7,7 @@ namespace VanguardLTE
         protected $fillable = [
             'user_id',
             'writer_id',
+            'ref_id',
             'title', 
             'content', 
             'created_at', 
@@ -25,6 +26,10 @@ namespace VanguardLTE
         public function user()
         {
             return $this->hasOne('VanguardLTE\User', 'id', 'user_id');
+        }
+        public function refs()
+        {
+            return $this->hasMany('VanguardLTE\Message', 'ref_id', 'id');
         }
     }
 

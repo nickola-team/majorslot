@@ -81,9 +81,28 @@
                                 <span aria-hidden="true">&times;</span></button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <span id="msgContent"></span>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table align-items-left table-flush">
+                                <tbody>
+                                    <tr>
+                                        <td>발신자</td>
+                                        <td><span id="msgWriter"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>상위파트너</td>
+                                        <td><span id="msgWriterParent"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>제목</td>
+                                        <td><span id="msgTitle"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>내용</td>
+                                        <td><span id="msgContent"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary"  data-dismiss="modal">확인</button>
@@ -257,27 +276,25 @@
             $("#" + notice).hide();
         }
 
-        $(function() {
-            $('.viewMsg').click(function(event){
-                if( $(event.target).is('.newMsg') ){
-                    var content = $(event.target).attr('data-msg');
-                    var idx = $(event.target).attr('data-id');
-                }else{
-                    var content = $(event.target).parents('.newMsg').attr('data-msg');
-                    var idx = $(event.target).parents('.newMsg').attr('data-id');
-                }
+        function viewMsg(obj) {
+                var content = obj.getAttribute('data-msg');
+                var writer = obj.getAttribute('data-writer');
+                var parent = obj.getAttribute('data-parent');
+                var title = obj.getAttribute('data-title');
+
+                var idx = obj.getAttribute('data-id');
                 $.ajax({
-					url: "api/readMsg",
+					url: "/api/readMsg",
 					type: "POST",
-					data: {'id': idx },
-					dataType: 'json',
+					data: {id: idx },
 					success: function (data) {
                     }
 				});
                 $('#msgContent').html(content);
-                
-            });
-        });
+                $('#msgWriter').html(writer);
+                $('#msgWriterParent').html(parent);
+                $('#msgTitle').html(title);
+        }
         @endif
 
 

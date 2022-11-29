@@ -27,7 +27,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function create()
         {
-            return view('backend.argon.notices.add', compact('msgtemps'));
+            return view('backend.argon.notices.add');
         }
         public function store(\Illuminate\Http\Request $request)
         {

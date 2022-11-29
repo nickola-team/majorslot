@@ -333,6 +333,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.msg.list',
             'uses' => 'MessageController@index',
         ]);
+        Route::get('/messages/child', [
+            'as' => 'argon.msg.child',
+            'uses' => 'MessageController@child',
+        ]);
         Route::get('messages/create', [
             'as' => 'argon.msg.create',
             'uses' => 'MessageController@create',

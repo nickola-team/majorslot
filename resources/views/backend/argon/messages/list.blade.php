@@ -4,6 +4,10 @@
     ])
 
 @section('page-title',  '쪽지')
+@push('css')
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@endpush
 
 @section('content')
 <div class="container-fluid">
@@ -74,7 +78,7 @@
                     <h3 class="mb-0">쪽지</h3>
                 </div>
                 <div class="table-responsive">
-					<table class="table align-items-center table-flush">
+                    <table class="table align-items-center table-flush" id="msglist">
 						<thead class="thead-light">
 						<tr>
 							<th scope="col">발신자</th>
@@ -83,24 +87,48 @@
 							<th scope="col">제목</th>
 							<th scope="col">작성시간</th>
 							<th scope="col">읽은시간</th>
+                            <th scope="col">상태</th>
 							<th scope="col"></th>
 						</tr>
 						</thead>
 						<tbody>
-						@if (count($msgs))
-							@foreach ($msgs as $msg)
-								@include('backend.argon.messages.partials.row')
-							@endforeach
-						@else
-							<tr><td colspan='9'>No Data</td></tr>
-						@endif
+                            @include('backend.argon.messages.partials.childs')
 						</tbody>
 					</table>
 				</div>
-
+                <!-- Card footer -->
+				<div class="card-footer py-4">
+					{{ $msgs->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 @stop
+
+
+@push('js')
+<script src="{{ asset('back/argon') }}/js/jquery.treetable.js"></script>
+<script>
+    var table = $("#msglist");
+    $("#msglist").treetable({ 
+        expandable: true ,
+        onNodeCollapse: function() {
+            var node = this;
+            table.treetable("unloadBranch", node);
+        },
+        onNodeExpand: function() {
+            var node = this;
+            table.treetable("unloadBranch", node);
+            $.ajax({
+                async: true,
+                url: "{{argon_route('argon.msg.child')}}?id="+node.id
+                }).done(function(html) {
+                    var rows = $(html).filter("tr");
+                    table.treetable("loadBranch", node, rows);
+            });
+        }
+        });
+</script>
+@endpush
