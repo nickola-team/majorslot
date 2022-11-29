@@ -55,7 +55,7 @@
                                     <label class="form-control-label" for="recommender">예금주명</label>
                                     <input type="text" name="recommender" id="recommender" class="form-control" value="" >
                                 </div>
-				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
+				                <div class="form-group">
                                     <table>
                                         <tr>
                                             <th>슬롯롤링%</th>
