@@ -980,7 +980,7 @@ namespace VanguardLTE
                     $partner = $partner->referral;
                 }
                 // last check if the deal_percent is less than comaster's deal percent
-                if ($partner!=null && $partner->deal_percent < $deal_percent  )
+                if ($partner!=null && $partner->{$deal_field[$type]} < $deal_percent  )
                 {
                     //error
                     return [];
