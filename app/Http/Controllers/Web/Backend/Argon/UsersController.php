@@ -41,18 +41,32 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['상위에이전트를 찾을수 없습니다']);
             }
-            $deal_percent = $user->deal_percent;
-            $table_deal_percent = $user->tabe_deal_percent;            
-            if ($user->hasRole('manager'))
+            // $deal_percent = $user->deal_percent;
+            // $table_deal_percent = $user->tabe_deal_percent;            
+            // if ($user->hasRole('manager'))
+            // {
+            //     $deal_percent = $user->shop->deal_percent;
+            //     $table_deal_percent = $user->shop->tabe_deal_percent;            
+            // }
+            $check_deals = [
+                'deal_percent',
+                'table_deal_percent',
+                'pball_single_percent',
+                'pball_comb_percent'
+            ];
+            foreach ($check_deals as $dealtype)
             {
-                $deal_percent = $user->shop->deal_percent;
-                $table_deal_percent = $user->shop->tabe_deal_percent;            
+                if ($parent->{$dealtype} < $user->{$dealtype})
+                {
+                    return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+                }
             }
+            
 
-            if ($deal_percent > $parent->deal_percent || $table_deal_percent > $parent->table_deal_percent)
-            {
-                return redirect()->back()->withErrors(['롤링은 상위에이전트보다 클수 없습니다.']);
-            }
+            // if ($deal_percent > $parent->deal_percent || $table_deal_percent > $parent->table_deal_percent)
+            // {
+            //     return redirect()->back()->withErrors(['롤링은 상위에이전트보다 클수 없습니다.']);
+            // }
 
             if ($user->hasRole('manager'))
             {
@@ -108,15 +122,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $role = \jeremykenedy\LaravelRoles\Models\Role::find($request->role_id);
             $data['parent_id'] = $parent->id;
 
+            $check_deals = [
+                'deal_percent',
+                'table_deal_percent',
+                'pball_single_percent',
+                'pball_comb_percent'
+            ];
+            foreach ($check_deals as $dealtype)
+            {
+                if (isset($data[$dealtype]) && $parent!=null &&  $parent->{$dealtype} < $data[$dealtype])
+                {
+                    return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+                }
+            }
 
-            if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
-            {
-                return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
-            }
-            if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
-            {
-                return redirect()->back()->withErrors(['라이브딜비는 상위에이전트보다 클수 없습니다']);
-            }
+            // if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+            // }
+            // if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['라이브딜비는 상위에이전트보다 클수 없습니다']);
+            // }
             // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
             // {
             //     return redirect()->back()->withErrors(['죽장퍼센트는 상위에이전트보다 클수 없습니다']);
@@ -376,14 +403,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $data['parent_id'] = $parent->id;
 
             $shop = $parent->shop;
-            if (isset($data['deal_percent']) && $shop!=null &&  $shop->deal_percent < $data['deal_percent'])
+            $check_deals = [
+                'deal_percent',
+                'table_deal_percent',
+                'pball_single_percent',
+                'pball_comb_percent'
+            ];
+            foreach ($check_deals as $dealtype)
             {
-                return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
+                if (isset($data[$dealtype]) && $shop!=null &&  $shop->{$dealtype} < $data[$dealtype])
+                {
+                    return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
+                }
             }
-            if (isset($data['table_deal_percent']) && $shop!=null && $shop->table_deal_percent < $data['table_deal_percent'])
-            {
-                return redirect()->back()->withErrors(['라이브딜비는 매장보다 클수 없습니다']);
-            }
+
+            // if (isset($data['deal_percent']) && $shop!=null &&  $shop->deal_percent < $data['deal_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
+            // }
+            // if (isset($data['table_deal_percent']) && $shop!=null && $shop->table_deal_percent < $data['table_deal_percent'])
+            // {
+            //     return redirect()->back()->withErrors(['라이브딜비는 매장보다 클수 없습니다']);
+            // }
             // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
             // {
             //     return redirect()->back()->withErrors(['죽장퍼센트는 매장보다 클수 없습니다']);

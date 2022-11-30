@@ -65,9 +65,9 @@
                                         </tr>
                                         <tr>
                                             <td style="padding:3px;"><input type="text" name="deal_percent" id="deal_percent" class="form-control" value="0"></td>
-                                            <td style="padding:3px;"><input type="text" name="table_deal_percent" id="deal_percent" class="form-control" value="0"></td>
-                                            <td style="padding:3px;"><input type="text" name="pb_single_percent" id="deal_percent" class="form-control" value="0"></td>
-                                            <td style="padding:3px;"><input type="text" name="pb_comb_percent" id="deal_percent" class="form-control" value="0"></td>
+                                            <td style="padding:3px;"><input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control" value="0"></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_single_percent" id="pball_single_percent" class="form-control" value="0"></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_comb_percent" id="pball_comb_percent" class="form-control" value="0"></td>
                                         </tr>
                                     </table>
                                 </div>
