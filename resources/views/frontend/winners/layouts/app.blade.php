@@ -344,7 +344,7 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">타이틀리스트 SLOT</span>
+      <span class="a_style">타이틀리스트 GAMES</span>
     </div>
 
     <div class="slot-container">
