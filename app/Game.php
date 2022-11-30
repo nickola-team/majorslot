@@ -640,10 +640,12 @@ namespace VanguardLTE
             'table_bank' => 'Table', 
             'fish' => 'Fish'
         ];
+        public $divBanks = [500, 1000, 2000, 5000];
         public static function boot()
         {
             parent::boot();
         }
+        public $allBet = 0;
         public function get_values($key, $add_empty = false, $add_value = false)
         {
             $arr = Game::$values[$key];
@@ -731,11 +733,25 @@ namespace VanguardLTE
                 {
                     return 0;
                 }
-                return $bank->bank;
+                for($k = 0; $k < 4; $k++){
+                    if( $this->allBet <= $this->divBanks[$k]){
+                        return $bank->{'bank_0'.($k+1)};
+                    }
+                }
+                return $bank->bank_05;
             }
             if( $this->gamebank != null && $this->game_bank ) 
             {
-                return $this->game_bank->{$this->gamebank};
+                if($this->gamebank == 'slots'){
+                    for($k = 0; $k < 4; $k++){
+                        if( $this->allBet <= $this->divBanks[$k]){
+                            return $this->game_bank->{'slots_0'.($k+1)};
+                        }
+                    }
+                    return $this->game_bank->slots_05;
+                }else{
+                    return $this->game_bank->{$this->gamebank};
+                }
             }
             return 0;
         }
@@ -743,6 +759,13 @@ namespace VanguardLTE
         {
             if( $this->gamebank != null || $slotState == 'bonus' ) 
             {
+                $bank_index = 5;
+                for($k = 0; $k < 4; $k++){
+                    if( $this->allBet <= $this->divBanks[$k]){
+                        $bank_index = $k+1;
+                        break;
+                    }
+                }
                 if( $slotState == 'bonus' ) 
                 {
                     //$gamebank = 'bonus';
@@ -753,30 +776,33 @@ namespace VanguardLTE
                     }
                     if( $type == 'inc' ) 
                     {
-                        if ($bank->max_bank!=0 && $bank->bank + $balance > $bank->max_bank)
-                        {
-                            $bank->update(['bank' => $bank->max_bank]);
-                        }
-                        else {
-                            $bank->increment('bank', $balance);
-                        }
+                        // if ($bank->max_bank!=0 && $bank->bank + $balance > $bank->max_bank)
+                        // {
+                        //     $bank->update(['bank' => $bank->max_bank]);
+                        // }
+                        // else {
+                            $bank->increment(('bank_0' . $bank_index), $balance);
+                        // }
                     }
                     if( $type == 'dec' ) 
                     {
-                        $bank->decrement('bank', $balance);
+                        $bank->decrement(('bank_0' . $bank_index), $balance);
                     }
                     if( $type == 'update' ) 
                     {
-                        if ($bank->max_bank!=0 &&  $balance > $bank->max_bank)
-                        {
-                            $balance = $bank->max_bank;
-                        }
-                        $bank->update(['bank' => $balance]);
+                        // if ($bank->max_bank!=0 &&  $balance > $bank->max_bank)
+                        // {
+                        //     $balance = $bank->max_bank;
+                        // }
+                        $bank->update([('bank_0' . $bank_index) => $balance]);
                     }
                     return;
                 }
                 $bank = $this->game_bank;
                 $gamebank = $this->gamebank;
+                if($gamebank == 'slots'){
+                    $gamebank = $gamebank . '_0' . $bank_index;
+                }
                 if( !$bank ) 
                 {
                     $bank = GameBank::create(['shop_id' => $this->shop_id]);

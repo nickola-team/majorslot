@@ -29,7 +29,16 @@ namespace VanguardLTE\Games\MasterJokerPM
             {
                 return '';
             }
-            $slotEvent['slotEvent'] = $slotEvent['action'];
+            $slotEvent['slotEvent'] = $slotEvent['action']; 
+
+            if($slotEvent['slotEvent'] == 'doSpin' && isset($slotEvent['c'])) 
+            { 
+               $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $slotEvent['c']); 
+               $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 1); 
+            } 
+            $slotSettings->SetBet(); 
+
+
             if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
                 $lastEvent = $slotSettings->GetHistory();

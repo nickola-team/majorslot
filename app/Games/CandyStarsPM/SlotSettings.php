@@ -674,6 +674,20 @@ namespace VanguardLTE\Games\CandyStarsPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'Bet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Bet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+
+
         public function GetReelStrips($winType, $bet)
         {
             // if($fsmax > 0){
@@ -704,7 +718,7 @@ namespace VanguardLTE\Games\CandyStarsPM
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 35);    
+                        $stacks = $stacks->where('odd', '<=', 10);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

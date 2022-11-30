@@ -29,6 +29,12 @@ namespace VanguardLTE\Games\TheDogHousePM
                 return '';
             }
             $slotEvent['slotEvent'] = $slotEvent['action'];
+
+            if($slotEvent['slotEvent'] == 'doSpin' && isset($slotEvent['c'])){
+                $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $slotEvent['c']);
+            }
+            $slotSettings->SetBet();
+
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');

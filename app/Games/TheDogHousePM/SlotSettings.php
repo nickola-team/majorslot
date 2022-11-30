@@ -723,5 +723,14 @@ namespace VanguardLTE\Games\TheDogHousePM
             $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
             return json_decode($stack, true);
         }
+        public function SetBet(){
+            if($this->GetGameData($this->slotId . 'Bet') == null){
+                $this->SetGameData($this->slotId . 'Bet', 0);
+            }
+            if($this->GetGameData($this->slotId . 'Lines') == null){
+                $this->SetGameData($this->slotId . 'Lines', 0);
+            }
+            $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines');
+        }
     }
 }

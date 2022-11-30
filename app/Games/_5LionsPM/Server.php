@@ -33,7 +33,16 @@ namespace VanguardLTE\Games\_5LionsPM
             $LASTSPIN = $slotSettings->GetHistory();
             // $LASTSPIN = null;
 
-            $slotEvent['slotEvent'] = $slotEvent['action'];
+            $slotEvent['slotEvent'] = $slotEvent['action']; 
+
+            if($slotEvent['slotEvent'] == 'doSpin' && isset($slotEvent['c'])) 
+            { 
+               $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $slotEvent['c']);      
+               $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 50);
+            } 
+            $slotSettings->SetBet(); 
+
+
 
             if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
