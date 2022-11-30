@@ -29,7 +29,15 @@ namespace VanguardLTE\Games\MysticChiefPM
             {
                 return '';
             }
-            $slotEvent['slotEvent'] = $slotEvent['action'];
+            $slotEvent['slotEvent'] = $slotEvent['action']; 
+
+            if($slotEvent['slotEvent'] == 'doSpin' && isset($slotEvent['c'])) 
+            { 
+               $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $slotEvent['c']); 
+            } 
+            $slotSettings->SetBet(); 
+
+
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"' . $slotSettings->GetBalance() . '"}';

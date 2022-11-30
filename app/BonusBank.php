@@ -7,6 +7,11 @@ namespace VanguardLTE
         protected $fillable = [
             'master_id', 
             'bank', 
+            'bank_01',     // <= 500
+            'bank_02',     // <= 1000
+            'bank_03',     // <= 2000
+            'bank_04',     // <= 5000
+            'bank_05',     // > 5000
             'game_id',
             'max_bank'
         ];

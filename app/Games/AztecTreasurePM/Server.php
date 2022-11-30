@@ -28,7 +28,15 @@ namespace VanguardLTE\Games\AztecTreasurePM
             {
                 return '';
             }
-            $slotEvent['slotEvent'] = $slotEvent['action'];
+            $slotEvent['slotEvent'] = $slotEvent['action']; 
+
+            if($slotEvent['slotEvent'] == 'doSpin' && isset($slotEvent['c'])) 
+            { 
+               $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $slotEvent['c']); 
+            } 
+            $slotSettings->SetBet(); 
+
+
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
@@ -50,7 +58,7 @@ namespace VanguardLTE\Games\AztecTreasurePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
-                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 10);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 20);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [9,3,11,6,6,11,5,9,11,4,6,12,4,9,9,6,8,11,9,9,1,3,11,9,9,4,3,8,4,4]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog

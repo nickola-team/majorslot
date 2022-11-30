@@ -1122,6 +1122,20 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'Bet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Bet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+
+
         public function GetReelStrips($winType, $slotEvent, $slotReelId, $scattercount)
         {
             $slotReelId = $slotReelId + 1;
