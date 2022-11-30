@@ -75,7 +75,7 @@
                             </div>
                             <label for="maxslot4" class="col-md-2 col-form-label form-control-label text-center">최대슬롯환수금4</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="maxslot" value="{{ $maxslot4?$maxslot4->value:'' }}" placeholder="">
+                                <input type="text" class="form-control" name="maxslot4" value="{{ $maxslot4?$maxslot4->value:'' }}" placeholder="">
                             </div>
                             <div class="col-md-1">
                             </div>
