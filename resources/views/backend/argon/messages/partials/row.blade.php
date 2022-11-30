@@ -41,9 +41,15 @@
         @endif
     </td>
     <td>
+        @if ($msg->writer)
         <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" data-id="{{$msg->id}}" data-writer="{{$msg->writer->role_id>auth()->user()->role_id?'총본사':$msg->writer->username}}" data-parent="{{$msg->writer->role_id>auth()->user()->role_id?'총본사':$msg->writer->parents(auth()->user()->role_id-1)}}" data-title="{{$msg->title}}" onclick="viewMsg(this);">
             {{$msg->title}}
         </a>
+        @else
+        <a class="newMsg viewMsg" href="#" data-toggle="modal" data-target="#openMsgModal" data-msg="{{ $msg->content }}" data-id="{{$msg->id}}" data-writer="Unknown" data-parent="Unknown" data-title="{{$msg->title}}" onclick="viewMsg(this);">
+            {{$msg->title}}
+        </a>
+        @endif
     </td>
 	<td>{{ $msg->created_at }}</td>
     <td>{{ $msg->read_at??'읽지않음' }}</td>
