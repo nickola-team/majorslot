@@ -453,12 +453,30 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $gamebank = $gamebank->paginate(20);
 
-            $minslot = \VanguardLTE\Settings::where('key', 'minslot')->first();
-            $maxslot = \VanguardLTE\Settings::where('key', 'maxslot')->first();
-            $minbonus = \VanguardLTE\Settings::where('key', 'minbonus')->first();
-            $maxbonus = \VanguardLTE\Settings::where('key', 'maxbonus')->first();
+            $minslot1 = \VanguardLTE\Settings::where('key', 'minslot1')->first();
+            $maxslot1 = \VanguardLTE\Settings::where('key', 'maxslot1')->first();
+            $minslot2 = \VanguardLTE\Settings::where('key', 'minslot2')->first();
+            $maxslot2 = \VanguardLTE\Settings::where('key', 'maxslot2')->first();
+            $minslot3 = \VanguardLTE\Settings::where('key', 'minslot3')->first();
+            $maxslot3 = \VanguardLTE\Settings::where('key', 'maxslot3')->first();
+            $minslot4 = \VanguardLTE\Settings::where('key', 'minslot4')->first();
+            $maxslot4 = \VanguardLTE\Settings::where('key', 'maxslot4')->first();
+            $minslot5 = \VanguardLTE\Settings::where('key', 'minslot5')->first();
+            $maxslot5 = \VanguardLTE\Settings::where('key', 'maxslot5')->first();
+
+            $minbonus1 = \VanguardLTE\Settings::where('key', 'minbonus1')->first();
+            $maxbonus1 = \VanguardLTE\Settings::where('key', 'maxbonus1')->first();
+            $minbonus2 = \VanguardLTE\Settings::where('key', 'minbonus2')->first();
+            $maxbonus2 = \VanguardLTE\Settings::where('key', 'maxbonus2')->first();
+            $minbonus3 = \VanguardLTE\Settings::where('key', 'minbonus3')->first();
+            $maxbonus3 = \VanguardLTE\Settings::where('key', 'maxbonus3')->first();
+            $minbonus4 = \VanguardLTE\Settings::where('key', 'minbonus4')->first();
+            $maxbonus4 = \VanguardLTE\Settings::where('key', 'maxbonus4')->first();
+            $minbonus5 = \VanguardLTE\Settings::where('key', 'minbonus5')->first();
+            $maxbonus5 = \VanguardLTE\Settings::where('key', 'maxbonus5')->first();
+
             $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
-            return view('backend.argon.game.bank', compact('gamebank','bonusbank', 'minslot','maxslot','minbonus','maxbonus','reset_bank'));
+            return view('backend.argon.game.bank', compact('gamebank','bonusbank', 'minslot1','maxslot1','minslot2','maxslot2','minslot3','maxslot3','minslot4','maxslot4','minslot5','maxslot5','minbonus1','maxbonus1','minbonus2','maxbonus2','minbonus3','maxbonus3','minbonus4','maxbonus4','minbonus5','maxbonus5','reset_bank'));
         }
         public function game_betlimit(\Illuminate\Http\Request $request)
         {
