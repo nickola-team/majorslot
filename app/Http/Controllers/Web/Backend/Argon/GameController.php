@@ -486,6 +486,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.game.betlimit', compact('betLimits'));
         }
 
+
         public function game_betlimitupdate(\Illuminate\Http\Request $request)
         {
             $data = $request->all();
@@ -528,6 +529,74 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             return redirect()->back()->withSuccess(['배팅한도가 업데이트되었습니다']);
         }
+
+        public function game_gactable(\Illuminate\Http\Request $request)
+        {
+            $gacstatTable = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getgamelist('gvo');
+            $providerinfo = \VanguardLTE\ProviderInfo::where('provider','gacclose')->where('user_id', auth()->user()->id)->first();
+            $gacclosed = [];
+            if ($providerinfo)
+            {
+                $gacclosed = json_decode($providerinfo->config, true);
+            }
+            $gactables = [];
+            foreach ($gacstatTable as $table )
+            {
+                if (in_array($table['gamecode'], $gacclosed))
+                {
+                    $table['view'] = 0;
+                }
+                else
+                {
+                    $table['view'] = 1;
+                }
+                $gactables[] = $table;
+            }
+            return view('backend.argon.game.gactable', compact('gactables'));
+        }
+
+        public function game_gactableupdate(\Illuminate\Http\Request $request)
+        {
+            $table = $request->table;
+            $view = $request->view;
+
+            $providerinfo = \VanguardLTE\ProviderInfo::where('provider','gacclose')->where('user_id', auth()->user()->id)->first();
+            $gacclosed = [];
+            if ($providerinfo)
+            {
+                $gacclosed = json_decode($providerinfo->config, true);
+            }
+            if ($view == 1)
+            {
+                $gacclosed = array_diff($gacclosed, array($table));
+            }
+            else
+            {
+                $gacclosed[] = $table;
+            }
+            if ($providerinfo)
+            {
+                if (count($gacclosed) > 0)
+                {
+                    $providerinfo->update(['config' => json_encode($gacclosed)]);
+                }
+                else
+                {
+                    $providerinfo->delete();
+                }
+            }
+            else
+            {
+                \VanguardLTE\ProviderInfo::create([
+                    'user_id' => auth()->user()->id,
+                    'provider' => 'gacclose',
+                    'config' => json_encode($gacclosed)
+                ]);
+            }
+            
+            return redirect()->back()->withSuccess(['테이블상태를 업데이트 했습니다']);
+        }
+
         public function game_missrole(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();

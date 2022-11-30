@@ -477,6 +477,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.game.betlimitupdate',
             'uses' => 'GameController@game_betlimitupdate',
         ]);
+        Route::get('game/gactable', [
+            'as' => 'argon.game.gactable',
+            'uses' => 'GameController@game_gactable',
+        ]);
+
+        Route::get('game/gactable/update', [
+            'as' => 'argon.game.gactable.update',
+            'uses' => 'GameController@game_gactableupdate',
+        ]);
 
         Route::get('game/missrole', [
             'as' => 'argon.game.missrole',
