@@ -1031,7 +1031,7 @@ namespace VanguardLTE
                     $gameObject = new $object();
                     if (method_exists($gameObject, 'gameDetail'))
                     {
-                        $res = $gameObject->gameDetail($statgame);
+                        $res = $gameObject->gameDetail($stat_game);
                     }
                     else
                     {
