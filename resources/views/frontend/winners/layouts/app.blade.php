@@ -679,7 +679,7 @@
 											<p>등록계좌정보 :</p>
 										</div>
 										<div class="infos">
-											<p>:****:***</p>
+											<p>{{Auth::check()?Auth::user()->bankInfo(true):''}}</p>
 										</div>
 									</div>
 									<div class="form-group">
@@ -951,7 +951,7 @@
 										<p>계좌번호</p>
 									</div>
 									<div class="infos">
-										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()?auth()->user()->account_no:''}}" data-parsley-id="1905" disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()?('***'.substr(auth()->user()->account_no,-2)):''}}" data-parsley-id="1905" disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
 									</div>
 								</div>
               <div class="form-group">
@@ -959,7 +959,7 @@
                   <p>입금자명</p>
                 </div>
                 <div class="infos">
-                  <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()?auth()->user()->recommender:''}}" data-parsley-id="0017" disabled><ul class="parsley-errors-list" id="parsley-id-0017" ></ul>
+                  <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()?(mb_substr(auth()->user()->recommender,0,1).'***'):''}}" data-parsley-id="0017" disabled><ul class="parsley-errors-list" id="parsley-id-0017" ></ul>
                 </div>
               </div>
               <div class="form-group">
@@ -1050,7 +1050,7 @@
               <p>계좌번호</p>
             </div>
             <div class="infos">
-              <input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()? auth()->user()->account_no : ''}}" data-parsley-id="1905" disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+              <input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()? ('***'.substr(auth()->user()->account_no,-2)) : ''}}" data-parsley-id="1905" disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
             </div>
           </div>
           <div class="form-group">
@@ -1058,7 +1058,7 @@
               <p>출금자명</p>
             </div>
             <div class="infos">
-              <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()? auth()->user()->recommender:''}}" data-parsley-id="0017" disabled><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+              <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()? (mb_substr(auth()->user()->recommender,0,1).'***'):''}}" data-parsley-id="0017" disabled><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
             </div>
           </div>
           <div class="form-group">
