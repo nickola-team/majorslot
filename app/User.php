@@ -1020,7 +1020,7 @@ namespace VanguardLTE
             if ($type == 'pball') //powerball deal
             {
                 $res = null;
-                $gameInfo = $statgame->game_item;
+                $gameInfo = $stat_game->game_item;
                 if ($gameInfo)
                 {
                     $object = '\VanguardLTE\Games\\' . $gameInfo->name . '\Server';
