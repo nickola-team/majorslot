@@ -379,9 +379,6 @@
               </button>
               <img class="plate" src="/frontend/winners/img/bg/slot-plate.png">
             </div>
-            <div class="icon-cont">
-              <img src="/frontend/winners/img/slot-icon2/{{ $category->title }}.png" />
-            </div>
           </a>     
 
 					@endif
