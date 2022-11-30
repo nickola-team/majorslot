@@ -158,10 +158,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function gamebanks_setting(\Illuminate\Http\Request $request)
         {
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot'], ['value' => $request->minslot]);
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot'], ['value' => $request->maxslot]);
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus'], ['value' => $request->minbonus]);
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus'], ['value' => $request->maxbonus]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot1'], ['value' => $request->minslot1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot1'], ['value' => $request->maxslot1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot2'], ['value' => $request->minslot2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot2'], ['value' => $request->maxslot2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot3'], ['value' => $request->minslot3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot3'], ['value' => $request->maxslot3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot4'], ['value' => $request->minslot4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot4'], ['value' => $request->maxslot4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot5'], ['value' => $request->minslot5]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot5'], ['value' => $request->maxslot5]);
+            
+            
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus1'], ['value' => $request->minbonus1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus1'], ['value' => $request->maxbonus1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus2'], ['value' => $request->minbonus2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus2'], ['value' => $request->maxbonus2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus3'], ['value' => $request->minbonus3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus3'], ['value' => $request->maxbonus3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus4'], ['value' => $request->minbonus4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus4'], ['value' => $request->maxbonus4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus5'], ['value' => $request->minbonus5]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus5'], ['value' => $request->maxbonus5]);
+            
             \VanguardLTE\Settings::updateOrCreate(['key' => 'reset_bank'], ['value' => $request->reset_bank]);
             return redirect()->back()->withSuccess(['환수금 설정이 업데이트되었습니다.']);
         }
