@@ -534,7 +534,9 @@ namespace VanguardLTE\Games\BuffaloKingPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -595,7 +597,9 @@ namespace VanguardLTE\Games\BuffaloKingPM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isBuyFreespin = -1)
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }

@@ -256,7 +256,7 @@ namespace VanguardLTE\Games\CheekyEmperorPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
             }
@@ -296,7 +296,7 @@ namespace VanguardLTE\Games\CheekyEmperorPM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
             }
@@ -695,7 +695,7 @@ namespace VanguardLTE\Games\CheekyEmperorPM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'win'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameCheekyEmperorStack::where('id', 186)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameCheekyEmperorStack::where('id', 79361)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;

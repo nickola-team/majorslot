@@ -487,7 +487,9 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -531,7 +533,9 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '')
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
