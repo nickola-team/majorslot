@@ -30,7 +30,7 @@
                             <td><span class="text-warning">{{number_format($stat->sum,0)}}</span></td>
                             <td><span class="text-warning">{{__($stat->type)}}</span></td>
                             @endif
-                            <td>{{$stat->bankInfo()}}</td>
+                            <td>{{$stat->bankInfo(true)}}</td>
                             <td>{{$stat->created_at}}</td>
                             <td>{{\VanguardLTE\WithdrawDeposit::statMsg()[$stat->status]}}</td>
                         </tr>

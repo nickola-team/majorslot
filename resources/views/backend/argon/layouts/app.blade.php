@@ -42,6 +42,16 @@
             }
             $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notices = \VanguardLTE\Notice::where(['active' => 1])->whereIn('type', ['all','partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
+            if (auth()->user()->hasRole('admin'))
+            {
+                $msgs = \VanguardLTE\Message::where('writer_id', 0)->orderby('created_at', 'desc')->get(); //system message
+                $unreadmsgs = $msgs;
+            }
+            else
+            {
+                $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->orderby('created_at', 'desc')->get();
+                $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get(); //unread message
+            }
         ?>
         @if (count($notices)>0)
             @foreach ($notices as $notice)
@@ -81,9 +91,28 @@
                                 <span aria-hidden="true">&times;</span></button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <span id="msgContent"></span>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table align-items-left table-flush">
+                                <tbody>
+                                    <tr>
+                                        <td>발신자</td>
+                                        <td><span id="msgWriter"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>상위파트너</td>
+                                        <td><span id="msgWriterParent"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>제목</td>
+                                        <td><span id="msgTitle"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>내용</td>
+                                        <td><span id="msgContent"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary"  data-dismiss="modal">확인</button>
@@ -126,6 +155,9 @@
                 $("#notification{{$notice->id}}").show();
             }
             @endforeach
+            @endif
+            @if (count($unreadmsgs) > 0)
+                $("#msgbutton").click();
             @endif
             @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
             var updateTime = 3000;
@@ -205,6 +237,12 @@
                             {
                                 $('#rateText').text('');
                             }
+
+                            if (inouts['msg'] > 0)
+                            {
+                                $("#msgbutton").click();
+                            }
+                            $("#unreadmsgcount").text(inouts['msg']);
                             timeout = setTimeout(updateInOutRequest, updateTime);
                             if (callback != null) callback();
                         },
@@ -257,27 +295,25 @@
             $("#" + notice).hide();
         }
 
-        $(function() {
-            $('.viewMsg').click(function(event){
-                if( $(event.target).is('.newMsg') ){
-                    var content = $(event.target).attr('data-msg');
-                    var idx = $(event.target).attr('data-id');
-                }else{
-                    var content = $(event.target).parents('.newMsg').attr('data-msg');
-                    var idx = $(event.target).parents('.newMsg').attr('data-id');
-                }
+        function viewMsg(obj) {
+                var content = obj.getAttribute('data-msg');
+                var writer = obj.getAttribute('data-writer');
+                var parent = obj.getAttribute('data-parent');
+                var title = obj.getAttribute('data-title');
+
+                var idx = obj.getAttribute('data-id');
                 $.ajax({
-					url: "api/readMsg",
+					url: "/api/readMsg",
 					type: "POST",
-					data: {'id': idx },
-					dataType: 'json',
+					data: {id: idx },
 					success: function (data) {
                     }
 				});
                 $('#msgContent').html(content);
-                
-            });
-        });
+                $('#msgWriter').html(writer);
+                $('#msgWriterParent').html(parent);
+                $('#msgTitle').html(title);
+        }
         @endif
 
 

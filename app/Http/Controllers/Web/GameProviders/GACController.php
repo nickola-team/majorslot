@@ -238,6 +238,31 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
+            $hirechyUsers = [];
+            $parent = $user;
+            while ($parent)
+            {
+                $hirechyUsers[] = $parent->id;
+                $parent = $parent->referral;
+            }
+            $closetables = [];
+            $gaccloses = \VanguardLTE\ProviderInfo::whereIn('user_id', $hirechyUsers)->where('provider', 'gacclose')->get();
+            foreach ($gaccloses as $table)
+            {
+                $data = json_decode($table->config, true);
+                $closetables = array_merge_recursive($closetables, $data);
+            }
+            if (count($closetables) > 0 && in_array($tableName, $closetables))
+            {
+                return response()->json([
+                        'result' => false,
+                        'message' => 'This table '.$tableName.' is in maintenance',
+                        'data' => [
+                            'balance' => 0,
+                        ]
+                    ]);
+            }
+
             $amount = abs($betAmount);
             
             if ($betInfo == 2) //additional betting

@@ -158,10 +158,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function gamebanks_setting(\Illuminate\Http\Request $request)
         {
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot'], ['value' => $request->minslot]);
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot'], ['value' => $request->maxslot]);
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus'], ['value' => $request->minbonus]);
-            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus'], ['value' => $request->maxbonus]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot1'], ['value' => $request->minslot1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot1'], ['value' => $request->maxslot1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot2'], ['value' => $request->minslot2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot2'], ['value' => $request->maxslot2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot3'], ['value' => $request->minslot3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot3'], ['value' => $request->maxslot3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot4'], ['value' => $request->minslot4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot4'], ['value' => $request->maxslot4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minslot5'], ['value' => $request->minslot5]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxslot5'], ['value' => $request->maxslot5]);
+            
+            
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus1'], ['value' => $request->minbonus1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus1'], ['value' => $request->maxbonus1]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus2'], ['value' => $request->minbonus2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus2'], ['value' => $request->maxbonus2]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus3'], ['value' => $request->minbonus3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus3'], ['value' => $request->maxbonus3]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus4'], ['value' => $request->minbonus4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus4'], ['value' => $request->maxbonus4]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'minbonus5'], ['value' => $request->minbonus5]);
+            \VanguardLTE\Settings::updateOrCreate(['key' => 'maxbonus5'], ['value' => $request->maxbonus5]);
+            
             \VanguardLTE\Settings::updateOrCreate(['key' => 'reset_bank'], ['value' => $request->reset_bank]);
             return redirect()->back()->withSuccess(['환수금 설정이 업데이트되었습니다.']);
         }
@@ -453,12 +472,30 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $gamebank = $gamebank->paginate(20);
 
-            $minslot = \VanguardLTE\Settings::where('key', 'minslot')->first();
-            $maxslot = \VanguardLTE\Settings::where('key', 'maxslot')->first();
-            $minbonus = \VanguardLTE\Settings::where('key', 'minbonus')->first();
-            $maxbonus = \VanguardLTE\Settings::where('key', 'maxbonus')->first();
+            $minslot1 = \VanguardLTE\Settings::where('key', 'minslot1')->first();
+            $maxslot1 = \VanguardLTE\Settings::where('key', 'maxslot1')->first();
+            $minslot2 = \VanguardLTE\Settings::where('key', 'minslot2')->first();
+            $maxslot2 = \VanguardLTE\Settings::where('key', 'maxslot2')->first();
+            $minslot3 = \VanguardLTE\Settings::where('key', 'minslot3')->first();
+            $maxslot3 = \VanguardLTE\Settings::where('key', 'maxslot3')->first();
+            $minslot4 = \VanguardLTE\Settings::where('key', 'minslot4')->first();
+            $maxslot4 = \VanguardLTE\Settings::where('key', 'maxslot4')->first();
+            $minslot5 = \VanguardLTE\Settings::where('key', 'minslot5')->first();
+            $maxslot5 = \VanguardLTE\Settings::where('key', 'maxslot5')->first();
+
+            $minbonus1 = \VanguardLTE\Settings::where('key', 'minbonus1')->first();
+            $maxbonus1 = \VanguardLTE\Settings::where('key', 'maxbonus1')->first();
+            $minbonus2 = \VanguardLTE\Settings::where('key', 'minbonus2')->first();
+            $maxbonus2 = \VanguardLTE\Settings::where('key', 'maxbonus2')->first();
+            $minbonus3 = \VanguardLTE\Settings::where('key', 'minbonus3')->first();
+            $maxbonus3 = \VanguardLTE\Settings::where('key', 'maxbonus3')->first();
+            $minbonus4 = \VanguardLTE\Settings::where('key', 'minbonus4')->first();
+            $maxbonus4 = \VanguardLTE\Settings::where('key', 'maxbonus4')->first();
+            $minbonus5 = \VanguardLTE\Settings::where('key', 'minbonus5')->first();
+            $maxbonus5 = \VanguardLTE\Settings::where('key', 'maxbonus5')->first();
+
             $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
-            return view('backend.argon.game.bank', compact('gamebank','bonusbank', 'minslot','maxslot','minbonus','maxbonus','reset_bank'));
+            return view('backend.argon.game.bank', compact('gamebank','bonusbank', 'minslot1','maxslot1','minslot2','maxslot2','minslot3','maxslot3','minslot4','maxslot4','minslot5','maxslot5','minbonus1','maxbonus1','minbonus2','maxbonus2','minbonus3','maxbonus3','minbonus4','maxbonus4','minbonus5','maxbonus5','reset_bank'));
         }
         public function game_betlimit(\Illuminate\Http\Request $request)
         {
@@ -485,6 +522,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             return view('backend.argon.game.betlimit', compact('betLimits'));
         }
+
 
         public function game_betlimitupdate(\Illuminate\Http\Request $request)
         {
@@ -528,6 +566,74 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             return redirect()->back()->withSuccess(['배팅한도가 업데이트되었습니다']);
         }
+
+        public function game_gactable(\Illuminate\Http\Request $request)
+        {
+            $gacstatTable = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getgamelist('gvo');
+            $providerinfo = \VanguardLTE\ProviderInfo::where('provider','gacclose')->where('user_id', auth()->user()->id)->first();
+            $gacclosed = [];
+            if ($providerinfo)
+            {
+                $gacclosed = json_decode($providerinfo->config, true);
+            }
+            $gactables = [];
+            foreach ($gacstatTable as $table )
+            {
+                if (in_array($table['gamecode'], $gacclosed))
+                {
+                    $table['view'] = 0;
+                }
+                else
+                {
+                    $table['view'] = 1;
+                }
+                $gactables[] = $table;
+            }
+            return view('backend.argon.game.gactable', compact('gactables'));
+        }
+
+        public function game_gactableupdate(\Illuminate\Http\Request $request)
+        {
+            $table = $request->table;
+            $view = $request->view;
+
+            $providerinfo = \VanguardLTE\ProviderInfo::where('provider','gacclose')->where('user_id', auth()->user()->id)->first();
+            $gacclosed = [];
+            if ($providerinfo)
+            {
+                $gacclosed = json_decode($providerinfo->config, true);
+            }
+            if ($view == 1)
+            {
+                $gacclosed = array_diff($gacclosed, array($table));
+            }
+            else
+            {
+                $gacclosed[] = $table;
+            }
+            if ($providerinfo)
+            {
+                if (count($gacclosed) > 0)
+                {
+                    $providerinfo->update(['config' => json_encode($gacclosed)]);
+                }
+                else
+                {
+                    $providerinfo->delete();
+                }
+            }
+            else
+            {
+                \VanguardLTE\ProviderInfo::create([
+                    'user_id' => auth()->user()->id,
+                    'provider' => 'gacclose',
+                    'config' => json_encode($gacclosed)
+                ]);
+            }
+            
+            return redirect()->back()->withSuccess(['테이블상태를 업데이트 했습니다']);
+        }
+
         public function game_missrole(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();

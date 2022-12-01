@@ -489,7 +489,9 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -533,7 +535,9 @@ namespace VanguardLTE\Games\GreatRhinoPM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '')
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -1061,6 +1065,20 @@ namespace VanguardLTE\Games\GreatRhinoPM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'Bet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Bet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+
+
         public function GetReelStrips($winType, $slotEvent, $bonusType)
         {
             $isScatter = false;

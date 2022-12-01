@@ -32,13 +32,36 @@
                                     <label class="form-control-label" for="phone">연락처</label>
                                     <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="" >
                                 </div>
-				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="deal_percent">롤링%</label>
-                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="">
+                                <div class="form-group{{ $errors->has('bank_name') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="bank_name">은행</label>
+                                    @php
+                                        $banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
+                                    @endphp
+                                    {!! Form::select('bank_name', $banks, '', ['class' => 'form-control', 'id' => 'bank_name']) !!}		
                                 </div>
-                                <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>
-                                    <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="" >
+                                <div class="form-group{{ $errors->has('account_no') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="account_no">계좌번호</label>
+                                    <input type="text" name="account_no" id="account_no" class="form-control" value="" >
+                                </div>
+                                <div class="form-group{{ $errors->has('recommender') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="recommender">예금주명</label>
+                                    <input type="text" name="recommender" id="recommender" class="form-control" value="" >
+                                </div>
+				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
+                                    <table>
+                                        <tr>
+                                            <th>슬롯롤링%</th>
+                                            <th>라이브롤링%</th>
+                                            <th>파워볼단폴롤링%</th>
+                                            <th>파워볼조합롤링%</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:3px;"><input type="text" name="deal_percent" id="deal_percent" class="form-control" value="0"></td>
+                                            <td style="padding:3px;"><input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control" value="0"></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_single_percent" id="pball_single_percent" class="form-control" value="0"></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_comb_percent" id="pball_comb_percent" class="form-control" value="0"></td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="password">비밀번호</label>

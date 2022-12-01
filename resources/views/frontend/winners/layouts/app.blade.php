@@ -307,7 +307,7 @@
         <div class="item">
           <div class="text-cont">
             <div class="inner">
-              <p class="title">Winner's Pro에 </p>
+              <p class="title">타이틀리스트에 </p>
               <p class="sub">오신것을 환영합니다.</p>
             </div>
           </div>
@@ -324,7 +324,7 @@
           <div class="text-cont">
             <div class="inner">
               <p class="title">매일매일 터지는 잭팟 !</p>
-              <p class="sub"> Winner's Pro와 함께하세요 !</p>
+              <p class="sub"> 타이틀리스트와 함께하세요 !</p>
             </div>
           </div>
         </div>
@@ -344,7 +344,7 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">위너스 SLOT</span>
+      <span class="a_style">타이틀리스트 GAMES</span>
     </div>
 
     <div class="slot-container">
@@ -358,7 +358,7 @@
             @if ($unreadmsg>0)
             <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('쪽지를 확인하세요.');">
             @else
-            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
             @endif
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('로그인이 필요합니다');">
@@ -378,9 +378,6 @@
               @endif
               </button>
               <img class="plate" src="/frontend/winners/img/bg/slot-plate.png">
-            </div>
-            <div class="icon-cont">
-              <img src="/frontend/winners/img/slot-icon2/{{ $category->title }}.png" />
             </div>
           </a>     
 
@@ -430,7 +427,7 @@
       </div>
     </div>
     <div class="copyright-cont">
-        <span>ⓒ COPYRIGHT  Winner's Pro  2021 ALL RIGHTS RESERVED</span>
+        <span>ⓒ COPYRIGHT  TitleList  2022 ALL RIGHTS RESERVED</span>
     </div>
 	</div>
 
@@ -544,39 +541,6 @@
 								</div>
 								<div class="form-group">
 									<div class="labels">
-										<p>은행명</p>
-									</div>
-									<div class="infos">
-										<label>
-											<select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="5166">
-												<option value="">--은행 선택--</option>
-                        @foreach(\VanguardLTE\User::$values["banks"] AS $val)
-                          @if($val != "")
-                            <option value="{{$val}}">{{$val}}</option>
-                          @endif
-                        @endforeach
-											</select><ul class="parsley-errors-list" id="parsley-id-5166"></ul>
-										</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="labels">
-										<p>계좌번호</p>
-									</div>
-									<div class="infos">
-										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="labels">
-										<p>예금주</p>
-									</div>
-									<div class="infos">
-										<input id="mb_account_name" class="form-control" data-parsley-trigger="change" data-parsley-pattern="/^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]+$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="12" data-parsley-minlength="2" data-parsley-minlength-message="3 자 이상 입력하세요." data-parsley-maxlength="12" data-parsley-maxlength-message="12 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="a_name" type="text" value="" data-parsley-id="0047"><ul class="parsley-errors-list" id="parsley-id-0047"></ul>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="labels">
 										<p>추천인코드(부여받으신 코드 입력)</p>
 									</div>
 									<div class="infos">
@@ -679,7 +643,7 @@
 											<p>등록계좌정보 :</p>
 										</div>
 										<div class="infos">
-											<p>:****:***</p>
+											<p>{{Auth::check()?Auth::user()->bankInfo(true):''}}</p>
 										</div>
 									</div>
 									<div class="form-group">
@@ -941,12 +905,7 @@
 									<div class="infos">
 										<label>
 											<select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="5166" value="">
-												<option value="">--은행 선택--</option>
-                        @foreach(\VanguardLTE\User::$values["banks"] AS $val)
-                          @if($val != "")
-                            <option value="{{$val}}" {{Auth::check() && auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
-                          @endif
-                        @endforeach
+                        <option value="{{Auth::check()?auth()->user()->bank_name:''}}" selected>{{Auth::check()?auth()->user()->bank_name:''}}</option>
 											</select><ul class="parsley-errors-list" id="parsley-id-5166"></ul>
 										</label>
 									</div>
@@ -956,7 +915,7 @@
 										<p>계좌번호</p>
 									</div>
 									<div class="infos">
-										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()?auth()->user()->account_no:''}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()?('***'.substr(auth()->user()->account_no,-2)):''}}" data-parsley-id="1905" disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
 									</div>
 								</div>
               <div class="form-group">
@@ -964,7 +923,7 @@
                   <p>입금자명</p>
                 </div>
                 <div class="infos">
-                  <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()?auth()->user()->recommender:''}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+                  <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()?(mb_substr(auth()->user()->recommender,0,1).'***'):''}}" data-parsley-id="0017" disabled><ul class="parsley-errors-list" id="parsley-id-0017" ></ul>
                 </div>
               </div>
               <div class="form-group">
@@ -1045,12 +1004,7 @@
             <div class="infos">
               <label>
                 <select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="7298">
-                  <option value="">--은행 선택--</option>
-                  @foreach(\VanguardLTE\User::$values["banks"] AS $val)
-                    @if($val != "")
-                    <option value="{{$val}}" {{Auth::check() && auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
-                    @endif
-                  @endforeach
+                  <option value="{{Auth::check()?auth()->user()->bank_name:''}}" selected>{{Auth::check()?auth()->user()->bank_name:''}}</option>
                 </select><ul class="parsley-errors-list" id="parsley-id-7298"></ul>
               </label>
             </div>
@@ -1060,7 +1014,7 @@
               <p>계좌번호</p>
             </div>
             <div class="infos">
-              <input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()? auth()->user()->account_no : ''}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+              <input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()? ('***'.substr(auth()->user()->account_no,-2)) : ''}}" data-parsley-id="1905" disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
             </div>
           </div>
           <div class="form-group">
@@ -1068,7 +1022,15 @@
               <p>출금자명</p>
             </div>
             <div class="infos">
-              <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()? auth()->user()->recommender:''}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+              <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()? (mb_substr(auth()->user()->recommender,0,1).'***'):''}}" data-parsley-id="0017" disabled><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="labels">
+              <p>출금비밀번호</p>
+            </div>
+            <div class="infos">
+              <input id="confirmation_token" class="form-control"  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="password" value="" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0019"></ul>
             </div>
           </div>
 
@@ -1603,14 +1565,16 @@ var userName = "";
 
 
   $(document).ready(function() {
-    var prevTime = localStorage.getItem("hide_notification");
-    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-      $("#notification").hide();
-    }
+      var prevTime = localStorage.getItem("hide_notification");
+      if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+        $("#notification").hide();
+      }
+  @if ($unreadmsg>0)
+      alert_ok('새로운 쪽지가 도착했습니다');
+  @endif
   });
 
   
-<!--
 function setCookie( name, value, expiredays ) {
     var todayDate = new Date();
     todayDate.setDate( todayDate.getDate() + expiredays );

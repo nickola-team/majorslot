@@ -25,7 +25,9 @@ namespace VanguardLTE
             'slot_garant_deal', 
             'slot_miss_deal', 
             'table_garant_deal',
-            'table_miss_deal'
+            'table_miss_deal',
+            'pball_single_percent', 
+            'pball_comb_percent',
         ];
         public static $values = [
             'currency' => [

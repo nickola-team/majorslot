@@ -28,6 +28,23 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
+                        <h3 class="card-title text-primary mb-0 ">접속중 유저</h3>
+                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['online'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
                         <h3 class="card-title text-warning mb-0 ">보유금합계</h3>
                         <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['balance'])}}</span>
                     </div>
@@ -80,6 +97,18 @@
                                 <input class="form-control" type="text" value="{{Request::get('shop')}}" id="shop" name="shop">
                             </div>
                             <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">상태</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="online" name="online">
+                                    <option value="" @if (Request::get('online') == '') selected @endif>@lang('app.all')</option>
+									<option value="1" @if (Request::get('online') == 1) selected @endif> 온라인</option>
+                                </select>
+                            </div>
                             </div>
                         </div>
                             

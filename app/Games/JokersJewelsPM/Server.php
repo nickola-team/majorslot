@@ -28,7 +28,15 @@ namespace VanguardLTE\Games\JokersJewelsPM
             {
                 return '';
             }
-            $slotEvent['slotEvent'] = $slotEvent['action'];
+            $slotEvent['slotEvent'] = $slotEvent['action']; 
+
+            if($slotEvent['slotEvent'] == 'doSpin' && isset($slotEvent['c'])) 
+            { 
+               $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $slotEvent['c']); 
+            } 
+            $slotSettings->SetBet(); 
+
+
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
@@ -49,7 +57,7 @@ namespace VanguardLTE\Games\JokersJewelsPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
-                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 20);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 5);
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [8,7,4,9,8,6,7,4,9,8,3,7,7,6,6]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks

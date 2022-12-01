@@ -4,6 +4,10 @@
     ])
 
 @section('page-title',  '쪽지')
+@push('css')
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@endpush
 
 @section('content')
 <div class="container-fluid">
@@ -74,34 +78,45 @@
                     <h3 class="mb-0">쪽지</h3>
                 </div>
                 <div class="table-responsive">
-					<table class="table align-items-center table-flush">
+                    <table class="table align-items-center table-flush" id="msglist">
 						<thead class="thead-light">
 						<tr>
-							<th scope="col">수신아이디</th>
+							<th scope="col">발신자</th>
+                            <th scope="col">수신자</th>
+                            <th scope="col">타입</th>
 							<th scope="col">제목</th>
-							<th scope="col">등록날짜</th>
-							<th scope="col">읽은날짜</th>
-							@if (auth()->user()->hasRole('admin'))
-							<th scope="col">작성자</th>
-							@endif
+							<th scope="col">작성시간</th>
+							<th scope="col">읽은시간</th>
+                            <th scope="col">상태</th>
 							<th scope="col"></th>
 						</tr>
 						</thead>
 						<tbody>
-						@if (count($msgs))
-							@foreach ($msgs as $msg)
-								@include('backend.argon.messages.partials.row')
-							@endforeach
-						@else
-							<tr><td colspan='9'>No Data</td></tr>
-						@endif
+                            @include('backend.argon.messages.partials.childs')
 						</tbody>
 					</table>
 				</div>
-
+                <!-- Card footer -->
+				<div class="card-footer py-4">
+					{{ $msgs->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 @stop
+
+
+@push('js')
+<script src="{{ asset('back/argon') }}/js/jquery.treetable.js"></script>
+<script>
+    var table = $("#msglist");
+
+    $("#msglist").treetable({ 
+        expandable: true
+        });
+
+    $("#msglist").treetable("expandAll");
+</script>
+@endpush

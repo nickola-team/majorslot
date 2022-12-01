@@ -495,7 +495,9 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -539,7 +541,9 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isBuyFreespin = -1)
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -1127,6 +1131,20 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             }
             return [$reels, $newTumbPoses, $newTumbMuls];   // 당첨되지않은 심볼배열, 와일드 위치, 와일드 배당값
         }
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'Bet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Bet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+
+
         public function GetReelStrips($winType, $slotEvent, $slotReelId, $scattercount, $isTumb = false, $lastTumbReelCount = [0, 0, 0, 0, 0, 0])
         {
             $slotReelId = $slotReelId + 1;

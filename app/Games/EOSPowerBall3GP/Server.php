@@ -300,7 +300,7 @@ namespace VanguardLTE\Games\EOSPowerBall3GP
                                             'bet' => $bet->bet, 
                                             'win' => $bet->win, 
                                             'game' =>  $trend->game_id, 
-                                            'type' => 'table',
+                                            'type' => 'pball',
                                             'percent' => 0, 
                                             'percent_jps' => 0, 
                                             'percent_jpg' => 0, 
@@ -342,7 +342,7 @@ namespace VanguardLTE\Games\EOSPowerBall3GP
 
         }
         public function gameDetail(\VanguardLTE\StatGame $stat)
-        {
+    {
             $rounds = explode('_',$stat->roundid);
             $dno = $rounds[1];
             $userbets = \VanguardLTE\GPGameBet::where([

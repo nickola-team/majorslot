@@ -6,6 +6,11 @@ namespace VanguardLTE
         protected $table = 'game_bank';
         protected $fillable = [
             'slots', 
+            'slots_01',     // <= 500
+            'slots_02',     // <= 1000
+            'slots_03',     // <= 2000
+            'slots_04',     // <= 5000
+            'slots_05',     // > 5000
             'little', 
             'table_bank', 
             'fish', 

@@ -56,7 +56,15 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 $isFreeSpin = true;
                 $pur_value = $slotEvent['pur'];
             }
-            $slotEvent['slotEvent'] = $slotEvent['action'];
+            $slotEvent['slotEvent'] = $slotEvent['action']; 
+
+            if($slotEvent['slotEvent'] == 'doSpin' && isset($slotEvent['c'])) 
+            { 
+               $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $slotEvent['c']); 
+            } 
+            $slotSettings->SetBet(); 
+
+
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
                 $Balance = $slotSettings->GetBalance();

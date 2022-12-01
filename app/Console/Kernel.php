@@ -1003,41 +1003,155 @@ namespace VanguardLTE\Console
             });
             \Artisan::command('hourly:reset_bank {masterid=0}', function ($masterid) {
                 $this->info('Begin reset game bank');
-                $minslot = \VanguardLTE\Settings::where('key', 'minslot')->first();
-                $maxslot = \VanguardLTE\Settings::where('key', 'maxslot')->first();
-                $minbonus = \VanguardLTE\Settings::where('key', 'minbonus')->first();
-                $maxbonus = \VanguardLTE\Settings::where('key', 'maxbonus')->first();
+                $minslot1 = \VanguardLTE\Settings::where('key', 'minslot1')->first();
+                $maxslot1 = \VanguardLTE\Settings::where('key', 'maxslot1')->first();
+                $minslot2 = \VanguardLTE\Settings::where('key', 'minslot2')->first();
+                $maxslot2 = \VanguardLTE\Settings::where('key', 'maxslot2')->first();
+                $minslot3 = \VanguardLTE\Settings::where('key', 'minslot3')->first();
+                $maxslot3 = \VanguardLTE\Settings::where('key', 'maxslot3')->first();
+                $minslot4 = \VanguardLTE\Settings::where('key', 'minslot4')->first();
+                $maxslot4 = \VanguardLTE\Settings::where('key', 'maxslot4')->first();
+                $minslot5 = \VanguardLTE\Settings::where('key', 'minslot5')->first();
+                $maxslot5 = \VanguardLTE\Settings::where('key', 'maxslot5')->first();
+
+                $minbonus1 = \VanguardLTE\Settings::where('key', 'minbonus1')->first();
+                $maxbonus1 = \VanguardLTE\Settings::where('key', 'maxbonus1')->first();
+                $minbonus2 = \VanguardLTE\Settings::where('key', 'minbonus2')->first();
+                $maxbonus2 = \VanguardLTE\Settings::where('key', 'maxbonus2')->first();
+                $minbonus3 = \VanguardLTE\Settings::where('key', 'minbonus3')->first();
+                $maxbonus3 = \VanguardLTE\Settings::where('key', 'maxbonus3')->first();
+                $minbonus4 = \VanguardLTE\Settings::where('key', 'minbonus4')->first();
+                $maxbonus4 = \VanguardLTE\Settings::where('key', 'maxbonus4')->first();
+                $minbonus5 = \VanguardLTE\Settings::where('key', 'minbonus5')->first();
+                $maxbonus5 = \VanguardLTE\Settings::where('key', 'maxbonus5')->first();
                 // $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
                 $gamebanks = \VanguardLTE\GameBank::all();
                 foreach ($gamebanks as $bank)
                 {
                     $admin = \VanguardLTE\User::where('role_id', 9)->first();
                     try {
-                        $old = $bank->slots;
-                        if ($minslot && $bank->slots < $minslot->value)
+                        $shop = \VanguardLTE\Shop::where('id', $bank->shop_id)->first();
+
+                        $old1 = $bank->slots_01;
+                        if ($minslot1 && $bank->slots_01 < $minslot1->value)
                         {
-                            $bank->slots = $minslot->value;
+                            $bank->slots_01 = $minslot1->value;
                         }
-                        if ($maxslot && $bank->slots > $maxslot->value)
+                        if ($maxslot1 && $bank->slots_01 > $maxslot1->value)
                         {
-                            $bank->slots = $maxslot->value;
+                            $bank->slots_01 = $maxslot1->value;
                         }
-                        if ($old != $bank->slots){
-                            $shop = \VanguardLTE\Shop::where('id', $bank->shop_id)->first();
-                            if ($shop){
-                                $name = $shop->name;
-                                $bank->save();
-                                \VanguardLTE\BankStat::create([
-                                    'name' => 'Slot' . "[$name]", 
-                                    'user_id' => $admin->id, 
-                                    'type' => ($old<$bank->slots)?'add':'out', 
-                                    'sum' => abs($old - $bank->slots), 
-                                    'old' => $old, 
-                                    'new' => $bank->slots, 
-                                    'shop_id' => $bank->shop_id
-                                ]);
-                            }
+                        if ($shop && $old1 != $bank->slots_01){
+                            $name = $shop->name;
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot1' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old1<$bank->slots_01)?'add':'out', 
+                                'sum' => abs($old1 - $bank->slots_01), 
+                                'old' => $old1, 
+                                'new' => $bank->slots_01, 
+                                'shop_id' => $bank->shop_id
+                            ]);
                         }
+
+                        $old2 = $bank->slots_02;
+
+                        if ($minslot2 && $bank->slots_02 < $minslot2->value)
+                        {
+                            $bank->slots_02 = $minslot2->value;
+                        }
+                        if ($maxslot2 && $bank->slots_02 > $maxslot2->value)
+                        {
+                            $bank->slots_02 = $maxslot2->value;
+                        }
+
+                        if ($shop && $old2 != $bank->slots_02){
+                            $name = $shop->name;
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot2' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old2<$bank->slots_02)?'add':'out', 
+                                'sum' => abs($old2 - $bank->slots_02), 
+                                'old' => $old2, 
+                                'new' => $bank->slots_02, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+
+                        $old3 = $bank->slots_03;
+
+                        if ($minslot3 && $bank->slots_03 < $minslot3->value)
+                        {
+                            $bank->slots_03 = $minslot3->value;
+                        }
+                        if ($maxslot3 && $bank->slots_03 > $maxslot3->value)
+                        {
+                            $bank->slots_03 = $maxslot3->value;
+                        }
+
+                        if ($shop && $old3 != $bank->slots_03){
+                            $name = $shop->name;
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot3' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old3<$bank->slots_03)?'add':'out', 
+                                'sum' => abs($old3 - $bank->slots_03), 
+                                'old' => $old3, 
+                                'new' => $bank->slots_03, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+
+                        $old4 = $bank->slots_04;
+
+                        if ($minslot4 && $bank->slots_04 < $minslot4->value)
+                        {
+                            $bank->slots_04 = $minslot4->value;
+                        }
+                        if ($maxslot4 && $bank->slots_04 > $maxslot4->value)
+                        {
+                            $bank->slots_04 = $maxslot4->value;
+                        }
+
+                        if ($shop && $old4 != $bank->slots_04){
+                            $name = $shop->name;
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot4' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old4<$bank->slots_04)?'add':'out', 
+                                'sum' => abs($old4 - $bank->slots_04), 
+                                'old' => $old4, 
+                                'new' => $bank->slots_04, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+
+                        $old5 = $bank->slots_05;
+
+                        if ($minslot5 && $bank->slots_05 < $minslot5->value)
+                        {
+                            $bank->slots_05 = $minslot5->value;
+                        }
+                        if ($maxslot5 && $bank->slots_05 > $maxslot5->value)
+                        {
+                            $bank->slots_05 = $maxslot5->value;
+                        }
+
+                        if ($shop && $old5 != $bank->slots_05){
+                            $name = $shop->name;
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot5' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old5<$bank->slots_05)?'add':'out', 
+                                'sum' => abs($old5 - $bank->slots_05), 
+                                'old' => $old5, 
+                                'new' => $bank->slots_05, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+                        
+                        $bank->save();
+
                     }
                     catch (Exception $ex)
                     {
@@ -1050,37 +1164,163 @@ namespace VanguardLTE\Console
                 {
                     try {
                         if ($bank->game && $bank->game->advanced == 'modern'){
-                            $old = $bank->bank;
-                            if ($minbonus && $bank->bank < $minbonus->value)
+                            $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
+                            $old1 = $bank->bank_01;
+                            if ($minbonus1 && $bank->bank_01 < $minbonus1->value)
                             {
-                                $bank->bank = $minbonus->value;
+                                $bank->bank_01 = $minbonus1->value;
                             }
-                            if ($maxbonus && $bank->bank > $maxbonus->value)
+                            if ($maxbonus1 && $bank->bank_01 > $maxbonus1->value)
                             {
-                                $bank->bank = $maxbonus->value;
+                                $bank->bank_01 = $maxbonus1->value;
                             }
-                            if ($old != $bank->bank){
-                                $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
+                            if ($old1 != $bank->bank_01){
                                 if ($master)
                                 {
                                     $name = $master->username;
-                                    $bank->save();
                                     $game = 'General';
                                     if ($bank->game_id!=0)
                                     {
                                         $game = $bank->game->title;
                                     }
                                     \VanguardLTE\BankStat::create([
-                                        'name' => 'Bonus' . "[$name]-$game", 
+                                        'name' => 'Bonus1' . "[$name]-$game", 
                                         'user_id' => $admin->id, 
-                                        'type' => ($old<$bank->bank)?'add':'out', 
-                                        'sum' => abs($old - $bank->bank), 
-                                        'old' => $old, 
-                                        'new' => $bank->bank, 
+                                        'type' => ($old1<$bank->bank_01)?'add':'out', 
+                                        'sum' => abs($old1 - $bank->bank_01), 
+                                        'old' => $old1, 
+                                        'new' => $bank->bank_01, 
                                         'shop_id' => 0
                                     ]);
                                 }
                             }
+
+                            //2
+                            $old2 = $bank->bank_02;
+                            if ($minbonus2 && $bank->bank_02 < $minbonus2->value)
+                            {
+                                $bank->bank_02 = $minbonus2->value;
+                            }
+                            if ($maxbonus2 && $bank->bank_02 > $maxbonus2->value)
+                            {
+                                $bank->bank_02 = $maxbonus2->value;
+                            }
+                            if ($old2 != $bank->bank_02){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus2' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old2<$bank->bank_02)?'add':'out', 
+                                        'sum' => abs($old2 - $bank->bank_02), 
+                                        'old' => $old2, 
+                                        'new' => $bank->bank_02, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            //3
+                            $old3 = $bank->bank_03;
+                            if ($minbonus3 && $bank->bank_03 < $minbonus3->value)
+                            {
+                                $bank->bank_03 = $minbonus3->value;
+                            }
+                            if ($maxbonus3 && $bank->bank_03 > $maxbonus3->value)
+                            {
+                                $bank->bank_03 = $maxbonus3->value;
+                            }
+                            if ($old3 != $bank->bank_03){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus3' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old3<$bank->bank_03)?'add':'out', 
+                                        'sum' => abs($old3 - $bank->bank_03), 
+                                        'old' => $old3, 
+                                        'new' => $bank->bank_03, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            //4
+                            $old4 = $bank->bank_04;
+                            if ($minbonus4 && $bank->bank_04 < $minbonus4->value)
+                            {
+                                $bank->bank_04 = $minbonus4->value;
+                            }
+                            if ($maxbonus4 && $bank->bank_04 > $maxbonus4->value)
+                            {
+                                $bank->bank_04 = $maxbonus4->value;
+                            }
+                            if ($old4 != $bank->bank_04){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus4' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old4<$bank->bank_04)?'add':'out', 
+                                        'sum' => abs($old4 - $bank->bank_04), 
+                                        'old' => $old4, 
+                                        'new' => $bank->bank_04, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            //5
+                            $old5 = $bank->bank_05;
+                            if ($minbonus5 && $bank->bank_05 < $minbonus5->value)
+                            {
+                                $bank->bank_05 = $minbonus5->value;
+                            }
+                            if ($maxbonus5 && $bank->bank_05 > $maxbonus5->value)
+                            {
+                                $bank->bank_05 = $maxbonus5->value;
+                            }
+                            if ($old5 != $bank->bank_05){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus5' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old5<$bank->bank_05)?'add':'out', 
+                                        'sum' => abs($old5 - $bank->bank_05), 
+                                        'old' => $old5, 
+                                        'new' => $bank->bank_05, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            $bank->save();
+
                         }
                     }
                     catch (Exception $ex)

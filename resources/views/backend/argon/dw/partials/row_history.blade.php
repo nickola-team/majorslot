@@ -26,7 +26,9 @@
 <td><span class="text-warning">{{number_format($stat->sum,0)}}</span></td>
 <td><span class="text-warning">{{__($stat->type)}}</span></td>
 @endif
-<td>{{$stat->bankinfo()}}</td>
+<td>
+    {{$stat->bankinfo(!auth()->user()->isInOutPartner())}}
+</td>
 <td>{{$stat->created_at}}</td>
 <td>{{$stat->updated_at}}</td>
 <td>

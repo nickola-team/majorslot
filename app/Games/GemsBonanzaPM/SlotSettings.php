@@ -262,7 +262,9 @@ namespace VanguardLTE\Games\GemsBonanzaPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -302,7 +304,9 @@ namespace VanguardLTE\Games\GemsBonanzaPM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -684,6 +688,20 @@ namespace VanguardLTE\Games\GemsBonanzaPM
             $purmuls = [2000];
             return $purmuls[$pur];
         }
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'Bet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Bet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+
+
         public function GetReelStrips($winType, $pur, $bet, $ind = -1)
         {
             // if($winType == 'bonus'){

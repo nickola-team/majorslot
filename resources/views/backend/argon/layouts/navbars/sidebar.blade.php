@@ -169,6 +169,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.gactable')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    에볼루션 테이블설정
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.missrole')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     공배팅
@@ -303,6 +309,12 @@
                                 <a class="nav-link text-white" href="{{argon_route('argon.notice.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     공지
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msgtemp.list')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    템플릿
                                 </a>
                             </li>
                             @endif

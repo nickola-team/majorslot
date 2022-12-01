@@ -401,7 +401,9 @@ namespace VanguardLTE\Games\Dragons888PM
         }
         public function GetBank($slotState = '')
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -444,7 +446,9 @@ namespace VanguardLTE\Games\Dragons888PM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '')
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -830,6 +834,20 @@ namespace VanguardLTE\Games\Dragons888PM
             $spinWin = rand(1, $this->WinGamble);
             return $spinWin;
         }
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'Bet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Bet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+
+
         public function GetReelStrips($winType)
         {
             if( $winType != 'bonus' ) 

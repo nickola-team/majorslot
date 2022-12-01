@@ -151,39 +151,63 @@
                                     <label class="form-control-label" for="phone">폰연락처</label>
                                     <input type="text" name="phone" id="phone" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone', $user->phone) }}" {{$user->id != auth()->user()->id?'disabled':''}}>
                                 </div>
-                                @if ($user->id == auth()->user()->id)
+                                @if ($user->id == auth()->user()->id || auth()->user()->isInoutPartner())
                                 <div class="form-group{{ $errors->has('bank_name') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="bank_name">은행</label>
                                     @php
                                         $banks = array_combine(\VanguardLTE\User::$values['banks'], \VanguardLTE\User::$values['banks']);
                                     @endphp
-                                    {!! Form::select('bank_name', $banks, $user->bank_name ? auth()->user()->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name']) !!}		
+                                    {!! Form::select('bank_name', $banks, $user->bank_name ? $user->bank_name : '', ['class' => 'form-control', 'id' => 'bank_name', 'disabled' => !auth()->user()->isInoutPartner()]) !!}		
                                 </div>
+                                <?php
+                                    $accno = $user->account_no;
+                                    $recommender = $user->recommender;
+                                    if (!$user->isInOutPartner() && $user->id == auth()->user()->id)
+                                    {
+                                        if ($accno != '')
+                                        {
+                                            $maxlen = strlen($accno)>1?2:1;
+                                            $accno = '******' . substr($accno, -$maxlen);
+                                        }
+                                        if ($recommender != '')
+                                        {
+                                            $recommender = mb_substr($recommender, 0, 1) . '***';
+                                        }
+                                    }
+                                ?>
                                 <div class="form-group{{ $errors->has('account_no') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="account_no">계좌번호</label>
-                                    <input type="text" name="account_no" id="account_no" class="form-control{{ $errors->has('account_no') ? ' is-invalid' : '' }}" value="{{ old('account_no', $user->account_no) }}">
+                                    <input type="text" name="account_no" id="account_no" class="form-control{{ $errors->has('account_no') ? ' is-invalid' : '' }}" value="{{ $accno }}"  {{auth()->user()->isInoutPartner()?'':'disabled'}}>
                                 </div>
                                 <div class="form-group{{ $errors->has('recommender') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="recommender">예금주명</label>
-                                    <input type="text" name="recommender" id="recommender" class="form-control{{ $errors->has('recommender') ? ' is-invalid' : '' }}" value="{{ old('recommender', $user->recommender) }}">
+                                    <input type="text" name="recommender" id="recommender" class="form-control{{ $errors->has('recommender') ? ' is-invalid' : '' }}" value="{{ $recommender }}"  {{auth()->user()->isInoutPartner()?'':'disabled'}}>
                                 </div>
                                 @endif
 
-				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="deal_percent">롤링%</label>
-                                    <input type="text" name="deal_percent" id="deal_percent" class="form-control{{ $errors->has('deal_percent') ? ' is-invalid' : '' }}" value="{{ old('deal_percent', $user->hasRole('manager')?$user->shop->deal_percent:$user->deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
+				                <div class="form-group">
+                                    <table>
+                                        <tr>
+                                            <th>슬롯롤링%</th>
+                                            <th>라이브롤링%</th>
+                                            <th>파워볼단폴롤링%</th>
+                                            <th>파워볼조합롤링%</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:3px;"><input type="text" name="deal_percent" id="deal_percent" class="form-control" value="{{$user->deal_percent}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                            <td style="padding:3px;"><input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control" value="{{$user->table_deal_percent}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_single_percent" id="pball_single_percent" class="form-control" value="{{$user->pball_single_percent}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_comb_percent" id="pball_comb_percent" class="form-control" value="{{$user->pball_comb_percent}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="table_deal_percent">라이브롤링%</label>
-                                    <input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control{{ $errors->has('table_deal_percent') ? ' is-invalid' : '' }}" value="{{ old('table_deal_percent',$user->hasRole('manager')?$user->table_deal_percent:$user->table_deal_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
-                                </div>
-
-                                <div class="form-group{{ $errors->has('table_deal_percent') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="table_deal_percent">상태</label>
+                                @if (auth()->user()->isInOutPartner())
+                                <div class="form-group">
+                                    <label class="form-control-label">상태</label>
                                     {!! Form::select('status', $statuses, $user->status,
                                         ['class' => 'form-control', 'id' => 'status', 'disabled' => ($user->hasRole(['admin']) || $user->id == auth()->user()->id) ? true: false]) !!}
                                 </div>
-                                @if (auth()->user()->isInOutPartner())
+                                
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">메모</label>
                                     @if ($user->memo)
@@ -197,6 +221,7 @@
                                 </div>
                             </div>
                         </form>
+                        @if ($user->id == auth()->user()->id || auth()->user()->isInoutPartner() || (auth()->user()->hasRole('manager') && $user->hasRole('user')))
                         <hr class="my-4" />
                         <form method="post" action="{{argon_route('argon.common.profile.password')}}" autocomplete="off">
                             @csrf
@@ -218,6 +243,7 @@
                                 </div>
                             </div>
                         </form>
+                        @endif
                         @if (auth()->user()->isInOutPartner())
                         <hr class="my-4" />
                         <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>

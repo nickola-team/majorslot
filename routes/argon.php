@@ -293,6 +293,38 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.notice.delete',
             'uses' => 'NoticesController@delete',
         ]);
+
+
+        /**
+         * template routes
+         */
+
+        Route::get('msgtemp', [
+            'as' => 'argon.msgtemp.list',
+            'uses' => 'MsgTempController@index',
+        ]);
+        Route::get('msgtemp/create', [
+            'as' => 'argon.msgtemp.create',
+            'uses' => 'MsgTempController@create',
+        ]);
+        Route::post('msgtemp/create', [
+            'as' => 'argon.msgtemp.store',
+            'uses' => 'MsgTempController@store',
+        ]);
+        Route::get('msgtemp/{msgtemp}/edit', [
+            'as' => 'argon.msgtemp.edit',
+            'uses' => 'MsgTempController@edit',
+        ]);
+        Route::post('msgtemp/{msgtemp}/update', [
+            'as' => 'argon.msgtemp.update',
+            'uses' => 'MsgTempController@update',
+        ]);
+        Route::delete('msgtemp/{msgtemp}/delete', [
+            'as' => 'argon.msgtemp.delete',
+            'uses' => 'MsgTempController@delete',
+        ]);
+
+
         /**
          * messages routes
          */
@@ -444,6 +476,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::post('game/betlimit', [
             'as' => 'argon.game.betlimitupdate',
             'uses' => 'GameController@game_betlimitupdate',
+        ]);
+        Route::get('game/gactable', [
+            'as' => 'argon.game.gactable',
+            'uses' => 'GameController@game_gactable',
+        ]);
+
+        Route::get('game/gactable/update', [
+            'as' => 'argon.game.gactable.update',
+            'uses' => 'GameController@game_gactableupdate',
         ]);
 
         Route::get('game/missrole', [

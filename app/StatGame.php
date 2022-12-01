@@ -87,14 +87,14 @@ namespace VanguardLTE
 
         public static function create(array $attributes = [])
         {
-            $filterGames = [' FG', ' FG1', ' respin', ' RS', ' doBonus'];
-            foreach($filterGames as $ignoreGame) 
-            {
-                if (strlen($attributes['game']) >= strlen($ignoreGame) && substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
-                {
-                    $attributes['bet'] = 0;
-                }
-            }
+            // $filterGames = [' FG', ' FG1', ' respin', ' RS', ' doBonus'];
+            // foreach($filterGames as $ignoreGame) 
+            // {
+            //     if (strlen($attributes['game']) >= strlen($ignoreGame) && substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
+            //     {
+            //         $attributes['bet'] = 0;
+            //     }
+            // }
 
             if (empty($attributes['category_id']) || empty($attributes['game_id']))
             {

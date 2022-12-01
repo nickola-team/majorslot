@@ -42,13 +42,13 @@ namespace VanguardLTE
             'shop_id', 
             'session',
             'session_json',
-            'count_deal_balance', 
+            'pball_single_percent', 
+            'pball_comb_percent',
             'deal_balance', 
             'deal_percent',
             'table_deal_percent',
             'money_percent',
             'mileage',
-            'count_mileage',
             'bank_name',
             'recommender',
             'account_no',
@@ -120,7 +120,8 @@ namespace VanguardLTE
                 '펀드온라인코리아', 
                 '케이티비투자증권',
                 'PAYWIN',
-                'JUNCOIN'
+                'JUNCOIN',
+                'MESSAGE'
             ],
             'reset_days' => [
                 '',
@@ -846,33 +847,27 @@ namespace VanguardLTE
             ]);
         }
 
-        public function processBetDealerMoney_Queue($stat_game) 
+        public function getDealData($betMoney,$winMoney,$type, $stat_game)
         {
             $game = $stat_game->game;
-            $betMoney = $stat_game->bet;
-            $winMoney = $stat_game->win;
-            $refundGames = ['_refund', '_tie'];
-            foreach($refundGames as $refundGame) 
-            {
-                if (strlen($game) >= strlen($refundGame) && substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
-                {
-                    $betMoney = -$stat_game->win;
-                    $winMoney = 0;
-                    break;
-                }
-            }
+            $category_id = $stat_game->category_id;
+            $game_id = $stat_game->game_id;
             $date_time = $stat_game->date_time;
             if ($date_time == null)
             {
                 $date_time = date('Y-m-d H:i:s');
             }
-            $type=$stat_game->type;
-            $category_id = $stat_game->category_id;
-            $game_id = $stat_game->game_id;
-
-            if(!$this->hasRole('user')) {
-                return;
+            if ($type == null)
+            {
+                $type = 'slot';
             }
+            $deal_field = [
+                'slot' => 'deal_percent',
+                'table' => 'table_deal_percent',
+                'pbsingle' => 'pball_single_percent',
+                'pbcomb' => 'pball_comb_percent'
+            ];
+
             $shop = $this->shop;
             $deal_balance = 0;
             $deal_mileage = 0;
@@ -882,7 +877,7 @@ namespace VanguardLTE
             $ggr_percent = 0;
 
             $deal_data = [];
-            $deal_percent = ($type==null || $type=='slot')?$this->deal_percent:$this->table_deal_percent;
+            $deal_percent = $this->{$deal_field[$type]};
             if ($deal_percent > 0) //user can get deal percent
             {
                 $deal_balance = $betMoney * $deal_percent  / 100;
@@ -892,8 +887,8 @@ namespace VanguardLTE
                     'partner_id' => $this->id, //user's id
                     'balance_before' => 0, 
                     'balance_after' => 0, 
-                    'bet' => abs($stat_game->bet), 
-                    'win' => abs($stat_game->win), 
+                    'bet' => $betMoney, 
+                    'win' => $winMoney, 
                     'deal_profit' => $deal_balance,
                     'game' => $game,
                     'shop_id' => $shop->id,
@@ -910,7 +905,7 @@ namespace VanguardLTE
                 $deal_mileage = $deal_balance;
             }
 
-            $deal_percent = ($type==null || $type=='slot')?$shop->deal_percent:$shop->table_deal_percent;
+            $deal_percent = $shop->{$deal_field[$type]};
             $ggr_percent = $shop->ggr_percent;
             $manager = $this->referral;
             if ($manager != null){
@@ -920,15 +915,15 @@ namespace VanguardLTE
                     if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                     {
                         //error
-                        return ;
+                        return $deal_data;
                     }
                     $deal_data[] = [
                         'user_id' => $this->id, 
                         'partner_id' => $manager->id, //manager's id
                         'balance_before' => 0, 
                         'balance_after' => 0, 
-                        'bet' => abs($stat_game->bet), 
-                        'win' => abs($stat_game->win), 
+                        'bet' => abs($betMoney), 
+                        'win' => abs($winMoney), 
                         'deal_profit' => $deal_balance,
                         'game' => $game,
                         'shop_id' => $shop->id,
@@ -948,7 +943,7 @@ namespace VanguardLTE
                 {
                     $deal_mileage = $deal_balance;
                     $ggr_mileage = $ggr_profit;
-                    $deal_percent = ($type==null || $type=='slot')?$partner->deal_percent:$partner->table_deal_percent;
+                    $deal_percent = $partner->{$deal_field[$type]};
                     $ggr_percent = $partner->ggr_percent;
                     if($deal_percent > 0 || $ggr_percent > 0) {
                         $deal_balance = $betMoney * $deal_percent  / 100;
@@ -956,7 +951,7 @@ namespace VanguardLTE
                         if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                         {
                             //error
-                            return ;
+                            return $deal_data;
                         }
                         if ($deal_balance > $deal_mileage)
                         {
@@ -965,8 +960,8 @@ namespace VanguardLTE
                                 'partner_id' => $partner->id,
                                 'balance_before' => 0, 
                                 'balance_after' => 0, 
-                                'bet' => abs($stat_game->bet),
-                                'win' => abs($stat_game->win),
+                                'bet' => abs($betMoney),
+                                'win' => abs($winMoney),
                                 'deal_profit' => $deal_balance,
                                 'game' => $game,
                                 'shop_id' => $this->shop_id,
@@ -985,18 +980,97 @@ namespace VanguardLTE
                     $partner = $partner->referral;
                 }
                 // last check if the deal_percent is less than comaster's deal percent
-                if ($partner!=null && $partner->deal_percent < $deal_percent  )
+                if ($partner!=null && $partner->{$deal_field[$type]} < $deal_percent  )
                 {
                     //error
+                    return [];
+                }
+            }
+            return $deal_data;
+        }
+
+        public function processBetDealerMoney_Queue($stat_game) 
+        {
+            $game = $stat_game->game;
+            $betMoney = $stat_game->bet;
+            $winMoney = $stat_game->win;
+            $type=$stat_game->type;
+            $category_id = $stat_game->category_id;
+            $game_id = $stat_game->game_id;
+            $date_time = $stat_game->date_time;
+            if ($date_time == null)
+            {
+                $date_time = date('Y-m-d H:i:s');
+            }
+
+            $refundGames = ['_refund', '_tie'];
+            foreach($refundGames as $refundGame) 
+            {
+                if (strlen($game) >= strlen($refundGame) && substr_compare($game, $refundGame, -strlen($refundGame)) === 0)
+                {
+                    $betMoney = -$stat_game->win;
+                    $winMoney = 0;
+                    break;
+                }
+            }
+            if(!$this->hasRole('user')) {
+                return;
+            }
+
+            if ($type == 'pball') //powerball deal
+            {
+                $res = null;
+                $gameInfo = $stat_game->game_item;
+                if ($gameInfo)
+                {
+                    $object = '\VanguardLTE\Games\\' . $gameInfo->name . '\Server';
+                    if (!class_exists($object))
+                    {
+                        return;
+                    }
+                    $gameObject = new $object();
+                    if (method_exists($gameObject, 'gameDetail'))
+                    {
+                        $res = $gameObject->gameDetail($stat_game);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                if ($res == null)
+                {
                     return;
+                }
+                foreach ($res['bets'] as $bet)
+                {
+                    $betMoney = $bet->amount;
+                    $winMoney = $bet->win;
+                    if (($bet->rt >=1 && $bet->rt<=4) || ($bet->rt >=9 && $bet->rt<=12))
+                    {
+                        $type = 'pbsingle';
+                    }
+                    else
+                    {
+                        $type = 'pbcomb';
+                    }
+                    $deal_data = $this->getDealData($betMoney, $winMoney, $type, $stat_game);
+                    if (count($deal_data) > 0)
+                    {
+                        \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
+                    }
+                }
+            }
+            else
+            {            
+                $deal_data = $this->getDealData($betMoney, $winMoney, $type, $stat_game);
+                if (count($deal_data) > 0)
+                {
+                    \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
                 }
             }
 
-            if (count($deal_data) > 0)
-            {
-                \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
-                // \VanguardLTE\Jobs\UpdateSummary::dispatch($deal_data)->onQueue('summary');
-            }
+            
         }
         public function processBetDealerMoney($betMoney, $game, $type='slot') 
         {
@@ -1200,9 +1274,25 @@ namespace VanguardLTE
             return $sum + $sumShop - $this->balance;
         }
         
-        public function bankInfo()
+        public function bankInfo($bmask=false)
         {
-            return $this->bank_name . ' - ' . $this->account_no . ' - ' . $this->recommender;
+            $info = $this->bank_name . ' - ' . $this->account_no . ' - ' . $this->recommender;
+            if ($bmask)
+            {
+                $accno = $this->account_no;
+                $recommender = $this->recommender;
+                if ($accno != '')
+                {
+                    $maxlen = strlen($accno)>1?2:1;
+                    $accno = '******' . substr($accno, -$maxlen);
+                }
+                if ($recommender != '')
+                {
+                    $recommender = mb_substr($recommender, 0, 1) . '***';
+                }
+                $info = $this->bank_name . ' - ' . $accno . ' - ' . $recommender;
+            }
+            return $info;
         }
         
         public static function badgeclass(){
@@ -1223,6 +1313,13 @@ namespace VanguardLTE
         public function info()
         {
             return $this->hasMany('VanguardLTE\Info', 'user_id');
+        }
+
+        public function isLoggedIn()
+        {
+            $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+            $session = \VanguardLTE\Session::where('user_id', $this->id)->where('last_activity', '>=', $validTimestamp)->first();
+            return $session!=null;
         }
 
 

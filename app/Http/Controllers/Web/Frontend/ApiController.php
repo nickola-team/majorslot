@@ -446,7 +446,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'type' => 'out',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
                 'payeer_id' => $request->id]);
+            $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get();
             $res['join'] = 0;
+            $res['msg'] = count($unreadmsgs);
             if (auth()->user()->isInOutPartner()) {
                 $shops = auth()->user()->availableShops();
                 $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('shop_id', $shops);
@@ -1159,12 +1161,36 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'url' => $url
                 ], 200);
             }
+            else if ($master->bank_name == 'MESSAGE') //계좌를 쪽지방식으로 알려주는 총본사
+            {
+                $date_time = date('Y-m-d H:i:s', strtotime("-2 minutes"));
+                $lastMsgs = \VanguardLTE\Message::where([
+                    'writer_id' => $user->id,
+                ])->where('created_at', '>', $date_time)->get();
+                if (count($lastMsgs) > 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '이미 쪽지를 발송하였습니다. 잠시후 다시 시도하세요',
+                    ], 200);
+                }
+                $data = [
+                    'user_id' => $master->id,
+                    'writer_id' => $user->id,
+                    'title' => '계좌문의드립니다',
+                    'content' => number_format($amount) . '원 입금계좌 문의드립니다'
+                ];
+                \VanguardLTE\Message::create($data);
+                return response()->json([
+                    'error' => false, 
+                    'msg' => '계좌문의 쪽지가 발송되었습니다',
+                ], 200);
+            }
             else
             {
                 $telegramId = $master->address;
                 if ($force==0 && $user->hasRole('user'))
                 {
-                    
                     return response()->json([
                         'error' => false, 
                         'msg' => '텔레그램 문의, 아이디 ' . $telegramId,
@@ -1300,7 +1326,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $user = auth()->user();
 
-            if($user->role_id > 1 && ($user->bank_name == null || $user->bank_name == '')){
+            if(($user->bank_name == null || $user->bank_name == '')){
                 return response()->json([
                     'error' => true, 
                     'msg' => '계좌정보를 입력해주세요',
@@ -1388,12 +1414,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
-                $user->update([
-                    'recommender' => $request->accountName,
-                    'bank_name' => $request->bank,
-                    'account_no' => $request->no
-                ]);
-                $user =  $user->fresh();
+                // $user->update([
+                //     'recommender' => $request->accountName,
+                //     'bank_name' => $request->bank,
+                //     'account_no' => $request->no
+                // ]);
+                // $user =  $user->fresh();
             }
 
 
@@ -1787,7 +1813,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $msg = \VanguardLTE\Message::where('id', $request->id)->first();
             if ($msg && $msg->read_at == null)
             {
-                $msg->update(['read_at' => \Carbon\Carbon::now()]);
+                if ($msg->user_id == auth()->user()->id)
+                {
+                    $msg->update(['read_at' => \Carbon\Carbon::now()]);
+                }
             }
             return response()->json(['error' => 0]);
         }

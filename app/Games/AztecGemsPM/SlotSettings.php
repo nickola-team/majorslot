@@ -670,6 +670,20 @@ namespace VanguardLTE\Games\AztecGemsPM
             $purmuls = [2000, 2200, 2400, 2600, 2800, 3000, 3200, 3400, 3600, 3800, 4000, 3000];
             return $purmuls[$pur];
         }
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'Bet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Bet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+
+
         public function GetReelStrips($winType, $bet)
         {
             $spintype = 0;

@@ -273,15 +273,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 else{
                     $parent = $user->referral;
                 }
-
-                if ($parent!=null &&  isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
+                $check_deals = [
+                    'deal_percent',
+                    'table_deal_percent',
+                    'pball_single_percent',
+                    'pball_comb_percent'
+                ];
+                foreach ($check_deals as $dealtype)
                 {
-                    return redirect()->back()->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
-                }
-
-                if ($parent!=null &&  isset($data['table_deal_percent']) && $parent->table_deal_percent < $data['table_deal_percent'])
-                {
-                    return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+                    if ($parent!=null &&  isset($data[$dealtype]) && $parent->{$dealtype} < $data[$dealtype])
+                    {
+                        return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+                    }
                 }
             }
             if ($user->hasRole('manager'))

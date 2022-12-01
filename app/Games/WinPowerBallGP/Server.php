@@ -292,7 +292,7 @@ namespace VanguardLTE\Games\WinPowerBallGP
                                             'bet' => $bet->bet, 
                                             'win' => $bet->win, 
                                             'game' =>  $currentTrend->game_id, 
-                                            'type' => 'table',
+                                            'type' => 'pball',
                                             'percent' => 0, 
                                             'percent_jps' => 0, 
                                             'percent_jpg' => 0, 

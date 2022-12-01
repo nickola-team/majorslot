@@ -12,43 +12,62 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             if (auth()->user()->hasRole('admin'))
             {
-                $msgs = \VanguardLTE\Message::all();
+                $msgs = \VanguardLTE\Message::orderBy('created_at','desc')->where('ref_id', 0);
             }
-            else if (auth()->user()->hasRole('group'))
+            // else if (auth()->user()->hasRole('group'))
+            // {
+            //     $comasters = auth()->user()->childPartners();
+            //     $msgs = \VanguardLTE\Message::whereIn('writer_id', $comasters)->orWhereIn('user_id', $comasters)->orderBy('created_at','desc');
+            // }
+            else //if (auth()->user()->hasRole('comaster'))
             {
-                $comasters = auth()->user()->childPartners();
-                $msgs = \VanguardLTE\Message::whereIn('writer_id', $comasters)->orWhereIn('user_id', $comasters)->get();
+                $msgs = \VanguardLTE\Message::where(function ($query) {
+                    $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
+                })->where(function ($query) {
+                    $query->where('ref_id','=', 0);
+                })->orderBy('created_at','desc');
             }
-            else if (auth()->user()->hasRole('comaster'))
-            {
-                $msgs = \VanguardLTE\Message::where('writer_id', auth()->user()->id)->orWhere('user_id', auth()->user()->id)->get();
-            }
-            else
-            {
-                $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get();
-            }
+            // else
+            // {
+            //     $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get();
+            // }
             $odd = \VanguardLTE\Settings::where('key', 'MaxOdd')->first();
             $win = \VanguardLTE\Settings::where('key', 'MaxWin')->first();
             $data = [
                 'MaxOdd' => $odd?$odd->value:300,
                 'MaxWin' => $win?$win->value:5000000
             ];
+            $msgs = $msgs->paginate(20);
             return view('backend.argon.messages.list', compact('msgs','data'));
         }
-        public function create()
+        public function create(\Illuminate\Http\Request $request)
         {
-            return view('backend.argon.messages.add');
+            $ref = $request->ref;
+            $refmsg = null;
+            if ($ref != '')
+            {
+                $refmsg = \VanguardLTE\Message::where('id', $ref)->first();
+                $availableUsers = auth()->user()->availableUsers();
+                if ($refmsg==null && !in_array($refmsg->writer_id, $availableUsers))
+                {
+                    return redirect()->back()->withErrors(['수신자를 찾을수 없습니다']);
+                }
+            }
+            $msgtemps = \VanguardLTE\MsgTemp::where('writer_id', auth()->user()->id)->orderBy('order','desc')->get();
+            return view('backend.argon.messages.add', compact('msgtemps','refmsg'));
         }
         public function store(\Illuminate\Http\Request $request)
         {
             $data = $request->only([
                 'title',
                 'content',
+                'ref_id'
             ]);
             if ($request->user != '')
             {
+                $availableUsers = auth()->user()->availableUsers();
                 $user = \VanguardLTE\User::where('username', $request->user)->first();
-                if (!$user)
+                if (!$user || !in_array($user->id, $availableUsers))
                 {
                     return redirect()->back()->withErrors('발송할 회원을 찾을수 없습니다.');
                 }
