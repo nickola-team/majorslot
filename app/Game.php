@@ -757,6 +757,10 @@ namespace VanguardLTE
         }
         public function set_gamebank($balance, $type = 'update', $slotState = '')
         {
+            if($balance > 0 && $slotState == ''){
+                $this->garant_bonus3++;
+                $this->save();
+            }
             if( $this->gamebank != null || $slotState == 'bonus' ) 
             {
                 $bank_index = 5;
