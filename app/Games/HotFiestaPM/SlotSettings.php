@@ -536,7 +536,7 @@ namespace VanguardLTE\Games\HotFiestaPM
         }
         public function SetBank(/* $slotState = '',  */$slotEvent = '', $sum, $isBuyFreespin = -1)
         {
-            if( $this->isBonusStart || $slotEvent == 'bonus' || $slotEvent == 'freespin') 
+            if( $this->isBonusStart || $slotEvent == 'bonus' || $slotEvent == 'doBonus' || $slotEvent == 'freespin') 
             {
                 $slotState = 'bonus';
             }

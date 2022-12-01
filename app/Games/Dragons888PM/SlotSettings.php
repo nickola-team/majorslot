@@ -401,7 +401,9 @@ namespace VanguardLTE\Games\Dragons888PM
         }
         public function GetBank($slotState = '')
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
@@ -444,7 +446,9 @@ namespace VanguardLTE\Games\Dragons888PM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '')
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+
+
             {
                 $slotState = 'bonus';
             }
