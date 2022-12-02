@@ -757,10 +757,18 @@ namespace VanguardLTE\Games\YumYumPowerwaysPM
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($fsmax > 0){
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
+                        $this->game->garant_bonus3 = 0;
+                        $win = explode(',', $this->game->game_win->winbonus3);
+                        $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
+                        $this->game->save();
                     }else{
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        if($fsmax > 0){
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        }
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){

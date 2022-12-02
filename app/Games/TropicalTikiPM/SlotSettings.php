@@ -716,7 +716,7 @@ namespace VanguardLTE\Games\TropicalTikiPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameTropicalTikiStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 40000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
@@ -726,10 +726,18 @@ namespace VanguardLTE\Games\TropicalTikiPM
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                    if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
+                        $this->game->garant_bonus3 = 0;
+                        $win = explode(',', $this->game->game_win->winbonus3);
+                        $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
+                        $this->game->save();
                     }else{
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        if($winType == 'bonus'){
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        }
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
