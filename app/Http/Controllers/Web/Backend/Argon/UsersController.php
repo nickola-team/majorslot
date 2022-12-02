@@ -741,6 +741,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         }
 
+        public function player_game_process(\Illuminate\Http\Request $request)
+        {
+            $gacid = $request->id;
+            if (!auth()->user()->hasRole('admin'))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 접근입니다.']);
+            }
+
+            $result = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::processResult($gacid);
+            if ($result['error'] == false)
+            {
+                return redirect()->back()->withSuccess([$result['win'] . '원의 당첨금 결과처리되었습니다']);
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['결과처리를 할수 없습니다']);
+            }
+            
+
+        }
+
         public function player_game_detail(\Illuminate\Http\Request $request)
         {
             $statid = $request->statid;

@@ -376,6 +376,137 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
         }
+        public static function processResult($placeid)
+        {
+            $record = \VanguardLTE\GACTransaction::where('id', $placeid)->where(['gactransaction.type'=>1,'gactransaction.status'=>0])->first();
+            if ($record == null)
+            {
+                return ['error'=>true];
+            }
+            //get last bet id
+            $lastBetId = 0;
+            $lastbetResult = \VanguardLTE\GACTransaction::where('date_time', '<', $record->date_time)->where('type' , 2)->orderby('date_time','desc')->first();
+            if ($lastbetResult)
+            {
+                $lastBetId = $lastbetResult->betInfo;
+            }
+
+            //get bet history
+            $recommend = config('app.gac_key');
+            $param = [
+                'betId' => intval($lastBetId),
+                'recommend' => $recommend,
+                'pageSize' => 300, //maximum 300
+                'pageNumber' => 1
+            ];
+
+            $data = null;
+            try {
+                $response = Http::timeout(10)->post(config('app.gac_api') . '/wallet/api/getBetHistoryByRecommend', $param);
+                if (!$response->ok())
+                {
+                    Log::error('GAC : getgamehistory response failed. ' . $response->body());
+                    return ['error'=>true];
+                }
+                $data = $response->json();
+                if ($data==null || $data['returnCode']!=0)
+                {
+                    return ['error'=>true];
+                }
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('GAC : getgamehistory request failed. ' . $ex->getMessage());
+                return ['error'=>true];
+            }
+            
+            //get info about placeBet
+            $json_data = json_decode($record->data, true);
+
+
+            $gameId = $json_data['gameId'];
+            $userId = $json_data['userId'];
+
+            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId, $userId){
+                return (isset($k['gameId']) && ($k['gameId'] == $gameId)) && (isset($k['userId']) && $k['userId'] == $userId);
+            }));
+
+
+            if (count($userbets) > 0) //found bet history
+            {
+                $betId = 0;
+                $winAmount = 0;
+                $betAmount = 0;
+                foreach ($userbets as $bet)
+                {
+                    $winAmount = $winAmount + $bet['winAmount'];
+                    $betAmount = $betAmount + $bet['betAmount'];
+                    if ($betId==0 || $betId>$bet['id'])
+                    {
+                        $betId = $bet['id'];
+                    }
+                }
+
+                $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
+                if (!$user)
+                {
+                    return ['error'=>true];
+                }
+                $user->balance = $user->balance + abs($winAmount);
+                $user->save();
+
+                $gameObj = GACController::getGameObj($json_data['tableName']);
+                if (!$gameObj)
+                {
+                    $gameObj = GACController::getGameObj('unknowntable');
+                }
+
+                $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => $gameObj['href']])->first();
+
+                $old_balance = $record->response + abs($winAmount);
+                
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $user->id, 
+                    'balance' => intval($old_balance), 
+                    'bet' => $betAmount, 
+                    'win' => $winAmount, 
+                    'game' =>  $gameObj['name'] . '[M]_' . $gameObj['href'], 
+                    'type' => 'table',
+                    'percent' => 0, 
+                    'percent_jps' => 0, 
+                    'percent_jpg' => 0, 
+                    'profit' => 0, 
+                    'denomination' => 0, 
+                    'shop_id' => $user->shop_id,
+                    'category_id' => isset($category)?$category->id:0,
+                    'game_id' => $gameObj['gamecode'],
+                    'roundid' =>  $betId . '-' . $json_data['tableName'],
+                    'date_time' => $record->date_time
+                ]);
+
+                $record->update(['status' => 1]);
+                //create betresult record
+                \VanguardLTE\GACTransaction::create([
+                    'user_id' => $record->user_id,
+                    'game_id' => $record->game_id,
+                    'betInfo' => $betId,
+                    'type' => 2,
+                    'data' => json_encode([
+                        'betId' => $betId,
+                        'tableName' =>  $json_data['tableName'],
+                        'gameId' => $record->game_id,
+                        'betAmount' => $betAmount,
+                        'winAmount' => $winAmount,
+                        'response' => intval($old_balance),
+                        'status' => 1
+                    ])
+                ]);
+                return ['error'=>false,'win' => $winAmount];
+            }
+
+            return ['error'=>true];
+        }
+
 
         public function betresult(\Illuminate\Http\Request $request)
         {
