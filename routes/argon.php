@@ -134,7 +134,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'UsersController@player_game_cancel',
         ]);
 
-        Route::get('/player/cancelgame', [
+        Route::get('/player/processgame', [
             'as' => 'argon.player.processgame',
             'uses' => 'UsersController@player_game_process',
         ]);
