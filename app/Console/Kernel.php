@@ -360,7 +360,7 @@ namespace VanguardLTE\Console
                     'category' => 'user', 
                     'action' => 'delete'
                 ])->where('created_at', '<=', $date_time)->first();
-                if( $tasks != 0 ) 
+                if( $task != null ) 
                 {
                     $task->update(['finished' => 1]);
                     $user = \VanguardLTE\User::find($task->item_id);
