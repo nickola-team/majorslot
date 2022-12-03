@@ -324,12 +324,12 @@ function showGamesPopup(title, category) {
 
             if (data.games.length > 0) {
                 for (var i = 0; i < data.games.length; i++) {
-                    if (i != 0 && i % 6 == 0) {
+                    if (i != 0 && i % 5 == 0) {
                         strHtml += `</tr><tr>`;
                     }
                     if (data.games[i].provider)
                     {
-                        strHtml += `<td style="width: 220px; padding-bottom: 20px" onClick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');">
+                        strHtml += `<td style="width: 250px; padding-bottom: 30px" onClick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');">
                                                 <table>
                                                 <tbody>
                                                     <tr>
@@ -341,8 +341,8 @@ function showGamesPopup(title, category) {
                             strHtml += `<img
                                     src="${data.games[i].icon}"
                                     id="xImag"
-                                    width="170"
-                                    height="130"
+                                    width="240px"
+                                    height="180px"
                                     />`;
                         }
                         else
@@ -350,8 +350,8 @@ function showGamesPopup(title, category) {
                             strHtml += `<img
                                     src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg"
                                     id="xImag"
-                                    width="170"
-                                    height="130"
+                                    width="240px"
+                                    height="180px"
                                     />`;
                         }
                         strHtml += `</a>
@@ -363,7 +363,7 @@ function showGamesPopup(title, category) {
                                         <div style="
                                             text-align: center;
                                             position: absolute;
-                                            width: 170px;">
+                                            width: 240px;">
                                         <span class="slot_txt_style">${data.games[i].title}</span>
                                         </div>
                                     </td>
@@ -374,7 +374,7 @@ function showGamesPopup(title, category) {
                     }
                     else
                     {
-                        strHtml += `<td style="width: 220px; padding-bottom: 20px" onClick="startGame('${data.games[i].name}');">
+                        strHtml += `<td style="width: 240px; padding-bottom: 30px" onClick="startGame('${data.games[i].name}');">
                                                 <table>
                                                 <tbody>
                                                     <tr>
@@ -384,8 +384,8 @@ function showGamesPopup(title, category) {
                                                             ><img
                                                             src="/frontend/Default/ico/${data.games[i].name}.jpg"
                                                             id="xImag"
-                                                            width="170"
-                                                            height="130"
+                                                            width="240px"
+                                                            height="180px"
                                                         /></a>
                                                         </div>
                                                     </td>
@@ -395,7 +395,7 @@ function showGamesPopup(title, category) {
                                                         <div style="
                                                             text-align: center;
                                                             position: absolute;
-                                                            width: 170px;">
+                                                            width: 240px;">
                                                         <span class="slot_txt_style">${data.games[i].title}</span>
                                                         </div>
                                                     </td>
