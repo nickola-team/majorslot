@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\ShiningHot100PM
+namespace VanguardLTE\Games\ShiningHot40PM
 {
     class SlotSettings
     {
@@ -97,7 +97,7 @@ namespace VanguardLTE\Games\ShiningHot100PM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[2.50,5.00,7.50,10.00,12.50,20.00,30.00,40.00,50.00,75.00,100.00,150.00,250.00,500.00,750.00,1000.00]; 
+            $this->Bet = explode(',', $game->bet); //[5.00,10.00,15.00,20.00,25.00,50.00,75.00,100.00,125.00,190.00,250.00,375.00,625.00,1250.00,1875.00,2500.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -696,7 +696,7 @@ namespace VanguardLTE\Games\ShiningHot100PM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameShiningHot100Stack::where('id', 117)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameShiningHot40Stack::where('id', 459)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -711,11 +711,11 @@ namespace VanguardLTE\Games\ShiningHot100PM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameShiningHot100Stack::where('spin_type', $spintype);
-                $index = mt_rand(0, 29000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameShiningHot40Stack::where('spin_type', $spintype);
+                $index = 0; //mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index =  mt_rand(0, 68000);
+                    // $index =  mt_rand(0, 75000);
                 }
                 if($isLowBank == true){
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
