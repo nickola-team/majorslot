@@ -355,27 +355,25 @@ namespace VanguardLTE\Console
             $schedule->call(function()
             {
                 $date_time = date('Y-m-d 0:0:0', strtotime("-1 days"));
-                $tasks = \VanguardLTE\Task::where([
+                $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'user', 
                     'action' => 'delete'
-                ])->where('created_at', '<=', $date_time)->get();
-                if( count($tasks) > 0 ) 
+                ])->where('created_at', '<=', $date_time)->first();
+                if( $tasks != 0 ) 
                 {
-                    foreach ($tasks as $task){
-                        $task->update(['finished' => 1]);
-                        $user = \VanguardLTE\User::find($task->item_id);
-                        if ($user){
-                            $user->detachAllRoles();
-                            //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
-                            \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
-                            //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
-                            \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
-                            \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
-                            \VanguardLTE\Session::where('user_id', $user->id)->delete();
-                            \VanguardLTE\Info::where('user_id', $user->id)->delete();
-                            $user->delete();
-                        }
+                    $task->update(['finished' => 1]);
+                    $user = \VanguardLTE\User::find($task->item_id);
+                    if ($user){
+                        $user->detachAllRoles();
+                        //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
+                        \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
+                        //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
+                        \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
+                        \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Session::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Info::where('user_id', $user->id)->delete();
+                        $user->delete();
                     }
                 }
             })->everyMinute();
