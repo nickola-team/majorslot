@@ -22,6 +22,10 @@ if (! function_exists('settings')) {
 if (! function_exists('rand_region_numbers')) {
     function rand_region_numbers($max, $count)
     {
+        if (!is_numeric($max) || !is_numeric($count))
+        {
+            return [0];
+        }
         if ($max < $count)
         {
             return [$count];
