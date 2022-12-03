@@ -1464,11 +1464,11 @@ if ( getCookie( "divpopup03" ) == "check" ) {
 			});
   }
   function depositSubmit() {
-    if (!depositAccountRequested)
-    {
-      alert_error('입금계좌요청을 먼저 하세요');
-      return;
-    }
+    // if (!depositAccountRequested)
+    // {
+    //   alert_error('입금계좌요청을 먼저 하세요');
+    //   return;
+    // }
     $.ajax({
         type: "POST",
         url: "/api/addbalance",
