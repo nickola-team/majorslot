@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\ShiningHot100PM
+namespace VanguardLTE\Games\BigBassSplashPM
 {
     class SlotSettings
     {
@@ -73,16 +73,31 @@ namespace VanguardLTE\Games\ShiningHot100PM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0];
-            $this->Paytable[3] = [0,0,0,100,1000,5000];
-            $this->Paytable[4] = [0,0,0,50,200,500];
-            $this->Paytable[5] = [0,0,0,50,200,500];
-            $this->Paytable[6] = [0,0,0,20,50,200];
-            $this->Paytable[7] = [0,0,0,20,50,200];
-            $this->Paytable[8] = [0,0,0,20,50,200];
-            $this->Paytable[9] = [0,0,5,20,50,200];
-            $this->Paytable[10] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,6,60,240,2400];
+            $this->Paytable[4] = [0,0,0,36,180,1200];
+            $this->Paytable[5] = [0,0,0,24,120,600];
+            $this->Paytable[6] = [0,0,0,24,120,600];
+            $this->Paytable[7] = [0,0,0,12,60,0];
+            $this->Paytable[8] = [0,0,0,6,30,120];
+            $this->Paytable[9] = [0,0,0,6,30,120];
+            $this->Paytable[10] = [0,0,0,6,30,120];
+            $this->Paytable[11] = [0,0,0,6,30,120];
+            $this->Paytable[12] = [0,0,0,6,30,120];
+            $this->Paytable[13] = [0,0,0,0,0,0];
+            $this->Paytable[14] = [0,0,0,0,0,0];
+            $this->Paytable[15] = [0,0,0,0,0,0];
+            $this->Paytable[16] = [0,0,0,0,0,0];
+            $this->Paytable[17] = [0,0,0,0,0,0];
+            $this->Paytable[18] = [0,0,0,0,0,0];
+            $this->Paytable[19] = [0,0,0,0,0,0];
+            $this->Paytable[20] = [0,0,0,0,0,0];
+            $this->Paytable[21] = [0,0,0,0,0,0];
+            $this->Paytable[22] = [0,0,0,0,0,0];
+            $this->Paytable[23] = [0,0,0,0,0,0];
+            $this->Paytable[24] = [0,0,0,0,0,0];
+            $this->Paytable[25] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -97,7 +112,7 @@ namespace VanguardLTE\Games\ShiningHot100PM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[2.50,5.00,7.50,10.00,12.50,20.00,30.00,40.00,50.00,75.00,100.00,150.00,250.00,500.00,750.00,1000.00]; 
+            $this->Bet = explode(',', $game->bet); //[20.00,40.00,60.00,80.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,1500.00,2500.00,5000.00,7500.00,10000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -383,11 +398,11 @@ namespace VanguardLTE\Games\ShiningHot100PM
             }
             else
             {
-                // if( $bonus_systemmoney > 0 ) 
-                // {
-                //     $sum -= $bonus_systemmoney;
-                //     $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
-                // }
+                if( $bonus_systemmoney > 0 ) 
+                {
+                    $sum -= $bonus_systemmoney;
+                    $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
+                }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -693,17 +708,23 @@ namespace VanguardLTE\Games\ShiningHot100PM
         } 
 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $ind = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameShiningHot100Stack::where('id', 117)->first();
-                // return json_decode($stack->spin_stack, true);
+            //     $stack = \VanguardLTE\PPGameStackModel\PPGameBigBassSplashStack::where('id', 35586)->first();
+            //     return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
-            if($winType == 'win' || $winType == 'bonus'){
+            if($winType == 'bonus'){
+                $winAvaliableMoney = $this->GetBank('bonus');
+                $spintype = 1;
+            }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
+            }
+            if($ind > -1){
+                $spintype = 1;
             }
             $limitOdd = 0;
             if($winType != 'none'){
@@ -711,13 +732,20 @@ namespace VanguardLTE\Games\ShiningHot100PM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameShiningHot100Stack::where('spin_type', $spintype);
-                $index = mt_rand(0, 29000);
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassSplashStack::where('spin_type','>', 0);
+                }else{
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassSplashStack::where('spin_type', 0);
+                }
+                $index = 0; //mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index =  mt_rand(0, 68000);
+                    // $index = mt_rand(0, 80000);
                 }
                 if($isLowBank == true){
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 15);    
+                    }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
@@ -727,7 +755,11 @@ namespace VanguardLTE\Games\ShiningHot100PM
                         $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        if($winType == 'bonus'){
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        }
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){

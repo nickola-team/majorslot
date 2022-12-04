@@ -716,7 +716,7 @@ namespace VanguardLTE\Games\CoffeeWildPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameCoffeeWildStack::where('spin_type', 0);
                 }
-                $index = mt_rand(0, 38000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }

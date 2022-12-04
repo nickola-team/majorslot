@@ -329,9 +329,11 @@ namespace VanguardLTE\Games\RockVegasPM
                 $str_accv = '';
                 $str_acci = '';
                 $str_values_info = '';
+                $str_srf = '';
                 $apv = 0;
                 $rs_t = 0;
                 $arr_g = null;
+                $initReel = [];
                 if($isGeneratedFreeStack == true){
                     $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
@@ -388,6 +390,15 @@ namespace VanguardLTE\Games\RockVegasPM
                                 $scatterPoses[] = $j * 5 + $i;   
                             }
                         }
+                    }
+                    if($scatterCount >= 3 && count($initReel) == 15){
+                        $arr_srf = [];
+                        for($k = 0; $k < count($scatterPoses); $k++){
+                            if($initReel[$scatterPoses[$k]] != $scatter){
+                                array_push($arr_srf, $initReel[$scatterPoses[$k]] . '~1~' . $scatterPoses[$k]);
+                            }
+                        }
+                        $str_srf = implode(';', $arr_srf);
                     }
                     $isCalcWinLine = true;
                     $_lineWinNumber = 1;
@@ -526,6 +537,9 @@ namespace VanguardLTE\Games\RockVegasPM
                 }
                 if($str_rs != ''){
                     $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;
+                }
+                if($str_srf != ''){
+                    $strOtherResponse = $strOtherResponse . '&srf=' . $str_srf;
                 }
                 if($str_initReel != ''){
                     $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
