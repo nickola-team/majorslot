@@ -362,7 +362,6 @@ namespace VanguardLTE\Console
                 ])->where('created_at', '<=', $date_time)->first();
                 if( $task != null ) 
                 {
-                    $task->update(['finished' => 1]);
                     $user = \VanguardLTE\User::find($task->item_id);
                     if ($user){
                         $user->detachAllRoles();
@@ -375,6 +374,7 @@ namespace VanguardLTE\Console
                         \VanguardLTE\Info::where('user_id', $user->id)->delete();
                         $user->delete();
                     }
+                    $task->update(['finished' => 1]);
                 }
             })->everyMinute();
             $schedule->call(function()
