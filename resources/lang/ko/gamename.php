@@ -1014,4 +1014,16 @@ return [
         "GreedyWolf" => "그리디 울프",
         "FireHot40" => "파이어 핫 40",
         "FireHot100" => "파이어 핫 100",
+
+        "FireHot20" =>  "파이어 핫 20",
+        "FireHot5" =>  "파이어 핫 5",
+        "OctobeerFortunes" =>  "옥토비어 포춘",
+        "GorillaMayhem" =>  "고릴라 메이헴",
+        "CheekyEmperor" =>  "치키 엠페러",
+        "HotToBurnExtreme" =>  "핫 투 번 익스트림",
+        "TropicalTiki" =>  "트로피컬 티키",
+        "CoffeeWild" =>  "커피 와일드",
+        "ShiningHot100" =>  "샤이닝 핫 100",
+        "ShiningHot5" =>  "샤이닝 핫 20",
+
 ];
