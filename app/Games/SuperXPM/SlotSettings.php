@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\SuperXPM
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 25);    
                     }else{
                         $stacks = $stacks->where('pur_level', ($bl - 1));
                     }
