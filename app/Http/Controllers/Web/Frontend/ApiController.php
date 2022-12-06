@@ -309,6 +309,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '이미 실행중인 게임을 종료하세요', 'code' => '001']);
             }
+            //reset playing_game field to null for provider games.
+            $user->update([
+                'playing_game' => null,
+                'remember_token' => $user->api_token
+            ]);
 
             $provider = $request->provider;
             $gamecode = $request->gamecode;
@@ -320,14 +325,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
             }
-            //reset playing_game field to null for provider games.
-            if ($user)
-            {
-                $user->update([
-                    'playing_game' => null,
-                    'remember_token' => $user->api_token
-                ]);
-            }
+            
             $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
            
             
