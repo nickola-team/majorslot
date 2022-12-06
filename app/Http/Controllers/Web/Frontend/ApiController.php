@@ -1008,23 +1008,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '001'
                 ], 200);
             }
-            if ($amount == 0)
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '충전금액을 입력하세요',
-                    'code' => '002'
-                ], 200);
-            }
+            
 
-            if ($amount > 5000000)
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '충전금액은 최대 500만원까지 가능합니다.',
-                    'code' => '002'
-                ], 200);
-            }
+            // if ($amount > 5000000)
+            // {
+            //     return response()->json([
+            //         'error' => true, 
+            //         'msg' => '충전금액은 최대 500만원까지 가능합니다.',
+            //         'code' => '002'
+            //     ], 200);
+            // }
 
             if ($account == '')
             {
@@ -1049,6 +1042,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if ($master->bank_name == 'PAYWIN') // 페이윈 가상계좌
             {
+                if ($amount == 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '충전금액을 입력하세요',
+                        'code' => '002'
+                    ], 200);
+                }
                 //상품조회
                 try {
                     $data = [
@@ -1146,6 +1147,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else if ($master->bank_name == 'JUNCOIN') //준코인 가상계좌
             {
+                if ($amount == 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '충전금액을 입력하세요',
+                        'code' => '002'
+                    ], 200);
+                }
+
                 if ($amount % 10000 != 0)
                 {
                     return response()->json([
@@ -1178,7 +1188,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'user_id' => $master->id,
                     'writer_id' => $user->id,
                     'title' => '계좌문의드립니다',
-                    'content' => number_format($amount) . '원 입금계좌 문의드립니다'
+                    'content' => '입금계좌 문의드립니다'
                 ];
                 \VanguardLTE\Message::create($data);
                 return response()->json([
