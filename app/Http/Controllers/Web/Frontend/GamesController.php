@@ -191,10 +191,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
                 $user->update(['playing_game' => null]);
             }
-            if (str_contains($user->username, 'testfor'))
-            {
-                abort(404);
-            }
+            // if (str_contains($user->username, 'testfor'))
+            // {
+            //     abort(404);
+            // }
             if (!isset($game))
             {
                 return redirect()->route('frontend.auth.login');
