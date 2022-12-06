@@ -63,7 +63,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function domain_category(\Illuminate\Http\Request $request)
         {
             set_time_limit(0);
-            $sites = \VanguardLTE\WebSite::orderby('id');
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = [auth()->user()->id];
+            $sites = \VanguardLTE\WebSite::orderby('id')->whereIn('adminid', $availablePartners);
             if ($request->domain != '')
             {
                 $sites = $sites->where('title', 'like', '%'. $request->domain . '%');
@@ -74,7 +76,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function domain_update(\Illuminate\Http\Request $request)
         {
             $categoryid = $request->cat_id;
-            $status = $request->status;
+            $data = $request->only([
+                'status',
+                'view'
+            ]);
+            // $status = $request->status;
+            // $view = $request->view;
             $category = \VanguardLTE\Category::where('id', $categoryid)->first();
             if (!$category)
             {
@@ -83,7 +90,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             // $category->update(['view' => $status]);
 
             $site_id = $category->site_id;
-            \VanguardLTE\Category::where(['site_id' => $site_id, 'original_id' => $category->original_id])->update(['view' => $status]);
+            $site = \VanguardLTE\WebSite::where('id', $site_id)->first();
+            if (!$site)
+            {
+                return redirect()->back()->withErrors(['도메인을 찾을수 없습니다']);
+            }
+            $admin = $site->admin;
+            $availableShops = $admin->availableShops();
+            \VanguardLTE\Category::where('original_id' , $category->original_id)->whereIn('shop_id', $availableShops)->update($data);
+            \VanguardLTE\Category::where('original_id' , $category->original_id)->where('site_id', $site_id)->update($data);
 
             return redirect()->back()->withSuccess(['게임상태를 업데이트했습니다']);
 

@@ -312,7 +312,7 @@ namespace VanguardLTE
         public function childPartners()
         {
             $level = $this->level();
-            $users = User::where(['parent_id'=> $this->id,'role_id' => $this->role_id-1])->get();
+            $users = User::where(['parent_id'=> $this->id])->get();
             return $users->pluck('id')->toArray();
         }
 
