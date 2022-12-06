@@ -695,7 +695,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $recommend = config('app.gac_key');
             $data = [
                 'userId' => strval($user->id),
-                'userName' => $user->username,
+                'userName' => $user->username . '#' . strval($user->id),
                 'recommend' => $recommend,
                 'gameType' => ($gameObj['href'] == 'gac')?(self::GACGAC):(self::GACGVO),
             ];
