@@ -567,7 +567,8 @@
 				$('.mb_money').val(numberWithCommas(mb_money));
 				amount = 0;
 				cal();
-				msg('{{__('powerball.Betaccepted',[],$pagelang)}}', 'success');			
+				process_history();
+				msg('{{__('powerball.Betaccepted',[],$pagelang)}}', 'success');
 			}
 			else
 			{							

@@ -175,6 +175,10 @@
         $("#doSubmit").attr('disabled', 'disabled');
         var money = $('#amount').val();
         var confirmation_token = $('#confirmation_token').val();
+        if (money < 30000)
+        {
+            show_alarm('환전은 3만원이상부터 가능합니다.');
+        }
         $.ajax({
             type: 'POST',
             url: '/api/outbalance',

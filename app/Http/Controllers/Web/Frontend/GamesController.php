@@ -321,7 +321,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $GLOBALS['rgrc'] = config('app.salt');
             $userId = \Illuminate\Support\Facades\Auth::id();
             $user = \VanguardLTE\User::find($userId);
-            if (!$user || $user->playing_game == 'pp')
+            if (!$user || $user->remember_token != $user->api_token)
             {
                 exit('unlogged'); // it must be different per every game. but...
             }

@@ -608,10 +608,6 @@
 				</div>
 				<div class="modal-body">
 					<div class="tab-mdl active">
-						<div class="mypage-nav">
-							<button class="account-link active"><i class="icon icon-User"></i> 나의 정보</button>
-							<button class="history-link"><i class="icon icon-List"></i> 입출금내역</button>
-						</div>
 						<div class="mypage-tabs">
 							<div class="mp-tab active">
 								<div class="form-container">
@@ -737,13 +733,13 @@
 										</div>
 										<div class="infos">
                       <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
-											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="30000" data-parsley-min-message="최소입금 30,000원 이상" placeholder="최소입금 30,000원 부터가능(만원단위입금)" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
+											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="0" data-parsley-min-message="" placeholder="" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
 											<div class="btn-grp" style="margin-top: 25px;">
 												<button type="button" onclick="addAmount(4,1)">1만</button>
 												<button type="button" onclick="addAmount(4,3)">3만</button>
 												<button type="button" onclick="addAmount(4,5)">5만</button>
 												<button type="button" onclick="addAmount(4,10)">10만</button>
-												<button type="button" onclick="addAmount(4,50)">50만</button>
+                        <button type="button" onclick="addAmount(4,{{Auth::check()?(intval(auth()->user()->deal_balance)/10000) : 0}})">전액</button>
 												<button type="button" onclick="resetAmount(4)">정정하기</button>
 											</div>
 										</div>
@@ -762,15 +758,10 @@
 									var df = $("#pointFrm");
 									df.submit(function (e) {
 										var amount = parseInt($("[name=point_money]").val());
-										if (amount % 10000 > 0) {
-											alert_error('입금금액은 만원단위로 입력하세요.');
-											e.preventDefault();
-										} else {
-											$(this).parsley().validate();
-											if ($(this).parsley().isValid()) {
-												$('.wrapper_loading').removeClass('hidden');
-											}
-										}
+                    $(this).parsley().validate();
+                    if ($(this).parsley().isValid()) {
+                      $('.wrapper_loading').removeClass('hidden');
+                    }
 									});
 								</script>
 							</div>
@@ -931,7 +922,7 @@
                   <p>입금금액</p>
                 </div>
                 <div class="infos">
-                  <input class="form-control w400" id="depositAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="30000" data-parsley-min-message="최소입금 30,000원 이상" placeholder="최소입금 30,000원 부터가능(만원단위입금)" name="money" type="text" value="" data-parsley-id="0361"><ul class="parsley-errors-list" id="parsley-id-0361"></ul>
+                  <input class="form-control w400" id="depositAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="10000" data-parsley-min-message="최소입금 10,000원 이상" placeholder="최소입금 10,000원 부터가능(만원단위입금)" name="money" type="text" value="" data-parsley-id="0361"><ul class="parsley-errors-list" id="parsley-id-0361"></ul>
                   <div class="btn-grp" style="margin-top: 25px;">
                     <button type="button" onclick="addAmount(1,1)">1만</button>
                     <button type="button" onclick="addAmount(1,3)">3만</button>
@@ -1270,10 +1261,6 @@
 				</div>
 				<div class="modal-body">
 					<div class="tab-mdl active">
-						<div class="mypage-nav">
-							<button class="account-link"><i class="icon icon-User"></i> 나의 정보</button>
-							<button class="history-link active"><i class="icon icon-List"></i> 입출금내역</button>
-						</div>
 						<div class="mypage-tabs">
 							<div class="mp-tab deposit-list active">
 								<table class="bs-table deposit-tb">

@@ -167,6 +167,7 @@
             var audio_in = new Audio("{{ url('/frontend/Major/major/audio/door-bell.mp3')}}");
             var audio_out = new Audio("{{ url('/frontend/Major/major/audio/camera-beep.mp3')}}");
             var user_join = new Audio("{{ url('/frontend/Major/major/audio/user-join.mp3')}}");
+            var new_msg = new Audio("{{ url('/frontend/Major/major/audio/new-message.mp3')}}");
             $("#in_newmark").hide();
             $("#out_newmark").hide();
             $("#join_newmark").hide();
@@ -240,6 +241,10 @@
 
                             if (inouts['msg'] > 0)
                             {
+                                if (inouts['rating'] > 0)
+                                {
+                                    new_msg.play();
+                                }
                                 $("#msgbutton").click();
                             }
                             $("#unreadmsgcount").text(inouts['msg']);
