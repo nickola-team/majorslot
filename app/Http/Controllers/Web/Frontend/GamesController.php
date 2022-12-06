@@ -38,6 +38,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else
             {
+                if (str_contains($request->root(),env('SESSION_SECURE_DOMAIN')))
+                {
+                    return response()->view('system.pages.unlogged', [], 200)->header('Content-Type', 'text/html');
+                }
                 return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
             }
 
