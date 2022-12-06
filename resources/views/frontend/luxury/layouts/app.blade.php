@@ -312,10 +312,14 @@
           ?>
               @foreach($livecats AS $index=>$category)
               @if (Auth::check())
-                @if ($category->provider=='gac')
-                <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', 'gvolobby');">
+                @if ($category->status == 0)
+                    <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="alert('점검중입니다');">
                 @else
-                <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', '{{$category->href}}');">
+                  @if ($category->provider=='gac')
+                  <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', 'gvolobby');">
+                  @else
+                  <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', '{{$category->href}}');">
+                  @endif
                 @endif
               @else
               <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="showLoginAlert();">
@@ -338,7 +342,11 @@
 			@if ($categories && count($categories))
 				@foreach($categories AS $index=>$category)
           @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && ($category->type == 'slot'))
-					<a class="slot-btn gl-title-click" onclick="showGamesPopup('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
+					@if ($category->status == 0)
+            <a class="slot-btn gl-title-click" onclick="showGamesPopup('점검중입니다')">
+            @else
+            <a class="slot-btn gl-title-click" onclick="showGamesPopup('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
+            @endif
 						<div class="inner">
 						<img
 							class="slot-bg"
