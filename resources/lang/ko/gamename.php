@@ -1024,6 +1024,6 @@ return [
         "TropicalTiki" =>  "트로피컬 티키",
         "CoffeeWild" =>  "커피 와일드",
         "ShiningHot100" =>  "샤이닝 핫 100",
-        "ShiningHot5" =>  "샤이닝 핫 20",
+        "ShiningHot5" =>  "샤이닝 핫 5",
 
 ];
