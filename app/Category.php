@@ -14,6 +14,7 @@ namespace VanguardLTE
             'shop_id',
             'site_id',
             'view',
+            'status',
             'type'
         ];
         public $timestamps = false;
