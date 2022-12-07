@@ -20,7 +20,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function category_update(\Illuminate\Http\Request $request)
         {
             $categoryid = $request->cat_id;
-            $status = $request->status;
+            $data = $request->only([
+                'status',
+                'view'
+            ]);
             $userid = $request->user_id;
             $user = \VanguardLTE\User::where('id',$userid)->first();
             if (!$user)
@@ -32,7 +35,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['하부매장이 없습니다']);
             }
-            \VanguardLTE\Category::where('original_id', $categoryid)->whereIn('shop_id', $shops)->update(['view' => $status]);
+            \VanguardLTE\Category::where('original_id', $categoryid)->whereIn('shop_id', $shops)->update($data);
             return redirect()->back()->withSuccess(['게임상태를 업데이트했습니다']);
         }
 
