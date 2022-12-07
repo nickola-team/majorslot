@@ -78,6 +78,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'data' => []
                 ]);
             }
+
+           
+            
+
+            $hirechyUsers = [];
+            $closetables = [];
+
+
             $betlimitD = json_decode($default_config->config, true);
             $betlimit = $betlimitD;
             $parent = $user;
@@ -86,11 +94,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'gac')->first();
                 if ($user_config)
                 {
-                    $userlimit = json_decode($user_config->config, true);
-                    break;
+                    if ($userlimit==null){
+                        $userlimit = json_decode($user_config->config, true);
+                    }
                 }
+                $hirechyUsers[] = $parent->id;
                 $parent = $parent->referral;
             }
+
+            $gaccloses = \VanguardLTE\ProviderInfo::whereIn('user_id', $hirechyUsers)->where('provider', 'gacclose')->get();
+            foreach ($gaccloses as $table)
+            {
+                $data = json_decode($table->config, true);
+                $closetables = array_merge_recursive($closetables, $data);
+            }
+
             if ($userlimit)
             {
                 foreach ($betlimitD as $idx => $limit)
@@ -171,7 +189,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'message' => 'OK',
                 'data' => json_encode([[
                     'GameType' => self::GACGVO,
-                    "Limits" => $betlimit
+                    "Limits" => $betlimit,
+                    "Blocks" => $closetables
                     ]])
             ]);
         }
