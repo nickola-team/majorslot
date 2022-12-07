@@ -357,6 +357,8 @@
           @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
             @if ($unreadmsg>0)
             <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('쪽지를 확인하세요.');">
+            @elseif ($category->status == 0)
+            <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('점검중입니다.');">
             @else
             <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
             @endif

@@ -84,8 +84,10 @@
                 <th scope="col">포지션</th>
                 <th scope="col">게임갯수</th>
                 <th scope="col">게임제공사</th>
-                <th scope="col">활성된 매장</th>
-                <th scope="col">비활성된 매장</th>
+                <th scope="col">사용중 매장</th>
+                <th scope="col">미사용 매장</th>
+                <th scope="col">운영중 매장</th>
+                <th scope="col">점검중 매장</th>
                 <th class="text-right">일괄적용</th>
                 </tr>
             </thead>
