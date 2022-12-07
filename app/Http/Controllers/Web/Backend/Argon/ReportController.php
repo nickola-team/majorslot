@@ -21,6 +21,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user_id = $param[0];
             $date = $param[1];
             $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors('찾을수 없습니다.');
+            }
             $users = $user->childPartners();
 
             $summary = \VanguardLTE\DailySummary::where('date', '=', $date)->whereIn('user_id', $users);
@@ -177,6 +181,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user_id = $param[0];
             $date = $param[1];
             $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors('찾을수 없습니다.');
+            }
             $users = $user->childPartners();
 
             $summary = \VanguardLTE\DailySummary::where('date', '=', $date)->where('type','monthly')->whereIn('user_id', $users);
@@ -217,6 +225,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                         return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
                     }
                     $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+                    if (!$user)
+                    {
+                        return redirect()->back()->withErrors('찾을수 없습니다.');
+                    }
                     $users = $user->childPartners();
                     $dates = ($request->session()->exists('dates') ? $request->session()->get('dates') : '');
                 }
