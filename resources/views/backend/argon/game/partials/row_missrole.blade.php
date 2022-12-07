@@ -1,6 +1,6 @@
 <td>{{ $shop->id }}</td>
 <td>{{ $shop->name }} </td>
-<td>{{ $shop->percent }}</td>
+<td>{{ $shop->deal_percent }}</td>
 <td>{{ $shop->table_percent }}</td>
 @if (auth()->user()->hasRole('admin'))
 <td>
