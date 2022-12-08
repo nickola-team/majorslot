@@ -1683,12 +1683,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $symbol = $request->symbol;
             $tokens = explode('-', $token);
             $gameid = -1;
+            $user = null;
             if (count($tokens) > 1)
             {
-                $token = $tokens[0];
+                $userid = $tokens[0];
                 $gameid = $tokens[1];
+                $user = \VanguardLTE\User::where('id', $userid)->first();
             }
-            $user = \VanguardLTE\User::where('api_token', $token)->first();
+            else
+            {
+                $user = \VanguardLTE\User::where('api_token', $token)->first();
+            }
+            
             if (!$user )
             {
                 return response()->json([ ]);
