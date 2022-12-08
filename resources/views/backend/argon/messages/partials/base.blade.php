@@ -1,6 +1,6 @@
 <div class="form-group">
     <label>회원아이디</label> <span class="text-red">* 회원아이디를 입력하지 않으면 전체회원들에게 발송됩니다.</span>
-    <input type="text" class="form-control" id="user" name="user" placeholder="@lang('app.title')" value="{{$refmsg?$refmsg->writer->username:Request::get('to') }}">
+    <input type="text" class="form-control" id="user" name="user" placeholder="@lang('app.title')" value="{{($refmsg &&$refmsg->writer)?$refmsg->writer->username:Request::get('to') }}">
 </div>
 <div class="form-group">
     <label>제목</label>
