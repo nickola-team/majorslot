@@ -797,7 +797,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                         {
                             if ($statgame->user)
                             {
-                                return redirect('/gs2c/lastGameHistory.do?symbol='.$game->label.'&token='.$statgame->user->api_token.'-'.$statgame->id);
+                                return redirect('/gs2c/lastGameHistory.do?symbol='.$game->label.'&token='.$statgame->user->id.'-'.$statgame->id);
                             }
                         }
                     }
