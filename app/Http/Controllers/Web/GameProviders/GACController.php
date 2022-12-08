@@ -700,21 +700,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $is_test = str_contains($user->username, 'testfor');
-            if ($is_test) //it must be hidden from all providers
-            {
-                return null;
-            }
             $gameObj = GACController::getGameObj($gamecode);
             if (!$gameObj)
             {
                 return null;
             }
+            $username = $user->username;
+            $parse = explode('#', $username);
+            if (count($parse) > 1)
+            {
+                $username = $parse[count($parse) - 1];
+            }
 
             $recommend = config('app.gac_key');
             $data = [
                 'userId' => strval($user->id),
-                'userName' => $user->username . '#' . strval($user->id),
+                'userName' => $username . '#' . strval($user->id),
                 'recommend' => $recommend,
                 'gameType' => ($gameObj['href'] == 'gac')?(self::GACGAC):(self::GACGVO),
             ];
