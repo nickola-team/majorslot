@@ -521,7 +521,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                             if ($statgame->user)
                             {
                                 return response()->json(['error' => false, 'res' => [
-                                    'href' => '/gs2c/lastGameHistory.do?symbol='.$game->label.'&token='.$statgame->user->api_token.'-'.$statgame->id
+                                    'href' => '/gs2c/lastGameHistory.do?symbol='.$game->label.'&token='.$statgame->user->id.'-'.$statgame->id
                                 ]]);
                             }
                         }
