@@ -17,8 +17,8 @@
 @endif
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
-<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => Request::getRequestUri()])}}" ><button class="btn btn-success btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>충 전</button></a>
-<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => Request::getRequestUri()])}}"><button class="btn btn-warning btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>환 전</button></a>
+<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>충 전</button></a>
+<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>환 전</button></a>
 
 <div class="dropdown">
     <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
