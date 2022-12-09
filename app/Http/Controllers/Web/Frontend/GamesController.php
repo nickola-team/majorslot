@@ -308,6 +308,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404);
             }
+            if ($game->view == 0)
+            {
+                return response()->view('system.pages.gameisclosed', [], 200)->header('Content-Type', 'text/html');
+            }
             $url = '/game/' . $game->name;
             return view('frontend.Default.games.apigame',compact('url'));
         }
