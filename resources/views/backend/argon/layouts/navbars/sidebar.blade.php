@@ -249,7 +249,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    일별충환전
+                                    일별정산
                                 </a>
                             </li>
                             <li class="nav-item">
