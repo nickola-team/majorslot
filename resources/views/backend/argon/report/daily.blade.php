@@ -147,7 +147,7 @@
                                 <th scope="col">배팅금</th>
                                 <th scope="col">당첨금</th>
                                 <th scope="col">벳윈수익</th>
-                                <th scope="col">딜비수익</th>
+                                <th scope="col">롤링금</th>
                             </tr>
                         </thead>
                         <tbody class="list">
