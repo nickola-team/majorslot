@@ -770,7 +770,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     foreach ($infoShop as $info)
                     {
                         $inf = $info->info;
-                        if ($inf->roles =='slot')
+                        if ($inf && $inf->roles =='slot')
                         {
                             $inf->title = $data['slot_total_deal'];
                             $inf->link = $data['slot_total_miss'];
@@ -778,7 +778,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                             $slotinf = $inf;
                             $inf->save();
                         }
-                        if ($inf->roles =='table')
+                        if ($inf && $inf->roles =='table')
                         {
                             $inf->title = $data['table_total_deal'];
                             $inf->link = $data['table_total_miss'];
