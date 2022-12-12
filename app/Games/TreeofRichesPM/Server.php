@@ -125,7 +125,7 @@ namespace VanguardLTE\Games\TreeofRichesPM
                         $spinType = 's';
                     }
                     if($rs_t > 0){
-                        $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t . '&rs_win=' . $totalWin;
+                        $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t . '&rs_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                     }
                     if($str_initReel != ''){
                         $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
