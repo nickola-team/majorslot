@@ -182,7 +182,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 
             }
             // tie betlimit multiply 5 time
-            $betlimit[$idx]['BetLimit']['Baccarat_Tie'] = $betlimit[$idx]['BetLimit']['Baccarat_Tie'] * 5;
+            $betlimit[0]['BetLimit']['Baccarat_Tie'] = $betlimit[0]['BetLimit']['Baccarat_Tie'] * 5;
 
             return response()->json([
                 'result' => true,
