@@ -177,14 +177,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         {
                             $betlimit[$idx]['BetLimit'][$k] = $userlimit['rlmax'];
                         }
-                        else if ($k=='Baccarat_Tie') // tie betlimit multiply 5 time
-                        {
-                            $betlimit[$idx]['BetLimit'][$k] = $betlimit[$idx]['BetLimit'][$k] * 5;
-                        }
                     }
                 }
                 
             }
+            // tie betlimit multiply 5 time
+            $betlimit[$idx]['BetLimit']['Baccarat_Tie'] = $betlimit[$idx]['BetLimit']['Baccarat_Tie'] * 5;
 
             return response()->json([
                 'result' => true,
