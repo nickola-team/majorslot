@@ -712,10 +712,10 @@ namespace VanguardLTE\Games\ShiningHot20PM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameShiningHot20Stack::where('spin_type', $spintype);
-                $index = 0; //mt_rand(0, 29000);
+                $index = mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index =  mt_rand(0, 75000);
+                    $index =  mt_rand(0, 68000);
                 }
                 if($isLowBank == true){
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
