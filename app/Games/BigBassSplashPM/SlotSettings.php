@@ -711,8 +711,8 @@ namespace VanguardLTE\Games\BigBassSplashPM
         public function GetReelStrips($winType, $bet, $ind = -1)
         {
             // if($winType == 'bonus'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGameBigBassSplashStack::where('id', 35586)->first();
-            //     return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameBigBassSplashStack::where('id', 286)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
@@ -737,10 +737,10 @@ namespace VanguardLTE\Games\BigBassSplashPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassSplashStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 29000);
+                $index = mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 80000);
+                    $index = mt_rand(0, 95000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
