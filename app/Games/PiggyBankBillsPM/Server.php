@@ -337,28 +337,26 @@ namespace VanguardLTE\Games\PiggyBankBillsPM
                 $scatterWin = 0;
                 $_obf_winCount = 0;
                 for($i = 0; $i < 9; $i++){
-                    if(($lastReel[$linesId[$i][0]] == $lastReel[$linesId[$i][1]]) || $lastReel[$linesId[$i][0]] == $wild || $lastReel[$linesId[$i][1]] == $wild){
+                    if($lastReel[$linesId[$i][0]] == $lastReel[$linesId[$i][1]] && $lastReel[$linesId[$i][0]] == $scatter){
+                        $scatterCount++;
+                    }else if(($lastReel[$linesId[$i][0]] == $lastReel[$linesId[$i][1]]) || $lastReel[$linesId[$i][0]] == $wild || $lastReel[$linesId[$i][1]] == $wild){
                         $firstEle = $lastReel[$linesId[$i][0]];
                         if($firstEle == $wild){
                             $firstEle = $lastReel[$linesId[$i][1]];
                         }
-                        if($firstEle == $scatter){
-                            $scatterCount++;
-                        }else{
-                            $mul = 1;
-                            if(count($arr_slm_mv) > 0){
-                                for($k = 0; $k < 2; $k++){
-                                    if($arr_slm_mv[$linesId[$i][$k]] > 1){
-                                        $mul = $mul * $arr_slm_mv[$linesId[$i][$k]]; 
-                                    }
+                        $mul = 1;
+                        if(count($arr_slm_mv) > 0){
+                            for($k = 0; $k < 2; $k++){
+                                if($arr_slm_mv[$linesId[$i][$k]] > 1){
+                                    $mul = $mul * $arr_slm_mv[$linesId[$i][$k]]; 
                                 }
                             }
-                            $lineWin = $slotSettings->Paytable[$firstEle] * $betline * $mul;
-                            if($lineWin > 0){
-                                $totalWin += $lineWin;
-                                $_obf_winCount++;
-                                $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$i.'~'.$lineWin . '~' . $linesId[$i][0] . '~' . $linesId[$i][1];
-                            }
+                        }
+                        $lineWin = $slotSettings->Paytable[$firstEle] * $betline * $mul;
+                        if($lineWin > 0){
+                            $totalWin += $lineWin;
+                            $_obf_winCount++;
+                            $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$i.'~'.$lineWin . '~' . $linesId[$i][0] . '~' . $linesId[$i][1];
                         }
                     }
                 }
