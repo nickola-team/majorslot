@@ -525,7 +525,9 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                             $strOtherResponse = $strOtherResponse . '&purtr=1&puri=' . $pur;
                         }
                     }
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $stack);  
+                    if($isGeneratedFreeStack == false){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $stack);  
+                    }
                 }
                 if($arr_g != null){
                     $arr_g['bg']['rw'] ='' . $totalWin;
