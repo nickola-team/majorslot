@@ -148,7 +148,7 @@ namespace VanguardLTE\Games\BigBassSplashPM
                         if($mo_m > 0){
                             $moneyWin = $moneyWin * $mo_m;
                         }
-                        $strOtherResponse = $strOtherResponse . '&mo_tv=' . $mo_tv . '&mo_tw=' . $moneyWin;
+                        $strOtherResponse = $strOtherResponse . '&mo_c=1&mo_tv=' . $mo_tv . '&mo_tw=' . $moneyWin;
                     }
                     if($mo_m > 0){
                         $strOtherResponse = $strOtherResponse . '&mo_m=' . $mo_m;
@@ -489,8 +489,8 @@ namespace VanguardLTE\Games\BigBassSplashPM
                 $reelA = [];
                 $reelB = [];
                 for($i = 0; $i < 5; $i++){
-                    $reelA[$i] = mt_rand(8, 12);
-                    $reelB[$i] = mt_rand(8, 12);
+                    $reelA[$i] = mt_rand(4, 8);
+                    $reelB[$i] = mt_rand(4, 8);
                 }
                 $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
                 $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
@@ -547,7 +547,7 @@ namespace VanguardLTE\Games\BigBassSplashPM
                     $strOtherResponse = $strOtherResponse . '&mo_wpos=' . $str_mo_wpos;
                 }
                 if($mo_tv > 0){
-                    $strOtherResponse = $strOtherResponse . '&mo_tv=' . $mo_tv . '&mo_tw=' . $moneyWin;
+                    $strOtherResponse = $strOtherResponse . '&mo_c=1&mo_tv=' . $mo_tv . '&mo_tw=' . $moneyWin;
                 }
                 if($mo_m > 0){
                     $strOtherResponse = $strOtherResponse . '&mo_m=' . $mo_m;
@@ -595,7 +595,7 @@ namespace VanguardLTE\Games\BigBassSplashPM
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse . $strWinLine .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&w='.$totalWin.'&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -658,7 +658,7 @@ namespace VanguardLTE\Games\BigBassSplashPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
 
-                $response = 'fsmul=1&balance='.$Balance.'&fsmax='. $fsmax .'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=1&fsres=0.00&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                $response = 'fsmul=1&balance='.$Balance.'&fsmax='. $fsmax . $strOtherResponse .'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=1&fsres=0.00&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
 
                 
                 //------------ ReplayLog ---------------

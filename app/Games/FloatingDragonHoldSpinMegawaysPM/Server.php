@@ -512,7 +512,10 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                 }
                 $money_win = 0;
                 if($mo_tv > 0){
-                    $money_win = $mo_tv * $betline * $lines;
+                    $money_win = $mo_tv * $betline;
+                    if($mo_m > 1){
+                        $money_win = $money_win * $mo_m;
+                    }
                     $totalWin += $money_win;
                 }
 
