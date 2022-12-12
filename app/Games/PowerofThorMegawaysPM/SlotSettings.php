@@ -681,7 +681,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
         
         public function BonusWinChance($currentIndex)
         {
-            $fsChance = [30, 40, 50, 50]; // [4, 6, 8, 10, 12]
+            $fsChance = [10, 20, 50, 50]; // [4, 6, 8, 10, 12]
             $percent = mt_rand(0, 100);
             if($fsChance[$currentIndex] > $percent){
                 return true;
@@ -751,7 +751,7 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
-                    if($fsmax >= 10){
+                    if($fsmax >= 22){
                         $stacks = $stacks->where('odd', '<=', 35);    
                     }else if($fsmax > 0){
                         $stacks = $stacks->where('odd', '<=', 15);    
