@@ -10,67 +10,69 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         const XMX_PROVIDER = 'tp';
-        const XMX_PP_HREF = 'xmx_pp';
         const XMX_GAME_IDENTITY = [
-            'xmx_bbtec' => 6,
-            'xmx_pp' => 8,
-            'xmx_isoft' => 10,
-            'xmx_star' => 11,
-            'xmx_pgsoft' => 14,
-            'xmx_bbin' => 15,
-            'xmx_rtg' => 19,
-            'xmx_mg' => 21,
-            'xmx_cq9' => 23,
-            'xmx_hbn' => 24,
-            'xmx_playstar' => 29,
-            'xmx_gameart' => 30,
-            'xmx_ttg' => 32,
-            'xmx_genesis' => 33,
-            'xmx_tpg' => 34,
-            'xmx_playson' => 36,
-            'xmx_bng' => 37,
-            'xmx_evoplay' => 40,
-            'xmx_dreamtech' => 41,
-            'xmx_ag' => 44,
-            'xmx_theshow' => 47,
-            'xmx_png' => 51,
+            'xmx-bbtec' => 6,
+            'xmx-pp' => 8,
+            'xmx-isoft' => 10,
+            'xmx-star' => 11,
+            'xmx-pgsoft' => 14,
+            'xmx-bbin' => 15,
+            'xmx-rtg' => 19,
+            'xmx-mg' => 21,
+            'xmx-cq9' => 23,
+            'xmx-hbn' => 24,
+            'xmx-playstar' => 29,
+            'xmx-gameart' => 30,
+            'xmx-ttg' => 32,
+            'xmx-genesis' => 33,
+            'xmx-tpg' => 34,
+            'xmx-playson' => 36,
+            'xmx-bng' => 37,
+            'xmx-evoplay' => 40,
+            'xmx-dreamtech' => 41,
+            'xmx-ag' => 44,
+            'xmx-theshow' => 47,
+            'xmx-png' => 51,
         ];
-        const xmx_IDENTITY_GAME = [
-            6  => 'xmx_bbtec'      ,
-            8  => 'xmx_pp'         ,
-            10 => 'xmx_isoft'      ,
-            11 => 'xmx_star'       ,
-            14 => 'xmx_pgsoft'     ,
-            15 => 'xmx_bbin'       ,
-            19 => 'xmx_rtg'        ,
-            21 => 'xmx_mg'         ,
-            23 => 'xmx_cq9'        ,
-            24 => 'xmx_hbn'        ,
-            29 => 'xmx_playstar'   ,
-            30 => 'xmx_gameart'    ,
-            32 => 'xmx_ttg'        ,
-            33 => 'xmx_genesis'    ,
-            34 => 'xmx_tpg'        ,
-            36 => 'xmx_playson'    ,
-            37 => 'xmx_bng'        ,
-            40 => 'xmx_evoplay'    ,
-            41 => 'xmx_dreamtech'  ,
-            44 => 'xmx_ag'         ,
-            47 => 'xmx_theshow'    ,
-            51 => 'xmx_png'        ,
+        const XMX_IDENTITY_GAME = [
+            6  => 'xmx-bbtec'      ,
+            8  => 'xmx-pp'         ,
+            10 => 'xmx-isoft'      ,
+            11 => 'xmx-star'       ,
+            14 => 'xmx-pgsoft'     ,
+            15 => 'xmx-bbin'       ,
+            19 => 'xmx-rtg'        ,
+            21 => 'xmx-mg'         ,
+            23 => 'xmx-cq9'        ,
+            24 => 'xmx-hbn'        ,
+            29 => 'xmx-playstar'   ,
+            30 => 'xmx-gameart'    ,
+            32 => 'xmx-ttg'        ,
+            33 => 'xmx-genesis'    ,
+            34 => 'xmx-tpg'        ,
+            36 => 'xmx-playson'    ,
+            37 => 'xmx-bng'        ,
+            40 => 'xmx-evoplay'    ,
+            41 => 'xmx-dreamtech'  ,
+            44 => 'xmx-ag'         ,
+            47 => 'xmx-theshow'    ,
+            51 => 'xmx-png'        ,
         ];
 
         public static function getGameObj($uuid)
         {
-            $gamelist = XMXController::getgamelist($uuid);
-            if ($gamelist)
+            foreach (XMXController::XMX_IDENTITY_GAME as $ref)
             {
-                foreach($gamelist as $game)
+                $gamelist = XMXController::getgamelist($ref);
+                if ($gamelist)
                 {
-                    if ($game['gamecode'] == $uuid)
+                    foreach($gamelist as $game)
                     {
-                        return $game;
-                        break;
+                        if ($game['gamecode'] == $uuid)
+                        {
+                            return $game;
+                            break;
+                        }
                     }
                 }
             }
@@ -111,14 +113,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         
-        public static function getuserbalance($gid, $user) {
+        public static function getUserBalance($href, $user) {
             $url = config('app.xmx_api') . '/getAccountBalance';
             $op = config('app.xmx_op');
+            $category = XMXController::XMX_GAME_IDENTITY[$href];
     
             $params = [
                 'isRenew' => true,
                 'operatorID' => $op,
-                'thirdPartyCode' => $gid,
+                'thirdPartyCode' => $category,
                 'time' => time(),
                 'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
                 'vendorID' => 0,
@@ -160,7 +163,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = config('app.xmx_api') . '/getGameList';
             $op = config('app.xmx_op');
 
-            $category = self::XMX_GAME_IDENTITY[$href];
+            $category = XMXController::XMX_GAME_IDENTITY[$href];
 
             $params = [
                 'operatorID' => $op,
@@ -265,9 +268,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             return $url;
         }
-        public static function withdrawAll($gid, $user)
+        public static function withdrawAll($href, $user)
         {
-            $balance = XMXController::getuserbalance($gid, $user);
+            $category = XMXController::XMX_GAME_IDENTITY[$href];
+            $balance = XMXController::getuserbalance($href, $user);
             if ($balance < 0)
             {
                 return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
@@ -280,7 +284,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $params = [
                     'amount' => $balance,
                     'operatorID' => $op,
-                    'thirdPartyCode' => $gid,
+                    'thirdPartyCode' => $category,
                     'transactionID' => uniqid(self::XMX_PROVIDER),
                     'userID' => self::XMX_PROVIDER . sprintf("%04d",auth()->user()->id),
                     'time' => time(),
@@ -342,8 +346,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $key = config('app.bnn_key');
-
-            $balance = XMXController::getuserbalance($gamecode, $user);
+            $game = XMXController::getGameObj($gamecode);
+            if ($game == null)
+            {
+                Log::error('XMXMakeLink : Game not find  ' . $game);
+                return null;
+            }
+            $balance = XMXController::getuserbalance($game['href'], $user);
             if ($balance == -1)
             {
                 return null;
@@ -352,7 +361,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance)
             {
                 //withdraw all balance
-                $data = XMXController::withdrawAll($gamecode, $user);
+                $data = XMXController::withdrawAll($game['href'], $user);
                 if ($data['error'])
                 {
                     return null;
