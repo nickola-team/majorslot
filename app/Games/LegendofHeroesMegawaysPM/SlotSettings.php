@@ -681,7 +681,7 @@ namespace VanguardLTE\Games\LegendofHeroesMegawaysPM
         
         public function BonusWinChance($currentIndex)
         {
-            $fsChance = [10, 20, 50, 50]; // [4, 6, 8, 10, 12]
+            $fsChance = [80, 70, 50, 50]; // [4, 6, 8, 10, 12]
             $percent = mt_rand(0, 100);
             if($fsChance[$currentIndex] > $percent){
                 return true;
