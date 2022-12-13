@@ -1033,7 +1033,7 @@ return [
         "MahjongPanda" => "마종 판다",
         "LittleGemHoldandSpin" => "리틀 젬 홀드 앤드 스핀",
         "QueenofGods" => "퀸 오브 갓즈",
-        "BookOfTutRespin" => "북 오브 투트 리스핀",
+        "BookofTutRespin" => "북 오브 투트 리스핀",
         "SpinScoreMegaways" => "스핀 & 스코어 메가웨이즈",
         "BiggerBassBlizzard" => "비거 배스 블리자드",
 
