@@ -377,7 +377,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => intval($old_balance), 
                 'bet' => $betAmount, 
                 'win' => $betAmount, 
-                'game' =>  $gameObj['name'] . '_' . $gameObj['href'], 
+                'game' =>  $gameObj['name'] . '[C]_' . $gameObj['href'], 
                 'type' => 'table',
                 'percent' => 0, 
                 'percent_jps' => 0, 
