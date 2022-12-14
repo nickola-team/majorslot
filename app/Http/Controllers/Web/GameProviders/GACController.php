@@ -223,7 +223,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betAmount = isset($data['betAmount'])?$data['betAmount']:0;
             $betInfo = isset($data['betInfo'])?$data['betInfo']:0;
             $gameId = isset($data['gameId'])?$data['gameId']:0;
-            if (!$userId || !$tableName || !$betAmount || !$gameId)
+            if (!isset($data['userId']) || !isset($data['tableName']) || !isset($data['betAmount']) || !isset($data['gameId']))
             {
                 return response()->json([
                     'result' => false,
@@ -268,8 +268,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gaccloses = \VanguardLTE\ProviderInfo::whereIn('user_id', $hirechyUsers)->where('provider', 'gacclose')->get();
             foreach ($gaccloses as $table)
             {
-                $data = json_decode($table->config, true);
-                $closetables = array_merge_recursive($closetables, $data);
+                $data2 = json_decode($table->config, true);
+                $closetables = array_merge_recursive($closetables, $data2);
             }
             if (count($closetables) > 0 && in_array($tableName, $closetables))
             {
