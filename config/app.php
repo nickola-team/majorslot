@@ -215,6 +215,7 @@ return [
     'xmx_api' => env('XMX_API', ''),
     'xmx_key' => env('XMX_KEY', ''),
     'xmx_op' => env('XMX_OP', ''),
+    'xmx_prefix' => env('XMX_PREFIX', ''),
 
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),

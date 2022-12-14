@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
-        const XMX_PROVIDER = 'tp';
+        const XMX_PROVIDER = 'xmx';
         const XMX_GAME_IDENTITY = [
             'xmx-bbtec' => 6,
             'xmx-pp' => 8,
@@ -79,12 +79,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return null;
         }
 
-        public static function hashParams($params) {
+        public static function hashParam($params) {
             if (!$params || count($params) == 0) {
                 return null;
             }
     
-            $privateKey = config('xmx_key', '');
+            $privateKey = config('app.xmx_key', '');
     
             $strParams = '';
             ksort($params);
@@ -100,8 +100,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     
             $hash = md5($privateKey . trim($strParams, "&"));
     
-            $params['hash'] = $hash;
-            return $params;
+            return $hash;
         }
 
         /*
@@ -122,12 +121,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'isRenew' => true,
                 'operatorID' => $op,
                 'thirdPartyCode' => $category,
-                'time' => time(),
+                'time' => time()*1000,
                 'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
                 'vendorID' => 0,
             ];
 
-            $params['hash'] = XMXProvider::hashParam($params);
+            $params['hash'] = XMXController::hashParam($params);
     
             $response = Http::asForm()->post($url, $params);
             
@@ -135,7 +134,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($response->ok()) {
                 $res = $response->json();
     
-                if ($res['returnCode'] == 1) {
+                if ($res['returnCode'] == 0) {
                     $balance = $res['thirdPartyBalance'];
                 }
                 else
@@ -168,11 +167,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'operatorID' => $op,
                 'thirdPartyCode' => $category,
-                'time' => time(),
+                'time' => time() * 1000,
                 'vendorID' => 0,
             ];
 
-            $params['hash'] = XMXProvider::hashParam($params);
+            $params['hash'] = XMXController::hashParam($params);
     
             $response = Http::asForm()->post($url, $params);
             if (!$response->ok())
@@ -181,11 +180,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $data = $response->json();
             $gameList = [];
-            if ($data['resultCode'] == 0)
+            if ($data['returnCode'] == 0)
             {
                 foreach ($data['games'] as $game)
                 {
-                    if (in_array($href,['tp_bng','tp_playson']) && str_contains($game['uuid'],'_mob'))
+                    if (in_array($href,['xmx-bng','xmx-playson']) && str_contains($game['id'],'_mob'))
                     {
                         continue;
                     }
@@ -201,6 +200,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'view' => 1
                     ]);
                 }
+
+                //add Unknown Game item
+                array_push($gameList, [
+                    'provider' => self::XMX_PROVIDER,
+                    'href' => $href,
+                    'symbol' => 'Unknown',
+                    'gamecode' => $href,
+                    'enname' => 'UnknownGame',
+                    'name' => 'UnknownGame',
+                    'title' => 'UnknownGame',
+                    'icon' => '',
+                    'type' => 'slot',
+                    'view' => 0
+                ]);
             }
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
@@ -217,10 +230,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'operatorID' => $op,
                 'userID' => self::XMX_PROVIDER . sprintf("%04d",auth()->user()->id),
-                'time' => time(),
+                'time' => time()*1000,
                 'vendorID' => 0,
             ];
-            $params['hash'] = XMXProvider::hashParam($params);
+            $params['hash'] = XMXController::hashParam($params);
 
             $url = config('app.xmx_api') . '/generateSession';
             $response = Http::asForm()->post($url, $params);
@@ -245,10 +258,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'lang' => 'kr',
                 'operatorID' => $op,
                 'session' => $session,
-                'time' => time(),
+                'time' => time()*1000,
                 'vendorID' => 0,
             ];
-            $params['hash'] = XMXProvider::hashParam($params);
+            $params['hash'] = XMXController::hashParam($params);
 
             $url = config('app.xmx_api') . '/getGameUrl';
             $response = Http::asForm()->post($url, $params);
@@ -286,11 +299,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'operatorID' => $op,
                     'thirdPartyCode' => $category,
                     'transactionID' => uniqid(self::XMX_PROVIDER),
-                    'userID' => self::XMX_PROVIDER . sprintf("%04d",auth()->user()->id),
-                    'time' => time(),
+                    'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time()*1000,
                     'vendorID' => 0,
                 ];
-                $params['hash'] = XMXProvider::hashParam($params);
+                $params['hash'] = XMXController::hashParam($params);
 
                 $url = config('app.xmx_api') . '/transferPointG2M';
                 $response = Http::asForm()->post($url, $params);
@@ -312,11 +325,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'amount' => $balance,
                     'operatorID' => $op,
                     'transactionID' => uniqid(self::XMX_PROVIDER),
-                    'userID' => self::XMX_PROVIDER . sprintf("%04d",auth()->user()->id),
-                    'time' => time(),
+                    'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time()*1000,
                     'vendorID' => 0,
                 ];
-                $params['hash'] = XMXProvider::hashParam($params);
+                $params['hash'] = XMXController::hashParam($params);
 
                 $url = config('app.xmx_api') . '/subtractMemberPoint';
                 $response = Http::asForm()->post($url, $params);
@@ -345,13 +358,41 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
 
-            $key = config('app.bnn_key');
             $game = XMXController::getGameObj($gamecode);
             if ($game == null)
             {
                 Log::error('XMXMakeLink : Game not find  ' . $game);
                 return null;
             }
+
+            $op = config('app.xmx_op');
+
+            //create ximax account
+            $params = [
+                'operatorID' => $op,
+                'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time()*1000,
+                'vendorID' => 0,
+                'walletID' =>config('app.xmx_prefix') . sprintf("%04d",$user->id),
+            ];
+            $params['hash'] = XMXController::hashParam($params);
+
+            $url = config('app.xmx_api') . '/createAccount';
+            $response = Http::asForm()->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('XMXmakelink : createAccount request failed. ' . $response->body());
+
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || ($data['returnCode'] != 0 && $data['returnCode'] != 23))
+            {
+                Log::error('XMXmakelink : createAccount result failed. ' . ($data==null?'null':$data['description']));
+                return null;
+            }
+
+
             $balance = XMXController::getuserbalance($game['href'], $user);
             if ($balance == -1)
             {
@@ -370,18 +411,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 if ($user->balance > 0)
                 {
-                    $op = config('app.xmx_op');
 
                     //addMemberPoint
                     $params = [
-                        'amount' => $balance,
+                        'amount' => $user->balance,
                         'operatorID' => $op,
                         'transactionID' => uniqid(self::XMX_PROVIDER),
-                        'userID' => self::XMX_PROVIDER . sprintf("%04d",auth()->user()->id),
-                        'time' => time(),
+                        'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                        'time' => time()*1000,
                         'vendorID' => 0,
                     ];
-                    $params['hash'] = XMXProvider::hashParam($params);
+                    $params['hash'] = XMXController::hashParam($params);
 
                     $url = config('app.xmx_api') . '/addMemberPoint';
                     $response = Http::asForm()->post($url, $params);
@@ -414,127 +454,160 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [XMXController::XMX_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($timepoint)
+        public static function gamerounds($thirdparty,$startDate)
         {
-            $url = config('app.bnn_api') . '/v2/history/idx';
-            $key = config('app.bnn_key');
-            $pageSize = 1000;
+            $op = config('app.xmx_op');
+
+            $endDate = date('Y-m-d H:i:s');
+
             $params = [
-                'key' => $key,
-                'page_size' => $pageSize,
-                'game_idx' => $timepoint
+                'endDate' => $endDate,
+                'operatorID' => $op,
+                'startDate' => $startDate,
+                'thirdPartyCode' => $thirdparty,
+                'pageSize' => 1000,
+                'time' => time()*1000,
+                'vendorID' => 0,
             ];
-            $response = null;
+            $params['hash'] = XMXController::hashParam($params);
 
-            try {
-                $response = Http::get($url, $params);
-            } catch (\Exception $e) {
-                Log::error('BNNGameRounds : GameRounds request failed. ' . $e->getMessage());
-                return null;
-            }
-
+            $url = config('app.xmx_api') . '/getBetWinHistoryAll';
+            $response = Http::asForm()->post($url, $params);
             if (!$response->ok())
             {
-                Log::error('BNNGameRounds : GameRounds request failed. ' . $response->body());
+                Log::error('XMXgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
+
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || $data['returnCode'] != 0)
+            {
+                Log::error('XMXgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
                 return null;
             }
 
-            $data = $response->json();
             return $data;
         }
 
         public static function processGameRound()
         {
-            $tpoint = \VanguardLTE\Settings::where('key', 'BNNtimepoint')->first();
-            if ($tpoint)
-            {
-                $timepoint = $tpoint->value;
-            }
-            else
-            {
-                $timepoint = 0;
-            }
-
-            //get category id
-            
-            $data = XMXController::gamerounds($timepoint);
             $count = 0;
-            if ($data && $data['ret'] == 1 && $data['total'] > 0)
+
+            foreach (XMXController::XMX_GAME_IDENTITY as $catname => $thirdId)
             {
-                
-                foreach ($data['data'] as $round)
-                {
-                    $bet = $round['bet_money'];
-                    $win = $round['result_money'];
+                $category = \VanguardLTE\Category::where([
+                    'provider'=> XMXController::XMX_PROVIDER,
+                    'href' => $catname,
+                    'shop_id' => 0,
+                    'site_id' => 0,
+                    ])->first();
 
-                    $category = \VanguardLTE\Category::where(['provider' => self::XMX_PROVIDER, 'shop_id' => 0, 'href' =>$round['gid']])->first();
-                    if ($round['extra'] != null)
+                if (!$category)
+                {
+                    continue;
+                }
+                $lasttime = '2022-12-01 0:0:0';
+                $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
+                if ($lastround)
+                {
+                    $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                }
+                $data = XMXController::gamerounds($thirdId, $lasttime);
+                if ($data['totalDataSize'] > 0)
+                {
+                    
+                    foreach ($data['history'] as $round)
                     {
-                        $balance = $round['extra']['after_money'];
-                    }
-                    else
-                    {
-                        $balance = -1;
-                    }
-                    $time = $round['game_date'];
+                        $bet = 0;
+                        $win = 0;
+                        $gameName = $round['gameID'];
+                        if ($catname == 'xmx-cq9')
+                        {
+                            if ($round['transType'] == 'BET')
+                            {
+                                continue;
+                            }
+                            $betdata = json_decode($round['history'],true);
+                            $bet = $betdata['bet'];
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance'];
+                        }
+                        else if ($catname == 'xmx-bng' || $catname == 'xmx-playson')
+                        {
+                            if ($round['transType'] == 'WIN')
+                            {
+                                continue;
+                            }
 
-                    $userid = preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['uid']) ;
-                    $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
-                    $gameName = $round['gid'];
-                    \VanguardLTE\StatGame::create([
-                        'user_id' => $userid, 
-                        'balance' => $balance, 
-                        'bet' => $bet, 
-                        'win' => $win, 
-                        'game' =>$gameName . '_bnn', 
-                        'type' => 'table',
-                        'percent' => 0, 
-                        'percent_jps' => 0, 
-                        'percent_jpg' => 0, 
-                        'profit' => 0, 
-                        'denomination' => 0, 
-                        'date_time' => $time,
-                        'shop_id' => $shop?$shop->shop_id:0,
-                        'category_id' => isset($category)?$category->id:0,
-                        'game_id' => $gameName,
-                        'roundid' => $round['gubun'] . '_' . $round['game_idx'],
-                    ]);
-                    $timepoint =  $round['game_idx'];
-                    $count = $count + 1;
+                            $betdata = json_decode($round['history'],true);
+                            $bet = $betdata['bet']??0;
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance_after'];
+                            if ($bet==0 && $win==0)
+                            {
+                                continue;
+                            }
+                        }
+                        else if ($catname == 'xmx-hbn')
+                        {
+                            if ($round['transType'] == 'BET')
+                            {
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['history'],true);
+                            $bet = $betdata['stake'];
+                            $win = $betdata['payout'];
+                            $balance = -1;
+                            $gameName = $betdata['gameKeyName'];
+                        }
+                        else
+                        {
+                            if ($round['transType'] == 'BET')
+                            {
+                                $bet = $round['amount'];
+                            }
+                            else
+                            {
+                                $win = $round['amount'];
+                            }
+
+                            $balance = -1;
+                        }
+
+                        $time = $round['transTime'];
+
+                        $userid = intval(preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['userID'])) ;
+                        $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                        
+                        \VanguardLTE\StatGame::create([
+                            'user_id' => $userid, 
+                            'balance' => $balance, 
+                            'bet' => $bet, 
+                            'win' => $win, 
+                            'game' =>$gameName . '_xmx', 
+                            'type' => 'slot',
+                            'percent' => 0, 
+                            'percent_jps' => 0, 
+                            'percent_jpg' => 0, 
+                            'profit' => 0, 
+                            'denomination' => 0, 
+                            'date_time' => $time,
+                            'shop_id' => $shop?$shop->shop_id:0,
+                            'category_id' => isset($category)?$category->id:0,
+                            'game_id' => $catname,
+                            'roundid' => $round['gameID'] . '_' . $round['roundID'],
+                        ]);
+                        $count = $count + 1;
+                    }
                 }
 
-                $timepoint = $timepoint + 1;
-                if ($tpoint)
-                {
-                    $tpoint->update(['value' => $timepoint]);
-                    $tpoint->save();
-                }
-                else
-                {
-                    \VanguardLTE\Settings::create(['key' => 'BNNtimepoint', 'value' => $timepoint]);
-                }
             }
-            return [$count, $timepoint];
+            
+            
+            return [$count, 0];
         }
 
-        public static function getAgentBalance()
-        {
-            $url = config('app.bnn_api') . '/v1/agent-money';
-            $key = config('app.bnn_key');
-            $params = [
-                'key' => $key,
-            ];
-            $response = null;
-
-            try {
-                $response = Http::get($url, $params);
-                $data = $response->json();
-                return $data['money_ro'];
-            } catch (\Exception $e) {
-                Log::error('BNNAgentMoney : request failed. ' . $e->getMessage());
-                return -1;
-            }
-        }
     }
 
 }
