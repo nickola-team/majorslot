@@ -713,7 +713,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $username = $username . '#' . strval($user->id);
-            $username = substr($username, -10);
+            $username = mb_substr($username, -10);
 
             $recommend = config('app.gac_key');
             $data = [
