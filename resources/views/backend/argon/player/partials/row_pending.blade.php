@@ -17,7 +17,7 @@
 </td>
 <td> {{$table['title']}} </td>
 <td>
-    {{number_format($statdata['betAmount'])}}
+    {{number_format(isset($statdata['betAmount'])?$statdata['betAmount']:0)}}
 </td>
 <td>{{ $stat->date_time }}</td>
 <td>미결중</td>
