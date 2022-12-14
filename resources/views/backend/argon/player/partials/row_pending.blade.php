@@ -1,6 +1,9 @@
 <?php
     $statdata = json_decode($stat->data,true);
-    $table = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getGameObj($statdata['tableName']);
+    $table = null;
+    if (isset($statdata['tableName'])){
+        $table = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getGameObj($statdata['tableName']);
+    }
     if ($table == null)
     {
         $table = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getGameObj('unknowntable');
