@@ -712,10 +712,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $username = $parse[count($parse) - 1];
             }
 
+            $username = $username . '#' . strval($user->id);
+            $username = substr($username, -10);
+
             $recommend = config('app.gac_key');
             $data = [
                 'userId' => strval($user->id),
-                'userName' => $username . '#' . strval($user->id),
+                'userName' => $username,
                 'recommend' => $recommend,
                 'gameType' => ($gameObj['href'] == 'gac')?(self::GACGAC):(self::GACGVO),
             ];
