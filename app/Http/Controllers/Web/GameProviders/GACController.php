@@ -223,7 +223,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betAmount = isset($data['betAmount'])?$data['betAmount']:0;
             $betInfo = isset($data['betInfo'])?$data['betInfo']:0;
             $gameId = isset($data['gameId'])?$data['gameId']:0;
-            if (!$userId || !$tableName || !$betAmount || !$gameId)
+            if (!isset($data['userId']) || !isset($data['tableName']) || !isset($data['betAmount']) || !isset($data['gameId']))
             {
                 return response()->json([
                     'result' => false,
