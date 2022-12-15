@@ -561,6 +561,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $balance = -1;
                             $gameName = $betdata['gameKeyName'];
                         }
+                        else if ($catname == 'xmx-pp')
+                        {
+                            if ($round['transType'] == 'WIN')
+                            {
+                                continue;
+                            }
+
+                            $betdata = explode(',', $round['history']);
+                            $bet = $betdata[9];
+                            $win = $betdata[10];
+                            $balance = -1;
+                        }
                         else
                         {
                             if ($round['transType'] == 'BET')
