@@ -411,9 +411,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         break;
                 }
             }
-            $games = $games->get();
+            // $games = $games->get();
+            $org_ids = $games->pluck('original_id')->toArray();
+            $game_ids = $games->pluck('id')->toArray();
+            $startDate = date('Y-m-d', strtotime('-30 days'));
+            $query = 'SELECT A.*, B.bet from w_games A  left JOIN (SELECT SUM(totalbet) AS bet,SUM(totalwin) AS win, game_id AS game_id FROM w_game_summary WHERE date>="'.$startDate.'" and game_id in ('.implode(',',$org_ids).') GROUP BY game_id) B ON A.original_id=B.game_id WHERE A.id in ('.implode(',',$game_ids).')  ORDER BY B.bet desc;';
+            $gamerst = \DB::select($query);
             $data = [];
-            foreach ($games as $game)
+            foreach ($gamerst as $game)
             {
                 $data[] = [
                     'name' => $game->name,
