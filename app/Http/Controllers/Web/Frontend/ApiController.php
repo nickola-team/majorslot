@@ -411,14 +411,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         break;
                 }
             }
-            $games = $games->get();
+            // $games = $games->get();
+            $org_ids = $games->pluck('original_id')->toArray();
+            $game_ids = $games->pluck('id')->toArray();
+            $startDate = date('Y-m-d', strtotime('-30 days'));
+            $query = 'SELECT A.*, B.bet from w_games A  left JOIN (SELECT SUM(totalbet) AS bet,SUM(totalwin) AS win, game_id AS game_id FROM w_game_summary WHERE date>="'.$startDate.'" and game_id in ('.implode(',',$org_ids).') GROUP BY game_id) B ON A.original_id=B.game_id WHERE A.id in ('.implode(',',$game_ids).')  ORDER BY B.bet desc;';
+            $gamerst = \DB::select($query);
             $data = [];
-            foreach ($games as $game)
+            foreach ($gamerst as $game)
             {
                 $data[] = [
                     'name' => $game->name,
                     'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
                     'enname' => $game->title,
+                    'label' => $game->label,
                 ];
             }
             return $data;
@@ -586,39 +592,29 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if ($cat1->provider != null)
                 {
                     $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
-                    // //include gac lobby at all live casino
-                    // if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
-                    // {
-                    //     //skip
-                    // }
-                    // else {
-                    //     if ($cat1->type == 'live' && $cat1->href != 'gac')
-                    //     {
-                    //         $cat2 = \VanguardLTE\Category::where([
-                    //             'href' => 'gac', 
-                    //             'shop_id' => $shop_id
-                    //         ])->first();
-                    //         if ($cat2 && $cat2->view == 1)
-                    //         {
-                    //             $gacgames = $this->gamelistbyProvider($cat2->provider, $cat2->href);
-                    //             //change game icons
-                    //             foreach ($gacgames as $index=>$gac)
-                    //             {
-                    //                 $icon_name = str_replace(' ', '_', $gacgames[$index]['gameid']);
-                    //                 $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
-                    //                 if ($cat1->href == 'live') //pragmatic
-                    //                 {
-                    //                     $gacgames[$index]['icon'] = '/frontend/Default/ico/gac/pp/' .  $icon_name . '.png';
-                    //                 }
-                    //                 else if ($cat1->href == 'evo') //evolution
-                    //                 {
-                    //                     $gacgames[$index]['icon'] = '/frontend/Default/ico/gac/evo/' .  $icon_name . '.png';
-                    //                 }
-                    //             }
-                    //             $selectedGames = array_merge($gacgames, $selectedGames);                                
-                    //         }
-                    //     }
-                    // }
+                    $childcat = \VanguardLTE\Category::where([
+                        'parent' => $cat1->id, 
+                        'shop_id' => $shop_id
+                    ])->first();
+                    if ($childcat)
+                    {
+                        $childgames = $this->gamelist([$childcat->id],false);
+                        $sortedgames = [];
+                        foreach ($childgames as $cg)
+                        {
+                            foreach ($selectedGames as $idx=>$sg)
+                            {
+                                if (isset($sg['symbol']) && ($sg['symbol']==$cg['label']))
+                                {
+                                    $sortedgames[] = $sg;
+                                    unset($selectedGames[$idx]);
+                                    break;
+                                }
+                            }
+                        }
+                        //now add remained games
+                        $selectedGames = array_merge($sortedgames, $selectedGames);
+                    }
                 }
                 else{
                     if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
