@@ -319,7 +319,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $gamecode = $request->gamecode;
             if ($provider == 'null')
             {
-                return response()->json(['error'=>false,'data' => ['url' => '/game/' . $gamecode]]);
+                $fakeparams = [
+                    'jackpotid' => 0,
+                    'exitGame' => 1,
+                    'extra' => 0,
+                    'game' => $gamecode, //this is real param
+                    'lobbyUrl' => 'js://window.close();',
+                    'mjckey' => uniqid('AUTH@') . uniqid('~style@'),
+                ];
+                return response()->json(['error'=>false,'data' => ['url' => route('frontend.game.startgame',$fakeparams)]]);
             }
             if ($provider == '')
             {
