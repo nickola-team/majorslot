@@ -208,6 +208,16 @@ return [
     'bnn_api' => env('BNN_API', ''),
     'bnn_key' => env('BNN_KEY', ''),
 
+
+    /*
+    XIMAX Auth key
+    */
+    'xmx_api' => env('XMX_API', ''),
+    'xmx_key' => env('XMX_KEY', ''),
+    'xmx_op' => env('XMX_OP', ''),
+    'xmx_prefix' => env('XMX_PREFIX', ''),
+
+
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
 
