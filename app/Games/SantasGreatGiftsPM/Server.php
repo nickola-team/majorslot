@@ -136,7 +136,7 @@ namespace VanguardLTE\Games\SantasGreatGiftsPM
                     }
                     if($pw >= 0){
                         if($pw > 0){
-                            $pw = $pw / $original_bet * $bet;
+                            $pw = str_replace(',', '', $pw) / $original_bet * $bet;
                         }
                         $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
                     }
@@ -547,7 +547,7 @@ namespace VanguardLTE\Games\SantasGreatGiftsPM
                 }
                 if($pw >= 0){
                     if($pw > 0){
-                        $pw = $pw / $original_bet * $betline;
+                        $pw = str_replace(',', '', $pw) / $original_bet * $betline;
                     }
                     $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
                 }

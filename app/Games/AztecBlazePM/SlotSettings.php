@@ -711,7 +711,7 @@ namespace VanguardLTE\Games\AztecBlazePM
         public function GetReelStrips($winType, $bet, $bl)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameAztecBlazeStack::where('id', 160)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameAztecBlazeStack::where('id', 13389)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -734,19 +734,22 @@ namespace VanguardLTE\Games\AztecBlazePM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameAztecBlazeStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 80000);
                 }
+                $index = mt_rand(0, 34000);
                 if($bl > 0){
                     $stacks = $stacks->where('pur_level', $bl);
                 }else{
                     $stacks = $stacks->where('pur_level','<=', 0);
+                    $index = mt_rand(34000, 59000);
+                    if($winType == 'win'){
+                        $index = mt_rand(34000, 95000);
+                    }
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 10);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
