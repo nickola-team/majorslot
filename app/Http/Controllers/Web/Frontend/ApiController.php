@@ -323,9 +323,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'jackpotid' => 0,
                     'exitGame' => 1,
                     'extra' => 0,
+                    'mjckey' => uniqid('AUTH@') . uniqid('~style@'),
                     'game' => $gamecode, //this is real param
                     'lobbyUrl' => 'js://window.close();',
-                    'mjckey' => uniqid('AUTH@') . uniqid('~style@'),
                 ];
                 return response()->json(['error'=>false,'data' => ['url' => route('frontend.game.startgame',$fakeparams)]]);
             }
