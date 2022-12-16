@@ -73,7 +73,7 @@ namespace VanguardLTE\Games\TheWildMachinePM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1]  = [0,0,0,0];
+            $this->Paytable[1]  = [0,0,0,0,0,0,0,0];
             $this->Paytable[2]  = [0,0,0,25,200,500,0,3500];
             $this->Paytable[3]  = [0,0,0,25,100,500,0,3500];
             $this->Paytable[4]  = [0,0,0,10,75,250,0,1000];
