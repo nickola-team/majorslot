@@ -814,7 +814,7 @@ return [
         "PandaFourtune2" => "판다포츈2",
         "Pirate Gold" => "파이럿골드",
         "GreatRhinoDeluxe" =>   "그레이트라이디럭스",
-        "PowerOfThorMegaways" =>    "파워오브토르메가웨이",
+        "PowerofThorMegaways" =>    "파워오브토르메가웨이",
         "BonanzaGold" =>    "보난자골드",
         "SweetBonanza" =>   "스위트보난자",
         "GatesofOlympus" => "게이트오브올리푸스",
