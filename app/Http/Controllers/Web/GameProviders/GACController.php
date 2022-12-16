@@ -183,6 +183,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             // tie betlimit multiply 5 time
             $betlimit[0]['BetLimit']['Baccarat_Tie'] = $betlimit[0]['BetLimit']['Baccarat_Tie'] * 5;
+            $betlimit[0]['BetLimit']['Baccarat_PlayerPair'] = $betlimit[0]['BetLimit']['Baccarat_PlayerPair'] * 5;
+            $betlimit[0]['BetLimit']['Baccarat_BankerPair'] = $betlimit[0]['BetLimit']['Baccarat_BankerPair'] * 5;
 
             return response()->json([
                 'result' => true,
@@ -223,7 +225,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betAmount = isset($data['betAmount'])?$data['betAmount']:0;
             $betInfo = isset($data['betInfo'])?$data['betInfo']:0;
             $gameId = isset($data['gameId'])?$data['gameId']:0;
-            if (!$userId || !$tableName || !$betAmount || !$gameId)
+            if (!isset($data['userId']) || !isset($data['tableName']) || !isset($data['betAmount']) || !isset($data['gameId']))
             {
                 return response()->json([
                     'result' => false,
@@ -268,8 +270,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gaccloses = \VanguardLTE\ProviderInfo::whereIn('user_id', $hirechyUsers)->where('provider', 'gacclose')->get();
             foreach ($gaccloses as $table)
             {
-                $data = json_decode($table->config, true);
-                $closetables = array_merge_recursive($closetables, $data);
+                $data2 = json_decode($table->config, true);
+                $closetables = array_merge_recursive($closetables, $data2);
             }
             if (count($closetables) > 0 && in_array($tableName, $closetables))
             {
@@ -370,14 +372,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => $gameObj['href']])->first();
 
-            $old_balance = $record->response + abs($betAmount);
+            $old_balance = $user->balance;
+            $ctime = date('Y-m-d/H:i:s');
             
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => intval($old_balance), 
                 'bet' => $betAmount, 
                 'win' => $betAmount, 
-                'game' =>  $gameObj['name'] . '_' . $gameObj['href'], 
+                'game' =>  $gameObj['name'] . '[C'.$ctime.']_' . $gameObj['href'], 
                 'type' => 'table',
                 'percent' => 0, 
                 'percent_jps' => 0, 
@@ -713,7 +716,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $username = $username . '#' . strval($user->id);
-            $username = substr($username, -10);
+            $username = mb_substr($username, -10);
 
             $recommend = config('app.gac_key');
             $data = [
