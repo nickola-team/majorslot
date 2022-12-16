@@ -254,6 +254,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $pagelang = $parent->language;
             return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
         }
+        public function startGameWithiFrame(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
+        {
+            $game = $request->game;
+            $url = '/game/' . $game;
+            return view('frontend.Default.games.apigame',compact('url'));
+        }
 
         public function startGameWithToken(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {

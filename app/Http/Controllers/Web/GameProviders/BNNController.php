@@ -138,7 +138,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             return $url;
         }
-        public static function withdrawAll($user)
+        public static function withdrawAll($gamecode,$user)
         {
             $url = config('app.bnn_api') . '/v1/withdrawal-all';
             $key = config('app.bnn_key');
@@ -182,7 +182,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance)
             {
                 //withdraw all balance
-                $data = BNNController::withdrawAll($user);
+                $data = BNNController::withdrawAll($gamecode,$user);
                 if ($data['error'])
                 {
                     return null;

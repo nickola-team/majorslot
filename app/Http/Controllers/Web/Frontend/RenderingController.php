@@ -446,18 +446,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if (!$launchRequest)
             {
                 //this is irlegal request.
-                return redirect('/');
+                abort(404);
             }
             if ($user->id != $launchRequest->user_id)
             {
-                return redirect('/');
+                abort(404);
             }
 
             $launchRequest->delete();
             $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
             if (!class_exists($object))
             {
-                return redirect('/');
+                abort(404);
             }
 
             $rqtime = 5; //default 5s
@@ -466,6 +466,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $user->update([
                     'playing_game' => strtolower($provider) . '_' . $gamecode,
+                    'played_at' => time(),
+                ]);
+                $rqtime = 30; //default 5s
+            }
+            else if ($provider == 'xmx')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\XMXController::getGameObj($gamecode);
+                if ($game==null)
+                {
+                    abort(404);
+                }
+                $user->update([
+                    'playing_game' => strtolower($provider) . '_' . $game['href'],
                     'played_at' => time(),
                 ]);
                 $rqtime = 30; //default 5s

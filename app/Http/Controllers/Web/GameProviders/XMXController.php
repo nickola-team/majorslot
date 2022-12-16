@@ -1,0 +1,625 @@
+<?php 
+namespace VanguardLTE\Http\Controllers\Web\GameProviders
+{
+    use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
+    class XMXController extends \VanguardLTE\Http\Controllers\Controller
+    {
+        /*
+        * UTILITY FUNCTION
+        */
+
+        const XMX_PROVIDER = 'xmx';
+        const XMX_GAME_IDENTITY = [
+            'xmx-bbtec' => 6,
+            'xmx-pp' => 8,
+            'xmx-isoft' => 10,
+            'xmx-star' => 11,
+            'xmx-pgsoft' => 14,
+            'xmx-bbin' => 15,
+            'xmx-rtg' => 19,
+            'xmx-mg' => 21,
+            'xmx-cq9' => 23,
+            'xmx-hbn' => 24,
+            'xmx-playstar' => 29,
+            'xmx-gameart' => 30,
+            'xmx-ttg' => 32,
+            'xmx-genesis' => 33,
+            'xmx-tpg' => 34,
+            'xmx-playson' => 36,
+            'xmx-bng' => 37,
+            'xmx-evoplay' => 40,
+            'xmx-dreamtech' => 41,
+            'xmx-ag' => 44,
+            'xmx-theshow' => 47,
+            'xmx-png' => 51,
+        ];
+        const XMX_IDENTITY_GAME = [
+            6  => 'xmx-bbtec'      ,
+            8  => 'xmx-pp'         ,
+            10 => 'xmx-isoft'      ,
+            11 => 'xmx-star'       ,
+            14 => 'xmx-pgsoft'     ,
+            15 => 'xmx-bbin'       ,
+            19 => 'xmx-rtg'        ,
+            21 => 'xmx-mg'         ,
+            23 => 'xmx-cq9'        ,
+            24 => 'xmx-hbn'        ,
+            29 => 'xmx-playstar'   ,
+            30 => 'xmx-gameart'    ,
+            32 => 'xmx-ttg'        ,
+            33 => 'xmx-genesis'    ,
+            34 => 'xmx-tpg'        ,
+            36 => 'xmx-playson'    ,
+            37 => 'xmx-bng'        ,
+            40 => 'xmx-evoplay'    ,
+            41 => 'xmx-dreamtech'  ,
+            44 => 'xmx-ag'         ,
+            47 => 'xmx-theshow'    ,
+            51 => 'xmx-png'        ,
+        ];
+
+        public static function getGameObj($uuid)
+        {
+            foreach (XMXController::XMX_IDENTITY_GAME as $ref)
+            {
+                $gamelist = XMXController::getgamelist($ref);
+                if ($gamelist)
+                {
+                    foreach($gamelist as $game)
+                    {
+                        if ($game['gamecode'] == $uuid)
+                        {
+                            return $game;
+                            break;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static function hashParam($params) {
+            if (!$params || count($params) == 0) {
+                return null;
+            }
+    
+            $privateKey = config('app.xmx_key', '');
+    
+            $strParams = '';
+            ksort($params);
+            foreach ($params as $key => $value) {
+                if ($key == 'hash') {
+                    continue;
+                }
+                
+                if ($value !== null) {
+                    $strParams = "{$strParams}&{$key}={$value}";
+                }
+            }
+    
+            $hash = md5($privateKey . trim($strParams, "&"));
+    
+            return $hash;
+        }
+
+        /*
+        */
+
+        
+        /*
+        * FROM CONTROLLER, API
+        */
+
+        
+        public static function getUserBalance($href, $user) {
+            $url = config('app.xmx_api') . '/getAccountBalance';
+            $op = config('app.xmx_op');
+            $category = XMXController::XMX_GAME_IDENTITY[$href];
+    
+            $params = [
+                'isRenew' => true,
+                'operatorID' => $op,
+                'thirdPartyCode' => $category,
+                'time' => time()*1000,
+                'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                'vendorID' => 0,
+            ];
+
+            $params['hash'] = XMXController::hashParam($params);
+    
+            $response = Http::asForm()->post($url, $params);
+            
+            $balance = -1;
+            if ($response->ok()) {
+                $res = $response->json();
+    
+                if ($res['returnCode'] == 0) {
+                    $balance = $res['thirdPartyBalance'];
+                }
+                else
+                {
+                    Log::error('XMXgetuserbalance : return failed. ' . $res['description']);
+                }
+            }
+            else
+            {
+                Log::error('XMXgetuserbalance : response is not okay. ' . $response->body());
+            }
+            return $balance;
+        }
+        
+        public static function getgamelist($href)
+        {
+            $gameList = \Illuminate\Support\Facades\Redis::get($href.'list');
+            if ($gameList)
+            {
+                $games = json_decode($gameList, true);
+                if ($games!=null && count($games) > 0){
+                    return $games;
+                }
+            }
+            $url = config('app.xmx_api') . '/getGameList';
+            $op = config('app.xmx_op');
+
+            $category = XMXController::XMX_GAME_IDENTITY[$href];
+
+            $params = [
+                'operatorID' => $op,
+                'thirdPartyCode' => $category,
+                'time' => time() * 1000,
+                'vendorID' => 0,
+            ];
+
+            $params['hash'] = XMXController::hashParam($params);
+    
+            $response = Http::asForm()->post($url, $params);
+            if (!$response->ok())
+            {
+                return [];
+            }
+            $data = $response->json();
+            $gameList = [];
+            if ($data['returnCode'] == 0)
+            {
+                foreach ($data['games'] as $game)
+                {
+                    if (in_array($href,['xmx-bng','xmx-playson']) && str_contains($game['id'],'_mob'))
+                    {
+                        continue;
+                    }
+                    array_push($gameList, [
+                        'provider' => self::XMX_PROVIDER,
+                        'href' => $href,
+                        'gamecode' => $game['id'],
+                        'enname' => $game['tEN'],
+                        'name' => preg_replace('/\s+/', '', $game['tEN']),
+                        'title' => $game['tKR'],
+                        'icon' => $game['img'],
+                        'type' => strtolower($game['gt']),
+                        'view' => 1
+                    ]);
+                }
+
+                //add Unknown Game item
+                array_push($gameList, [
+                    'provider' => self::XMX_PROVIDER,
+                    'href' => $href,
+                    'symbol' => 'Unknown',
+                    'gamecode' => $href,
+                    'enname' => 'UnknownGame',
+                    'name' => 'UnknownGame',
+                    'title' => 'UnknownGame',
+                    'icon' => '',
+                    'type' => 'slot',
+                    'view' => 0
+                ]);
+            }
+            \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
+            return $gameList;
+            
+        }
+
+        public static function makegamelink($gamecode) 
+        {
+
+            $op = config('app.xmx_op');
+
+            //generate session
+            
+            $params = [
+                'operatorID' => $op,
+                'userID' => self::XMX_PROVIDER . sprintf("%04d",auth()->user()->id),
+                'time' => time()*1000,
+                'vendorID' => 0,
+            ];
+            $params['hash'] = XMXController::hashParam($params);
+
+            $url = config('app.xmx_api') . '/generateSession';
+            $response = Http::asForm()->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('XMXGetLink : Game Session request failed. ' . $response->body());
+
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || $data['returnCode'] != 0)
+            {
+                Log::error('XMXGetLink : Game Session result failed. ' . ($data==null?'null':$data['description']));
+                return null;
+            }
+            $session = $data['session'];
+
+            //Create Game link
+
+            $params = [
+                'gameID' => $gamecode,
+                'lang' => 'kr',
+                'operatorID' => $op,
+                'session' => $session,
+                'time' => time()*1000,
+                'vendorID' => 0,
+            ];
+            $params['hash'] = XMXController::hashParam($params);
+
+            $url = config('app.xmx_api') . '/getGameUrl';
+            $response = Http::asForm()->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('XMXGetLink : Game url request failed. ' . $response->body());
+
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || $data['returnCode'] != 0)
+            {
+                Log::error('XMXGetLink : Game url result failed. ' . ($data==null?'null':$data['description']));
+                return null;
+            }
+            $url = $data['gameUrl'];
+
+            return $url;
+        }
+        public static function withdrawAll($href, $user)
+        {
+            $category = XMXController::XMX_GAME_IDENTITY[$href];
+            $balance = XMXController::getuserbalance($href, $user);
+            if ($balance < 0)
+            {
+                return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
+            }
+            if ($balance > 0)
+            {
+                $op = config('app.xmx_op');
+
+                //transferPointG2M
+                $params = [
+                    'amount' => $balance,
+                    'operatorID' => $op,
+                    'thirdPartyCode' => $category,
+                    'transactionID' => uniqid(self::XMX_PROVIDER),
+                    'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time()*1000,
+                    'vendorID' => 0,
+                ];
+                $params['hash'] = XMXController::hashParam($params);
+
+                $url = config('app.xmx_api') . '/transferPointG2M';
+                $response = Http::asForm()->post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('XMXWithdraw : transferPointG2M request failed. ' . $response->body());
+
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'response not ok'];
+                }
+                $data = $response->json();
+                if ($data==null || $data['returnCode'] != 0)
+                {
+                    Log::error('XMXWithdraw : transferPointG2M result failed. ' . ($data==null?'null':$data['description']));
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
+                }
+
+                //subtractMemberPoint
+                $params = [
+                    'amount' => $balance,
+                    'operatorID' => $op,
+                    'transactionID' => uniqid(self::XMX_PROVIDER),
+                    'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time()*1000,
+                    'vendorID' => 0,
+                ];
+                $params['hash'] = XMXController::hashParam($params);
+
+                $url = config('app.xmx_api') . '/subtractMemberPoint';
+                $response = Http::asForm()->post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('XMXWithdraw : subtractMemberPoint request failed. ' . $response->body());
+
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'response not ok'];
+                }
+                $data = $response->json();
+                if ($data==null || $data['returnCode'] != 0)
+                {
+                    Log::error('XMXWithdraw : subtractMemberPoint result failed. ' . ($data==null?'null':$data['description']));
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
+                }
+            }
+            return ['error'=>false, 'amount'=>$balance];
+        }
+
+        public static function makelink($gamecode, $userid)
+        {
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                Log::error('XMXMakeLink : Does not find user ' . $userid);
+                return null;
+            }
+
+            $game = XMXController::getGameObj($gamecode);
+            if ($game == null)
+            {
+                Log::error('XMXMakeLink : Game not find  ' . $game);
+                return null;
+            }
+
+            $op = config('app.xmx_op');
+
+            //create ximax account
+            $params = [
+                'operatorID' => $op,
+                'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time()*1000,
+                'vendorID' => 0,
+                'walletID' =>config('app.xmx_prefix') . sprintf("%04d",$user->id),
+            ];
+            $params['hash'] = XMXController::hashParam($params);
+
+            $url = config('app.xmx_api') . '/createAccount';
+            $response = Http::asForm()->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('XMXmakelink : createAccount request failed. ' . $response->body());
+
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || ($data['returnCode'] != 0 && $data['returnCode'] != 23))
+            {
+                Log::error('XMXmakelink : createAccount result failed. ' . ($data==null?'null':$data['description']));
+                return null;
+            }
+
+
+            $balance = XMXController::getuserbalance($game['href'], $user);
+            if ($balance == -1)
+            {
+                return null;
+            }
+
+            if ($balance != $user->balance)
+            {
+                //withdraw all balance
+                $data = XMXController::withdrawAll($game['href'], $user);
+                if ($data['error'])
+                {
+                    return null;
+                }
+                //Add balance
+
+                if ($user->balance > 0)
+                {
+
+                    //addMemberPoint
+                    $params = [
+                        'amount' => $user->balance,
+                        'operatorID' => $op,
+                        'transactionID' => uniqid(self::XMX_PROVIDER),
+                        'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                        'time' => time()*1000,
+                        'vendorID' => 0,
+                    ];
+                    $params['hash'] = XMXController::hashParam($params);
+
+                    $url = config('app.xmx_api') . '/addMemberPoint';
+                    $response = Http::asForm()->post($url, $params);
+                    if (!$response->ok())
+                    {
+                        Log::error('XMXmakelink : addMemberPoint request failed. ' . $response->body());
+
+                        return null;
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['returnCode'] != 0)
+                    {
+                        Log::error('XMXmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['description']));
+                        return null;
+                    }
+                }
+            }
+            
+            return '/followgame/xmx/'.$gamecode;
+
+        }
+
+        public static function getgamelink($gamecode)
+        {
+            $user = auth()->user();
+            if ($user->playing_game != null) //already playing game.
+            {
+                return ['error' => true, 'data' => '이미 실행중인 게임을 종료해주세요. 이미 종료했음에도 불구하고 이 메시지가 계속 나타난다면 매장에 문의해주세요.'];
+            }
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [XMXController::XMX_PROVIDER, $gamecode])]];
+        }
+
+        public static function gamerounds($thirdparty,$startDate)
+        {
+            $op = config('app.xmx_op');
+
+            $endDate = date('Y-m-d H:i:s');
+
+            $params = [
+                'endDate' => $endDate,
+                'operatorID' => $op,
+                'startDate' => $startDate,
+                'thirdPartyCode' => $thirdparty,
+                'pageSize' => 1000,
+                'time' => time()*1000,
+                'vendorID' => 0,
+            ];
+            $params['hash'] = XMXController::hashParam($params);
+
+            $url = config('app.xmx_api') . '/getBetWinHistoryAll';
+            $response = Http::asForm()->post($url, $params);
+            if (!$response->ok())
+            {
+                Log::error('XMXgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
+
+                return null;
+            }
+            $data = $response->json();
+            if ($data==null || $data['returnCode'] != 0)
+            {
+                Log::error('XMXgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
+                return null;
+            }
+
+            return $data;
+        }
+
+        public static function processGameRound()
+        {
+            $count = 0;
+
+            foreach (XMXController::XMX_GAME_IDENTITY as $catname => $thirdId)
+            {
+                $category = \VanguardLTE\Category::where([
+                    'provider'=> XMXController::XMX_PROVIDER,
+                    'href' => $catname,
+                    'shop_id' => 0,
+                    'site_id' => 0,
+                    ])->first();
+
+                if (!$category)
+                {
+                    continue;
+                }
+                $lasttime = '2022-12-01 0:0:0';
+                $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
+                if ($lastround)
+                {
+                    $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                }
+                $data = XMXController::gamerounds($thirdId, $lasttime);
+                if ($data['totalDataSize'] > 0)
+                {
+                    
+                    foreach ($data['history'] as $round)
+                    {
+                        $bet = 0;
+                        $win = 0;
+                        $gameName = $round['gameID'];
+                        if ($catname == 'xmx-cq9')
+                        {
+                            if ($round['transType'] == 'BET')
+                            {
+                                continue;
+                            }
+                            $betdata = json_decode($round['history'],true);
+                            $bet = $betdata['bet'];
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance'];
+                        }
+                        else if ($catname == 'xmx-bng' || $catname == 'xmx-playson')
+                        {
+                            if ($round['transType'] == 'WIN')
+                            {
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['history'],true);
+                            $bet = $betdata['bet']??0;
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance_after'];
+                            if ($bet==0 && $win==0)
+                            {
+                                continue;
+                            }
+                        }
+                        else if ($catname == 'xmx-hbn')
+                        {
+                            if ($round['transType'] == 'BET')
+                            {
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['history'],true);
+                            $bet = $betdata['stake'];
+                            $win = $betdata['payout'];
+                            $balance = -1;
+                            $gameName = $betdata['gameKeyName'];
+                        }
+                        else if ($catname == 'xmx-pp')
+                        {
+                            if ($round['transType'] == 'WIN')
+                            {
+                                continue;
+                            }
+
+                            $betdata = explode(',', $round['history']);
+                            $bet = $betdata[9];
+                            $win = $betdata[10];
+                            $balance = -1;
+                        }
+                        else
+                        {
+                            if ($round['transType'] == 'BET')
+                            {
+                                $bet = $round['amount'];
+                            }
+                            else
+                            {
+                                $win = $round['amount'];
+                            }
+
+                            $balance = -1;
+                        }
+
+                        $time = $round['transTime'];
+
+                        $userid = intval(preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['userID'])) ;
+                        $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                        
+                        \VanguardLTE\StatGame::create([
+                            'user_id' => $userid, 
+                            'balance' => $balance, 
+                            'bet' => $bet, 
+                            'win' => $win, 
+                            'game' =>$gameName . '_xmx', 
+                            'type' => 'slot',
+                            'percent' => 0, 
+                            'percent_jps' => 0, 
+                            'percent_jpg' => 0, 
+                            'profit' => 0, 
+                            'denomination' => 0, 
+                            'date_time' => $time,
+                            'shop_id' => $shop?$shop->shop_id:0,
+                            'category_id' => isset($category)?$category->id:0,
+                            'game_id' => $catname,
+                            'roundid' => $round['gameID'] . '_' . $round['roundID'],
+                        ]);
+                        $count = $count + 1;
+                    }
+                }
+
+            }
+            
+            
+            return [$count, 0];
+        }
+
+    }
+
+}
