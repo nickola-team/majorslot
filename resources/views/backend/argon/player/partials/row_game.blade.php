@@ -51,7 +51,7 @@
 </td>
 <td> {{$game}} </td>
 <td>
-    @if ($stat->category->href == 'habaneroplay')
+    @if ($stat->category && $stat->category->href == 'habaneroplay')
     -1
     @else
     {{number_format($stat->balance,0)}}
