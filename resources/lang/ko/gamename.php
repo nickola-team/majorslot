@@ -1037,4 +1037,18 @@ return [
         "SpinScoreMegaways" => "스핀 & 스코어 메가웨이즈",
         "BiggerBassBlizzard" => "비거 배스 블리자드",
 
+        "SantasGreatGifts" => "산타 그레이트 기프트",
+        "CosmicCash" => "코스믹 캐시",
+        "AztecBlaze" => "아즈텍 블레이즈",
+        "KingdomofAsgard" => "킹덤 오브 아스가르드",
+        "ToweringFortunes" => "타워링 포춘",
+        "FirebirdSpiritConnectCollect" => "파이어버드스프릿컨넥컬렉트",
+        "StarlightChristmas" => "스타라이트크리스마스",
+        "PirateGoldenAge" => "파이럿골든에이지",
+        "GemsofSerengeti" => "젬스오브세렝게티",
+        //"WolfGold" => "울프골드",
+        "HokkaidoWolf" => "홋카이도 울프",
+
+
+
 ];
