@@ -490,7 +490,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'played_at' => time(),
                 ]);
             }
-            $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode);
+            $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode, $user);
             return view('frontend.Default.games.render', compact('provider','url','rqtime'));
             
         }
