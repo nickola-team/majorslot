@@ -104,7 +104,7 @@ namespace VanguardLTE\Games\HotChilliPM
                         $arr_lines = explode('&', $str_line);
                         for($k = 0; $k < count($arr_lines); $k++){
                             $arr_sub_lines = explode('~', $arr_lines[$k]);
-                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
+                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
                             $totalWin = $totalWin + $arr_sub_lines[1];
                             $arr_lines[$k] = implode('~', $arr_sub_lines);
                         }
