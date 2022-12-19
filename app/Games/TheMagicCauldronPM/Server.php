@@ -46,7 +46,7 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
                 $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
                 exit( $response );
             }
-
+            $original_bet = 0.1;
             if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
                 $lastEvent = $slotSettings->GetHistory();
@@ -128,6 +128,7 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
                     if($stack['slm_mv'] != ''){
                         $arr_slm_mv = explode(',', $stack['slm_mv']);
                     }
+                    $strWinLine = $stack['win_line'];
                     $currentReelSet = $stack['reel_set'];
                     if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                         $strOtherResponse = $strOtherResponse . '&puri=' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin');
@@ -191,6 +192,16 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
                     }
                     if(count($arr_slm_mv) > 0){
                         $strOtherResponse = $strOtherResponse . '&slm_mv=' . implode(',', $arr_slm_mv);
+                    }
+                    if($strWinLine != ''){
+                        $arr_lines = explode('&', $strWinLine);
+                        for($k = 0; $k < count($arr_lines); $k++){
+                            $arr_sub_lines = explode('~', $arr_lines[$k]);
+                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
+                            $arr_lines[$k] = implode('~', $arr_sub_lines);
+                        }
+                        $strWinLine = implode('&', $arr_lines);
+                        $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                     }
                     $strOtherResponse = $strOtherResponse . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 }else{
@@ -400,6 +411,7 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
                         $arr_slm_mv = explode(',', $stack['slm_mv']);
                     }
                     $currentReelSet = $stack['reel_set'];
+                    $strWinLine = $stack['win_line'];
                 }else{
                     $stack = $slotSettings->GetReelStrips($winType, $pur, $betline * $lines);
                     if($stack == null){
@@ -434,74 +446,19 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
                         $arr_slm_mv = explode(',', $stack[0]['slm_mv']);
                     }
                     $currentReelSet = $stack[0]['reel_set'];
+                    $strWinLine = $stack[0]['win_line'];
                 }
-
-                $reels = [];
-                $wildReels = [];
-                for($i = 0; $i < 7; $i++){
-                    $reels[$i] = [];
-                    $wildReels[$i] = [];
-                    for($j = 0; $j < 7; $j++){
-                        $reels[$i][$j] = $lastReel[$j * 7 + $i];
-                        $wildReels[$i][$j] = 0;
+                if($strWinLine != ''){
+                    $arr_lines = explode('&', $strWinLine);
+                    for($k = 0; $k < count($arr_lines); $k++){
+                        $arr_sub_lines = explode('~', $arr_lines[$k]);
+                        $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
+                        $totalWin = $totalWin + $arr_sub_lines[1];
+                        $arr_lines[$k] = implode('~', $arr_sub_lines);
                     }
-                }
-
-                for($k = 0; $k < 7; $k++){
-                    for( $j = 0; $j < 7; $j++ ) 
-                    {
-                        if(strpos($this->strCheckSymbol, '<' . $j . '-' . $k.'>') == false){
-                            $this->repeatCount = 1;
-                            $this->strWinLinePos = ($k * 7 + $j);
-                            $this->strCheckSymbol = $this->strCheckSymbol . ';<' . $j . '-' . $k.'>';
-                            $this->findZokbos($reels, $j, $k, $reels[$j][$k]);
-
-                            if($this->repeatCount >= 5){
-                                $winLine = [];
-                                $winLine['FirstSymbol'] = $reels[$j][$k];
-                                $winLine['RepeatCount'] = $this->repeatCount;
-                                $winLine['StrLineWin'] = $this->strWinLinePos;
-                                array_push($this->winLines, $winLine);
-                            }
-                        }
-                    }   
-                }
-                for($r = 0; $r < count($this->winLines); $r++){
-                    $winLine = $this->winLines[$r];
-                    $arr_symbols = explode('~', $winLine['StrLineWin']);
-                    if($winLine['FirstSymbol'] == 13){
-                        $arr_initReel = [];
-                        $firstSymbol = $winLine['FirstSymbol'];
-                        if($str_initReel != ''){
-                            $arr_initReel = explode(',', $str_initReel);
-                            for($k = 0; $k <count($arr_symbols); $k++){
-                                $symbol_pos = $arr_symbols[$k]; 
-                                if($lastReel[$symbol_pos] == 13 && $arr_initReel[$symbol_pos] < 11){
-                                    $firstSymbol = $arr_initReel[$symbol_pos];
-                                    break;
-                                }
-                            }        
-                        }
-                        $winLineMoney = $slotSettings->Paytable[$firstSymbol][$winLine['RepeatCount']] * $betline;
-                    }else{
-                        $winLineMoney = $slotSettings->Paytable[$winLine['FirstSymbol']][$winLine['RepeatCount']] * $betline;
-                    }
-                    $line_mul = 0;
-                    for($k = 0; $k <count($arr_symbols); $k++){
-                        for($j=0; $j < count($arr_slm_mp); $j++){
-                            if($arr_symbols[$k] == $arr_slm_mp[$j]){                                
-                                $line_mul += $arr_slm_mv[$j];
-                            }
-                        }
-                    }
-                    if($line_mul > 0){
-                        $winLineMoney = $winLineMoney * $line_mul;
-                    }
-                    if($winLineMoney > 0){   
-                        $strWinLine = $strWinLine . '&l'. $r.'='.$r.'~'.$winLineMoney . '~' . $winLine['StrLineWin'];
-                        $totalWin += $winLineMoney;
-                    }
-                }   
+                    $strWinLine = implode('&', $arr_lines);
+                } 
+                
 
 
                 $spinType = 's';
@@ -618,8 +575,10 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
                 if($currentReelSet >= 0){
                     $strOtherResponse = $strOtherResponse  .'&reel_set='. $currentReelSet;
                 }
-
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse . $strWinLine .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=7&st=rect&c='.$betline.'&sw=7&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.$totalWin.'&s=' . $strLastReel;
+                if($strWinLine != ''){
+                    $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
+                }
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=7&st=rect&c='.$betline.'&sw=7&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.$totalWin.'&s=' . $strLastReel;
 
 
                 if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
