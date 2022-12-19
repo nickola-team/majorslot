@@ -817,7 +817,7 @@ return [
         "PowerofThorMegaways" =>    "파워오브토르메가웨이",
         "BonanzaGold" =>    "보난자골드",
         "SweetBonanza" =>   "스위트보난자",
-        "GatesofOlympus" => "게이트오브올리푸스",
+        "GatesofOlympus" => "게이트오브올림푸스",
         "UltraHoldandSpin" =>   "울트라홀드앤스핀",
         "5Lions" =>    "5라이온스",
         "HotFiesta" =>  "핫파이에스타",
