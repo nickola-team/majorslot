@@ -58,7 +58,7 @@ class GameTerminateCommand extends Command
                         $data = [
                             'error' => true
                         ];
-                        if (count($extra) >= 2){
+                        if (count($extra) >= 3){
                             $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $extra[1],$user);
                             Log::channel('monitor_game')->info($provider .'-' .$extra[1]. ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
                         }

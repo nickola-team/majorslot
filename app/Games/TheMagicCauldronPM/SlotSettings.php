@@ -705,8 +705,8 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
         public function GetReelStrips($winType, $pur, $bet, $ind = -1)
         {
             // if($winType == 'win'){
-            //     $stack = \VanguardLTE\PPGameStackModel\PPGameTheMagicCauldronStack::where('id', 66781)->first();
-            //     return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheMagicCauldronStack::where('id', 49106)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
@@ -724,7 +724,7 @@ namespace VanguardLTE\Games\TheMagicCauldronPM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameTheMagicCauldronStack::where('spin_type', $spintype);
-                $index = mt_rand(0, 78000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
