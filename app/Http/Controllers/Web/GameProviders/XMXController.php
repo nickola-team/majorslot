@@ -10,6 +10,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         const XMX_PROVIDER = 'xmx';
+        const XMX_PP_HREF = 'xmx-pp';
         const XMX_GAME_IDENTITY = [
             'xmx-bbtec' => 6,
             'xmx-pp' => 8,
@@ -220,7 +221,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode) 
+        public static function makegamelink($gamecode, $user) 
         {
 
             $op = config('app.xmx_op');
@@ -229,7 +230,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             $params = [
                 'operatorID' => $op,
-                'userID' => self::XMX_PROVIDER . sprintf("%04d",auth()->user()->id),
+                'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
                 'time' => time()*1000,
                 'vendorID' => 0,
             ];
@@ -618,6 +619,176 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             
             return [$count, 0];
+        }
+
+        public static function syncpromo()
+        {
+            $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
+            if (!$anyuser)
+            {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+            $op = config('app.xmx_op');
+            try{
+                $gamelist = XMXController::getgamelist(self::XMX_PP_HREF);
+                $len = count($gamelist);
+                if ($len > 10) {$len = 10;}
+                if ($len == 0)
+                {
+                    return ['error' => true, 'msg' => 'not found any available game.'];
+                }
+                $rand = mt_rand(0,$len);
+                
+                $gamecode = $gamelist[$rand]['gamecode'];
+                    //create ximax account
+                $params = [
+                    'operatorID' => $op,
+                    'userID' => self::XMX_PROVIDER . sprintf("%04d",$anyuser->id),
+                    'time' => time()*1000,
+                    'vendorID' => 0,
+                    'walletID' =>config('app.xmx_prefix') . sprintf("%04d",$anyuser->id),
+                ];
+                $params['hash'] = XMXController::hashParam($params);
+
+                $url = config('app.xmx_api') . '/createAccount';
+                $response = Http::asForm()->post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('XMXmakelink : createAccount request failed. ' . $response->body());
+
+                    return ['error' => true, 'msg' => 'createAccount failed.'];
+                }
+                $data = $response->json();
+                if ($data==null || ($data['returnCode'] != 0 && $data['returnCode'] != 23))
+                {
+                    Log::error('XMXmakelink : createAccount result failed. ' . ($data==null?'null':$data['description']));
+                    return ['error' => true, 'msg' => 'createAccount failed.'];
+                }
+
+                $url = XMXController::makegamelink($gamecode, $anyuser);
+                if ($url == null)
+                {
+                    return ['error' => true, 'msg' => 'game link error '];
+                }
+
+                $parse = parse_url($url);
+                $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
+            
+                //emulate client
+                $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+                if ($response->status() == 302)
+                {
+                    $location = $response->header('location');
+                    $keys = explode('&', $location);
+                    $mgckey = null;
+                    foreach ($keys as $key){
+                        if (str_contains( $key, 'mgckey='))
+                        {
+                            $mgckey = $key;
+                        }
+                        if (str_contains($key, 'symbol='))
+                        {
+                            $gamecode = $key;
+                        }
+                    }
+                    if (!$mgckey){
+                        return ['error' => true, 'msg' => 'could not find mgckey value'];
+                    }
+                    
+                    $promo = \VanguardLTE\PPPromo::take(1)->first();
+                    if (!$promo)
+                    {
+                        $promo = \VanguardLTE\PPPromo::create();
+                    }
+                    $raceIds = [];
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/active/?'.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->active = $response->body();
+                        $json_data = $response->json();
+                        if (isset($json_data['races']))
+                        {
+                            foreach ($json_data['races'] as $race)
+                            {
+                                $raceIds[$race['id']] = null;
+                            }
+                        }
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/details/?'.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->tournamentdetails = $response->body();
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/details/?'.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->racedetails = $response->body();
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/v3/leaderboard/?'.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->tournamentleaderboard = $response->body();
+                    }
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/prizes/?'.$gamecode.'&' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $promo->raceprizes = $response->body();
+                    }
+
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post($ppgameserver . '/gs2c/promo/race/winners/?'.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
+                    if ($response->ok())
+                    {
+                        $promo->racewinners = $response->body();
+                    }
+
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/minilobby/games?' . $mgckey );
+                    if ($response->ok())
+                    {
+                        $json_data = $response->json();
+                        //disable not own games
+                        $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
+                        $gIds = $ownCats->games->pluck('game_id')->toArray();
+                        $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->get();
+
+                        $lobbyCats = $json_data['lobbyCategories'];
+                        $filteredCats = [];
+                        foreach ($lobbyCats as $cat)
+                        {
+                            $lobbyGames = $cat['lobbyGames'];
+                            $filteredGames = [];
+                            foreach ($lobbyGames as $game)
+                            {
+                                foreach ($ownGames as $og)
+                                {
+                                    if ($og->label == $game['symbol'])
+                                    {
+                                        $filteredGames[] = $game;
+                                        break;
+                                    }
+                                }
+                            }
+                            $cat['lobbyGames'] = $filteredGames;
+                            $filteredCats[] = $cat;
+                        }
+                        $json_data['lobbyCategories'] = $filteredCats;
+                        $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                        $promo->games = json_encode($json_data);
+                    }
+
+                    $promo->save();
+                    return ['error' => false, 'msg' => 'synchronized successfully.'];
+                }
+                else
+                {
+                    return ['error' => true, 'msg' => 'server response is not 302.'];
+                }
+            }
+            catch (\Exception $ex)
+            {
+                return ['error' => true, 'msg' => 'server exception.' . $ex->getMessage()];
+                
+            }
+            
         }
 
     }

@@ -236,7 +236,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             return '/followgame/kuza/'.$gamecode;
         }
-        public static function makegamelink($gamecode)
+        public static function makegamelink($gamecode, $user)
         {
             //run
              $url = null;
@@ -246,7 +246,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Content-Type' => 'application/x-www-form-urlencoded'
                 ];
                 $param = [
-                    'username' => self::PROVIDER . auth()->user()->id,
+                    'username' => self::PROVIDER . $user->id,
                     'password' => '11@@aabb',
                     'ipAddress' => '192.168.1.1'
                 ];

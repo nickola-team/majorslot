@@ -109,13 +109,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode) 
+        public static function makegamelink($gamecode, $user) 
         {
             $url = config('app.bnn_api') . '/v1/game-url';
             $key = config('app.bnn_key');
             $params = [
                 'key' => $key,
-                'uid' => self::BNN_PROVIDER . auth()->user()->id,
+                'uid' => self::BNN_PROVIDER . $user->id,
                 'gid' => $gamecode,
                 'min' => 5000,
                 'max' => 3000000
