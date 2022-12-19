@@ -711,7 +711,7 @@ namespace VanguardLTE\Games\SantasGreatGiftsPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('id', 763)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('id', 1329)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -734,16 +734,16 @@ namespace VanguardLTE\Games\SantasGreatGiftsPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 29000);
+                $index = mt_rand(0, 45000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 80000);
                 }
                 if($winType == 'bonus'){
                     if($pur >= 0){
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('pur_level', $pur);
+                        $stacks = $stacks->where('pur_level', $pur);
                     }else{
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('pur_level','<=', 0);
+                        $stacks = $stacks->where('pur_level','<=', 0);
                     }
                 }
                 if($isLowBank == true){
