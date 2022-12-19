@@ -748,7 +748,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         //disable not own games
                         $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
                         $gIds = $ownCats->games->pluck('game_id')->toArray();
-                        $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->get();
+                        $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view',1)->get();
 
                         $lobbyCats = $json_data['lobbyCategories'];
                         $filteredCats = [];
