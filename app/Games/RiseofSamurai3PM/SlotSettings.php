@@ -702,6 +702,8 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
 
         public function GetReelStrips($winType, $pur, $bet)
         {
+            // $stack = \VanguardLTE\PPGameStackModel\PPGameRiseofSamurai3Stack::where('id', 8)->first();
+            //     return json_decode($stack->spin_stack, true);
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -718,7 +720,7 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
             $isLowBank = false;
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameRiseofSamurai3Stack::where('spin_type', $spintype);
-                $index = mt_rand(0, 30000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }else if($winType == 'bonus'){
@@ -731,7 +733,7 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 10);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
