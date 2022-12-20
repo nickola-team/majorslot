@@ -266,7 +266,7 @@
                   </div>
                 @else
                   <div class="my">
-                    <a class="fade_2_open" data-popup-ordinal="0" onclick="showLoginPopup()"><img src="/frontend/jungle/images/top_btn_001.png"></a>
+                    <a class="fade_2_open" data-popup-ordinal="0" onclick="showLoginPopup('bigbang')"><img src="/frontend/jungle/images/top_btn_001.png"></a>
                     <a class="fade_3_open" data-popup-ordinal="0" onclick="showRegisterPopup()"><img src="/frontend/jungle/images/top_btn_002.png"></a>
                   </div>
                 @endif
