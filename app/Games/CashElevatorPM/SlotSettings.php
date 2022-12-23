@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\CosmicCashPM
+namespace VanguardLTE\Games\CashElevatorPM
 {
     class SlotSettings
     {
@@ -73,31 +73,27 @@ namespace VanguardLTE\Games\CosmicCashPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
+            $this->Paytable[0] = [0,0,0,0,0,0];
             $this->Paytable[1] = [0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,6,60,240,2400];
-            $this->Paytable[4] = [0,0,0,36,180,1200];
-            $this->Paytable[5] = [0,0,0,24,120,600];
-            $this->Paytable[6] = [0,0,0,24,120,600];
-            $this->Paytable[7] = [0,0,0,12,60,0];
-            $this->Paytable[8] = [0,0,0,6,30,120];
-            $this->Paytable[9] = [0,0,0,6,30,120];
-            $this->Paytable[10] = [0,0,0,6,30,120];
-            $this->Paytable[11] = [0,0,0,6,30,120];
-            $this->Paytable[12] = [0,0,0,6,30,120];
-            $this->Paytable[13] = [0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,2,40,200,500];
+            $this->Paytable[3] = [0,0,2,40,200,400];
+            $this->Paytable[4] = [0,0,0,30,100,300];
+            $this->Paytable[5] = [0,0,0,20,80,200];
+            $this->Paytable[6] = [0,0,0,20,80,200];
+            $this->Paytable[7] = [0,0,0,8,40,150];
+            $this->Paytable[8] = [0,0,0,8,40,150];
+            $this->Paytable[9] = [0,0,0,4,10,100];
+            $this->Paytable[10] = [0,0,0,4,10,100];
+            $this->Paytable[11] = [0,0,0,4,10,100];
+            $this->Paytable[12] = [0,0,0,0,0,0];
+            $this->Paytable[13] = [0,0,2,40,200,500];
+            $this->Paytable[14] = [0,0,2,40,200,500];
+            $this->Paytable[15] = [0,0,2,40,200,500];
             $this->Paytable[16] = [0,0,0,0,0,0];
             $this->Paytable[17] = [0,0,0,0,0,0];
             $this->Paytable[18] = [0,0,0,0,0,0];
             $this->Paytable[19] = [0,0,0,0,0,0];
             $this->Paytable[20] = [0,0,0,0,0,0];
-            $this->Paytable[21] = [0,0,0,0,0,0];
-            $this->Paytable[22] = [0,0,0,0,0,0];
-            $this->Paytable[23] = [0,0,0,0,0,0];
-            $this->Paytable[24] = [0,0,0,0,0,0];
-            $this->Paytable[25] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -112,7 +108,7 @@ namespace VanguardLTE\Games\CosmicCashPM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[5.00,10.00,15.00,20.00,25.00,50.00,75.00,100.00,125.00,190.00,250.00,375.00,625.00,1250.00,1875.00,2500.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -268,7 +264,7 @@ namespace VanguardLTE\Games\CosmicCashPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin'  || $slotState == 'doRespin') 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
 
 
             {
@@ -310,7 +306,7 @@ namespace VanguardLTE\Games\CosmicCashPM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' || $slotState == 'doRespin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
 
 
             {
@@ -398,11 +394,11 @@ namespace VanguardLTE\Games\CosmicCashPM
             }
             else
             {
-                if( $bonus_systemmoney > 0 ) 
-                {
-                    $sum -= $bonus_systemmoney;
-                    $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
-                }
+                // if( $bonus_systemmoney > 0 ) 
+                // {
+                //     $sum -= $bonus_systemmoney;
+                //     $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
+                // }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -459,7 +455,7 @@ namespace VanguardLTE\Games\CosmicCashPM
         public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $isState = true)
         {
             $slotstate = $this->slotId . ' ' . $slotState;
-            if( $slotState == 'freespin' ) 
+            if( $slotState == 'respin' ) 
             {
                 $slotstate = $this->slotId . ' Free';
             }
@@ -691,7 +687,7 @@ namespace VanguardLTE\Games\CosmicCashPM
         
         public function GetPurMul($pur)
         {
-            $purmuls = [100];
+            $purmuls = [2000];
             return $purmuls[$pur];
         }
         public function SetBet() 
@@ -708,10 +704,10 @@ namespace VanguardLTE\Games\CosmicCashPM
         } 
 
 
-        public function GetReelStrips($winType, $bet, $pur = -1)
+        public function GetReelStrips($winType, $bet, $currentElevator = 1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameCosmicCashStack::where('id', 363)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameCashElevatorStack::where('id', 1353)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -728,28 +724,17 @@ namespace VanguardLTE\Games\CosmicCashPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
+            $loopCount = 0;
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCosmicCashStack::where('spin_type','>', 0);
-                }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCosmicCashStack::where('spin_type', 0);
-                }
-                $index = mt_rand(0, 39000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashElevatorStack::where('pur_level', $currentElevator);
+                $index = mt_rand(0, 100000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 80000);
-                }
-                if($winType == 'bonus'){
-                    if($pur >= 0){
-                        $stacks = $stacks->where('pur_level', $pur);
-                    }else{
-                        $stacks = $stacks->where('pur_level','<=', 0);
-                    }
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
-                    }
+                    // if($winType == 'bonus'){
+                    //     $stacks = $stacks->where('odd', '<=', 10);    
+                    // }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
@@ -759,17 +744,25 @@ namespace VanguardLTE\Games\CosmicCashPM
                         $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus'){
-                            $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
-                        }else{
+                        // if($winType == 'bonus'){
+                        //     $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        // }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
-                        }
+                        // }
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     $isLowBank = true;
                 }else{
                     break;
+                }
+                $loopCount++;
+                if($loopCount > 100){
+                    if($winType == 'win'){
+                        $winType = 'none';
+                    }else if($winType == 'none'){
+                        $winType = 'win';
+                    }
                 }
             }
             $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
