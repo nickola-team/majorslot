@@ -270,10 +270,12 @@ namespace VanguardLTE\Games\CosmicCashPM
                 if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                 {
                     $slotEvent['slotEvent'] = 'freespin';
+                }else if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
+                    $slotEvent['slotEvent'] = 'doRespin';
                 }
                 $lines = $slotEvent['slotLines'];
                 $betline = $slotEvent['slotBet'];
-                if( $slotEvent['slotEvent'] == 'doSpin' || $slotEvent['slotEvent'] == 'freespin' ) 
+                if( $slotEvent['slotEvent'] == 'doSpin' || $slotEvent['slotEvent'] == 'freespin'  || $slotEvent['slotEvent'] == 'doRespin' ) 
                 {
                     if( $lines <= 0 || $betline <= 0.0001 ) 
                     {
@@ -292,7 +294,7 @@ namespace VanguardLTE\Games\CosmicCashPM
                             exit( $response );
                         }
                     }
-                    if($slotEvent['slotEvent'] == 'freespin'){
+                    if($slotEvent['slotEvent'] == 'freespin' || $slotEvent['slotEvent'] == 'doRespin'){
                         if ($lastEvent->serverResponse->bet != $betline){
                             $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid Bets"}';
                         exit( $response );
@@ -525,7 +527,6 @@ namespace VanguardLTE\Games\CosmicCashPM
                     $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t . '&rs_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin');                    
                     if($slotEvent['slotEvent'] != 'freespin' && $fsmax <= 0){
                         $spinType = 'c';
-                        $slotEvent['slotEvent'] = 'doRespin';
                     }
                 }
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
