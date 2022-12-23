@@ -701,11 +701,9 @@ namespace VanguardLTE\Games\BookofFallenPM
             if($ind >= 0){
                 $spintype = $ind;
             }
-            if($pur == 1){
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
-                if($winType == 'bonus'){
-                    $pur_level = 2;
-                }
+                $pur_level = 2;
             }else if($winType == 'win' || $pur == 0){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
