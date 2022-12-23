@@ -1049,6 +1049,8 @@ return [
         //"WolfGold" => "울프골드",
         "HokkaidoWolf" => "홋카이도 울프",
 
+        "CashElevator" => "캐시엘리베이터"
+
 
 
 ];
