@@ -275,7 +275,20 @@ namespace VanguardLTE\Games\BiggerBassBlizzardPM
                         }
                     }
                 }
-                
+                $payline = [
+                    [2,2,2,2,2],
+                    [3,3,3,3,3],
+                    [1,1,1,1,1],
+                    [4,4,4,4,4],
+                    [1,2,3,2,1],
+                    [2,3,4,3,2],
+                    [3,2,1,2,3],
+                    [4,3,2,3,4],
+                    [1,1,2,3,3],
+                    [2,2,3,4,4],
+                    [3,3,2,1,1],
+                    [4,4,3,2,2]
+                ];
                 $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines, $bl);
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
@@ -399,12 +412,15 @@ namespace VanguardLTE\Games\BiggerBassBlizzardPM
                     $str_trail = $stack[0]['trail'];
                     $strWinLine = $stack[0]['win_line'];
                 }
+                $moneycount = 0;
                 for($i = 0; $i < 5; $i++){
                     $reels[$i] = [];
                     for($j = 0; $j < 4; $j++){
                         $reels[$i][$j] = $lastReel[$j * 5 + $i];
                         if($lastReel[$j * 5 + $i] == 1){
                             $scatterCount++;
+                        }else if($lastReel[$j * 5 + $i] == 7){
+                            $moneycount++;
                         }
                     }
                 }                
@@ -418,6 +434,34 @@ namespace VanguardLTE\Games\BiggerBassBlizzardPM
                     }
                     $strWinLine = implode('&', $arr_lines);
                 } 
+                $str_g = '';
+                if($moneycount > 5 && $str_mo != ''){
+                    $normal_mo_wpos = [];
+                    $normal_mo_tv = 0;
+                    $arr_mo = explode(',', $str_mo);
+                    for($i = 0; $i < 12; $i++){
+                        $sub_mo_wpos = [];
+                        $sub_mo_tv = 0;
+                        for($k = 0; $k < 5; $k++){
+                            if($reels[$k][$payline[$i][$k] - 1] != 7){
+                                $sub_mo_tv = 0;
+                                break;
+                            }else{
+                                $sub_mo_tv += $arr_mo[($payline[$i][$k] - 1) * 5 + $k];
+                                $sub_mo_wpos[] = ($payline[$i][$k] - 1) * 5 + $k;
+                            }
+                        }
+                        if($sub_mo_tv > 0){
+                            $normal_mo_tv += $sub_mo_tv;
+                            $normal_mo_wpos = array_unique(array_merge($normal_mo_wpos, $sub_mo_wpos));
+                        }
+                    }
+                    if($normal_mo_tv > 0){
+                        $normal_money_win = $normal_mo_tv * $betline;
+                        $totalWin = $totalWin + $normal_money_win;
+                        $str_g = '&g={l6:{mo_c:"1",mo_tv:"'. $normal_mo_tv .'",mo_tw:"'. $normal_money_win .'",mo_wpos:"'. implode(',', $normal_mo_wpos) .'"}}';
+                    }
+                }
                 $moneyWin = 0;
                 if($mo_tv > 0){
                     $moneyWin = $mo_tv * $betline; // * $mul;
@@ -426,6 +470,7 @@ namespace VanguardLTE\Games\BiggerBassBlizzardPM
                     }
                     $totalWin += $moneyWin;
                 }
+
 
                 $spinType = 's';
                 if( $totalWin > 0) 
@@ -537,7 +582,7 @@ namespace VanguardLTE\Games\BiggerBassBlizzardPM
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse  .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&bl='. $bl .'&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=12&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse . $str_g .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&bl='. $bl .'&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=12&w='.$totalWin.'&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
