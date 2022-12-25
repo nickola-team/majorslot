@@ -147,7 +147,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 Log::error('XMXgetuserbalance : response is not okay. ' . $response->body());
             }
-            return $balance;
+            return intval($balance);
         }
         
         public static function getgamelist($href)
@@ -317,6 +317,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = $response->json();
                 if ($data==null || $data['returnCode'] != 0)
                 {
+                    Log::error('XMXWithdraw : transferPointG2M result failed. PARAMS=' . json_encode($params));
                     Log::error('XMXWithdraw : transferPointG2M result failed. ' . ($data==null?'null':$data['description']));
                     return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
                 }
@@ -476,6 +477,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response = Http::asForm()->post($url, $params);
             if (!$response->ok())
             {
+                Log::error('XMXgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
                 Log::error('XMXgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
 
                 return null;
@@ -483,6 +485,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             if ($data==null || $data['returnCode'] != 0)
             {
+                Log::error('XMXgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
                 Log::error('XMXgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
                 return null;
             }
@@ -507,11 +510,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = '2022-12-01 0:0:0';
+                $lasttime = date('Y-m-d H:i:s',strtotime('-1 days'));;
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
-                    $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                    $d = strtotime($lastround->date_time);
+                    if ($d > strtotime("-1 days"))
+                    {
+                        $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                    }
                 }
                 $data = XMXController::gamerounds($thirdId, $lasttime);
                 if ($data['totalDataSize'] > 0)

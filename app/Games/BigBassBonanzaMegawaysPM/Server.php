@@ -129,7 +129,7 @@ namespace VanguardLTE\Games\BigBassBonanzaMegawaysPM
 
                     $strOtherResponse = $strOtherResponse . '&accm=cp~mp;cp~mp&acci=0;1&wmt=pr2&wmv=' . $wmv;
                     if($mo_tv > 0){
-                        $strOtherResponse = $strOtherResponse . '&mo_tv='. $mo_tv .'&mo_tw=' . ($mo_tv * $betline);
+                        $strOtherResponse = $strOtherResponse . '&mo_tv='. $mo_tv .'&mo_tw=' . ($mo_tv * $bet);
                     }
                     if($str_accv != ''){
                         $strOtherResponse = $strOtherResponse . '&accv=' . $str_accv;
