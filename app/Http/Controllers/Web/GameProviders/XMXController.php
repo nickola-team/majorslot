@@ -476,6 +476,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response = Http::asForm()->post($url, $params);
             if (!$response->ok())
             {
+                Log::error('XMXgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
                 Log::error('XMXgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
 
                 return null;
@@ -483,6 +484,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             if ($data==null || $data['returnCode'] != 0)
             {
+                Log::error('XMXgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
                 Log::error('XMXgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
                 return null;
             }
