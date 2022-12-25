@@ -426,7 +426,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $params['hash'] = XMXController::hashParam($params);
 
                     $url = config('app.xmx_api') . '/addMemberPoint';
-                    $response = Http::asForm()->post($url, $params);
+                    $response = Http::asForm()->timeout(30)->post($url, $params);
                     if (!$response->ok())
                     {
                         Log::error('XMXmakelink : addMemberPoint request failed. ' . $response->body());
