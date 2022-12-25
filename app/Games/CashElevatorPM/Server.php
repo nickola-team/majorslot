@@ -201,10 +201,10 @@ namespace VanguardLTE\Games\CashElevatorPM
                     if($str_trail != ''){
                         $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
                     }else{
-                        $arr_accv = explode('~', $str_accv);
-                        $basement = $arr_accv[1];
-                        if($bgt > 0 && isset($arr_accv[3]) && $arr_accv[3] > 0){
-                            $strOtherResponse = $strOtherResponse . '&trail=basement~' . $basement;
+                        if($bgt > 0){
+                            if($freeStacks[0]['trail'] != ''){
+                                $strOtherResponse = $strOtherResponse . '&trail=' . $freeStacks[0]['trail'];
+                            }
                         }
                     }
                     if($pw > 0){
@@ -787,13 +787,9 @@ namespace VanguardLTE\Games\CashElevatorPM
                 if($str_trail != ''){
                     $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
                 }else{
-                    $basement = 1;
-                    $arr_accv = explode('~', $str_accv);
-                    $basement = $arr_accv[1];
-                    if($bgt > 0 && isset($arr_accv[3]) && $arr_accv[3] > 0){
-                        $strOtherResponse = $strOtherResponse . '&trail=basement~' . $basement;
+                    if($freeStacks[0]['trail'] != ''){
+                        $strOtherResponse = $strOtherResponse . '&trail=' . $freeStacks[0]['trail'];
                     }
-                    // $strOtherResponse = $strOtherResponse . '&trail=basement~' . $basement;
                 }
                 
                 $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') .'&balance='. $Balance .'&index='.$slotEvent['index'].'&coef='. $coef .'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType . $strOtherResponse .'&rw=0.00&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
