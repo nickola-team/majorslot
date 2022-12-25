@@ -15,7 +15,8 @@ namespace VanguardLTE
             'table_bank', 
             'fish', 
             'bonus', 
-            'shop_id'
+            'shop_id', 
+            'game_id'
         ];
         public static function boot()
         {
