@@ -147,7 +147,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 Log::error('XMXgetuserbalance : response is not okay. ' . $response->body());
             }
-            return $balance;
+            return intval($balance);
         }
         
         public static function getgamelist($href)
