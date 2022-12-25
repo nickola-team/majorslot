@@ -317,6 +317,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = $response->json();
                 if ($data==null || $data['returnCode'] != 0)
                 {
+                    Log::error('XMXWithdraw : transferPointG2M result failed. PARAMS=' . json_encode($params));
                     Log::error('XMXWithdraw : transferPointG2M result failed. ' . ($data==null?'null':$data['description']));
                     return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
                 }
