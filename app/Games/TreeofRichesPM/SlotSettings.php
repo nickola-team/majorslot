@@ -629,10 +629,17 @@ namespace VanguardLTE\Games\TreeofRichesPM
             else if( $spinWin == 1 || $bonusWin == 1 && !$this->slotBonus ) 
             {
                 $currentbank = $this->GetBank($garantType);
-                $return = [
-                    'win', 
-                    $currentbank
-                ];
+                if($currentbank < $bet){
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }else{
+                    $return = [
+                        'win', 
+                        $currentbank
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
