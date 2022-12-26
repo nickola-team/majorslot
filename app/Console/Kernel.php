@@ -1029,7 +1029,7 @@ namespace VanguardLTE\Console
                     $admin = \VanguardLTE\User::where('role_id', 9)->first();
                     try {
                         $shop = \VanguardLTE\Shop::where('id', $bank->shop_id)->first();
-
+                        $game = $bank->game;
                         $old1 = $bank->slots_01;
                         if ($minslot1 && $bank->slots_01 < $minslot1->value)
                         {
@@ -1041,6 +1041,10 @@ namespace VanguardLTE\Console
                         }
                         if ($shop && $old1 != $bank->slots_01){
                             $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
                             \VanguardLTE\BankStat::create([
                                 'name' => 'Slot1' . "[$name]", 
                                 'user_id' => $admin->id, 
@@ -1065,6 +1069,10 @@ namespace VanguardLTE\Console
 
                         if ($shop && $old2 != $bank->slots_02){
                             $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
                             \VanguardLTE\BankStat::create([
                                 'name' => 'Slot2' . "[$name]", 
                                 'user_id' => $admin->id, 
@@ -1089,6 +1097,10 @@ namespace VanguardLTE\Console
 
                         if ($shop && $old3 != $bank->slots_03){
                             $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
                             \VanguardLTE\BankStat::create([
                                 'name' => 'Slot3' . "[$name]", 
                                 'user_id' => $admin->id, 
@@ -1113,6 +1125,10 @@ namespace VanguardLTE\Console
 
                         if ($shop && $old4 != $bank->slots_04){
                             $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
                             \VanguardLTE\BankStat::create([
                                 'name' => 'Slot4' . "[$name]", 
                                 'user_id' => $admin->id, 
@@ -1137,6 +1153,10 @@ namespace VanguardLTE\Console
 
                         if ($shop && $old5 != $bank->slots_05){
                             $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
                             \VanguardLTE\BankStat::create([
                                 'name' => 'Slot5' . "[$name]", 
                                 'user_id' => $admin->id, 
