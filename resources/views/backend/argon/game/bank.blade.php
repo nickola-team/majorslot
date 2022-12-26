@@ -203,6 +203,7 @@
                     <tr>
                     <th scope="col">번호</th>
                     <th scope="col">파트너이름</th>
+                    <th scope="col">게임이름</th>
                     <th scope="col">환수율%</th>
                     <th scope="col">환수금1</th>
                     <th scope="col">환수금2</th>
