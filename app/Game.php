@@ -687,7 +687,17 @@ namespace VanguardLTE
         }
         public function game_bank()
         {
-            return $this->hasOne('VanguardLTE\GameBank', 'shop_id', 'shop_id');
+            if (!$this->shop)
+            {
+                return null;
+            }
+            $bank = GameBank::lockforUpdate()->where(['shop_id' => $this->shop_id, 'game_id' => $this->original_id])->first();
+            if (!$bank)
+            {
+                $bank = GameBank::create(['shop_id' => $this->shop_id, 'game_id' => $this->original_id]);
+            }
+            return $bank;
+            // return $this->hasOne('VanguardLTE\GameBank', 'shop_id', 'shop_id');
         }
         public function bonus_bank()
         {
@@ -740,17 +750,18 @@ namespace VanguardLTE
                 }
                 return $bank->bank_05;
             }
-            if( $this->gamebank != null && $this->game_bank ) 
+            $game_bank = $this->game_bank();
+            if( $this->gamebank != null && $game_bank ) 
             {
                 if($this->gamebank == 'slots'){
                     for($k = 0; $k < 4; $k++){
                         if( $this->allBet <= $this->divBanks[$k]){
-                            return $this->game_bank->{'slots_0'.($k+1)};
+                            return $game_bank->{'slots_0'.($k+1)};
                         }
                     }
-                    return $this->game_bank->slots_05;
+                    return $game_bank->slots_05;
                 }else{
-                    return $this->game_bank->{$this->gamebank};
+                    return $game_bank->{$this->gamebank};
                 }
             }
             return 0;
@@ -802,14 +813,14 @@ namespace VanguardLTE
                     }
                     return;
                 }
-                $bank = $this->game_bank;
+                $bank = $this->game_bank();
                 $gamebank = $this->gamebank;
                 if($gamebank == 'slots'){
                     $gamebank = $gamebank . '_0' . $bank_index;
                 }
                 if( !$bank ) 
                 {
-                    $bank = GameBank::create(['shop_id' => $this->shop_id]);
+                    $bank = GameBank::create(['shop_id' => $this->shop_id, 'game_id' => $this->original_id]);
                 }
                 if( $type == 'inc' ) 
                 {

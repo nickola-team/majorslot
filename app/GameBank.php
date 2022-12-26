@@ -15,7 +15,8 @@ namespace VanguardLTE
             'table_bank', 
             'fish', 
             'bonus', 
-            'shop_id'
+            'shop_id', 
+            'game_id'
         ];
         public static function boot()
         {
@@ -24,6 +25,10 @@ namespace VanguardLTE
         public function shop()
         {
             return $this->belongsTo('VanguardLTE\Shop');
+        }
+        public function game()
+        {
+            return $this->belongsTo('VanguardLTE\Game');
         }
     }
 
