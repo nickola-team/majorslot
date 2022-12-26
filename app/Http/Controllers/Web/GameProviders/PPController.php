@@ -1955,6 +1955,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return response('SoundState=true_true_true_false_false');
             }
+            \DB::beginTransaction();
             $slot = new $object($ppgame, $userId);
 
             if ($request->method == 'load') // send settings to client from server
@@ -1973,6 +1974,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $slot->SetGameData('settings', $request->settings);
                 $slot->SaveGameData();
+                \DB::commit();
                 return response($request->settings);
             }
         }
