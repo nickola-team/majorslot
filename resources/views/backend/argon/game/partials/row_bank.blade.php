@@ -3,6 +3,7 @@
 ?>
 <td>{{ $bank->id }}</td>
 <td>{{ $bank->shop->name }} <span class="badge {{$badge_class[3]}}">매장</span></td>
+<td>{{ $bank->game?$bank->game->name:'공통' }}</td>
 <td>{{ $bank->shop->percent }}</td>
 <td>{{ number_format($bank->slots_01,0) }}</td>
 <td>{{ number_format($bank->slots_02,0) }}</td>
