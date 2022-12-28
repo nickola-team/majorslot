@@ -106,7 +106,7 @@ namespace VanguardLTE\Games\MasterChensFortunePM
                         $arr_psym = explode(';', $str_psym);
                         for($k = 0; $k < count($arr_psym); $k++){
                             $arr_sub_psym = explode('~', $arr_psym[$k]);
-                            $arr_sub_psym[1] = $arr_sub_psym[1] / $original_bet * $bet;
+                            $arr_sub_psym[1] = str_replace(',', '', $arr_sub_psym[1]) / $original_bet * $bet;
                             $arr_psym[$k] = implode('~', $arr_sub_psym);
                         }
                         $str_psym = implode(';', $arr_psym);
@@ -284,7 +284,7 @@ namespace VanguardLTE\Games\MasterChensFortunePM
                     $arr_psym = explode(';', $str_psym);
                     for($k = 0; $k < count($arr_psym); $k++){
                         $arr_sub_psym = explode('~', $arr_psym[$k]);
-                        $arr_sub_psym[1] = $arr_sub_psym[1] / $original_bet * $betline;
+                        $arr_sub_psym[1] = str_replace(',', '', $arr_sub_psym[1]) / $original_bet * $betline;
                         $totalWin = $totalWin + $arr_sub_psym[1];
                         $arr_psym[$k] = implode('~', $arr_sub_psym);
                     }
