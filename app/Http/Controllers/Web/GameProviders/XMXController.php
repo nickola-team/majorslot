@@ -189,17 +189,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         continue;
                     }
-                    array_push($gameList, [
-                        'provider' => self::XMX_PROVIDER,
-                        'href' => $href,
-                        'gamecode' => $game['id'],
-                        'enname' => $game['tEN'],
-                        'name' => preg_replace('/\s+/', '', $game['tEN']),
-                        'title' => $game['tKR'],
-                        'icon' => $game['img'],
-                        'type' => strtolower($game['gt']),
-                        'view' => 1
-                    ]);
+                    if (strtolower($game['gt']) == 'slot')
+                    {
+                        array_push($gameList, [
+                            'provider' => self::XMX_PROVIDER,
+                            'href' => $href,
+                            'gamecode' => $game['id'],
+                            'enname' => $game['tEN'],
+                            'name' => preg_replace('/\s+/', '', $game['tEN']),
+                            'title' => $game['tKR'],
+                            'icon' => $game['img'],
+                            'type' => strtolower($game['gt']),
+                            'view' => 1
+                        ]);
+                    }
                 }
 
                 //add Unknown Game item
