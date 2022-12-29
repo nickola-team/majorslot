@@ -107,7 +107,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $str_dsam = $stack['dsam'];
                     $str_sty = $stack['sty'];
                     $apv = $stack['apv'];
-                    $apwa= $stack['apwa'];
+                    $apwa= str_replace(',', '', $stack['apwa']);
                     $str_apt = $stack['apt'];
                     $strWinLine = $stack['win_line'];
                     $fsmore = $stack['fsmore'];
@@ -367,7 +367,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $str_dsam = $stack['dsam'];
                     $str_sty = $stack['sty'];
                     $apv = $stack['apv'];
-                    $apwa= $stack['apwa'];
+                    $apwa= str_replace(',', '', $stack['apwa']);
                     $str_apt = $stack['apt'];
                     $strWinLine = $stack['win_line'];
                     $fsmore = $stack['fsmore'];
@@ -393,7 +393,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                     $str_dsam = $stack[0]['dsam'];
                     $str_sty = $stack[0]['sty'];
                     $apv = $stack[0]['apv'];
-                    $apwa= $stack[0]['apwa'];
+                    $apwa= str_replace(',', '', $stack[0]['apwa']);
                     $str_apt = $stack[0]['apt'];
                     $strWinLine = $stack[0]['win_line'];
                     $fsmore = $stack[0]['fsmore'];

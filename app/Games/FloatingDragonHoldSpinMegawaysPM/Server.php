@@ -148,7 +148,7 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                     if($arr_g != null){
                         if(isset($arr_g['bg'])){
                             if(isset($arr_g['bg']['rw'])){
-                                $arr_g['bg']['rw'] = "" . ($arr_g['bg']['rw'] / $original_bet * $bet);
+                                $arr_g['bg']['rw'] = "" . (str_replace(',', '', $arr_g['bg']['rw']) / $original_bet * $bet);
                             }
                             if(isset($arr_g['bg']['end'])){
                                 if($arr_g['bg']['end'] == 0){
@@ -719,7 +719,7 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                 if($arr_g != null && isset($arr_g['bg'])){
                     $money_win = 0;
                     if(isset($arr_g['bg']['rw'])){
-                        $arr_g['bg']['rw'] = "" . ($arr_g['bg']['rw'] / $original_bet * $betline);
+                        $arr_g['bg']['rw'] = "" . (str_replace(',', '', $arr_g['bg']['rw']) / $original_bet * $betline);
                         if(isset($arr_g['bg']['end']) && $arr_g['bg']['end'] == 1){
                             $totalWin = $arr_g['bg']['rw'];
                             if($totalWin > 0){

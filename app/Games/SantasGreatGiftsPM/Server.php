@@ -161,7 +161,7 @@ namespace VanguardLTE\Games\SantasGreatGiftsPM
                     if($str_trail != ''){
                         $arr_trails = explode('~', $str_trail);
                         if(isset($arr_trails[1]) && $arr_trails[1] > 0){
-                            $arr_trails[1] = $arr_trails[1] / $original_bet * $bet;
+                            $arr_trails[1] = str_replace(',', '', $arr_trails[1]) / $original_bet * $bet;
                         }
                         $strOtherResponse = $strOtherResponse . '&trail=' . implode('~', $arr_trails);
                     }
@@ -572,7 +572,7 @@ namespace VanguardLTE\Games\SantasGreatGiftsPM
                 if($str_trail != ''){
                     $arr_trails = explode('~', $str_trail);
                     if(isset($arr_trails[1]) && $arr_trails[1] > 0){
-                        $arr_trails[1] = $arr_trails[1] / $original_bet * $betline;
+                        $arr_trails[1] = str_replace(',', '', $arr_trails[1]) / $original_bet * $betline;
                     }
                     $strOtherResponse = $strOtherResponse . '&trail=' . implode('~', $arr_trails);
                 }

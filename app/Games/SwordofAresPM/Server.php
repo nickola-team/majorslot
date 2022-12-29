@@ -114,7 +114,7 @@ namespace VanguardLTE\Games\SwordofAresPM
                     $fsmore = $stack['fsmore'];
                     $fsmax = $stack['fsmax'];
                     $strWinLine = $stack['win_line'];
-                    $apwa = $stack['apwa'];
+                    $apwa = str_replace(',', '', $stack['apwa']);
                     $apv = $stack['apv'];
                     $str_apt = $stack['apt'];
                     if($strWinLine != ''){
@@ -359,7 +359,7 @@ namespace VanguardLTE\Games\SwordofAresPM
                     $fsmore = $stack['fsmore'];
                     $fsmax = $stack['fsmax'];
                     $strWinLine = $stack['win_line'];
-                    $apwa = $stack['apwa'];
+                    $apwa = str_replace(',', '', $stack['apwa']);
                     $apv = $stack['apv'];
                     $str_apt = $stack['apt'];
                 }else{
@@ -382,7 +382,7 @@ namespace VanguardLTE\Games\SwordofAresPM
                     $fsmore = $stack[0]['fsmore'];
                     $fsmax = $stack[0]['fsmax'];
                     $strWinLine = $stack[0]['win_line'];
-                    $apwa = $stack[0]['apwa'];
+                    $apwa = str_replace(',', '', $stack[0]['apwa']);
                     $apv = $stack[0]['apv'];
                     $str_apt = $stack[0]['apt'];
                 }

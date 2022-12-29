@@ -153,7 +153,7 @@ namespace VanguardLTE\Games\EmeraldKingRainbowRoadPM
                                 if(isset($item['l0'])){
                                     $arr_wins = explode('~', $item['l0']);
                                     if(count($arr_wins) > 0){
-                                        $sub_win = $arr_wins[1] / $original_bet * $bet;
+                                        $sub_win = str_replace(',', '', $arr_wins[1]) / $original_bet * $bet;
                                         $arr_wins[1] = $sub_win;
                                         $g[$key]['l0'] = implode('~', $arr_wins);
                                     }
@@ -472,7 +472,7 @@ namespace VanguardLTE\Games\EmeraldKingRainbowRoadPM
                         if(isset($item['l0'])){
                             $arr_wins = explode('~', $item['l0']);
                             if(count($arr_wins) > 0){
-                                $sub_win = $arr_wins[1] / $original_bet * $betline;
+                                $sub_win = str_replace(',', '', $arr_wins[1]) / $original_bet * $betline;
                                 $arr_wins[1] = $sub_win;
                                 $totalWin = $totalWin + $sub_win;
                                 $g[$key]['l0'] = implode('~', $arr_wins);

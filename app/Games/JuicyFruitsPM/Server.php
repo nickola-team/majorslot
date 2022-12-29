@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\JuicyFruitsPM
                     $str_initReel = $stack['initReel'];
                     $str_initReel = $stack['initReel'];
                     $apv = $stack['apv'];
-                    $apwa = $stack['apwa'];
+                    $apwa = str_replace(',', '', $stack['apwa']);
                     $currentReelSet = $stack['reel_set'];
                     $fsmore = $stack['fsmore'];
                     $str_accm = $stack['accm'];
@@ -364,7 +364,7 @@ namespace VanguardLTE\Games\JuicyFruitsPM
                     $lastReel = explode(',', $stack['reel']);
                     $str_initReel = $stack['initReel'];
                     $apv = $stack['apv'];
-                    $apwa = $stack['apwa'];
+                    $apwa = str_replace(',', '', $stack['apwa']);
                     $currentReelSet = $stack['reel_set'];
                     $fsmore = $stack['fsmore'];
                     $str_accm = $stack['accm'];
@@ -382,7 +382,7 @@ namespace VanguardLTE\Games\JuicyFruitsPM
                     $lastReel = explode(',', $stack[0]['reel']);
                     $str_initReel = $stack[0]['initReel'];
                     $apv = $stack[0]['apv'];
-                    $apwa = $stack[0]['apwa'];
+                    $apwa = str_replace(',', '', $stack[0]['apwa']);
                     $currentReelSet = $stack[0]['reel_set'];
                     $fsmore = $stack[0]['fsmore'];
                     $str_accm = $stack[0]['accm'];
