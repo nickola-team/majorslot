@@ -201,6 +201,10 @@
                                         </tr>
                                     </table>
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="ggr">죽장%</label>
+                                    <input type="text" name="ggr_percent" id="ggr_percent" class="form-control{{ $errors->has('ggr_percent') ? ' is-invalid' : '' }}" value="{{ old('ggr_percent', $user->ggr_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
+                                </div>
                                 @if (auth()->user()->isInOutPartner())
                                 <div class="form-group">
                                     <label class="form-control-label">상태</label>
