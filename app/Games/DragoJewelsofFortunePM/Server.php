@@ -172,7 +172,7 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                         $strOtherResponse = $strOtherResponse . '&rwd=' . $str_rwd;
                     }
                     if($rs_p > -1){
-                        $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs=0&rs_m=' . $rs_m . '&bpw=' . ($bpw / $bet * 20);
+                        $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs=0&rs_m=' . $rs_m . '&bpw=' . (str_replace(',', '', $bpw) / $bet * 20);
                     }
                     if($str_pr_t != ''){
                         $strOtherResponse = $strOtherResponse . '&pr_t=' . $str_pr_t;
@@ -449,7 +449,7 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                     foreach($old_wlc_vs as $index=>$wlc){
                         $arr_wlc = explode('~', $wlc);
                         if(isset($arr_wlc[1])){
-                            $arr_wlc[1] = $arr_wlc[1] / $original_bet * $betline;
+                            $arr_wlc[1] = str_replace(',', '', $arr_wlc[1]) / $original_bet * $betline;
                             $totalWin = $totalWin + ($arr_wlc[1] * $fsmul);
                         }
                         $wlc_vs[] = implode('~', $arr_wlc);
@@ -556,7 +556,7 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                     $strOtherResponse = $strOtherResponse . '&end=' . $end;
                 }
                 if($rs_p > -1){
-                    $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs=0&rs_m=' . $rs_m . '&bpw=' . ($bpw / $original_bet * $betline);
+                    $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs=0&rs_m=' . $rs_m . '&bpw=' . (str_replace(',', '', $bpw) / $original_bet * $betline);
                 }
                 if($str_pr_t != ''){
                     $strOtherResponse = $strOtherResponse . '&pr_t=' . $str_pr_t;

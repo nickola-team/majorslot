@@ -186,7 +186,7 @@ namespace VanguardLTE\Games\DowntheRailsPM
                             $g['gmb']['rw'] = '' . ($apv * $bet);
                         }
                         if(isset($g['eol_g']) && isset($g['eol_g']['mo_tw']) && $rs_t > 0){
-                            $eol_moneyWin = $g['eol_g']['mo_tw'] / $original_bet * $bet;
+                            $eol_moneyWin = str_replace(',', '', $g['eol_g']['mo_tw']) / $original_bet * $bet;
                             $g['eol_g']['mo_tw'] = '' . $eol_moneyWin;
                         }
                         if(!isset($g['eol_g'])){
@@ -531,7 +531,7 @@ namespace VanguardLTE\Games\DowntheRailsPM
                     $totalWin = $totalWin + $moneyWin;
                 }
                 if($g != null && isset($g['eol_g']) && isset($g['eol_g']['mo_tw']) && $rs_t > 0){
-                    $eol_moneyWin = $g['eol_g']['mo_tw'] / $original_bet * $betline;
+                    $eol_moneyWin = str_replace(',', '', $g['eol_g']['mo_tw']) / $original_bet * $betline;
                     $g['eol_g']['mo_tw'] = '' . $eol_moneyWin;
                     $totalWin = $totalWin + $eol_moneyWin;
                 }
