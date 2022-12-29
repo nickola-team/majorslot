@@ -121,6 +121,7 @@
                 <th scope="col">롤링금</th>
                 <th scope="col">슬롯롤링%</th>
                 <th scope="col">라이브롤링%</th>
+                <th scope="col">죽장%</th>
                 <th scope="col">가입날짜</th>
                 <th></th>
                 </tr>
