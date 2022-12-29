@@ -149,7 +149,7 @@ namespace VanguardLTE\Games\StarBountyPM
                         foreach($old_wlc_vs as $index=>$wlc){
                             $arr_wlc = explode('~', $wlc);
                             if(isset($arr_wlc[1])){
-                                $arr_wlc[1] = $arr_wlc[1] / $oldBetLine * $bet;
+                                $arr_wlc[1] = str_replace(',', '', $arr_wlc[1]) / $oldBetLine * $bet;
                             }
                             $wlc_vs[] = implode('~', $arr_wlc);
                         }
@@ -398,7 +398,7 @@ namespace VanguardLTE\Games\StarBountyPM
                     foreach($old_wlc_vs as $index=>$wlc){
                         $arr_wlc = explode('~', $wlc);
                         if(isset($arr_wlc[1])){
-                            $arr_wlc[1] = $arr_wlc[1] / $oldBetLine * $betline;
+                            $arr_wlc[1] = str_replace(',', '', $arr_wlc[1]) / $oldBetLine * $betline;
                             $totalWin = $totalWin + $arr_wlc[1];
                             $isNewTumb = true;
                         }

@@ -132,7 +132,7 @@ namespace VanguardLTE\Games\PyramidKingPM
                     $rsb_m = $stack['rsb_m'];
                     $rsb_c = $stack['rsb_c'];
                     $bw = $stack['bw'];
-                    $bpw = $stack['bpw'];
+                    $bpw = str_replace(',', '', $stack['bpw']);
                     $end = $stack['end'];
                     $fsmore = $stack['fsmore'];
                     if($stack['reel_set'] > -1){
@@ -582,7 +582,7 @@ namespace VanguardLTE\Games\PyramidKingPM
                 if($bw == 1 && $bgt == 11){
                     $spinType = 'b';
                     $isState = false;
-                    $strOtherResponse = $strOtherResponse . '&rsb_s=11,12&bgid=0&rsb_m=3&rsb_c=0&bgt=11&bw=1&bpw=' . ($bpw / $original_bet * $betline);
+                    $strOtherResponse = $strOtherResponse . '&rsb_s=11,12&bgid=0&rsb_m=3&rsb_c=0&bgt=11&bw=1&bpw=' . (str_replace(',', '', $bpw) / $original_bet * $betline);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 11);
                 }
                 if($str_mo != ''){
