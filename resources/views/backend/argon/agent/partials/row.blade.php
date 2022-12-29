@@ -14,6 +14,7 @@
 <td>{{ number_format($user->deal_balance - $user->mileage,0) }}</td>
 <td>{{ number_format($user->deal_percent,2) }}</td>
 <td>{{ number_format($user->table_deal_percent,2) }}</td>
+<td>{{ number_format($user->ggr_percent,2) }}</td>
 @endif
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
