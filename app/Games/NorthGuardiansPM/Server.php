@@ -105,7 +105,7 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                 }
                 $currentReelSet = 0;
                 $spinType = 's';
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                 {
                     $strOtherResponse = $strOtherResponse . '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=0.00&fsmul=1';
                     $currentReelSet = 1;
@@ -456,9 +456,14 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                     }
                 }
                 if($fsmore > 0 && $isCalcWinLine == false && $slotEvent['slotEvent'] == 'freespin'){
-                    $diff_more = $fsmore - $slotSettings->GetGameData($slotSettings->slotId . 'LastFsmore');
+                    if($fsmore < 3){
+                        $diff_more = $fsmore;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'LastFsmore', $slotSettings->GetGameData($slotSettings->slotId . 'LastFsmore') + $fsmore);
+                    }else{
+                        $diff_more = $fsmore - $slotSettings->GetGameData($slotSettings->slotId . 'LastFsmore');
+                        $slotSettings->SetGameData($slotSettings->slotId . 'LastFsmore', $fsmore);
+                    }
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $diff_more);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'LastFsmore', $fsmore);
                 }
 
                 $strLastReel = implode(',', $lastReel);
@@ -483,7 +488,7 @@ namespace VanguardLTE\Games\NorthGuardiansPM
                     $isEnd = false;
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                     
-                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
+                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) 
                     {
                         $spinType = 'cb';
                         $isEnd = true;
