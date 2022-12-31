@@ -292,6 +292,9 @@ namespace VanguardLTE\Games\QueeniePM
                 }
                 $freeStacks = []; 
                 $isGeneratedFreeStack = false;
+                $slotSettings->SetGameData($slotSettings->slotId . 'Wins', [0,0,0,0,0,0,0,0,0,0,0,0]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Status', [0,0,0,0,0,0,0,0,0,0,0,0]);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Level', -1);
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
                     $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
@@ -319,10 +322,7 @@ namespace VanguardLTE\Games\QueeniePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'Level', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'Wins', [0,0,0,0,0,0,0,0,0,0,0,0]);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'Status', [0,0,0,0,0,0,0,0,0,0,0,0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
