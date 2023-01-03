@@ -130,10 +130,10 @@ namespace VanguardLTE\Games\GreatRhinoPM
                         for($k = 0; $k < count($arr_lines); $k++){
                             $arr_sub_lines = explode('~', $arr_lines[$k]);
                             $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
-                            $totalWin = $totalWin + $arr_sub_lines[1];
                             $arr_lines[$k] = implode('~', $arr_sub_lines);
                         }
                         $strWinLine = implode('&', $arr_lines);
+                        $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                     }
                     if($bgt > 0){
                         $strOtherResponse = $strOtherResponse . '&bgt='. $bgt .'&rsb_m=' . $rsb_m . '&rsb_c=' . $rsb_c .'&coef='. ($bet * 20);
