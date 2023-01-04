@@ -11,9 +11,9 @@ namespace VanguardLTE\Games\WinPowerBallGP
         public  $GAME_TIME = 270;
         public  $GAME_PERIOD = 270;
         public  $LAST_LIMIT_TIME = 1;
-        public  $VIDEO_URL = 'http://pow-9.com/';
+        public  $VIDEO_URL = 'http://video.pp-99.com/';
         public  $VIDEO_WIDTH = 1200;
-        public  $TREND_URL = 'http://pow-9.com/ajax.process_powerball.php';
+        public  $TREND_URL = 'http://video.pp-99.com/ajax.process_powerball.php';
         public  $RATE = [
             1 => 1.95, //파홀
             2 => 1.95,  //파짝
@@ -216,7 +216,7 @@ namespace VanguardLTE\Games\WinPowerBallGP
 
         public function getCurrentTrend()
         {
-            return null;
+            // return null;
             $response = Http::get($this->TREND_URL);
             if ($response->ok()) {
                 $data = $response->json();
