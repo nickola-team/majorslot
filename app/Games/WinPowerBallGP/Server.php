@@ -216,7 +216,7 @@ namespace VanguardLTE\Games\WinPowerBallGP
 
         public function getCurrentTrend()
         {
-            return null;
+            // return null;
             $response = Http::get($this->TREND_URL);
             if ($response->ok()) {
                 $data = $response->json();
