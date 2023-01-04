@@ -190,6 +190,8 @@ namespace VanguardLTE\Games\_5LionsGoldPM
                     }
                     if($str_fs_opt != ''){
                         $strOtherResponse = $strOtherResponse . '&fs_opt_mask=' . $str_fs_opt_mask . '&fs_opt=' . $str_fs_opt;
+                    }else if($spinType == 'fso'){
+                        $strOtherResponse = $strOtherResponse . '&fs_opt_mask=fs,m,ts,rm&fs_opt=25,1,2,2;3;5~20,1,2,3;5;8~15,1,2,5;8;10~13,1,2,8;10;15~10,1,2,10;15;30~6,1,2,15;30;40~-1,-1,2,-1';
                     }
                     if($str_wrlm_cs != ''){
                         $strOtherResponse = $strOtherResponse . '&wrlm_cs=' . $str_wrlm_cs . '&wrlm_res=' . $str_wrlm_res;
