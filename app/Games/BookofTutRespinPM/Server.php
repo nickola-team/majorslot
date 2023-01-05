@@ -422,7 +422,7 @@ namespace VanguardLTE\Games\BookofTutRespinPM
                     $strWinLine = implode('&', $arr_lines);
                 } 
                 $moneyWin = 0;
-                if($rs_t > 0 && $arr_g != null && isset($arr_g['ep'])){
+                if($arr_g != null && isset($arr_g['ep'])){
                     $arr_ep = [];
                     foreach( $arr_g['ep'] as $key => $vl ) 
                     {
