@@ -200,9 +200,14 @@ namespace VanguardLTE\Games\EmeraldKingRainbowRoadPM
                         }else{
                             $strOtherResponse = $strOtherResponse . '&bgid=1';
                         }
-                        $strOtherResponse = $strOtherResponse . '&end=0&bgt='. $slotSettings->GetGameData($slotSettings->slotId . 'Bgt') .'&coef='. ($bet * 20) . '&wp='. $wp .'&level=' . $level;
+                        if($end == 1){
+                            $spinType = 's';
+                        }else{
+                            $spinType = 'b';
+                        }
+                        $strOtherResponse = $strOtherResponse . '&end=' . $end . '&bgt='. $slotSettings->GetGameData($slotSettings->slotId . 'Bgt') .'&coef='. ($bet * 20) . '&wp='. $wp .'&level=' . $level;
                         $strOtherResponse = $strOtherResponse . '&g=' . preg_replace('/"(\w+)":/i', '\1:', json_encode($g));
-                        $spinType = 'b';
+                        
                     }else{
                         if($rs_p >= 0){
                             $strOtherResponse = $strOtherResponse . '&g=' . preg_replace('/"(\w+)":/i', '\1:', json_encode($g));
@@ -724,26 +729,29 @@ namespace VanguardLTE\Games\EmeraldKingRainbowRoadPM
                     $spinType = 'cb';
                     $slotSettings->SetBalance($totalWin);
                     $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusType', 0);
                 }
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                 $strOtherResponse = '';
                 if($totalWin > 0){
-                    $strOtherResponse = $strOtherResponse . '&end=1&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
-                }else{
-                    $strOtherResponse = $strOtherResponse . '&end=0';
+                    $strOtherResponse = $strOtherResponse . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 }
+
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 if($end < 1){
                     if($bmw > 0){
                         $strOtherResponse = $strOtherResponse . '&rw=' . $bmw;
                     }else{
                         $strOtherResponse = $strOtherResponse . '&rw=0';
-                    }                    
+                    }       
+                    $strOtherResponse = $strOtherResponse . '&end=0';
                 }else{
-                    $strOtherResponse = $strOtherResponse . '&rw=' . $totalWin;
+                    $strOtherResponse = $strOtherResponse . '&end='. $end .'&rw=' . $totalWin;                    
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusType', 0);
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') == 0){
+                        $spinType = 's';
+                    }
                 }
                 if($lifes >= 0){
                     $strOtherResponse = $strOtherResponse . '&lifes=' . $lifes;
