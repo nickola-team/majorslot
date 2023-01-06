@@ -394,7 +394,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/jungle/images/partner.png" /><br /><br />Copyright ⓒ
-            2022~2023 청담  All rights reserved.
+            2022~2023 Cheongdam  All rights reserved.
           </div>
          </div>
          <div>
