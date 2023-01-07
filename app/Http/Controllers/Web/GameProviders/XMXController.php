@@ -461,6 +461,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function gamerounds($thirdparty,$startDate)
         {
+            
             $op = config('app.xmx_op');
 
             $endDate = date('Y-m-d H:i:s');
@@ -475,25 +476,33 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'vendorID' => 0,
             ];
             $params['hash'] = XMXController::hashParam($params);
-
-            $url = config('app.xmx_api') . '/getBetWinHistoryAll';
-            $response = Http::asForm()->post($url, $params);
-            if (!$response->ok())
+            try
             {
-                Log::error('XMXgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
-                Log::error('XMXgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
+                $url = config('app.xmx_api') . '/getBetWinHistoryAll';
+                $response = Http::timeout(10)->asForm()->post($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('XMXgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
+                    Log::error('XMXgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
 
-                return null;
+                    return null;
+                }
+                $data = $response->json();
+                if ($data==null || $data['returnCode'] != 0)
+                {
+                    Log::error('XMXgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
+                    Log::error('XMXgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
+                    return null;
+                }
+
+                return $data;
             }
-            $data = $response->json();
-            if ($data==null || $data['returnCode'] != 0)
+            catch (\Exception $ex)
             {
-                Log::error('XMXgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
-                Log::error('XMXgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
-                return null;
+                Log::error('XMXgamerounds : getBetWinHistoryAll Excpetion. exception= ' . $ex->getMessage());
+                Log::error('XMXgamerounds : getBetWinHistoryAll Excpetion. PARAMS= ' . json_encode($params));
             }
-
-            return $data;
+            return null;
         }
 
         public static function processGameRound()
@@ -513,7 +522,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-1 days'));;
+                $lasttime = date('Y-m-d H:i:s',strtotime('-1 days'));
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
