@@ -479,7 +479,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try
             {
                 $url = config('app.xmx_api') . '/getBetWinHistoryAll';
-                $response = Http::timeout(10)->asForm()->post($url, $params);
+                $response = Http::timeout(30)->asForm()->post($url, $params);
                 if (!$response->ok())
                 {
                     Log::error('XMXgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
