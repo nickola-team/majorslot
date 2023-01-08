@@ -555,7 +555,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
                 $data = XMXController::gamerounds($thirdId, $lasttime);
-                if ($data['totalDataSize'] > 0)
+                if (isset($data['totalDataSize']) && $data['totalDataSize'] > 0)
                 {
                     
                     foreach ($data['history'] as $round)
