@@ -131,7 +131,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try {
                 $params['hash'] = XMXController::hashParam($params);
         
-                $response = Http::asForm()->post($url, $params);
+                $response = Http::asForm()->get($url, $params);
                 
                 if ($response->ok()) {
                     $res = $response->json();
@@ -182,7 +182,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $params['hash'] = XMXController::hashParam($params);
     
-            $response = Http::asForm()->post($url, $params);
+            $response = Http::asForm()->get($url, $params);
             if (!$response->ok())
             {
                 return [];
@@ -248,7 +248,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params['hash'] = XMXController::hashParam($params);
 
             $url = config('app.xmx_api') . '/generateSession';
-            $response = Http::asForm()->post($url, $params);
+            $response = Http::asForm()->get($url, $params);
             if (!$response->ok())
             {
                 Log::error('XMXGetLink : Game Session request failed. ' . $response->body());
@@ -276,7 +276,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params['hash'] = XMXController::hashParam($params);
 
             $url = config('app.xmx_api') . '/getGameUrl';
-            $response = Http::asForm()->post($url, $params);
+            $response = Http::asForm()->get($url, $params);
             if (!$response->ok())
             {
                 Log::error('XMXGetLink : Game url request failed. ' . $response->body());
@@ -318,7 +318,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $params['hash'] = XMXController::hashParam($params);
                 try {
                     $url = config('app.xmx_api') . '/transferPointG2M';
-                    $response = Http::asForm()->post($url, $params);
+                    $response = Http::asForm()->get($url, $params);
                     if (!$response->ok())
                     {
                         Log::error('XMXWithdraw : transferPointG2M request failed. ' . $response->body());
@@ -352,7 +352,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $params['hash'] = XMXController::hashParam($params);
                 try {
                     $url = config('app.xmx_api') . '/subtractMemberPoint';
-                    $response = Http::asForm()->post($url, $params);
+                    $response = Http::asForm()->get($url, $params);
                     if (!$response->ok())
                     {
                         Log::error('XMXWithdraw : subtractMemberPoint request failed. ' . $response->body());
@@ -405,7 +405,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params['hash'] = XMXController::hashParam($params);
 
             $url = config('app.xmx_api') . '/createAccount';
-            $response = Http::asForm()->post($url, $params);
+            $response = Http::asForm()->get($url, $params);
             if (!$response->ok())
             {
                 Log::error('XMXmakelink : createAccount request failed. ' . $response->body());
@@ -451,7 +451,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $params['hash'] = XMXController::hashParam($params);
 
                     $url = config('app.xmx_api') . '/addMemberPoint';
-                    $response = Http::asForm()->timeout(30)->post($url, $params);
+                    $response = Http::asForm()->timeout(30)->get($url, $params);
                     if (!$response->ok())
                     {
                         Log::error('XMXmakelink : addMemberPoint request failed. ' . $response->body());
@@ -501,7 +501,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try
             {
                 $url = config('app.xmx_api') . '/getBetWinHistoryAll';
-                $response = Http::timeout(30)->asForm()->post($url, $params);
+                $response = Http::timeout(30)->asForm()->get($url, $params);
                 if (!$response->ok())
                 {
                     Log::error('XMXgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
@@ -692,7 +692,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $params['hash'] = XMXController::hashParam($params);
 
                 $url = config('app.xmx_api') . '/createAccount';
-                $response = Http::asForm()->post($url, $params);
+                $response = Http::asForm()->get($url, $params);
                 if (!$response->ok())
                 {
                     Log::error('XMXmakelink : createAccount request failed. ' . $response->body());
@@ -776,7 +776,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $promo->raceprizes = $response->body();
                     }
 
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post($ppgameserver . '/gs2c/promo/race/winners/?'.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
+                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/winners/?'.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
                     if ($response->ok())
                     {
                         $promo->racewinners = $response->body();
