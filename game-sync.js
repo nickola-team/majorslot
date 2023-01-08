@@ -2,8 +2,8 @@ const { exec } = require("child_process");
 
 
 let betwinSync = 60000;
-let exitSync = 1000;
-let launchSync = 300;
+let exitSync = 2000;
+let launchSync = 2000;
 
 console.log('======= Starting Game Launch  thread =============');
 console.log(' Bet/Win Sync = %d seconds', betwinSync / 1000);
