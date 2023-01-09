@@ -9,6 +9,7 @@
 <td>{{ number_format($user->shop->deal_balance - $user->shop->mileage,0) }}</td>
 <td>{{ number_format($user->shop->deal_percent,2) }}</td>
 <td>{{ number_format($user->shop->table_deal_percent,2) }}</td>
+<td>{{ number_format($user->shop->ggr_percent,2) }}</td>
 @else
 <td>{{number_format($user->balance)}}</td>
 <td>{{ number_format($user->deal_balance - $user->mileage,0) }}</td>
@@ -18,7 +19,7 @@
 @endif
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
-<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>충 전</button></a>
+<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" >충 전</button></a>
 <a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm" {{(auth()->user()->isInOutPartner() || (auth()->user()->role_id==$user->role_id+1)?'':'disabled')}}>환 전</button></a>
 
 <div class="dropdown">
