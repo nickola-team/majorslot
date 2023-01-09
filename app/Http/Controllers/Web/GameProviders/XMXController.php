@@ -438,7 +438,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 if ($user->balance > 0)
                 {
-
                     //addMemberPoint
                     $params = [
                         'amount' => $user->balance,
@@ -449,19 +448,62 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'vendorID' => 0,
                     ];
                     $params['hash'] = XMXController::hashParam($params);
+                    try {
+                        $url = config('app.xmx_api') . '/addMemberPoint';
+                        $response = Http::asForm()->timeout(30)->get($url, $params);
+                        if (!$response->ok())
+                        {
+                            Log::error('XMXmakelink : addMemberPoint request failed. ' . $response->body());
 
-                    $url = config('app.xmx_api') . '/addMemberPoint';
-                    $response = Http::asForm()->timeout(30)->get($url, $params);
-                    if (!$response->ok())
+                            return null;
+                        }
+                        $data = $response->json();
+                        if ($data==null || $data['returnCode'] != 0)
+                        {
+                            Log::error('XMXmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['description']));
+                            return null;
+                        }
+                    }
+                    catch (\Exception $ex)
                     {
-                        Log::error('XMXmakelink : addMemberPoint request failed. ' . $response->body());
-
+                        Log::error('XMXmakelink : addMemberPoint Exception. exception=' . $ex->getMessage());
+                        Log::error('XMXmakelink : addMemberPoint PARAM. PARAM=' . json_encode($params));
                         return null;
                     }
-                    $data = $response->json();
-                    if ($data==null || $data['returnCode'] != 0)
+
+                    //transferM2G
+                    $category = XMXController::XMX_GAME_IDENTITY[$game['href']];
+                    $params = [
+                        'amount' => $user->balance,
+                        'operatorID' => $op,
+                        'thirdPartyCode' => $category,
+                        'transactionID' => uniqid(self::XMX_PROVIDER),
+                        'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                        'time' => time()*1000,
+                        'vendorID' => 0,
+                    ];
+                    $params['hash'] = XMXController::hashParam($params);
+                    try 
                     {
-                        Log::error('XMXmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['description']));
+                        $url = config('app.xmx_api') . '/transferPointM2G';
+                        $response = Http::asForm()->timeout(30)->get($url, $params);
+                        if (!$response->ok())
+                        {
+                            Log::error('XMXmakelink : transferPointM2G request failed. ' . $response->body());
+
+                            return null;
+                        }
+                        $data = $response->json();
+                        if ($data==null || $data['returnCode'] != 0)
+                        {
+                            Log::error('XMXmakelink : transferPointM2G result failed. ' . ($data==null?'null':$data['description']));
+                            return null;
+                        }
+                    }
+                    catch (\Exception $ex)
+                    {
+                        Log::error('XMXmakelink : transferPointM2G Exception. exception=' . $ex->getMessage());
+                        Log::error('XMXmakelink : transferPointM2G PARAM. PARAM=' . json_encode($params));
                         return null;
                     }
                 }

@@ -121,8 +121,9 @@ namespace VanguardLTE\Games\GreekGodsPM
                         $currentReelSet = $stack['reel_set'];
                     }
                     $coef = $bet * 25;
+                    $rw = 0;
                     if($wp > 0){
-                        $rw = $rw * $coef;
+                        $rw = $wp * $coef;
                     }
                     if($str_pb_v != ''){
                         $arr_pb_v = explode(';', $str_pb_v);
