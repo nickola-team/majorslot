@@ -670,7 +670,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                             $balance = -1;
                         }
-
+                        if (is_null($win))
+                        {
+                            $win = 0;
+                        }
                         $time = $round['transTime'];
 
                         $userid = intval(preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['userID'])) ;
