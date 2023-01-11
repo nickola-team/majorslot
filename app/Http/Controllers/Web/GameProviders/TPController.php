@@ -518,7 +518,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'denomination' => 0, 
                         'date_time' => $time,
                         'shop_id' => $shop?$shop->shop_id:0,
-                        'category_id' => isset($category)?$category->id:0,
+                        'category_id' => isset($category)?$category->original_id:0,
                         'game_id' => $gameObj['gamecode'],
                         'roundid' => $round['GameID'] . '_' . $round['LinkTransID'],
                     ]);
