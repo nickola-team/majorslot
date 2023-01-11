@@ -1049,8 +1049,13 @@ return [
         //"WolfGold" => "울프골드",
         "HokkaidoWolf" => "홋카이도 울프",
 
-        "CashElevator" => "캐시엘리베이터"
+        "CashElevator" => "캐시엘리베이터",
 
-
+        "ShieldofSparta" => "쉴드 오브 스파르타",
+        "GatesofGatotKaca" => "게이츠 오브 가토카카",
+        "BigBassBonanzaKeepingitReel" => "빅 배스 보난자 - 키핑 잇 릴",
+        "LuckyFishingMegaways" => "럭키 피싱 메가웨이즈",
+        "DragonHero" => "드래곤 히어로",
+        "5RabbitsMegaways" => "5 래빗스 메가웨이즈",
 
 ];
