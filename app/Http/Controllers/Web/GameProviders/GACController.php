@@ -219,6 +219,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function placebet(\Illuminate\Http\Request $request)
         {
+            \DB::beginTransaction();
             $data = json_decode($request->getContent(), true);
             $userId = isset($data['userId'])?$data['userId']:0;
             $tableName = isset($data['tableName'])?$data['tableName']:'';
@@ -337,6 +338,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'response' => $user->balance,
                 'status' => 0
             ]);
+            \DB::commit();
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
@@ -532,6 +534,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function betresult(\Illuminate\Http\Request $request)
         {
+            \DB::beginTransaction();
             $data = json_decode($request->getContent(), true);
             $userId = isset($data['userId'])?$data['userId']:0;
             $tableName = isset($data['tableName'])?$data['tableName']:'';
@@ -647,7 +650,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
 
             \VanguardLTE\GACTransaction::whereIn('id', $betrecords->pluck('id')->toArray())->update(['status' => 1]);
-
+            \DB::commit();
 
             return response()->json([
                 'result' => true,
