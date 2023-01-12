@@ -1,5 +1,6 @@
 var fs = require('fs');
 var serverConfig;
+
 serverConfig = JSON.parse(fs.readFileSync('../public/socket_config_cq9.json', 'utf8'));
 if(serverConfig.ssl) {
 	var privateKey = fs.readFileSync('ssl/goldsvet.com.key', 'utf8');
@@ -90,6 +91,7 @@ wss.on('connection', function connection(ws) {
 		}
 		var paramStr = JSON.stringify(param);
 		console.log("Param str = " + paramStr);
+		console.log("Cookie str = " + ck);
 		var options = {
 			method: 'post',
 			body: param,
