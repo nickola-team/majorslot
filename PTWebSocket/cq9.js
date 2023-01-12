@@ -63,9 +63,9 @@ wss.on('connection', function connection(ws) {
 		/*------------------------*/
 		var request = require('request');
 		var gameName = '';
-		if(message.split(":::")[1] != undefined) {
+		if(message.toString().split(":::")[1] != undefined) {
 			try {
-				var param = JSON.parse(message.split(":::")[1]);
+				var param = JSON.parse(message.toString().split(":::")[1]);
 			} catch(e) {
 				return;
 			}
@@ -109,7 +109,7 @@ wss.on('connection', function connection(ws) {
 			}
 			if(body != undefined) {
 				try {
-					var allReq = body.split("------");
+					var allReq = body.toString().split("------");
 				} catch(e) {
 					console.log('Error :', e)
 					return;
