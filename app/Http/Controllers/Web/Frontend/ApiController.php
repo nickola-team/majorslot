@@ -1822,6 +1822,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function readMessage(\Illuminate\Http\Request $request)
         {
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
+            {
+                return response()->json(['error' => 0]);
+            }
             $msg = \VanguardLTE\Message::where('id', $request->id)->first();
             if ($msg && $msg->read_at == null)
             {

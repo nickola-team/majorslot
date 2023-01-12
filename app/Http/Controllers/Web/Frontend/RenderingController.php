@@ -477,6 +477,30 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     abort(404);
                 }
+                if ($game['href'] == 'xmx-cq9') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'CQ9';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'cq9play',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $url = url('/game/' . $embed_games->name);
+                        $alonegame = 1;
+                        $data = null;
+                        return view('frontend.Default.games.theplus', compact('url', 'alonegame', 'data'));
+                    }
+                }
+
                 $user->update([
                     'playing_game' => strtolower($provider) . '_' . $game['href'],
                     'played_at' => time(),
