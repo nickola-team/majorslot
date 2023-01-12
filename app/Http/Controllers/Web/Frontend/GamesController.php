@@ -337,7 +337,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = \VanguardLTE\User::find($userId);
             if (!$user || $user->remember_token != $user->api_token)
             {
-                exit('unlogged'); // it must be different per every game. but...
+                exit('unlogged-1'); // it must be different per every game. but...
             }
             if (str_contains($user->username, 'testfor'))
             {
