@@ -89,6 +89,7 @@ wss.on('connection', function connection(ws) {
 			return;
 		}
 		var paramStr = JSON.stringify(param);
+		console.log("Param str = " + paramStr);
 		var options = {
 			method: 'post',
 			body: param,
