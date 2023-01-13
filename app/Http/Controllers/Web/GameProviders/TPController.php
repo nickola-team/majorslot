@@ -488,7 +488,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
 
-                    $category = \VanguardLTE\Category::where(['provider' => self::TP_PROVIDER, 'shop_id' => 0, 'href' => self::TP_IDENTITY_GAME[$round['ThirdParty']]])->first();
+                    $category = \VanguardLTE\Category::where(['provider' => self::TP_PROVIDER,'href' => self::TP_IDENTITY_GAME[$round['ThirdParty']]])->first();
 
                     $balance = $round['Balance'];
                     $time = $round['Date'];
@@ -518,7 +518,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'denomination' => 0, 
                         'date_time' => $time,
                         'shop_id' => $shop?$shop->shop_id:0,
-                        'category_id' => isset($category)?$category->id:0,
+                        'category_id' => isset($category)?$category->original_id:0,
                         'game_id' => $gameObj['gamecode'],
                         'roundid' => $round['GameID'] . '_' . $round['LinkTransID'],
                     ]);

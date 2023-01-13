@@ -1,5 +1,6 @@
 var fs = require('fs');
 var serverConfig;
+
 serverConfig = JSON.parse(fs.readFileSync('../public/socket_config_cq9.json', 'utf8'));
 if(serverConfig.ssl) {
 	var privateKey = fs.readFileSync('ssl/goldsvet.com.key', 'utf8');
@@ -63,9 +64,11 @@ wss.on('connection', function connection(ws) {
 		/*------------------------*/
 		var request = require('request');
 		var gameName = '';
+		message = message + '';
+		var param = {};
 		if(message.split(":::")[1] != undefined) {
 			try {
-				var param = JSON.parse(message.split(":::")[1]);
+				param = JSON.parse(message.split(":::")[1]);
 			} catch(e) {
 				return;
 			}
@@ -87,6 +90,8 @@ wss.on('connection', function connection(ws) {
 			return;
 		}
 		var paramStr = JSON.stringify(param);
+		console.log("Param str = " + paramStr);
+		console.log("Cookie str = " + ck);
 		var options = {
 			method: 'post',
 			body: param,
@@ -109,7 +114,8 @@ wss.on('connection', function connection(ws) {
 			}
 			if(body != undefined) {
 				try {
-					var allReq = body.split("------");
+					body = body + '';
+					var allReq = body.toString().split("------");
 				} catch(e) {
 					console.log('Error :', e)
 					return;
