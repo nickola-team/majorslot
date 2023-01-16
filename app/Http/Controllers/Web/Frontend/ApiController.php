@@ -294,8 +294,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
 
-            $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance,2);
-            $deal_balance = number_format(\Illuminate\Support\Facades\Auth::user()->deal_balance,2);
+            $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance);
+            $deal_balance = number_format(\Illuminate\Support\Facades\Auth::user()->deal_balance);
 
             return response()->json(['error' => false, 'balance' => $balance, 'deal' => $deal_balance]);
         }
