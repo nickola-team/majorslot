@@ -714,6 +714,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user = auth()->user();
             $info = $user->info;
             $data = $request->all();
+            if ($data['slot_total_deal']== 0 || $data['slot_total_miss']==0)
+            {
+                return redirect()->back()->withErrors(['공배팅값은 0이 될수 없습니다']);
+            }
             $slotinf = null;
             $tableinf = null;
 
