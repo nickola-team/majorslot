@@ -1563,6 +1563,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->back()->withErrors(['본사를 찾을수 없습니다.']);
             }
+            if (!$user->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['관리권한이 없습니다.']);
+            }
             if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
@@ -1755,6 +1759,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
+            }
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['본사를 찾을수 없습니다.']);
+            }
+            if (!$user->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['관리권한이 없습니다.']);
             }
             
             $amount = $transaction->sum;
