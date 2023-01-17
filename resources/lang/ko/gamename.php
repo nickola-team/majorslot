@@ -1058,4 +1058,7 @@ return [
         "DragonHero" => "드래곤 히어로",
         "5RabbitsMegaways" => "5 래빗스 메가웨이즈",
 
+        "ReelBanks" => "릴 뱅크",
+        "PizzaPizzaPizza" => "피자피자피자",
+
 ];
