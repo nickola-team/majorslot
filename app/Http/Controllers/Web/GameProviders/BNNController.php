@@ -59,7 +59,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         {
                             foreach ($data['money'] as $money)
                             {
-                                if ($money['gid'] == $gid)
+                                if ($money['gid'] == 'center_' . $gid)
                                 {
                                     $balance = $money['money'];
                                     break;
