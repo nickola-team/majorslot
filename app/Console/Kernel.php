@@ -23,6 +23,8 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\GameWithdrawAll::class,
 
             \VanguardLTE\Console\Commands\MonitorBetWin::class,
+            \VanguardLTE\Console\Commands\GameRTPMonitor::class,
+            
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
@@ -93,13 +95,14 @@ namespace VanguardLTE\Console
 
             $schedule->command('gp:genTrend')->dailyAt('08:00')->runInBackground();
 
-            $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
+            // $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
 
             $schedule->command('monitor:betwin')->cron('0 * * * *'); //every hour
+            $schedule->command('monitor:rtp')->dailyAt('12:00')->runInBackground();
 
             // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
