@@ -722,7 +722,7 @@ namespace VanguardLTE\Games\DancePartyPM
             }
             $isLowBank = false;
             while(true){
-                $index =  mt_rand(0, 48000);
+                $index =  mt_rand(0, 58000);
                 if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameDancePartyStack::where('spin_type', 1);
                 }else{

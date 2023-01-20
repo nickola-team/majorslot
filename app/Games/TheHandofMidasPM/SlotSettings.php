@@ -745,11 +745,11 @@ namespace VanguardLTE\Games\TheHandofMidasPM
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $limitWinOdd = 15;
+                        $limitWinOdd = 20;
                         if($pur == 1){
-                            $limitWinOdd = 25;
+                            $limitWinOdd = 30;
                         }else if($pur == 2){
-                            $limitWinOdd = 35;
+                            $limitWinOdd = 40;
                         }
                         $stacks = $stacks->where('odd', '<=', $limitWinOdd);    
                     }
