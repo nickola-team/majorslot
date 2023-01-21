@@ -726,12 +726,14 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $index = mt_rand(0, 48000);
                 if($ind >= 0){
                     $stacks = $stacks->where(['pur_level'=>$ind, 'scatter_count'=>$scatterCount]);
+                }else if($winType == 'bonus'){
+                    $stacks = $stacks->where('scatter_count', '<', 6);
                 }else if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
                     if($ind >= 0){
-                        $stacks = $stacks->where('odd', '<=', 10);    
+                        $stacks = $stacks->where('odd', '<=', 35);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
