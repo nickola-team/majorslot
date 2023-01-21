@@ -491,7 +491,7 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $rsb_m = $stack['rsb_m'];
                 $rsb_c = $stack['rsb_c'];
                 $bw = $stack['bw'];
-                $bpw = $stack['bpw'];
+                $bpw = str_replace(',', '', $stack['bpw']);
                 $bgt = $stack['bgt'];
                 $rw = $stack['rw'];
                 $end = $stack['end'];
@@ -535,10 +535,8 @@ namespace VanguardLTE\Games\GreatRhinoPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                 $strOtherResponse = '';
-                if( $slotEvent['slotEvent'] == 'freespin' ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                 {
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                     {
                         $strOtherResponse = '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
