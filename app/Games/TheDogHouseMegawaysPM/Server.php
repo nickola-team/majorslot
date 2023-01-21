@@ -248,7 +248,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $_winAvaliableMoney = $_spinSettings[1];
                 $allBet = $betline * $lines;
                 if($pur >= 0 && $slotEvent['slotEvent'] != 'freespin'){
-                    $allBet = $betline * 100;
+                    $allBet = $allBet * 100;
                 }
                 $freeStacks = []; 
                 $isGeneratedFreeStack = false;
