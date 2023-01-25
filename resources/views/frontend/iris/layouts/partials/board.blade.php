@@ -12,7 +12,11 @@
                         </p>
                     </span>
                 </div>
-                <button type="button" class="more-btn"  onclick="board('notice')">
+                @auth()
+                <button type="button" class="more-btn"  onclick="boardnotice();closeMenu();">
+                @else
+                <button type="button" class="more-btn"  onclick="mustSignIn('로그인이 필요한 메뉴입니다.')">
+                @endif
                     more 
                     <img src="/frontend/iris/theme/sp/images/board/btn_more.png">        
                 </button>
@@ -23,7 +27,29 @@
                     @if (count($noticelist) > 0)
                     @foreach ($noticelist as $ntc)
                     <tr>
-                        <td class="text-left"  onclick="boardOn('notice',{{$ntc->id}})">
+                        @auth()
+                        <?php
+                            $detect = new \Detection\MobileDetect();
+                            if( $detect->isMobile() || $detect->isTablet() ) 
+                            {
+                                $top = 0;
+                                $left = 0;
+                                $width = 'window.innerWidth';
+                                $height = 'window.innerHeight';
+                            }
+                            else
+                            {
+                                $top = 100;
+                                $left = 100;
+                                $width = 420;
+                                $height = 380;
+                            }
+                        ?>
+                        
+                        <td class="text-left"  onclick="addPopup('popupID{{$ntc->id}}', {{$top}}, {{$left}}, {{$width}}, {{$height}});">
+                        @else
+                        <td class="text-left"  onclick="mustSignIn('로그인이 필요한 메뉴입니다.')">
+                        @endif
                             <a href="javascript:void(0)">{{$ntc->title}}</a>
                         </td>
                         <td align="right" style="color:#656565">{{date('Y-m-d', strtotime($ntc->date_time))}}</td>

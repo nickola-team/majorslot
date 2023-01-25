@@ -101,6 +101,7 @@ $(document).ready(function(){
 
 
 function ugml(){
+    return;
     $.post('/proc/user.game.money.load.php',{load : 1},function(data){});
     $.post('data/user.game.money.load.php',{load : 1, sess : sess},function(data){
         return;
@@ -197,23 +198,88 @@ $.post('/partner/proc/ipchul.log.php',{type : ipchul},function(data){
 
 }
 
-function ipchulGo(){
-if(ipchulType == 2){
-    return;
-}
-if($('#ipchulMoney').val() % 10000 > 0){
-    alert('만 단위로 신청가능합니다.');
-    return;
-}
-$('.loaderBg').css('display','block');
-$.post('/partner/proc/ipchul.proc.php',{type : ipchulType, money : $('#ipchulMoney').val()},function(data){
-    $('.loaderBg').css('display','none');
-    if(data == 1){
-        alert('신청완료 되었습니다.');
-        document.location.reload();
-    } else {
-        alert(data);
+function deposit() {
+    var money = $("#ipchulMoney").val();
+
+    if(money == 0){
+        alert('입금 금액을 입력하세요.');
+        return;
     }
-});
+    if(money % 10000 > 0){
+        alert('만 단위로 신청가능합니다.');
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/api/addbalance",
+        data: {money: money },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                parent.closeIfr();
+                return;
+            }
+
+            alert("신청완료 되었습니다.");
+            parent.closeIfr();
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        },
+    });
 }
 
+function requestAccount(){
+    $.ajax({
+        type: "POST",
+        url: "/api/depositAccount",
+        data: null,
+        cache: false,
+        async: false,
+        success: function (data) {
+            alert(data.msg);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        },
+    });
+
+}
+
+
+function withdraw() {
+    var money = $("#ipchulMoney").val();
+
+    if(money == 0){
+        alert('출금 금액을 입력하세요.');
+        return;
+    }
+    if(money % 10000 > 0){
+        alert('만 단위로 신청가능합니다.');
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/api/outbalance",
+        data: { money: money  },
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                parent.closeIfr();
+                return;
+            }
+
+            alert("신청완료 되었습니다.");
+            parent.closeIfr();
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        },
+    });
+}

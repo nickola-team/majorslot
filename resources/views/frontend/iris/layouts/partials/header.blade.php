@@ -12,27 +12,47 @@
         <button class="m-menu-btn"><i class="fa fa-bars"></i></button>
         <ul>
             <li>
-                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="charge(0); closeMenu();" >
+                @auth()
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="charge('add'); closeMenu();" >
+                @else
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')" >
+                @endif
                     <p>입금신청</p>
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="charge(1); closeMenu();">
+                @auth()
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="charge('out'); closeMenu();" >
+                @else
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')" >
+                @endif
                     <p>출금신청</p>
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0)" class="evol-mdl-trigger popup" onclick="board('notice'); closeMenu();" >
+                @auth()
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="boardnotice(); closeMenu();" >
+                @else
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')" >
+                @endif
                     <p>공지사항</p>
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0)" class="evol-mdl-trigger popup" onclick="board('person'); closeMenu();" >
+                @auth()
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="boardperson(); closeMenu();" >
+                @else
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')" >
+                @endif
                     <p>1:1 문의</p>
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0)" class="evol-mdl-trigger popup" onclick="board('event'); closeMenu();" >
+                @auth()
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="closeMenu();" >
+                @else
+                <a href="javascript:void(0)" class="evol-mdl-trigger" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')" >
+                @endif
                     <p>이벤트</p>
                 </a>
             </li>

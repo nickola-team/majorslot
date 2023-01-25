@@ -153,6 +153,36 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             return response()->json(['error' => false, 'msg' => '성공']);
         }
+        public function notices(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return response()->json(['error' => true, 'msg' => '로그인하세요']);
+            }
+            $parent = $user->referral;
+                
+            while($parent!=null && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+
+            }
+            $adminid = $parent->id;
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
+            return response()->json(['error' => false, 'data' => $noticelist]);
+        }
+        public function inoutHistory(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return response()->json(['error' => true, 'msg' => '로그인하세요']);
+            }
+            $type = $request->type;
+            $statistics = \VanguardLTE\WithdrawDeposit::select('sum','status','created_at')->where('user_id', $user->id)->where('type', $type)->orderBy('created_at', 'DESC')->take(10)->get();
+            return response()->json(['error' => false, 'balance'=>$user->balance, 'data' => $statistics]);
+
+        }
         public function stat_game_balance(\Illuminate\Http\Request $request)
         {
             if( !\Illuminate\Support\Facades\Auth::check() ) {
@@ -1021,14 +1051,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             //     ], 200);
             // }
 
-            if ($account == '')
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '입금자명을 입력하세요',
-                    'code' => '003'
-                ], 200);
-            }
+            // if ($account == '')
+            // {
+            //     return response()->json([
+            //         'error' => true, 
+            //         'msg' => '입금자명을 입력하세요',
+            //         'code' => '003'
+            //     ], 200);
+            // }
             $master = $user->referral;
             while ($master!=null && !$master->isInoutPartner())
             {
@@ -1232,7 +1262,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '004'
                 ], 200);
             }
-            if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
+            if ($user->hasRole('user') && ($user->recommender == '' || $user->bank_name == ''  || $user->account_no == '') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
             {
                 return response()->json([
                     'error' => true, 
@@ -1255,7 +1285,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'msg' => '충전금액을 입력해주세요'
                 ], 200);
             }
-            if ($user->hasRole('user'))
+            if ($user->hasRole('user')  && ($request->accountName != '' || $request->bank != ''  || $request->no != ''))
             {
                 $user->update([
                     'recommender' => $request->accountName,
@@ -1370,7 +1400,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
 
-            if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
+            if ($user->hasRole('user') && ($user->recommender == '' || $user->bank_name == ''  || $user->account_no == '') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
             {
                 return response()->json([
                     'error' => true, 
@@ -1832,6 +1862,48 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'status' => 2
             ]);
            return redirect()->back()->withSuccess(['조작이 성공적으로 진행되었습니다.']);
+        }
+        public function msglist(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
+            {
+                return response()->json(['error' => true, 'msg'=>'로그인하세요']);
+            }
+
+            $msgs = \VanguardLTE\Message::where(function ($query) {
+                $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
+            })->orderBy('created_at','desc')->get();
+            return response()->json(['error' => false, 'user_id'=>auth()->user()->id,'data' => $msgs]);
+        }
+        public function writeMessage(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
+            {
+                return response()->json(['error' => true, 'msg' => '로그인하세요']);
+            }
+            if ($request->title == '' || $request->content == '')
+            {
+                return response()->json(['error' => true, 'msg' => '제목과 내용을 모두 입력하세요']);
+            }
+            $title = $request->title;
+            $content = $request->content;
+
+            $parent =auth()->user()->referral;
+            while($parent!=null && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+
+            }
+            $adminid = $parent->id;
+            $msg = \VanguardLTE\Message::create(
+                [
+                    'user_id' => $adminid,
+                    'writer_id' => auth()->user()->id,
+                    'title' => $title,
+                    'content' => $content,
+                ]
+                );
+            return response()->json(['error' => false, 'id' => $msg->id]);
         }
         public function readMessage(\Illuminate\Http\Request $request)
         {

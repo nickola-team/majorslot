@@ -25,9 +25,6 @@
 
     <script type="text/javascript" src="//js.pusher.com/4.1/pusher.min.js"></script>
     <script>
-    sess = '6senff9igl3clsehls3c2k7q7r';
-    </script>
-    <script>
         $(document).ready(function () {
             $(document).bind("contextmenu", function (e) {
                 return false;
@@ -54,11 +51,24 @@
           }
           else
           {
-            addPopup('popupID{{$ntc->id}}'
-                    , '100'
-                    , '100'
-                    , '420'
-                    , '380');
+            <?php
+                $detect = new \Detection\MobileDetect();
+                if( $detect->isMobile() || $detect->isTablet() ) 
+                {
+                    $top = 0;
+                    $left = 0;
+                    $width = 'window.innerWidth';
+                    $height = 'window.innerHeight';
+                }
+                else
+                {
+                    $top = 100;
+                    $left = 100+425*$loop->index;
+                    $width = 420;
+                    $height = 380;
+                }
+            ?>
+            addPopup('popupID{{$ntc->id}}', {{$top}}, {{$left}}, {{$width}}, {{$height}});
           }
           @endforeach
         }
@@ -94,7 +104,11 @@
     @include('frontend.iris.layouts.partials.footer')
 
     @include('frontend.iris.modals.common')
+    @auth()
+    @else
     @include('frontend.iris.modals.login')
+    @include('frontend.iris.modals.join')
+    @endauth
     @foreach ($noticelist as $ntc)
       @include('frontend.iris.modals.notice', ['notice' => $ntc])
     @endforeach

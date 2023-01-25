@@ -11,7 +11,11 @@
             @if ($categories && count($categories))
             @foreach($categories AS $index=>$category)
                 @if ($category->type =='slot')
-                <a href="javascript:void(0)" class="cs-btn" onclick="slotgameOn({{$category->original_id}})">                      
+                @auth()
+                <a href="javascript:void(0)" class="cs-btn" onclick="slotGame('{{$category->href}}')">                      
+                @else
+                <a href="javascript:void(0)" class="cs-btn" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')">                      
+                @endif
                     <div class="img-cont">
                         <div class="main-img">
                             <img src="/frontend/iris/theme/sp/images/slot_image/{{ $category->title.'.png' }}"  class="bgImg">                              
@@ -32,7 +36,11 @@
             @if ($categories && count($categories))
             @foreach($categories AS $index=>$category)
                 @if ($category->type =='live')
-                <a href="javascript:void(0)" class="cs-btn" onclick="gameStart({{$category->original_id}})">                      
+                @auth()
+                <a href="javascript:void(0)" class="cs-btn" onclick="gameStart({{$category->original_id}})">
+                @else
+                <a href="javascript:void(0)" class="cs-btn" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')">
+                @endif
                     <div class="img-cont">
                         <div class="main-img">
                             <img src="/frontend/iris/theme/sp/images/slot_image/{{ $category->title.'.png' }}"  class="bgImg">                              

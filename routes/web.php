@@ -381,6 +381,14 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.readmsg',
         'uses' => 'ApiController@readMessage',
     ]);
+    Route::post('api/writeMsg', [
+        'as' => 'frontend.api.writemsg',
+        'uses' => 'ApiController@writeMessage',
+    ]);
+    Route::post('api/messages', [
+        'as' => 'frontend.api.msglist',
+        'uses' => 'ApiController@msglist',
+    ]);
     Route::post('api/deleteMsg', [
         'as' => 'frontend.api.deletemsg',
         'uses' => 'ApiController@deleteMessage',
@@ -403,6 +411,17 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.join',
         'uses' => 'ApiController@postJoin'
     ]); 
+
+    Route::post('api/inouthistory', [
+        'as' => 'frontend.api.inouthistory',
+        'uses' => 'ApiController@inoutHistory'
+    ]); 
+
+    Route::post('api/notices', [
+        'as' => 'frontend.api.notices',
+        'uses' => 'ApiController@notices'
+    ]); 
+
 
     Route::get('/api/stat_game_balance', [
         'as' => 'backend.game_stat.balance',
