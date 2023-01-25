@@ -507,7 +507,7 @@ namespace VanguardLTE\Games\AztecTreasurePM
                 }
                 
                 $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse . $strWinLine .'&balance='.$Balance. '&index='.$slotEvent['index'].'&c='.$betline.'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) . '&sa=' . $strReelSa . '&sb=' . $strReelSb .'&sh=6&c='. $betline .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&s='.$strLastReel.'&w='.$totalWin;
-                if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) 
+                if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 && $bw == 0) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     // $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
@@ -590,7 +590,7 @@ namespace VanguardLTE\Games\AztecTreasurePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freeNum);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                 }
-                $strOtherResponse = '&fsmul=1&wins='. $str_wins .'&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&status='. $str_status .'&rw=0.00&wins_mask='. $str_wins_mask .'&fswin=0.00&fs=1&wp=0&fsres=0.00';
+                $strOtherResponse = '&fsmul=1&wins='. $str_wins .'&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&status='. $str_status .'&rw=0.00&wins_mask='. $str_wins_mask .'&fswin=0.00&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') .'&wp=0&fsres=0.00';
                 
                 if($fsmore > 0){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $fsmore);
