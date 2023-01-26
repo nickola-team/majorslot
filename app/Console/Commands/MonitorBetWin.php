@@ -80,12 +80,8 @@ class MonitorBetWin extends Command
                     
                     if ($user)
                     {
-                        //send message to this user's shops, comaster and admin
-                        $partner = $user->referral;
-                        while ($partner != null && !$partner->isInoutPartner())
-                        {
-                            $partner = $partner->referral;
-                        }
+                        //send message toadmin
+                        $partner = \VanguardLTE\User::where('role_id', 9)->first();
                         \VanguardLTE\Message::create([
                             'user_id' => $partner->id,
                             'writer_id' => 0,
@@ -114,11 +110,7 @@ class MonitorBetWin extends Command
                     if ($user)
                     {
                         //send message to this user's shops, comaster and admin
-                        $partner = $user->referral;
-                        while ($partner != null && !$partner->isInoutPartner())
-                        {
-                            $partner = $partner->referral;
-                        }
+                        $partner = \VanguardLTE\User::where('role_id', 9)->first();
                         \VanguardLTE\Message::create([
                             'user_id' => $partner->id,
                             'writer_id' => 0,
