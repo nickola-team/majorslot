@@ -2,12 +2,11 @@
 <html lang="en">
 
 <head>
-    <title>IRIS</title>
+    <title>@yield('page-title')</title>
     <meta charset="utf-8">
-    <meta name="csrf-token" content="N42J9frtxnJn5HASoCAMNQEvJOqH5uaCA5u1TkWx">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="shortcut icon" href="/frontend/iris/img/seven3.png" type="image/x-icon">
-        <script type="text/javascript" src="/frontend/iris/theme/sp/js/jquery-3.2.1.min.js"></script>
+    <link rel="shortcut icon" href="/frontend/iris/img/seven3.png" type="image/x-icon">
+    <script type="text/javascript" src="/frontend/iris/theme/sp/js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/frontend/iris/theme/sp/js/jquery.number.min.js"></script>
     <script type="text/javascript" src="/frontend/iris/theme/sp/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/frontend/iris/theme/sp/js/font-awesome.min.js"></script>
@@ -118,18 +117,6 @@
 
 <script type="text/javascript" src="/frontend/iris/js/game.js?v=1673741516"></script>
 <script type="text/javascript" src="/frontend/iris/js/money.js?v=1672945882"></script>
-
-<script>
-
-    function gameStart(gameId,vendor){
-                casinoGame(gameId,vendor);
-            }
-
-    function slotgameOn(gameId){
-                slotGame(gameId,'');
-            }
-
-</script>
 
 </body>
 </html><style>

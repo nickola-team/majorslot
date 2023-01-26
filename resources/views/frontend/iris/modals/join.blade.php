@@ -4,7 +4,7 @@
         <div class="modal-head">
   			<span class="title">
   				<p>회원가입&nbsp;<span style="color: #e81010; font-size: 18px; font-weight: bolder;">[개인정보 불일치 시 가입불가]</span></p>
-  				<p class="sub">성공적인 베팅을 위한 파트너 IRIS!</p>
+  				<p class="sub">성공적인 베팅을 위한 파트너 @yield('page-title')!</p>
   			</span>
             <a href="#" class="close-btn" data-dismiss="modal"><i class="fa fa-times"></i></a>
         </div>

@@ -39,7 +39,7 @@
 
         <div class="logo">
             <img src="/frontend/iris/img/iris_logo.png?v=1671720585" width="120">
-            <p> ⓒ IRIS Limited 2021.</p>
+            <p> ⓒ @yield('page-title') Limited 2023.</p>
         </div>
 
         <div class="contacts">
