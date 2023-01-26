@@ -428,7 +428,7 @@ namespace VanguardLTE\Games\GatesofValhallaPM
                         if($firstEle == $wild){
                             $firstEle = $ele;
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                        }else if($ele == $firstEle || $ele == $wild){
+                        }else if(($ele == $firstEle || $ele == $wild) && $scatter != $firstEle){
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
                             if($j == 4){
                                 $isNewTumb = true;
@@ -503,7 +503,7 @@ namespace VanguardLTE\Games\GatesofValhallaPM
                         if($firstEle == $wild){
                             $firstEle = $ele;
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                        }else if($ele == $firstEle || $ele == $wild){
+                        }else if(($ele == $firstEle || $ele == $wild) && $scatter != $firstEle){
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
                             if($j == 0 && $winSymbol != $firstEle){
                                 $isNewTumb = true;
