@@ -324,10 +324,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
 
-            $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance);
-            $deal_balance = number_format(\Illuminate\Support\Facades\Auth::user()->deal_balance);
+            $balance = number_format(auth()->user()->balance);
+            $deal_balance = number_format(auth()->user()->deal_balance);
+            $unreadmsg = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->count();
 
-            return response()->json(['error' => false, 'balance' => $balance, 'deal' => $deal_balance]);
+            return response()->json(['error' => false, 'balance' => $balance, 'deal' => $deal_balance, 'msgCount' => $unreadmsg]);
         }
         public function getgamelink(\Illuminate\Http\Request $request)
         {

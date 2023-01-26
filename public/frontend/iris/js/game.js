@@ -45,17 +45,26 @@ function closeIfr(){
    $('.nav-main').removeClass('active');
 }
 
-function casinoGame(num, vendor){
-   console.log(num);
-   var size = 'width=1024, height=640, menubar=no, status=no, toolbar=no';
-   if(num == 'seastory' || num == 'davinci'){
-      size = 'width=540, height=900, menubar=no, status=no, toolbar=no';
-   } else if(vendor == 'soul'){
-      size = 'width=1280, height=725, menubar=no, status=no, toolbar=no, scrolling=no';
-   }
+function casinoGameStart(category){
+   $('.loaderBg').css('display','block');
 
-   console.log(size);
-   opWin = window.open('/casino/game.php?gameId='+num+'&type=casino&vendor='+vendor,'Casino 팝업',size);
+   $.ajax({
+      type: "POST",
+      url: "/api/getgamelist",
+      data: {category : category},
+      cache: false,
+      async: true,
+      success: function (data, status) {
+          if (data.error) {
+              alert(data.msg);
+              return;
+          }
+          closeLoader();
+          if (data.games.length > 0) {
+            startGameByProvider(data.games[0].provider, data.games[0].gamecode);
+          }
+         }
+      });
 }
 
 
@@ -487,7 +496,9 @@ function boardnotice(){
 }
 
 function boardperson(){
+   $('#msgBg').remove();
    $('.loaderBg').css('display','block');
+
 
    $.ajax({
       type: "POST",

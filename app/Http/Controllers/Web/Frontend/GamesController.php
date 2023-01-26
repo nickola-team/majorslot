@@ -99,7 +99,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($shop_id != 0)
             {
                 $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
-                $unreadmsg = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->whereNull('read_at')->count();
+                $unreadmsg = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->count();
                 //transaction history
 
                 $trhistory = \VanguardLTE\WithdrawDeposit::leftJoin('transactions', function($join){

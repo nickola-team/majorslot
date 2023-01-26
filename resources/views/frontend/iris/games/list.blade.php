@@ -37,7 +37,7 @@
             @foreach($categories AS $index=>$category)
                 @if ($category->type =='live')
                 @auth()
-                <a href="javascript:void(0)" class="cs-btn" onclick="gameStart({{$category->original_id}})">
+                <a href="javascript:void(0)" class="cs-btn" onclick="casinoGameStart('{{$category->href}}')">
                 @else
                 <a href="javascript:void(0)" class="cs-btn" onclick="mustSignIn('로그인이 필요한 메뉴입니다.')">
                 @endif
