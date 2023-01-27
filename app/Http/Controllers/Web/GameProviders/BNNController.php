@@ -193,10 +193,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($user->balance > 0)
                 {
                     $url = config('app.bnn_api') . '/v1/deposit';
-                    $gamecode = str_replace('-', '_', $gamecode);
+                    $gamecode1 = str_replace('-', '_', $gamecode);
                     $params = [
                         'key' => $key,
-                        'gid' => $gamecode,
+                        'gid' => $gamecode1,
                         'uid' => self::BNN_PROVIDER . $user->id,
                         'money' => (int)$user->balance
                     ];
