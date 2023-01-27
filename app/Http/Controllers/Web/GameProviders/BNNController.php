@@ -39,11 +39,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getuserbalance($gid, $user) {
             $url = config('app.bnn_api') . '/v1/user-money';
             $key = config('app.bnn_key');
-    
+            $gid = str_replace('-', '_', $gid);
             $params = [
                 'key' => $key,
                 'uid' => self::BNN_PROVIDER . $user->id,
-                'gid' => 'center_' . $gid
+                'gid' => $gid
             ];
     
             $response = Http::get($url, $params);
@@ -59,7 +59,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         {
                             foreach ($data['money'] as $money)
                             {
-                                if ($money['gid'] == 'center_' . $gid)
+                                if ($money['gid'] == $gid)
                                 {
                                     $balance = $money['money'];
                                     break;
@@ -113,10 +113,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $url = config('app.bnn_api') . '/v1/game-url';
             $key = config('app.bnn_key');
+            $gamecode = str_replace('-', '_', $gamecode);
             $params = [
                 'key' => $key,
                 'uid' => self::BNN_PROVIDER . $user->id,
-                'gid' => 'center_' . $gamecode,
+                'gid' => $gamecode,
                 'min' => 5000,
                 'max' => 3000000
             ];
@@ -192,9 +193,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($user->balance > 0)
                 {
                     $url = config('app.bnn_api') . '/v1/deposit';
+                    $gamecode = str_replace('-', '_', $gamecode);
                     $params = [
                         'key' => $key,
-                        'gid' => 'center_' . $gamecode,
+                        'gid' => $gamecode,
                         'uid' => self::BNN_PROVIDER . $user->id,
                         'money' => (int)$user->balance
                     ];
@@ -281,12 +283,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $bet = $round['bet_money'];
                     $win = $round['result_money'];
                     $href = $round['gid'];
-                    $gids = explode('_', $round['gid']);
-                    if (count($gids) > 1)
-                    {
-                        $href = $gids[1];
-                    }
-
+                    $href = str_replace('_', '-', $round['gid']);
                     $category = \VanguardLTE\Category::where(['provider' => self::BNN_PROVIDER, 'href' =>$href])->first();
                     if ($round['extra'] != null)
                     {
@@ -349,7 +346,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             try {
                 $response = Http::get($url, $params);
                 $data = $response->json();
-                return $data['money_ro'];
+                return $data['money'];
             } catch (\Exception $e) {
                 Log::error('BNNAgentMoney : request failed. ' . $e->getMessage());
                 return -1;
