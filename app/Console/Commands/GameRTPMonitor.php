@@ -125,7 +125,7 @@ class GameRTPMonitor extends Command
                         }
                         $gamewin->winline10 = implode(',', $newnumbers);
 
-                        $bonus3 = $gamewin->winbonus10;
+                        $bonus10 = $gamewin->winbonus10;
                         $numbers = explode(',', $bonus10);
                         $newnumbers = [];
                         foreach ($numbers as $n)
