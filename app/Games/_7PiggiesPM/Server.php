@@ -631,11 +631,18 @@ namespace VanguardLTE\Games\_7PiggiesPM
                 $str_wins_mask = implode(',', $arr_wins_mask);
                 $str_status = implode(',', $arr_status);
                 if($end == 1 && $win_fs > 0){
-                    if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                     {
                         $fscSessions = $slotSettings->GetGameData($slotSettings->slotId . 'FscSessions');
                         array_push($fscSessions, $win_fs . ',' . $win_mul);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FscSessions', $fscSessions);
+                        if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') >= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
+                            $arr_sessions = explode(',', $fscSessions[0]);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $arr_sessions[1]);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $arr_sessions[0]);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);    
+                        }
                     }else{
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $win_mul);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $win_fs);
