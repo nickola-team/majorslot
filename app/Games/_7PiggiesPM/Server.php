@@ -641,7 +641,9 @@ namespace VanguardLTE\Games\_7PiggiesPM
                             $arr_sessions = explode(',', $fscSessions[0]);
                             $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $arr_sessions[1]);
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $arr_sessions[0]);
-                            $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);    
+                            $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);   
+                            array_shift($fscSessions);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FscSessions', $fscSessions); 
                         }
                     }else{
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $win_mul);
