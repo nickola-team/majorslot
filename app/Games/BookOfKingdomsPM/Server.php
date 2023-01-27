@@ -132,7 +132,8 @@ namespace VanguardLTE\Games\BookOfKingdomsPM
                     $rsb_m = $stack['rsb_m'];
                     $rsb_c = $stack['rsb_c'];
                     $bw = $stack['bw'];
-                    $bpw = $stack['bpw'];
+                    $bpw = str_replace(',', '', $stack['bpw']);
+                    $rw = str_replace(',', '', $stack['rw']);
                     $end = $stack['end'];
                     $fsmore = $stack['fsmore'];
                     if($stack['reel_set'] > -1){
