@@ -137,11 +137,10 @@ namespace VanguardLTE\Games\PizzaPizzaPizzaPM
                         foreach( $arr_g as $index => $value ) 
                         {
                             if(isset($value['mo_m']) && isset($value['mo_tv']) && isset($value['mo_tw'])){
-                                $submoneyWin = $value['mo_tv'] * $betline;
+                                $submoneyWin = $value['mo_tv'] * $bet;
                                 if($value['mo_m'] > 1){
                                     $submoneyWin = $submoneyWin * $value['mo_m'];
                                 }
-                                $totalWin = $totalWin + $submoneyWin;
                                 $value['mo_tw'] = '' . $submoneyWin;
                                 $arr_g[$index] = $value;
                             }

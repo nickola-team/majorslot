@@ -132,7 +132,8 @@ namespace VanguardLTE\Games\BookOfKingdomsPM
                     $rsb_m = $stack['rsb_m'];
                     $rsb_c = $stack['rsb_c'];
                     $bw = $stack['bw'];
-                    $bpw = $stack['bpw'];
+                    $bpw = str_replace(',', '', $stack['bpw']);
+                    $rw = str_replace(',', '', $stack['rw']);
                     $end = $stack['end'];
                     $fsmore = $stack['fsmore'];
                     if($stack['reel_set'] > -1){
@@ -350,8 +351,8 @@ namespace VanguardLTE\Games\BookOfKingdomsPM
                     $str_rsb_s = $stack['rsb_s'];
                     $rsb_m = $stack['rsb_m'];
                     $rsb_c = $stack['rsb_c'];
+                    $bpw = str_replace(',', '', $stack['bpw']);
                     $bw = $stack['bw'];
-                    $bpw = $stack['bpw'];
                     $bgt = $stack['bgt'];
                     $fsmore = $stack['fsmore'];
                     $currentReelSet = $stack['reel_set'];
@@ -371,8 +372,8 @@ namespace VanguardLTE\Games\BookOfKingdomsPM
                     $rsb_m = $stack[0]['rsb_m'];
                     $rsb_c = $stack[0]['rsb_c'];
                     $bw = $stack[0]['bw'];
-                    $bpw = $stack[0]['bpw'];
                     $bgt = $stack[0]['bgt'];
+                    $bpw = str_replace(',', '', $stack[0]['bpw']);
                     $fsmore = $stack[0]['fsmore'];
                     $currentReelSet = $stack[0]['reel_set'];
                 }
@@ -638,9 +639,9 @@ namespace VanguardLTE\Games\BookOfKingdomsPM
                 $rsb_m = $stack['rsb_m'];
                 $rsb_c = $stack['rsb_c'];
                 $bw = $stack['bw'];
-                $bpw = $stack['bpw'];
+                $bpw = str_replace(',', '', $stack['bpw']);
+                $rw = str_replace(',', '', $stack['rw']);
                 $bgt = $stack['bgt'];
-                $rw = $stack['rw'];
                 $end = $stack['end'];
                 $currentReelSet = $stack['reel_set'];
 
