@@ -24,6 +24,8 @@ namespace VanguardLTE\Console
 
             \VanguardLTE\Console\Commands\MonitorBetWin::class,
             \VanguardLTE\Console\Commands\GameRTPMonitor::class,
+
+            \VanguardLTE\Console\Commands\XMXWithdrawAll::class,
             
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
