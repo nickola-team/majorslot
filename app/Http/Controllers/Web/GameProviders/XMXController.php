@@ -293,6 +293,45 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             return $url;
         }
+        public static function subtractMemberPointAll( $user)
+        {
+
+            $op = config('app.xmx_op');
+            //subtractMemberPointAll
+            $params = [
+                'operatorID' => $op,
+                'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time()*1000,
+                'vendorID' => 0,
+            ];
+            $balance = 0;
+            $params['hash'] = XMXController::hashParam($params);
+            try {
+                $url = config('app.xmx_api') . '/subtractMemberPointAll';
+                $response = Http::asForm()->get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('XMXWithdraw : subtractMemberPointAll request failed. ' . $response->body());
+
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'response not ok'];
+                }
+                $data = $response->json();
+                if ($data==null || $data['returnCode'] != 0)
+                {
+                    Log::error('XMXWithdraw : subtractMemberPointAll result failed. PARAMS=' . json_encode($params));
+                    Log::error('XMXWithdraw : subtractMemberPointAll result failed. ' . ($data==null?'null':$data['description']));
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
+                }
+                $balance = $data['memberBalance'];
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('XMXWithdraw : subtractMemberPointAll Exception. Exception=' . $ex->getMessage());
+                Log::error('XMXWithdraw : subtractMemberPointAll Exception. PARAMS=' . json_encode($params));
+                return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
+            }
+            return ['error'=>false, 'amount'=>$balance];
+        }
         public static function withdrawAll($href, $user)
         {
             $category = XMXController::XMX_GAME_IDENTITY[$href];
@@ -303,7 +342,40 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             if ($balance > 0)
             {
-                $op = config('app.xmx_op');
+                $op = config('app.xmx_op');//transferPointG2M
+                $params = [
+                    'amount' => $balance,
+                    'operatorID' => $op,
+                    'thirdPartyCode' => $category,
+                    'transactionID' => uniqid(self::XMX_PROVIDER),
+                    'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time()*1000,
+                    'vendorID' => 0,
+                ];
+                $params['hash'] = XMXController::hashParam($params);
+                try {
+                    $url = config('app.xmx_api') . '/transferPointG2M';
+                    $response = Http::asForm()->get($url, $params);
+                    if (!$response->ok())
+                    {
+                        Log::error('XMXWithdraw : transferPointG2M request failed. ' . $response->body());
+
+                        return ['error'=>true, 'amount'=>0, 'msg'=>'response not ok'];
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['returnCode'] != 0)
+                    {
+                        Log::error('XMXWithdraw : transferPointG2M result failed. PARAMS=' . json_encode($params));
+                        Log::error('XMXWithdraw : transferPointG2M result failed. ' . ($data==null?'null':$data['description']));
+                        return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    Log::error('XMXWithdraw : transferPointG2M Exception. Exception=' . $ex->getMessage());
+                    Log::error('XMXWithdraw : transferPointG2M Exception. PARAMS=' . json_encode($params));
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
+                }
 
                 //transferPointG2M
                 $params = [
@@ -586,12 +658,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-1 days'));
+                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
                     $d = strtotime($lastround->date_time);
-                    if ($d > strtotime("-1 days"))
+                    if ($d > strtotime("-12 hours"))
                     {
                         $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
                     }
