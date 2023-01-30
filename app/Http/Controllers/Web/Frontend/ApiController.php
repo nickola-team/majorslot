@@ -484,11 +484,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $transactions1 = \VanguardLTE\WithdrawDeposit::where([
                 'type' => 'add',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
-                'payeer_id' => $request->id]);
+                'payeer_id' => auth()->user()->id]);
             $transactions2 = \VanguardLTE\WithdrawDeposit::where([
                 'type' => 'out',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
-                'payeer_id' => $request->id]);
+                'payeer_id' => auth()->user()->id]);
             $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get();
             $res['join'] = 0;
             $res['msg'] = count($unreadmsgs);
