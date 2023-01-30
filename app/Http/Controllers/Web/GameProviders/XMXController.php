@@ -658,12 +658,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-1 days'));
+                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
                     $d = strtotime($lastround->date_time);
-                    if ($d > strtotime("-1 days"))
+                    if ($d > strtotime("-12 hours"))
                     {
                         $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
                     }
