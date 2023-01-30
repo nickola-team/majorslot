@@ -1,40 +1,20 @@
 <?php 
 namespace VanguardLTE\Games\PandaFortune2PM
 {
-    include('CheckReels.php');
     class Server
     {
+        public $winLines = [];
         public function get($request, $game, $userId) // changed by game developer
         {
-            /*if( config('LicenseDK.APL_INCLUDE_KEY_CONFIG') != 'wi9qydosuimsnls5zoe5q298evkhim0ughx1w16qybs2fhlcpn' ) 
-            {
-                return false;
-            }
-            if( md5_file(base_path() . '/app/Lib/LicenseDK.php') != '3c5aece202a4218a19ec8c209817a74e' ) 
-            {
-                return false;
-            }
-            if( md5_file(base_path() . '/config/LicenseDK.php') != '951a0e23768db0531ff539d246cb99cd' ) 
-            {
-                return false;
-            }
-            $checked = new \VanguardLTE\Lib\LicenseDK();
-            $license_notifications_array = $checked->aplVerifyLicenseDK(null, 0);
-            if( $license_notifications_array['notification_case'] != 'notification_license_ok' ) 
-            {
-                $response = '{"responseEvent":"error","responseType":"error","serverResponse":"Error LicenseDK"}';
-                exit( $response );
-            }*/
             $response = '';
             \DB::beginTransaction();
-            // $userId = \Auth::id();// changed by game developer
             if( $userId == null ) 
             {
             	$response = 'unlogged';
                 exit( $response );
             }
             $user = \VanguardLTE\User::lockForUpdate()->find($userId);
-            $credits = $userId == 1 ? $request->action === 'doInit' ? 5000 : $user->balance : null;
+            $credits = null;
             $slotSettings = new SlotSettings($game, $userId, $credits);
             $paramData = trim(file_get_contents('php://input'));
             $_obf_params = explode('&', $paramData);
@@ -59,80 +39,132 @@ namespace VanguardLTE\Games\PandaFortune2PM
 
             if( $slotEvent['slotEvent'] == 'update' ) 
             {
-                $Balance = $slotSettings->GetBalance();
+                $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+                if(!isset($Balance)){
+                    $Balance = $slotSettings->GetBalance();
+                }
                 $response = 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
                 exit( $response );
-            }else if( $slotEvent['slotEvent'] == 'doInit' ) 
+            }
+            $original_bet = 0.1;
+            if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
                 $lastEvent = $slotSettings->GetHistory();
                 $_obf_StrResponse = '';
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
-                $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 25);
-                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,7,4,3,8,4,3,5,6,7,8,5,7,3,4]);                
-                $slotSettings->SetGameData($slotSettings->slotId . 'GoldenPoses', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,7,4,3,8,4,3,5,6,7,8,5,7,3,4]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
-                $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
+                $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $strOtherResponse = '';
+                $currentReelSet = 0;
+                $stack = null;
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $lastEvent->serverResponse->totalFreeGames);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $lastEvent->serverResponse->currentFreeGames);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $lastEvent->serverResponse->totalWin);
+                    if(isset($lastEvent->serverResponse->TotalSpinCount)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $lastEvent->serverResponse->TotalSpinCount);
+                    }
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'GoldenPoses', $lastEvent->serverResponse->GoldenPoses);
-                    $bet = $lastEvent->serverResponse->bet;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
-                    if(isset($lastEvent->serverResponse->RoundID)){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    if (isset($lastEvent->serverResponse->TumbAndFreeStacks)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', json_decode(json_encode($lastEvent->serverResponse->TumbAndFreeStacks), true)); // FreeStack
+
+                        $FreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
+                        $stack = $FreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') -1];
                     }
-                    if (isset($lastEvent->serverResponse->FreeStacks)){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
-                    }
+                    $bet = $lastEvent->serverResponse->bet;
                 }
                 else
                 {
                     $bet = '40.00';
                 }
-                $currentReelSet = 0;
                 $spinType = 's';
-                $lastReel = $slotSettings->GetGameData($slotSettings->slotId . 'LastReel');
-                $lastReelStr = implode(',', $lastReel);
-                $goldenPoses = $slotSettings->GetGameData($slotSettings->slotId . 'GoldenPoses');
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 )
-                {
-                    $strOtherResponse = '&fs=' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . '&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') .  '&fsres=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=0.00&fsmul=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
-                    $currentReelSet = 2;
-                }else{
-                    $strOtherResponse = '';
-                }
-                $arr_gsf = [];
-                for($k = 0; $k < count($goldenPoses); $k++){
-                    if($goldenPoses[$k] == 1){
-                        array_push($arr_gsf, $lastReel[$k] . '~' . $k);
+                $fsmore = 0;
+                $fsmul = 1;
+                $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
+                if(isset($stack)){
+                    $fsmore = $stack['fsmore'];
+                    $str_initReel = $stack['is'];
+                    $wp = $stack['wp'];
+                    $bw = $stack['bw'];
+                    $str_gsf = $stack['gsf'];
+                    $str_gsf_a = $stack['gsf_a'];
+                    $strWinLine = $stack['win_line'];
+                    if($stack['reel_set'] >= 0){
+                        $currentReelSet = $stack['reel_set'];
+                    }
+                    
+                    if($str_initReel != ''){
+                        $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
+                    }
+                    if($str_gsf != ''){
+                        $strOtherResponse = $strOtherResponse . '&gsf=' . $str_gsf;
+                    }
+                    if($str_gsf_a != ''){
+                        $strOtherResponse = $strOtherResponse . '&gsf_a=' . $str_gsf_a;
+                    }
+                    $bonusWin = 0;
+                    if($bw == 1 && $wp > 0){
+                        $bonusWin = $bet * 25 * $wp;
+                        $strOtherResponse = $strOtherResponse . '&coef='. ($bet * 25) .'&rw='. $bonusWin .'&bw=1&wp='. $wp .'&end=1';
+                    }
+                    $normalWin = 0;
+                    if($strWinLine != ''){
+                        $arr_lines = explode('&', $strWinLine);
+                        for($k = 0; $k < count($arr_lines); $k++){
+                            $arr_sub_lines = explode('~', $arr_lines[$k]);
+                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
+                            $normalWin = $normalWin + $arr_sub_lines[1];
+                            $arr_lines[$k] = implode('~', $arr_sub_lines);
+                        }
+                        $strWinLine = implode('&', $arr_lines);
+                        $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
+                    }
+                    $strOtherResponse = $strOtherResponse . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . '&w=' . $normalWin;
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 || $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') > 0)
+                    {
+                        if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') > 0 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') == 0) 
+                        {
+                            $strOtherResponse = $strOtherResponse . '&fs_total='.($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 1).'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        }
+                        else
+                        {
+                            $strOtherResponse = $strOtherResponse . '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        }
+                        if($fsmore > 0){
+                            $strOtherResponse = $strOtherResponse . '&fsmore=' . $fsmore;
+                        }  
                     }
                 }
-                if(count($arr_gsf) > 0){
-                    $strOtherResponse = $strOtherResponse . '&gsf=' . implode(';', $arr_gsf);
-                }
-                $Balance = $slotSettings->GetBalance();
+                
+                
+                $Balance = $slotSettings->GetBalance();  
+
                 $response = 'def_s=6,7,4,3,8,4,3,5,6,7,8,5,7,3,4&balance='. $Balance .'&cfgs=1&ver=2&index=1&balance_cash='. $Balance .'&def_sb=4,13,4,7,8&reel_set_size=3&def_sa=10,3,5,3,7&reel_set='.$currentReelSet.$strOtherResponse.'&balance_bonus=0.00&na='. $spinType.'&scatters=1~100,15,2,0,0~12,12,12,0,0~1,1,1,1,1&gmb=0,0,0&bg_i=3,0,2,1,1,2,2,3,1,4,3,5,2,6,1,7,2,8,1,9,5,10,15,20,25,50,75,100,150,200,250,500,1000,2500,5000,10,5,10,15,20,25,50,75,100,150,200,250,500,1000,2500,5000,11&rt=d&gameInfo={rtps:{regular:"96.51"},props:{max_rnd_sim:"1",max_rnd_hr:"953591",max_rnd_win:"5000"}}&wl_i=tbm~5000&stime=' . floor(microtime(true) * 1000) .'&sa=10,3,5,3,7&sb=4,13,4,7,8&sc='. implode(',', $slotSettings->Bet) .'&defc=0.08&sh=3&wilds=2~0,0,0,0,0~1,1,1,1,1&bonuses=0&fsbonus=&c='.$bet.'&sver=5&bg_i_mask=pw,ic,pw,ic,pw,ic,pw,ic,pw,ic,pw,ic,pw,ic,pw,ic,pw,ic,pw,ic,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,ic,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,pw,ic&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;200,50,25,0,0;150,50,10,0,0;100,20,5,0,0;100,20,5,0,0;100,20,5,0,0;50,15,5,0,0;50,15,5,0,0;50,10,5,0,0;50,10,5,0,0;50,10,5,0,0;50,10,5,0,0&l=25&rtp=96.51&reel_set0=10,6,12,4,8,12,6,12,6~7,5,11,13,3,9,3,11,13,3,11,3,9,3,11,3,5,9,11,13,5,3,9,13,11,9,3~10,13,3,9,5,6,7,4,11,8,12,9,11,3,7,3,7,11,5,11,8,11,3,11,7,8,11,3,6,9~3,7,11,6,9,8,4,12,5,13,10,11,9,13,7,6,12,6,12,7,12,5,13,9,6,9,7,11,9,6,7,6~9,3,2,1,4,5,10,13,6,7,8,11,12,11,1,4,6,12,11,1,11,12,2,1,11,3,1,11,3,1,4&s='.$lastReelStr.'&reel_set2=9,5,13,12,1,8,10,6,4,7,3,11,7,12,4,7,12,10,4,8,6,4,8,6,7,4,5,7,5~10,5,4,12,2,2,2,7,9,3,2,11,6,8,13,1,6,2,12,2,5,8,2,6,11,3,11,2,12,2,3,12,8,6,12,3~2,2,2,11,6,9,2,8,13,7,3,1,5,12,4,10,4,6,12,13,12,11,3,4,12,6,13,12,6,12,3,12,3,12,13,10,12,3,4,3,13~12,10,7,8,11,5,2,2,2,3,4,1,13,2,9,6,8,2,11,2,13,2,5,2,5,2,1,2,8,5,2,5~2,2,2,11,4,1,8,6,7,2,3,12,5,13,10,9,1,10,6,1,7,6,10,8,6,11,1,9,5,6,9,7,9,6,8,5,11,6,8,10,11,10,5,6,13,8,1,6,9&reel_set1=1,8,11,13,4,12,7,5,9,10,6,3,6,11,7,11,6,8,6,13,5~2,2,2,7,9,10,4,13,11,12,2,8,1,6,5,3,6,1,10,7,10,12,6,8,10,12,10,11,1,9,7,6,8,7,10~2,2,2,12,6,3,7,13,4,1,11,5,8,10,2,9,6,10,12,10,9,13,12~2,2,2,2,6,8,9,12,1,13,3,11,5,7,10,4,12,7,12,3,12,8,12,7,8~11,2,10,8,13,12,3,4,1,5,7,6,9,13,8,1,9,4,10';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
                 $Balance = $slotSettings->GetBalance();
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);    
                 $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                
                 //------------ ReplayLog ---------------                
                 $lastEvent = $slotSettings->GetHistory();
                 if($lastEvent != NULL){
@@ -143,10 +175,10 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     $betline = $slotSettings->Bet[0];
                 }
                 $lines = 25;      
-                $allbet = $betline * $lines;
+                $allBet = $betline * $lines;
                 $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
-                if($replayLog && count($replayLog) && $totalWin > $allbet){
+                if($replayLog && count($replayLog) && $totalWin > $allBet){
                     $current_replayLog["cr"] = $paramData;
                     $current_replayLog["sr"] = $response;
                     array_push($replayLog, $current_replayLog);
@@ -154,11 +186,11 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     \VanguardLTE\Jobs\UpdateReplay::dispatch([
                         'user_id' => $userId,
                         'game_id' => $slotSettings->game->original_id,
-                        'bet' => $allbet,
+                        'bet' => $allBet,
                         'brand_id' => config('app.stylename'),
-                        'base_bet' => $allbet,
+                        'base_bet' => $allBet,
                         'win' => $totalWin,
-                        'rtp' => $totalWin / $allbet,
+                        'rtp' => $totalWin / $allBet,
                         'game_logs' => urlencode(json_encode($replayLog))
                     ]);
                 }
@@ -167,13 +199,10 @@ namespace VanguardLTE\Games\PandaFortune2PM
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
-                
                 $lastEvent = $slotSettings->GetHistory();
-                $linesId = $slotSettings->winLines;
-                
                 $slotEvent['slotBet'] = $slotEvent['c'];
                 $slotEvent['slotLines'] = 25;
-                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
+                if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                 {
                     $slotEvent['slotEvent'] = 'freespin';
                 }
@@ -186,12 +215,12 @@ namespace VanguardLTE\Games\PandaFortune2PM
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bet state"}';
                         exit( $response );
                     }
-                    if( $slotEvent['slotEvent'] == 'doSpin' && $slotSettings->GetBalance() < ($lines * $betline) ) 
+                    if( $slotEvent['slotEvent'] == 'doSpin' && $slotSettings->GetBalance() < ($lines * $betline)  && $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') == 0) 
                     {
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid balance"}';
                         exit( $response );
                     }
-                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotEvent['slotEvent'] == 'freespin' ) 
+                    if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1  < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')) && $slotEvent['slotEvent'] == 'freespin' ) 
                     {
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bonus state"}';
                         exit( $response );
@@ -203,295 +232,125 @@ namespace VanguardLTE\Games\PandaFortune2PM
                         }
                     }
                 }
-                $allbet = $betline * $lines;
-                $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $allbet, $lines);
+                
+                $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
-                $freeStacks = []; // free stacks
+
+                // $winType = 'bonus';
+
+                $allBet = $betline * $lines;
+                $tumbAndFreeStacks = []; 
                 $isGeneratedFreeStack = false;
-                $isForceWin = false;
                 if($slotEvent['slotEvent'] == 'freespin'){
-                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') == 1){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'GoldenPoses', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);   
-                    }
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') + 1);
-                    $bonusMpl = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl');
-                    $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame');    
-                    
-                    // free stacks
-                    if($slotSettings->happyhouruser){
-                        $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
-                        if(count($freeStacks) == $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')){
-                            $isGeneratedFreeStack = true;
-                        }
-                    }
-                    if($leftFreeGames <= mt_rand(0 , 1) && $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') == 0){
-                        $winType = 'win';
-                        $_winAvaliableMoney = $slotSettings->GetBank($slotEvent['slotEvent']);
-                        $isForceWin = true;
-                    }
+                    $leftFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') - $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'); 
+                    $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 }
                 else
                 {
                     $slotEvent['slotEvent'] = 'bet';
-                    $slotSettings->SetBalance(-1 * ($allbet), $slotEvent['slotEvent']);
-                    $_sum = ($allbet) / 100 * $slotSettings->GetPercent();
+                    $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
+                    $_sum = $allBet / 100 * $slotSettings->GetPercent();
                     $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
-                    $bonusMpl = 1;
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'GoldenPoses', [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
-
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '275' . substr($roundstr, 4, 7);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []);
                 }
                 
+                $wild = '2';
+                $scatter = '1';
                 $Balance = $slotSettings->GetBalance();
-                if( $slotEvent['slotEvent'] == 'bet' ) 
-                {
-                    $slotSettings->UpdateJackpots($allbet);
+                $totalWin = 0;
+                $bonusMpl = 1;
+                $lineWins = [];
+                $lineWinNum = [];
+                $strWinLine = '';
+                $winLineCount = 0;
+                $reels = [];
+                $fsmore = 0;
+                $str_initReel = '';
+                $end = -1;
+                $wp = 0;
+                $bw = 0;
+                $str_gsf = '';
+                $str_gsf_a = '';
+                $scatterCount = 0;
+                $scatterPoses = [];
+                $scatterWin = 0;
+                if($slotEvent['slotEvent'] == 'freespin'){
+                    $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                    $lastReel = explode(',', $stack['reel']);
+                    $currentReelSet = $stack['reel_set'];
+                    $fsmore = $stack['fsmore'];
+                    $str_initReel = $stack['is'];
+                    $end = $stack['end'];
+                    $wp = $stack['wp'];
+                    $bw = $stack['bw'];
+                    $str_gsf = $stack['gsf'];
+                    $str_gsf_a = $stack['gsf_a'];
+                    $strWinLine = $stack['win_line'];
+                }else{
+                    $stack = $slotSettings->GetReelStrips($winType, $betline * $lines);
+                    if($stack == null){
+                        $response = 'unlogged';
+                        exit( $response );
+                    }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $stack);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 1);
+                    $lastReel = explode(',', $stack[0]['reel']);
+                    $currentReelSet = $stack[0]['reel_set'];
+                    $fsmore = $stack[0]['fsmore'];
+                    $str_initReel = $stack[0]['is'];
+                    $end = $stack[0]['end'];
+                    $wp = $stack[0]['wp'];
+                    $bw = $stack[0]['bw'];
+                    $str_gsf = $stack[0]['gsf'];
+                    $str_gsf_a = $stack[0]['gsf_a'];
+                    $strWinLine = $stack[0]['win_line'];
                 }
-                
-                $isJackpot = false;
-                $jackpotPosCount = 0;
-                $jackpotLine = -1;
-                if($winType == 'win' && $slotSettings->IsCheckJackpot() && $isGeneratedFreeStack == false){                    
-                    $isJackpot = true;
-                    $goldenPoses = $slotSettings->GetGameData($slotSettings->slotId . 'GoldenPoses');
-                    for( $k = 0; $k < $lines; $k++ ) 
-                    {
-                        $lineId = $linesId[$k];
-                        $goldenCount = 0;
-                        for($j = 0; $j < 5; $j++){
-                            $pos = ($lineId[$j] - 1) * 5 + $j;
-                            if($goldenPoses[$pos] == 1){
-                                $goldenCount++;
-                            }
-                        }
-                        if($jackpotPosCount == 0 || ($goldenCount > 0 && $goldenCount < $jackpotPosCount)){
-                            $jackpotPosCount = $goldenCount;
-                            $jackpotLine = $k;
+                for($i = 0; $i < 5; $i++){
+                    $reels[$i] = [];
+                    for($j = 0; $j < 3; $j++){
+                        $reels[$i][$j] = $lastReel[$j * 5 + $i];
+                        if($lastReel[$j * 5 + $i] == $scatter){
+                            $scatterCount++;
+                            $scatterPoses[] = $j * 5 + $i;
                         }
                     }
                 }
-                $defaultScatters = 0;
-                if($winType == 'bonus'){
-                    $defaultScatters = $slotSettings->GenerateFreeSpinCount();
+                if($strWinLine != ''){
+                    $arr_lines = explode('&', $strWinLine);
+                    for($k = 0; $k < count($arr_lines); $k++){
+                        $arr_sub_lines = explode('~', $arr_lines[$k]);
+                        $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
+                        $totalWin = $totalWin + $arr_sub_lines[1];
+                        $arr_lines[$k] = implode('~', $arr_sub_lines);
+                    }
+                    $strWinLine = implode('&', $arr_lines);
                 }
-                for( $i = 0; $i <= 2000; $i++ ) 
-                {
-                    $totalWin = 0;
-                    $lineWins = [];
-                    $lineWinNum = [];
-                    $wild = 2;
-                    $scatter = 1;
-                    $_obf_winCount = 0;
-                    $strWinLine = '';
-                    $_obf_scatterposes = [];
-                    $goldenWins = [];
-                    $scattersCount = 0;
-                    $scattersWin = 0;
-                    $goldenWin = 0;
-                    $_lineWinNumber = 1;
-                    if($isGeneratedFreeStack == true){
-                        $freeStack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 2];
-                        $reels = $freeStack['Reel'];
-                        $goldenPoses = $freeStack['GoldenPoses'];
-                        $goldenWins = $freeStack['GoldenWins'];
-                    }else{
-                        $goldenPoses = $slotSettings->GetGameData($slotSettings->slotId . 'GoldenPoses');
-                        if($isJackpot == true){
-                            if($jackpotLine == -1){
-                                $jackpotLine = mt_rand(0, count($lines)-1);
-                            }
-                            $reels = $slotSettings->GenerateJackpotReel($jackpotLine);
-                            if($jackpotPosCount == 0){
-                                $goldenReelPos = mt_rand(0, 4);
-                                $goldenPoses[($linesId[$jackpotLine][$goldenReelPos] - 1) * 5 + $goldenReelPos] = 1;
-                            }
-                        }else{
-                            $reels = $slotSettings->GetReelStrips($winType, $slotEvent['slotEvent'], $betline, $defaultScatters);
-                            for($k = 0; $k < 15; $k++){
-                                if($goldenPoses[$k] == 0 && $slotSettings->CheckGoldenSymbol() && $reels['reel' . ($k % 5 + 1)][floor($k / 5)] != $scatter){
-                                    $goldenPoses[$k] = 1;
-                                }
-                            }
-                        }
-                    }
-                    for( $k = 0; $k < $lines; $k++ ) 
-                    {
-                        $_lineWin = '';
-                        $firstEle = $reels['reel1'][$linesId[$k][0] - 1];
-                        $lineWinNum[$k] = 1;
-                        $lineWins[$k] = 0;
-                        $isWild = false;
-                        $isJackpotPay = false;
-                        for($j = 1; $j < 5; $j++){
-                            $ele = $reels['reel'. ($j + 1)][$linesId[$k][$j] - 1];
-                            if($firstEle == $wild){
-                                $firstEle = $ele;
-                                $isWild = true;
-                                $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                            }else if($ele == $firstEle || $ele == $wild){
-                                $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                                if($ele == $wild){
-                                    $isWild = true;
-                                }
-                                if($j == 4){
-                                    if($firstEle > 2){
-                                        $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
-                                        if($lineWins[$k] > 0){
-                                            $totalWin += $lineWins[$k];
-                                            $_obf_winCount++;
-                                            $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$k.'~'.$lineWins[$k];
-                                            for($kk = 0; $kk < $lineWinNum[$k]; $kk++){
-                                                $pos = ($linesId[$k][$kk] - 1) * 5 + $kk;
-                                                $strWinLine = $strWinLine . '~' . ($pos);
-                                                $symbol = $reels['reel'. ($kk + 1)][$linesId[$k][$kk] - 1];
-                                                if($goldenPoses[$pos] == 1 && $isGeneratedFreeStack == false){
-                                                    if($isJackpot == true && $isJackpotPay == false){
-                                                        array_push($goldenWins, [$symbol, $slotSettings->GetGoldenMul($symbol, $lineWinNum[$k], $isJackpot)]);
-                                                        $isJackpotPay = true;
-                                                    }else{
-                                                        array_push($goldenWins, [$symbol, $slotSettings->GetGoldenMul($symbol, $lineWinNum[$k])]);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }else{
-                                        $lineWinNum[$k] = 0;
-                                    }
-                                }
-                            }else{
-                                if($slotSettings->Paytable[$firstEle][$lineWinNum[$k]] > 0){
-                                    if($firstEle > 2){
-                                        $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
-                                        if($lineWins[$k] > 0){
-                                            $totalWin += $lineWins[$k];
-                                            $_obf_winCount++;
-                                            $strWinLine = $strWinLine . '&l'. ($_obf_winCount - 1).'='.$k.'~'.$lineWins[$k];
-                                            for($kk = 0; $kk < $lineWinNum[$k]; $kk++){                                                
-                                                $pos = ($linesId[$k][$kk] - 1) * 5 + $kk;
-                                                $strWinLine = $strWinLine . '~' . ($pos);
-                                                $symbol = $reels['reel'. ($kk + 1)][$linesId[$k][$kk] - 1];
-                                                if($goldenPoses[$pos] == 1 && $isGeneratedFreeStack == false){
-                                                    array_push($goldenWins, [$symbol, $slotSettings->GetGoldenMul($symbol, $lineWinNum[$k])]);
-                                                }
-                                            }   
-                                        }
-                                    }else{
-                                        $lineWinNum[$k] = 0;    
-                                    }
-                                }else{
-                                    $lineWinNum[$k] = 0;
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    
-                    for( $r = 1; $r <= 5; $r++ ) 
-                    {
-                        for( $k = 0; $k <= 2; $k++ ) 
-                        {
-                            if( $reels['reel' . $r][$k] == $scatter ) 
-                            {
-                                $scattersCount++;
-                                if($goldenPoses[$k * 5 + $r - 1] == 1){
-                                    continue;
-                                }
-                                array_push($_obf_scatterposes, $k * 5 + $r - 1);
-                            }
-                        }
-                    }
-                    if($scattersCount >= 3){
-                        $scattersWin =$allbet * $slotSettings->scatterPayTable[$scattersCount];
-                    }
-
-                    for($k = 0; $k < count($goldenWins); $k++){
-                        $goldenWin = $goldenWin + $allbet * $goldenWins[$k][1];
-                    }
-                    $totalWin = $totalWin + $scattersWin + $goldenWin;
-                    
-                    if( $i >= 1000 ) 
-                    {
-                        $winType = 'none';
-                        $isJackpot = false;
-                    }
-                    // if( $slotSettings->increaseRTP && $winType == 'win' && $totalWin < ($lines * $betline * rand(2, 5)) ) 
-                    // {
-                    // }
-                    // else if( !$slotSettings->increaseRTP && $winType == 'win' && $lines * $betline < $totalWin ) 
-                    // {
-                    // }
-                    // else
-                    // {
-                        if( $i > 1500 ) 
-                        {
-                            // $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"Bad Reel Strip"}';
-                            // exit( $response );
-                            break;
-                        }
-                        
-                        if( $scattersCount >= 3 && ($winType != 'bonus' || $scattersCount != $defaultScatters) ) 
-                        {
-                        }
-                        else if ($scattersCount == 5)
-                        {
-                            
-                        }
-                        else if($isGeneratedFreeStack == true){
-                            break;  //freestack
-                        }
-                        else if($isForceWin == true && $totalWin > 0 && $totalWin < $betline * $lines * 10){
-                            break;   // win by force when winmoney is 0 in freespin
-                        }
-                        else if($winType == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') > 450){
-                            break;  // give freespin per 450spins over
-                        }
-                        else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 
-                        {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank('bonus');
-                            if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
-                            {
-                                $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        else if( $totalWin > 0 && $totalWin <= $_winAvaliableMoney && $winType == 'win' ) 
-                        {
-                            $_obf_0D163F390C080D0831380D161E12270D0225132B261501 = $slotSettings->GetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''));
-                            if( $_obf_0D163F390C080D0831380D161E12270D0225132B261501 < $_winAvaliableMoney ) 
-                            {
-                                $_winAvaliableMoney = $_obf_0D163F390C080D0831380D161E12270D0225132B261501;
-                            }
-                            else
-                            {
-                                if(($slotEvent['slotEvent'] != 'freespin' && $totalWin < $betline * $lines * 20) || $slotEvent['slotEvent'] == 'freespin'){  // Max Win
-                                    break;
-                                }
-                            }
-                        }
-                        else if( $totalWin == 0 && $winType == 'none' ) 
-                        {
-                            break;
-                        }
-                    // }
+                $bonusWin = 0;
+                if($bw == 1 && $wp > 0){
+                    $bonusWin = $betline * $lines * $wp;
+                    $totalWin = $totalWin + $bonusWin;
+                }
+                if($scatterCount >= 3){
+                    $muls = [0,0,0,2,15,100];
+                    $scatterWin = $muls[$scatterCount] * $betline * $lines;
+                    $totalWin = $totalWin + $scatterWin;
                 }
                 $spinType = 's';
                 if( $totalWin > 0) 
@@ -501,126 +360,106 @@ namespace VanguardLTE\Games\PandaFortune2PM
                     $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
                 }
                 $_obf_totalWin = $totalWin;
-                if( $scattersCount >= 3 ) 
-                {
-                    
-                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') == 0 ) 
-                    {
-                        $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
-                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 12);
-                        $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
-                    }
-                    else
-                    {
-                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 8);
-                    }
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
-                }
-                $lastReel = [];
-                for($k = 0; $k < 3; $k++){
-                    for($j = 1; $j <= 5; $j++){
-                        $lastReel[($j - 1) + $k * 5] = $reels['reel'.$j][$k];
-                    }
-                }
-                $strLastReel = implode(',', $lastReel);
-                $strReelSa = $reels['reel1'][3].','.$reels['reel2'][3].','.$reels['reel3'][3].','.$reels['reel4'][3].','.$reels['reel5'][3];
-                $strReelSb = $reels['reel1'][-1].','.$reels['reel2'][-1].','.$reels['reel3'][-1].','.$reels['reel4'][-1].','.$reels['reel5'][-1];
-               
-                $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
-                $slotSettings->SetGameData($slotSettings->slotId . 'GoldenPoses', $goldenPoses);
-                $strOtherResponse = '';
-                $n_reel_set = 0;
-                $isEnd = false;
                 $isState = true;
+                if($scatterCount >= 3 && $slotEvent['slotEvent'] != 'freespin'){
+                    $freeSpins = [0,0,0,8,10,15];
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 12);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
+                }else if($fsmore > 0 && $slotEvent['slotEvent'] == 'freespin'){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $fsmore);
+                }
+                $reelA = [];
+                $reelB = [];
+                for($i = 0; $i < 5; $i++){
+                    $reelA[$i] = mt_rand(4, 8);
+                    $reelB[$i] = mt_rand(4, 8);
+                }
+                $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
+                $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
+                $strLastReel = implode(',', $lastReel);
+                $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
+                $strOtherResponse = '';
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
                 {
-                    $n_reel_set = 2;
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin - $goldenWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                     $spinType = 's';
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
-                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
+                    $isEnd = false;
+                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) 
                     {
+                        $strOtherResponse = $strOtherResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                         $spinType = 'c';
                         $isEnd = true;
-                        $strOtherResponse = '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsmul_total=1&fsend_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                     }
                     else
                     {
-                        $strOtherResponse = '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
                         $isState = false;
+                        $strOtherResponse = $strOtherResponse . '&fsmul=1&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') .'&fs='. $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame').'&fswin=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres='.$slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                        $spinType = 's';
+                    }
+                    if($fsmore > 0){
+                        $strOtherResponse = $strOtherResponse . '&fsmore=' . $fsmore;
                     }
                 }else
                 {
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
-                    if($scattersCount >=3 ){
-                        $spinType = 's';
-                        $strOtherResponse = '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fs=1&fsres=0.00';
+                    // $_obf_0D5C3B1F210914123C222630290E271410213E320B0A11 = $totalWin;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
+                    if($scatterCount >= 3){
                         $isState = false;
-                        // FreeStack
-                        if($slotSettings->IsAvailableFreeStack() || $slotSettings->happyhouruser){
-                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $slotSettings->GetFreeStack($betline * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames')));
-                        }
-                    }  
-                    if($scattersCount >= 1){
-                        $n_reel_set = 1;
+                        $spinType = 's';
+                        $strOtherResponse = $strOtherResponse . '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fsres=0.00&fs=1&psym=1~'. $scatterWin .'~' . implode(',', $scatterPoses);
                     }
                 }
-
-                if($scattersCount >= 3){
-                    $strOtherResponse = $strOtherResponse . '&psym=1~'. $scattersWin .'~' . implode(',', $_obf_scatterposes);
+                if($bw == 1 && $wp > 0){
+                    $strOtherResponse = $strOtherResponse . '&coef='. ($betline * $lines) .'&rw='. $bonusWin .'&bw=1&wp='. $wp .'&end=1';
                 }
-                $arr_gsf = [];
-                for($k = 0; $k < count($goldenPoses); $k++){
-                    if($goldenPoses[$k] == 1){
-                        array_push($arr_gsf, $lastReel[$k] . '~' . $k);
-                    }
+                if($str_initReel != ''){
+                    $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
+                }        
+                if($str_gsf != ''){
+                    $strOtherResponse = $strOtherResponse . '&gsf=' . $str_gsf;
                 }
-                if(count($arr_gsf) > 0){
-                    $strOtherResponse = $strOtherResponse . '&gsf=' . implode(';', $arr_gsf);
+                if($str_gsf_a != ''){
+                    $strOtherResponse = $strOtherResponse . '&gsf_a=' . $str_gsf_a;
                 }
-                if($goldenWin > 0){
-                    $arr_gsf_a = [];
-                    $totalGoldenMul = 0;
-                    for($k = 0; $k < count($goldenWins); $k++){
-                        array_push($arr_gsf_a, $goldenWins[$k][0] . '~' . $goldenWins[$k][1]);
-                        $totalGoldenMul = $totalGoldenMul + $goldenWins[$k][1];
-                    }
-                    $strOtherResponse = $strOtherResponse . '&coef='. $allbet .'&gsf_a='. implode(';', $arr_gsf_a) .'&rw='. $goldenWin .'&bw=1&wp='. $totalGoldenMul .'&end=1';
+                if($strWinLine != ''){
+                    $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse . '&balance='.$Balance.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) . '&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&reel_set='.$n_reel_set.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&s='.$strLastReel.'&w='.($totalWin - $goldenWin);
+                
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')  . '&reel_set='. $currentReelSet . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&s=' . $strLastReel . '&w=' . ($totalWin - $bonusWin);
 
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
+                    // $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }
-
+                if( $slotEvent['slotEvent'] != 'freespin' && $scatterCount >= 3) 
+                {
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+                }
                 //------------ ReplayLog ---------------
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
                 if (!$replayLog) $replayLog = [];
                 $current_replayLog["cr"] = $paramData;
                 $current_replayLog["sr"] = $response;
-                array_push($replayLog, $current_replayLog);
+                array_push($replayLog, $current_replayLog); 
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
                 //------------ *** ---------------
-
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"GoldenPoses":'.json_encode($goldenPoses) . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';
-                $slotSettings->SaveLogReport($_GameLog, $allbet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
-                
-                if( $scattersCount >= 3 && $slotEvent['slotEvent'] != 'freespin') 
-                {
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
-                }
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') . ',"TumbAndFreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
+                $allBet = $betline * $lines;
+                $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
+
             }
-            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
+            if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doFSOption' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){                
                 $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
             }
             $slotSettings->SaveGameData();
@@ -648,12 +487,10 @@ namespace VanguardLTE\Games\PandaFortune2PM
             $game_log['request'] = $request;
             $game_log['response'] = $response;
             $game_log['currency'] = 'KRW';
-            $game_log['currencySymbol'] = 'â‚©';
+            $game_log['currencySymbol'] = '₩';
             $game_log['configHash'] = '02344a56ed9f75a6ddaab07eb01abc54';
-
             $str_gamelog = json_encode($game_log);
             $slotSettings->saveGameLog($str_gamelog, $roundId);
         }
     }
-
 }
