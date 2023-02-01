@@ -1733,7 +1733,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gamename = $stat_game->game_id;
 
                 $pm_games = \VanguardLTE\Game::where('id', $stat_game->game_id)->first();
-                $gamelist1 = XMXController::getgamelist('xmx-pp');
+                $gamelist1 = TPController::getgamelist('tp_pp');
                 foreach($gamelist1 as $game)
                 {
                     $gamename = $game['name'];
