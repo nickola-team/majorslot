@@ -52,7 +52,6 @@
                         @endif
                             <a href="javascript:void(0)">{{$ntc->title}}</a>
                         </td>
-                        <td align="right" style="color:#656565">{{date('Y-m-d', strtotime($ntc->date_time))}}</td>
                     </tr>
                     @endforeach
                     @else
