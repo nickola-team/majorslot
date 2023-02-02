@@ -251,47 +251,6 @@
 			f.submit();
 		}
 	</script>
-	<div id="etc_pop4" class="popup_style04 popup_none">
-		<div class="popup_wrap_1000">   
-			<div class="close_box"><a href="#" class="etc_pop4_close"><img src="/frontend/kdior/images/popup_close.png"></a></div>
-			<div class="popupbox">
-				<form name="MemberPw" method="post">
-				<div class="title1">정보수정</div><!-- 타이틀 -->
-				<div class="con_box10">
-					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="write_title_top">                    
-						<tr>
-							<td class="write_title">아이디</td>
-							<td class="write_basic">test01</td>
-						</tr>                 
-						<tr>
-							<td class="write_title">닉네임</td>
-							<td class="write_basic">test01</td>
-						</tr>  
-						<tr>
-							<td class="write_title">현재비밀번호</td>
-							<td class="write_basic"><input name="RE_IU_PW" id="RE_IU_PW" class="input1" type="password"></td>
-						</tr>    
-						<tr>
-							<td class="write_title">변경비밀번호</td>
-							<td class="write_basic"><input name="NE_IU_PW" id="NE_IU_PW" class="input1" type="password"></td>
-						</tr>    
-						<tr>
-							<td class="write_title">변경비밀번호 확인</td>
-							<td class="write_basic"><input name="NE_IU_PW2" id="NE_IU_PW2" class="input1" type="password"></td>
-						</tr> 
-					</table>
-				</div>
-				<div class="con_box10">
-					<div class="btn_wrap_center">
-						<ul>
-							<li><a href="#" onclick="pw_modify();"><span class="btn3_1">비밀번호변경</span></a></li>
-						</ul>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
 
 
 	<script src="/frontend/kdior/js/modal_alert.js?v=202301301152"></script> 	

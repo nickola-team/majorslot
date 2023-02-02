@@ -2,8 +2,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
-<title>K-Dior CASINO</title>
-<meta name="viewport" content="width=1600,minimum-scale=0,maximum-scale=5,target-densitydpi=device-dpi">
+<title>@yield('page-title')</title>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;">
 <link rel="shortcut icon" href="/frontend/kdior/favicon.ico" type="image/x-icon">
 <link href="/frontend/kdior/css/common.css?v=202301301150" rel="stylesheet" type="text/css">
 <link href="/frontend/kdior/css/basic.css?v=202301301150" rel="stylesheet" type="text/css">

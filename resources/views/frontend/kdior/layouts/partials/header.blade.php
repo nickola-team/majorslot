@@ -17,7 +17,6 @@
                         <li>&nbsp;콤프 <span class="font11">0</span>&nbsp;&nbsp;&nbsp;</li>
                         <li>&nbsp;<a href="#" class="sub_pop4_open">쿠폰 <span class="font11">0</span>&nbsp;개&nbsp;&nbsp;&nbsp;</a></li>
 
-                        <li><a href="#" class="etc_pop4_open"><span class="login_btn1" style="min-width: 60px;">정보수정</span></a></li>                
                         <li><a href="/logout"><span class="login_btn2" style="min-width: 60px;">로그아웃</span></a></li>                                    
                     @else
                     <li><a href="#" class="etc_pop2_open"><span class="login_btn1">로그인</span></a></li> 
