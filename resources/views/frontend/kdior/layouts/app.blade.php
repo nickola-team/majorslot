@@ -1,0 +1,53 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<title>K-Dior CASINO</title>
+<meta name="viewport" content="width=1600,minimum-scale=0,maximum-scale=5,target-densitydpi=device-dpi">
+<link rel="shortcut icon" href="/frontend/kdior/favicon.ico" type="image/x-icon">
+<link href="/frontend/kdior/css/common.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/kdior/css/basic.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/kdior/css/font.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/kdior/css/layout.css?v=202301301150" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/frontend/kdior/css/animations.css?v=202301301150"><!-- CSS animations1 -->
+<script language="javascript" src="/frontend/kdior/js/showid.js" type="text/javascript"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script><!-- sk_기본 -->
+<script type="text/javascript" src="/frontend/kdior/jq/sk_popup/sk_popup.js"></script><!-- 팝업 -->
+<script type="text/javascript" src="/frontend/kdior/js/sk_tab.js"></script><!-- sk_탭 -->
+<script src="/frontend/kdior/js/func.js"></script>
+</head>
+
+
+<body class="overflow-x:hidden;">
+	<!-- ★메인★ -->
+	<div id="wrap">
+		@include('frontend.kdior.layouts.partials.header')
+        @include('frontend.kdior.layouts.partials.banner')
+		
+
+		<div class="main_contents_wrap">
+			<div class="main_contents_box">
+				@include('frontend.kdior.layouts.partials.category')
+				@include('frontend.kdior.layouts.partials.board')
+			</div>
+		</div>
+		@include('frontend.kdior.layouts.partials.footer')
+		
+	</div><!-- wrap -->
+
+	@yield('content')
+	@auth()
+		@include('frontend.kdior.modals.common')
+	@else
+		@include('frontend.kdior.modals.login')
+		@include('frontend.kdior.modals.join')
+	@endif
+	@foreach ($noticelist as $ntc)
+      @include('frontend.kdior.modals.notice', ['notice' => $ntc])
+    @endforeach
+</body>
+
+</html>
+<iframe name="ifr" id="ifr" src="" width="0" height="0" border="0"></iframe>
