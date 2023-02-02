@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,6 +46,5 @@
       @include('frontend.kdior.modals.notice', ['notice' => $ntc])
     @endforeach
 </body>
-
 </html>
-<iframe name="ifr" id="ifr" src="" width="0" height="0" border="0"></iframe>
+

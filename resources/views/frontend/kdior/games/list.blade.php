@@ -10,16 +10,25 @@
 				<div class="title1"><img src="/frontend/kdior/images/title01.png?v=202301301150"/></div><!-- 타이틀 -->
 				<div class="game">
 					<ul style="width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;margin: 20px auto 10px auto;">
-
-						<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);"><img src="/frontend/kdior/images/game/EVOLUTION.png?v=202301301150"><img src="/frontend/kdior/images/game/EVOLUTION.png?v=202301301150" class="mouseover3 casino_1_close etc_pop2_open" style="display:none;"></a></li>
-
+						@foreach($categories AS $index=>$category)
+						@if ($category->type =='live' && $category->provider != 'kuza')
+						<li>
+							<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
+							@auth 
+								onclick="casinoGameStart('{{$category->href}}');"
+							@endif
+							>
+							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png">
+							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png" class="mouseover3 casino_1_close etc_pop2_open" style="display:none;">
+							</a>
+						</li>
+						@endif
+						@endforeach
 					</ul>
 				</div>    
 			</div>
 		</div>
 	</div>
-
-
 
 	<!-- 호텔 라이브카지노 -->
 	<div id="casino_2" class="popup_style04 popup_none">
@@ -30,7 +39,20 @@
 				<div class="game">
 					<ul  style="width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;margin: 20px auto 10px auto;">
 
-						<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);"><img src="/frontend/kdior/images/game/BOTACASINO.png?v=202301301150"><img src="/frontend/kdior/images/game/BOTACASINO.png?v=202301301150" class="mouseover3 casino_2_close etc_pop2_open" style="display:none;"></a></li>
+						@foreach($categories AS $index=>$category)
+						@if ($category->type =='live' && $category->provider == 'kuza')
+						<li>
+							<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
+							@auth 
+								onclick="casinoGameStart('{{$category->href}}');"
+							@endif
+							>
+							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png">
+							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png" class="mouseover3 casino_1_close etc_pop2_open" style="display:none;">
+							</a>
+						</li>
+						@endif
+						@endforeach
 
 					</ul>
 				</div>    
@@ -48,8 +70,23 @@
 				<div class="title1"><img src="/frontend/kdior/images/title03.png?v=202301301150"></div><!-- 타이틀 -->
 				<div class="game">
 					<ul style="width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;margin: 20px auto 10px auto;">
-
-						<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);"><img src="/frontend/kdior/images/game/PRAGMATICSLOT.png?v=202301301150"><img src="/frontend/kdior/images/game/PRAGMATICSLOT.png?v=202301301150" class="mouseover3 casino_3_close etc_pop2_open" style="display:none;"></a></li>
+						@foreach($categories AS $index=>$category)
+						@if ($category->type =='slot')
+						<li>
+							<a href="#"  onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
+							@auth 
+								class="casino_3_close etc_pop1_open"
+								onclick="slotGame('{{$category->href}}', '{{$category->trans?$category->trans->trans_title:$category->title}}');"
+							@else
+								class="casino_3_close etc_pop2_open" 
+							@endif
+							>
+							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png">
+							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png" class="mouseover3 casino_1_close etc_pop2_open" style="display:none;">
+							</a>
+						</li>
+						@endif
+						@endforeach
 
 					</ul>
 				</div>    

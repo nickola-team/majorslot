@@ -1,3 +1,14 @@
+<!-- 슬롯게임상세 -->
+<div id="etc_pop1" class="etc_pop1 popup_style04 popup_none">
+    <div class="popup_wrap_1360">   
+        <div class="close_box"><a href="#" class="etc_pop1_close"><img src="/frontend/kdior/images/popup_close.png"></a></div>
+        <div class="popupbox">
+            <div class="title1" id="pop1_title">슬롯게임</div><!-- 타이틀 -->
+            <div class="game" id="pop1_content">
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 입금신청 -->
 <div id="sub_pop1" class="popup_style04 popup_none">
     <div class="popup_wrap_1000">   

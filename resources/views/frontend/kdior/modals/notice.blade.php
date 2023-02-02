@@ -17,3 +17,14 @@
         </div>             
 	</div>
 </div>
+<script>
+    cookiedata = document.cookie;
+    if ( cookiedata.indexOf("pop{{$notice->id}}=done") < 0 )
+    {
+        document.getElementById("pop{{$notice->id}}").style.visibility = "visible";
+    }
+    else
+    {
+        document.getElementById("pop{{$notice->id}}").style.visibility = "hidden";
+    }
+</script>
