@@ -218,64 +218,26 @@
 </div>
 
 
-	<!-- 충전내역 -->
-	<div id="sub_pop8" class="popup_style04 popup_none">
-		<div class="popup_wrap_1000">   
-			<div class="close_box"><a href="#" class="sub_pop8_close"><img src="/frontend/kdior/images/popup_close.png"></a></div>
-			<div class="popupbox">
-				<div class="title1">충전내역</div><!-- 타이틀 -->
-				<div class="con_box10" id="sub_pop8_content">
-				</div>      
-			</div>
-		</div>
-	</div>
+<!-- 충전내역 -->
+<div id="sub_pop8" class="popup_style04 popup_none">
+    <div class="popup_wrap_1000">   
+        <div class="close_box"><a href="#" class="sub_pop8_close"><img src="/frontend/kdior/images/popup_close.png"></a></div>
+        <div class="popupbox">
+            <div class="title1">충전내역</div><!-- 타이틀 -->
+            <div class="con_box10" id="sub_pop8_content">
+            </div>      
+        </div>
+    </div>
+</div>
 
-	<!-- 환전내역 -->
-	<div id="sub_pop9" class="popup_style04 popup_none">
-		<div class="popup_wrap_1000">   
-			<div class="close_box"><a href="#" class="sub_pop9_close"><img src="/frontend/kdior/images/popup_close.png"></a></div>
-			<div class="popupbox">
-				<div class="title1">환전내역</div><!-- 타이틀 -->
-				<div class="con_box10"  id="sub_pop9_content">
-				</div>      
-			</div>
-		</div>
-	</div>
-	<!-- 정보수정 -->
-	<script type="text/javascript">
-		function pw_modify() {
-			var f = document.MemberPw;
-
-			f.target = "ifr";
-			f.action="/member/_MemberPasswd_Proc.asp"
-			f.submit();
-		}
-	</script>
-
-
-	<script src="/frontend/kdior/js/modal_alert.js?v=202301301152"></script> 	
-	<div class="fc-header-balances" style="z-index:999999;">
-	<script>
-	
-		var modal = new ModalAlert();	//modal_alert.js파일의 클래스 불러오기
-		
-		$(function(){
-			// ajax 선언
-			let reloadMsg = function () {
-				var ajax = $.ajax({
-				type: "GET", // 요청 메소드 타입
-				url: "/etc/_memo_alram2.asp" // 접속 url
-				});
-				// 결과
-				ajax.done(function(data){
-				// 위 라벨 태그에 결과를 입력한다.
-				$(".fc-header-balances").html(data);
-				}) ;
-			}
-
-			reloadMsg();	//일단 즉시 한번 호출하고
-
-			timer = setInterval( reloadMsg, 20000);		//10초마다 호출함
-		});
-	</script>
-	</div>
+<!-- 환전내역 -->
+<div id="sub_pop9" class="popup_style04 popup_none">
+    <div class="popup_wrap_1000">   
+        <div class="close_box"><a href="#" class="sub_pop9_close"><img src="/frontend/kdior/images/popup_close.png"></a></div>
+        <div class="popupbox">
+            <div class="title1">환전내역</div><!-- 타이틀 -->
+            <div class="con_box10"  id="sub_pop9_content">
+            </div>      
+        </div>
+    </div>
+</div>
