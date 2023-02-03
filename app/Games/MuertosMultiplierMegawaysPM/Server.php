@@ -241,7 +241,7 @@ namespace VanguardLTE\Games\MuertosMultiplierMegawaysPM
                 $allBet = $betline * $lines;
                 $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
-                if($replayLog && count($replayLog) && $totalWin > $allBet){
+                if($replayLog && count($replayLog) && $totalWin >= ($allBet * 10)){
                     $current_replayLog["cr"] = $paramData;
                     $current_replayLog["sr"] = $response;
                     array_push($replayLog, $current_replayLog);
