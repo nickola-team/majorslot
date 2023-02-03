@@ -417,6 +417,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'SettingsController@system_values',
         ]);
 
+        Route::get('system/xmxwithdrawall', [
+            'as' => 'argon.system.xmxwithdraw',
+            'uses' => 'SettingsController@xmx_withdrawall',
+        ]);
+
         /**
          * Game routes
          */
