@@ -242,14 +242,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.setting.system', compact('serverstat','agents','strinternallog', 'filesize'));
         }
 
-    }
+        public function xmx_withdrawall(\Illuminate\Http\Request $request)
+        {
+            set_time_limit(0);
+            \Artisan::call('xmx:withdrawAll');
+        }
 
-}
-namespace 
-{
-    function onkXppk3PRSZPackRnkDOJaZ9()
-    {
-        return 'OkBM2iHjbd6FHZjtvLpNHOc3lslbxTJP6cqXsMdE4evvckFTgS';
     }
 
 }
