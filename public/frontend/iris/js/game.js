@@ -429,7 +429,6 @@ function boardnotice(){
                                        <tr> 
                                           <th width="70">번호</th>
                                           <th>제목</th>
-                                          <th width="148">작성일</th>
                                        </tr>
                                     </thead>
                                     <tbody>`;
@@ -439,10 +438,9 @@ function boardnotice(){
                                     htmldoc += `<tr onclick="openNotice(${data.data[i].id})" class="cp">
                                        <td  align="right">${i+1}</td>
                                        <td id="subj_${data.data[i].id}">${data.data[i].title}</td>
-                                       <td align="right">${date.toLocaleString()}</td>
                                        </tr>`;
                                     htmldoc += `<tr id="cont_${data.data[i].id}" style="display:none">
-                                       <td colspan="3">
+                                       <td colspan="2">
                                        <div class="contents">`;
                                     htmldoc += data.data[i].content;
                                     htmldoc += `
@@ -453,7 +451,7 @@ function boardnotice(){
                               }
                               else
                               {
-                                 htmldoc += `<tr><td colspan='3'>내역이 없습니다.</td></tr>`;
+                                 htmldoc += `<tr><td colspan='2'>내역이 없습니다.</td></tr>`;
                               }
                      htmldoc += `
                                     </tbody>

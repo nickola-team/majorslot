@@ -346,6 +346,19 @@ namespace VanguardLTE\Games\LegendofHeroesMegawaysPM
                     $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                     $lastReel = explode(',', $stack['reel']);
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') == 1 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') == 22){
+                        $symCount = 0;
+                        for($i = 0; $i < 48; $i++){
+                            if($lastReel[$i] == 1){
+                                $symCount++;
+                            }
+                        }
+                        if($symCount >= 7){
+                            $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                            $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            $lastReel = explode(',', $stack['reel']);
+                        }
+                    }
                     if($stack['g'] != ''){
                         $arr_g = $stack['g'];
                     }
