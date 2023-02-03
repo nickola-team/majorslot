@@ -34,7 +34,7 @@ textarea::placeholder               {color:#f0f0f0; font-size:13px; letter-spaci
  *-------------------------------------------------------------------------------------*/
 A,area   {blr:expression(this.onFocus=this.blur())} 
 :focus   {-moz-outline-style: none;} 
-form     {margin:0;} 
+form     {margin:0;vertical-align:middle;} 
 img      {border:none;}
 ul,ol,li,dl,dd,dt  {margin:0; list-style:none;}
 

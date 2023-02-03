@@ -11,13 +11,13 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;">
 <link rel="shortcut icon" href="/frontend/kdior/favicon.ico" type="image/x-icon">
 <link href="/frontend/kdior/css/font.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/kdior/css/basic.css?v=202301301150" rel="stylesheet" type="text/css">
+
 @if( $detect->isMobile() || $detect->isTablet() ) 
 <link href="/frontend/kdior/css/m/common.css?v=202301301150" rel="stylesheet" type="text/css">
-<link href="/frontend/kdior/css/m/basic.css?v=202301301150" rel="stylesheet" type="text/css">
 <link href="/frontend/kdior/css/m/layout.css?v=202301301150" rel="stylesheet" type="text/css">
 @else
 <link href="/frontend/kdior/css/common.css?v=202301301150" rel="stylesheet" type="text/css">
-<link href="/frontend/kdior/css/basic.css?v=202301301150" rel="stylesheet" type="text/css">
 <link href="/frontend/kdior/css/layout.css?v=202301301150" rel="stylesheet" type="text/css">
 @endif
 <link rel="stylesheet" href="/frontend/kdior/css/animations.css?v=202301301150"><!-- CSS animations1 -->
@@ -51,6 +51,11 @@
 		
 	</div><!-- wrap -->
 	@if( $detect->isMobile() || $detect->isTablet() ) 
+		@auth()
+			@include('frontend.kdior.modals.common')
+		@else
+			@include('frontend.kdior.modals.join')
+		@endif
 	@else
 		@yield('content')
 		@auth()
