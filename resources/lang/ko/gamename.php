@@ -1061,4 +1061,7 @@ return [
         "ReelBanks" => "릴 뱅크",
         "PizzaPizzaPizza" => "피자피자피자",
 
+        "HotPepper" => "핫 페퍼",
+        "SweetPowernudge" => "스위트 파워넛지"
+
 ];
