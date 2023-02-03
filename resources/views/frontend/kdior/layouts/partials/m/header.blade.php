@@ -26,9 +26,16 @@
                 <li style="width:30%;margin-top:10px;"><input name="IU_PW" id="IU_PW" type="password" class="input_login" placeholder="비밀번호" onKeyPress="if(event.keyCode == 13) {loginChk();}"></li>
                 <li style="width:20%"><a href="#" onclick="loginChk();"><span class="login_btn01">로그인</span></a></li>
             
-                <li style="width:20%"><a href="/codePop.asp"><span class="login_btn02">회원가입</span></a></li>
+                <li style="width:20%"><a href="#" class="etc_pop3_open"><span class="login_btn02">회원가입</span></a></li>
             
             </ul>
-        </div>  
+        </div>
+        <div class="top_menu">
+            <ul>
+                <li><a href="/"><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></li>
+                <li><a href="/"><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></li>
+                <li><a href="/"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></li>                        
+            </ul>                 	
+        </div>       
     @endif
 </div><!-- header_wrap -->

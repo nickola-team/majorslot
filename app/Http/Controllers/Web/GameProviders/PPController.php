@@ -1438,6 +1438,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return response($data, 200)->header('Content-Type', 'application/json');
         }
+        public function announcementsunread(\Illuminate\Http\Request $request)
+        {
+            $data = [
+                "error" => 0,
+                "description" => "OK",
+                "announcements" => []
+            ];
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
+        public function promotournamentscores(\Illuminate\Http\Request $request)
+        {
+            $data = [
+                "error" => 0,
+                "description" => "OK",
+                "scores" => []
+            ];
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
         public static function syncpromo()
         {
             if (config('app.ppmode') == 'bt') // BT integration mode
