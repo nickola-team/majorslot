@@ -34,8 +34,8 @@ class GameRTPMonitor extends Command
     const MIN_RTP = 0.9;
     const MAX_RTP = 1.00;
     const LINE10_STEP = 1;
-    const BONUS3_STEP = 50;
-    const BONUS10_STEP = 10;
+    const BONUS3_STEP = 10;
+    const BONUS10_STEP = 5;
     public function __construct()
     {
         parent::__construct();
