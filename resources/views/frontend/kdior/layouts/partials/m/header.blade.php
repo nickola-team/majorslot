@@ -4,10 +4,10 @@
             <div class="m_logo"><a href="/"><img src="/frontend/kdior/images/logo.png?v=202302021619" width="130"></a></div>
         </div>
         <div class="my_wrap">
-            <img src='/img/lv1.png' align='absmiddle' width='35'>&nbsp;test01님 &nbsp;&nbsp;
-            캐쉬 <span class="font11">121,930</span> &nbsp;&nbsp; 
+            <img src='/frontend/kdior/img/lv1.png' align='absmiddle' width='35'>&nbsp;{{auth()->user()->username}}님 &nbsp;&nbsp;
+            캐쉬 <span class="font11">{{number_format(auth()->user()->balance)}}</span> &nbsp;&nbsp; 
             콤프 <span class="font11">0</span> &nbsp;&nbsp; 
-            <a href="/member/coupon_list.asp">쿠폰 <span class="font11">0</span></a>
+            <a href="/member/coupon_list.asp">쿠폰 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span></a>
         </div>
         <div class="top_menu">
             <ul>
@@ -22,11 +22,13 @@
         </div>
         <div class="login">
             <ul>
+                <form method="post" name="LoginFrm" id="frmLogin">
                 <li style="width:30%;margin-top:10px;"><input name="IU_ID" id="IU_ID" class="input_login" placeholder="아이디"></li>
                 <li style="width:30%;margin-top:10px;"><input name="IU_PW" id="IU_PW" type="password" class="input_login" placeholder="비밀번호" onKeyPress="if(event.keyCode == 13) {loginChk();}"></li>
                 <li style="width:20%"><a href="#" onclick="loginChk();"><span class="login_btn01">로그인</span></a></li>
             
                 <li style="width:20%"><a href="#" class="etc_pop3_open"><span class="login_btn02">회원가입</span></a></li>
+                </form>
             
             </ul>
         </div>

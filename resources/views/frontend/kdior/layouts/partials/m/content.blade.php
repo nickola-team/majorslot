@@ -34,20 +34,37 @@
 <div class="contents_wrap">
     <div class="con_box15">
         <table width="100%" border="0" align="center" cellspacing="5" cellpadding="0">
+            @auth()
             <tr>
                 <td width="5%"></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu1.png?v=202302021551" width="80%"></a></td>                       
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu2.png?v=202302021551" width="80%"></a></td>                       
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop1_open"><img src="/frontend/kdior/images/menu1.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#" class="sub_pop2_open"><img src="/frontend/kdior/images/menu2.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
                 <td width="5%"></td>
             </tr>
             <tr>
                 <td width="5%"></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu4.png?v=202302021551" width="80%"></a></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu5.png?v=202302021551" width="80%"></a></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu6.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop5_open"><img src="/frontend/kdior/images/menu4.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop8_open" onclick="deposit_detail();"><img src="/frontend/kdior/images/menu5.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop9_open" onclick="withdraw_detail();"><img src="/frontend/kdior/images/menu6.png?v=202302021551" width="80%"></a></td>
                 <td width="5%"></td>
-            </tr>                                
+            </tr>
+            @else
+            <tr>
+                <td width="5%"></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu1.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu2.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
+                <td width="5%"></td>
+            </tr>
+            <tr>
+                <td width="5%"></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu4.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu5.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu6.png?v=202302021551" width="80%"></a></td>
+                <td width="5%"></td>
+            </tr>
+            @endif                              
         </table>                 	
     </div> 
     <script type="text/javascript" src="/frontend/kdior/js/sk_table.js"></script><!-- sk_table -->    
