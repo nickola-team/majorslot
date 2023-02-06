@@ -9,7 +9,7 @@
 			<div class="popupbox">
 				<div class="title1"><img src="/frontend/kdior/images/title01.png?v=202301301150"/></div><!-- 타이틀 -->
 				<div class="game">
-					<ul style="width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;margin: 20px auto 10px auto;">
+					<ul  class="categorylist">
 						@foreach($categories AS $index=>$category)
 						@if ($category->type =='live' && $category->provider != 'kuza')
 						<li>
@@ -37,7 +37,7 @@
 			<div class="popupbox">
 				<div class="title1"><img src="/frontend/kdior/images/title02.png?v=202301301150"></div><!-- 타이틀 -->
 				<div class="game">
-					<ul  style="width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;margin: 20px auto 10px auto;">
+					<ul   class="categorylist">
 
 						@foreach($categories AS $index=>$category)
 						@if ($category->type =='live' && $category->provider == 'kuza')
@@ -69,7 +69,7 @@
 			<div class="popupbox">
 				<div class="title1"><img src="/frontend/kdior/images/title03.png?v=202301301150"></div><!-- 타이틀 -->
 				<div class="game">
-					<ul style="width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;margin: 20px auto 10px auto;">
+					<ul class="categorylist">
 						@foreach($categories AS $index=>$category)
 						@if ($category->type =='slot')
 						<li>

@@ -50,20 +50,16 @@
 		@include('frontend.kdior.layouts.partials.footer')
 		
 	</div><!-- wrap -->
-	@if( $detect->isMobile() || $detect->isTablet() ) 
-		@auth()
-			@include('frontend.kdior.modals.common')
-		@else
-			@include('frontend.kdior.modals.join')
-		@endif
+	@yield('content')
+	@auth()
+		@include('frontend.kdior.modals.common')
 	@else
-		@yield('content')
-		@auth()
-			@include('frontend.kdior.modals.common')
-		@else
-			@include('frontend.kdior.modals.login')
-			@include('frontend.kdior.modals.join')
-		@endif
+		@include('frontend.kdior.modals.join')
+		@include('frontend.kdior.modals.join')
+	@endif
+	@if( $detect->isMobile() || $detect->isTablet() ) 
+		
+	@else
 		@foreach ($noticelist as $ntc)
 		@include('frontend.kdior.modals.notice', ['notice' => $ntc])
 		@endforeach
