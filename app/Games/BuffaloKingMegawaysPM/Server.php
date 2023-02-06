@@ -98,7 +98,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 }
                 else
                 {
-                    $bet = '50.00';
+                    $bet = '100.00';
                 }
                 $spinType = 's';
                 $arr_g = null;
@@ -214,7 +214,7 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $allBet = $betline * $lines;
                 $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
-                if($replayLog && count($replayLog) && $totalWin > $allBet){
+                if($replayLog && count($replayLog) && $totalWin >= ($allBet * 10)){
                     $current_replayLog["cr"] = $paramData;
                     $current_replayLog["sr"] = $response;
                     array_push($replayLog, $current_replayLog);
