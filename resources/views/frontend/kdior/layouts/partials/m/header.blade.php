@@ -34,9 +34,9 @@
         </div>
         <div class="top_menu">
             <ul>
-                <li><a href="/"><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></li>
-                <li><a href="/"><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></li>
-                <li><a href="/"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></li>                        
+                <li><a href="#" class="casino_1_open"><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></li>
+                <li><a href="#" class="casino_2_open"><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></li>
+                <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></li>                        
             </ul>                 	
         </div>       
     @endif

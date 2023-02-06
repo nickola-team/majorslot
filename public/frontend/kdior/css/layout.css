@@ -148,7 +148,7 @@
 .notice_popup_btn_wrap {float:right;}
 .notice_popup_btn_wrap ul li {float:left; margin:0 0 0 5px;}
 .notice_popup_btn {float:right; background:#ba9358; min-width:60px; height:36px; line-height:36px; padding:0 15px 0 15px; text-align:center; display:inline-block; font-family: 'Noto Sans KR', sans-serif; color:#000000; font-size:14px; font-weight:600;}
-.notice_popup_box {float:left; width:450px; height:500px; background:#000000; border:2px solid #ba9358; background:#111111;}
+.notice_popup_box {float:left; width:450px; background:#000000; border:2px solid #ba9358; background:#111111;}
 .notice_popup_text {float:left; width:100%;}
-.notice_popup_font1 {float:left; width:100%; font-family: 'Noto Sans KR', sans-serif; font-size:22px; letter-spacing:-1px; font-weight:700; color:#ffffff; line-height:40px;}
-.notice_popup_font2 {float:left; width:100%; font-family: 'Noto Sans KR', sans-serif; font-size:16px; letter-spacing:-1px; font-weight:400; color:#d4d4d4; line-height:28px;}
+.notice_popup_font1 {float:left; width:100%; padding:5px;  font-family: 'Noto Sans KR', sans-serif; font-size:22px; letter-spacing:-1px; font-weight:700; color:#ffffff; line-height:40px;}
+.notice_popup_font2 {float:left; width:100%; padding:5px; font-family: 'Noto Sans KR', sans-serif; font-size:16px; letter-spacing:-1px; font-weight:400; color:#d4d4d4; line-height:28px;}

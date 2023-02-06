@@ -37,8 +37,6 @@
 		@else
 			@include('frontend.kdior.layouts.partials.header')
 			@include('frontend.kdior.layouts.partials.banner')
-			
-
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
 					@include('frontend.kdior.layouts.partials.category')
@@ -54,16 +52,13 @@
 	@auth()
 		@include('frontend.kdior.modals.common')
 	@else
-		@include('frontend.kdior.modals.join')
+		@include('frontend.kdior.modals.login')
 		@include('frontend.kdior.modals.join')
 	@endif
-	@if( $detect->isMobile() || $detect->isTablet() ) 
-		
-	@else
-		@foreach ($noticelist as $ntc)
-		@include('frontend.kdior.modals.notice', ['notice' => $ntc])
-		@endforeach
-	@endif
+
+	@foreach ($noticelist as $ntc)
+	@include('frontend.kdior.modals.notice', ['notice' => $ntc])
+	@endforeach
 </body>
 </html>
 
