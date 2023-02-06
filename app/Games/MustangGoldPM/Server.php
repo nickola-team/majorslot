@@ -108,7 +108,7 @@ namespace VanguardLTE\Games\MustangGoldPM
                 }
                 else
                 {
-                    $bet = '40.00';
+                    $bet = '100.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));

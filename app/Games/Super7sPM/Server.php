@@ -81,7 +81,7 @@ namespace VanguardLTE\Games\Super7sPM
                 }
                 else
                 {
-                    $bet = '200.00';
+                    $bet = '400.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
