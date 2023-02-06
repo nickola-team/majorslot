@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '200.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));

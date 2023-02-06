@@ -98,7 +98,7 @@ namespace VanguardLTE\Games\BookofFallenPM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[20.00,40.00,60.00,80.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,1500.00,2500.00,5000.00,7500.00,10000.00]; 
+            $this->Bet = explode(',', $game->bet); //[20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00,6000.00,7000.00,8000.00,10000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
