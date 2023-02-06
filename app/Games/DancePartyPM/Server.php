@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\DancePartyPM
                 }
                 else
                 {
-                    $bet = '50.00';
+                    $bet = '100.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));

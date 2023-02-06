@@ -94,7 +94,7 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 else
                 {
                     $strOtherResponse = $strOtherResponse . '&mbr=1,1,1';
-                    $bet = '50.00';
+                    $bet = '100.00';
                 }
                 if(isset($stack)){
                     $currentReelSet = $stack['reel_set'];
