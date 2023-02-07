@@ -2,8 +2,8 @@
     <div class="login_modal evolution_modal modal-dialog">
         <div class="modal-head">
   			<span class="title">
-  				<p>IRIS에 오신 것을 환영합니다.</p>
-  				<p class="sub">성공적인 베팅을 위한 파트너 IRIS!</p>
+  				<p>@yield('page-title')에 오신 것을 환영합니다.</p>
+  				<p class="sub">성공적인 베팅을 위한 파트너 @yield('page-title')!</p>
   			</span>
             <a href="#" class="close-btn" data-dismiss="modal"><i class="fa fa-times"></i></a>
         </div>
