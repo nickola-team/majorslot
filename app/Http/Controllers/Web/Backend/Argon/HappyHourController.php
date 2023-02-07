@@ -112,7 +112,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $happyhour = $request->id;
             $jp = \VanguardLTE\HappyHourUser::where('id', $happyhour)->first();
             event(new \VanguardLTE\Events\Jackpot\DeleteJackpot($jp));
-            $jp->delete();
+            // $jp->delete();
+            $jp->update(['status' => 2]);
             return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['유저콜이 삭제되었습니다']);
         }
 
