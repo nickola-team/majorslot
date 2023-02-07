@@ -49,9 +49,16 @@
 .con_box60 {float:left; width:100%; margin:60px 0 0 0;}
 
 .game {margin:0 auto; width:100%;}
-.game ul { float:left; text-align:center; }
-.game ul li {display:inline-block; text-align:center; margin: 3px}
-.game ul li img:hover {box-shadow:rgba(54,30,5,0.7) 0 0 30px 0;}
+.game .categorylist {width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;margin: 20px auto 10px auto;}
+.game .categorylist li {display:inline-block; text-align:center; margin: 3px}
+.game .categorylist li img:hover {box-shadow:rgba(54,30,5,0.7) 0 0 30px 0;}
+
+.game {margin:0 auto; width:100%;}
+.game .gamelist { float:left; text-align:center; }
+.game .gamelist li {display:inline-block; text-align:center; margin: 3px}
+.game .gamelist li img {width: 240px;height: 172px;}
+.game .gamelist li img:hover {box-shadow:rgba(54,30,5,0.7) 0 0 30px 0;}
+
 
 .check {float:left; width:320px; height:130px; background:rgba(0,0,0,0.5) url(../images/check.png) center center no-repeat; position:absolute; z-index:10000; text-align:center; font-size:20px; font-family:'GmarketSans'; font-weight:700; color:#f7f7f7; line-height:26px; top:0px; left:0px; padding:45px 0 0 0; text-shadow:1px 5px 5px #000000;}
 .check span{color:rgba(200,0,0,0.9);}
@@ -141,7 +148,7 @@
 .notice_popup_btn_wrap {float:right;}
 .notice_popup_btn_wrap ul li {float:left; margin:0 0 0 5px;}
 .notice_popup_btn {float:right; background:#ba9358; min-width:60px; height:36px; line-height:36px; padding:0 15px 0 15px; text-align:center; display:inline-block; font-family: 'Noto Sans KR', sans-serif; color:#000000; font-size:14px; font-weight:600;}
-.notice_popup_box {float:left; width:450px; height:500px; background:#000000; border:2px solid #ba9358; background:#111111;}
+.notice_popup_box {float:left; width:450px; background:#000000; border:2px solid #ba9358; background:#111111;}
 .notice_popup_text {float:left; width:100%;}
-.notice_popup_font1 {float:left; width:100%; font-family: 'Noto Sans KR', sans-serif; font-size:22px; letter-spacing:-1px; font-weight:700; color:#ffffff; line-height:40px;}
-.notice_popup_font2 {float:left; width:100%; font-family: 'Noto Sans KR', sans-serif; font-size:16px; letter-spacing:-1px; font-weight:400; color:#d4d4d4; line-height:28px;}
+.notice_popup_font1 {float:left; width:100%; padding:5px;  font-family: 'Noto Sans KR', sans-serif; font-size:22px; letter-spacing:-1px; font-weight:700; color:#ffffff; line-height:40px;}
+.notice_popup_font2 {float:left; width:100%; padding:5px; font-family: 'Noto Sans KR', sans-serif; font-size:16px; letter-spacing:-1px; font-weight:400; color:#d4d4d4; line-height:28px;}

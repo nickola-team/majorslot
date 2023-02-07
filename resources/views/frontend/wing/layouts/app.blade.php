@@ -32,10 +32,10 @@
 	<!-- ★메인★ -->
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'kdior'])
+			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'wing'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'kdior'])
+			@include('frontend.kdior.layouts.partials.header', ['logo' => 'wing'])
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">

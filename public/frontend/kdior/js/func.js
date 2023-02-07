@@ -767,16 +767,16 @@ function slotGame(category, title){
 				return;
 			}
 			if (data.games.length > 0) {
-				var htmldoc = `<ul>`;
+				var htmldoc = `<ul class="gamelist">`;
 				for (i=0;i<data.games.length;i++)
 				{
 					if (data.games[i].provider)
 					{
-						htmldoc += `<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');"><img src="${data.games[i].icon}" style="width:240px;height:172px;"><img src="${data.games[i].icon}" class="mouseover3" style="display:none;width:240px;height:172px;"><br>${data.games[i].title}</a></li>`;
+						htmldoc += `<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');"><img src="${data.games[i].icon}"><img src="${data.games[i].icon}" class="mouseover3" style="display:none;"><br>${data.games[i].title}</a></li>`;
 					}
 					else
 					{
-						htmldoc += `<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGameByProvider(null, '${data.games[i].name}');"><img src="/frontend/Default/ico/${data.games[i].name}.jpg" style="width:240px;height:172px;"><img src="/frontend/Default/ico/${data.games[i].name}.jpg" class="mouseover3" style="display:none;width:240px;height:172px;"><br>${data.games[i].title}</a></li>`;
+						htmldoc += `<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGameByProvider(null, '${data.games[i].name}');"><img src="/frontend/Default/ico/${data.games[i].name}.jpg" ><img src="/frontend/Default/ico/${data.games[i].name}.jpg" class="mouseover3" style="display:none;"><br>${data.games[i].title}</a></li>`;
 					}
 				}
 				htmldoc += `</ul>`;

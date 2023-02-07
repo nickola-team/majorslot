@@ -25,7 +25,7 @@
                     <tr>
                         <td class="write_title">충전금액</td>
                         <td class="write_basic">
-                            <input name="IC_Amount" id="IC_Amount" value="0" class="input1" size="30"><br>
+                            <input name="IC_Amount" id="IC_Amount" value="0" class="input1"><br>
                             <a href="#"><span class="btn1_2" onclick="moneyadd('10,000');">1만원</span></a>  
                             <a href="#"><span class="btn1_2" onclick="moneyadd('50,000');">5만원</span></a> 
                             <a href="#"><span class="btn1_2" onclick="moneyadd('100,000');">10만원</span></a> 
@@ -61,13 +61,13 @@
                     <tbody>
                     <tr>
                         <td class="write_title">보유금액</td>
-                        <td class="write_basic"><input class="input1" size="30" value="{{number_format(auth()->user()->balance)}}" readonly=""></td>
+                        <td class="write_basic"><input class="input1" value="{{number_format(auth()->user()->balance)}}" readonly=""></td>
                     </tr> 
                                                                                                                                                                                                 
                     <tr>
                         <td class="write_title">출금금액</td>
                         <td class="write_basic">
-                            <input name="IE_Amount" id="IE_Amount" class="input1" size="30" value="0"><br>
+                            <input name="IE_Amount" id="IE_Amount" class="input1" value="0"><br>
                             <a href="#"><span class="btn1_2" onclick="moneyadd2('10,000');">1만원</span></a>  
                             <a href="#"><span class="btn1_2" onclick="moneyadd2('50,000');">5만원</span></a> 
                             <a href="#"><span class="btn1_2" onclick="moneyadd2('100,000');">10만원</span></a> 

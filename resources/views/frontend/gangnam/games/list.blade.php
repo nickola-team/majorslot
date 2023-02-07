@@ -1,4 +1,4 @@
-@extends('frontend.iris.layouts.app')
+@extends('frontend.gangnam.layouts.app')
 @section('page-title', $title)
 
 @section('content')

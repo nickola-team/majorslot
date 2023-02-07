@@ -1,9 +1,19 @@
-<div id="pop{{$notice->id}}" class="notice_popup1" style="position:absolute;top:50px;left:{{50+$loop->index * 200}}px;" >
-    <div class="notice_popup_wrap" style="position:absolute;top:50px;left:{{50+$loop->index * 200}}px;">
-        <div>
-            <div class="notice_popup_text" style="background-color: #000;border: 3px solid var(--c-10-20, #f9e569);">
+<div id="pop{{$notice->id}}" class="notice_popup1" 
+@if( $detect->isMobile() || $detect->isTablet() ) 
+@else
+    style="position:absolute;top:50px;left:{{50+$loop->index * 200}}px;" 
+@endif
+>
+    <div class="notice_popup_wrap" 
+@if( $detect->isMobile() || $detect->isTablet() ) 
+@else
+    style="position:absolute;top:50px;left:{{50+$loop->index * 200}}px;"
+@endif
+    >
+        <div class="notice_popup_box">
+            <div class="notice_popup_text" style="background:#222222;border: 3px solid var(--c-10-20, #f9e569);">
                 <span class="notice_popup_font2">
-                    <div style="background:#222222; border:1px solid #cccccc">
+                    <div style="background:#222222;">
                         <?php echo $notice->content; ?>
                     </div>
                 </span>

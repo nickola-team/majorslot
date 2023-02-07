@@ -38,7 +38,7 @@
         </div>
 
         <div class="logo">
-            <img src="/frontend/iris/img/iris_logo.png?v=1671720585" width="120">
+            <img src="/frontend/{{$logo}}/img/iris_logo.png?v=1671720585" width="120">
             <p> ⓒ @yield('page-title') Limited 2020.</p>
         </div>
 
