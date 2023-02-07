@@ -93,14 +93,14 @@
 </div>
 
 <div class="wrapper">
-    @include('frontend.iris.layouts.partials.header', ['logo' => 'iris'])
+    @include('frontend.iris.layouts.partials.header', ['logo' => 'gangnam'])
     @include('frontend.iris.layouts.partials.banner')
     @include('frontend.iris.layouts.partials.category')
     
     @yield('content')
 
     @include('frontend.iris.layouts.partials.board')
-    @include('frontend.iris.layouts.partials.footer', ['logo' => 'iris'])
+    @include('frontend.iris.layouts.partials.footer', ['logo' => 'gangnam'])
 
     @include('frontend.iris.modals.common')
     @auth()

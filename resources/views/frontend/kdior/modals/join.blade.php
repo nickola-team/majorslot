@@ -44,7 +44,7 @@
 						</tr>
 						<tr>
 							<td class="write_title">예금주</td>
-							<td class="write_basic"><input id="IU_BankOwner" name="IU_BankOwner" class="input1" placeholder="2자이상 한글, 영문만 가능"> (입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다)</td>
+							<td class="write_basic"><input id="IU_BankOwner" name="IU_BankOwner" class="input1" placeholder="2자이상 한글, 영문만 가능"><p> (입금과 출금시 사용하시는 실제 예금주명으로 기입하여 주시기 바랍니다)</td>
 						</tr>
 
 						<tr>

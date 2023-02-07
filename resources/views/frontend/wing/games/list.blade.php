@@ -1,4 +1,4 @@
-@extends('frontend.kdior.layouts.app')
+@extends('frontend.wing.layouts.app')
 @section('page-title', $title)
 
 @section('content')

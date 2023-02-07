@@ -1062,6 +1062,11 @@ return [
         "PizzaPizzaPizza" => "피자피자피자",
 
         "HotPepper" => "핫 페퍼",
-        "SweetPowernudge" => "스위트 파워넛지"
+        "SweetPowernudge" => "스위트 파워넛지",
+
+        "FuryofOdinMegaways" => "퓨리 오브 오딘 메가웨이즈",
+        "GatesofAztec" => "게이츠 오브 아즈텍",
+
+
 
 ];

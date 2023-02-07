@@ -34,20 +34,37 @@
 <div class="contents_wrap">
     <div class="con_box15">
         <table width="100%" border="0" align="center" cellspacing="5" cellpadding="0">
+            @auth()
             <tr>
                 <td width="5%"></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu1.png?v=202302021551" width="80%"></a></td>                       
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu2.png?v=202302021551" width="80%"></a></td>                       
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop1_open"><img src="/frontend/kdior/images/menu1.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#" class="sub_pop2_open"><img src="/frontend/kdior/images/menu2.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
                 <td width="5%"></td>
             </tr>
             <tr>
                 <td width="5%"></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu4.png?v=202302021551" width="80%"></a></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu5.png?v=202302021551" width="80%"></a></td>
-                <td width="30%" align="center"><a href="/login.asp"><img src="/frontend/kdior/images/menu6.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop5_open"><img src="/frontend/kdior/images/menu4.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop8_open" onclick="deposit_detail();"><img src="/frontend/kdior/images/menu5.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop9_open" onclick="withdraw_detail();"><img src="/frontend/kdior/images/menu6.png?v=202302021551" width="80%"></a></td>
                 <td width="5%"></td>
-            </tr>                                
+            </tr>
+            @else
+            <tr>
+                <td width="5%"></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu1.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu2.png?v=202302021551" width="80%"></a></td>                       
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
+                <td width="5%"></td>
+            </tr>
+            <tr>
+                <td width="5%"></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu4.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu5.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu6.png?v=202302021551" width="80%"></a></td>
+                <td width="5%"></td>
+            </tr>
+            @endif                              
         </table>                 	
     </div> 
     <script type="text/javascript" src="/frontend/kdior/js/sk_table.js"></script><!-- sk_table -->    
@@ -55,11 +72,22 @@
         <div class="main_con1_title"><img src="/frontend/kdior/images/main_con3_title_550.png" width="100%"></div>
         <div class="main_con1">          
             <table width="98%" align="center" border="0" cellspacing="0" cellpadding="0">
-
-                <tr>
-                    <td style="width: 200px; overflow-x: hidden;"><a href="/login.asp">씨큐점검</a></td>
-                    <td align="right"><span class="font15">2022-01-08</span></td>
-                </tr>
+                @if (count($noticelist) > 0)
+                    @foreach ($noticelist as $ntc)
+                        <tr>
+                            @auth()
+                            <td style="width:200px; overflow-x: hidden;"><a href="#" class="sub_pop3_open">{{$ntc->title}}</a></td>
+                            @else
+                            <td style="width:200px; overflow-x: hidden;"><a href="#">{{$ntc->title}}</a></td>
+                            @endif
+                            <td align="right"><span class="font15">{{date('Y-m-d',strtotime($ntc->date_time))}}</span></td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td align="center">공지사항이 없습니다</td>
+                    </tr>
+                @endif
             </table>                  
         </div>
     </div>  	
