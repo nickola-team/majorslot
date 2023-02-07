@@ -15,7 +15,11 @@
 						<li>
 							<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
 							@auth 
+								@if ($category->status == 0)
+								onclick="alert('점검중입니다');"
+								@else
 								onclick="casinoGameStart('{{$category->href}}');"
+								@endif
 							@endif
 							>
 							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png">
@@ -44,7 +48,11 @@
 						<li>
 							<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
 							@auth 
+								@if ($category->status == 0)
+								onclick="alert('점검중입니다');"
+								@else
 								onclick="casinoGameStart('{{$category->href}}');"
+								@endif
 							@endif
 							>
 							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png">
@@ -74,9 +82,13 @@
 						@if ($category->type =='slot')
 						<li>
 							<a href="#"  onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
-							@auth 
+							@auth
+								@if ($category->status == 0)
+								onclick="alert('점검중입니다');"
+								@else
 								class="casino_3_close etc_pop1_open"
 								onclick="slotGame('{{$category->href}}', '{{$category->trans?$category->trans->trans_title:$category->title}}');"
+								@endif
 							@else
 								class="casino_3_close etc_pop2_open" 
 							@endif
