@@ -52,7 +52,10 @@
 	@auth()
 		@include('frontend.kdior.modals.common')
 	@else
+		@if( $detect->isMobile() || $detect->isTablet() ) 
+		@else
 		@include('frontend.kdior.modals.login')
+		@endif
 		@include('frontend.kdior.modals.join')
 	@endif
 
