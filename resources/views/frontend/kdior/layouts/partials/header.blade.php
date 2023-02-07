@@ -8,7 +8,7 @@
                     <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/gnb3.png?v=202301301150"></a></li>                           
                 </ul>
             </div>
-            <div class="logo" style="margin-left:-130px;"><a href="/"><img src="/frontend/kdior/images/logo.png?v=202301301150" class="bounce" width="260px"></a></div>
+            <div class="logo" style="margin-left:-130px;"><a href="/"><img src="/frontend/{{$logo}}/images/logo.png?v=202301301150" class="bounce" width="260px"></a></div>
             <div class="login">
                 <ul>
                     @auth()
