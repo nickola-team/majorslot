@@ -20,5 +20,18 @@
                 </div>
             </div>
         </div>
+        <div class="carousel-text-cont1">
+            <div class="ct-center">
+                <div class="carousel-ct carousel" data-ride="carousel" data-pause="false">
+                    <div class="carousel-inner">
+                      <div class="item active">
+                        <div class="text-cont">
+                          <img src="/frontend/iris/theme/sp/images/banner/bn_text_intro.png" class="welcomeText">
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

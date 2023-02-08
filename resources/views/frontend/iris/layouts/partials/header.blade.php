@@ -1,13 +1,7 @@
 <div class="nav-main">
     <div class="nav-center">
         <a href="/" class="logo">
-            <table style="border: 0; padding:0; height:100%;">
-                <tr>
-                    <td valign="middle">
-                        <img src="/frontend/{{$logo}}/img/iris_logo.png?v=1671720585" style="margin-left:10px; margin-top:10px">
-                    </td>
-                </tr>
-            </table>
+            <img src="/frontend/{{$logo}}/img/iris_logo.png?v=1671720585">
         </a>
         <button class="m-menu-btn"><i class="fa fa-bars"></i></button>
         <ul>
