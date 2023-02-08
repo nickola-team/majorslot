@@ -73,8 +73,8 @@ namespace VanguardLTE\Games\LuckyDragonBallPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0];
             $this->Paytable[3] = [0,0,0,15,50,100];
             $this->Paytable[4] = [0,0,0,10,25,50];
             $this->Paytable[5] = [0,0,0,8,15,25];
