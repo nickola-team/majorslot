@@ -786,6 +786,10 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $bonusWin = 1;
                 $_obf_grantbonus_count = 0;
                 $game->{'winbonus' . $_obf_granttype . $_obf_linecount} = $this->getNewSpin($game, 0, 1, $lines, $garantType);
+                if ($this->happyhouruser)
+                {
+                    $game->{'winbonus' . $_obf_granttype . $_obf_linecount} = rand(0,50);
+                }
             }
             else if( $_obf_winline_count <= $_obf_grantwin_count ) 
             {
