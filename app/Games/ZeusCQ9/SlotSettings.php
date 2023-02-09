@@ -1148,23 +1148,27 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            if ($this->happyhouruser && $index<=2)
+                            if ($this->happyhouruser && $index<=2 && $winType == 'win')
                             {
                                 $highsymbols = [1,2,3,4,5];
+                                $selectedsymbol = $highsymbols[rand(0, count($highsymbols)-1)];
+
                                 $chance = rand(0, 10);
                                 if ($chance < 8)
                                 {
                                     $trycount = 0;
-                                    do{
+                                    do
+                                    {
                                         $selidx = mt_rand(0, count($this->$reelStrip) - 3);
                                         $_obf_reelStripCounts[$index + 1] = $selidx;
-                                        if (in_array($this->$reelStrip[$selidx], $highsymbols))
+                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+1]];
+                                        if (in_array($selectedsymbol, $shownsyms))
                                         {
                                             break;
                                         }
                                         $trycount = $trycount + 1;
                                     }
-                                    while ($trycount<10);
+                                    while ($trycount<20);
                                 }
                                 else
                                 {
@@ -1213,23 +1217,27 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            if ($this->happyhouruser && $index<=2)
+                            if ($this->happyhouruser && $index<=2 && $winType == 'win')
                             {
                                 $highsymbols = [1,2,3,4,5];
+                                $selectedsymbol = $highsymbols[rand(0, count($highsymbols)-1)];
+
                                 $chance = rand(0, 10);
                                 if ($chance < 8)
                                 {
                                     $trycount = 0;
-                                    do{
+                                    do
+                                    {
                                         $selidx = mt_rand(0, count($this->$reelStrip) - 3);
                                         $_obf_reelStripCounts[$index + 1] = $selidx;
-                                        if (in_array($this->$reelStrip[$selidx], $highsymbols))
+                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+1]];
+                                        if (in_array($selectedsymbol, $shownsyms))
                                         {
                                             break;
                                         }
                                         $trycount = $trycount + 1;
                                     }
-                                    while ($trycount<10);
+                                    while ($trycount<20);
                                 }
                                 else
                                 {
@@ -1239,9 +1247,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                             else
                             {
                                 $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
-                            }
-                            
-                            
+                            }                            
                         }
                     }
                 }
