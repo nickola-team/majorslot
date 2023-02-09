@@ -1148,7 +1148,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            if ($this->happyhouruser && $index<=2 && $winType == 'win')
+                            if ($this->happyhouruser && $index<=3 && $winType == 'win')
                             {
                                 $highsymbols = [1,2,3,4,5];
                                 $selectedsymbol = $highsymbols[rand(0, count($highsymbols)-1)];
@@ -1217,7 +1217,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            if ($this->happyhouruser && $index<=2 && $winType == 'win')
+                            if ($this->happyhouruser && $index<=3 && $winType == 'win')
                             {
                                 $highsymbols = [1,2,3,4,5];
                                 $selectedsymbol = $highsymbols[rand(0, count($highsymbols)-1)];
