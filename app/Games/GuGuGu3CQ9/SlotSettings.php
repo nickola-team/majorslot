@@ -94,7 +94,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,
-                'time' => date('G')
+                // 'time' => date('G')
             ])->first();
             //------- *** -------//
             $user->balance = $credits != null ? $credits : $user->balance;

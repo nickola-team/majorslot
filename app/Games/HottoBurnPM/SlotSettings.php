@@ -73,8 +73,8 @@ namespace VanguardLTE\Games\HottoBurnPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0];
             $this->Paytable[3] = [0,0,0,100,1000,5000];
             $this->Paytable[4] = [0,0,0,50,200,500];
             $this->Paytable[5] = [0,0,0,50,200,500];
