@@ -1161,7 +1161,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                                     {
                                         $selidx = mt_rand(0, count($this->$reelStrip) - 3);
                                         $_obf_reelStripCounts[$index + 1] = $selidx;
-                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+1]];
+                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+2]];
                                         if (in_array($selectedsymbol, $shownsyms))
                                         {
                                             break;
@@ -1230,7 +1230,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                                     {
                                         $selidx = mt_rand(0, count($this->$reelStrip) - 3);
                                         $_obf_reelStripCounts[$index + 1] = $selidx;
-                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+1]];
+                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+2]];
                                         if (in_array($selectedsymbol, $shownsyms))
                                         {
                                             break;
