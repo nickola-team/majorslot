@@ -1148,7 +1148,33 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            if ($this->happyhouruser && $index<=2)
+                            {
+                                $highsymbols = [1,2,3,4,5];
+                                $chance = rand(0, 10);
+                                if ($chance < 8)
+                                {
+                                    $trycount = 0;
+                                    do{
+                                        $selidx = mt_rand(0, count($this->$reelStrip) - 3);
+                                        $_obf_reelStripCounts[$index + 1] = $selidx;
+                                        if (in_array($this->$reelStrip[$selidx], $highsymbols))
+                                        {
+                                            break;
+                                        }
+                                        $trycount = $trycount + 1;
+                                    }
+                                    while ($trycount<10);
+                                }
+                                else
+                                {
+                                    $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                                }
+                            }
+                            else
+                            {
+                                $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            }
                         }
                     }
                 }
@@ -1187,7 +1213,35 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            if ($this->happyhouruser && $index<=2)
+                            {
+                                $highsymbols = [1,2,3,4,5];
+                                $chance = rand(0, 10);
+                                if ($chance < 8)
+                                {
+                                    $trycount = 0;
+                                    do{
+                                        $selidx = mt_rand(0, count($this->$reelStrip) - 3);
+                                        $_obf_reelStripCounts[$index + 1] = $selidx;
+                                        if (in_array($this->$reelStrip[$selidx], $highsymbols))
+                                        {
+                                            break;
+                                        }
+                                        $trycount = $trycount + 1;
+                                    }
+                                    while ($trycount<10);
+                                }
+                                else
+                                {
+                                    $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                                }
+                            }
+                            else
+                            {
+                                $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            }
+                            
+                            
                         }
                     }
                 }
