@@ -806,7 +806,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $spin_percent = 8;
                 if ($garantType == 'freespin')
                 {
-                    $spin_percent = 7;
+                    $spin_percent = 9;
                 }
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
             }
