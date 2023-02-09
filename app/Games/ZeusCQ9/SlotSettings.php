@@ -799,10 +799,10 @@ namespace VanguardLTE\Games\ZeusCQ9
             if ($this->happyhouruser)
             {
                 $bonus_spin = rand(1, 10);
-                $spin_percent = 5;
+                $spin_percent = 8;
                 if ($garantType == 'freespin')
                 {
-                    $spin_percent = 3;
+                    $spin_percent = 7;
                 }
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
             }
