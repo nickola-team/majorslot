@@ -313,6 +313,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $amount = $amount - $main_amount;
                 }
             }
+            else if ($betInfo == 3) //cancel betting
+            {
+                return response()->json([
+                    'result' => true,
+                    'message' => 'bet cancel',
+                    'data' => [
+                        'balance' => $user->balance,
+                    ]
+                ]);
+            }
 
             if ($user->balance < $amount)
             {
