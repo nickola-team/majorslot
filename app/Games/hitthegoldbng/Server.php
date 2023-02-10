@@ -1099,7 +1099,7 @@ namespace VanguardLTE\Games\hitthegoldbng
                 'player_id' => $slotSettings->playerId,
                 'brand' => 'major',
                 'tag' => '',
-                'game_id' => 228,
+                'game_id' => $slotSettings->game->original_id,
                 'game_name' => 'hit_the_gold_bng',
                 'currency' => 'KRW',
                 'mode' => 'REAL',
