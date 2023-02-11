@@ -34,7 +34,8 @@ document.location.href='../../';
 <body style="margin:0px;width:100%;background-color:black;overflow:hidden">
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src="/games/scarabrichesbng/game.html?token=_major:17390&game=scarab_riches&lang=ko&sound=1&quickspin=1&ts=1645537656&exit_url=&cashier_url=&history_url=/op/major/history.html&player_id=@if( auth()->user() != null){{ auth()->user()->id }}@endif&game_id={{isset($envID)?$envID:0}}&currency=KRW&mode=REAL&brand=major&tz=0&lang=ko&mobile=0&title=&wl=prod" allowfullscreen>
+
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/_WildWildBananasPM/openGame.do?lang=en&cur=@if( auth()->user() != null && auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vswayswwhex&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}' allowfullscreen>
 
 
 
