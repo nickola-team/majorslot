@@ -617,7 +617,7 @@ namespace VanguardLTE\Games\tigerstonebng
                 'brand' => 'major',
                 'tag' => '',
                 'game_id' => $slotSettings->game->original_id,
-                'game_name' => 'tiger_stone_bng',
+                'game_name' => 'tigerstonebng',
                 'currency' => 'KRW',
                 'mode' => 'REAL',
                 'bet' => $allBet,
