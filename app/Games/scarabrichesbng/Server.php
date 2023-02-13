@@ -715,7 +715,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                 'brand' => 'major',
                 'tag' => '',
                 'game_id' => $slotSettings->game->original_id,
-                'game_name' => 'scarab_riches_bng',
+                'game_name' => 'scarabrichesbng',
                 'currency' => 'KRW',
                 'mode' => 'REAL',
                 'bet' => $allBet,
