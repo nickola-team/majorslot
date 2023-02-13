@@ -523,9 +523,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'gameId' => $record->game_id,
                         'betAmount' => $betAmount,
                         'winAmount' => $winAmount,
-                        'response' => intval($old_balance),
-                        'status' => 1
-                    ])
+
+                    ]),
+                    'response' => intval($old_balance),
+                    'status' => 1
                 ]);
                 return ['error'=>false,'win' => $winAmount];
             }
