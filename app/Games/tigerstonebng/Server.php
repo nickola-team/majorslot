@@ -585,15 +585,15 @@ namespace VanguardLTE\Games\tigerstonebng
             
             $profit = ($allBet ?? 0) - $win;
             $context = $objRes['context'];
-            if(isset($context['spins'])){
-                $spins = $context['spins'];
-                $state = 'spins';
+            if(isset($context['bonus'])){
+                $spins = $context['bonus'];
+                $state = 'bonus';
             }else if(isset($context['freespins'])){
                 $spins = $context['freespins'];
                 $state = 'freespins';
-            }else if(isset($context['bonus'])){
-                $spins = $context['bonus'];
-                $state = 'bonus';
+            }else if(isset($context['spins'])){
+                $spins = $context['spins'];
+                $state = 'spins';
             }else{
                 // throw error
                 return;
