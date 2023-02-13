@@ -1067,6 +1067,9 @@ return [
         "FuryofOdinMegaways" => "퓨리 오브 오딘 메가웨이즈",
         "GatesofAztec" => "게이츠 오브 아즈텍",
 
+        //Booongo
+        "tigerstone" => "타이거 스톤",
+
 
 
 ];
