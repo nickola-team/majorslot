@@ -453,11 +453,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $json_data = json_decode($record->data, true);
 
-            $userbets = $data['betHistories'];
 
 
-            if (count($userbets) > 0) //found bet history
+            if (isset($data['betHistories'][$gameId])) //found bet history
             {
+                $userbets = $data['betHistories'][$gameId];
+
                 $betId = 0;
                 $winAmount = 0;
                 $betAmount = 0;
