@@ -756,7 +756,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             else
             {
-                return redirect()->back()->withErrors(['결과처리를 할수 없습니다']);
+                \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::cancelResult($gacid);
+
+                return redirect()->back()->withSuccess(['취소처리 되었습니다']);
             }
             
 
