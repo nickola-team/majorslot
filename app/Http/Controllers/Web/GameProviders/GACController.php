@@ -219,8 +219,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function placebet(\Illuminate\Http\Request $request)
         {
-            $rand = mt_rand(0,30);
-            sleep($rand);
             \DB::beginTransaction();
             $data = json_decode($request->getContent(), true);
             $userId = isset($data['userId'])?$data['userId']:0;

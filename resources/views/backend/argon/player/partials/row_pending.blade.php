@@ -23,7 +23,6 @@
 <td>미결중</td>
 @if (auth()->user()->hasRole('admin'))
 <td>
-<a href="{{argon_route('argon.player.processgame', ['id' => $stat->id])}}" ><button class="btn btn-success btn-sm">결과처리</button></a>
-<a href="{{argon_route('argon.player.cancelgame', ['id' => $stat->id])}}" ><button class="btn btn-warning btn-sm">취소처리</button></a>
+<a href="{{argon_route('argon.player.processgame', ['id' => $stat->id])}}" ><button class="btn btn-success btn-sm">수동처리</button></a>
 </td>
 @endif
