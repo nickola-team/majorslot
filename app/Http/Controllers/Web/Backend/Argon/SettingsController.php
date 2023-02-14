@@ -200,12 +200,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             $serverstat = server_stat();
             $bnnmoney = -1;
-            $tpnmoney = -1;
             $kuzanmoney = -1;
             try
             {
                 $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
-                $tpnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getAgentBalance();
                 $kuzanmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KUZAController::getAgentBalance();
 
             }
@@ -215,7 +213,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             $agents = [
                 'bnn' => $bnnmoney,
-                'tp' => $tpnmoney,
                 'kuza' => $kuzanmoney
             ];
             $strinternallog = '';
@@ -240,6 +237,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             return view('backend.argon.setting.system', compact('serverstat','agents','strinternallog', 'filesize'));
+        }
+        public function logreset(\Illuminate\Http\Request $request)
+        {
+            $laravel = storage_path('logs/laravel.log');
+            if (file_exists($laravel)) {     // Make sure we don't create the file
+                $fp = fopen($laravel, 'w');  // Sets the file size to zero bytes
+                fclose($fp);
+            }
+            return redirect()->back()->withSuccess(['로그파일을 리셋하였습니다']);
         }
 
         public function xmx_withdrawall(\Illuminate\Http\Request $request)

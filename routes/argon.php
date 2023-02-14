@@ -422,6 +422,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'SettingsController@xmx_withdrawall',
         ]);
 
+        Route::get('system/logreset', [
+            'as' => 'argon.system.logreset',
+            'uses' => 'SettingsController@logreset',
+        ]);
+
         /**
          * Game routes
          */
