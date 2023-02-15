@@ -218,7 +218,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'agentId' => $op,
                     'token' => $token,
                     'transactionID' => uniqid(self::KTEN_PROVIDER),
-                    'userID' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                     'time' => time(),
                 ];
 
@@ -275,7 +275,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                 'time' => time(),
             ];
-            $alreadyUser = 0;
+            $alreadyUser = 1;
             try
             {
 
@@ -294,7 +294,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 if ($data['errorCode'] == 4)
                 {
-                    $alreadyUser = 1;
+                    $alreadyUser = 0;
                 }
             }
             catch (\Exception $ex)
@@ -310,6 +310,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'token' => $token,
                     'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                     'time' => time(),
+                    'email' => self::KTEN_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
                 ];
                 try
                 {
@@ -356,11 +358,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     //addMemberPoint
                     $params = [
-                        'amount' => $user->balance,
+                        'amount' => floatval($user->balance),
                         'agentId' => $op,
                         'token' => $token,
                         'transactionID' => uniqid(self::KTEN_PROVIDER),
-                        'userID' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                        'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                         'time' => time(),
                     ];
                     try {
@@ -535,7 +537,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $betdata = json_decode($round['details'],true);
                             $bet = $betdata['bet'];
                             $win = $betdata['win'];
-                            $balance = $betdata['balance'];
+                            $balance = $betdata['balance']??0;
                         }
                         else
                         {

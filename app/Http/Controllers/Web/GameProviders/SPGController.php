@@ -40,6 +40,44 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return null;
         }
 
+        public static function getHmac(
+                            string $httpMethod,
+                            string $uri,
+                            string $utf8EncodedContent
+                            )
+        {
+            $apiKey = 'a90763b71b6e43aba4b0a959914b9bd6';
+            $secret = 'OZ+cq1HeLDYM1OUxYVDAUW+BgiEBnMmCvrqKD1/w749ICoLIgJ1dfO4bcNY959+J8wyNLBoeRWy5dE5HbfJuSw==';
+            $timestamp = time();
+            $nonce = uniqid(self::SPG_PROVIDER);
+            $payload = SPGController::buildPayload($httpMethod, $uri, $utf8EncodedContent, $timestamp, $nonce);
+            $hash = SPGController::getHmacHash($payload);
+            return "Hmac {$apiKey}:{$hash}:{$nonce}:{$timestamp}";
+        }
+
+        public static function getHmacHash(string $payload) {
+            $secret = 'OZ+cq1HeLDYM1OUxYVDAUW+BgiEBnMmCvrqKD1/w749ICoLIgJ1dfO4bcNY959+J8wyNLBoeRWy5dE5HbfJuSw==';
+            return base64_encode(hash_hmac('sha256', $payload, base64_decode($secret), true));
+        }
+    
+        public static function buildPayload(
+            string $httpMethod,
+            string $uri,
+            string $utf8EncodedContent,
+            int $timestamp, 
+            string $nonce) {
+                $apiKey = 'a90763b71b6e43aba4b0a959914b9bd6';
+                $contentHash = '';
+    
+                if (strlen($utf8EncodedContent) > 0) {
+                    $decoded = utf8_decode($utf8EncodedContent);
+                    $contentHash = base64_encode(md5($decoded, true));
+                }
+    
+                $encodedUri = strtolower(urlencode($uri));
+                return "{$apiKey}{$httpMethod}{$encodedUri}{$timestamp}{$nonce}{$contentHash}";
+        }
+
         /*
         * FROM SPG, BACK API
         */
