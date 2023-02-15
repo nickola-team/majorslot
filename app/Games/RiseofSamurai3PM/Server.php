@@ -525,6 +525,9 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
                     $strOtherResponse = $strOtherResponse . '&mbp=' . implode(',', $arr_mbp) . '&mbv=' . implode(',', $arr_mbv);
                 }
                 $strOtherResponse = $strOtherResponse . '&ls=0&mbri=1,2,3&mbr=' . $str_mbr;
+                if($str_initReel != ''){
+                    $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
+                }
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }

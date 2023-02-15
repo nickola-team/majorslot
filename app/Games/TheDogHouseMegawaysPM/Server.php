@@ -449,6 +449,9 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 if($pur >= 0){
                     $strOtherResponse = $strOtherResponse . '&purtr=1';
                 }
+                if($str_initReel != ''){
+                    $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
+                }
                 if($str_wlm_v != ''){
                     $strOtherResponse = $strOtherResponse . '&wlm_v='. $str_wlm_v .'&wlm_p='. $str_wlm_p;
                 }

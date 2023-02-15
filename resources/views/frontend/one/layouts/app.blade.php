@@ -394,7 +394,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/jungle/images/partner.png" /><br /><br />Copyright ⓒ
-            2022~2023 ONE  All rights reserved.
+            2022~2023 SUNCASINO  All rights reserved.
           </div>
          </div>
          <div>
