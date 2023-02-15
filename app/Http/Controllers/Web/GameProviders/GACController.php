@@ -315,39 +315,59 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else if ($betInfo == 3) //cancel betting
             {
-                return response()->json([
-                    'result' => true,
-                    'message' => 'bet cancel',
-                    'data' => [
-                        'balance' => $user->balance,
-                    ]
-                ]);
+                $record = \VanguardLTE\GACTransaction::where([
+                    'user_id' => $userId,
+                    'game_id' => $gameId,
+                    'betInfo' => 1,
+                    'type' => 1
+                    ])->first();
+                if ($record)
+                {
+                    $user->balance = $user->balance + intval($amount);
+                    $user->save();
+                    $user = $user->fresh();
+                    $record->update(['status' => 2]);
+                }
+                else
+                {
+                    \VanguardLTE\GACTransaction::create([
+                        'user_id' => $userId, 
+                        'game_id' => $gameId,
+                        'betInfo' => $betInfo,
+                        'type' => 1,
+                        'data' => json_encode($data),
+                        'response' => $user->balance,
+                        'status' => 0
+                    ]);
+                }
             }
-
-            if ($user->balance < $amount)
+            else if ($betInfo == 1) //normal betting
             {
-                return response()->json([
-                    'result' => false,
-                    'message' => 'balance is not enough',
-                    'data' => [
-                        'balance' => $user->balance,
-                    ]
+                if ($user->balance < $amount)
+                {
+                    return response()->json([
+                        'result' => false,
+                        'message' => 'balance is not enough',
+                        'data' => [
+                            'balance' => $user->balance,
+                        ]
+                    ]);
+                }
+
+                $user->balance = $user->balance - intval($amount);
+                $user->save();
+                $user = $user->fresh();
+
+                \VanguardLTE\GACTransaction::create([
+                    'user_id' => $userId, 
+                    'game_id' => $gameId,
+                    'betInfo' => $betInfo,
+                    'type' => 1,
+                    'data' => json_encode($data),
+                    'response' => $user->balance,
+                    'status' => 0
                 ]);
             }
-
-            $user->balance = $user->balance - intval($amount);
-            $user->save();
-            $user = $user->fresh();
-
-            \VanguardLTE\GACTransaction::create([
-                'user_id' => $userId, 
-                'game_id' => $gameId,
-                'betInfo' => $betInfo,
-                'type' => 1,
-                'data' => json_encode($data),
-                'response' => $user->balance,
-                'status' => 0
-            ]);
             \DB::commit();
             return response()->json([
                 'result' => true,
