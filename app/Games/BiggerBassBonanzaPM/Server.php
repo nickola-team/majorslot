@@ -377,6 +377,15 @@ namespace VanguardLTE\Games\BiggerBassBonanzaPM
                         }
                     }
                 }
+                $arr_srf = [];
+                if($str_trail == 'visual_feature~dynamite'){
+                    $arr_initReel = explode(',', $str_initReel);
+                    for($k = 0; $k < 20; $k++){
+                        if($lastReel[$k] == 7 && $arr_initReel[$k] != 7){
+                            $arr_srf[] = $arr_initReel[$k] . '~7~' . $k;
+                        }
+                    }
+                }
                 $_lineWinNumber = 1;
                 $_obf_winCount = 0;
                 for( $k = 0; $k < $lines; $k++ ) 
@@ -518,7 +527,7 @@ namespace VanguardLTE\Games\BiggerBassBonanzaPM
                     $strOtherResponse = $strOtherResponse . '&stf=' . $str_stf;
                 }
                 if($str_trail != ''){
-                    $strOtherResponse = $strOtherResponse . '&srf=&trail=' . $str_trail;
+                    $strOtherResponse = $strOtherResponse . '&srf='. implode(';', $arr_srf) .'&trail=' . $str_trail;
                 }
                 if($mo_tv > 0){
                     $strOtherResponse = $strOtherResponse . '&mo_tv=' . $mo_tv . '&mo_tw=' . $moneyWin;
