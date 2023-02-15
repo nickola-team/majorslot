@@ -307,6 +307,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                 $str_slm_mv = '';
                 $fsmax = 0;
                 $fsmore = 0;
+                $str_initReel = '';
                 $scatterWin = 0;
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
@@ -314,6 +315,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                     $lastReel = explode(',', $stack['reel']);
                     $currentReelSet = $stack['reel_set'];
                     $fsmore = $stack['fsmore'];
+                    $str_initReel = $stack['initreel'];
                     $fsmax = $stack['fsmax'];
                     $str_sty = $stack['sty'];
                     $str_trail = $stack['trail'];
@@ -333,6 +335,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                     $lastReel = explode(',', $stack[0]['reel']);
                     $currentReelSet = $stack[0]['reel_set'];
                     $fsmore = $stack[0]['fsmore'];
+                    $str_initReel = $stack[0]['initreel'];
                     $fsmax = $stack[0]['fsmax'];
                     $str_sty = $stack[0]['sty'];
                     $str_trail = $stack[0]['trail'];
@@ -428,6 +431,9 @@ namespace VanguardLTE\Games\HotFiestaPM
                 }
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $strOtherResponse = $strOtherResponse . '&puri=0';
+                }
+                if($str_initReel != ''){
+                    $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
                 }
                 if($pur >= 0){
                     $strOtherResponse = $strOtherResponse . '&purtr=1';
