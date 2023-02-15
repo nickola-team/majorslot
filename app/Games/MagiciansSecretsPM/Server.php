@@ -405,8 +405,6 @@ namespace VanguardLTE\Games\MagiciansSecretsPM
                 $isState = true;
                 if($rs == 'mc'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'RespinState', $slotSettings->GetGameData($slotSettings->slotId . 'RespinState') + 1);
-                    $isState = false;
-                    $spinType = 's';
                 }
                 if( $freespinNum > 0 && $slotEvent['slotEvent'] == 'freespin') 
                 {
@@ -477,6 +475,8 @@ namespace VanguardLTE\Games\MagiciansSecretsPM
                     if($slotSettings->GetGameData($slotSettings->slotId . 'RespinState') > 1){
                         $strOtherResponse = $strOtherResponse . '&rs_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinWin');
                     }
+                    $isState = false;
+                    $spinType = 's';
                 }else{
                     if($isRespin == true){
                         $strOtherResponse = $strOtherResponse . '&rs_t='.$slotSettings->GetGameData($slotSettings->slotId . 'RespinState').'&rs_win='.$slotSettings->GetGameData($slotSettings->slotId . 'RespinWin');
