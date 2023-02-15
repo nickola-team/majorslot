@@ -524,6 +524,9 @@ namespace VanguardLTE\Games\WildWestGoldPM
                 if(count($arr_mbp) > 0){
                     $strOtherResponse = $strOtherResponse . '&mbp=' . implode(',', $arr_mbp) . '&mbv=' . implode(',', $arr_mbv);
                 }
+                if($str_initReel != ''){
+                    $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
+                }
                 $strOtherResponse = $strOtherResponse . '&ls=0&mbri=1,2,3&mbr=' . $str_mbr;
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
