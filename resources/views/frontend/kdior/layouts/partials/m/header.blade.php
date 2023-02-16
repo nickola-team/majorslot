@@ -2,6 +2,7 @@
     @auth()
         <div class="top">
             <div class="m_logo"><a href="/"><img src="/frontend/{{$logo}}/images/logo.png?v=202302021619" width="130"></a></div>
+            <div class="m_menu"><a href="#" onclick="$('.aside2').asidebar('open')"><img src="/frontend/kdior/images/m_menu.png" width="40"></a></div>
         </div>
         <div class="my_wrap">
             <img src='/frontend/kdior/img/lv1.png' align='absmiddle' width='35'>&nbsp;{{auth()->user()->username}}님 &nbsp;&nbsp;
