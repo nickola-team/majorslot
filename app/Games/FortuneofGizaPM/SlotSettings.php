@@ -580,7 +580,7 @@ namespace VanguardLTE\Games\FortuneofGizaPM
             $winline_count = $game->{'winline' . $granttype . $linecount};
             $grantwin_count++;
             if($isdoublechance == 1){
-                $grantbonus_count+=2;
+                $grantbonus_count++;
             }else{
                 $grantbonus_count++;
             }
