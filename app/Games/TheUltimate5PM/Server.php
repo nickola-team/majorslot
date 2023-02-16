@@ -573,9 +573,17 @@ namespace VanguardLTE\Games\TheUltimate5PM
                     } 
                 }
                 if($rs_c > 0 || $rs_t > 0){
-                    $strOtherResponse = $strOtherResponse . '&accm=cp&acci=1&pw='. ($mo_tv * $betline) .'&mo_tv=' . $mo_tv;
+                    $strOtherResponse = $strOtherResponse . '&accm=cp&acci=1';
                     if($rs_c > 0){
                         $isState = false;
+                        $arr_mo = explode(',', $str_mo);
+                        $pw = 0;
+                        for($k = 0; $k < 15; $k++){
+                            $pw += $arr_mo[$k] * $betline * $lines;
+                        }
+                        $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
+                    }else{
+                        $strOtherResponse = $strOtherResponse . '&mo_tv=' . $mo_tv;
                     }
                     if($str_mo_wpos != ''){
                         $strOtherResponse = $strOtherResponse . '&mo_wpos=' . $str_mo_wpos;
