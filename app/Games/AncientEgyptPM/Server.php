@@ -289,7 +289,7 @@ namespace VanguardLTE\Games\AncientEgyptPM
                         if($lastReel[$j * 5 + $i] == $scatter){
                             $scatterCount++;
                             $scatterPoses[] = $j * 5 + $i;   
-                        }else if($lastReel[$j * 5 + $i] == $bonusSymbol){
+                        }else if($me_bonusReelPoses[$i] == 0 && $lastReel[$j * 5 + $i] == $bonusSymbol){
                             $me_bonusCount++;
                             $me_bonusPoses[] = $j * 5 + $i;   
                             $me_bonusReelPoses[$i] = 1;
