@@ -394,7 +394,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/jungle/images/partner.png" /><br /><br />Copyright ⓒ
-            2022~2023 K-슬롯  All rights reserved.
+            2022~2023 전봇대  All rights reserved.
           </div>
          </div>
          <div>
