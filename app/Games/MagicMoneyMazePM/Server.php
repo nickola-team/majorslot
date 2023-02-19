@@ -367,7 +367,7 @@ namespace VanguardLTE\Games\MagicMoneyMazePM
                     $pw = $pw / $original_bet * $betline;
                 }
                 $moneyWin = 0;
-                if($apv > 0 && $rs_t > 0){
+                if($apv > 0 && ($rs_t > 0 || $rs_p < 0)){
                     $moneyWin = $betline * $apv;
                     $totalWin = $totalWin + $moneyWin;
                 }
