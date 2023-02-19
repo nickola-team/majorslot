@@ -1,4 +1,4 @@
-@extends('frontend.kslot.layouts.app')
+@extends('frontend.jonbodae.layouts.app')
 @section('page-title', $title)
 
 @section('content')
