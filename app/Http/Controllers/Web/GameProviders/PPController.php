@@ -1751,13 +1751,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gamename = $stat_game->game_id;
 
                 $pm_games = \VanguardLTE\Game::where('id', $stat_game->game_id)->first();
-                $gamelist1 = TPController::getgamelist('tp_pp');
+                $gamelist1 = KTENController::getgamelist('kten-pp');
                 foreach($gamelist1 as $game)
                 {
                     $gamename = $game['name'];
-                    // $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
-                    // $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
-                    if ($game['symbol'] == $pm_games->label)
+                    if ($game['gamecode'] == $pm_games->label)
                     {
                         $gamename = $game['enname'];
                         break;
