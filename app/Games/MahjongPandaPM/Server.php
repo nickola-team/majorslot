@@ -480,7 +480,7 @@ namespace VanguardLTE\Games\MahjongPandaPM
                     $strOtherResponse = $strOtherResponse . '&rs_more=' . $rs_more;
                 }
                 if($rs_t > 0){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $fsmax <= 0){
                         $spinType = 'c';
                     }
                     $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t;

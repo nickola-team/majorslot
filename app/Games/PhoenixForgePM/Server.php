@@ -535,7 +535,7 @@ namespace VanguardLTE\Games\PhoenixForgePM
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 }
                 else if($rs_t > 0){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $scatterCount < 3){
                         $spinType = 'c';
                         $isState = true;
                     }

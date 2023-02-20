@@ -573,7 +573,7 @@ namespace VanguardLTE\Games\BermudaRichesPM
                     $strOtherResponse = $strOtherResponse . '&rs=mc&tmb_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . '&rs_p=' . ($slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') - 1) . '&rs_c=1&rs_m=1';
                 }
                 else if($isTumb == true){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $scatterCount < 3){
                         $spinType = 'c';
                         $isState = true;
                     }
