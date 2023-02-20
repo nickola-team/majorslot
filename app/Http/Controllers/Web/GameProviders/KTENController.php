@@ -636,171 +636,211 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function syncpromo()
         {
-            $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
-            if (!$anyuser)
+            $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
+            if (!$user)
             {
                 return ['error' => true, 'msg' => 'not found any available user.'];
             }
-            $op = config('app.kten_op');
-            try{
-                $gamelist = KTENController::getgamelist(self::KTEN_PP_HREF);
-                $len = count($gamelist);
-                if ($len > 10) {$len = 10;}
-                if ($len == 0)
-                {
-                    return ['error' => true, 'msg' => 'not found any available game.'];
-                }
-                $rand = mt_rand(0,$len);
+            $gamelist = KTENController::getgamelist(self::KTEN_PP_HREF);
+            $len = count($gamelist);
+            if ($len > 10) {$len = 10;}
+            if ($len == 0)
+            {
+                return ['error' => true, 'msg' => 'not found any available game.'];
+            }
+            $rand = mt_rand(0,$len);
                 
-                $gamecode = $gamelist[$rand]['gamecode'];
-                    //create ximax account
-                $params = [
-                    'operatorID' => $op,
-                    'userID' => self::KTEN_PROVIDER . sprintf("%04d",$anyuser->id),
-                    'time' => time()*1000,
-                    'vendorID' => 0,
-                    'walletID' =>config('app.xmx_prefix') . sprintf("%04d",$anyuser->id),
-                ];
-                $params['hash'] = KTENController::hashParam($params);
+            $gamecode = $gamelist[$rand]['gamecode'];
+            $op = config('app.kten_op');
+            $token = config('app.kten_key');
 
-                $url = config('app.kten_api') . '/createAccount';
-                $response = Http::asForm()->get($url, $params);
+            //check kten account
+            $params = [
+                'agentId' => $op,
+                'token' => $token,
+                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time(),
+            ];
+            $alreadyUser = 1;
+            try
+            {
+
+                $url = config('app.kten_api') . '/api/checkUser';
+                $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('KTENmakelink : createAccount request failed. ' . $response->body());
-
-                    return ['error' => true, 'msg' => 'createAccount failed.'];
+                    Log::error('KTENmakelink : checkUser request failed. ' . $response->body());
+                    return ['error' => true, 'msg' => 'checkUser failed.'];
                 }
                 $data = $response->json();
-                if ($data==null || ($data['errorCode'] != 0 && $data['errorCode'] != 23))
+                if ($data==null || ($data['errorCode'] != 0 && $data['errorCode'] != 4))
                 {
-                    Log::error('KTENmakelink : createAccount result failed. ' . ($data==null?'null':$data['description']));
-                    return ['error' => true, 'msg' => 'createAccount failed.'];
+                    Log::error('KTENmakelink : checkUser result failed. ' . ($data==null?'null':$data['msg']));
+                    return ['error' => true, 'msg' => 'checkUser failed.'];
                 }
-
-                $url = KTENController::makegamelink($gamecode, $anyuser);
-                if ($url == null)
+                if ($data['errorCode'] == 4)
                 {
-                    return ['error' => true, 'msg' => 'game link error '];
-                }
-
-                $parse = parse_url($url);
-                $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
-            
-                //emulate client
-                $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
-                if ($response->status() == 302)
-                {
-                    $location = $response->header('location');
-                    $keys = explode('&', $location);
-                    $mgckey = null;
-                    foreach ($keys as $key){
-                        if (str_contains( $key, 'mgckey='))
-                        {
-                            $mgckey = $key;
-                        }
-                        if (str_contains($key, 'symbol='))
-                        {
-                            $gamecode = $key;
-                        }
-                    }
-                    if (!$mgckey){
-                        return ['error' => true, 'msg' => 'could not find mgckey value'];
-                    }
-                    
-                    $promo = \VanguardLTE\PPPromo::take(1)->first();
-                    if (!$promo)
-                    {
-                        $promo = \VanguardLTE\PPPromo::create();
-                    }
-                    $raceIds = [];
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/active/?'.$gamecode.'&' . $mgckey );
-                    if ($response->ok())
-                    {
-                        $promo->active = $response->body();
-                        $json_data = $response->json();
-                        if (isset($json_data['races']))
-                        {
-                            foreach ($json_data['races'] as $race)
-                            {
-                                $raceIds[$race['id']] = null;
-                            }
-                        }
-                    }
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/details/?'.$gamecode.'&' . $mgckey );
-                    if ($response->ok())
-                    {
-                        $promo->tournamentdetails = $response->body();
-                    }
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/details/?'.$gamecode.'&' . $mgckey );
-                    if ($response->ok())
-                    {
-                        $promo->racedetails = $response->body();
-                    }
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/v3/leaderboard/?'.$gamecode.'&' . $mgckey );
-                    if ($response->ok())
-                    {
-                        $promo->tournamentleaderboard = $response->body();
-                    }
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/prizes/?'.$gamecode.'&' . $mgckey );
-                    if ($response->ok())
-                    {
-                        $promo->raceprizes = $response->body();
-                    }
-
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/winners/?'.$gamecode.'&' . $mgckey , ['latestIdentity' => $raceIds]);
-                    if ($response->ok())
-                    {
-                        $promo->racewinners = $response->body();
-                    }
-
-                    $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/minilobby/games?' . $mgckey );
-                    if ($response->ok())
-                    {
-                        $json_data = $response->json();
-                        //disable not own games
-                        $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
-                        $gIds = $ownCats->games->pluck('game_id')->toArray();
-                        $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view',1)->get();
-
-                        $lobbyCats = $json_data['lobbyCategories'];
-                        $filteredCats = [];
-                        foreach ($lobbyCats as $cat)
-                        {
-                            $lobbyGames = $cat['lobbyGames'];
-                            $filteredGames = [];
-                            foreach ($lobbyGames as $game)
-                            {
-                                foreach ($ownGames as $og)
-                                {
-                                    if ($og->label == $game['symbol'])
-                                    {
-                                        $filteredGames[] = $game;
-                                        break;
-                                    }
-                                }
-                            }
-                            $cat['lobbyGames'] = $filteredGames;
-                            $filteredCats[] = $cat;
-                        }
-                        $json_data['lobbyCategories'] = $filteredCats;
-                        $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
-                        $promo->games = json_encode($json_data);
-                    }
-
-                    $promo->save();
-                    return ['error' => false, 'msg' => 'synchronized successfully.'];
-                }
-                else
-                {
-                    return ['error' => true, 'msg' => 'server response is not 302.'];
+                    $alreadyUser = 0;
                 }
             }
             catch (\Exception $ex)
             {
-                return ['error' => true, 'msg' => 'server exception.' . $ex->getMessage()];
-                
+                Log::error('KTENcheckuser : checkUser Exception. Exception=' . $ex->getMessage());
+                Log::error('KTENcheckuser : checkUser Exception. PARAMS=' . json_encode($params));
+                return ['error' => true, 'msg' => 'checkUser failed.'];
             }
+            if ($alreadyUser == 0){
+                //create kten account
+                $params = [
+                    'agentId' => $op,
+                    'token' => $token,
+                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time(),
+                    'email' => self::KTEN_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
+                ];
+                try
+                {
+
+                    $url = config('app.kten_api') . '/api/createAccount';
+                    $response = Http::asForm()->post($url, $params);
+                    if (!$response->ok())
+                    {
+                        Log::error('KTENmakelink : createAccount request failed. ' . $response->body());
+                        return ['error' => true, 'msg' => 'createAccount failed.'];
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['errorCode'] != 0)
+                    {
+                        Log::error('KTENmakelink : createAccount result failed. ' . ($data==null?'null':$data['msg']));
+                        return ['error' => true, 'msg' => 'createAccount failed.'];
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    Log::error('KTENcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
+                    Log::error('KTENcheckuser : createAccount Exception. PARAMS=' . json_encode($params));
+                    return ['error' => true, 'msg' => 'createAccount failed.'];
+                }
+            }
+
+            $url = KTENController::makegamelink($gamecode, $user);
+            if ($url == null)
+            {
+                return ['error' => true, 'msg' => 'game link error '];
+            }
+
+            $parse = parse_url($url);
+            $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
+        
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                    }
+                    if (str_contains($key, 'symbol='))
+                    {
+                        $gamecode = $key;
+                    }
+                }
+                if (!$mgckey){
+                    return ['error' => true, 'msg' => 'could not find mgckey value'];
+                }
+                
+                $promo = \VanguardLTE\PPPromo::take(1)->first();
+                if (!$promo)
+                {
+                    $promo = \VanguardLTE\PPPromo::create();
+                }
+                $raceIds = [];
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/active/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->active = $response->body();
+                    $json_data = $response->json();
+                    if (isset($json_data['races']))
+                    {
+                        foreach ($json_data['races'] as $race)
+                        {
+                            $raceIds[$race['id']] = null;
+                        }
+                    }
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/details/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentdetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/details/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->racedetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/v3/leaderboard/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentleaderboard = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/prizes/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->raceprizes = $response->body();
+                }
+                
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post($ppgameserver . '/gs2c/promo/race/v2/winners/?'.$gamecode.'&' . $mgckey, ['latestIdentity' => $raceIds]) ;
+                if ($response->ok())
+                {
+                    $promo->racewinners = $response->body();
+                }
+
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/minilobby/games?' . $mgckey );
+                if ($response->ok())
+                {
+                    $json_data = $response->json();
+                    //disable not own games
+                    $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
+                    $gIds = $ownCats->games->pluck('game_id')->toArray();
+                    $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view',1)->get();
+
+                    $lobbyCats = $json_data['lobbyCategories'];
+                    $filteredCats = [];
+                    foreach ($lobbyCats as $cat)
+                    {
+                        $lobbyGames = $cat['lobbyGames'];
+                        $filteredGames = [];
+                        foreach ($lobbyGames as $game)
+                        {
+                            foreach ($ownGames as $og)
+                            {
+                                if ($og->label == $game['symbol'])
+                                {
+                                    $filteredGames[] = $game;
+                                    break;
+                                }
+                            }
+                        }
+                        $cat['lobbyGames'] = $filteredGames;
+                        $filteredCats[] = $cat;
+                    }
+                    $json_data['lobbyCategories'] = $filteredCats;
+                    $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                    $promo->games = json_encode($json_data);
+                }
+
+                $promo->save();
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
+            }
+            else
+            {
+                return ['error' => true, 'msg' => 'server response is not 302.'];
+            }          
             
         }
 
