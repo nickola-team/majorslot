@@ -517,7 +517,7 @@ namespace VanguardLTE\Games\ChickenDropPM
                     $strOtherResponse = $strOtherResponse . '&rs=mc&tmb_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . '&rs_p=' . $rs_p . '&rs_c='. ($rs_p + 1) .'&rs_m='. ($rs_p + 1);
                 }
                 if($rs_t > 0){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $scatterCount < 4){
                         $spinType = 'c';
                         $isState = true;
                     }

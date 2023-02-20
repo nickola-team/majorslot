@@ -508,7 +508,7 @@ namespace VanguardLTE\Games\SwordofAresPM
                     $isState = false;
                 }
                 else if($isTumb == true){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $scatterCount < 4){
                         $spinType = 'c';
                         $isState = true;
                     }
