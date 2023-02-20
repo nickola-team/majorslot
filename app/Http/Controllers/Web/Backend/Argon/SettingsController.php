@@ -201,10 +201,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $serverstat = server_stat();
             $bnnmoney = -1;
             $kuzanmoney = -1;
+            $ktennmoney = -1;
             try
             {
                 $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
                 $kuzanmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KUZAController::getAgentBalance();
+                $ktennmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::getAgentBalance();
 
             }
             catch (\Exception $e)
@@ -213,7 +215,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             $agents = [
                 'bnn' => $bnnmoney,
-                'kuza' => $kuzanmoney
+                'kuza' => $kuzanmoney,
+                'kten' => $ktennmoney
             ];
             $strinternallog = '';
             $filesize = 0;
