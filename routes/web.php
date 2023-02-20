@@ -1565,6 +1565,13 @@ Route::group([ 'prefix' => 'dg',], function () {
     Route::post('/account/unsettle/{agentName}  ', 'GameProviders\DGController@unsettle');
 });
 
+/**
+ * SPOGAME Provider
+ */
+Route::group(['prefix' => 'spogame',], function () {
+	Route::get('/balance', 'GameProviders\SPGController@balance');
+    Route::post('/changebalance', 'GameProviders\SPGController@changebalance');
+});
 
 
 /**

@@ -217,6 +217,14 @@ return [
     'xmx_op' => env('XMX_OP', ''),
     'xmx_prefix' => env('XMX_PREFIX', ''),
 
+    /*
+    KTEN Auth key
+    */
+    'kten_api' => env('KTEN_API', ''),
+    'kten_op' => env('KTEN_OP', ''),
+    'kten_key' => env('KTEN_KEY', ''),
+
+
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
