@@ -311,6 +311,40 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         ]);
                     }
                     $amount = $amount - $main_amount;
+                    if ($user->balance < $amount)
+                    {
+                        return response()->json([
+                            'result' => false,
+                            'message' => 'balance is not enough',
+                            'data' => [
+                                'balance' => $user->balance,
+                            ]
+                        ]);
+                    }
+
+                    $user->balance = $user->balance - intval($amount);
+                    $user->save();
+                    $user = $user->fresh();
+
+                    \VanguardLTE\GACTransaction::create([
+                        'user_id' => $userId, 
+                        'game_id' => $gameId,
+                        'betInfo' => $betInfo,
+                        'type' => 1,
+                        'data' => json_encode($data),
+                        'response' => $user->balance,
+                        'status' => 0
+                    ]);
+                }
+                else
+                {
+                    return response()->json([
+                        'result' => false,
+                        'message' => 'Could not find main bet',
+                        'data' => [
+                            'balance' => $user->balance,
+                        ]
+                    ]);
                 }
             }
             else if ($betInfo == 3) //cancel betting
