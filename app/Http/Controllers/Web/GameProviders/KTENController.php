@@ -594,6 +594,46 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return [$count, 0];
         }
 
+        public static function getAgentBalance()
+        {
+
+            $op = config('app.kten_op');
+            $token = config('app.kten_key');
+
+            //check kten account
+            $params = [
+                'agentId' => $op,
+                'token' => $token,
+                'time' => time(),
+            ];
+
+            try
+            {
+
+                $url = config('app.kten_api') . '/api/getAgentAccountBalance';
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('KTENAgentBalance : agentbalance request failed. ' . $response->body());
+                    return -1;
+                }
+                $data = $response->json();
+                if (($data==null) || ($data['errorCode'] != 0))
+                {
+                    Log::error('KTENAgentBalance : agentbalance result failed. ' . ($data==null?'null':$data['msg']));
+                    return -1;
+                }
+                return $data['balance'];
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('KTENAgentBalance : agentbalance Exception. Exception=' . $ex->getMessage());
+                Log::error('KTENAgentBalance : agentbalance Exception. PARAMS=' . json_encode($params));
+                return -1;
+            }
+
+        }
+
         public static function syncpromo()
         {
             $anyuser = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
