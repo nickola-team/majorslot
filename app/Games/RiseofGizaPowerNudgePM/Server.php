@@ -566,7 +566,7 @@ namespace VanguardLTE\Games\RiseofGizaPowerNudgePM
                     }
                 }
                 else if($isTumb == true){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $scatterCount < 3){
                         $spinType = 'c';
                         $isState = true;
                     }

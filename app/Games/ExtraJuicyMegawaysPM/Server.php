@@ -468,6 +468,7 @@ namespace VanguardLTE\Games\ExtraJuicyMegawaysPM
 
                     if($isNewTumb == false){
                         if($scatterCount > 6){
+                            $isState = false;
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 28);
                             $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                             $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
@@ -499,7 +500,7 @@ namespace VanguardLTE\Games\ExtraJuicyMegawaysPM
                     $strOtherResponse = $strOtherResponse . '&rs=mc&tmb_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') . '&rs_p=' . ($slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') - 1) . '&rs_c=1&rs_m=1';
                 }
                 else if($isTumb == true){
-                    if($slotEvent['slotEvent'] != 'freespin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $scatterCount < 4){
                         $spinType = 'c';
                         $isState = true;
                     }
