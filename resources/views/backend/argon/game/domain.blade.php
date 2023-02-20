@@ -66,6 +66,8 @@
                 @if (auth()->user()->hasRole('admin'))
                 <th scope="col">게임제공사</th>
                 <th scope="col">사용여부</th>
+                @else
+                <th scope="col">게임제공사</th>
                 @endif
                 <th scope="col">상태</th>
                 <th></th>
@@ -79,7 +81,7 @@
                             $categories = $site->categories;
                             if (!auth()->user()->hasRole('admin'))
                             {
-                                $excat = ['pragmatic', 'habaneroplay', 'bngplay','cq9play'];
+                                $excat = ['habaneroplay', 'bngplay','cq9play'];
                                 $categories = $categories->where('view',1)->whereNotIn('href', $excat);
                             }
                         ?>

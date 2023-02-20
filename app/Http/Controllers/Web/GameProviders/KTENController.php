@@ -218,7 +218,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'agentId' => $op,
                     'token' => $token,
                     'transactionID' => uniqid(self::KTEN_PROVIDER),
-                    'userID' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                     'time' => time(),
                 ];
 
@@ -275,7 +275,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                 'time' => time(),
             ];
-            $alreadyUser = 0;
+            $alreadyUser = 1;
             try
             {
 
@@ -294,7 +294,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 if ($data['errorCode'] == 4)
                 {
-                    $alreadyUser = 1;
+                    $alreadyUser = 0;
                 }
             }
             catch (\Exception $ex)
@@ -310,6 +310,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'token' => $token,
                     'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                     'time' => time(),
+                    'email' => self::KTEN_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
                 ];
                 try
                 {
@@ -356,11 +358,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     //addMemberPoint
                     $params = [
-                        'amount' => $user->balance,
+                        'amount' => floatval($user->balance),
                         'agentId' => $op,
                         'token' => $token,
                         'transactionID' => uniqid(self::KTEN_PROVIDER),
-                        'userID' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                        'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
                         'time' => time(),
                     ];
                     try {
@@ -536,6 +538,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $bet = $betdata['bet'];
                             $win = $betdata['win'];
                             $balance = $betdata['balance'];
+                            if (!$bet || !$win)
+                            {
+                                Log::error('KTEN PP round : '. json_encode($round));
+                                break;
+                            }
                         }
                         else
                         {
@@ -585,6 +592,46 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             
             return [$count, 0];
+        }
+
+        public static function getAgentBalance()
+        {
+
+            $op = config('app.kten_op');
+            $token = config('app.kten_key');
+
+            //check kten account
+            $params = [
+                'agentId' => $op,
+                'token' => $token,
+                'time' => time(),
+            ];
+
+            try
+            {
+
+                $url = config('app.kten_api') . '/api/getAgentAccountBalance';
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('KTENAgentBalance : agentbalance request failed. ' . $response->body());
+                    return -1;
+                }
+                $data = $response->json();
+                if (($data==null) || ($data['errorCode'] != 0))
+                {
+                    Log::error('KTENAgentBalance : agentbalance result failed. ' . ($data==null?'null':$data['msg']));
+                    return -1;
+                }
+                return $data['balance'];
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('KTENAgentBalance : agentbalance Exception. Exception=' . $ex->getMessage());
+                Log::error('KTENAgentBalance : agentbalance Exception. PARAMS=' . json_encode($params));
+                return -1;
+            }
+
         }
 
         public static function syncpromo()

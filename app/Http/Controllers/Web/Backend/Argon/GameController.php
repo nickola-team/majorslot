@@ -76,6 +76,59 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $sites = $sites->paginate(5);
             return view('backend.argon.game.domain', compact('sites'));
         }
+        public function domain_provider_update(\Illuminate\Http\Request $request)
+        {
+            $categoryid = $request->cat_id;
+            $provider = $request->provider;
+            $category = \VanguardLTE\Category::where('id', $categoryid)->first();
+            if (!$category)
+            {
+                return redirect()->back()->withErrors(['게임을 찾을수 없습니다']);
+            }
+
+            $site_id = $category->site_id;
+            $site = \VanguardLTE\WebSite::where('id', $site_id)->first();
+            if (!$site)
+            {
+                return redirect()->back()->withErrors(['도메인을 찾을수 없습니다']);
+            }
+
+            $newcat = null;
+            if ($provider == 1)
+            {
+                $newcat = \VanguardLTE\Category::where([
+                    'title' => $category->title,
+                    'site_id' => $site_id,
+                    'shop_id' => 0
+                    ]
+                    )->whereNotNull('provider')->first();
+            }
+            else
+            {
+                $newcat = \VanguardLTE\Category::where([
+                    'title' => $category->title,
+                    'site_id' => $site_id,
+                    'shop_id' => 0
+                    ]
+                    )->whereNull('provider')->first();
+            }
+            if (!$newcat)
+            {
+                return redirect()->back()->withErrors(['교체할 제공사가 없습니다']);
+            }
+
+            $admin = $site->admin;
+            $availableShops = $admin->availableShops();
+
+            \VanguardLTE\Category::where('original_id' , $category->original_id)->whereIn('shop_id', $availableShops)->update(['view' => 0]);
+            \VanguardLTE\Category::where('original_id' , $category->original_id)->where('site_id', $site_id)->update(['view' => 0]);
+
+            \VanguardLTE\Category::where('original_id' , $newcat->original_id)->whereIn('shop_id', $availableShops)->update(['view' => 1]);
+            \VanguardLTE\Category::where('original_id' , $newcat->original_id)->where('site_id', $site_id)->update(['view' => 1]);
+
+            return redirect()->back()->withSuccess(['게임제공사를 교체했습니다']);
+
+        }
         public function domain_update(\Illuminate\Http\Request $request)
         {
             $categoryid = $request->cat_id;
