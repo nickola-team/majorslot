@@ -16,6 +16,21 @@
         <span class="text-red">내림</span>
         @endif
     </td>
+    @else
+    <td>
+        
+        @if ($category->title =='Pragmatic Play')
+            @if ($category->provider != null)
+                공식사
+                <a class="btn btn-success  btn-sm" href="{{argon_route('argon.game.domain.provider', ['cat_id'=>$category->id, 'provider'=>0])}}">대행사이용</a>
+            @else
+                대행사
+                <a class="btn btn-warning  btn-sm" href="{{argon_route('argon.game.domain.provider', ['cat_id'=>$category->id, 'provider'=>1])}}">공식사이용</a>
+            @endif
+        @else
+            공식사
+        @endif
+    </td>
     @endif
     <td>
         @if ($category->status == 1)
