@@ -4,6 +4,6 @@
         <br><br>
         <img src="/frontend/kdior/images/footer_bank.png?v=202301301150">
         <br>
-        Copyright (c) 2022 @yield('page-title') Casino All rights reserved
+        Copyright (c) 2022 @yield('page-title') All rights reserved
     </div>
 </div><!-- footer -->
