@@ -39,7 +39,7 @@
                 <td width="5%"></td>
                 <td width="30%" align="center"><a href="#" class="sub_pop1_open"><img src="/frontend/kdior/images/menu1.png?v=202302021551" width="80%"></a></td>                       
                 <td width="30%" align="center"><a href="#" class="sub_pop2_open"><img src="/frontend/kdior/images/menu2.png?v=202302021551" width="80%"></a></td>                       
-                <td width="30%" align="center"><a href="#"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
+                <td width="30%" align="center"><a href="#" class="sub_pop3_open"><img src="/frontend/kdior/images/menu3.png?v=202302021551" width="80%"></a></td>
                 <td width="5%"></td>
             </tr>
             <tr>
