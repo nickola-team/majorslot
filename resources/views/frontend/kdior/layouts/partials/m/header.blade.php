@@ -7,8 +7,7 @@
         <div class="my_wrap">
             <img src='/frontend/kdior/img/lv1.png' align='absmiddle' width='35'>&nbsp;{{auth()->user()->username}}님 &nbsp;&nbsp;
             캐쉬 <span class="font11">{{number_format(auth()->user()->balance)}}</span> &nbsp;&nbsp; 
-            콤프 <span class="font11">0</span> &nbsp;&nbsp; 
-            <a href="/member/coupon_list.asp">쿠폰 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span></a>
+            보너스 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span> &nbsp;&nbsp; 
         </div>
         <div class="top_menu">
             <ul>
