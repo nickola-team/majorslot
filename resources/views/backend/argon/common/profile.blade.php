@@ -223,8 +223,8 @@
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-gameOn">게임관리권한</label>
                                         <p>
-                                        <input type="radio"    name="gameOn" value="1" {{$user->sessiondata()['gameOn']==1?'checked':''}}   /> <span>있음</span>
-                                        <input type="radio"    name="gameOn" value="0" {{$user->sessiondata()['gameOn']==0?'checked':''}}   /> <span>없음</span>
+                                        <input type="radio"    name="gameOn" value="1" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==1?'checked':''}}   /> <span>있음</span>
+                                        <input type="radio"    name="gameOn" value="0" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==0?'checked':''}}   /> <span>없음</span>
 
                                     </div>
                                 @endif
