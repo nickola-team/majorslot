@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="icon" href="/frontend/december/images/logo_02.png" >
+    <link rel="icon" href="/frontend/angelslot/images/logo_02.png" >
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"
@@ -227,7 +227,7 @@
                   href="{{Request::root()}}"
                   class="bs-logo"
                   style="display: block"
-                  ><img src="/frontend/december/images/logo_02.png"
+                  ><img src="/frontend/angelslot/images/logo_02.png"
                 /></a>
                 <div class="util_right">
                 @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
@@ -267,7 +267,7 @@
                   </div>
                 @else
                   <div class="my">
-                    <a class="fade_2_open" data-popup-ordinal="0" onclick="showLoginPopup('december')"><img src="/frontend/jungle/images/top_btn_001.png"></a>
+                    <a class="fade_2_open" data-popup-ordinal="0" onclick="showLoginPopup('angelslot')"><img src="/frontend/jungle/images/top_btn_001.png"></a>
                     <a class="fade_3_open" data-popup-ordinal="0" onclick="showRegisterPopup()"><img src="/frontend/jungle/images/top_btn_002.png"></a>
                   </div>
                 @endif
@@ -295,42 +295,7 @@
             </div>
           </div>
           <div class="visual_ling_2"></div>
-          <div class="visual_wrap" style="background: url(/frontend/december/images/visual_bg.jpg) center top no-repeat;!important;">
-          <div id="wrap-casino" style=" text-align: right; padding: 10px; margin-right:450px;">
-          @if ($categories && count($categories))
-          <?php 
-            $livecats = [];
-            $livecount = 0;
-            foreach ($categories as $cat)
-            {
-              if ($cat->type == 'live'){
-                $livecats[] = $cat;
-              }
-            }
-            $livecount = count($livecats);
-
-          ?>
-              @foreach($livecats AS $index=>$category)
-              @if (Auth::check())
-                @if ($category->status == 0)
-                    <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="alert('점검중입니다');">
-                @else
-                  @if ($category->provider=='gac')
-                  <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', 'gvolobby');">
-                  @else
-                  <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', '{{$category->href}}');">
-                  @endif
-                @endif
-              @else
-              <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="showLoginAlert();">
-              @endif
-              
-              @if ($index==intval($livecount/2-1))
-              <br>
-              @endif
-              @endforeach
-            @endif
-              </div>
+          <div class="visual_wrap" style="background: url(/frontend/angelslot/images/visual_bg.jpg) center top no-repeat;!important; height : 380px;">
           </div>
           <div class="visual_ling_2"></div>
           
@@ -394,7 +359,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/jungle/images/partner.png" /><br /><br />Copyright ⓒ
-            2022~2023 DECEMBER  All rights reserved.
+            2022~2023 ANGEL SLOT  All rights reserved.
           </div>
          </div>
          <div>
