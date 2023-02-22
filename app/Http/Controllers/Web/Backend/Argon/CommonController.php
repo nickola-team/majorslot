@@ -267,7 +267,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $userdata = $user->sessiondata();
                 $userdata['gameOn'] = $data['gameOn'];
-                $data['session_json'] = json_encode($userdata);
+                $data['session'] = json_encode($userdata);
                 unset($data['gameOn']);
 
             }
