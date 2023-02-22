@@ -118,6 +118,7 @@ namespace VanguardLTE
                 '중국공상', 
                 '펀드온라인코리아', 
                 '케이티비투자증권',
+                '신협',
                 'PAYWIN',
                 'JUNCOIN',
                 'MESSAGE'
