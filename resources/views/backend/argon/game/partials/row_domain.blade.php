@@ -18,7 +18,7 @@
     </td>
     @else
     <td>
-        @if (auth()->user()->sessiondata()['gameOn'] == 1)
+        @if (isset(auth()->user()->sessiondata()['gameOn']) && auth()->user()->sessiondata()['gameOn'] == 1)
         @if ($category->title =='Pragmatic Play')
             @if ($category->provider != null)
                 공식사
