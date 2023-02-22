@@ -10,30 +10,36 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         const SPG_PROVIDER = 'spg';
+        const SPG_PP_HREF = 'spg-pp';
+        const SPG_GAME_IDENTITY = [
+            'spg-pp' => 'Pragmatic',
+            'spg-cq9' => 'Cq9',
+            'spg-hbn' => 'Habanero',
+            'spg-playson' => 'Playson',
+            'spg-bng' => 'Booongo',
+        ];
+        const SPG_IDENTITY_GAME = [
+            'Pragmatic'  => 'spg-pp',
+            'Cq9' => 'spg-cq9'  ,
+            'Habanero'  =>  'spg-hbn',
+            'Playson' => 'spg-playson'  ,
+            'Booongo' => 'spg-bng'  ,
+        ];
 
-        public function microtime_string()
+        public static function getGameObj($uuid)
         {
-            $microstr = sprintf('%.4f', microtime(TRUE));
-            $microstr = str_replace('.', '', $microstr);
-            return $microstr;
-        }
-
-
-        public static function getGameObj($tableId)
-        {
-            $gamelist_gac = SPGController::getgamelist('gac');
-            $gamelist_evo = SPGController::getgamelist('gvo');
-
-            $gamelist = array_merge_recursive($gamelist_gac, $gamelist_evo);
-            $tableName = preg_replace('/\s+/', '', $tableId);
-            if ($gamelist)
+            foreach (SPGController::SPG_IDENTITY_GAME as $ref)
             {
-                foreach($gamelist as $game)
+                $gamelist = SPGController::getgamelist($ref);
+                if ($gamelist)
                 {
-                    if ($game['gamecode'] == $tableName)
+                    foreach($gamelist as $game)
                     {
-                        return $game;
-                        break;
+                        if ($game['gamecode'] == $uuid)
+                        {
+                            return $game;
+                            break;
+                        }
                     }
                 }
             }
@@ -41,10 +47,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         public static function getHmac(
-                            string $httpMethod,
-                            string $uri,
-                            string $utf8EncodedContent
-                            )
+            string $httpMethod,
+            string $uri,
+            string $utf8EncodedContent
+            )
         {
             $apiKey = 'a90763b71b6e43aba4b0a959914b9bd6';
             $secret = 'OZ+cq1HeLDYM1OUxYVDAUW+BgiEBnMmCvrqKD1/w749ICoLIgJ1dfO4bcNY959+J8wyNLBoeRWy5dE5HbfJuSw==';
@@ -59,173 +65,71 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $secret = 'OZ+cq1HeLDYM1OUxYVDAUW+BgiEBnMmCvrqKD1/w749ICoLIgJ1dfO4bcNY959+J8wyNLBoeRWy5dE5HbfJuSw==';
             return base64_encode(hash_hmac('sha256', $payload, base64_decode($secret), true));
         }
-    
+
         public static function buildPayload(
             string $httpMethod,
             string $uri,
             string $utf8EncodedContent,
             int $timestamp, 
             string $nonce) {
-                $apiKey = 'a90763b71b6e43aba4b0a959914b9bd6';
-                $contentHash = '';
-    
-                if (strlen($utf8EncodedContent) > 0) {
-                    $decoded = utf8_decode($utf8EncodedContent);
-                    $contentHash = base64_encode(md5($decoded, true));
-                }
-    
-                $encodedUri = strtolower(urlencode($uri));
-                return "{$apiKey}{$httpMethod}{$encodedUri}{$timestamp}{$nonce}{$contentHash}";
+            $apiKey = 'a90763b71b6e43aba4b0a959914b9bd6';
+            $contentHash = '';
+
+            if (strlen($utf8EncodedContent) > 0) {
+                $decoded = utf8_decode($utf8EncodedContent);
+                $contentHash = base64_encode(md5($decoded, true));
+            }
+
+            $encodedUri = strtolower(urlencode($uri));
+            return "{$apiKey}{$httpMethod}{$encodedUri}{$timestamp}{$nonce}{$contentHash}";
         }
 
         /*
-        * FROM SPG, BACK API
         */
 
-        public function balance(\Illuminate\Http\Request $request)
-        {
-            
-            $username = $request->username;
-            $userid = intval(preg_replace('/'. self::SPG_PROVIDER .'(\d+)/', '$1', $username)) ;
-            $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
-            if (!$user)
-            {
-                return response()->json([
-                    'balance' => 0,
-                ]);
-            }
-            return response()->json([
-                'balance' => intval($user->balance),
-            ]);
-        }
-
-        public function changebalance(\Illuminate\Http\Request $request)
-        {
-            \DB::beginTransaction();
-            $data = json_decode($request->getContent(), true);
-            $username = isset($data['username'])?$data['username']:'';
-            $amount = isset($data['amount'])?$data['amount']:0;
-            $type = isset($data['type'])?$data['type']:'';
-            $tid = isset($data['tid'])?$data['tid']:'';
-            $iGameId = isset($data['iGameId'])?$data['iGameId']:'';
-            $iActionId = isset($data['iActionId'])?$data['iActionId']:'';
-
-            if (!$username || !$amount || !$type || !$tid || !$iGameId || !$iActionId)
-            {
-                return response()->json([
-                    'error' => 'Parameter incorrect',
-                    'balance' => 0,
-                ]);
-            }
-            
-            $userId = intval(preg_replace('/'. self::SPG_PROVIDER .'(\d+)/', '$1', $username)) ;
-            $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
-            if (!$user)
-            {
-                return response()->json([
-                    'error' => 'Not found user',
-                    'balance' => 0,
-                ]);
-            }
-
-            // $betrecords = \VanguardLTE\SPGTransaction::where([
-            //     'user_id' => $userId,
-            //     'game_id' => $gameId,
-            //     'type' => 1,
-            //     'status' => 0
-            //     ])->get();
-            // if (count($betrecords) == 0)
-            // {
-            //     return response()->json([
-            //         'result' => false,
-            //         'message' => 'No placebet exist',
-            //         'data' => [
-            //             'balance' => 0,
-            //         ]
-            //     ]);
-            // }
-
-            // $winrecord = \VanguardLTE\SPGTransaction::where([
-            //     'user_id' => $userId,
-            //     'game_id' => $gameId,
-            //     'type' => 2,
-            //     'betInfo' => $betId
-            //     ])->first();
-            // if ($winrecord)
-            // {
-            //     return response()->json([
-            //         'result' => false,
-            //         'message' => 'duplicated betid - ' . $betId,
-            //         'data' => [
-            //             'balance' => 0,
-            //         ]
-            //     ]);
-            // }
-            if ($type == 'credit')
-            {
-                $user->balance = $user->balance + intval(abs($amount));
-            }
-            else if ($type == 'debit')
-            {
-                if ($user->balance < intval(abs($amount)))
-                {
-                    return response()->json([
-                        'error' => 'User balance is not enough than ' . abs($amount),
-                        'balance' => 0,
-                    ]);
-                }
-                $user->balance = $user->balance - intval(abs($amount));
-
-            }
-                
-            $user->save();
-            
-            // $gameObj = SPGController::getGameObj($tableName);
-            // if (!$gameObj)
-            // {
-            //     $gameObj = SPGController::getGameObj('unknowntable');
-            // }
-
-            // $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => $gameObj['href']])->first();
-
-            // \VanguardLTE\StatGame::create([
-            //     'user_id' => $user->id, 
-            //     'balance' => intval($user->balance), 
-            //     'bet' => $betAmount, 
-            //     'win' => $winAmount, 
-            //     'game' =>  $gameObj['name'] . '_' . $gameObj['href'], 
-            //     'type' => 'table',
-            //     'percent' => 0, 
-            //     'percent_jps' => 0, 
-            //     'percent_jpg' => 0, 
-            //     'profit' => 0, 
-            //     'denomination' => 0, 
-            //     'shop_id' => $user->shop_id,
-            //     'category_id' => isset($category)?$category->id:0,
-            //     'game_id' => $gameObj['gamecode'],
-            //     'roundid' => $betId . '-' . $tableName,
-            // ]);
-
-            // \VanguardLTE\SPGTransaction::create([
-            //     'user_id' => $userId, 
-            //     'game_id' => $gameId,
-            //     'betInfo' => $betId,
-            //     'type' => 2,
-            //     'data' => json_encode($data),
-            //     'response' => $user->balance,
-            //     'status' => 1
-            // ]);
-
-            // \VanguardLTE\SPGTransaction::whereIn('id', $betrecords->pluck('id')->toArray())->update(['status' => 1]);
-            \DB::commit();
-
-            return response()->json([
-                'balance' => intval($user->balance)
-            ]);
-        }
+        
         /*
         * FROM CONTROLLER, API
         */
+
+        
+        public static function getUserBalance($user) {
+            $url = config('app.spg_api') . '/api/User';
+            $secret = config('app.spg_secret');
+            $token = config('app.spg_key');
+    
+            $params = [
+                'username' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
+            ];
+            $balance = -1;
+
+            try {       
+                $response = Http::get($url, $params);
+                
+                if ($response->ok()) {
+                    $res = $response->json();
+        
+                    if ($res['errorCode'] == 0) {
+                        $balance = $res['balance'];
+                    }
+                    else
+                    {
+                        Log::error('KTENgetuserbalance : return failed. ' . $res['errorCode']);
+                    }
+                }
+                else
+                {
+                    Log::error('KTENgetuserbalance : response is not okay. ' . $response->body());
+                }
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('KTENgetuserbalance : getAccountBalance Excpetion. exception= ' . $ex->getMessage());
+                Log::error('KTENgamerounds : getAccountBalance Excpetion. PARAMS= ' . json_encode($params));
+            }
+            
+            return intval($balance);
+        }
         
         public static function getgamelist($href)
         {
@@ -237,231 +141,742 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return $games;
                 }
             }
-            $gameList = [];
-            $query = 'SELECT * FROM w_provider_games WHERE provider="gac' . $href .'"';
-            $gac_games = \DB::select($query);
-            foreach ($gac_games as $game)
+            $url = config('app.spg_api') . '/api/getGameList';
+            $secret = config('app.spg_op');
+            $token = config('app.spg_key');
+
+            $category = SPGController::SPG_GAME_IDENTITY[$href];
+
+            $params = [
+                'agentId' => $secret,
+                'token' => $token,
+                'thirdname' => $category,
+                'time' => time(),
+            ];
+
+    
+            $response = Http::get($url, $params);
+            if (!$response->ok())
             {
-                $icon_name = str_replace(' ', '_', $game->gameid);
-                $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
-                array_push($gameList, [
-                    'provider' => 'gac',
-                    'gameid' => $game->gameid,
-                    'gamecode' => $game->gamecode,
-                    'enname' => $game->name,
-                    'name' => preg_replace('/\s+/', '', $game->name),
-                    'title' => $game->title,
-                    'type' => $game->type,
-                    'href' => $href,
-                    'view' => $game->view,
-                    'icon' => '/frontend/Default/ico/gac/'. $href . '/' . $icon_name . '.jpg',
-                    ]);
+                return [];
             }
+            $data = $response->json();
+            $gameList = [];
+
+            foreach ($data as $game)
+            {
+                if (strtolower($game['game_type']) == 'slot')
+                {
+                    array_push($gameList, [
+                        'provider' => self::SPG_PROVIDER,
+                        'href' => $href,
+                        'gamecode' => $game['game_id'],
+                        'symbol' => $game['game_id'],
+                        'enname' => $game['cp_game_name_en'],
+                        'name' => preg_replace('/\s+/', '', $game['cp_game_name_en']),
+                        'title' => $game['cp_game_name_kor'],
+                        'icon' => $game['thumbnail'],
+                        'type' => strtolower($game['game_type']),
+                        'view' => 1
+                    ]);
+                }
+            }
+
+            //add Unknown Game item
+            array_push($gameList, [
+                'provider' => self::SPG_PROVIDER,
+                'href' => $href,
+                'symbol' => 'Unknown',
+                'gamecode' => $href,
+                'enname' => 'UnknownGame',
+                'name' => 'UnknownGame',
+                'title' => 'UnknownGame',
+                'icon' => '',
+                'type' => 'slot',
+                'view' => 0
+            ]);
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
             
         }
 
-        public static function makegamelink($gamecode)
+        public static function makegamelink($gamecode, $user) 
         {
-            $user = auth()->user();
-            if ($user == null)
-            {
-                return null;
-            }
-            $gameObj = SPGController::getGameObj($gamecode);
-            if (!$gameObj)
-            {
-                return null;
-            }
-            $username = $user->username;
-            $parse = explode('#', $username);
-            if (count($parse) > 1)
-            {
-                $username = $parse[count($parse) - 1];
-            }
 
-            $username = $username . '#' . strval($user->id);
-            $username = mb_substr($username, -10);
+            $secret = config('app.spg_op');
+            $token = config('app.spg_key');
+            
 
-            $recommend = config('app.gac_key');
-            $data = [
-                'userId' => strval($user->id),
-                'userName' => $username,
-                'recommend' => $recommend,
-                'gameType' => ($gameObj['href'] == 'gac')?(self::SPGSPG):(self::SPGGVO),
+            //Create Game link
+
+            $params = [
+                'gameId' => $gamecode,
+                'agentId' => $secret,
+                'token' => $token,
+                'time' => time(),
+                'userId' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
             ];
-            if (!str_contains(strtolower($gamecode),'lobby'))
+
+            $url = config('app.spg_api') . '/api/getGameUrl';
+            $response = Http::get($url, $params);
+            if (!$response->ok())
             {
-                $data['tableId'] = $gamecode;
+                Log::error('KTENGetLink : Game url request failed. ' . $response->body());
+
+                return null;
             }
-            $url = null;
-            try {
-                $response = Http::timeout(20)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
+            $data = $response->json();
+            if ($data==null || $data['errorCode'] != 0)
+            {
+                Log::error('KTENGetLink : Game url result failed. ' . ($data==null?'null':$data['errorCode']));
+                return null;
+            }
+            $url = $data['gameUrl'];
+
+            return $url;
+        }
+        
+        public static function withdrawAll($user)
+        {
+            $balance = SPGController::getuserbalance($user);
+            if ($balance < 0)
+            {
+                return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
+            }
+            if ($balance > 0)
+            {
+                $secret = config('app.spg_op');
+                $token = config('app.spg_key');
+
+                $params = [
+                    'amount' => $balance,
+                    'agentId' => $secret,
+                    'token' => $token,
+                    'transactionID' => uniqid(self::SPG_PROVIDER),
+                    'userId' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time(),
+                ];
+
+                try {
+                    $url = config('app.spg_api') . '/api/subtractMemberPoint';
+                    $response = Http::get($url, $params);
+                    if (!$response->ok())
+                    {
+                        Log::error('KTENWithdraw : subtractMemberPoint request failed. ' . $response->body());
+
+                        return ['error'=>true, 'amount'=>0, 'msg'=>'response not ok'];
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['errorCode'] != 0)
+                    {
+                        Log::error('KTENWithdraw : subtractMemberPoint result failed. PARAMS=' . json_encode($params));
+                        Log::error('KTENWithdraw : subtractMemberPoint result failed. ' . ($data==null?'null':$data['errorCode']));
+                        return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    Log::error('KTENWithdraw : subtractMemberPoint Exception. Exception=' . $ex->getMessage());
+                    Log::error('KTENWithdraw : subtractMemberPoint Exception. PARAMS=' . json_encode($params));
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
+                }
+            }
+            return ['error'=>false, 'amount'=>$balance];
+        }
+
+        public static function makelink($gamecode, $userid)
+        {
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                Log::error('KTENMakeLink : Does not find user ' . $userid);
+                return null;
+            }
+
+            $game = SPGController::getGameObj($gamecode);
+            if ($game == null)
+            {
+                Log::error('KTENMakeLink : Game not find  ' . $game);
+                return null;
+            }
+
+            $secret = config('app.spg_op');
+            $token = config('app.spg_key');
+
+            //check kten account
+            $params = [
+                'agentId' => $secret,
+                'token' => $token,
+                'userId' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time(),
+            ];
+            $alreadyUser = 1;
+            try
+            {
+
+                $url = config('app.spg_api') . '/api/checkUser';
+                $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('SPG : getLobbyUrl response failed. ' . $response->body());
+                    Log::error('KTENmakelink : checkUser request failed. ' . $response->body());
                     return null;
                 }
                 $data = $response->json();
-                if (isset($data['lobbyUrl'])){
-                    $url = $data['lobbyUrl'];
+                if ($data==null || ($data['errorCode'] != 0 && $data['errorCode'] != 4))
+                {
+                    Log::error('KTENmakelink : checkUser result failed. ' . ($data==null?'null':$data['msg']));
+                    return null;
+                }
+                if ($data['errorCode'] == 4)
+                {
+                    $alreadyUser = 0;
                 }
             }
             catch (\Exception $ex)
             {
-                Log::error('SPG : getLobbyUrl request failed. ' . $ex->getMessage());
+                Log::error('KTENcheckuser : checkUser Exception. Exception=' . $ex->getMessage());
+                Log::error('KTENcheckuser : checkUser Exception. PARAMS=' . json_encode($params));
+                return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
+            }
+            if ($alreadyUser == 0){
+                //create kten account
+                $params = [
+                    'agentId' => $secret,
+                    'token' => $token,
+                    'userId' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time(),
+                    'email' => self::SPG_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
+                ];
+                try
+                {
+
+                    $url = config('app.spg_api') . '/api/createAccount';
+                    $response = Http::asForm()->post($url, $params);
+                    if (!$response->ok())
+                    {
+                        Log::error('KTENmakelink : createAccount request failed. ' . $response->body());
+                        return null;
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['errorCode'] != 0)
+                    {
+                        Log::error('KTENmakelink : createAccount result failed. ' . ($data==null?'null':$data['msg']));
+                        return null;
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    Log::error('KTENcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
+                    Log::error('KTENcheckuser : createAccount Exception. PARAMS=' . json_encode($params));
+                    return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
+                }
+            }
+            
+            $balance = SPGController::getuserbalance($user);
+            if ($balance == -1)
+            {
                 return null;
             }
-            return $url;
+
+            if ($balance != $user->balance)
+            {
+                //withdraw all balance
+                $data = SPGController::withdrawAll($user);
+                if ($data['error'])
+                {
+                    return null;
+                }
+                //Add balance
+
+                if ($user->balance > 0)
+                {
+                    //addMemberPoint
+                    $params = [
+                        'amount' => floatval($user->balance),
+                        'agentId' => $secret,
+                        'token' => $token,
+                        'transactionID' => uniqid(self::SPG_PROVIDER),
+                        'userId' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
+                        'time' => time(),
+                    ];
+                    try {
+                        $url = config('app.spg_api') . '/api/addMemberPoint';
+                        $response = Http::get($url, $params);
+                        if (!$response->ok())
+                        {
+                            Log::error('KTENmakelink : addMemberPoint request failed. ' . $response->body());
+
+                            return null;
+                        }
+                        $data = $response->json();
+                        if ($data==null || $data['errorCode'] != 0)
+                        {
+                            Log::error('KTENmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['description']));
+                            return null;
+                        }
+                    }
+                    catch (\Exception $ex)
+                    {
+                        Log::error('KTENmakelink : addMemberPoint Exception. exception=' . $ex->getMessage());
+                        Log::error('KTENmakelink : addMemberPoint PARAM. PARAM=' . json_encode($params));
+                        return null;
+                    }
+                }
+            }
+            
+            return '/followgame/kten/'.$gamecode;
+
         }
 
         public static function getgamelink($gamecode)
         {
-            $gameObj = SPGController::getGameObj($gamecode);
-            if (!$gameObj)
+            $user = auth()->user();
+            if ($user->playing_game != null) //already playing game.
             {
-                return ['error' => true, 'msg' => '게임이 없습니다'];
+                return ['error' => true, 'data' => '이미 실행중인 게임을 종료해주세요. 이미 종료했음에도 불구하고 이 메시지가 계속 나타난다면 매장에 문의해주세요.'];
             }
-            $detect = new \Detection\MobileDetect();
-            if ($detect->isiOS() || $detect->isiPadOS())
-            {
-                $url = SPGController::makegamelink($gamecode);
-            }
-            else
-            {
-                $url = '/gac/golobby?code=' . $gamecode;
-            }
-            if ($url)
-            {
-                return ['error' => false, 'data' => ['url' => $url]];
-            }
-            return ['error' => true, 'msg' => '로그인하세요'];
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [SPGController::SPG_PROVIDER, $gamecode])]];
         }
 
-        public function embedSPGgame(\Illuminate\Http\Request $request)
+        public static function gamerounds($thirdparty,$startDate)
         {
-            $gamecode = $request->code;
-            $url = SPGController::makegamelink($gamecode);
-            if ($url)
-            {
-                return view('frontend.Default.games.apigame',compact('url'));
-            }
-            else
-            {
-                abort(404);
-            }
+            
+            $secret = config('app.spg_op');
+            $token = config('app.spg_key');
 
+            $endDate = date('Y-m-d H:i:s');
 
-        }
-
-        public static function getgamedetail(\VanguardLTE\StatGame $stat)
-        {
-            $betId = explode('-',$stat->roundid)[0];
-            if ($betId == '000000')
-            {
-                return null;
-            }
-            $recommend = config('app.gac_key');
-            $param = [
-                'betId' => intval($betId) - 1,
-                'recommend' => $recommend,
-                'pageSize' => 100,
-                'pageNumber' => 1
+            $params = [
+                'endDate' => $endDate,
+                'agentId' => $secret,
+                'token' => $token,
+                'startDate' => $startDate,
+                'thirdname' => $thirdparty,
+                'pageSize' => 1000,
+                'pageStart' => 1,
+                'time' => time(),
             ];
-
-            $data = null;
-            try {
-                $response = Http::timeout(10)->post(config('app.gac_api') . '/wallet/api/getBetHistoryByRecommend', $param);
+            try
+            {
+                $url = config('app.spg_api') . '/api/getBetWinHistoryAll';
+                $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('SPG : getgamedetail response failed. ' . $response->body());
+                    Log::error('KTENgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
+                    Log::error('KTENgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
+
                     return null;
                 }
                 $data = $response->json();
-                if ($data==null || $data['returnCode']!=0)
+                if ($data==null || $data['errorCode'] != 0)
                 {
+                    Log::error('KTENgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
+                    Log::error('KTENgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
                     return null;
+                }
+
+                return $data;
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('KTENgamerounds : getBetWinHistoryAll Excpetion. exception= ' . $ex->getMessage());
+                Log::error('KTENgamerounds : getBetWinHistoryAll Excpetion. PARAMS= ' . json_encode($params));
+            }
+            return null;
+        }
+
+        public static function processGameRound()
+        {
+            $count = 0;
+
+            foreach (SPGController::SPG_GAME_IDENTITY as $catname => $thirdId)
+            {
+                $category = \VanguardLTE\Category::where([
+                    'provider'=> SPGController::SPG_PROVIDER,
+                    'href' => $catname,
+                    'shop_id' => 0,
+                    'site_id' => 0,
+                    ])->first();
+
+                if (!$category)
+                {
+                    continue;
+                }
+                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
+                $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
+                if ($lastround)
+                {
+                    $d = strtotime($lastround->date_time);
+                    if ($d > strtotime("-12 hours"))
+                    {
+                        $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                    }
+                }
+                $data = SPGController::gamerounds($thirdId, $lasttime);
+                if (isset($data['totalPageSize']) && $data['totalPageSize'] > 0)
+                {
+                    
+                    foreach ($data['data'] as $round)
+                    {
+                        $bet = 0;
+                        $win = 0;
+                        $gameName = $round['gameId'];
+                        if ($catname == 'spg-cq9')
+                        {
+                            if ($round['type'] == 'WIN')
+                            {
+                                continue;
+                            }
+                            $betdata = json_decode($round['details'],true);
+                            $bet = $betdata['bet'];
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance'];
+                        }
+                        else if ($catname == 'spg-bng' || $catname == 'spg-playson')
+                        {
+                            if ($round['type'] == 'WIN')
+                            {
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['details'],true);
+                            $bet = $betdata['bet']??0;
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance_after'];
+                            if ($bet==0 && $win==0)
+                            {
+                                continue;
+                            }
+                        }
+                        else if ($catname == 'spg-hbn')
+                        {
+                            if ($round['type'] == 'WIN')
+                            {
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['history'],true);
+                            $bet = $betdata['Stake'];
+                            $win = $betdata['Payout'];
+                            $balance = $betdata['BalanceAfter'];
+                            $gameName = $betdata['GameKeyName'];
+                        }
+                        else if ($catname == 'spg-pp')
+                        {
+                            if ($round['type'] == 'WIN')
+                            {
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['details'],true);
+                            $bet = $betdata['bet'];
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance'];
+                            if (!$bet || !$win)
+                            {
+                                Log::error('KTEN PP round : '. json_encode($round));
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if ($round['type'] == 'BET')
+                            {
+                                $bet = $round['amount'];
+                            }
+                            else
+                            {
+                                $win = $round['amount'];
+                            }
+
+                            $balance = -1;
+                        }
+                        if (is_null($win))
+                        {
+                            $win = 0;
+                        }
+                        $time = $round['trans_time'];
+
+                        $userid = intval(preg_replace('/'. self::SPG_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
+                        $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                        
+                        \VanguardLTE\StatGame::create([
+                            'user_id' => $userid, 
+                            'balance' => $balance, 
+                            'bet' => $bet, 
+                            'win' => $win, 
+                            'game' =>$gameName . '_kten', 
+                            'type' => 'slot',
+                            'percent' => 0, 
+                            'percent_jps' => 0, 
+                            'percent_jpg' => 0, 
+                            'profit' => 0, 
+                            'denomination' => 0, 
+                            'date_time' => $time,
+                            'shop_id' => $shop?$shop->shop_id:0,
+                            'category_id' => isset($category)?$category->id:0,
+                            'game_id' =>  $round['gameId'],
+                            'roundid' => $round['gameId'] . '_' . $round['roundID'],
+                        ]);
+                        $count = $count + 1;
+                    }
+                }
+
+            }
+            
+            
+            return [$count, 0];
+        }
+
+        public static function getAgentBalance()
+        {
+
+            $secret = config('app.spg_op');
+            $token = config('app.spg_key');
+
+            //check kten account
+            $params = [
+                'agentId' => $secret,
+                'token' => $token,
+                'time' => time(),
+            ];
+
+            try
+            {
+
+                $url = config('app.spg_api') . '/api/getAgentAccountBalance';
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('KTENAgentBalance : agentbalance request failed. ' . $response->body());
+                    return -1;
+                }
+                $data = $response->json();
+                if (($data==null) || ($data['errorCode'] != 0))
+                {
+                    Log::error('KTENAgentBalance : agentbalance result failed. ' . ($data==null?'null':$data['msg']));
+                    return -1;
+                }
+                return $data['balance'];
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('KTENAgentBalance : agentbalance Exception. Exception=' . $ex->getMessage());
+                Log::error('KTENAgentBalance : agentbalance Exception. PARAMS=' . json_encode($params));
+                return -1;
+            }
+
+        }
+
+        public static function syncpromo()
+        {
+            $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
+            if (!$user)
+            {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+            $gamelist = SPGController::getgamelist(self::SPG_PP_HREF);
+            $len = count($gamelist);
+            if ($len > 10) {$len = 10;}
+            if ($len == 0)
+            {
+                return ['error' => true, 'msg' => 'not found any available game.'];
+            }
+            $rand = mt_rand(0,$len);
+                
+            $gamecode = $gamelist[$rand]['gamecode'];
+            $secret = config('app.spg_op');
+            $token = config('app.spg_key');
+
+            //check kten account
+            $params = [
+                'agentId' => $secret,
+                'token' => $token,
+                'userId' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time(),
+            ];
+            $alreadyUser = 1;
+            try
+            {
+
+                $url = config('app.spg_api') . '/api/checkUser';
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('KTENmakelink : checkUser request failed. ' . $response->body());
+                    return ['error' => true, 'msg' => 'checkUser failed.'];
+                }
+                $data = $response->json();
+                if ($data==null || ($data['errorCode'] != 0 && $data['errorCode'] != 4))
+                {
+                    Log::error('KTENmakelink : checkUser result failed. ' . ($data==null?'null':$data['msg']));
+                    return ['error' => true, 'msg' => 'checkUser failed.'];
+                }
+                if ($data['errorCode'] == 4)
+                {
+                    $alreadyUser = 0;
                 }
             }
             catch (\Exception $ex)
             {
-                Log::error('SPG : getLobbyUrl request failed. ' . $ex->getMessage());
-                return null;
+                Log::error('KTENcheckuser : checkUser Exception. Exception=' . $ex->getMessage());
+                Log::error('KTENcheckuser : checkUser Exception. PARAMS=' . json_encode($params));
+                return ['error' => true, 'msg' => 'checkUser failed.'];
             }
-            $gameId = '';
-            $userId = '';
-            foreach ($data['betHistories'] as $bet)
-            {
-                if (isset($bet['id']) && ($bet['id'] == $betId))
+            if ($alreadyUser == 0){
+                //create kten account
+                $params = [
+                    'agentId' => $secret,
+                    'token' => $token,
+                    'userId' => self::SPG_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time(),
+                    'email' => self::SPG_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
+                ];
+                try
                 {
-                    $gameId = $bet['gameId'];
-                    $userId = $bet['userId'];
-                    break;
+
+                    $url = config('app.spg_api') . '/api/createAccount';
+                    $response = Http::asForm()->post($url, $params);
+                    if (!$response->ok())
+                    {
+                        Log::error('KTENmakelink : createAccount request failed. ' . $response->body());
+                        return ['error' => true, 'msg' => 'createAccount failed.'];
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['errorCode'] != 0)
+                    {
+                        Log::error('KTENmakelink : createAccount result failed. ' . ($data==null?'null':$data['msg']));
+                        return ['error' => true, 'msg' => 'createAccount failed.'];
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    Log::error('KTENcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
+                    Log::error('KTENcheckuser : createAccount Exception. PARAMS=' . json_encode($params));
+                    return ['error' => true, 'msg' => 'createAccount failed.'];
                 }
             }
-            if ($gameId == '')
+
+            $url = SPGController::makegamelink($gamecode, $user);
+            if ($url == null)
             {
-                return null;
+                return ['error' => true, 'msg' => 'game link error '];
             }
-            $userbets = array_values(array_filter($data['betHistories'], function($k) use ($gameId, $userId){
-                return (isset($k['gameId']) && ($k['gameId'] == $gameId)) && (isset($k['userId']) && $k['userId'] == $userId);
-            }));
-            
-            $gametype = 'Baccarat';
-            if ($userbets[0]['gameKind'] == 1)
+
+            $parse = parse_url($url);
+            $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
+        
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            if ($response->status() == 302)
             {
-                $gametype = 'Baccarat';
-                $result = [
-                    'tableName' => $userbets[0]['tableName'],
-                    'type' => $gametype,
-                    'gameNumber' => $userbets[0]['gameNumber'],
-                    'regdate' => $userbets[0]['regdate'],
-                    'bankerScore' => $userbets[0]['bankerScore'],
-                    'playerScore' => $userbets[0]['playerScore'],
-                    'bankerHand' => $userbets[0]['bankerHand'],
-                    'playerHand' => $userbets[0]['playerHand'],
-                    'result' => $userbets[0]['result'],
-                ];
-            }
-            else if ($userbets[0]['gameKind'] == 2)
-            {
-                $gametype = 'DragonTiger';
-                $result = [
-                    'tableName' => $userbets[0]['tableName'],
-                    'type' => $gametype,
-                    'gameNumber' => $userbets[0]['gameNumber'],
-                    'regdate' => $userbets[0]['regdate'],
-                    'dragonScore' => $userbets[0]['dragonScore'],
-                    'tigerScore' => $userbets[0]['tigerScore'],
-                    'dragonHand' => $userbets[0]['dragonHand'],
-                    'tigerHand' => $userbets[0]['tigerHand'],
-                    'result' => $userbets[0]['result'],
-                ];
-            }
-            else if ($userbets[0]['gameKind'] == 4)
-            {
-                $gametype = 'SicBo';
-                $result = [
-                    'tableName' => $userbets[0]['tableName'],
-                    'type' => $gametype,
-                    'gameNumber' => $userbets[0]['gameNumber'],
-                    'regdate' => $userbets[0]['regdate'],
-                    'score' => [$userbets[0]['first'],$userbets[0]['second'],$userbets[0]['third']],
-                ];
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                    }
+                    if (str_contains($key, 'symbol='))
+                    {
+                        $gamecode = $key;
+                    }
+                }
+                if (!$mgckey){
+                    return ['error' => true, 'msg' => 'could not find mgckey value'];
+                }
+                
+                $promo = \VanguardLTE\PPPromo::take(1)->first();
+                if (!$promo)
+                {
+                    $promo = \VanguardLTE\PPPromo::create();
+                }
+                $raceIds = [];
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/active/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->active = $response->body();
+                    $json_data = $response->json();
+                    if (isset($json_data['races']))
+                    {
+                        foreach ($json_data['races'] as $race)
+                        {
+                            $raceIds[$race['id']] = null;
+                        }
+                    }
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/details/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentdetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/details/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->racedetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/v3/leaderboard/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentleaderboard = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/prizes/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->raceprizes = $response->body();
+                }
+                
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post($ppgameserver . '/gs2c/promo/race/v2/winners/?'.$gamecode.'&' . $mgckey, ['latestIdentity' => $raceIds]) ;
+                if ($response->ok())
+                {
+                    $promo->racewinners = $response->body();
+                }
+
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/minilobby/games?' . $mgckey );
+                if ($response->ok())
+                {
+                    $json_data = $response->json();
+                    //disable not own games
+                    $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
+                    $gIds = $ownCats->games->pluck('game_id')->toArray();
+                    $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view',1)->get();
+
+                    $lobbyCats = $json_data['lobbyCategories'];
+                    $filteredCats = [];
+                    foreach ($lobbyCats as $cat)
+                    {
+                        $lobbyGames = $cat['lobbyGames'];
+                        $filteredGames = [];
+                        foreach ($lobbyGames as $game)
+                        {
+                            foreach ($ownGames as $og)
+                            {
+                                if ($og->label == $game['symbol'])
+                                {
+                                    $filteredGames[] = $game;
+                                    break;
+                                }
+                            }
+                        }
+                        $cat['lobbyGames'] = $filteredGames;
+                        $filteredCats[] = $cat;
+                    }
+                    $json_data['lobbyCategories'] = $filteredCats;
+                    $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                    $promo->games = json_encode($json_data);
+                }
+
+                $promo->save();
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
             }
             else
             {
-                return null;
-            }
+                return ['error' => true, 'msg' => 'server response is not 302.'];
+            }          
             
-
-            return [
-                'type' => $gametype,
-                'result' => $result,
-                'bets' => $userbets,
-                'stat' => $stat
-            ];
         }
 
     }
