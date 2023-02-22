@@ -41,7 +41,7 @@ namespace VanguardLTE
             'parent_id', 
             'shop_id', 
             'session',
-            'session_json',
+            'session_json', //used as nosql data for comaster
             'pball_single_percent', 
             'pball_comb_percent',
             'deal_balance', 
@@ -1322,6 +1322,12 @@ namespace VanguardLTE
             return $session!=null;
         }
 
+        public function sessiondata()
+        {
+            $session = $this->session_json;
+            $data = json_decode($session,true);
+            return $data;
+        }
 
 
     }

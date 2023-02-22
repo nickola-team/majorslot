@@ -219,6 +219,15 @@
                                     @endif
                                     <textarea id="memo" name="memo" class="form-control" rows="5">{{$user->memo?$user->memo->memo:''}}</textarea>
                                 </div>
+                                @if (auth()->user()->hasRole('admin') && $user->isInOutPartner())
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-gameOn">게임관리권한</label>
+                                        <p>
+                                        <input type="radio"    name="gameOn" value="1" {{$user->sessiondata()['gameOn']==1?'checked':''}}   /> <span>있음</span>
+                                        <input type="radio"    name="gameOn" value="0" {{$user->sessiondata()['gameOn']==0?'checked':''}}   /> <span>없음</span>
+
+                                    </div>
+                                @endif
                                 @endif
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">보관</button>
