@@ -39,12 +39,11 @@
 
         <div class="logo">
             <img src="/frontend/{{$logo}}/img/iris_logo.png?v=1671720585" width="120">
-            <p> ⓒ @yield('page-title') Limited 2020.</p>
+            <p> ⓒ @yield('page-title') Limited 2023.</p>
         </div>
 
         <div class="contacts">
             <button type="button" style="cursor: auto;"><img src="/frontend/iris/theme/fm/images/icon/tele.png" alt="텔레그램"></button>
-            <p><span>@iris079</span></p>
         </div>
     </div>
 </div>
