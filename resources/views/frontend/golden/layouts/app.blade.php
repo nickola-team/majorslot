@@ -408,9 +408,11 @@
          </div>
          <div>
          @if ($noticelist != null && count($noticelist) > 0)          
+         <?php $c=0; ?>
         @foreach ($noticelist as $ntc)
             @if ($ntc->popup == 'popup')
-        <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($loop->index*300)}}px; z-index: 1000;">
+            <?php $c=$c+1; ?>
+        <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($c*300)}}px; z-index: 1000;">
           <div class="pop01_popup_wrap">
               <div class="pop01_popup_btn_wrap">
                   <ul>
