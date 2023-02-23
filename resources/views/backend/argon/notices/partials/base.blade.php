@@ -13,6 +13,10 @@
     <textarea id="content" name="content" rows="10" cols="150" style="width:100%;">{{ $edit ? $notice->content : '공지내용을 입력하세요' }}</textarea>
 </div>
 <div class="form-group">
+    <label>공지형식</label>
+    {!! Form::select('popup', \VanguardLTE\Notice::popups(), $edit ? $notice->popup : 'popup', ['id' => 'popup', 'class' => 'form-control']) !!}
+</div>
+<div class="form-group">
     <label>공지대상</label>
     {!! Form::select('type', \VanguardLTE\Notice::lists(), $edit ? $notice->type : 'user', ['id' => 'type', 'class' => 'form-control']) !!}
 </div>

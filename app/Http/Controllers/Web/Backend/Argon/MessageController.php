@@ -75,7 +75,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             else
             {
-                $data['user_id'] = 0;
+                return redirect()->back()->withErrors('회원아이디를 입력하세요');
             }
             $data['writer_id'] = auth()->user()->id;
             \VanguardLTE\Message::create($data);
