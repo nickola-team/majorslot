@@ -295,7 +295,42 @@
             </div>
           </div>
           <div class="visual_ling_2"></div>
-          <div class="visual_wrap" style="background: url(/frontend/angelslot/images/visual_bg.jpg) center top no-repeat;!important; height : 380px;">
+          <div class="visual_wrap" style="background: url(/frontend/angelslot/images/visual_bg.jpg) center top no-repeat;!important;">
+          <div id="wrap-casino" style=" text-align: right; padding: 10px; margin-right:450px;">
+          @if ($categories && count($categories))
+            <?php 
+              $livecats = [];
+              $livecount = 0;
+              foreach ($categories as $cat)
+              {
+                if ($cat->type == 'live'){
+                  $livecats[] = $cat;
+                }
+              }
+              $livecount = count($livecats);
+
+            ?>
+                @foreach($livecats AS $index=>$category)
+                @if (Auth::check())
+                  @if ($category->status == 0)
+                      <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="alert('점검중입니다');">
+                  @else
+                    @if ($category->provider=='gac')
+                    <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', 'gvolobby');">
+                    @else
+                    <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="startGameByProvider('{{$category->provider}}', '{{$category->href}}');">
+                    @endif
+                  @endif
+                @else
+                <img src="/frontend/jungle/images/lives/{{$category->title}}.jpg" style="height: 180px; cursor: pointer;" onClick="showLoginAlert();">
+                @endif
+                
+                @if ($index==intval($livecount/2-1))
+                <br>
+                @endif
+                @endforeach
+              @endif
+                </div>
           </div>
           <div class="visual_ling_2"></div>
           
