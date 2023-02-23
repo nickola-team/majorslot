@@ -481,7 +481,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$response->ok())
             {
                 Log::error('XMXmakelink : createAccount request failed. ' . $response->body());
-
+                Log::error('XMXmakelink : createAccount PARAM. PARAM=' . json_encode($params));
                 return null;
             }
             $data = $response->json();
