@@ -9,7 +9,7 @@ namespace VanguardLTE
             'title', 
             'type', 
             'content', 
-            'image', 
+            'popup', 
             'active',
             'date_time', 
         ];
@@ -20,6 +20,13 @@ namespace VanguardLTE
                 'user' => '회원',
                 'partner' => '파트너',
                 'all' => '전체'
+            ];
+        }
+        public static function popups()
+        {
+            return [
+                'popup' => '팝업',
+                'general' => '일반',
             ];
         }
         public static function boot()
