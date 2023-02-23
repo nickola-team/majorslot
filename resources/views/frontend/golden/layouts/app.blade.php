@@ -406,6 +406,7 @@
          <div>
          @if ($noticelist != null && count($noticelist) > 0)          
         @foreach ($noticelist as $ntc)
+            @if ($ntc->popup == 'popup')
         <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($loop->index*510)}}px; z-index: 1000;">
           <div class="pop01_popup_wrap">
               <div class="pop01_popup_btn_wrap">
@@ -427,6 +428,7 @@
           </div>
         </div>
         </div>
+        @endif
         @endforeach
         @endif
       </div>
@@ -457,10 +459,12 @@
   $(document).ready(function() {
 @if ($noticelist!=null && count($noticelist) >0)
 @foreach ($noticelist as $ntc)    
-    var prevTime = localStorage.getItem("{{$ntc->id}}hide_notification");
-    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-      $("#{{$ntc->id}}notification").hide();
-    }
+    @if ($ntc->popup == 'popup')
+      var prevTime = localStorage.getItem("{{$ntc->id}}hide_notification");
+      if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+        $("#{{$ntc->id}}notification").hide();
+      }
+    @endif
 @endforeach				
 @endif
 
