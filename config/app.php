@@ -224,6 +224,13 @@ return [
     'kten_op' => env('KTEN_OP', ''),
     'kten_key' => env('KTEN_KEY', ''),
 
+    /*
+    SPOGAME Auth key
+    */
+    'spg_api' => env('SPG_API', ''),
+    'spg_secret' => env('SPG_SECRET', ''),
+    'spg_key' => env('SPG_KEY', ''),
+
 
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
