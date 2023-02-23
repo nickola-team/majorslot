@@ -421,7 +421,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
 
                 if($scatterCount >= 3){
                     $muls = [0,0,0,1,20,100];
-                    $scatterWin = $muls[$scatterWin] * $betline * $lines;
+                    $scatterWin = $muls[$scatterCount] * $betline * $lines;
                 }
                 $totalWin = $totalWin + $scatterWin; 
                 
