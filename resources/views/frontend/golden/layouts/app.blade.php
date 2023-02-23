@@ -339,8 +339,11 @@
 
 	  		<div id="popup"></div>
         @auth()
+          @include('frontend.jungle.modals.deposit')
+          @include('frontend.jungle.modals.contact')
+          @include('frontend.jungle.modals.deposit')
+          @include('frontend.jungle.modals.contact')
           @include('frontend.jungle.modals.noticelist')
-          
         @else
         @include('frontend.jungle.modals.join')
         @endif
@@ -407,7 +410,7 @@
          @if ($noticelist != null && count($noticelist) > 0)          
         @foreach ($noticelist as $ntc)
             @if ($ntc->popup == 'popup')
-        <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($loop->index*510)}}px; z-index: 1000;">
+        <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($loop->index*300)}}px; z-index: 1000;">
           <div class="pop01_popup_wrap">
               <div class="pop01_popup_btn_wrap">
                   <ul>
@@ -416,8 +419,7 @@
                   </ul>
               </div>
               <div class="pop01_popup_box">
-                  <div class="pop01_popup_text" style="padding: 30px; width: 500px;">
-                    <span class="pop01_popup_font1" style="border-bottom: 2px solid rgb(255, 255, 255); margin-bottom: 15px;"></span>
+                  <div class="pop01_popup_text" style="min-width: 300px;">
                     <span class="pop01_popup_font2">
                           <div>
                               <?php echo $ntc->content ?>

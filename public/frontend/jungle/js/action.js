@@ -428,26 +428,7 @@ function showProfilePopup() {
             <a href="#" class="fade_1_close" onclick="closePopup();"><img src="/frontend/jungle/images/popup_close.png" /></a>
             </div>
             <div class="popupbox">
-            <div class="popup_tab_wrap">
-                <ul class="popup_tab">
-                <li class="tab1" data-target="#popuptab_cont1">
-                    <a onclick="showDepositPopup();"><span><img src="/frontend/jungle/images/gnb01.png" /> 입금신청</span></a>
-                </li>
-                <li class="tab2" data-target="#popuptab_cont2">
-                    <a onclick="showWithdrawPopup();"><span><img src="/frontend/jungle/images/gnb02.png" /> 출금신청</span></a>
-                </li>
-                <li class="tab7" data-target="#popuptab_cont7">
-                    <a onclick="showNotificationPopup();"><span><img src="/frontend/jungle/images/gnb07.png" /> 공지사항</span></a>
-                </li>
-                <li class="tab8" data-target="#popuptab_cont8">
-                    <a><span><img src="/frontend/jungle/images/gnb08.png" /> 마이페이지</span></a>
-                </li>
-                <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                    <a onclick="showContactPopup();"><span><img src="/frontend/jungle/images/gnb05.png" /> 고객센터</span></a>
-                </li>
-                <li class="tab10" data-target="#popuptab_cont10"></li>
-                </ul>
-            </div>
+            
             <div id="popuptab_cont4" class="popuptab_cont">
                 <div class="title1">마이페이지</div>
                 <div class="contents_in">
@@ -644,122 +625,7 @@ function showDepositPopup() {
         return;
     }
 
-    var strHtml = `
-        <div class="popup-overlay "
-        style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-        <div class="popup-content "
-            style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
-            <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-                role="dialog"
-                style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 800px;">
-                <div class="popup_wrap">
-                    <div class="close_box" onclick="closePopup();"><a href="#" class="fade_1_close"><img src="/frontend/jungle/images/popup_close.png"></a>
-                    </div>
-                    <div class="popupbox">
-                        <div class="popup_tab_wrap">
-                            <ul class="popup_tab">
-                            <li class="tab1" data-target="#popuptab_cont1">
-                                <a><span><img src="/frontend/jungle/images/gnb01.png" /> 입금신청</span></a>
-                            </li>
-                            <li class="tab2" data-target="#popuptab_cont2">
-                                <a onclick="showWithdrawPopup();"><span><img src="/frontend/jungle/images/gnb02.png" /> 출금신청</span></a>
-                            </li>
-                            <li class="tab7" data-target="#popuptab_cont7">
-                                <a onclick="showNotificationPopup();"><span><img src="/frontend/jungle/images/gnb07.png" /> 공지사항</span></a>
-                            </li>
-                            <li class="tab8" data-target="#popuptab_cont8">
-                                <a onclick="showProfilePopup();"><span><img src="/frontend/jungle/images/gnb08.png" /> 마이페이지</span></a>
-                            </li>
-                            <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                                <a onclick="showContactPopup();"><span><img src="/frontend/jungle/images/gnb05.png" /> 고객센터</span></a>
-                            </li>
-                            <li class="tab10" data-target="#popuptab_cont10"></li>
-                            </ul>
-                        </div>
-                        <div id="popuptab_cont2" class="popuptab_cont">
-                            <div class="title1">입금신청</div>
-                            <div class="contents_in">
-                                <div class="con_box00">
-                                    <div class="info_wrap">
-                                        <div class="info2">주의사항</div>
-                                        <div class="info3">- 입금 최소 1만원부터 가능하며 입금전 꼭! 본사의 충전계좌 확인 후 입금바랍니다.<br>- 수표 및 토스입금시
-                                            충전처리가 불가합니다.</div>
-                                    </div>
-                                </div>
-                                <div class="con_box10">
-                                    <div class="info_wrap">
-                                        <div class="info2" style="text-align: center;"><span class="ww_font">내 지갑 <img
-                                                    src="/frontend/jungle/images/ww_icon.png" height="30"><input
-                                                    class="input1 walletBalance" id="balance_offer" readonly="" value="${currentBalance}">
-                                                원</span></div>
-                                    </div>
-                                </div>
-                                <div class="con_box10" id="deposit">
-                                <form method="post" id="fundFrm" name="fundFrm">
-                                    <table class="write_title_top">
-                                        <tbody>
-                                            <tr>
-                                                <td class="write_title">ID</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1 userID" readonly=""
-                                                        value="${userName}"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="height: 5px;"></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">은행이름</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1" id="bankname" value="${bankname}"></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">계좌번호</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1" id="accountno" value="${accountno}"></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">입금자명</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic"><input class="input1 userName" id="name" value="${recommender}"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="height: 5px;"></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="write_title">입금금액</td>
-                                                <td class="write_td"></td>
-                                                <td class="write_basic">
-                                                    <input id="money" type="hidden" name="money" value="0">
-                                                    <input class="input1" id="money1" name="money1" placeholder="0" value="0" onchange="comma()">
-                                                    <a href="javascript:money_count('10000');" style="padding-left: 5px;"><span class="btn1_2">1만원</span></a>
-                                                    <a href="javascript:money_count('50000');" style="padding-left: 5px;"><span class="btn1_2">5만원</span></a>
-                                                    <a href="javascript:money_count('100000');" style="padding-left: 5px;"><span class="btn1_2">10만원</span></a>
-                                                    <a href="javascript:money_count('500000');" style="padding-left: 5px;"><span class="btn1_2">50만원</span></a>
-                                                    <a href="javascript:money_count('1000000');" style="padding-left: 5px;"><span class="btn1_2">100만원</span></a>
-                                                    <a href="javascript:money_count('5000000');" style="padding-left: 5px;"><span class="btn1_2">500만원</span></a>
-                                                    <a href="javascript:money_count_hand();" style="padding-left: 5px;"><span class="btn1_1">정정</span></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    </form>
-                                </div>
-                                <div class="con_box20">
-                                    <div class="btn_wrap_center">
-                                        <ul>
-                                            <li><a onclick="deposit();"><span class="btn3_1">입금신청하기</span></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-
-    $("#popup").html(strHtml);
+    $("#popdeposit").show();
 }
 
 function showWithdrawPopup() {
@@ -780,26 +646,7 @@ function showWithdrawPopup() {
                     <div class="close_box" onclick="closePopup();"><a href="#" class="fade_1_close"><img src="/frontend/jungle/images/popup_close.png"></a>
                     </div>
                     <div class="popupbox">
-                        <div class="popup_tab_wrap">
-                            <ul class="popup_tab">
-                            <li class="tab1" data-target="#popuptab_cont1">
-                                <a onclick="showDepositPopup();"><span><img src="/frontend/jungle/images/gnb01.png" /> 입금신청</span></a>
-                            </li>
-                            <li class="tab2" data-target="#popuptab_cont2">
-                                <a><span><img src="/frontend/jungle/images/gnb02.png" /> 출금신청</span></a>
-                            </li>
-                            <li class="tab7" data-target="#popuptab_cont7">
-                                <a onclick="showNotificationPopup();"><span><img src="/frontend/jungle/images/gnb07.png" /> 공지사항</span></a>
-                            </li>
-                            <li class="tab8" data-target="#popuptab_cont8">
-                                <a onclick="showProfilePopup();"><span><img src="/frontend/jungle/images/gnb08.png" /> 마이페이지</span></a>
-                            </li>
-                            <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                                <a onclick="showContactPopup();"><span><img src="/frontend/jungle/images/gnb05.png" /> 고객센터</span></a>
-                            </li>
-                            <li class="tab10" data-target="#popuptab_cont10"></li>
-                            </ul>
-                        </div>
+                        
                         <div id="popuptab_cont2" class="popuptab_cont">
                             <div class="title1">출금신청</div>
                             <div class="contents_in">
@@ -892,71 +739,20 @@ function showNotificationPopup() {
     $("#popnoticelist").show();
 
 }
-
+function showWriteContactPopup() {
+    if (loginYN !== 'Y') {
+        showLoginAlert()
+        return;
+    }
+    $("#popwritecont").show();
+}
 
 function showContactPopup() {
     if (loginYN !== 'Y') {
         showLoginAlert()
         return;
     }
-
-    var strHtml = `
-    <div class="popup-overlay "
-    style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); display: flex; z-index: 999;">
-    <div class="popup-content "
-        style="position: relative; background: rgb(0, 0, 0); margin: auto; border: none; padding: 5px; z-index: 99;">
-        <div id="fade_2" class="slideDown popup_none popup_content" data-popup-initialized="true" aria-hidden="false"
-            role="dialog"
-            style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s ease 0s; text-align: left; position: relative; vertical-align: middle; overflow-y: auto; height: 600px;">
-            <div class="popup_wrap">
-                <div class="close_box"><a class="fade_1_close" onclick="closePopup();"><img src="/frontend/jungle/images/popup_close.png"></a></div>
-                <div class="popupbox">
-                     <div class="popup_tab_wrap">
-                            <ul class="popup_tab">
-                            <li class="tab1" data-target="#popuptab_cont1">
-                                <a onclick="showDepositPopup();"><span><img src="/frontend/jungle/images/gnb01.png" /> 입금신청</span></a>
-                            </li>
-                            <li class="tab2" data-target="#popuptab_cont2">
-                                <a onclick="showWithdrawPopup();"><span><img src="/frontend/jungle/images/gnb02.png" /> 출금신청</span></a>
-                            </li>
-                            <li class="tab7" data-target="#popuptab_cont7">
-                                <a onclick="showNotificationPopup();"><span><img src="/frontend/jungle/images/gnb07.png" /> 공지사항</span></a>
-                            </li>
-                            <li class="tab8" data-target="#popuptab_cont8">
-                                <a onclick="showProfilePopup();"><span><img src="/frontend/jungle/images/gnb08.png" /> 마이페이지</span></a>
-                            </li>
-                            <li class="tab9 popupactive" data-target="#popuptab_cont9">
-                                <a><span><img src="/frontend/jungle/images/gnb05.png" /> 고객센터</span></a>
-                            </li>
-                            <li class="tab10" data-target="#popuptab_cont10"></li>
-                            </ul>
-                        </div>
-                    <div id="popuptab_cont8" class="popuptab_cont popupvis_hidden">
-                        <div class="title1">공지사항</div>
-                    </div>
-                    <div id="popuptab_cont9" class="popuptab_cont">
-                        <div class="title1">고객센터</div>
-                        <div class="contents_in">
-                            <div class="con_box00">
-                                <table style="width: 100%;">
-                                    <tbody>
-                                        <tr>
-                                            <td class="list_title1">제목</td>
-                                            <td class="list_title1" style="width: 10%;">작성일</td>
-                                            <td class="list_title1" style="width: 10%;">상태</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>`;
-
-    $("#popup").html(strHtml);
+    $("#popcontact").show();
 }
 
 function getBalance() {
@@ -1054,6 +850,24 @@ function loginSubmit(frm) {
         }
     });
 }
+
+function requestAccount(){
+    $.ajax({
+        type: "POST",
+        url: "/api/depositAccount",
+        data: null,
+        cache: false,
+        async: false,
+        success: function (data) {
+            $('#depositAccount').text(data.msg);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        },
+    });
+
+}
+
 
 function deposit() {
     var refundname = $("#deposit #name").val();
@@ -1176,4 +990,38 @@ function openNotice(idx){
     } else {
         $('#ntc_'+idx).css('display','table-row').addClass('open');
     }
+}
+
+function openMessage(idx){
+    if($('#msg_'+idx).hasClass("open")){
+        $('#msg_'+idx).css('display','none').removeClass('open');;
+    } else {
+        $('#msg_'+idx).css('display','table-row').addClass('open');
+    }
+    $.post('/api/readMsg',{id : idx},function(data){
+    }); 
+}
+
+function writeMessage(){
+    var subject = $('#subject').val();
+    var writeArea = $('#writeArea').val();
+    if(!subject){
+        alert('제목을 입력해주세요');
+        return;
+    }
+    if(!writeArea){
+        alert('내용을 입력해주세요');
+        return;
+    }
+    $.post('/api/writeMsg', {
+        title : subject, 
+        content : writeArea, 
+    },function(data){
+        if(data.error == false){
+            alert('저장 되었습니다');
+            window.location.href = "/";
+        } else {
+            alert(data.msg);
+        }
+    });
 }
