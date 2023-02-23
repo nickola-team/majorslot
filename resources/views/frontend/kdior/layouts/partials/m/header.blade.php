@@ -7,16 +7,9 @@
         <div class="my_wrap">
             <img src='/frontend/kdior/img/lv1.png' align='absmiddle' width='35'>&nbsp;{{auth()->user()->username}}님 &nbsp;&nbsp;
             캐쉬 <span class="font11">{{number_format(auth()->user()->balance)}}</span> &nbsp;&nbsp; 
-            콤프 <span class="font11">0</span> &nbsp;&nbsp; 
-            <a href="/member/coupon_list.asp">쿠폰 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span></a>
+            보너스 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span> &nbsp;&nbsp; 
         </div>
-        <div class="top_menu">
-            <ul>
-                <li><a href="#" class="casino_1_open"><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></li>
-                <li><a href="#" class="casino_2_open"><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></li>
-                <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></li>                        
-            </ul>                 	
-        </div>       
+        
     @else
         <div class="top">
             <div class="m_logo"><a href="/"><img src="/frontend/{{$logo}}/images/logo.png?v=202302021619" width="130"></a></div>
@@ -33,12 +26,25 @@
             
             </ul>
         </div>
-        <div class="top_menu">
-            <ul>
-                <li><a href="#" class="casino_1_open"><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></li>
-                <li><a href="#" class="casino_2_open"><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></li>
-                <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></li>                        
-            </ul>                 	
-        </div>       
+    
     @endif
+    <div class="top_menu">
+        <ul>
+            <li><a href="#" 
+            @if (isset($live) && $live=='disabled')
+                onclick="alert('점검중입니다');"
+            @else
+                class="casino_1_open"
+            @endif
+            ><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></li>
+            <li><a href="#" 
+            @if (isset($hotel) && $hotel=='disabled')
+                onclick="alert('점검중입니다');"
+            @else
+                class="casino_2_open"
+            @endif
+            ><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></li>
+            <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></li>                        
+        </ul>
+    </div>       
 </div><!-- header_wrap -->

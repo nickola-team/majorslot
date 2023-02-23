@@ -14,8 +14,7 @@
                     @auth()
                         <li><span class="font11" style="color:#fb0000;"><img src='/frontend/kdior/img/lv1.png' align='absmiddle' width='35'>&nbsp;{{auth()->user()->username}}</span>&nbsp;&nbsp;&nbsp;</li>                    
                         <li>&nbsp;캐쉬 <span class="font11">{{number_format(auth()->user()->balance)}}</span>&nbsp;&nbsp;&nbsp;</li>
-                        <li>&nbsp;콤프 <span class="font11">0</span>&nbsp;&nbsp;&nbsp;</li>
-                        <li>&nbsp;<a href="#" class="sub_pop4_open">쿠폰 <span class="font11">0</span>&nbsp;개&nbsp;&nbsp;&nbsp;</a></li>
+                        <li>&nbsp;보너스 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span>&nbsp;&nbsp;&nbsp;</li>
 
                         <li><a href="/logout"><span class="login_btn2" style="min-width: 60px;">로그아웃</span></a></li>                                    
                     @else
@@ -32,8 +31,7 @@
                     <li><a href="#" class="sub_pop1_open">입금신청</a></li>
                     <li><a href="#" class="sub_pop2_open">출금신청</a></li>
                     <li><a href="#" class="sub_pop3_open">공지사항</a></li>
-                    <li><a href="#" class="">쿠폰</a></li>
-                    <li><a href="#" class="sub_pop5_open">콤프</a></li>
+                    <li><a href="#" class="sub_pop5_open">보너스</a></li>
                     <li><a href="#" class="sub_pop6_open" onclick="support_detail();">고객센터</a></li>
                     <li><a href="#" class="sub_pop8_open" onclick="deposit_detail();">충전내역</a></li>
                     <li><a href="#" class="sub_pop9_open" onclick="withdraw_detail();">환전내역</a></li>                             
@@ -41,8 +39,7 @@
                     <li><a href="#" class="etc_pop2_open">입금신청</a></li>
                     <li><a href="#" class="etc_pop2_open">출금신청</a></li>
                     <li><a href="#" class="etc_pop2_open">공지사항</a></li>
-                    <li><a href="#" class="etc_pop2_open">쿠폰</a></li>
-                    <li><a href="#" class="etc_pop2_open">콤프</a></li>
+                    <li><a href="#" class="etc_pop2_open">보너스</a></li>
                     <li><a href="#" class="etc_pop2_open">고객센터</a></li>
                     <li><a href="#" class="etc_pop2_open">충전내역</a></li>
                     <li><a href="#" class="etc_pop2_open">환전내역</a></li>                                         

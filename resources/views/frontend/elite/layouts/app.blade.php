@@ -337,6 +337,12 @@
             <div class="sc-inner">
 
 	  		<div id="popup"></div>
+        @auth()
+          @include('frontend.jungle.modals.noticelist')
+          
+        @else
+        @include('frontend.jungle.modals.join')
+        @endif
         <?php $count = 0; ?>
 			@if ($categories && count($categories))
 				@foreach($categories AS $index=>$category)

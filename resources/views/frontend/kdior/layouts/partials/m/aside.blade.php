@@ -37,7 +37,7 @@
 							</tr> 
 							<tr>	                            
 								<td width="10%" align="center"><a href="#" class="sub_pop3_open"><span class="aside_btn1">공지사항</span></a></td>                                                                                              
-                                <td width="10%" align="center"><a href="#" class="sub_pop5_open"><span class="aside_btn1">콤프</span></a></td>
+                                <td width="10%" align="center"><a href="#" class="sub_pop5_open"><span class="aside_btn1">보너스</span></a></td>
 							</tr> 
 							<tr>	                                 
 								<td width="10%" align="center"><a href="#" class="sub_pop6_open" onclick="support_detail();"><span class="aside_btn1">고객센터</span></a></td>                                                          

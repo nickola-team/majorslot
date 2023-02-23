@@ -263,6 +263,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             $data = $request->all();
+            if (isset($data['gameOn']))
+            {
+                $userdata = $user->sessiondata();
+                $userdata['gameOn'] = $data['gameOn'];
+                $data['session'] = json_encode($userdata);
+                unset($data['gameOn']);
+
+            }
             
             if( !$user->isInOutPartner())
             {

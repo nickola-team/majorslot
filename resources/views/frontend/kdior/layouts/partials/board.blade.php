@@ -5,7 +5,7 @@
         <li><img src="/frontend/kdior/images/menu_line.png"></li>
         <li><a href="#" class="sub_pop2_open"><img src="/frontend/kdior/images/menu2.png?v=202301301150"></a></li>
         <li><img src="/frontend/kdior/images/menu_line.png"></li>
-        <li><a href="#" class=""><img src="/frontend/kdior/images/menu3.png?v=202301301150"></a></li>
+        <li><a href="#" class="sub_pop3_open"><img src="/frontend/kdior/images/menu3.png?v=202301301150"></a></li>
         <li><img src="/frontend/kdior/images/menu_line.png"></li>
         <li><a href="#" class="sub_pop5_open"><img src="/frontend/kdior/images/menu4.png?v=202301301150"></a></li>
         <li><img src="/frontend/kdior/images/menu_line.png"></li>

@@ -40,8 +40,7 @@ namespace VanguardLTE
             'count_return', 
             'parent_id', 
             'shop_id', 
-            'session',
-            'session_json',
+            'session',//used as nosql data for comaster
             'pball_single_percent', 
             'pball_comb_percent',
             'deal_balance', 
@@ -119,6 +118,7 @@ namespace VanguardLTE
                 '중국공상', 
                 '펀드온라인코리아', 
                 '케이티비투자증권',
+                '신협',
                 'PAYWIN',
                 'JUNCOIN',
                 'MESSAGE'
@@ -1322,6 +1322,12 @@ namespace VanguardLTE
             return $session!=null;
         }
 
+        public function sessiondata()
+        {
+            $session = $this->session;
+            $data = json_decode($session,true);
+            return $data;
+        }
 
 
     }

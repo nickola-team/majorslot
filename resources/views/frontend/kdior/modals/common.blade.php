@@ -133,13 +133,13 @@
 </div>
 
 
-<!-- 콤프 -->
+<!-- 보너스 -->
 
 <div id="sub_pop5" class="popup_style04 popup_none">
     <div class="popup_wrap_1000">   
         <div class="close_box"><a href="#" class="sub_pop5_close"><img src="/frontend/kdior/images/popup_close.png"></a></div>
         <div class="popupbox">
-            <div class="title1">콤프</div><!-- 타이틀 -->
+            <div class="title1">보너스</div><!-- 타이틀 -->
             <form method="post" name="frm">
             <div class="con_box10">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="write_title_top">  
@@ -148,7 +148,7 @@
                         <td class="write_basic">{{auth()->user()->username}}</td>
                     </tr> 
                     <tr>
-                        <td class="write_title">보유콤프</td>
+                        <td class="write_title">보유보너스</td>
                         <td class="write_basic"><span class="font11">{{number_format(auth()->user()->deal_balance)}}</span> P</td>
                     </tr>                     							
                 </table>                
@@ -156,7 +156,7 @@
             <div class="con_box10">
                 <div class="btn_wrap_center">
                     <ul>
-                        <li><a href="#" onclick="compExchange();"><span class="btn3_1">콤프사용</span></a></li>
+                        <li><a href="#" onclick="compExchange();"><span class="btn3_1">보너스사용</span></a></li>
                     </ul>
                 </div>
             </div>   
