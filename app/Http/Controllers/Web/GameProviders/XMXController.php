@@ -141,7 +141,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     else
                     {
-                        Log::error('XMXgetuserbalance : return failed. ' . $res['description']);
+                        Log::error('XMXgetuserbalance : return failed. ' . $user->id . ':' . $res['description']);
                     }
                 }
                 else
