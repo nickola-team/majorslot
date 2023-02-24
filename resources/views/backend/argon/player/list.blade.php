@@ -28,8 +28,10 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
+                        <a href="{{argon_route('argon.player.list', ['online' => 1])}}">
                         <h3 class="card-title text-primary mb-0 ">접속중 유저</h3>
                         <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['online'])}}</span>
+                        </a>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
@@ -107,6 +109,14 @@
                                 <select class="form-control" id="online" name="online">
                                     <option value="" @if (Request::get('online') == '') selected @endif>@lang('app.all')</option>
 									<option value="1" @if (Request::get('online') == 1) selected @endif> 온라인</option>
+                                </select>
+                            </div>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">보유금</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="balance" name="balance">
+                                    <option value="" @if (Request::get('balance') == '') selected @endif>순서없음</option>
+									<option value="1" @if (Request::get('balance') == 1) selected @endif> 많은순서</option>
+                                    <option value="2" @if (Request::get('balance') == 2) selected @endif> 작은순서</option>
                                 </select>
                             </div>
                             </div>
