@@ -95,7 +95,7 @@
 <div class="wrapper">
     @include('frontend.iris.layouts.partials.header', ['logo' => 'blueangel'])
     @include('frontend.iris.layouts.partials.banner')
-    @include('frontend.iris.layouts.partials.category', ['live' => 'disabled'])
+    @include('frontend.iris.layouts.partials.category')
     
     @yield('content')
 
