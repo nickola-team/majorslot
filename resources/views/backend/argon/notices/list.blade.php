@@ -22,6 +22,7 @@
 							<tr>
 								<th scope="col">제목</th>
 								<th scope="col">등록날짜</th>
+								<th scope="col">공지형식</th>
 								<th scope="col">공지대상</th>
 								<th scope="col">상태</th>
 								@if (auth()->user()->hasRole('admin'))

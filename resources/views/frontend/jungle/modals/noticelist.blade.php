@@ -25,6 +25,7 @@
                                         </tr>
                                         @if ($noticelist!=null && count($noticelist) >0)
                                         @foreach ($noticelist as $ntc)    
+                                        @if ($ntc->popup == 'general')
                                             <tr onclick="openNotice({{$ntc->id}});"  class="cp">
                                                 <td  class="list_notice2" style="width: 10%;">{{$loop->index+1}}</td>
                                                 <td  class="list_notice2">{{$ntc->title}}</td>
@@ -38,6 +39,7 @@
                                                 </td>
 
                                             </tr>
+                                        @endif
                                         @endforeach
                                         @else
                                         <tr><td>공지가 없습니다</td></tr>

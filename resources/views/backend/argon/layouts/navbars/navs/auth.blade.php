@@ -84,7 +84,7 @@
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block ml-lg-4">
-                    <a class="nav-link text-dark" href="#">
+                    <a class="nav-link text-dark" href="{{argon_route('argon.player.list', ['balance' => 1])}}">
                         하부 총 보유금 {{number_format(auth()->user()->childBalanceSum())}}
                     </a>
                 </li>

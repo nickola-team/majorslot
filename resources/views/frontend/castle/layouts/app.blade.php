@@ -339,6 +339,8 @@
 
 	  		<div id="popup"></div>
         @auth()
+          @include('frontend.jungle.modals.deposit')
+          @include('frontend.jungle.modals.contact')
           @include('frontend.jungle.modals.noticelist')
           
         @else

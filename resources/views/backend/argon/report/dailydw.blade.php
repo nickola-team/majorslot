@@ -2,7 +2,7 @@
         'parentSection' => 'report',
         'elementName' => 'report-dailydw'
     ])
-@section('page-title',  '일별충환전')
+@section('page-title',  '일별정산')
 
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
@@ -154,7 +154,7 @@
         <div class="col">
             <div class="card mt-4">
                 <div class="card-header border-0">
-                    <h3 class="mb-0">일별충환전</h3>
+                    <h3 class="mb-0">일별정산</h3>
                 </div>
                 <div class="table-responsive">
                         <table class="table align-items-center table-flush" id="dailydwlist">

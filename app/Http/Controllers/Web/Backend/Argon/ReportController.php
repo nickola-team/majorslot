@@ -253,9 +253,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $statistics = \VanguardLTE\CategorySummary::orderBy('category_summary.date', 'DESC');
         
-            $totalQuery = 'SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal-total_mileage) as totaldeal, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+            $totalQuery = 'SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal) as total_deal, SUM(total_mileage) as total_mileage, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
 
-            $dateQuery = 'SELECT totalbet, totalwin, (total_deal-total_mileage) as totaldeal, category_id, date, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title AS title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+            $dateQuery = 'SELECT totalbet, totalwin, total_deal,total_mileage, category_id, date, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title AS title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
 
             $start_date = date("Y-m-1");
             $end_date = date("Y-m-d");
@@ -291,6 +291,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $user = auth()->user();
             }
 
+            
+
             $statistics = $statistics->where('user_id', $user->id);
             $totalQuery = $totalQuery . "AND w_category_summary.user_id=$user->id ";
             $dateQuery = $dateQuery . "AND w_category_summary.user_id=$user->id ";
@@ -311,17 +313,36 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $totalQuery = $totalQuery . "AND w_category_summary.category_id=$category->id ";
                 $dateQuery = $dateQuery . "AND w_category_summary.category_id=$category->id ";
             }
+
+            if ($request->gametype != '')
+            {
+                $category = \VanguardLTE\Category::where('type', $request->gametype);
+                if (!auth()->user()->hasRole('admin'))
+                {
+                    $category = $category->where('parent', 0);
+                }
+                $category = $category->pluck('original_id')->toArray();
+                $uniqueCat = array_unique($category);
+                if (count($uniqueCat) == 0)
+                {
+                    return redirect()->back()->withErrors(['게임사를 찾을수 없습니다']);
+                }
+                $statistics = $statistics->whereIn('category_id', $uniqueCat);
+                $totalQuery = $totalQuery . "AND w_category_summary.category_id in (". implode(',',$uniqueCat). ") ";
+                $dateQuery = $dateQuery . "AND w_category_summary.category_id in (". implode(',',$uniqueCat). ") ";
+            }
             
             $totalQuery = $totalQuery . "GROUP BY w_category_summary.category_id ORDER BY totalbet desc";
             $dateQuery = $dateQuery . "ORDER BY w_category_summary.date desc";
 
             if (!auth()->user()->hasRole('admin'))
             {
-                $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.totaldeal) as totaldeal, a.parent AS category_id, b.title FROM ($totalQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent ORDER BY totalbet desc";
-                $dateQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.totaldeal) as totaldeal, date, a.parent AS category_id, b.title FROM ($dateQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent, a.date ORDER BY a.date desc";
+                $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, a.parent AS category_id, b.title FROM ($totalQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent ORDER BY totalbet desc";
+
+                $dateQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, date, a.parent AS category_id, b.title FROM ($dateQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent, a.date ORDER BY a.date desc";
             }
         
-            $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.totaldeal) as totaldeal FROM ($totalQuery) c";
+            $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.total_deal) as total_deal, SUM(c.total_mileage) as total_mileage FROM ($totalQuery) c";
 
             $totalstatics = \DB::select($totalQuery);
             $totalsummary = \DB::select($sumQuery);
@@ -352,7 +373,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     }
                     $info['totalbet'] = $cat->totalbet;
                     $info['totalwin'] = $cat->totalwin;
-                    $info['totaldeal'] = $cat->totaldeal;
+                    $info['total_deal'] = $cat->total_deal;
+                    $info['total_mileage'] = $cat->total_mileage;
                     $info['title'] = $cat->title;
                     $info['category_id'] = $cat->category_id;
                     $date_cat['cat'][] = $info;

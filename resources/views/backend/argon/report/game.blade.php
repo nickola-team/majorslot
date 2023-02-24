@@ -69,7 +69,7 @@
                 <div class="row">
                     <div class="col ">
                         <h3 class="card-title text-info mb-0 ">롤링 합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($totalsummary[0]->totaldeal)}}</span>
+                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($totalsummary[0]->total_deal)}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -129,6 +129,14 @@
                                 <label for="player" class="col-md-2 col-form-label form-control-label text-center">게임사이름</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
+                                </div>
+                                <label for="gametype" class="col-md-2 col-form-label form-control-label text-center">게임타입</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="gametype" name="gametype">
+                                        <option value="" @if (Request::get('gametype') == '') selected @endif>@lang('app.all')</option>
+                                        <option value="live" @if (Request::get('gametype') == 'live') selected @endif>카지노</option>
+                                        <option value="slot" @if (Request::get('gametype') == 'slot') selected @endif>슬롯</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-1">
                                 </div>
