@@ -90,7 +90,7 @@
                             <div class="col-md-3">
                                 <select class="form-control" id="gametype" name="gametype">
                                     <option value="" @if (Request::get('gametype') == '') selected @endif>@lang('app.all')</option>
-                                    <option value="table" @if (Request::get('gametype') == 'table') selected @endif>라이브</option>
+                                    <option value="table" @if (Request::get('gametype') == 'table') selected @endif>카지노</option>
                                     <option value="slot" @if (Request::get('gametype') == 'slot') selected @endif>슬롯</option>
                                 </select>
                             </div>
