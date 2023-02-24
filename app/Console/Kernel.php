@@ -1572,6 +1572,30 @@ namespace VanguardLTE\Console
                 $this->info("End processTrend");
             });
 
+            \Artisan::command('spg:test {id=1}', function ($id) {
+                $this->info("Begin test");
+                $user = \VanguardLTE\User::find($id);
+                // if ($user){
+                //     $b = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::getUserBalance($user);
+                //     $this->info("Balance = " . $b);
+                // }
+                // else
+                // {
+                //     $this->info("User not found");
+                // }
+
+                // $gamelist = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::getgamelist('spg-bng');
+                
+                // $this->info(json_encode($gamelist));
+                // $url = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::makegamelink('book_of_sun', $user);
+                // $this->info($url);
+
+                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::withdrawAll($user);
+                $this->info(json_encode($data));
+
+                $this->info("End test");
+            });
+
             
 
         }
