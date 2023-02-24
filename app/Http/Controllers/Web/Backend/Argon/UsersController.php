@@ -530,13 +530,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $users = $users->where('username', 'like', '%' . $request->user . '%');
             }
 
-            $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
-            $onlieUsers = \VanguardLTE\Session::whereIn('user_id', $availableUsers)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
-            if ($request->online == 1)
-            {
-                $users = $users->whereIn('id',$onlieUsers);
-            }
-
             if ($request->shop != '')
             {
                 $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shop.'%')->whereIn('id', auth()->user()->availableShops())->pluck('id')->toArray();
@@ -557,11 +550,33 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $users = $users->orderby('balance', 'asc');
             }
 
+            $usersId = (clone $users)->pluck('id')->toArray();
+
+            $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+            $onlieUsers = \VanguardLTE\Session::whereIn('user_id', $usersId)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
+            $onlieUsers = array_unique($onlieUsers);
+
+            if ($request->online == 1)
+            {
+                $users = $users->whereIn('id',$onlieUsers);
+            }
+
+            if ($request->join != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->join[0]);
+                $end_date = preg_replace('/T/',' ', $request->join[1]);
+                $users = $users->where('created_at', '>', $start_date)->where('created_at', '<', $end_date);
+            }
+
+            $today = date('Y-m-d 0:0:0');
+            $newusers = (clone $users)->where('created_at', '>', $today)->get();
 
             $total = [
                 'count' => $users->count(),
                 'balance' => $users->sum('balance'),
-                'online' => count($onlieUsers)
+                'online' => count($onlieUsers),
+                'new' => count($newusers)
             ];
             
             $users = $users->paginate(20);
