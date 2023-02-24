@@ -322,7 +322,14 @@ namespace VanguardLTE
                     $in_out = \DB::select($query);
                     $adj['ggrout'] = $adj['ggrout'] + $in_out[0]->ggrout;
 
-                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    if ($user->isInoutPartner() && count($childusers) > 0)
+                    {
+                        $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage, 0 as total_ggr, SUM(ggr_profit) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',', $childusers) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    }
+                    else
+                    {
+                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    }
 
                     $deal_logs = \DB::select($query);
                     $adj['total_deal'] = $deal_logs[0]->total_deal??0;

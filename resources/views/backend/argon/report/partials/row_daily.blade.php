@@ -6,4 +6,10 @@
 <td>{{ number_format($adjustment->totalbet,0)}}</td>
 <td>{{ number_format($adjustment->totalwin,0)}}</td>
 <td>{{ number_format($adjustment->totalbet - $adjustment->totalwin,0) }}</td>
-<td>{{ number_format($adjustment->total_deal-$adjustment->total_mileage,0)}}</td>
+<td>
+    <ul>
+    <li>총롤링금 : {{ number_format($adjustment->total_deal,0)}}</li>
+    <li>하부롤링금 : {{ number_format($adjustment->total_mileage,0)}}</li>
+    <li>본인롤링금 : {{ number_format($adjustment->total_deal-$adjustment->total_mileage,0)}}</li>
+    </ul>
+</td>
