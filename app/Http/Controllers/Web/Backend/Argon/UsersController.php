@@ -548,6 +548,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $users = $users->where('shop_id',-1); //show nothing
                 }
             }
+            if ($request->balance == 1)
+            {
+                $users = $users->orderby('balance', 'desc');
+            }
+            else if ($request->balance == 2)
+            {
+                $users = $users->orderby('balance', 'asc');
+            }
+
 
             $total = [
                 'count' => $users->count(),
