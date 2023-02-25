@@ -643,7 +643,12 @@ namespace VanguardLTE\Games\tigerjunglebng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type','>', 0);
+                    $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
+                    if($currentHill[0] * 10 + $currentHill[1] >= 55){
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type', 2);
+                    }else{
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type','>', 0);
+                    }
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type', 0);
                 }

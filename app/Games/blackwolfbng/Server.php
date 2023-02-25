@@ -80,6 +80,7 @@ namespace VanguardLTE\Games\blackwolfbng
                 $objRes = [
                     'command' => $slotEvent['command'],
                     'context' => [
+                        'achievements' => ['level'=> 0, 'level_percent'=> 0, 'number'=> 0, 'total_percent'=> 0],
                         'actions' => ['spin'],
                         'current' => 'spins',
                         'last_args' => [
@@ -183,6 +184,7 @@ namespace VanguardLTE\Games\blackwolfbng
                 $currentRespin = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') ?? 0;
                 $totalSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') ?? 0;
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks') ?? [];
+                $moneyCount = $slotSettings->GetGameData($slotSettings->slotId . 'MoneyCount') ?? 0;
                 $stack = null;
                 $isState = false;
                 $is_extra_feature = false;
@@ -192,6 +194,10 @@ namespace VanguardLTE\Games\blackwolfbng
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $totalSpinCount + 1);
                     }else{
                         return '';
+                    }
+                    if($action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
+                        $moneyCount = 0;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'MoneyCount', $moneyCount);
                     }
                     $Counter = 0;
                     $spin_types = ['spins', 'freespins', 'bonus'];
@@ -221,6 +227,7 @@ namespace VanguardLTE\Games\blackwolfbng
                     $objRes = [
                         'command' => $slotEvent['command'],
                         'context' => [
+                            'achievements' => $slotSettings->GetAchievements($moneyCount),
                             'last_action' => $action['name'],
                             'last_args' => [],
                             'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
@@ -338,6 +345,7 @@ namespace VanguardLTE\Games\blackwolfbng
                     }
                     $freeSpinNum = 0;
                     $spin_types = ['spins', 'freespins', 'bonus'];
+                    $newMoneyCount = 0;
                     for($k = 0; $k < 3; $k++){
                         $spin_type = $spin_types[$k];
                         if($stack[$spin_type] != ''){
@@ -357,6 +365,16 @@ namespace VanguardLTE\Games\blackwolfbng
                             if(isset($stack[$spin_type]['bs'])){
                                 for($i = 0; $i < count($stack[$spin_type]['bs']); $i++){
                                     $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                }
+                            }
+                            if($slotEvent['slotEvent'] != 'respin' && $spin_types[$k] != 'bonus' && isset($stack[$spin_type]['board'])){
+                                $newMoneyCount = 0;
+                                for($i = 0; $i < 5; $i++){
+                                    for($j = 0; $j < 4; $j++){
+                                        if($stack[$spin_type]['board'][$i][$j] == 11){
+                                            $newMoneyCount++;
+                                        }
+                                    }
                                 }
                             }
                             if($spin_type != 'bonus'){
@@ -386,6 +404,13 @@ namespace VanguardLTE\Games\blackwolfbng
                             }
                         }
                     }
+                    if($newMoneyCount > 0){
+                        $moneyCount = $moneyCount + $newMoneyCount;
+                        if($moneyCount > 129){
+                            $moneyCount = 129;
+                        }
+                        $slotSettings->SetGameData($slotSettings->slotId . 'MoneyCount', $moneyCount);
+                    }
                     if( $totalWin > 0) 
                     {
                         $spinType = 'c';
@@ -412,6 +437,7 @@ namespace VanguardLTE\Games\blackwolfbng
                     $objRes = [
                         'command' => $slotEvent['command'],
                         'context' => [
+                            'achievements' => $slotSettings->GetAchievements($moneyCount),
                             'actions' => ['spin'],
                             'current' => 'spins',
                             'last_args' => [

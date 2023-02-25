@@ -183,10 +183,11 @@ namespace VanguardLTE\Games\tigerjunglebng
                 $currentRespin = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') ?? 0;
                 $totalSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') ?? 0;
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks') ?? [];
+                $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? [0, 0];
                 $stack = null;
                 $isState = false;
                 $is_extra_feature = false;
-                if($action['name'] == 'freespin_init' || $action['name'] == 'freespin_stop' || $action['name'] == 'bonus_init' || $action['name'] == 'bonus_spins_stop'){
+                if($action['name'] == 'freespin_init' || $action['name'] == 'freespin_stop' || $action['name'] == 'bonus_init' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
                     if(count($tumbAndFreeStacks) > 0 && isset($tumbAndFreeStacks[$totalSpinCount])){
                         $stack = $tumbAndFreeStacks[$totalSpinCount];
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $totalSpinCount + 1);
@@ -197,6 +198,7 @@ namespace VanguardLTE\Games\tigerjunglebng
                     $stack['spins']['bet_per_line'] = $betline * $DENOMINATOR;
                     $stack['spins']['round_bet'] = $betline * $DENOMINATOR * $LINES;
                     $stack['spins']['round_win'] = str_replace(',', '', $stack['spins']['round_win']) * $betline * $DENOMINATOR;
+                    $stack['spins']['hill'] = $currentHill;
                     if(isset($stack['spins']['total_win'])){
                         $stack['spins']['total_win'] = str_replace(',', '', $stack['spins']['total_win']) * $betline * $DENOMINATOR;
                     }
@@ -217,6 +219,7 @@ namespace VanguardLTE\Games\tigerjunglebng
                         $stack['bonus']['round_bet'] = $betline * $DENOMINATOR * $LINES;
                         $stack['bonus']['round_win'] = str_replace(',', '', $stack['bonus']['round_win']) * $betline * $DENOMINATOR;
                         $stack['bonus']['total_win'] = str_replace(',', '', $stack['bonus']['total_win']) * $betline * $DENOMINATOR;
+                        $stack['bonus']['hill'] = $currentHill;
                         if($stack['bonus']['bs_v'] && $stack['bonus']['bs_values']){
                             for($i = 0; $i < 5; $i++){
                                 for($j = 0; $j < 3; $j++){                                    
@@ -429,6 +432,19 @@ namespace VanguardLTE\Games\tigerjunglebng
                         }
                     }
                     
+                    if($moneyCount > 0 && $stack['bonus'] == ''){
+                        $currentHill[1]++;
+                        if($currentHill[1] >= 10){
+                            if($currentHill[0] < 5){
+                                $currentHill[0]++;
+                                $currentHill[1] = 0;
+                            }else{
+                                $currentHill[0] = 5;
+                                $currentHill[1] = 9;
+                            }
+                        }
+                    }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
                     if( $totalWin > 0) 
                     {
                         $spinType = 'c';
@@ -451,6 +467,12 @@ namespace VanguardLTE\Games\tigerjunglebng
                         }
                     }else if($respinNum > 0){
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $respinNum);
+                        $currentHill = [0, 0];
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                    }
+                    $stack['spins']['hill'] = $currentHill;
+                    if($stack['bonus'] != ''){
+                        $stack['bonus']['hill'] = $currentHill;
                     }
                     $objRes = [
                         'command' => $slotEvent['command'],
