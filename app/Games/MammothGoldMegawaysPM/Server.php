@@ -539,6 +539,8 @@ namespace VanguardLTE\Games\MammothGoldMegawaysPM
                 if($rs_p >= 0){
                     if($rs_p == 0){
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
+                    }else{
+                        $strOtherResponse = $strOtherResponse . '&rs_win=' . ($slotSettings->GetGameData($slotSettings->slotId . 'TumbWin'));
                     }
                     $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_c='. $rs_c .'&rs_m=' . $rs_m;
                 }
