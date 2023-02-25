@@ -15,7 +15,7 @@
                     <div id="popuptab_cont9" class="popuptab_cont">
                         <div class="title1">고객센터</div>
                         <div class="contents_in">
-                            <div class="con_box00">
+                            <div class="con_box00" id="contactlist">
                                 <table style="width: 100%;">
                                     <tbody>
                                         <tr>

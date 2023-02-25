@@ -147,7 +147,7 @@
                             </div>
                             <label for="join" class="col-md-2 col-form-label form-control-label text-center">가입날짜</label>
                             <div class="col-md-2">
-                            <input class="form-control" type="datetime-local" value="{{Request::get('join')[0]??date('Y-m-d\T00:00')}}" id="join" name="join[]">
+                            <input class="form-control" type="datetime-local" value="{{Request::get('join')[0]??date('Y-01-01\T00:00')}}" id="join" name="join[]">
                             </div>
                             <label for="join" class="col-form-label form-control-label" >~</label>
                             <div class="col-md-2">
