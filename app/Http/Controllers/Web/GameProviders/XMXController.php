@@ -141,7 +141,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     else
                     {
-                        Log::error('XMXgetuserbalance : return failed. ' . $res['description']);
+                        Log::error('XMXgetuserbalance : return failed. ' . $user->id . ':' . $res['description']);
                     }
                 }
                 else
@@ -377,41 +377,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
                 }
 
-                //transferPointG2M
-                $params = [
-                    'amount' => $balance,
-                    'operatorID' => $op,
-                    'thirdPartyCode' => $category,
-                    'transactionID' => uniqid(self::XMX_PROVIDER),
-                    'userID' => self::XMX_PROVIDER . sprintf("%04d",$user->id),
-                    'time' => time()*1000,
-                    'vendorID' => 0,
-                ];
-                $params['hash'] = XMXController::hashParam($params);
-                try {
-                    $url = config('app.xmx_api') . '/transferPointG2M';
-                    $response = Http::asForm()->get($url, $params);
-                    if (!$response->ok())
-                    {
-                        Log::error('XMXWithdraw : transferPointG2M request failed. ' . $response->body());
-
-                        return ['error'=>true, 'amount'=>0, 'msg'=>'response not ok'];
-                    }
-                    $data = $response->json();
-                    if ($data==null || $data['returnCode'] != 0)
-                    {
-                        Log::error('XMXWithdraw : transferPointG2M result failed. PARAMS=' . json_encode($params));
-                        Log::error('XMXWithdraw : transferPointG2M result failed. ' . ($data==null?'null':$data['description']));
-                        return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
-                    }
-                }
-                catch (\Exception $ex)
-                {
-                    Log::error('XMXWithdraw : transferPointG2M Exception. Exception=' . $ex->getMessage());
-                    Log::error('XMXWithdraw : transferPointG2M Exception. PARAMS=' . json_encode($params));
-                    return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
-                }
-
                 //subtractMemberPoint
                 $params = [
                     'amount' => $balance,
@@ -481,7 +446,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$response->ok())
             {
                 Log::error('XMXmakelink : createAccount request failed. ' . $response->body());
-
+                Log::error('XMXmakelink : createAccount PARAM. '.$url.' PARAM=' . json_encode($params));
                 return null;
             }
             $data = $response->json();

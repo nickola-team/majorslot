@@ -17,7 +17,13 @@
 <td>{{number_format($stat->totalbet)}}</td>
 <td>{{number_format($stat->totalwin)}}</td>
 <td>{{number_format($stat->totalbet-$stat->totalwin)}}</td>
-<td>{{number_format($stat->totaldeal)}}</td>
+<td>
+    <ul>
+        <li>총롤링금 : {{ number_format($stat->total_deal)}}</li>
+        <li>하부롤링금 : {{ number_format($stat->total_mileage)}}</li>
+        <li>본인롤링금 : {{ number_format($stat->total_deal-$stat->total_mileage)}}</li>
+    </ul>
+</td>
 @else
 @foreach ($category['cat'] as $stat)
     @if ($loop->index > 0)
@@ -41,7 +47,13 @@
     <td>{{number_format($stat['totalbet'])}}</td>
     <td>{{number_format($stat['totalwin'])}}</td>
     <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>
-	<td>{{number_format($stat['totaldeal'])}}</td>
+	<td>
+        <ul>
+        <li>총롤링금 : {{ number_format($stat['total_deal'])}}</li>
+        <li>하부롤링금 : {{ number_format($stat['total_mileage'])}}</li>
+        <li>본인롤링금 : {{ number_format($stat['total_deal']-$stat['total_mileage'],0)}}</li>
+        </ul>
+    </td>
     @if ($loop->index > 0)
 	</tr>
 	@endif

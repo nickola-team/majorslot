@@ -338,6 +338,7 @@
             <div class="sc-inner">
 
 	  		<div id="popup"></div>
+        
 
 			@if ($categories && count($categories))
 				@foreach($categories AS $index=>$category)

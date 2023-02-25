@@ -1626,3 +1626,12 @@
 
     margin-top: 50px;
 }
+.cp {cursor: pointer;}
+
+.mess-count {
+    color: #fff;
+    font-size: 12px;
+    background-color: #0f1f2f;
+    border: solid 1px #cdcdc3;
+    border-radius: 50%;
+}

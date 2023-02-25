@@ -20,6 +20,19 @@
     <script src="/frontend/winners/js/TweenMax.min.js"></script>
     <title>@yield('page-title')</title>
     <script type="text/javascript">
+      
+  @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+  var loginYN='Y';
+  var currentBalance = {{ Auth::user()->balance }};
+  var userName = "{{ Auth::user()->username }}";
+  var unreadmsg = {{$unreadmsg}};
+  @else
+  var loginYN='N';
+  var currentBalance = 0;
+  var userName = "";
+  @endif
+
+
       var depositAccountRequested = false;
       var filter = "win16|win32|win64|mac";
       function isMobile() {
@@ -107,13 +120,8 @@
         <div class="link-main">
           <ul class="bs-ul">
             @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-            @if ($unreadmsg>0)
-            <li class="deposit-link ">
-               <a href="javascript:void(0);"  onclick="alert_error('쪽지를 확인하세요.');">
-            @else
             <li class="deposit-link subpg-link">
               <a href="javascript:void(0);">
-            @endif
             @else
             <li class="deposit-link ">
                <a href="javascript:void(0);"  onclick="alert_error('로그인이 필요합니다.');">
@@ -126,13 +134,8 @@
             </li>
            
             @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-            @if ($unreadmsg>0)
-            <li class="deposit-link ">
-               <a href="javascript:void(0);"  onclick="alert_error('쪽지를 확인하세요.');">
-            @else
             <li class="withdraw-link subpg-link">
               <a href="javascript:void(0);" >
-            @endif
             @else
             <li class="withdraw-link ">
                <a href="javascript:void(0);"  onclick="alert_error('로그인이 필요합니다.');">
@@ -247,9 +250,9 @@
                   <div class="al-cont prog-b">
                   </div>
                   <div class="al-cont btn-grp">
-                    <button class="blue message message-btn" data-toggle="modal" data-target=".mypageModal">
+                    <button class="blue message message-btn" data-toggle="modal" data-target=".mypageModal" onClick="listMessages();">
                       <i class="fa fa-envelope"></i> 쪽지
-                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;">{{$unreadmsg}}</span>
+                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;" id="msgcnt">{{$unreadmsg}}</span>
                     </button>
                     <button class="logout-btn red" onclick="goLogout();"><i class="fa fa-sign-out-alt"></i> 로그아웃</button>
                   </div>
@@ -355,12 +358,10 @@
 					&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
 
           @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-            @if ($unreadmsg>0)
-            <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('쪽지를 확인하세요.');">
-            @elseif ($category->status == 0)
+            @if ($category->status == 0)
             <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('점검중입니다.');">
             @else
-            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
+            <a href="javascript:void(0);" class="slot-btn" onclick="if (unreadmsg>0) {alert_error('쪽지를 확인하세요');} else { getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0);}">
             @endif
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('로그인이 필요합니다');">
@@ -671,7 +672,7 @@
 								</div>
 							</div>
 
-							<div class="mp-tab">
+							<div class="mp-tab" id="msgDiv">
 								<table class="bs-table with-depth">
                 <colgroup>
                   <col width="55%">
@@ -1542,28 +1543,39 @@ if ( getCookie( "divpopup03" ) == "check" ) {
     });
 }
 
-@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-var loginYN='Y';
-var currentBalance = {{ Auth::user()->balance }};
-var userName = "{{ Auth::user()->username }}";
-@else
-var loginYN='N';
-var currentBalance = 0;
-var userName = "";
-@endif
-
-
   $(document).ready(function() {
       var prevTime = localStorage.getItem("hide_notification");
       if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
         $("#notification").hide();
       }
-  @if ($unreadmsg>0)
+      @if ($unreadmsg>0)
       alert_ok('새로운 쪽지가 도착했습니다');
-  @endif
+      @endif
+      timeout = setTimeout(checkMsg, 5000);
   });
 
-  
+function checkMsg()
+{
+    $.ajax({
+        type: 'POST',
+        url: '/api/balance',
+        data: null,
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error==false)
+            {
+              unreadmsg = data.msgCount;
+              $('#msgcnt').text(unreadmsg);
+            }
+            timeout = setTimeout(checkMsg, 5000);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+            timeout = setTimeout(checkMsg, 5000);
+        }
+    });
+}
 function setCookie( name, value, expiredays ) {
     var todayDate = new Date();
     todayDate.setDate( todayDate.getDate() + expiredays );
