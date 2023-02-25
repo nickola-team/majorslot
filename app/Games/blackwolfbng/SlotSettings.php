@@ -619,12 +619,28 @@ namespace VanguardLTE\Games\blackwolfbng
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-
+        public function GetAchievements($moneyCount){
+            $totalPercent = number_format($moneyCount / 130, 3);
+            $number = $moneyCount;
+            $levels = [0, 20, 40, 85, 130];
+            $level = 0;
+            $levelPercent = 0;
+            if($moneyCount > 0){
+                for($k = 0; $k < 5; $k++){
+                    if($levels[$k] >= $moneyCount){
+                        $level = $k-1;
+                        $levelPercent = number_format(($moneyCount - $levels[$k - 1]) / $levels[$k], 3);
+                        break;
+                    }
+                }
+            }
+            return ['level'=> $level, 'level_percent'=> $levelPercent, 'number'=> $number, 'total_percent'=> $totalPercent];
+        }
 
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolfStack::where('id', 7113)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolfStack::where('id', 6390)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -641,20 +657,26 @@ namespace VanguardLTE\Games\blackwolfbng
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
+            $limitBonusOdd = 15;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolfStack::where('spin_type','>', 0);
+                    if($this->GetGameData($this->slotId . 'MoneyCount') >= 129){
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolfStack::where('spin_type',2);
+                        $limitBonusOdd = 25;
+                    }else{
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolfStack::where('spin_type','>', 0);
+                    }
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolfStack::where('spin_type', 0);
                 }
-                $index = 0; // mt_rand(0, 38000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 80000);
+                    $index = mt_rand(0, 78000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', $limitBonusOdd);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

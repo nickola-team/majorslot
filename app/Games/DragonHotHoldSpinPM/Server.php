@@ -466,6 +466,11 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     $moneyWin = $mo_tv * $betline;
                     $totalWin = $totalWin + $moneyWin;
                 }
+                if($scatterCount >= 3){
+                    $muls = [0,0,0,1,20,100];
+                    $scatterWin = $muls[$scatterCount] * $betline * $lines;
+                    $totalWin = $totalWin + $scatterWin;
+                }
                 $spinType = 's';
                 if( $totalWin > 0) 
                 {
