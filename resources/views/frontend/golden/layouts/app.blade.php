@@ -250,6 +250,7 @@
                     </div>
                     <br />
                     <div style="margin: 0px 0px 10px; display: inline-block;float:right;color:white;">
+                    <a href="#" onclick="showContactPopup();"> 새 쪽지 : <span class="font07" id="msgcnt">{{ $unreadmsg }}</span>개 &nbsp;&nbsp;</a>
                       보너스 :
                       <span class="font05" id="myBonus">{{ number_format(Auth::user()->deal_balance,2) }} 원</span>
                       <a onclick="showDealOut();"><img src="/frontend/jungle/images/icon_bonus.png" class="icon_re"></a>
@@ -288,7 +289,8 @@
                     <a onclick="showNotificationPopup();"><img src="/frontend/jungle/images/gnb07.png" /> 공지사항</a>
                   </li>
                   <li>
-                    <a onclick="showContactPopup();"><img src="/frontend/jungle/images/gnb05.png" /> 고객센터</a>
+                    <a onclick="showContactPopup();"><img src="/frontend/jungle/images/gnb05.png" /> 고객센터
+                  </a>
                   </li>
                 </ul>
               </div>
@@ -460,28 +462,50 @@
 		var userName = "";
 	@endif
 
-  $(document).ready(function() {
-@if ($noticelist!=null && count($noticelist) >0)
-@foreach ($noticelist as $ntc)    
-    @if ($ntc->popup == 'popup')
-      var prevTime = localStorage.getItem("{{$ntc->id}}hide_notification");
-      if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-        $("#{{$ntc->id}}notification").hide();
-      }
+      $(document).ready(function() {
+    @if ($noticelist!=null && count($noticelist) >0)
+    @foreach ($noticelist as $ntc)    
+        @if ($ntc->popup == 'popup')
+          var prevTime = localStorage.getItem("{{$ntc->id}}hide_notification");
+          if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+            $("#{{$ntc->id}}notification").hide();
+          }
+        @endif
+    @endforeach				
     @endif
-@endforeach				
-@endif
-
-    $(".lightSlider").slick({
-      // normal options...
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3,
-      // variableWidth: true,
-      autoplay: true,
-      autoplaySpeed: 2000,
+      checkMsg();
+        $(".lightSlider").slick({
+          // normal options...
+          infinite: true,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          // variableWidth: true,
+          autoplay: true,
+          autoplaySpeed: 2000,
+          });
       });
-  })
+    function checkMsg()
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/api/balance',
+            data: null,
+            cache: false,
+            async: false,
+            success: function (data) {
+                if (data.error==false)
+                {
+                  unreadmsg = data.msgCount;
+                  $('#msgcnt').text(unreadmsg);
+                }
+                timeout = setTimeout(checkMsg, 5000);
+            },
+            error: function (err, xhr) {
+                alert(err.responseText);
+                timeout = setTimeout(checkMsg, 5000);
+            }
+        });
+    }
 </script>
 
 </body>

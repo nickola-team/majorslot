@@ -48,7 +48,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $refmsg = \VanguardLTE\Message::where('id', $ref)->first();
                 $availableUsers = auth()->user()->availableUsers();
-                if ($refmsg==null && !in_array($refmsg->writer_id, $availableUsers))
+                if ($refmsg==null || !in_array($refmsg->writer_id, $availableUsers))
                 {
                     return redirect()->back()->withErrors(['수신자를 찾을수 없습니다']);
                 }

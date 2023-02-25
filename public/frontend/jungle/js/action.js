@@ -752,7 +752,57 @@ function showContactPopup() {
         showLoginAlert()
         return;
     }
-    $("#popcontact").show();
+    $.post('/api/messages', null, function(data){
+        if(data.error == false){
+			var html = `<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tbody>
+						<tr>
+						<td width="15%" class="list_title1">번호</td>
+						<td class="list_title1">제목</td>
+						<td class="list_title1">작성시간</td>
+						<td class="list_title1">읽은시간</td>
+						<td width="12%" class="list_title1">타입</td>
+					</tr>`;
+			if (data.data.length > 0) {
+				for (var i = 0; i < data.data.length; i++) {
+					var date = new Date(data.data[i].created_at);
+                    var read = '';
+					if (data.data[i].read_at == null)
+					{
+						read = '읽지 않음';
+					}
+					else
+					{
+						date1 = new Date(data.data[i].read_at);
+						read = date1.toLocaleString();
+					}
+					type = (data.user_id==data.data[i].user_id)?'수신':'발신';
+					html += `<tr onclick="openMessage('${data.data[i].id}')" class="cp">
+						<td class="list_notice1">${i+1}</td>
+						<td class="list_notice2"> ${data.data[i].title}</td>
+						<td class="list_notice2">${date.toLocaleString()}</td>
+						<td class="list_notice2">${read}</td>
+						<td class="list_notice2">${type}</td>
+						</tr>
+						<tr id="msg_${data.data[i].id}" style="display:none;">
+						<td class="list_notice1"></td>
+						<td colspan="4" class="list_notice2">${data.data[i].content}</td>
+						</tr>`;
+				}
+				
+			}
+			html += `</table>`;
+            $('#contactlist').html(html);
+			$("#popcontact").show();
+            
+			
+        } else {
+            alert(data.msg);
+        }
+        
+    });
+
+    
 }
 
 function getBalance() {
