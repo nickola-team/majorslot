@@ -161,12 +161,34 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
-            $total = [
-                'totalin' => $summary->sum('totalin'),
-                'totalout' => $summary->sum('totalout'),
-                'moneyin' => $summary->sum('moneyin'),
-                'moneyout' => $summary->sum('moneyout'),
-            ];
+            if ($start_date==date('Y-m-d'))
+            {
+                $total = [
+                    'totalin' => 0,
+                    'totalout' => 0,
+                    'moneyin' => 0,
+                    'moneyout' => 0,
+                ];
+
+                $todaySumm = (clone $summary)->get();
+                foreach ($todaySumm as $su)
+                {
+                    $inout = $su->calcInOut();
+                    $total['totalin'] += $inout['totalin'];
+                    $total['totalout'] += $inout['totalout'];
+                    $total['moneyin'] += $inout['moneyin'];
+                    $total['moneyout'] += $inout['moneyout'];
+                }
+            }
+            else
+            {
+                $total = [
+                    'totalin' => $summary->sum('totalin'),
+                    'totalout' => $summary->sum('totalout'),
+                    'moneyin' => $summary->sum('moneyin'),
+                    'moneyout' => $summary->sum('moneyout'),
+                ];
+            }
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
             $summary = $summary->paginate(31);
             return view('backend.argon.report.dailydw', compact('summary','total'));
