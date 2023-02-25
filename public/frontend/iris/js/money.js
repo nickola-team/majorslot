@@ -47,8 +47,8 @@ function ugml(){
             if (data.error) {
                 return;
             }
-            $('.userMoney').text(parseInt(data.balance).toLocaleString());
-            $('.userPoint').text(parseInt(data.deal).toLocaleString());
+            $('.userMoney').text(data.balance);
+            $('.userPoint').text(data.deal);
             if (data.msgCount > 0)
             {
                 $('#msgBg').remove();
