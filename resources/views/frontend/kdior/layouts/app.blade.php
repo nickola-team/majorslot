@@ -35,14 +35,14 @@
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
 			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'kdior'])
-			@include('frontend.kdior.layouts.partials.m.content')
+			@include('frontend.kdior.layouts.partials.m.content1')
 		@else
 			@include('frontend.kdior.layouts.partials.header', ['logo' => 'kdior'])
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
 					@include('frontend.kdior.layouts.partials.category')
-					@include('frontend.kdior.layouts.partials.board')
+					@include('frontend.kdior.layouts.partials.board1')
 				</div>
 			</div>
 		@endif
