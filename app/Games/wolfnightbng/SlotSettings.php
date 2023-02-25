@@ -647,10 +647,10 @@ namespace VanguardLTE\Games\wolfnightbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameWolfNightStack::where('spin_type', 0);
                 }
-                $index = 0; // mt_rand(0, 38000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 80000);
+                    $index = mt_rand(0, 55000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
