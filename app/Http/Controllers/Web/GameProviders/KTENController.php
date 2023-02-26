@@ -535,14 +535,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
 
                             $betdata = json_decode($round['details'],true);
-                            $bet = $betdata['bet'];
-                            $win = $betdata['win'];
-                            $balance = $betdata['balance'];
-                            if (!$bet || !$win)
+                            
+                            if (!$betdata)
                             {
                                 Log::error('KTEN PP round : '. json_encode($round));
                                 break;
                             }
+                            $bet = $betdata['bet'];
+                            $win = $betdata['win'];
+                            $balance = $betdata['balance'];
                         }
                         else
                         {
