@@ -161,34 +161,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
-            if ($start_date==date('Y-m-d'))
-            {
-                $total = [
-                    'totalin' => 0,
-                    'totalout' => 0,
-                    'moneyin' => 0,
-                    'moneyout' => 0,
-                ];
+            $total = [
+                'totalin' => $summary->sum('totalin'),
+                'totalout' => $summary->sum('totalout'),
+                'moneyin' => $summary->sum('moneyin'),
+                'moneyout' => $summary->sum('moneyout'),
+            ];
 
-                $todaySumm = (clone $summary)->get();
-                foreach ($todaySumm as $su)
+            $todaySumm = (clone $summary)->get();
+            foreach ($todaySumm as $su)
+            {
+                if ($su->date == date('Y-m-d'))
                 {
                     $inout = $su->calcInOut();
-                    $total['totalin'] += $inout['totalin'];
-                    $total['totalout'] += $inout['totalout'];
-                    $total['moneyin'] += $inout['moneyin'];
-                    $total['moneyout'] += $inout['moneyout'];
+                    $total['totalin'] = $total['totalin'] - $su->totalin + $inout['totalin'];
+                    $total['totalout'] = $total['totalout'] - $su->totalout + $inout['totalout'];
+                    $total['moneyin'] = $total['moneyin'] - $su->moneyin + $inout['moneyin'];
+                    $total['moneyout'] =$total['moneyout'] - $su->moneyout + $inout['moneyout'];
                 }
             }
-            else
-            {
-                $total = [
-                    'totalin' => $summary->sum('totalin'),
-                    'totalout' => $summary->sum('totalout'),
-                    'moneyin' => $summary->sum('moneyin'),
-                    'moneyout' => $summary->sum('moneyout'),
-                ];
-            }
+            
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
             $summary = $summary->paginate(31);
             return view('backend.argon.report.dailydw', compact('summary','total'));
