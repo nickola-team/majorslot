@@ -64,6 +64,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $mtwin = $thismonthsummary->sum('totalwin');
                     $mtin = $thismonthsummary->sum('totalin');
                     $mtout = $thismonthsummary->sum('totalout');
+                    if ($todaysummary)
+                    {
+                        $mtin = $mtin - $todaysummary->totalin + $todayInOut['totalin'];
+                        $mtout = $mtout - $todaysummary->totalout + $todayInOut['totalout'];
+                    }
                     $monthprofit = $mtbet - $mtwin ;
                     if ($mtbet > 0){
                         $monthrtp = $mtwin / $mtbet  ; 
