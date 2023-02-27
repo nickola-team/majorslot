@@ -31,6 +31,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $monthsummary = null;
             $thismonthsummary = null;
             $monthcategory = null;
+            $todayInOut = null;
+
             if (count($availableShops) > 0){
                 $monthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->get();
                 $thismonthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $this_date)->get();
@@ -53,7 +55,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $todaysummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', $end_date)->first();
                 if ($todaysummary){
                     $todaybetwin = $todaysummary->totalbet - $todaysummary->totalwin;
-                    $todayprofit = $todaysummary->totalin - $todaysummary->totalout;
+                    $todayInOut = $todaysummary->calcInOut();
+                    $todayprofit = $todayInOut['totalin'] - $todayInOut['totalout'];
                 }
                 if ($thismonthsummary->count() > 0)
                 {
@@ -61,6 +64,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $mtwin = $thismonthsummary->sum('totalwin');
                     $mtin = $thismonthsummary->sum('totalin');
                     $mtout = $thismonthsummary->sum('totalout');
+                    if ($todaysummary)
+                    {
+                        $mtin = $mtin - $todaysummary->totalin + $todayInOut['totalin'];
+                        $mtout = $mtout - $todaysummary->totalout + $todayInOut['totalout'];
+                    }
                     $monthprofit = $mtbet - $mtwin ;
                     if ($mtbet > 0){
                         $monthrtp = $mtwin / $mtbet  ; 
@@ -71,9 +79,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     }
                 }
             }
+            
             $stats = [
                 'todaydw' => $todayprofit,
                 'todaybetwin' => $todaybetwin,
+                'todayin' => $todayInOut?$todayInOut['totalin']:0,
+                'todayout' => $todayInOut?$todayInOut['totalout']:0,
 
                 'monthbet' => $mtbet,
                 'monthwin' => $mtwin,

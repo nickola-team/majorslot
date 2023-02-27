@@ -3,6 +3,16 @@
 ?>
 <td><span class="{{$adjustment->user->role_id>3?'partner':'shop'}}">{{ $adjustment->user->username }}</span>&nbsp;<span class="badge {{$badge_class[$adjustment->user->role_id]}}">{{$adjustment->user->role->description}}</span></td>
 <td>{{ date('Y-m-d',strtotime($adjustment->date)) }}</td>
+<?php
+    if ($adjustment->date == date('Y-m-d'))
+    {
+        $inout = $adjustment->calcInOut();
+        $adjustment->totalin = $inout['totalin'];
+        $adjustment->totalout = $inout['totalout'];
+        $adjustment->moneyin = $inout['moneyin'];
+        $adjustment->moneyout = $inout['moneyout'];
+    }
+?>
 <td>{{ number_format($adjustment->totalin,0) }}</td>
 <td>{{ number_format($adjustment->totalout,0) }}</td>
 <td>{{ number_format($adjustment->moneyin,0) }}</td>

@@ -40,5 +40,6 @@
                                 data-confirm-text="유저의 게임을 종료하시겠습니까? 종료버튼클릭후 진행한 배팅은 무시됩니다."
                                 data-confirm-delete="확인"
                                 data-confirm-cancel="취소">게임종료</a>
+    <a class="dropdown-item" href="{{argon_route('argon.player.logout', ['id' => $user->id])}}">로그아웃</a>
 </div>
 </td>

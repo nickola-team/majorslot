@@ -38,7 +38,56 @@ namespace VanguardLTE
 
         public function prevDay()
         {
-            return $this->hasOne('VanguardLTE\DailySummary', 'user_id', 'user_id')->where('date', date('Y-m-d', strtotime("$this->date -1 days")));        }
+            return $this->hasOne('VanguardLTE\DailySummary', 'user_id', 'user_id')->where('date', date('Y-m-d', strtotime("$this->date -1 days")));        
+        }
+
+        public function calcInOut()
+        {
+            $adj = [
+                'totalin' => 0,
+                'totalout' => 0,
+                'moneyin' => 0,
+                'moneyout' => 0,
+            ];
+            $childPartners = $this->user->hierarchyPartners();
+            $childPartners[] = $this->user->id;
+            $availableUsers = $this->user->availableUsers();
+            $availableUsers[] = $this->user->id; //include self in/out
+
+            $from = $this->date . ' 0:0:0';
+            $to = $this->date . ' 23:59:59';
+            $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
+            $user_in_out = \DB::select($query);
+            $adj['totalin'] = $adj['totalin'] + $user_in_out[0]->totalin??0;
+
+            $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
+            $user_in_out = \DB::select($query);
+            $adj['totalout'] = $adj['totalout'] + $user_in_out[0]->totalout??0;
+
+            if (!$this->user->hasRole('admin'))
+            {
+
+                $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
+                $user_in_out = \DB::select($query);
+                $adj['moneyin'] = $adj['moneyin'] + $user_in_out[0]->moneyin??0;
+
+                $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
+                $user_in_out = \DB::select($query);
+                $adj['moneyout'] = $adj['moneyout'] + $user_in_out[0]->moneyout??0;
+            }
+            else
+            {
+                $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id = ' . $this->user->id;
+                $user_in_out = \DB::select($query);
+                $adj['moneyin'] = $adj['moneyin'] + $user_in_out[0]->moneyin??0;
+
+                $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id = ' . $this->user->id;
+                $user_in_out = \DB::select($query);
+                $adj['moneyout'] = $adj['moneyout'] + $user_in_out[0]->moneyout??0;
+            }
+
+            return $adj;
+        }
 
         public static function adjustment($user_id, $from, $to)
         {

@@ -1870,10 +1870,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg'=>'로그인하세요']);
             }
-
-            $msgs = \VanguardLTE\Message::where(function ($query) {
+            $parent = auth()->user()->referral;
+                
+            while($parent!=null && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $adminid = $parent->id;
+            
+            $personmsgs = \VanguardLTE\Message::where(function ($query) {
                 $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
-            })->orderBy('created_at','desc')->get();
+            });
+            $grpmsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::GROUP_MSG_ID, 'writer_id' => $adminid]);
+            $msgs = $grpmsgs->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
+            
             return response()->json(['error' => false, 'user_id'=>auth()->user()->id,'data' => $msgs]);
         }
         public function writeMessage(\Illuminate\Http\Request $request)
@@ -1913,11 +1923,21 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => 0]);
             }
             $msg = \VanguardLTE\Message::where('id', $request->id)->first();
-            if ($msg && $msg->read_at == null)
+            if ($msg )
             {
                 if ($msg->user_id == auth()->user()->id)
                 {
-                    $msg->update(['read_at' => \Carbon\Carbon::now()]);
+                    $msg->update([
+                            'read_at' => \Carbon\Carbon::now(), 
+                            'count' => 1
+                                ]);
+                }
+                else if ($msg->user_id == \VanguardLTE\Message::GROUP_MSG_ID)
+                {
+                    $msg->update([
+                        'read_at' => \Carbon\Carbon::now(), 
+                        'count' => $msg->count + 1
+                            ]);
                 }
             }
             return response()->json(['error' => 0]);
