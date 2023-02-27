@@ -564,6 +564,13 @@ namespace VanguardLTE\Games\bookofsunchoicebng
                     'win', 
                     $currentbank
                 ];
+                if( $currentbank < 0) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
@@ -621,17 +628,17 @@ namespace VanguardLTE\Games\bookofsunchoicebng
         } 
 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $ind)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBookofSunStack::where('id', 112189)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBookofSunChoiceStack::where('id', 15196)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
-            if($winType == 'bonus'){
+            if($ind > 0){
                 $winAvaliableMoney = $this->GetBank('bonus');
                 $spintype = 1;
-            }else if($winType == 'win'){
+            }else if($winType == 'win' || $winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -642,18 +649,20 @@ namespace VanguardLTE\Games\bookofsunchoicebng
             }
             $isLowBank = false;
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBookofSunStack::where('spin_type','>', 0);
+                if($ind > 0){
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBookofSunChoiceStack::where(['spin_type' => 1, 'pur_level' => $ind]);
+                }else if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBookofSunChoiceStack::where('spin_type',2);
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBookofSunStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBookofSunChoiceStack::where('spin_type', 0);
                 }
-                $index = mt_rand(0, 38000);
+                $index = 0; //mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    // $index = mt_rand(0, 75000);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus'){
+                    if($ind>0){
                         $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
@@ -665,7 +674,7 @@ namespace VanguardLTE\Games\bookofsunchoicebng
                         $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus'){
+                        if($ind > 0){
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();

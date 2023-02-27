@@ -428,7 +428,7 @@ namespace VanguardLTE\Games\godstempledeluxebng
                         }
                     }
                     $ach_scatter += $scatterCount;
-                    $slotSettings->SetGameData($slotSettings->slotId . 'Scatters', $ach_scatter);         
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Scatters', $ach_scatter); 
                     if($stack['actions'][0] == 'achievements_init'){
                         $freeSpinNum = 12;
                     }
