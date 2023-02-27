@@ -70,7 +70,7 @@ class MonitorBetWin extends Command
         if ($max_odd > 0) {
 
             //max odd check
-            $query = "SELECT user_id, sum(bet), sum(win), sum(win)/sum(bet) as odd, roundid FROM w_stat_game WHERE date_time >= '" . $startTime . "' AND date_time<='" . $endTime . "' GROUP BY user_id, roundid ORDER BY odd DESC";
+            $query = "SELECT user_id, sum(bet), sum(win), sum(win)/sum(bet) as odd, roundid FROM w_stat_game WHERE bet>0 and date_time >= '" . $startTime . "' AND date_time<='" . $endTime . "' GROUP BY user_id, roundid ORDER BY odd DESC";
             $stat_games = \DB::select($query);
             foreach($stat_games as $stat_game) {
                 if ($stat_game->odd >= $max_odd)
