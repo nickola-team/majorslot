@@ -345,10 +345,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 exit('unlogged-1'); // it must be different per every game. but...
             }
-            if (str_contains($user->username, 'testfor'))
-            {
-                abort(404);
-            }
             $object = '\VanguardLTE\Games\\' . $game . '\Server';
             $server = new $object();
             echo $server->get($request, $game, $userId);
