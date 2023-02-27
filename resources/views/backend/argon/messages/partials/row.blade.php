@@ -3,9 +3,7 @@
 ?>
     <td>
     <span  class="{{count($msg->refs)>0?'partner':'shop'}}">
-        @if ($msg->writer_id == 0)
-            시스템
-        @elseif ($msg->writer)
+        @if ($msg->writer)
             @if ($msg->writer->role_id > auth()->user()->role_id)
                 총본사
             @else
@@ -13,15 +11,15 @@
                 {{$msg->writer->username}} <span class="badge {{$badge_class[$msg->writer->role_id]}}">{{$msg->writer->role->description}}</span>
             </a>
             @endif
+        @elseif (isset(\VanguardLTE\Message::RECV_NAME[$msg->writer_id]))
+            {{\VanguardLTE\Message::RECV_NAME[$msg->writer_id]}}
         @else
-        '알수없음'
+        알수없음
         @endif
     </span>
     </td>
     <td>
-        @if ($msg->user_id == 0)
-            시스템
-        @elseif ($msg->user)
+        @if ($msg->user)
             @if ($msg->user->role_id > auth()->user()->role_id)
                 총본사
             @else
@@ -29,8 +27,10 @@
                 {{$msg->user->username}}<span class="badge {{$badge_class[$msg->user->role_id]}}">{{$msg->user->role->description}}</span>
             </a>
             @endif
+        @elseif (isset(\VanguardLTE\Message::RECV_NAME[$msg->user_id]))
+            {{\VanguardLTE\Message::RECV_NAME[$msg->user_id]}}
         @else
-        '알수없음'
+        알수없음
         @endif
     </td>
     <td>
@@ -53,6 +53,7 @@
     </td>
 	<td>{{ $msg->created_at }}</td>
     <td>{{ $msg->read_at??'읽지않음' }}</td>
+    <td>{{ $msg->count }}</td>
     <td>
         @if (count($msg->refs)>0)
         <span class="text-green">답변함</span>

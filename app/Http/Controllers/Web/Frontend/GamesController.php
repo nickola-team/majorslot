@@ -99,9 +99,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($shop_id != 0)
             {
                 // $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get(); //messages
-                $msgs = \VanguardLTE\Message::where(function ($query) {
+                $personmsgs = \VanguardLTE\Message::where(function ($query) {
                     $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
-                })->orderBy('created_at','desc')->get();
+                });
+                $grpmsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::GROUP_MSG_ID, 'writer_id' => $adminid]);
+                $msgs = $grpmsgs->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
+
                 $unreadmsg = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->count();
                 //transaction history
 

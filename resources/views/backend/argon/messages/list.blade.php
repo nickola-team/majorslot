@@ -87,6 +87,7 @@
 							<th scope="col">제목</th>
 							<th scope="col">작성시간</th>
 							<th scope="col">읽은시간</th>
+                            <th scope="col">읽은회원수</th>
                             <th scope="col">상태</th>
 							<th scope="col"></th>
 						</tr>

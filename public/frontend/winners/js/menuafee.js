@@ -504,7 +504,7 @@ function listMessages() {
 						var date1 = new Date(data.data[i].read_at);
 						read = date1.toLocaleString();
 					}
-					var type = (data.user_id==data.data[i].user_id)?'수신':'발신';
+					var type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';
 					html += `<tr class="depth-click" onclick="readMessage('${data.data[i].id}')" id="title_${data.data[i].id}">
 						<td>${data.data[i].title}</td>
 						<td>${date.toLocaleString()}</td>
