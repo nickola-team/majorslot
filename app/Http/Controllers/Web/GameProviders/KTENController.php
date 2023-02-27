@@ -527,24 +527,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $balance = $betdata['BalanceAfter'];
                             $gameName = $betdata['GameKeyName'];
                         }
-                        else if ($catname == 'kten-pp')
-                        {
-                            if ($round['type'] == 'WIN')
-                            {
-                                continue;
-                            }
+                        // else if ($catname == 'kten-pp')
+                        // {
+                        //     if ($round['type'] == 'WIN')
+                        //     {
+                        //         continue;
+                        //     }
 
-                            $betdata = json_decode($round['details'],true);
+                        //     $betdata = json_decode($round['details'],true);
                             
-                            if (!$betdata)
-                            {
-                                Log::error('KTEN PP round : '. json_encode($round));
-                                break;
-                            }
-                            $bet = $betdata['bet'];
-                            $win = $betdata['win'];
-                            $balance = $betdata['balance'];
-                        }
+                        //     if (!$betdata)
+                        //     {
+                        //         Log::error('KTEN PP round : '. json_encode($round));
+                        //         break;
+                        //     }
+                        //     $bet = $betdata['bet'];
+                        //     $win = $betdata['win'];
+                        //     $balance = $betdata['balance'];
+                        // }
                         else
                         {
                             if ($round['type'] == 'BET')
