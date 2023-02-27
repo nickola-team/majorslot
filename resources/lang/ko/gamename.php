@@ -1074,6 +1074,15 @@ return [
         //Booongo
         "tigerstone" => "타이거 스톤",
 
-
+        "tigerjungle" => "타이거 정글",
+        "pearldiver2" => "펄 다이버 2: 트레저 체스트",
+        "blackwolf" => "블랙 울프",
+        "wolfsaga" => "울프사가",
+        "wolfnight" => "울프 나이트",
+        "hitmoregold" => "히트 모어 골드!",
+        "greenchilli" => "그린 칠리",
+        "buddhafortune" => "붓다 포츈",
+        "bookofsun" => "북 오브 썬",
+        "15goldeneggs" => "15 골든 에그스",
 
 ];
