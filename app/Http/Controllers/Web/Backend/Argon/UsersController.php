@@ -719,7 +719,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'win' => (clone $statistics)->sum('win'),
             ];
 
-            $statistics = $statistics->paginate(20);
+            $statistics = $statistics->paginate(50);
 
             //check if evolution+gameartcasino
             $master = $user;
