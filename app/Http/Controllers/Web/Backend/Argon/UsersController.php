@@ -611,6 +611,34 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);
         }
+
+        public function player_logout(\Illuminate\Http\Request $request,  \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
+        {
+            $userid = $request->id;
+            $availableUsers = auth()->user()->hierarchyUsersOnly();
+            if (!in_array($userid, $availableUsers))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+            }
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
+            }
+            if ($user->playing_game != null)
+            {
+                $user->update(['playing_game' => $user->playing_game . '_exit']);
+            }
+
+            $user->update(['api_token' => null]);
+
+            $sessionRepository->invalidateAllSessionsForUser($user->id);
+
+
+
+
+            return redirect()->back()->withSuccess(['플레이어를 로그아웃시켰습니다.']);
+        }
         
 
         public function player_transaction(\Illuminate\Http\Request $request)

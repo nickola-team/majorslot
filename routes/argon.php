@@ -107,6 +107,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.player.terminate',
             'uses' => 'UsersController@player_terminate',
         ]);
+        Route::get('/player/logout', [
+            'as' => 'argon.player.logout',
+            'uses' => 'UsersController@player_logout',
+        ]);
 
         Route::get('/player/join', [
             'as' => 'argon.player.join',
