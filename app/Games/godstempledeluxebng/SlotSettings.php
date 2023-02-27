@@ -564,6 +564,12 @@ namespace VanguardLTE\Games\godstempledeluxebng
                     'win', 
                     $currentbank
                 ];
+                if($currentbank < 0){
+                    $return = [
+                        'none', 
+                        $currentbank
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
@@ -640,7 +646,7 @@ namespace VanguardLTE\Games\godstempledeluxebng
         public function GetReelStrips($winType, $bet, $ach_scatter)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameGodsTempleDeluxeStack::where('id', 1292)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameGodsTempleDeluxeStack::where('id', 83012)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $is_achieve = false;

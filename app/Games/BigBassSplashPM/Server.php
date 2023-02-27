@@ -123,6 +123,10 @@ namespace VanguardLTE\Games\BigBassSplashPM
                     $rs_m = $stack['rs_m'];
                     $rs_t = $stack['rs_t'];
                     $bw = $stack['bw'];
+                    $str_s_mark = '';
+                    if(isset($stack['s_mark'])){                        
+                        $str_s_mark = $stack['s_mark'];
+                    }
                     $arr_g = null;
                     if($stack['g'] != ''){
                         $arr_g = $stack['g'];
@@ -176,6 +180,9 @@ namespace VanguardLTE\Games\BigBassSplashPM
                     }
                     if($str_trail != ''){
                         $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
+                    }
+                    if($str_s_mark != ''){
+                        $strOtherResponse = $strOtherResponse . '&s_mark=' . $str_s_mark;
                     }
                     if($rs_p >= 0){
                         $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_m=' . $rs_m . '&rs_c=' . $rs_c;
@@ -387,7 +394,10 @@ namespace VanguardLTE\Games\BigBassSplashPM
                 $fsmax = 0;
                 $arr_g = null;
                 $scatterCount = 0;
-                if($slotEvent['slotEvent'] == 'freespin'){
+                $strReelSa = '';
+                $strReelSb = '';
+                $str_s_mark = '';
+                if($slotEvent['slotEvent'] == 'freespin' || $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
                     $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                     $lastReel = explode(',', $stack['reel']);
@@ -410,6 +420,9 @@ namespace VanguardLTE\Games\BigBassSplashPM
                     $rs_c = $stack['rs_c'];
                     $rs_m = $stack['rs_m'];
                     $rs_t = $stack['rs_t'];
+                    $strReelSa = $stack['sa'];
+                    $strReelSb = $stack['sb'];
+                    $str_s_mark = $stack['s_mark'];
                     $bw = $stack['bw'];
                     if($stack['g'] != ''){
                         $arr_g = $stack['g'];
@@ -444,6 +457,9 @@ namespace VanguardLTE\Games\BigBassSplashPM
                     $rs_c = $stack[0]['rs_c'];
                     $rs_m = $stack[0]['rs_m'];
                     $rs_t = $stack[0]['rs_t'];
+                    $strReelSa = $stack[0]['sa'];
+                    $strReelSb = $stack[0]['sb'];
+                    $str_s_mark = $stack[0]['s_mark'];
                     $bw = $stack[0]['bw'];
                     if($stack[0]['g'] != ''){
                         $arr_g = $stack[0]['g'];
@@ -490,14 +506,14 @@ namespace VanguardLTE\Games\BigBassSplashPM
                 }else if($fsmore > 0 && $slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $fsmore);
                 }
-                $reelA = [];
-                $reelB = [];
-                for($i = 0; $i < 5; $i++){
-                    $reelA[$i] = mt_rand(4, 8);
-                    $reelB[$i] = mt_rand(4, 8);
-                }
-                $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
-                $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
+                // $reelA = [];
+                // $reelB = [];
+                // for($i = 0; $i < 5; $i++){
+                //     $reelA[$i] = mt_rand(4, 8);
+                //     $reelB[$i] = mt_rand(4, 8);
+                // }
+                // $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
+                // $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
                 $strLastReel = implode(',', $lastReel);
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $rs_p);
@@ -579,6 +595,9 @@ namespace VanguardLTE\Games\BigBassSplashPM
                 }
                 if($str_trail != ''){
                     $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
+                }
+                if($str_s_mark != ''){
+                    $strOtherResponse = $strOtherResponse . '&s_mark=' . $str_s_mark;
                 }
                 if($rs_p >= 0){
                     $isState = false;

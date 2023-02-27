@@ -564,6 +564,13 @@ namespace VanguardLTE\Games\_777gemsbng
                     'win', 
                     $currentbank
                 ];
+                if( $currentbank < 0) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
@@ -624,7 +631,7 @@ namespace VanguardLTE\Games\_777gemsbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGame777GemsStack::where('id', 150)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGame777GemsStack::where('id', 30749)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -647,10 +654,10 @@ namespace VanguardLTE\Games\_777gemsbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame777GemsStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    $index = mt_rand(0, 130000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
