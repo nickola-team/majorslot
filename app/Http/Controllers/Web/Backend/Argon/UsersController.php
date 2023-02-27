@@ -550,6 +550,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $users = $users->orderby('balance', 'asc');
             }
 
+            if ($request->ordername == 1)
+            {
+                $users = $users->orderby('username', 'asc');
+            }
+            else if ($request->ordername == 2)
+            {
+                $users = $users->orderby('username', 'desc');
+            }
+
             $usersId = (clone $users)->pluck('id')->toArray();
 
             $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;

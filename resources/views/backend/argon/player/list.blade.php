@@ -131,7 +131,7 @@
 									<option value="1" @if (Request::get('online') == 1) selected @endif> 온라인</option>
                                 </select>
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">보유금</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">보유금순</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="balance" name="balance">
                                     <option value="" @if (Request::get('balance') == '') selected @endif>순서없음</option>
@@ -139,6 +139,19 @@
                                     <option value="2" @if (Request::get('balance') == 2) selected @endif> 작은순서</option>
                                 </select>
                             </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="ordername" class="col-md-2 col-form-label form-control-label text-center">이름순</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="ordername" name="ordername">
+                                    <option value="" @if (Request::get('ordername') == '') selected @endif>순서없음</option>
+									<option value="1" @if (Request::get('ordername') == 1) selected @endif>A-Z순</option>
+                                    <option value="2" @if (Request::get('ordername') == 2) selected @endif>Z-A순</option>
+                                </select>
                             </div>
                         </div>
 
