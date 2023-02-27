@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="icon" href="/frontend/numberone/images/logo_02.png" >
+    <link rel="icon" href="/frontend/bigbang/images/logo_02.png" >
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"
@@ -250,6 +250,7 @@
                     </div>
                     <br />
                     <div style="margin: 0px 0px 10px; display: inline-block;float:right;color:white;">
+                    <a href="#" onclick="showContactPopup();"> 새 쪽지 : <span class="font07" id="msgcnt">{{ $unreadmsg }}</span>개 &nbsp;&nbsp;</a>
                       보너스 :
                       <span class="font05" id="myBonus">{{ number_format(Auth::user()->deal_balance,2) }} 원</span>
                       <a onclick="showDealOut();"><img src="/frontend/jungle/images/icon_bonus.png" class="icon_re"></a>
@@ -288,7 +289,8 @@
                     <a onclick="showNotificationPopup();"><img src="/frontend/jungle/images/gnb07.png" /> 공지사항</a>
                   </li>
                   <li>
-                    <a onclick="showContactPopup();"><img src="/frontend/jungle/images/gnb05.png" /> 고객센터</a>
+                    <a onclick="showContactPopup();"><img src="/frontend/jungle/images/gnb05.png" /> 고객센터
+                  </a>
                   </li>
                 </ul>
               </div>
@@ -341,8 +343,9 @@
         @auth()
           @include('frontend.jungle.modals.deposit')
           @include('frontend.jungle.modals.contact')
+          @include('frontend.jungle.modals.deposit')
+          @include('frontend.jungle.modals.contact')
           @include('frontend.jungle.modals.noticelist')
-          
         @else
         @include('frontend.jungle.modals.join')
         @endif
@@ -407,8 +410,11 @@
          </div>
          <div>
          @if ($noticelist != null && count($noticelist) > 0)          
+         <?php $c=0; ?>
         @foreach ($noticelist as $ntc)
-        <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($loop->index*510)}}px; z-index: 1000;">
+            @if ($ntc->popup == 'popup')
+            <?php $c=$c+1; ?>
+        <div class="pop01_popup1 draggable02" id="{{$ntc->id}}notification" style="position: absolute; top: 50px; left: {{($c*300)}}px; z-index: 1000;">
           <div class="pop01_popup_wrap">
               <div class="pop01_popup_btn_wrap">
                   <ul>
@@ -417,8 +423,7 @@
                   </ul>
               </div>
               <div class="pop01_popup_box">
-                  <div class="pop01_popup_text" style="padding: 30px; width: 500px;">
-                    <span class="pop01_popup_font1" style="border-bottom: 2px solid rgb(255, 255, 255); margin-bottom: 15px;"></span>
+                  <div class="pop01_popup_text" style="min-width: 300px;">
                     <span class="pop01_popup_font2">
                           <div>
                               <?php echo $ntc->content ?>
@@ -429,6 +434,7 @@
           </div>
         </div>
         </div>
+        @endif
         @endforeach
         @endif
       </div>
@@ -456,26 +462,50 @@
 		var userName = "";
 	@endif
 
-  $(document).ready(function() {
-@if ($noticelist!=null && count($noticelist) >0)
-@foreach ($noticelist as $ntc)    
-    var prevTime = localStorage.getItem("{{$ntc->id}}hide_notification");
-    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-      $("#{{$ntc->id}}notification").hide();
-    }
-@endforeach				
-@endif
-
-    $(".lightSlider").slick({
-      // normal options...
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3,
-      // variableWidth: true,
-      autoplay: true,
-      autoplaySpeed: 2000,
+      $(document).ready(function() {
+    @if ($noticelist!=null && count($noticelist) >0)
+    @foreach ($noticelist as $ntc)    
+        @if ($ntc->popup == 'popup')
+          var prevTime = localStorage.getItem("{{$ntc->id}}hide_notification");
+          if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+            $("#{{$ntc->id}}notification").hide();
+          }
+        @endif
+    @endforeach				
+    @endif
+      checkMsg();
+        $(".lightSlider").slick({
+          // normal options...
+          infinite: true,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          // variableWidth: true,
+          autoplay: true,
+          autoplaySpeed: 2000,
+          });
       });
-  })
+    function checkMsg()
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/api/balance',
+            data: null,
+            cache: false,
+            async: false,
+            success: function (data) {
+                if (data.error==false)
+                {
+                  unreadmsg = data.msgCount;
+                  $('#msgcnt').text(unreadmsg);
+                }
+                timeout = setTimeout(checkMsg, 5000);
+            },
+            error: function (err, xhr) {
+                alert(err.responseText);
+                timeout = setTimeout(checkMsg, 5000);
+            }
+        });
+    }
 </script>
 
 </body>

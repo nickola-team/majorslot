@@ -776,7 +776,7 @@ function showContactPopup() {
 						date1 = new Date(data.data[i].read_at);
 						read = date1.toLocaleString();
 					}
-					type = (data.user_id==data.data[i].user_id)?'수신':'발신';
+					var type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';
 					html += `<tr onclick="openMessage('${data.data[i].id}')" class="cp">
 						<td class="list_notice1">${i+1}</td>
 						<td class="list_notice2"> ${data.data[i].title}</td>
