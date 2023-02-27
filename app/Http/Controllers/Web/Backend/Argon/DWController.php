@@ -69,8 +69,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
             
-            $in_out_logs = $in_out_logs->where('created_at', '>=', $start_date);
-            $in_out_logs = $in_out_logs->where('created_at', '<=', $end_date);
+            $in_out_logs = $in_out_logs->where('updated_at', '>=', $start_date);
+            $in_out_logs = $in_out_logs->where('updated_at', '<=', $end_date);
             
             if( $request->user != '' ) 
             {

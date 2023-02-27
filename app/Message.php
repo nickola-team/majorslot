@@ -8,12 +8,19 @@ namespace VanguardLTE
             'user_id',
             'writer_id',
             'ref_id',
+            'count',
             'title', 
             'content', 
             'created_at', 
             'read_at',
         ];
         public $timestamps = false;
+        const SYSTEM_MSG_ID = 1;
+        const GROUP_MSG_ID = 99999;
+        const RECV_NAME = [
+            self::SYSTEM_MSG_ID => '시스템',
+            self::GROUP_MSG_ID => '전체회원'
+        ];
         public static function boot()
         {
             parent::boot();

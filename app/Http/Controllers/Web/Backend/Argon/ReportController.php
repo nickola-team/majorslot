@@ -167,6 +167,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'moneyin' => $summary->sum('moneyin'),
                 'moneyout' => $summary->sum('moneyout'),
             ];
+
+            $todaySumm = (clone $summary)->get();
+            foreach ($todaySumm as $su)
+            {
+                if ($su->date == date('Y-m-d'))
+                {
+                    $inout = $su->calcInOut();
+                    $total['totalin'] = $total['totalin'] - $su->totalin + $inout['totalin'];
+                    $total['totalout'] = $total['totalout'] - $su->totalout + $inout['totalout'];
+                    $total['moneyin'] = $total['moneyin'] - $su->moneyin + $inout['moneyin'];
+                    $total['moneyout'] =$total['moneyout'] - $su->moneyout + $inout['moneyout'];
+                }
+            }
+            
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
             $summary = $summary->paginate(31);
             return view('backend.argon.report.dailydw', compact('summary','total'));

@@ -69,15 +69,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($user->hasRole('manager')) // add shop balance
             {
 
-                if( \Auth::user()->hasRole([
-                    'master', 
-                    'agent', 
-                    'distributor', 
-                    'manager'
-                ]) && $data['type'] == 'out') 
-                {
-                    return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
-                }
+                // if( \Auth::user()->hasRole([
+                //     'master', 
+                //     'agent', 
+                //     'distributor', 
+                //     'manager'
+                // ]) && $data['type'] == 'out') 
+                // {
+                //     return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+                // }
 
                 $shop = $user->shop;
                 if( $request->all && $request->all == '1' ) 

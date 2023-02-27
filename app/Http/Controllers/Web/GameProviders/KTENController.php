@@ -468,7 +468,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
+                $lasttime = date('Y-m-d H:i:s',strtotime('-24 hours'));
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
@@ -527,23 +527,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $balance = $betdata['BalanceAfter'];
                             $gameName = $betdata['GameKeyName'];
                         }
-                        else if ($catname == 'kten-pp')
-                        {
-                            if ($round['type'] == 'WIN')
-                            {
-                                continue;
-                            }
+                        // else if ($catname == 'kten-pp')
+                        // {
+                        //     if ($round['type'] == 'WIN')
+                        //     {
+                        //         continue;
+                        //     }
 
-                            $betdata = json_decode($round['details'],true);
-                            $bet = $betdata['bet'];
-                            $win = $betdata['win'];
-                            $balance = $betdata['balance'];
-                            if (!$bet || !$win)
-                            {
-                                Log::error('KTEN PP round : '. json_encode($round));
-                                break;
-                            }
-                        }
+                        //     $betdata = json_decode($round['details'],true);
+                            
+                        //     if (!$betdata)
+                        //     {
+                        //         Log::error('KTEN PP round : '. json_encode($round));
+                        //         break;
+                        //     }
+                        //     $bet = $betdata['bet'];
+                        //     $win = $betdata['win'];
+                        //     $balance = $betdata['balance'];
+                        // }
                         else
                         {
                             if ($round['type'] == 'BET')
