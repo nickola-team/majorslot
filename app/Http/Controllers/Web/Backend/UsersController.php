@@ -235,7 +235,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                                 'user_id' => $distr->id,
                                 'name' => $partner[1],
                                 'alias' => $partner[0],
-                                'percent' => 90,
+                                'percent' => 97,
                                 'frontend' => 'Default',
                                 'currency' => 'KRW',
                                 'orderby' => 'AZ',
