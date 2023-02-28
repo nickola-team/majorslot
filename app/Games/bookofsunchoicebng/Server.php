@@ -266,9 +266,54 @@ namespace VanguardLTE\Games\bookofsunchoicebng
                         $objRes['context']['current'] = 'spins';
                     }
                 }else{
-                    if($slotEvent['slotEvent'] == 'bet' && $betline < $slotSettings->Bet[0]){
+                    if($slotEvent['slotEvent'] == 'bet' && $betline * $LINES > $BALANCE){
                         // throw error
-                        return '';
+                        $objRes = [
+                            'command' => $slotEvent['command'],
+                            'context' => [
+                                'actions' => ['spin'],
+                                'current' => 'spins',
+                                'last_args' => [],
+                                'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
+                                'math_version' => 'a',
+                                'round_finished' => true,
+                                'spins' => [
+                                    'bet_per_line' => $betline * $DENOMINATOR,
+                                    'board' => [[1, 5, 10], [3, 4, 9], [1, 10, 2], [9, 5, 1], [10, 2, 3]],
+                                    'lines' => $LINES,
+                                    'round_bet' => $betline * $LINES * $DENOMINATOR,
+                                    'round_win' => 0,
+                                    'total_win' => 0,
+                                ],
+                                'version' => 2
+                            ],
+                            'modes' => ['auto', 'play'],
+                            'origin_data' => [
+                                'data' => [
+                                    'quick_spin' => false
+                                ],
+                                'quick_spin' => false
+                            ],
+                            'request_id' => $slotEvent['request_id'],
+                            'session_id' => '68939e9a5d134e78bfd9993d4a2cc34e',
+                            'status' => [
+                                'code' => 'FUNDS_EXCEED',
+                                'type' => 'exceed'
+                            ],
+                            'user' => [
+                                'balance' => $BALANCE * 100,
+                                'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
+                                'currency' => 'KRW',
+                                'huid' => '969:major:17390:rKRW',
+                                'show_balance' => true
+                            ]
+                            ];
+                        if( $LASTSPIN !== NULL ) {
+                            if(isset($LASTSPIN->context)){
+                                $objRes['context'] = $LASTSPIN->context;
+                            }
+                        }
+                        return json_encode($objRes);
                     }else if($slotEvent['slotEvent'] == 'freespin'){
                         if($totalFreeGames <= 0 || ($currentFreeGames >= $totalFreeGames)) 
                         {
@@ -288,7 +333,7 @@ namespace VanguardLTE\Games\bookofsunchoicebng
                         $allBet = $betline * $LINES;                        
                         $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 0);
                         if($action['name'] == 'buy_spin'){
-                            $allBet = $allBet * 80;
+                            $allBet = $allBet * 90;
                             $isBuyFreeSpin = true;
                             $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 1);
                             $winType = 'bonus';
