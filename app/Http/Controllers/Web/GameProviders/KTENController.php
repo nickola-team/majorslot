@@ -377,7 +377,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $data = $response->json();
                         if ($data==null || $data['errorCode'] != 0)
                         {
-                            Log::error('KTENmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['description']));
+                            Log::error('KTENmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['errorCode']));
                             return null;
                         }
                     }
@@ -437,7 +437,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($data==null || $data['errorCode'] != 0)
                 {
                     Log::error('KTENgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
-                    Log::error('KTENgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
+                    Log::error('KTENgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['errorCode']));
                     return null;
                 }
 
