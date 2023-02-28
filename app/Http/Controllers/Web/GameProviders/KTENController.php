@@ -17,6 +17,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-hbn' => 'Habanero',
             'kten-playson' => 'Playson',
             'kten-bng' => 'Booongo',
+            'kten-og' => 'Og',
         ];
         const KTEN_IDENTITY_GAME = [
             'Pragmatic'  => 'kten-pp',
@@ -24,6 +25,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'Habanero'  =>  'kten-hbn',
             'Playson' => 'kten-playson'  ,
             'Booongo' => 'kten-bng'  ,
+            'Og' => 'kten-og'  ,
         ];
 
         public static function getGameObj($uuid)
@@ -526,6 +528,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $win = $betdata['Payout'];
                             $balance = $betdata['BalanceAfter'];
                             $gameName = $betdata['GameKeyName'];
+                        }
+                        else if ($catname == 'kten-og')
+                        {
+                            if ($round['type'] == 'WIN')
+                            {
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['details'],true);
+                            if (!$betdata)
+                            {
+                                Log::error('KTEN OG round : '. json_encode($round));
+                                continue;
+                            }
+                            $bet = $betdata['bettingamount'];
+                            $win = $bet + $betdata['winloseamount'];
+                            $balance = $betdata['balance'];
                         }
                         // else if ($catname == 'kten-pp')
                         // {
