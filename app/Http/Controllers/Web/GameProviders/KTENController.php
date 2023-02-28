@@ -134,6 +134,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if (strtolower($game['game_type']) == 'slot' || strtolower($game['game_type']) == 'casino') 
                 {
+                    $view = 1;
+                    if ($href == 'kten-og' && $game['game_id'] != 'ogplus')
+                    {
+                        $view = 0; // hide other tables
+                    }
+
                     array_push($gameList, [
                         'provider' => self::KTEN_PROVIDER,
                         'href' => $href,
@@ -144,7 +150,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'title' => $game['cp_game_name_kor'],
                         'icon' => $game['thumbnail'],
                         'type' => strtolower($game['game_type']),
-                        'view' => 1
+                        'view' => $view
                     ]);
                 }
             }
@@ -603,7 +609,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'date_time' => $time,
                             'shop_id' => $shop?$shop->shop_id:0,
                             'category_id' => isset($category)?$category->id:0,
-                            'game_id' =>  $round['gameId'],
+                            'game_id' =>  'ogplus_' . $round['gameId'],
                             'roundid' => $round['gameId'] . '_' . $round['roundID'],
                         ]);
                         $count = $count + 1;
