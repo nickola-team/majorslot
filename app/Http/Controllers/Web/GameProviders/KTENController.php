@@ -377,7 +377,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $data = $response->json();
                         if ($data==null || $data['errorCode'] != 0)
                         {
-                            Log::error('KTENmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['description']));
+                            Log::error('KTENmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['errorCode']));
                             return null;
                         }
                     }
@@ -437,7 +437,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($data==null || $data['errorCode'] != 0)
                 {
                     Log::error('KTENgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
-                    Log::error('KTENgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['description']));
+                    Log::error('KTENgamerounds : getBetWinHistoryAll result failed. ' . ($data==null?'null':$data['errorCode']));
                     return null;
                 }
 
@@ -468,7 +468,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
+                $lasttime = date('Y-m-d H:i:s',strtotime('-24 hours'));
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
@@ -527,24 +527,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $balance = $betdata['BalanceAfter'];
                             $gameName = $betdata['GameKeyName'];
                         }
-                        else if ($catname == 'kten-pp')
-                        {
-                            if ($round['type'] == 'WIN')
-                            {
-                                continue;
-                            }
+                        // else if ($catname == 'kten-pp')
+                        // {
+                        //     if ($round['type'] == 'WIN')
+                        //     {
+                        //         continue;
+                        //     }
 
-                            $betdata = json_decode($round['details'],true);
+                        //     $betdata = json_decode($round['details'],true);
                             
-                            if (!$betdata)
-                            {
-                                Log::error('KTEN PP round : '. json_encode($round));
-                                break;
-                            }
-                            $bet = $betdata['bet'];
-                            $win = $betdata['win'];
-                            $balance = $betdata['balance'];
-                        }
+                        //     if (!$betdata)
+                        //     {
+                        //         Log::error('KTEN PP round : '. json_encode($round));
+                        //         break;
+                        //     }
+                        //     $bet = $betdata['bet'];
+                        //     $win = $betdata['win'];
+                        //     $balance = $betdata['balance'];
+                        // }
                         else
                         {
                             if ($round['type'] == 'BET')

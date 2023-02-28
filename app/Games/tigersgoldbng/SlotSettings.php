@@ -564,6 +564,13 @@ namespace VanguardLTE\Games\tigersgoldbng
                     'win', 
                     $currentbank
                 ];
+                if( $currentbank < 0) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {

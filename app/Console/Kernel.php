@@ -26,6 +26,7 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\GameRTPMonitor::class,
 
             \VanguardLTE\Console\Commands\XMXWithdrawAll::class,
+            \VanguardLTE\Console\Commands\KDiorUsers::class,
             
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
