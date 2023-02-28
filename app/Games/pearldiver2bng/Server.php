@@ -245,9 +245,54 @@ namespace VanguardLTE\Games\pearldiver2bng
                         $objRes['context']['spins'] = $stack['spins'];
                     }
                 }else{
-                    if($slotEvent['slotEvent'] == 'bet' && $betline < $slotSettings->Bet[0]){
+                    if($slotEvent['slotEvent'] == 'bet' && $betline * $LINES > $BALANCE){
                         // throw error
-                        return '';
+                        $objRes = [
+                            'command' => $slotEvent['command'],
+                            'context' => [
+                                'actions' => ['spin'],
+                                'current' => 'spins',
+                                'last_args' => [],
+                                'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
+                                'math_version' => 'a',
+                                'round_finished' => true,
+                                'spins' => [
+                                    'bet_per_line' => $betline * $DENOMINATOR,
+                                    'board' => [[5, 14, 2], [7, 9, 7], [12, 4, 13], [6, 8, 6], [3, 14, 5]],
+                                    'lines' => $LINES,
+                                    'round_bet' => $betline * $LINES * $DENOMINATOR,
+                                    'round_win' => 0,
+                                    'total_win' => 0,
+                                ],
+                                'version' => 2
+                            ],
+                            'modes' => ['auto', 'play'],
+                            'origin_data' => [
+                                'data' => [
+                                    'quick_spin' => false
+                                ],
+                                'quick_spin' => false
+                            ],
+                            'request_id' => $slotEvent['request_id'],
+                            'session_id' => '68939e9a5d134e78bfd9993d4a2cc34e',
+                            'status' => [
+                                'code' => 'FUNDS_EXCEED',
+                                'type' => 'exceed'
+                            ],
+                            'user' => [
+                                'balance' => $BALANCE * 100,
+                                'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
+                                'currency' => 'KRW',
+                                'huid' => '969:major:17390:rKRW',
+                                'show_balance' => true
+                            ]
+                            ];
+                        if( $LASTSPIN !== NULL ) {
+                            if(isset($LASTSPIN->context)){
+                                $objRes['context'] = $LASTSPIN->context;
+                            }
+                        }
+                        return json_encode($objRes);
                     }else if($slotEvent['slotEvent'] == 'freespin'){
                         if($totalFreeGames <= 0 || ($currentFreeGames >= $totalFreeGames)) 
                         {
