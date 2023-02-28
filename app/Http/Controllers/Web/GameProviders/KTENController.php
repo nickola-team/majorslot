@@ -132,7 +132,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             foreach ($data as $game)
             {
-                if (strtolower($game['game_type']) == 'slot')
+                if (strtolower($game['game_type']) == 'slot' || strtolower($game['game_type']) == 'casino') 
                 {
                     array_push($gameList, [
                         'provider' => self::KTEN_PROVIDER,
@@ -489,6 +489,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $bet = 0;
                         $win = 0;
                         $gameName = $round['gameId'];
+                        $type = 'slot';
                         if ($catname == 'kten-cq9')
                         {
                             if ($round['type'] == 'WIN')
@@ -531,6 +532,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         else if ($catname == 'kten-og')
                         {
+                            $type = 'table';
                             if ($round['type'] == 'WIN')
                             {
                                 continue;
@@ -592,7 +594,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'bet' => $bet, 
                             'win' => $win, 
                             'game' =>$gameName . '_kten', 
-                            'type' => 'slot',
+                            'type' => $type,
                             'percent' => 0, 
                             'percent_jps' => 0, 
                             'percent_jpg' => 0, 
