@@ -18,6 +18,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-playson' => 'Playson',
             'kten-bng' => 'Booongo',
             'kten-og' => 'Og',
+            'kten-ppl' => 'Pragmatic',
         ];
         const KTEN_IDENTITY_GAME = [
             'Pragmatic'  => 'kten-pp',
@@ -26,6 +27,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'Playson' => 'kten-playson'  ,
             'Booongo' => 'kten-bng'  ,
             'Og' => 'kten-og'  ,
+            'PragmaticLive'  => 'kten-ppl',
+        ];
+
+        const KTEN_GAME_TYPE = [
+            'kten-pp' => 'slot',
+            'kten-cq9' => 'slot',
+            'kten-hbn' => 'slot',
+            'kten-playson' => 'slot',
+            'kten-bng' => 'slot',
+            'kten-og' => 'live',
+            'kten-ppl' => 'live',
         ];
 
         public static function getGameObj($uuid)
@@ -108,7 +120,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return $games;
                 }
             }
-            $url = config('app.kten_api') . '/api/getGameList';
+            $type = KTENController::KTEN_GAME_TYPE[$href];
+            if ($type=='slot')
+            {
+                $url = config('app.kten_api') . '/api/getGameList';
+            }
+            elseif ($type=='live')
+            {
+                $url = config('app.kten_api') . '/api/getLobbyList';
+            }
             $op = config('app.kten_op');
             $token = config('app.kten_key');
 
