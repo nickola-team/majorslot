@@ -468,7 +468,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-24 hours'));
+                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
