@@ -723,7 +723,7 @@ namespace VanguardLTE\Games\BookofFallenPM
                 $stacks = $stacks->where('pur_level', $pur_level);
                 if($isLowBank == true){
                     if($pur_level >= 0){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
