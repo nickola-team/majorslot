@@ -325,7 +325,25 @@
 			<script type="text/javascript" src="/frontend/pelican/tutu/js/sk_table.js"></script><!-- sk_실시간입출금현황 롤링 -->
 			
 
-			
+			<div class="main_game_wrap">
+				<div class="main_game_box">
+					<div class="main_game">
+						<ul>
+							@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+							
+							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subLive');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/pelican/tutu/images/main_game1.png" style="display: inline;width:550px;"><img src="/frontend/pelican/tutu/images/main_game1.png" class="mouseover1" style="display: none;width:550px;"></a></li>
+                            <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/pelican/tutu/images/main_game2.png" style="display: inline;width:550px;"><img src="/frontend/pelican/tutu/images/main_game2.png" class="mouseover1" style="display: none;width:550px;"></a></li>
+							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subPowerball');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/pelican/tutu/images/main_game3.png" style="display: inline;width:550px;"><img src="/frontend/pelican/tutu/images/main_game3.png" class="mouseover1" style="display: none;width:550px;"></a></li>
+
+							@else
+							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/pelican/tutu/images/main_game1.png" style="width:550px;"><img src="/frontend/pelican/tutu/images/main_game1.png" class="mouseover1" style="display:none;width:550px;"></a></li>
+							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/pelican/tutu/images/main_game2.png" style="width:550px;"><img src="/frontend/pelican/tutu/images/main_game2.png" class="mouseover1" style="display:none;width:550px;"></a></li>                
+							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/pelican/tutu/images/main_game3.png" style="width:550px;"><img src="/frontend/pelican/tutu/images/main_game3.png" class="mouseover1" style="display:none;width:550px;"></a></li> 
+							@endif
+						</ul>
+					</div>
+				</div>
+			</div>
 				<div class="main_best_wrap">
 					<div class="main_best_box">
 					<div class="main_best_title">
