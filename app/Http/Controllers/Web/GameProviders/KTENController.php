@@ -160,6 +160,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $view = 0; // hide other tables
                     }
 
+                    if ($href == 'kten-ppl' && $game['game_id'] != '101')
+                    {
+                        $view = 0; // hide other tables
+                    }
+
                     array_push($gameList, [
                         'provider' => self::KTEN_PROVIDER,
                         'href' => $href,
@@ -594,6 +599,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         // }
                         else
                         {
+                            if ($round['gameType'] == 'CASINO')
+                            {
+                                $type = 'table';
+                            }
                             if ($round['type'] == 'BET')
                             {
                                 $bet = $round['amount'];
