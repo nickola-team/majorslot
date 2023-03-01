@@ -188,6 +188,7 @@ namespace VanguardLTE\Games\MuertosMultiplierMegawaysPM
                             $arr_freespins = explode(',', $whvs);
                             $fsmax = $arr_freespins[$slotSettings->GetGameData($slotSettings->slotId . 'BonusIndex')] + $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                             if($end == 1){
+                                $strOtherResponse = $strOtherResponse . '&bw=1';
                                 $strOtherResponse = $strOtherResponse . '&trail=fs_n~' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames');
                             }else{
                                 $strOtherResponse = $strOtherResponse . '&trail=fs_n~' . $fsmax;
