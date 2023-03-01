@@ -27,11 +27,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $siteMaintence = env('MAINTENANCE', 0);
 
-            if( $siteMaintence==1 ) 
-            {
-                \Auth::logout();
-                return redirect()->to(argon_route('argon.auth.login'))->withErrors(['사이트 점검중입니다']);
-            }
+            
 
             $throttles = settings('throttle_enabled');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
@@ -85,6 +81,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
+            if( !$user->hasRole(['admin']) && $siteMaintence==1 ) 
+            {
+                \Auth::logout();
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(['사이트 점검중입니다']);
+            }
+            
             if( !$user->hasRole(['admin','group']) && setting('siteisclosed') ) 
             {
                 \Auth::logout();
