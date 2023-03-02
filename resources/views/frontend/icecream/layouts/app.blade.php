@@ -32,7 +32,7 @@
 	<!-- ★메인★ -->
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'icecream')
+			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'icecream'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
 			@include('frontend.kdior.layouts.partials.header', ['logo' => 'icecream'])
