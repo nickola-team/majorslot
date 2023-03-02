@@ -405,7 +405,7 @@
           </div>
           <div id="footer">
             <img src="/frontend/jungle/images/partner.png" /><br /><br />Copyright ⓒ
-            2022~2023 골든카지노  All rights reserved.
+            2022~2023 골드문카지노  All rights reserved.
           </div>
          </div>
          <div>
