@@ -566,7 +566,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $bet = $betdata['Stake'];
                             $win = $betdata['Payout'];
                             $balance = $betdata['BalanceAfter'];
-                            $gameName = $betdata['GameKeyName'];
+                            // $gameName = $betdata['GameKeyName'];
                         }
                         else if ($catname == 'kten-og')
                         {
@@ -585,6 +585,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $bet = $betdata['bettingamount'];
                             $win = $bet + $betdata['winloseamount'];
                             $balance = $betdata['balance'];
+                            $gameName = 'ogplus_' . $gameName;
                         }
                         else if ($catname == 'kten-pp')
                         {
@@ -664,7 +665,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'date_time' => $time,
                             'shop_id' => $shop?$shop->shop_id:0,
                             'category_id' => isset($category)?$category->id:0,
-                            'game_id' =>  'ogplus_' . $round['gameId'],
+                            'game_id' =>  $gameName,
                             'roundid' => $round['gameId'] . '_' . $round['roundID'],
                         ]);
                         $count = $count + 1;
