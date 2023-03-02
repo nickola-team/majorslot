@@ -117,6 +117,7 @@ namespace VanguardLTE\Games\GreekGodsPM
                     $bgt = $stack['bgt'];
                     $bw = $stack['bw'];
                     $end = $stack['end'];
+                    $wof_wi = $stack['wof_wi'];
                     if($stack['reel_set'] > -1){
                         $currentReelSet = $stack['reel_set'];
                     }
