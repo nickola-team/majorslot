@@ -61,7 +61,7 @@
 
 	@foreach ($noticelist as $ntc)
 	@if ($ntc->type == 'popup')
-	@include('frontend.kdior.modals.notice', ['notice' => $ntc)
+	@include('frontend.kdior.modals.notice', ['notice' => $ntc])
 	@endif
 	@endforeach
 </body>
