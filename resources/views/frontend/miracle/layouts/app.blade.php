@@ -32,10 +32,10 @@
 	<!-- ★메인★ -->
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'golden'])
+			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'miracle'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'golden'])
+			@include('frontend.kdior.layouts.partials.header', ['logo' => 'miracle'])
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
@@ -60,9 +60,7 @@
 	@endif
 
 	@foreach ($noticelist as $ntc)
-	@if ($ntc->type == 'popup')
 	@include('frontend.kdior.modals.notice', ['notice' => $ntc])
-	@endif
 	@endforeach
 </body>
 </html>

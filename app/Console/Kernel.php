@@ -106,7 +106,7 @@ namespace VanguardLTE\Console
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
 
             $schedule->command('monitor:betwin')->cron('0 * * * *'); //every hour
-            $schedule->command('monitor:rtp')->dailyAt('12:00')->runInBackground();
+            // $schedule->command('monitor:rtp')->dailyAt('12:00')->runInBackground();
 
             // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
