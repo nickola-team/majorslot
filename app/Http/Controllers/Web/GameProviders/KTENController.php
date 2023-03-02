@@ -20,15 +20,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-og' => 'Og',
             'kten-ppl' => 'Pragmatic',
         ];
-        const KTEN_IDENTITY_GAME = [
-            'Pragmatic'  => 'kten-pp',
-            'Cq9' => 'kten-cq9'  ,
-            'Habanero'  =>  'kten-hbn',
-            'Playson' => 'kten-playson'  ,
-            'Booongo' => 'kten-bng'  ,
-            'Og' => 'kten-og'  ,
-            'PragmaticLive'  => 'kten-ppl',
-        ];
 
         const KTEN_GAME_TYPE = [
             'kten-pp' => 'slot',
@@ -36,13 +27,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-hbn' => 'slot',
             'kten-playson' => 'slot',
             'kten-bng' => 'slot',
-            'kten-og' => 'live',
-            'kten-ppl' => 'live',
+            'kten-og' => 'casino',
+            'kten-ppl' => 'casino',
         ];
 
         public static function getGameObj($uuid)
         {
-            foreach (KTENController::KTEN_IDENTITY_GAME as $ref)
+            foreach (KTENController::KTEN_GAME_IDENTITY as $ref => $value)
             {
                 $gamelist = KTENController::getgamelist($ref);
                 if ($gamelist)
@@ -125,7 +116,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $url = config('app.kten_api') . '/api/getGameList';
             }
-            elseif ($type=='live')
+            elseif ($type=='casino')
             {
                 $url = config('app.kten_api') . '/api/getLobbyList';
             }
@@ -152,7 +143,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             foreach ($data as $game)
             {
-                if (strtolower($game['game_type']) == 'slot' || strtolower($game['game_type']) == 'casino') 
+                if (strtolower($game['game_type']) == $type) 
                 {
                     $view = 1;
                     if ($href == 'kten-og' && $game['game_id'] != 'ogplus')
@@ -164,6 +155,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $view = 0; // hide other tables
                     }
+                    $korname = $game['cp_game_name_kor'];
+                    if ($href == 'kten-bng')
+                    {
+                        $korname = preg_replace('/bng/', '', $korname);
+                        $korname = preg_replace('/_/', ' ', $korname);
+                    }
+                    if ($href == 'kten-playson')
+                    {
+                        $korname = preg_replace('/pls/', '', $korname);
+                        $korname = preg_replace('/_/', ' ', $korname);
+                    }
+
+                    if ($korname == '')
+                    {
+                        $korname = $game['cp_game_name_en'];
+                    }
 
                     array_push($gameList, [
                         'provider' => self::KTEN_PROVIDER,
@@ -172,7 +179,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'symbol' => $game['game_id'],
                         'enname' => $game['cp_game_name_en'],
                         'name' => preg_replace('/\s+/', '', $game['cp_game_name_en']),
-                        'title' => $game['cp_game_name_kor'],
+                        'title' => $korname,
                         'icon' => $game['thumbnail'],
                         'type' => strtolower($game['game_type']),
                         'view' => $view
@@ -559,7 +566,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $bet = $betdata['Stake'];
                             $win = $betdata['Payout'];
                             $balance = $betdata['BalanceAfter'];
-                            $gameName = $betdata['GameKeyName'];
+                            // $gameName = $betdata['GameKeyName'];
                         }
                         else if ($catname == 'kten-og')
                         {
@@ -578,25 +585,45 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $bet = $betdata['bettingamount'];
                             $win = $bet + $betdata['winloseamount'];
                             $balance = $betdata['balance'];
+                            $gameName = 'ogplus_' . $gameName;
                         }
-                        // else if ($catname == 'kten-pp')
-                        // {
-                        //     if ($round['type'] == 'WIN')
-                        //     {
-                        //         continue;
-                        //     }
+                        else if ($catname == 'kten-pp')
+                        {
+                            if ($round['gameType'] != 'SLOT')
+                            {
+                                continue;
+                            }
 
-                        //     $betdata = json_decode($round['details'],true);
-                            
-                        //     if (!$betdata)
-                        //     {
-                        //         Log::error('KTEN PP round : '. json_encode($round));
-                        //         break;
-                        //     }
-                        //     $bet = $betdata['bet'];
-                        //     $win = $betdata['win'];
-                        //     $balance = $betdata['balance'];
-                        // }
+                            if ($round['type'] == 'BET')
+                            {
+                                $bet = $round['amount'];
+                            }
+                            else
+                            {
+                                $win = $round['amount'];
+                            }
+
+                            $balance = -1;
+                        }
+                        else if ($catname == 'kten-ppl')
+                        {
+                            if ($round['gameType'] != 'CASINO')
+                            {
+                                continue;
+                            }
+                            $type = 'table';
+
+                            if ($round['type'] == 'BET')
+                            {
+                                $bet = $round['amount'];
+                            }
+                            else
+                            {
+                                $win = $round['amount'];
+                            }
+
+                            $balance = -1;
+                        }
                         else
                         {
                             if ($round['gameType'] == 'CASINO')
@@ -638,7 +665,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'date_time' => $time,
                             'shop_id' => $shop?$shop->shop_id:0,
                             'category_id' => isset($category)?$category->id:0,
-                            'game_id' =>  'ogplus_' . $round['gameId'],
+                            'game_id' =>  $gameName,
                             'roundid' => $round['gameId'] . '_' . $round['roundID'],
                         ]);
                         $count = $count + 1;

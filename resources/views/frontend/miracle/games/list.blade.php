@@ -1,4 +1,4 @@
-@extends('frontend.golden.layouts.app')
+@extends('frontend.miracle.layouts.app')
 @section('page-title', $title)
 
 @section('content')
