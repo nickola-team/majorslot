@@ -180,10 +180,13 @@ namespace VanguardLTE\Games\bookofsunchoicebng
                 $isState = false;
                 $is_extra_feature = false;
                 if($action['name'] == 'freespin_init' || $action['name'] == 'freespin_pick' || $action['name'] == 'freespin_stop'){
+                    $rnd_selected_id = 0;
                     if($action['name'] == 'freespin_pick'){
-                        $select_id = mt_rand(1, 9);
                         if(isset($action['params']['selected_id']) && $action['params']['selected_id'] != null){
                             $select_id = $action['params']['selected_id'];
+                        }else{
+                            $rnd_selected_id = mt_rand(1, 9);
+                            $select_id = $rnd_selected_id;
                         }
                         $tumbAndFreeStacks = $slotSettings->GetReelStrips('bonus', ($betline * $LINES), $select_id);
                         $stack = $tumbAndFreeStacks[0];
@@ -202,15 +205,16 @@ namespace VanguardLTE\Games\bookofsunchoicebng
                     for($k = 0; $k < 2; $k++){
                         $spin_type = $spin_types[$k];
                         if($stack[$spin_type] != ''){
-                            if($stack[$spin_type] != ''){
-                                $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
-                                $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
-                                if(isset($stack[$spin_type]['round_win'])){
-                                    $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR / 2;
-                                }
-                                if(isset($stack[$spin_type]['total_win'])){
-                                    $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR / 2;
-                                }
+                            if($action['name'] == 'freespin_pick' && isset($stack[$spin_type]['rnd_selected_id'])){
+                                $stack[$spin_type]['rnd_selected_id'] = $rnd_selected_id;
+                            }
+                            $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
+                            $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
+                            if(isset($stack[$spin_type]['round_win'])){
+                                $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR / 2;
+                            }
+                            if(isset($stack[$spin_type]['total_win'])){
+                                $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR / 2;
                             }
                         }
                     }

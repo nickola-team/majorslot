@@ -654,10 +654,10 @@ namespace VanguardLTE\Games\_777gemsrespinbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame777GemsRespinStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    $index = mt_rand(0, 95000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
