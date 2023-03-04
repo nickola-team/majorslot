@@ -10,12 +10,6 @@ namespace VanguardLTE\Console
     class Kernel extends \Illuminate\Foundation\Console\Kernel
     {
         protected $commands = [
-            \VanguardLTE\Console\Commands\TheplusLaunch::class,
-            \VanguardLTE\Console\Commands\TheplusSync::class,
-            \VanguardLTE\Console\Commands\TheplusTerminate::class,
-            \VanguardLTE\Console\Commands\TheplusWithdrawAll::class,
-
-            \VanguardLTE\Console\Commands\DreamGamingSync::class,
 
             \VanguardLTE\Console\Commands\GameLaunchCommand::class,
             \VanguardLTE\Console\Commands\GameSyncCommand::class,
