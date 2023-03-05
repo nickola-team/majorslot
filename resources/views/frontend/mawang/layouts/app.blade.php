@@ -48,7 +48,15 @@
 			</div>
 		@endif
 
-		@include('frontend.kdior.layouts.partials.footer')
+		<div class="footer_wrap">
+			<div class="footer_copyright">
+				<img src="/frontend/kdior/images/footer_partner.png?v=202301301150">
+				<br><br>
+				<img src="/frontend/kdior/images/footer_bank.png?v=202301301150">
+				<br>
+				Copyright (c) 2019 @yield('page-title') All rights reserved
+			</div>
+		</div><!-- footer -->
 		@if( ($detect->isMobile() || $detect->isTablet() ) && Auth::check()) 
 			@include('frontend.kdior.layouts.partials.m.aside')
 		@endif
