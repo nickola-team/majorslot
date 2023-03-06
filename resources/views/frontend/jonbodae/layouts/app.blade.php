@@ -354,7 +354,7 @@
 				@foreach($categories AS $index=>$category)
           @if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && ($category->type == 'slot'))
 					@if ($category->status == 0)
-            <a class="slot-btn gl-title-click" onclick="showGamesPopup('점검중입니다')">
+            <a class="slot-btn gl-title-click" onclick="alert('점검중입니다')">
             @else
             <a class="slot-btn gl-title-click" onclick="showGamesPopup('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
             @endif
