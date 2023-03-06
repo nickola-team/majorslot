@@ -35,10 +35,10 @@
 	<!-- ★메인★ -->
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'special'])
+			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'mawang'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'special'])
+			@include('frontend.kdior.layouts.partials.header', ['logo' => 'mawang'])
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
@@ -48,7 +48,15 @@
 			</div>
 		@endif
 
-		@include('frontend.kdior.layouts.partials.footer')
+		<div class="footer_wrap">
+			<div class="footer_copyright">
+				<img src="/frontend/kdior/images/footer_partner.png?v=202301301150">
+				<br><br>
+				<img src="/frontend/kdior/images/footer_bank.png?v=202301301150">
+				<br>
+				Copyright (c) 2019 @yield('page-title') All rights reserved
+			</div>
+		</div><!-- footer -->
 		@if( ($detect->isMobile() || $detect->isTablet() ) && Auth::check()) 
 			@include('frontend.kdior.layouts.partials.m.aside')
 		@endif
@@ -66,7 +74,9 @@
 	@endif
 
 	@foreach ($noticelist as $ntc)
+	@if ($ntc->type == 'popup')
 	@include('frontend.kdior.modals.notice', ['notice' => $ntc])
+	@endif
 	@endforeach
 </body>
 </html>

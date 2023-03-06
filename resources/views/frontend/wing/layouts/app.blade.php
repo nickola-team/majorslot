@@ -25,6 +25,9 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script><!-- sk_기본 -->
 <script type="text/javascript" src="/frontend/kdior/jq/sk_popup/sk_popup.js"></script><!-- 팝업 -->
 <script type="text/javascript" src="/frontend/kdior/js/sk_tab.js"></script><!-- sk_탭 -->
+<link href="/frontend/kdior/jq/hamburger1/menu.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/frontend/kdior/jq/hamburger1/menu.js"></script>
+
 <script src="/frontend/kdior/js/func.js"></script>
 </head>
 
@@ -46,6 +49,9 @@
 		@endif
 
 		@include('frontend.kdior.layouts.partials.footer')
+		@if( ($detect->isMobile() || $detect->isTablet() ) && Auth::check()) 
+			@include('frontend.kdior.layouts.partials.m.aside')
+		@endif
 		
 	</div><!-- wrap -->
 	@yield('content')
