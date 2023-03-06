@@ -1070,6 +1070,12 @@ return [
         "MammothGoldMegaways" => "맘모스 골드 메가웨이즈",
         "WildWildBananas" => "와일드 와일드 바나나",
 
+        "SecretCityGold"=> "씨크릿 시티 골드",
+        "FishEye"=> "피시 아이",
+        "MonsterSuperLanche"=> "몬스터 슈퍼랜치",
+        "GatotKacasFury"=> "가토 카카즈 퓨리",
+        "Mochimon"=> "모치몬",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
