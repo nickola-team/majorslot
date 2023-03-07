@@ -25,8 +25,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'view'
             ]);
             $userid = $request->user_id;
+            $availablePartners = auth()->user()->availableUsers();
             $user = \VanguardLTE\User::where('id',$userid)->first();
-            if (!$user)
+            if (!$user || !in_array($userid, $availablePartners))
             {
                 return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
             }
