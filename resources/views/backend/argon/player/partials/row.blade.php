@@ -5,7 +5,7 @@
     </a>
 </td>
 <td>{{$user->referral->username}}</td>
-<td><span id="uid_{{$user->id}}">{{number_format($user->balance)}}</span>&nbsp;<a href="#" onclick="refreshPlayerBalance({{$user->id}});return false;" class="btn btn-xs btn-icon-only btn-info"><i class="fas fa-undo"></i></a></td>
+<td><span id="uid_{{$user->id}}">{{number_format($user->balance)}}</span>&nbsp;<a href="#" onclick="refreshPlayerBalance({{$user->id}});return false;" class="btn btn-xs btn-icon-only btn-info" id="rfs_{{$user->id}}"><i class="fas fa-undo"></i></a></td>
 <td>{{ number_format($user->deal_balance - $user->mileage,0) }}</td>
 <td>{{number_format($user->total_in)}}</td>
 <td>{{number_format($user->total_out)}}</td>
