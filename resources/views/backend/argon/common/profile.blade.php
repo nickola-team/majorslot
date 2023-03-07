@@ -227,6 +227,11 @@
                                         <input type="radio"    name="gameOn" value="0" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==0?'checked':''}}   /> <span>없음</span>
 
                                     </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-gameOn">게임환수율%</label>
+                                        <input type="text" name="gamertp" id="gamertp" class="form-control{{ $errors->has('gamertp') ? ' is-invalid' : '' }}" value="{{ $rtppercent }}" >
+                                    </div>
                                 @endif
                                 @endif
                                 <div class="text-center">

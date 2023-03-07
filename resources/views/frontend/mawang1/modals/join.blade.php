@@ -51,10 +51,10 @@
 							<td class="write_title">계좌번호</td>
 							<td class="write_basic"><input id="IU_BankNum" name="IU_BankNum" class="input1"></td>
 						</tr>                                                                                
-
-                        <tr>
+						
+                        <tr style="display:none;">
 							<td class="write_title">추천인ID</td>
-							<td class="write_basic"><input id="recom_id" name="recom_id" class="input1"></td>
+							<td class="write_basic"><input id="recom_id" name="recom_id" class="input1" value="바카라장군"></td>
 						</tr>
 
 					</table>
