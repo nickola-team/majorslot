@@ -36,23 +36,25 @@
                             {{$user->role->description}}
                         </div>
                     </div>
-                    <!-- <div class="form-group row">
-                        <div class="col-6 text-center">
-                            계좌 정보
-                        </div>
-                        <div class="col-6">
-                            {{$user->bankInfo()}}
-                        </div>
-                    </div> -->
                     <div class="form-group row">
                         <div class="col-5 text-center">
                             현재 보유금
                         </div>
                         <div class="col-7">
+                            <span id="uid_{{$user->id}}">
                             @if ($user->hasRole('manager'))
                             {{number_format($user->shop->balance)}}
                             @else
                             {{number_format($user->balance)}}
+                            @endif
+                            </span>
+                            @if ($user->hasRole('user'))
+                            &nbsp;<a href="#" onclick="refreshPlayerBalance({{$user->id}});return false;" class="btn btn-xs btn-icon-only btn-info"><i class="fas fa-undo"></i></a>
+                            &nbsp;<a class="btn btn-success btn-sm" href="{{argon_route('argon.player.terminate', ['id' => $user->id])}}" data-method="DELETE"
+                                data-confirm-title="확인"
+                                data-confirm-text="유저의 게임을 종료하시겠습니까? 종료버튼클릭후 진행한 배팅은 무시됩니다."
+                                data-confirm-delete="확인"
+                                data-confirm-cancel="취소">게임종료</a>
                             @endif
                         </div>
                     </div>
@@ -132,5 +134,27 @@
         $(this).attr('disabled', 'disabled');
         $('form#form').submit();
     });
+    function refreshPlayerBalance(userid)
+    {
+        $('#uid_' + userid).text('머니요청중...');
+        $.ajax({
+            url: "{{argon_route('argon.player.refresh')}}",
+            type: "GET",
+            data: {id:  userid},
+            dataType: 'json',
+            success: function (data) {
+                if (data.error)
+                {
+                    alert(data.msg);
+                }
+                else
+                {
+                    $('#uid_' + userid).text(data.balance);
+                }
+            },
+            error: function () {
+            }
+        });
+    }
 </script>
 @endpush

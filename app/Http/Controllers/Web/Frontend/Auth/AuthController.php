@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
 {
+    use Log;
     class AuthController extends \VanguardLTE\Http\Controllers\Controller
     {
         private $users = null;
@@ -320,7 +321,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
         {
             event(new \VanguardLTE\Events\User\LoggedOut());
             if (\Auth::check()){
-                auth()->user()->update(['api_token' => null]);
+                $user = auth()->user();
+                $balance = \VanguardLTE\User::syncBalance($user);
+                if ($balance < 0)
+                {
+                    Log::info('sync failed');
+                }
+                
+                $b = $user->withdrawAll();
+                
+                $user->update([
+                    'playing_game' => null,
+                    'api_token' => null
+                ]);
             }
             \Auth::logout();
             return redirect('/');

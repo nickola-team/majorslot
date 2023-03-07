@@ -228,7 +228,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
     ]);
     Route::get('followgame/{provider}/{gamecode}', [
         'as' => 'frontend.providers.render',
-        'uses' => 'RenderingController@gamerender'
+        'uses' => 'RenderingController@gamerenderv2'
     ]);
     Route::get('providers/pp/{gamecode}', [
         'as' => 'frontend.providers.pp.render',

@@ -30,6 +30,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         ];
 
 
+        public static function getGameObj($uuid)
+        {
+            $gamelist = KUZAController::getgamelist($uuid);
+            if ($gamelist)
+            {
+                foreach($gamelist as $game)
+                {
+                    if ($game['gamecode'] == $uuid)
+                    {
+                        return $game;
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
 
         /*
         * FROM CONTROLLER, API
@@ -75,7 +92,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $gameList;
         }
 
-        public static function getUserBalance($user)
+        public static function getUserBalance($href, $user)
         {
             //get user balance
             $header = [
@@ -100,9 +117,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $data['data']['balance'];
         }
 
-        public static function withdrawAll($user)
+        public static function withdrawAll($href, $user)
         {
-            $balance = KUZAController::getUserBalance($user);
+            $balance = KUZAController::getUserBalance($href, $user);
 
             if ($balance <= 0)
             {
@@ -201,7 +218,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             //user balance
             try {
-                $data = KUZAController::withdrawAll($user);
+                $data = KUZAController::withdrawAll($gamecode, $user);
                 if ($data['error'])
                 {
                     Log::error('KUZA makelink withdraw user : error. ');

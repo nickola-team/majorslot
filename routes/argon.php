@@ -117,6 +117,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'UsersController@player_join',
         ]);
 
+        Route::get('/player/refresh', [
+            'as' => 'argon.player.refresh',
+            'uses' => 'UsersController@player_refresh',
+        ]);
+
 
         Route::get('/player/transaction', [
             'as' => 'argon.player.transaction',
