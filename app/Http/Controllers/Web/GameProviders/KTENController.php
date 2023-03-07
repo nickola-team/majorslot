@@ -60,7 +60,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         
-        public static function getUserBalance($user) {
+        public static function getUserBalance($href, $user) {
             $url = config('app.kten_api') . '/api/getAccountBalance';
             $op = config('app.kten_op');
             $token = config('app.kten_key');
@@ -241,9 +241,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url;
         }
         
-        public static function withdrawAll($user)
+        public static function withdrawAll($href, $user)
         {
-            $balance = KTENController::getuserbalance($user);
+            $balance = KTENController::getuserbalance($href,$user);
             if ($balance < 0)
             {
                 return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
@@ -378,7 +378,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             
-            $balance = KTENController::getuserbalance($user);
+            $balance = KTENController::getuserbalance($gamecode, $user);
             if ($balance == -1)
             {
                 return null;
@@ -387,7 +387,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance)
             {
                 //withdraw all balance
-                $data = KTENController::withdrawAll($user);
+                $data = KTENController::withdrawAll($gamecode, $user);
                 if ($data['error'])
                 {
                     return null;

@@ -31,10 +31,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
             }
             $user = \Auth::getProvider()->retrieveByCredentials($credentials);
-            if( $request->lang ) 
-            {
-                $user->update(['language' => $request->lang]);
-            }
+            // if( $request->lang ) 
+            // {
+            //     $user->update(['language' => $request->lang]);
+            // }
 
             //check admin id per site
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->get();
@@ -130,11 +130,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             while ($tryCount < 20);
             if ($bToken){
                 $user->update(['api_token' => $api_token]);
-                if ($user->playing_game != null)
-                {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
-                    $user->update(['playing_game' => null]);
-                }
+                // if ($user->playing_game != null)
+                // {
+                //     \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                //     $user->update(['playing_game' => null]);
+                // }
                 $user = $user->fresh();
                 if ($user->api_token != $api_token)
                 {
@@ -336,18 +336,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
             $user = auth()->user();
-            if ($user->playing_game != null)
-            {
-                return response()->json(['error' => true, 'msg' => '이미 실행중인 게임을 종료하세요', 'code' => '001']);
-            }
+            // if ($user->playing_game != null)
+            // {
+            //     return response()->json(['error' => true, 'msg' => '이미 실행중인 게임을 종료하세요', 'code' => '001']);
+            // }
             //reset playing_game field to null for provider games.
+            $balance = \VanguardLTE\User::syncBalance($user);
+
+            if ($balance < 0)
+            {
+                return response()->json(['error' => true, 'msg' => '잠시후 다시 시도하세요', 'code' => '002']);
+            }
+
+            $provider = $request->provider;
+            $gamecode = $request->gamecode;
             $user->update([
                 'playing_game' => null,
                 'remember_token' => $user->api_token
             ]);
-
-            $provider = $request->provider;
-            $gamecode = $request->gamecode;
             if ($provider == 'null')
             {
                 $fakeparams = [
@@ -367,7 +373,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             
             $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
            
-            
             return response()->json($res);
         }
 
@@ -1606,6 +1611,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
             }
+            
             if ($requestuser->hasRole('manager')) // for shops
             {
                 $shop = \VanguardLTE\Shop::lockforUpdate()->where('id', $transaction->shop_id)->get()->first();

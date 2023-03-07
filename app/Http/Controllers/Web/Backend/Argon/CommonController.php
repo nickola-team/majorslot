@@ -156,6 +156,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     $summ = $user->balance;
                 }
+
                 $result = $user->addBalance($data['type'], abs($summ), false, 0, null, isset($data['reason'])?$data['reason']:null);
             
                 $result = json_decode($result, true);

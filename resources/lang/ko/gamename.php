@@ -1070,6 +1070,12 @@ return [
         "MammothGoldMegaways" => "맘모스 골드 메가웨이즈",
         "WildWildBananas" => "와일드 와일드 바나나",
 
+        "SecretCityGold"=> "씨크릿 시티 골드",
+        "FishEye"=> "피시 아이",
+        "MonsterSuperLanche"=> "몬스터 슈퍼랜치",
+        "GatotKacasFury"=> "가토 카카즈 퓨리",
+        "Mochimon"=> "모치몬",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1084,5 +1090,16 @@ return [
         "buddhafortune" => "붓다 포츈",
         "bookofsun" => "북 오브 썬",
         "15goldeneggs" => "15 골든 에그스",
+
+        "godstempledeluxe" => "갓스 템플 디럭스",
+        "777gems" => "777 젬스",
+        "dragonpearls" => "드래곤 펄스",
+        "bookofsunmultichance" => "북 오브 썬 멀티찬스",
+        "olympiangods" => "올림피언 갓스",
+        "sunofegypt" => "썬 오브 이집트:홀드 앤 윈",
+        "777gemsrespin" => "777 젬스 리스핀",
+        "tigersgold" => "타이거스 골드",
+        "greatpanda" => "그레이트 판다 : 홀드 앤드 윈",
+        "moonsisters" => "문 시스터즈",
 
 ];

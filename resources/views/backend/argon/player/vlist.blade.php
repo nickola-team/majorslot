@@ -226,3 +226,30 @@
 </div>
 </div>
 @stop
+
+@push('js')
+<script>
+    function refreshPlayerBalance(userid)
+    {
+        $('#uid_' + userid).text('머니요청중...');
+        $.ajax({
+            url: "{{argon_route('argon.player.refresh')}}",
+            type: "GET",
+            data: {id:  userid},
+            dataType: 'json',
+            success: function (data) {
+                if (data.error)
+                {
+                    alert(data.msg);
+                }
+                else
+                {
+                    $('#uid_' + userid).text(data.balance);
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+</script>
+@endpush
