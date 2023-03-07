@@ -193,7 +193,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->to(argon_route('argon.dashboard'))->withErrors(['삭제된 유저입니다.']);
             }
             $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
-            return view('backend.argon.common.profile', compact('user', 'userActivities'));
+            $rtppercent = 0;
+            if ($user->isInOutPartner())
+            {
+                $shopIds = $user->availableShops();
+                if (count($shopIds) > 0)
+                {
+                    $rtppercent = \VanguardLTE\Shop::whereIn('id', $shopIds)->avg('percent');
+                }
+            }
+            return view('backend.argon.common.profile', compact('user', 'userActivities', 'rtppercent'));
         }
         public function updatePassword(\VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
@@ -272,6 +281,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $userdata['gameOn'] = $data['gameOn'];
                 $data['session'] = json_encode($userdata);
                 unset($data['gameOn']);
+
+            }
+            if (isset($data['gamertp']))
+            {
+                if ($data['gamertp'] >= 90 && $data['gamertp'] <= 100)
+                {
+                    if( $user->isInOutPartner())
+                    {
+                        $shopIds = $user->availableShops();
+                        if (count($shopIds) > 0)
+                        {
+                            $rtppercent = \VanguardLTE\Shop::whereIn('id', $shopIds)->update(['percent' => $data['gamertp']]);
+                        }
+                    }
+                }
+                else
+                {
+                    return redirect()->back()->withErrors(['환수율은 90~100사이에 설정되어야 합니다.']);
+                }
+                
+                unset($data['gamertp']);
 
             }
             
