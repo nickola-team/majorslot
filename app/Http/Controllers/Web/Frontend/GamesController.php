@@ -126,10 +126,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
              //we must sync balance
              if (\Illuminate\Support\Facades\Auth::check()){
-                $balance = \VanguardLTE\User::syncbalance(auth()->user());
-                if ($balance >= 0)
+                //게임사 연동 위해 대기중이면 머니동기화 하지 않기
+                $launchRequests = GameLaunch::where('finished', 0)->where('user_id', auth()->user()->balance)->get();
+                if (count($launchRequests) == 0)
                 {
-                    auth()->user()->balance = $balance;
+                    $balance = \VanguardLTE\User::syncbalance(auth()->user());
+                    if ($balance >= 0)
+                    {
+                        auth()->user()->balance = $balance;
+                    }
                 }
              }
 

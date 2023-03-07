@@ -831,6 +831,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return response()->json(['error'=>true, 'msg'=> '유저를 찾을수 없습니다']);
             }
+            //게임사 연동 위해 대기중이면 머니동기화 하지 않기
+            $launchRequests = GameLaunch::where('finished', 0)->where('user_id', $user->balance)->get();
+            if (count($launchRequests) > 0)
+            {
+                return response()->json(['error'=>true, 'msg'=> '잠시후 다시 요청하세요']);
+            }
             $balance = \VanguardLTE\User::syncBalance($user);
             if ($balance < 0)
             {
