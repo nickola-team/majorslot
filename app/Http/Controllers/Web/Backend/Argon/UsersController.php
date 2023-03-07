@@ -562,12 +562,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $usersId = (clone $users)->pluck('id')->toArray();
 
             $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
-            $onlieUsers = \VanguardLTE\Session::whereIn('user_id', $usersId)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
-            $onlieUsers = array_unique($onlieUsers);
+            $onlineUsers = \VanguardLTE\Session::whereIn('user_id', $usersId)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
+            $onlineUsers = array_unique($onlineUsers);
 
             if ($request->online == 1)
             {
-                $users = $users->whereIn('id',$onlieUsers);
+                $users = $users->whereIn('id',$onlineUsers);
             }
 
             if ($request->join != '')
@@ -584,7 +584,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $total = [
                 'count' => $users->count(),
                 'balance' => $users->sum('balance'),
-                'online' => count($onlieUsers),
+                'online' => count($onlineUsers),
                 'new' => count($newusers)
             ];
             
@@ -604,9 +604,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
             }
-            if ($user->playing_game != null)
+            $b = $user->withdrawAll();
+            if (!$b)
             {
-                $user->update(['playing_game' => $user->playing_game . '_exit']);
+                return redirect()->back()->withSuccess(['게임종료시 오류가 발생했습니다.']);
             }
 
             return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);
@@ -625,17 +626,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
             }
-            if ($user->playing_game != null)
-            {
-                $user->update(['playing_game' => $user->playing_game . '_exit']);
-            }
+            $b = $user->withdrawAll();
 
             $user->update(['api_token' => null]);
 
             $sessionRepository->invalidateAllSessionsForUser($user->id);
-
-
-
 
             return redirect()->back()->withSuccess(['플레이어를 로그아웃시켰습니다.']);
         }
@@ -821,7 +816,30 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
                 return redirect()->back()->withSuccess(['취소처리 되었습니다']);
             }
-            
+        }
+
+        public function player_refresh(\Illuminate\Http\Request $request)
+        {
+            $userid = $request->id;
+            $availableUsers = auth()->user()->hierarchyUsersOnly();
+            if (!in_array($userid, $availableUsers))
+            {
+                return response()->json(['error'=>true, 'msg'=> '유저를 찾을수 없습니다']);
+            }
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                return response()->json(['error'=>true, 'msg'=> '유저를 찾을수 없습니다']);
+            }
+            $balance = \VanguardLTE\User::syncBalance($user);
+            if ($balance < 0)
+            {
+                return response()->json(['error'=>true, 'msg'=> '게임사머니 연동오류']);
+            }
+            else
+            {
+                return response()->json(['error'=>false, 'balance'=> number_format($balance)]);
+            }        
 
         }
 

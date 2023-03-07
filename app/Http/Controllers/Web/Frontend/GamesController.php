@@ -124,6 +124,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 abort(404);
              }
 
+             //we must sync balance
+             if (\Illuminate\Support\Facades\Auth::check()){
+                $balance = \VanguardLTE\User::syncbalance(auth()->user());
+                if ($balance >= 0)
+                {
+                    auth()->user()->balance = $balance;
+                }
+             }
+
             return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'noticelist','msgs','unreadmsg', 'ppgames', 'trhistory'));
         }
         public function setpage(\Illuminate\Http\Request $request)

@@ -461,12 +461,12 @@ function showProfilePopup() {
 function convertDeal() {
 
     var money = $("#bonusdeal #money").val();
-    if (money < 30000) {
-        alert("환전 최소금액은 30,000원 입니다.");
+    if (money < 1000) {
+        alert("환전 최소금액은 1,000원 입니다.");
         return;
     }
-    if (money % 10000 > 0) {
-        alert("10,000원 단위로만 환전 가능합니다.");
+    if (money % 1000 > 0) {
+        alert("1,000원 단위로만 환전 가능합니다.");
         return;
     }
 

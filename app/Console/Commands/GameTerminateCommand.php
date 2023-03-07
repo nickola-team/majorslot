@@ -41,64 +41,17 @@ class GameTerminateCommand extends Command
      */
     public function handle()
     {
-        foreach (GameLaunchCommand::GAME_PROVIDERS as $provider)
-        {    
-            $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
-            if (!class_exists($object))
+        $gameUsers = User::whereNotNull('playing_game')->get();
+        foreach ($gameUsers as $user)
+        {
+            $validTimestamp = \Carbon\Carbon::now()->subMinutes(60)->timestamp;
+            $onlineSession = \VanguardLTE\Session::where('user_id', $user->id)->where('last_activity', '>=', $validTimestamp)->get();
+            if (count($onlineSession) == 0)
             {
-                continue;
-            }
-            $gameUsers = User::where('playing_game', 'like', strtolower($provider) . '%')->get();
-            
-            foreach ($gameUsers as $user) {
-                try {
-                    if (str_contains($user->playing_game ,'exit'))
-                    {
-                        $extra = explode('_', $user->playing_game);
-                        $data = [
-                            'error' => true
-                        ];
-                        if (count($extra) >= 3){
-                            $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $extra[1],$user);
-                            Log::channel('monitor_game')->info($provider .'-' .$extra[1]. ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
-                        }
-                        else
-                        {
-                            $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $user);
-                            Log::channel('monitor_game')->info($provider . ' : ' . $user->id . ' close game. balance = ' . $data['amount']);
-                        }
-                        
-                        if ($data['error'] == false){
-                            User::lockforUpdate()
-                                ->where('id', $user->id)
-                                ->update([
-                                    'balance' => $data['amount'], 
-                                    'playing_game' => null
-                                ]);
-                        }
-                        else
-                        {
-                            Log::channel('monitor_game')->info($provider . ' : ' . $user->id . ' close game error. msg = ' . (isset($data['msg'])?$data['msg']:''));
-                            User::lockforUpdate()
-                            ->where('id', $user->id)
-                            ->update([
-                                'playing_game' => null
-                            ]);
-                        }
-                    }
-                    else
-                    {
-                        if ( time() - $user->played_at > 600)
-                        {
-                            //?????
-                        }
-                    }
-                }
-                catch (Exception $exception) {
-                    Log::info('Exception while terminating game : ' . $user->id . $exception->getMessage());
-                }
+                //human user
+                $b = $user->withdrawAll();
+
             }
         }
-
     }
 }

@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\tigersgoldbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameTigersGoldStack::where('id', 278)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameTigersGoldStack::where('id', 21815)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -654,7 +654,7 @@ namespace VanguardLTE\Games\tigersgoldbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigersGoldStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 48000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 78000);

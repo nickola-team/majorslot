@@ -311,12 +311,12 @@ function joinChk() {
 	}
 	
 	// 비밀번호 체크
-	if(!pattern1.test(frm.IU_PW.value)||!pattern2.test(frm.IU_PW.value)||!pattern3.test(frm.IU_PW.value)||frm.IU_PW.value.length<8||frm.IU_PW.value.length>50){
-		alert("영문+숫자+특수기호 8자리 이상으로 구성하여야 합니다.");
-		frm.IU_PW.select();
-		frm.IU_PW.focus();
-		return false;
-	} 
+	// if(!pattern1.test(frm.IU_PW.value)||!pattern2.test(frm.IU_PW.value)||!pattern3.test(frm.IU_PW.value)||frm.IU_PW.value.length<8||frm.IU_PW.value.length>50){
+	// 	alert("영문+숫자+특수기호 8자리 이상으로 구성하여야 합니다.");
+	// 	frm.IU_PW.select();
+	// 	frm.IU_PW.focus();
+	// 	return false;
+	// } 
 
 	if (frm.IU_PW.value != frm.IU_PW1.value) {
 		alert(" 비밀번호와 비밀번호 확인이 일치하지 않습니다.");

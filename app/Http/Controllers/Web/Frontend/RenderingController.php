@@ -433,6 +433,88 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return view('frontend.Default.games.booongo', compact('url', 'alonegame', 'data'));
             
         }
+        public function gamerenderv2($provider, $gamecode, \Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
+            $t = $request->t; //check timestamp if it is normal request
+            $launchRequest = \VanguardLTE\GameLaunch::where('id', $t)->first();
+            if (!$launchRequest)
+            {
+                //this is irlegal request.
+                abort(404);
+            }
+            if ($user->id != $launchRequest->user_id)
+            {
+                abort(404);
+            }
+
+            $launchRequest->delete();
+            $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
+            if (!class_exists($object))
+            {
+                abort(404);
+            }
+
+            $game = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getGameObj', $gamecode);
+            if (!$game)
+            {
+                abort(404);
+            }
+
+            $user->update([
+                'playing_game' => $game['href'],
+                'played_at' => time(),
+            ]);
+            
+
+            if ($provider == 'bnn')
+            {
+
+                $user->update([
+                    'playing_game' => $gamecode,
+                    'played_at' => time(),
+                ]);
+            }
+            
+            else if ($provider == 'kuza')
+            {
+                $user->update([
+                    'playing_game' => strtolower($provider),
+                    'played_at' => time(),
+                ]);
+            }
+            else if ($provider == 'xmx')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\XMXController::getGameObj($gamecode);
+                if (!$game)
+                {
+                    abort(404);
+                }
+                $user->update([
+                    'playing_game' => $game['href'],
+                    'played_at' => time(),
+                ]);
+            }
+            else if ($provider == 'kten')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::getGameObj($gamecode);
+                if (!$game)
+                {
+                    abort(404);
+                }
+                $user->update([
+                    'playing_game' => $game['href'],
+                    'played_at' => time(),
+                ]);
+            }
+            $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode, $user);
+            return redirect($url);
+            
+        }
 
         public function gamerender($provider, $gamecode, \Illuminate\Http\Request $request)
         {

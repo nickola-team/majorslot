@@ -5,7 +5,7 @@
     </a>
 </td>
 <td>{{$user->referral->username}}</td>
-<td>{{number_format($user->balance)}}</td>
+<td><span id="uid_{{$user->id}}">{{number_format($user->balance)}}</span>&nbsp;<a href="#" onclick="refreshPlayerBalance({{$user->id}});return false;" class="btn btn-xs btn-icon-only btn-info"><i class="fas fa-undo"></i></a></td>
 <td>{{number_format($user->deal_balance)}}</td>
 <td>{{number_format($user->total_in)}}</td>
 <td>{{number_format($user->total_out)}}</td>
@@ -40,5 +40,6 @@
                                 data-confirm-text="유저의 게임을 종료하시겠습니까?"
                                 data-confirm-delete="확인"
                                 data-confirm-cancel="취소">게임종료</a>
+    <a class="dropdown-item" href="{{argon_route('argon.player.logout', ['id' => $user->id])}}">로그아웃</a>
 </div>
 </td>
