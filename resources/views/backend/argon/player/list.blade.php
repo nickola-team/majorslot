@@ -235,6 +235,12 @@
     function refreshPlayerBalance(userid)
     {
         $('#uid_' + userid).text('머니요청중...');
+        $('#rfs_' + userid).removeClass("btn-info");
+        $('#rfs_' + userid).css("pointer-events", "none");
+        setTimeout(() => {
+                    $('#rfs_' + userid).css("pointer-events", "auto"); 
+                    $('#rfs_' + userid).addClass("btn-info");
+                }, 10000);
         $.ajax({
             url: "{{argon_route('argon.player.refresh')}}",
             type: "GET",
@@ -249,6 +255,7 @@
                 {
                     $('#uid_' + userid).text(data.balance);
                 }
+                
             },
             error: function () {
             }
