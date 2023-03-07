@@ -39,7 +39,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function updateBalance(\Illuminate\Http\Request $request)
         {
-            \DB::beginTransaction();
+            // \DB::beginTransaction();
             $data = $request->all();
             if( !array_get($data, 'type') ) 
             {
@@ -166,7 +166,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     return redirect()->back()->withErrors([$result['message']]);
                 }
             }
-            \DB::commit();
+            // \DB::commit();
             return redirect($request->url)->withSuccess(['조작이 성공했습니다.']);
         }
 
