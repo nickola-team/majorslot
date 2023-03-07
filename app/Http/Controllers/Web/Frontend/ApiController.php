@@ -348,6 +348,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => '잠시후 다시 시도하세요', 'code' => '002']);
             }
 
+            auth()->user()->balance = $balance; //
+
             $provider = $request->provider;
             $gamecode = $request->gamecode;
             $user->update([
