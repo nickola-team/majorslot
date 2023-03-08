@@ -344,7 +344,7 @@ namespace VanguardLTE\Games\KingdomofAsgardPM
                         if($firstEle == $wild){
                             $firstEle = $ele;
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                            if($j == 4){
+                            if($j == 4 && $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] > 0){
                                 $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
                                 $totalWin += $lineWins[$k];
                                 $_obf_winCount++;
@@ -355,7 +355,7 @@ namespace VanguardLTE\Games\KingdomofAsgardPM
                             }
                         }else if($ele == $firstEle || $ele == $wild){
                             $lineWinNum[$k] = $lineWinNum[$k] + 1;
-                            if($j == 4){
+                            if($j == 4 && $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] > 0){
                                 $lineWins[$k] = $slotSettings->Paytable[$firstEle][$lineWinNum[$k]] * $betline;
                                 $totalWin += $lineWins[$k];
                                 $_obf_winCount++;
