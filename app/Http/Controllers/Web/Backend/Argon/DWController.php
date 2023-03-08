@@ -13,7 +13,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $user = auth()->user();
             $in_out_logs = \VanguardLTE\WithdrawDeposit::where('user_id', $user->id)->orderby('created_at', 'desc')->take(10)->get();
-            return view('backend.argon.dw.addrequest', compact('in_out_logs'));
+            $master = $user->referral;
+            while ($master!=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            $needRequestAccount = true;
+            if (!$master && $master->bank_name == 'MESSAGE')
+            {
+                $needRequestAccount = false;
+            }
+            return view('backend.argon.dw.addrequest', compact('in_out_logs', 'needRequestAccount'));
         }
 
         public function outrequest(\Illuminate\Http\Request $request)
