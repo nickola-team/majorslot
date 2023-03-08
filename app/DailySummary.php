@@ -477,15 +477,17 @@ namespace VanguardLTE
                 foreach ($childusers as $c)
                 {
                     $childAdj = DailySummary::summary_today($c);
-                    $adj['totalin'] = $adj['totalin'] + $childAdj['totalin'];
-                    $adj['totalout'] = $adj['totalout'] + $childAdj['totalout'];
-                    // $adj['moneyin'] = $adj['moneyin'] + $childAdj['moneyin'];
-                    // $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
-                    $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
-                    $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
-                    $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
-                    $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
-                    $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
+                    if ($childAdj){
+                        $adj['totalin'] = $adj['totalin'] + $childAdj['totalin'];
+                        $adj['totalout'] = $adj['totalout'] + $childAdj['totalout'];
+                        // $adj['moneyin'] = $adj['moneyin'] + $childAdj['moneyin'];
+                        // $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
+                        $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
+                        $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
+                        $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
+                        $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
+                        $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
+                    }
                 }
 
                 if (!$user->hasRole('admin'))
