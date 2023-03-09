@@ -153,7 +153,7 @@
 
 @push('js')
 <script>
-	var depositAccountRequested = false;
+	var depositAccountRequested = {{$needRequestAccount}};
     function show_alarm(msg, aftercallback)
     {
         $('#msgbody').html(msg);
