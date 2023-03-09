@@ -15,10 +15,10 @@
 
 @if( $detect->isMobile() || $detect->isTablet() ) 
 <link href="/frontend/kdior/css/m/common.css?v=202301301150" rel="stylesheet" type="text/css">
-<link href="/frontend/kdior/css/m/layout.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/bolton/css/m/layout.css?v=202301301150" rel="stylesheet" type="text/css">
 @else
 <link href="/frontend/kdior/css/common.css?v=202301301150" rel="stylesheet" type="text/css">
-<link href="/frontend/kdior/css/layout.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/bolton/css/layout.css?v=202301301150" rel="stylesheet" type="text/css">
 @endif
 <link rel="stylesheet" href="/frontend/kdior/css/animations.css?v=202301301150"><!-- CSS animations1 -->
 <script language="javascript" src="/frontend/kdior/js/showid.js" type="text/javascript"></script>

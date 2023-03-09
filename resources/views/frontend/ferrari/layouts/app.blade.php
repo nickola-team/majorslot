@@ -28,7 +28,7 @@
 <link href="/frontend/kdior/jq/hamburger1/menu.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/frontend/kdior/jq/hamburger1/menu.js"></script>
 
-<script src="/frontend/kdior/js/func.js"></script>
+<script src="/frontend/ferrari/js/func.js"></script>
 </head>
 
 <body>
