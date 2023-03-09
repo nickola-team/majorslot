@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\supermarblebng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameSuperMarbleStack::where('id', 278)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameSuperMarbleStack::where('id', 11727)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -654,14 +654,14 @@ namespace VanguardLTE\Games\supermarblebng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameSuperMarbleStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 48000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 78000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 40);    
+                        $stacks = $stacks->where('odd', '<=', 25);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

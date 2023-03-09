@@ -403,12 +403,13 @@ namespace VanguardLTE\Games\VegasNightsPM
                 $strOtherResponse = '';
                 $isState = true;
                 $isEnd = true;
-                $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                 if($rs_p >= 0){
                     $spinType = 's';
                     $isState = false;
                     $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p;
+                }else{
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                 }
                 if($rs_c > 0){
                     $strOtherResponse = $strOtherResponse . '&rs_c=' . $rs_c;
@@ -465,10 +466,15 @@ namespace VanguardLTE\Games\VegasNightsPM
                 if($str_wdrm_v != ''){
                     $strOtherResponse = $strOtherResponse . '&wdrm_v=' . $str_wdrm_v;
                 }
-                
-                if($rs_p >= 0 || $rs_t > 0){
-                    $strOtherResponse = $strOtherResponse . '&rs_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
+                if($rs_p > 0 || $rs_t > 0){
+                    $tumbWin = $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') ?? 0;
+                    $tumbWin = $tumbWin + $totalWin;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', $tumbWin);
+                    $strOtherResponse = $strOtherResponse . '&rs_win=' . $tumbWin;
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');   
+                }
+                if($rs_p <= 0){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                 }
                 if($rs_more > 0){
                     $strOtherResponse = $strOtherResponse . '&rs_more=' . $rs_more;
@@ -499,7 +505,7 @@ namespace VanguardLTE\Games\VegasNightsPM
                 $allBet = $lines * $betline;
                 $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 
-                if( ($scatterCount >= 3 && $slotEvent['slotEvent'] != 'freespin' && $rs_p == -1 && $rs_t <= 0) || $rs_p == 0) 
+                if( $scatterCount >= 3 && $slotEvent['slotEvent'] != 'freespin' && (($rs_p == -1 && $rs_t <= 0) || $rs_p == 0)) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
                     // $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
