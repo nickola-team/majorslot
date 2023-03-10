@@ -10,6 +10,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function index(\Illuminate\Http\Request $request)
         {
+            $type = $request->type;
             if (auth()->user()->hasRole('admin'))
             {
                 $msgs = \VanguardLTE\Message::orderBy('created_at','desc')->where('ref_id', 0);
@@ -31,6 +32,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             // {
             //     $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get();
             // }
+            $msgs = $msgs->where('type', $type);
             $odd = \VanguardLTE\Settings::where('key', 'MaxOdd')->first();
             $win = \VanguardLTE\Settings::where('key', 'MaxWin')->first();
             $data = [
@@ -61,7 +63,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $data = $request->only([
                 'title',
                 'content',
-                'ref_id'
+                'ref_id',
+                'type'
             ]);
             if ($request->user != '')
             {
@@ -73,13 +76,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 $data['user_id'] = $user->id;
             }
-            else
+            else if (auth()->user()->isInoutPartner())
             {
                 $data['user_id'] = \VanguardLTE\Message::GROUP_MSG_ID;
             }
+            else // 일반 파트너들이 본사에게 발송
+            {
+                $master = auth()->user();
+                while ($master !=null && !$master->isInoutPartner())
+                {
+                    $master = $master->referral;
+                }
+
+                $data['user_id'] = $master->id;
+            }
             $data['writer_id'] = auth()->user()->id;
             \VanguardLTE\Message::create($data);
-            return redirect()->to(argon_route('argon.msg.list'))->withSuccess(['쪽지가 발송되었습니다']);
+            return redirect()->to(argon_route('argon.msg.list', ['type' => $data['type']]))->withSuccess(['쪽지가 발송되었습니다']);
         }
         public function delete(\Illuminate\Http\Request $request, $argon, $message)
         {
@@ -87,24 +100,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($msg && $msg->user_id != 0){
                 $msg->delete();
             }
-            return redirect()->to(argon_route('argon.msg.list'))->withSuccess(['쪽지가 삭제되었습니다']);
+            return redirect()->back()->withSuccess(['쪽지가 삭제되었습니다']);
         }
 
         public function deleteall(\Illuminate\Http\Request $request)
         {
+            $type = 0;
+            if ($request->type != null)
+            {
+                $type = $request->type;
+            }
             if (auth()->user()->hasRole('admin'))
             {
-                $msgs = \VanguardLTE\Message::query()->delete();
-            }
-            else if (auth()->user()->isInoutPartner())
-            {
-                $msgs = \VanguardLTE\Message::where('writer_id', auth()->user()->id)->orwhere('user_id', auth()->user()->id)->delete();
+                $msgs = \VanguardLTE\Message::where('type',$type)->delete();
             }
             else
             {
-                $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->delete();
+                $msgs = \VanguardLTE\Message::where(['writer_id'=> auth()->user()->id, 'type' => $type])->orwhere(['user_id'=> auth()->user()->id, 'type' => $type])->delete();
             }
-            return redirect()->to(argon_route('argon.msg.list'))->withSuccess(['모든 쪽지가 삭제되었습니다']);
+            
+            return redirect()->back()->withSuccess(['모든 쪽지가 삭제되었습니다']);
         }
 
         public function updatemonitor(\Illuminate\Http\Request $request)
@@ -140,7 +155,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 );
             }
             
-            return redirect()->to(argon_route('argon.msg.list'))->withSuccess(['알림설정이 업데이트되었습니다']);
+            return redirect()->back()->withSuccess(['알림설정이 업데이트되었습니다']);
         }
         
     }

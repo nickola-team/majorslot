@@ -319,11 +319,19 @@
                             </li>
                             @endif
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="{{argon_route('argon.msg.list')}}">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msg.list', ['type'=>1])}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    쪽지
+                                    계좌문의
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msg.list', ['type'=>0])}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    일반쪽지
+                                </a>
+                            </li>
+
+                            
                             
                         </ul>
                     </div>

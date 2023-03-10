@@ -69,7 +69,7 @@
         }
     ?>
         @if (auth()->user()->isInOutPartner() && $msg->user_id==auth()->user()->id)
-        <a  href="{{argon_route('argon.msg.create', ['ref' => $msg->id])}}" >
+        <a  href="{{argon_route('argon.msg.create', ['ref' => $msg->id, 'type'=>\Request::get('type')])}}" >
             <button class="btn btn-primary btn-sm">답변</button>
         </a>
         @endif

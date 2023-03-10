@@ -9,6 +9,7 @@ namespace VanguardLTE
             'writer_id',
             'ref_id',
             'count',
+            'type', //0 - 일반문의, 1 - 계좌문의
             'title', 
             'content', 
             'created_at', 

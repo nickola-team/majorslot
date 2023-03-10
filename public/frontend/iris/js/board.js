@@ -31,6 +31,7 @@ function writeReqAccountMsg(){
     $.post('/api/writeMsg', {
         title : subject, 
         content : writeArea, 
+        type : 1,
     },function(data){
         $('.loaderBg').css('display','none');
         if(data.error == false){

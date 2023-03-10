@@ -101,7 +101,7 @@
                             <h6 class="text-sm text-muted m-0"><strong class="text-primary">{{count($unreadmsgs)}}</strong> 개의 새로운 쪽지가 있습니다</h6>
                         </div>
                         <!-- View all -->
-                        <a href="{{argon_route('argon.msg.list')}}" class="dropdown-item text-center text-primary font-weight-bold py-3">모두보기</a>
+                        <a href="{{argon_route('argon.msg.list', ['type'=>$msgtype])}}" class="dropdown-item text-center text-primary font-weight-bold py-3">모두보기</a>
                     </div>
             </ul>
             <ul class="navbar-nav align-items-center ml-auto ml-md-0">
