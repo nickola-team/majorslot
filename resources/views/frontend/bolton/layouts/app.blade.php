@@ -28,17 +28,24 @@
 <script type="text/javascript" src="/frontend/kdior/jq/hamburger1/menu.js"></script>
 <script type="text/javascript" src="/frontend/kdior/js/sk_tab.js"></script><!-- sk_탭 -->
 <script src="/frontend/kdior/js/func.js"></script>
+  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Anton'>
+
+<link rel="stylesheet" href="/frontend/bolton/css/star.css">
+
 </head>
 
 <body>
 	<!-- ★메인★ -->
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'bolton'])
+			@include('frontend.bolton.layouts.partials.m.header', ['logo' => 'bolton'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
 			@include('frontend.kdior.layouts.partials.header', ['logo' => 'bolton'])
-			@include('frontend.kdior.layouts.partials.banner')
+			@include('frontend.bolton.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
 					@include('frontend.kdior.layouts.partials.category')
@@ -52,6 +59,7 @@
 			@include('frontend.kdior.layouts.partials.m.aside')
 		@endif
 	</div><!-- wrap -->
+	
 	@yield('content')
 	@auth()
 		@include('frontend.kdior.modals.common')
