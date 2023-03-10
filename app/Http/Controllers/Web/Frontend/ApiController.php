@@ -1227,6 +1227,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $data = [
                     'user_id' => $master->id,
                     'writer_id' => $user->id,
+                    'type' => 1,
                     'title' => '계좌문의드립니다',
                     'content' => '입금계좌 문의드립니다'
                 ];
@@ -1906,7 +1907,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             $title = $request->title;
             $content = $request->content;
-
+            $type = 0;
+            if ($request->type != null)
+            {
+                $type = $request->type;
+            }
             $parent =auth()->user()->referral;
             while($parent!=null && !$parent->isInOutPartner())
             {
@@ -1918,6 +1923,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 [
                     'user_id' => $adminid,
                     'writer_id' => auth()->user()->id,
+                    'type' => $type,
                     'title' => $title,
                     'content' => $content,
                 ]

@@ -63,8 +63,7 @@
             <div class="card mt-4">
                 <div class="card-header border-0">
                     <div class="pull-right">
-					@if (auth()->user()->isInoutPartner())
-					<a href="{{ argon_route('argon.msg.deleteall') }}"
+					<a href="{{ argon_route('argon.msg.deleteall', ['type'=>\Request::get('type')]) }}"
 						data-method="DELETE"
 						data-confirm-title="확인"
 						data-confirm-text="모든 쪽지를 삭제하시겠습니까?"
@@ -72,8 +71,9 @@
 						data-confirm-cancel="취소">
 						<button type="button" class="btn btn-warning btn-sm">모두삭제</button>
 					</a>
-						<a href="{{ argon_route('argon.msg.create') }}" class="btn btn-primary btn-sm">보내기</a>
-					@endif
+                    @if (\Request::get('type') == 0)
+						<a href="{{ argon_route('argon.msg.create', ['type'=>\Request::get('type')]) }}" class="btn btn-primary btn-sm">보내기</a>
+                    @endif
 					</div>
                     <h3 class="mb-0">쪽지</h3>
                 </div>

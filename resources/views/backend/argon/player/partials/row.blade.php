@@ -32,7 +32,7 @@
 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
     <a class="dropdown-item" href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}">설정 및 정보</a>
     <hr class="my-1">
-    <a class="dropdown-item" href="{{argon_route('argon.msg.create', ['to' => $user->username])}}">쪽지보내기</a>
+    <a class="dropdown-item" href="{{argon_route('argon.msg.create', ['to' => $user->username, 'type' => 1])}}">쪽지보내기</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.gamehistory', ['player' => $user->username])}}">게임내역</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.terminate', ['id' => $user->id])}}" data-method="DELETE"
