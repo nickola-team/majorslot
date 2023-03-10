@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\pearldiverbng
+namespace VanguardLTE\Games\queenofthesunbng
 {
     class SlotSettings
     {
@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\pearldiverbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('id', 92)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameQueenofTheSunStack::where('id', 1063)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -650,14 +650,19 @@ namespace VanguardLTE\Games\pearldiverbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('spin_type','>', 0);
+                    $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
+                    if($currentHill[0] * 10 + $currentHill[1] >= 90){
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameQueenofTheSunStack::where('spin_type', 2);
+                    }else{
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameQueenofTheSunStack::where('spin_type','>', 0);
+                    }
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameQueenofTheSunStack::where('spin_type', 0);
                 }
-                $index = mt_rand(0, 28000);
+                $index = 0; //mt_rand(0, 42000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 70000);
+                    // $index = mt_rand(0, 78000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
