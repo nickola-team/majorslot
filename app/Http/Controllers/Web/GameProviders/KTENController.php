@@ -561,6 +561,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             {
                                 continue;
                             }
+                            if (!isset($round['history']))
+                            {
+                                Log::error('KTEN HBN round : '. json_encode($round));
+                                break;
+                            }
 
                             $betdata = json_decode($round['history'],true);
                             $bet = $betdata['Stake'];
