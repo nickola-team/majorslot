@@ -1392,6 +1392,7 @@ namespace VanguardLTE
                     else
                     {
                         Log::channel('monitor_game')->info('SyncBalance Failed | ' . strtoupper($ct->provider) . ' : ' . $lockUser->playing_game . ' : ' . $lockUser->username . '('.$lockUser->id . ') [old=' . $lockUser->balance. '],[new=-1]');
+                        \DB::commit();
                         return -1;
                     }
                     \DB::commit();
