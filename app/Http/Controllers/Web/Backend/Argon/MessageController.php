@@ -116,7 +116,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             else
             {
-                $msgs = \VanguardLTE\Message::where(['writer_id'=> auth()->user()->id, 'type' => $type])->orwhere(['user_id'=> auth()->user()->id, 'type' => $type])->delete();
+                return redirect()->back()->withSuccess(['현재 지원되지 않는 기능입니다']);
             }
             
             return redirect()->back()->withSuccess(['모든 쪽지가 삭제되었습니다']);
