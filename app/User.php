@@ -1348,11 +1348,13 @@ namespace VanguardLTE
                     if ($data['error'] == false){
                         Log::channel('monitor_game')->info('Withdraw from ' . $lockUser->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider);
                         $lockUser->update(['playing_game' => null, 'balance' => $data['amount']]);
+                        \DB::commit();
                         return true;
                     }
                     else
                     {
                         Log::channel('monitor_game')->info('Withdraw failed ' . $lockUser->username  . ' at ' . $ct->provider);
+                        \DB::commit();
                         return false;
                     }
                 }
