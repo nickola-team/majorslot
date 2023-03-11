@@ -1337,25 +1337,28 @@ namespace VanguardLTE
 
         public function withdrawAll()
         {
-            if ($this->playing_game != null)
+            \DB::beginTransaction();
+            $lockUser = \VanguardLTE\User::lockForUpdate()->find($this->id);
+            if ($lockUser->playing_game != null)
             {
-                $ct = \VanguardLTE\Category::where('href', $this->playing_game)->first();
+                $ct = \VanguardLTE\Category::where('href', $lockUser->playing_game)->first();
                 if ($ct != null && $ct->provider != null)
                 {
-                    $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::withdrawAll', $this->playing_game, $this);
+                    $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::withdrawAll', $lockUser->playing_game, $this);
                     if ($data['error'] == false){
-                        Log::channel('monitor_game')->info('Withdraw from ' . $this->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider);
-                        $this->update(['playing_game' => null, 'balance' => $data['amount']]);
+                        Log::channel('monitor_game')->info('Withdraw from ' . $lockUser->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider);
+                        $lockUser->update(['playing_game' => null, 'balance' => $data['amount']]);
                         return true;
                     }
                     else
                     {
-                        Log::channel('monitor_game')->info('Withdraw failed ' . $this->username  . ' at ' . $ct->provider);
+                        Log::channel('monitor_game')->info('Withdraw failed ' . $lockUser->username  . ' at ' . $ct->provider);
                         return false;
                     }
                 }
 
             }
+            \DB::commit();
             return true;
         }
 
