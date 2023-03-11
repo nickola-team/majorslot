@@ -4,7 +4,11 @@
     <table style="border:1px solid #EAEAEA; background-color:RGBA(0,0,0,0.9); color: #fff; width:100%; height:100%">
         <tbody style="vertical-align: middle;">
         <tr>
-            <td style="padding:20px;"><?php echo $notice->content; ?></td>
+            <td style="padding:20px;">
+            <div id="popcontent" style="height: 100%; overflow:auto;">
+                <?php echo $notice->content; ?>
+            </div>
+            </td>
         </tr>
         <tr>
             <td height="22" align="left" valign="middle" bgcolor="#D5D5D5">

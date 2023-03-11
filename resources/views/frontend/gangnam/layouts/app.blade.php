@@ -68,6 +68,8 @@
                 }
             ?>
             addPopup('popupID{{$ntc->id}}', {{$top}}, {{$left}}, {{$width}}, {{$height}});
+            //resize content div
+            $('#popupID{{$ntc->id}} #popcontent').css('height', {{$height-10}});
           }
           @endforeach
         }
