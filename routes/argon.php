@@ -106,11 +106,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::delete('/player/terminate', [
             'as' => 'argon.player.terminate',
             'uses' => 'UsersController@player_terminate',
-        ]);
+        ])->middleware('simultaneous:1');
         Route::get('/player/logout', [
             'as' => 'argon.player.logout',
             'uses' => 'UsersController@player_logout',
-        ]);
+        ])->middleware('simultaneous:1');
 
         Route::get('/player/join', [
             'as' => 'argon.player.join',
@@ -168,7 +168,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::post('/common/balance', [
             'as' => 'argon.common.balance.post',
             'uses' => 'CommonController@updateBalance',
-        ]);
+        ])->middleware('simultaneous:1');
 
         Route::get('/common/profile', [
             'as' => 'argon.common.profile',
