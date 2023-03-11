@@ -1344,13 +1344,13 @@ namespace VanguardLTE
                 {
                     $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::withdrawAll', $this->playing_game, $this);
                     if ($data['error'] == false){
-                        Log::info('Withdraw from ' . $this->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider);
+                        Log::channel('monitor_game')->info('Withdraw from ' . $this->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider);
                         $this->update(['playing_game' => null, 'balance' => $data['amount']]);
                         return true;
                     }
                     else
                     {
-                        Log::info('Withdraw failed ' . $this->username  . ' at ' . $ct->provider);
+                        Log::channel('monitor_game')->info('Withdraw failed ' . $this->username  . ' at ' . $ct->provider);
                         return false;
                     }
                 }
