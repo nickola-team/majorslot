@@ -39,7 +39,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function updateBalance(\Illuminate\Http\Request $request)
         {
-            // \DB::beginTransaction();
+            \DB::beginTransaction();
             $data = $request->all();
             if( !array_get($data, 'type') ) 
             {
@@ -48,22 +48,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user = \VanguardLTE\User::lockForUpdate()->find($request->user_id);
             if (!$user)
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
 
             if (!in_array($user->id, auth()->user()->availableUsers()))
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
 
             if ($user->playing_game != null )
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
             }
 
             $summ = abs(str_replace(',','',$request->amount));
             if ($summ == 0 && $request->all != '1' )
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['유효하지 않은 금액입니다']);
             }
 
@@ -88,6 +92,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $payer = auth()->user();
                 if( $data['type'] == 'add' && (!$payer->hasRole('admin') && $payer->balance < $summ  ) )
                 {
+                    \DB::commit();
                     return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_user_balance', [
                         'name' => $user->username, 
                         'balance' => $user->balance
@@ -95,6 +100,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 if( $data['type'] == 'out' && $shop->balance < $summ  ) 
                 {
+                    \DB::commit();
                     return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
                         'name' => $shop->name, 
                         'balance' => $shop->balance
@@ -163,10 +169,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $result = json_decode($result, true);
                 if( $result['status'] == 'error' ) 
                 {
+                    \DB::commit();
                     return redirect()->back()->withErrors([$result['message']]);
                 }
             }
-            // \DB::commit();
+            \DB::commit();
             return redirect($request->url)->withSuccess(['조작이 성공했습니다.']);
         }
 
