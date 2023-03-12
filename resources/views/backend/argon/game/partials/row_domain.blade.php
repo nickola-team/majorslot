@@ -46,10 +46,9 @@
         @if (auth()->user()->hasRole('admin'))
         <a class="btn btn-success  btn-sm" href="{{argon_route('argon.game.domain.status', ['cat_id'=>$category->id, 'view'=>1])}}">사용</a>
         <a  class="btn btn-warning btn-sm" href="{{argon_route('argon.game.domain.status', ['cat_id'=>$category->id, 'view'=>0])}}">내림</a>
-        
+        @endif
         <a class="btn btn-success  btn-sm" href="{{argon_route('argon.game.domain.status', ['cat_id'=>$category->id, 'status'=>1])}}">운영</a>
         <a  class="btn btn-warning btn-sm" href="{{argon_route('argon.game.domain.status', ['cat_id'=>$category->id, 'status'=>0])}}">점검</a>
-        @endif
     </td>
     @if ($loop->index > 0)
 	</tr>
