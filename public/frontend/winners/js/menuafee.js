@@ -202,17 +202,15 @@ function usePoint() {
     }
 }
 
-
-
 //-- 쪽지 --//
 function readMessage(idx) {
-    if($('#cont_'+idx).hasClass("open")){
-        $('#cont_'+idx).css('display','none').removeClass('open');
-        $('#title_'+idx).removeClass('active');
-    } else {
-        $('#cont_'+idx).css('display','block').addClass('open');
-        $('#title_'+idx).addClass('active');
-    }
+    // if($('#cont_'+idx).hasClass("open")){
+    //     $('#cont_'+idx).css('display','none').removeClass('open');
+    //     $('#title_'+idx).removeClass('active');
+    // } else {
+    //     $('#cont_'+idx).css('display','block').addClass('open');
+    //     $('#title_'+idx).addClass('active');
+    // }
 
     if (parseInt($('#is_sign_in').val())) {
         $.ajax({
@@ -241,97 +239,6 @@ function deleteMessage(idx) {
             }
         });
     }
-}
-
-
-//-- 공지사항 --//
-function viewEventDetail(idx, num) {
-    if (parseInt($("#is_sign_in").val()) == 1) {
-        $(".wrapper_loading").removeClass("hidden");
-        $.ajax({
-            url: "/board/view.asp",
-            type: "GET",
-            data: { target: "event", idx: idx, num: num },
-            dataType: "html",
-            success: function(data) {
-                $('.nav-mdl .event-link').parent().addClass('active');
-                $('.nav-mdl .event-link').parent().siblings('.nav-btn').removeClass('active');
-                $('.tab-mdl.event-view').addClass('active');
-                $('.tab-mdl.event-view').siblings('.tab-mdl').removeClass('active');
-
-                var obj = $(".event-view-section");
-                obj.empty();
-                obj.append(data);
-            },
-            complete: function() { $(".wrapper_loading").addClass("hidden") }
-        });
-    }
-}
-
-function viewNoticeDetail(idx, num) {
-    if (parseInt($("#is_sign_in").val()) == 1) {
-        $(".wrapper_loading").removeClass("hidden");
-        $.ajax({
-            url: "/board/view.asp",
-            type: "GET",
-            data: { target: "notice", idx: idx, num: num },
-            dataType: "html",
-            success: function(data) {
-                $('.nav-mdl .notice-link').parent().addClass('active');
-                $('.nav-mdl .notice-link').parent().siblings('.nav-btn').removeClass('active');
-                $('.tab-mdl.notice-view').addClass('active');
-                $('.tab-mdl.notice-view').siblings('.tab-mdl').removeClass('active');
-
-                var obj = $(".notice-view-section");
-                obj.empty();
-                obj.append(data);
-            },
-            complete: function() { $(".wrapper_loading").addClass("hidden") }
-        });
-    }
-}
-
-function noticeEventBack(type) {
-    switch (type) {
-        case "event":
-            $('.nav-mdl .event-link').parent().addClass('active');
-            $('.nav-mdl .event-link').parent().siblings('.nav-btn').removeClass('active');
-            $('.tab-mdl.event').addClass('active');
-            $('.tab-mdl.event').siblings('.tab-mdl').removeClass('active');
-            noticeEventInit();
-            break;
-        default:
-            $('.nav-mdl .notice-link').parent().addClass('active');
-            $('.nav-mdl .notice-link').parent().siblings('.nav-btn').removeClass('active');
-            $('.tab-mdl.notice').addClass('active');
-            $('.tab-mdl.notice').siblings('.tab-mdl').removeClass('active');
-            noticeEventInit();
-    }
-}
-
-function noticeEventInit() {
-    if ($(".event_table tbody tr td").length === 1) {
-        postAjax(1, "EV");
-    }
-    if ($(".notice_table tbody tr td").length === 1) {
-        postAjax(1, "NT");
-    }
-}
-
-function boardPopup(type, idx, num) {
-    if (parseInt($("#is_sign_in").val()) == 1) {
-        switch (type) {
-            case "event":
-                viewEventDetail(idx, num);
-                break;
-            default:
-                viewNoticeDetail(idx, num);
-        }
-    }
-}
-
-function postAjax(page, type) {
-    
 }
 
 

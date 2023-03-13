@@ -127,17 +127,32 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmin'];
                             }
                         }
-                        else if (isset($userlimit['bacmax']) && str_contains($k,'Baccarat_'))
+                        else if (str_contains($k,'Baccarat_'))
                         {
-                            if (str_contains($k,'Pair'))
+
+                            if (str_contains($k,'Pair') || str_contains($k,'Bonus'))
                             {
-                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'] / 10;
+                                if (isset($userlimit['bacpair']))
+                                {
+                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacpair'];
+                                }
                             }
-                            else
+                            else  if (str_contains($k,'Tie'))
                             {
-                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'];
+                                if (isset($userlimit['bacmax']))
+                                {
+                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'] / 10;
+                                }
+                            }
+                            else 
+                            {
+                                if (isset($userlimit['bacmax']))
+                                {
+                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'];
+                                }
                             }
                         }
+                        
 
                         //Dragon&Tiger
                         else if ($k=='DragonTiger_Min')

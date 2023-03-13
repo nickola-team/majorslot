@@ -42,15 +42,18 @@
             }
             $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notices = \VanguardLTE\Notice::where(['active' => 1])->whereIn('type', ['all','partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
+            $msgtype = 0;
             if (auth()->user()->hasRole('admin'))
             {
-                $msgs = \VanguardLTE\Message::where('writer_id', 0)->orderby('created_at', 'desc')->get(); //system message
-                $unreadmsgs = $msgs;
+                $unreadmsgs = [];
             }
             else
             {
-                $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->orderby('created_at', 'desc')->get();
                 $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get(); //unread message
+                if (count($unreadmsgs) > 0)
+                {
+                    $msgtype = $unreadmsgs->first()->type;
+                }
             }
         ?>
         @if (count($notices)>0)

@@ -68,6 +68,10 @@
                 }
             ?>
             addPopup('popupID{{$ntc->id}}', {{$top}}, {{$left}}, {{$width}}, {{$height}});
+            //resize content div
+            @if( $detect->isMobile() || $detect->isTablet() ) 
+            $('#popupID{{$ntc->id}} #popcontent').css('height', {{$height}}-100);
+            @endif
           }
           @endforeach
         }

@@ -19,6 +19,7 @@
                 <div class="card-body">
                     <form action="{{argon_route('argon.msg.store')}}" id="user-form" method="POST" >
                       <input type="hidden" id="ref_id" name="ref_id" value="{{$refmsg?$refmsg->id:0}}">
+                      <input type="hidden" id="type" name="type" value="{{\Request::get('type')}}">
                       <div class="pl-lg-4">
                         @include('backend.argon.messages.partials.base', ['edit' => false])
                         <div class="text-center">

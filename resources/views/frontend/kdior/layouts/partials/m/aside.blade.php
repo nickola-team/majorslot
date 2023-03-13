@@ -2,7 +2,7 @@
 		<div class="aside_wrap">
 			<div class="aside_top_wrap">
 				<div class="aside_top_left">
-					<a href="#"><img src="/frontend/kdior/images/logo.png?v=202302162217" width="135"></a>
+					<a href="#"><img src="/frontend/{{$logo}}/images/logo.png?v=202302162217" width="135"></a>
 				</div>
 				<div data-dismiss="aside" class="aside_top_right"><img src="/frontend/kdior/images/m_close.png?v=202302162217" width="40"></div>
 			</div> 

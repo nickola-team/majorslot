@@ -1128,9 +1128,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="text-center" colspan="3"></td>
-          </tr>
+        <?php $nidx = 1; ?>
+          @foreach ($noticelist as $notice)
+            @if ($notice->popup == 'general')
+            <tr class="depth-click">
+              <td>{{$nidx}}</td>
+              <td>{{$notice->title}}</td>
+              <td>{{$notice->date_time}}</td>
+            </tr>
+            <tr class="dropdown">
+              <td colspan="3">
+                <div class="mess-cont" style="display: none;">
+                  <div class="inner">
+                    <?php echo $notice->content ?>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <?php $nidx = $nidx + 1; ?>
+
+            @endif
+          @endforeach
         </tbody>
       </table>
     </div>
@@ -1349,16 +1367,21 @@
 	</div>
 </div>
 
-@if ($notice!=null)
-<div class="pop1" id="pop1" >
-    <p><br/></p>
+@if (count($noticelist) > 0)
+<?php $pidx=0;?>
+@foreach ($noticelist as $notice)
+@if ($notice->popup == 'popup')
+<div class="pop1" id="pop{{$notice->id}}" style="left:{{300+$pidx*350}}px;">
     <?php echo $notice->content ?>
-    <p><br/></p>
+    <p></br></p>
     <div style="position:absolute;left:5px;bottom:5px;width:190px;background-color:transparent;color:white;cursor: hand;display:content">
-      <input type="checkbox" name="notice1" id="notice1" value="" style="width:20px;">
-      <label for="notice1">오늘 하루 열지 않음 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop1'), 1, document.getElementById('notice1').checked);">[닫기]</span></label>
+      <input type="checkbox" name="notice1" id="notice{{$notice->id}}" value="" style="width:20px;">
+      <label for="notice{{$notice->id}}">오늘 하루 열지 않음 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop{{$notice->id}}'), {{$notice->id}}, document.getElementById('notice{{$notice->id}}').checked);">[닫기]</span></label>
     </div>
   </div>
+  <?php $pidx=$pidx+1;?>
+@endif
+@endforeach
 @endif
 @yield('content')
 
@@ -1366,17 +1389,13 @@
 
 <script type='text/javascript'>
 var xigame_id = '488';
-<!--
-if ( getCookie( "divpopup01" ) == "check" ) {
-	closeWin2(document.getElementById('pop1'));
-}
-if ( getCookie( "divpopup02" ) == "check" ) {
-	closeWin2(document.getElementById('pop2'));
-}
-if ( getCookie( "divpopup03" ) == "check" ) {
-	closeWin2(document.getElementById('pop3'));
-}
--->
+@if (count($noticelist) > 0)
+  @foreach ($noticelist as $notice)
+    if ( getCookie( "divpopup0{{$notice->id}}" ) == "check" ) {
+      closeWin2(document.getElementById('pop{{$notice->id}}'));
+    }
+  @endforeach
+@endif
 
   function loginSubmit() {
       

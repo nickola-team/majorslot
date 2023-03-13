@@ -32,14 +32,16 @@
 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
     <a class="dropdown-item" href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}">설정 및 정보</a>
     <hr class="my-1">
-    <a class="dropdown-item" href="{{argon_route('argon.msg.create', ['to' => $user->username])}}">쪽지보내기</a>
+    <a class="dropdown-item" href="{{argon_route('argon.msg.create', ['to' => $user->username, 'type' => 1])}}">쪽지보내기</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.gamehistory', ['player' => $user->username])}}">게임내역</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
     <a class="dropdown-item" href="{{argon_route('argon.player.terminate', ['id' => $user->id])}}" data-method="DELETE"
                                 data-confirm-title="확인"
                                 data-confirm-text="유저의 게임을 종료하시겠습니까? 종료버튼클릭후 진행한 배팅은 무시됩니다."
                                 data-confirm-delete="확인"
-                                data-confirm-cancel="취소">게임종료</a>
-    <a class="dropdown-item" href="{{argon_route('argon.player.logout', ['id' => $user->id])}}">로그아웃</a>
+                                data-confirm-cancel="취소"
+                                onClick="$(this).css('pointer-events', 'none');"
+                                >게임종료</a>
+    <a class="dropdown-item" href="{{argon_route('argon.player.logout', ['id' => $user->id])}}" onClick="$(this).css('pointer-events', 'none');">로그아웃</a>
 </div>
 </td>

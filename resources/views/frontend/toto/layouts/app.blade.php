@@ -24,21 +24,22 @@
 <script language="javascript" src="/frontend/kdior/js/showid.js" type="text/javascript"></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script><!-- sk_기본 -->
 <script type="text/javascript" src="/frontend/kdior/jq/sk_popup/sk_popup.js"></script><!-- 팝업 -->
-<script type="text/javascript" src="/frontend/kdior/js/sk_tab.js"></script><!-- sk_탭 -->
 <link href="/frontend/kdior/jq/hamburger1/menu.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/frontend/kdior/jq/hamburger1/menu.js"></script>
-
+<script type="text/javascript" src="/frontend/kdior/js/sk_tab.js"></script><!-- sk_탭 -->
 <script src="/frontend/kdior/js/func.js"></script>
+  
+
 </head>
 
 <body>
 	<!-- ★메인★ -->
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'island'])
+			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'toto'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'island'])
+			@include('frontend.kdior.layouts.partials.header', ['logo' => 'toto'])
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
@@ -48,20 +49,12 @@
 			</div>
 		@endif
 
-		<div class="footer_wrap">
-			<div class="footer_copyright">
-				<img src="/frontend/kdior/images/footer_partner.png?v=202301301150">
-				<br><br>
-				<img src="/frontend/kdior/images/footer_bank.png?v=202301301150">
-				<br>
-				Copyright (c) 2019 @yield('page-title') All rights reserved
-			</div>
-		</div><!-- footer -->
+		@include('frontend.kdior.layouts.partials.footer')
 		@if( ($detect->isMobile() || $detect->isTablet() ) && Auth::check()) 
-			@include('frontend.kdior.layouts.partials.m.aside', ['logo' => 'island'])
+			@include('frontend.kdior.layouts.partials.m.aside', ['logo' => 'toto'])
 		@endif
-		
 	</div><!-- wrap -->
+	
 	@yield('content')
 	@auth()
 		@include('frontend.kdior.modals.common')
@@ -74,9 +67,7 @@
 	@endif
 
 	@foreach ($noticelist as $ntc)
-	@if ($ntc->type == 'popup')
 	@include('frontend.kdior.modals.notice', ['notice' => $ntc])
-	@endif
 	@endforeach
 </body>
 </html>
