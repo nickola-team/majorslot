@@ -657,7 +657,7 @@ namespace VanguardLTE\Games\_3coinsegyptbng
                 $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 78000);
+                    $index = mt_rand(0, 88000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
