@@ -1076,6 +1076,10 @@ return [
         "GatotKacasFury"=> "가토 카카즈 퓨리",
         "Mochimon"=> "모치몬",
 
+        "ClubTropicana" => "클럽 트로피카나",
+        "FireArcher" => "파이어 아처",
+        "WildWildRichesMegaways" => "와일드 와일드 리치스 메가웨이즈",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
