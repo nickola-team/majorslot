@@ -157,6 +157,45 @@
                     <h3 class="mb-0">일별정산</h3>
                 </div>
                 <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="dailydwtotal">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">기간내 합계</th>
+                                <th scope="col">계좌충전</th>
+                                <th scope="col">계좌환전</th>
+                                <th scope="col">수동충전</th>
+                                <th scope="col">수동환전</th>
+                                <th scope="col">롤링전환</th>
+                                <th scope="col">배팅금</th>
+                                <th scope="col">당첨금</th>
+                                <th scope="col">벳윈수익</th>
+                                <th scope="col">롤링금</th>
+                                <th scope="col">총보유금</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                                <tr>
+                                    <td colspan='2'>{{$total['daterange']}}</td>
+                                    <td>{{number_format($total['totalin'])}}</td>
+                                    <td>{{number_format($total['totalout'])}}</td>
+                                    <td>{{number_format($total['moneyin'])}}</td>
+                                    <td>{{number_format($total['moneyout'])}}</td>
+                                    <td>{{number_format($total['dealout'])}}</td>
+                                    <td>{{number_format($total['totalbet'])}}</td>
+                                    <td>{{number_format($total['totalwin'])}}</td>
+                                    <td>{{number_format($total['totalbet']-$total['totalwin'])}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>총롤링금 : {{ number_format($total['total_deal'])}}</li>
+                                            <li>하부롤링금 : {{ number_format($total['total_mileage'])}}</li>
+                                            <li>본인롤링금 : {{ number_format($total['total_deal']-$total['total_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>{{number_format($total['balance']+$total['childsum'])}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <table class="table align-items-center table-flush" id="dailydwlist">
                         <thead class="thead-light">
                             <tr>

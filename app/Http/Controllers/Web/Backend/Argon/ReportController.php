@@ -162,10 +162,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $total = [
+                'daterange' => "$start_date~$end_date",
                 'totalin' => $summary->sum('totalin'),
                 'totalout' => $summary->sum('totalout'),
                 'moneyin' => $summary->sum('moneyin'),
                 'moneyout' => $summary->sum('moneyout'),
+                'dealout' => $summary->sum('dealout'),
+                'totalbet' => $summary->sum('totalbet'),
+                'totalwin' => $summary->sum('totalwin'),
+                'total_deal' => $summary->sum('total_deal'),
+                'total_mileage' => $summary->sum('total_mileage'),
+                'balance' => $summary->sum('balance'),
+                'childsum' => $summary->sum('childsum'),
             ];
 
             $todaySumm = (clone $summary)->get();
