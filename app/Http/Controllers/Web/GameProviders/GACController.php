@@ -129,7 +129,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         else if (isset($userlimit['bacmax']) && str_contains($k,'Baccarat_'))
                         {
-                            if (str_contains($k,'Pair'))
+                            if (str_contains($k,'Pair') || str_contains($k,'Bonus'))
                             {
                                 $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'] / 10;
                             }
