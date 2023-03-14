@@ -43,24 +43,27 @@ class GameWithdrawAll extends Command
         $tpUsers = User::whereNull('playing_game')->where('role_id',1)->get();
         foreach (GameLaunchCommand::GAME_PROVIDERS as $provider)
         {
-            $total = 0;
-            foreach ($tpUsers as $user) {
-                try {
-                        $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $user);
-                        if ($data['error'] == false){
-                            $total = $total + $data['amount'];       
-                            $this->info('Withdraw from ' . $user->username . ' amount = ' . $data['amount'] . ' at ' . $provider);
-                        }
-                        else
-                        {
-                            $this->info('Withdraw failed ' . $user->username  . ' at ' . $provider);
-                        }
+            if ($provider == 'KTEN')
+            {
+                $total = 0;
+                foreach ($tpUsers as $user) {
+                    try {
+                            $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $user);
+                            if ($data['error'] == false){
+                                $total = $total + $data['amount'];       
+                                $this->info('Withdraw from ' . $user->username . ' amount = ' . $data['amount'] . ' at ' . $provider);
+                            }
+                            else
+                            {
+                                $this->info('Withdraw failed ' . $user->username  . ' at ' . $provider);
+                            }
+                    }
+                    catch (Exception $exception) {
+                        $this->info('Exception while withdraw  : ' . $user->id);
+                    }
                 }
-                catch (Exception $exception) {
-                    $this->info('Exception while withdraw  : ' . $user->id);
-                }
+                $this->info('Total withdraw amount = ' . $total . ' at ' . $provider);
             }
-            $this->info('Total withdraw amount = ' . $total . ' at ' . $provider);
 
         }
 
