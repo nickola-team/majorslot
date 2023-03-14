@@ -436,34 +436,36 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ];
             }
 
-            if( $shop ) 
-            {
-                switch( $shop->orderby ) 
-                {
-                    case 'AZ':
-                        $games = $games->orderBy('name', 'ASC');
-                        break;
-                    case 'Rand':
-                        $games = $games->inRandomOrder();
-                        break;
-                    case 'RTP':
-                        $games = $games->orderBy(\DB::raw('CASE WHEN(stat_in > 0) THEN(stat_out*100)/stat_in ELSE 0 END '), 'DESC');
-                        break;
-                    case 'Count':
-                        $games = $games->orderBy('bids', 'DESC');
-                        break;
-                    case 'Date':
-                        $games = $games->orderBy('created_at', 'DESC');
-                        break;
-                }
-            }
+            // if( $shop ) 
+            // {
+            //     switch( $shop->orderby ) 
+            //     {
+            //         case 'AZ':
+            //             $games = $games->orderBy('name', 'ASC');
+            //             break;
+            //         case 'Rand':
+            //             $games = $games->inRandomOrder();
+            //             break;
+            //         case 'RTP':
+            //             $games = $games->orderBy(\DB::raw('CASE WHEN(stat_in > 0) THEN(stat_out*100)/stat_in ELSE 0 END '), 'DESC');
+            //             break;
+            //         case 'Count':
+            //             $games = $games->orderBy('bids', 'DESC');
+            //             break;
+            //         case 'Date':
+            //             $games = $games->orderBy('created_at', 'DESC');
+            //             break;
+            //     }
+            // }
             // $games = $games->get();
+            $games = $games->orderBy('created_at', 'DESC');
             $org_ids = $games->pluck('original_id')->toArray();
             $game_ids = $games->pluck('id')->toArray();
             $startDate = date('Y-m-d', strtotime('-30 days'));
-            $query = 'SELECT A.*, B.bet from w_games A  left JOIN (SELECT SUM(totalbet) AS bet,SUM(totalwin) AS win, game_id AS game_id FROM w_game_summary WHERE date>="'.$startDate.'" and game_id in ('.implode(',',$org_ids).') GROUP BY game_id) B ON A.original_id=B.game_id WHERE A.id in ('.implode(',',$game_ids).')  ORDER BY B.bet desc;';
+            $query = 'SELECT A.*, B.bet from w_games A  left JOIN (SELECT SUM(totalbet) AS bet,SUM(totalwin) AS win, game_id AS game_id FROM w_game_summary WHERE date>="'.$startDate.'" and game_id in ('.implode(',',$org_ids).') GROUP BY game_id) B ON A.original_id=B.game_id WHERE A.id in ('.implode(',',$game_ids).')  ORDER BY B.bet desc limit 20;';
             $gamerst = \DB::select($query);
             $data = [];
+            $hotgameids = [];
             foreach ($gamerst as $game)
             {
                 $data[] = [
@@ -472,6 +474,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'enname' => $game->title,
                     'label' => $game->label,
                 ];
+                $hotgameids[] = $game->id;
+            }
+            $games = $games->get();
+            foreach ($games as $game)
+            {
+                if (!in_array($game->id, $hotgameids))
+                {
+                    $data[] = [
+                        'name' => $game->name,
+                        'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
+                        'enname' => $game->title,
+                        'label' => $game->label,
+                    ];
+                }
             }
             return $data;
         }
