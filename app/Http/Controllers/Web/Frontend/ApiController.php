@@ -473,6 +473,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
                     'enname' => $game->title,
                     'label' => $game->label,
+                    'date_time' => $game->created_at
                 ];
                 $hotgameids[] = $game->id;
             }
@@ -486,6 +487,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
                         'enname' => $game->title,
                         'label' => $game->label,
+                        'date_time' => $game->created_at
                     ];
                 }
             }
