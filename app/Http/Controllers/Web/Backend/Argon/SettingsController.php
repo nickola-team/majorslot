@@ -254,7 +254,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function xmx_withdrawall(\Illuminate\Http\Request $request)
         {
             set_time_limit(0);
-            \Artisan::call('xmx:withdrawAll');
+            \Artisan::queue('xmx:withdrawAll');
+            \Artisan::queue('game:withdrawAll');
+            return redirect()->back()->withSuccess(['게임사 머니회수 스케줄을 작동하였습니다']);
         }
 
     }

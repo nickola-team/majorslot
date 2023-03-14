@@ -43,7 +43,7 @@ class GameWithdrawAll extends Command
         $tpUsers = User::whereNull('playing_game')->where('role_id',1)->get();
         foreach (GameLaunchCommand::GAME_PROVIDERS as $provider)
         {
-            if ($provider == 'KTEN')
+            if ($provider != 'XMX')
             {
                 $total = 0;
                 foreach ($tpUsers as $user) {
