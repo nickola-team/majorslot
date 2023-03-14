@@ -458,7 +458,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             //     }
             // }
             // $games = $games->get();
-            $games = $games->orderBy('created_at', 'DESC');
+            $games = $games->orderBy('original_id', 'DESC');
             $org_ids = $games->pluck('original_id')->toArray();
             $game_ids = $games->pluck('id')->toArray();
             $startDate = date('Y-m-d', strtotime('-30 days'));
@@ -473,6 +473,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
                     'enname' => $game->title,
                     'label' => $game->label,
+                    'date_time' => $game->created_at
                 ];
                 $hotgameids[] = $game->id;
             }
@@ -486,6 +487,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
                         'enname' => $game->title,
                         'label' => $game->label,
+                        'date_time' => $game->created_at
                     ];
                 }
             }
