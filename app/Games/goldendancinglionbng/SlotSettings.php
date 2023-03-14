@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\pearldiverbng
+namespace VanguardLTE\Games\goldendancinglionbng
 {
     class SlotSettings
     {
@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\pearldiverbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('id', 92)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameMagicAppleStack::where('id', 55394)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -650,14 +650,14 @@ namespace VanguardLTE\Games\pearldiverbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('spin_type','>', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameMagicAppleStack::where('spin_type','>', 0);
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameMagicAppleStack::where('spin_type', 0);
                 }
                 $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 70000);
+                    $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
