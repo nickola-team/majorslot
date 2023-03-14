@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\pearldiverbng
+namespace VanguardLTE\Games\WildWildRichesMegawaysPM
 {
     class SlotSettings
     {
@@ -73,6 +73,21 @@ namespace VanguardLTE\Games\pearldiverbng
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
+            $this->Paytable[1] = [0,0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,20,40,200,500,1000];
+            $this->Paytable[4] = [0,0,0,20,40,50,100];
+            $this->Paytable[5] = [0,0,0,6,10,20,50];
+            $this->Paytable[6] = [0,0,0,6,10,16,40];
+            $this->Paytable[7] = [0,0,0,4,8,12,30];
+            $this->Paytable[8] = [0,0,0,4,8,12,30];
+            $this->Paytable[9] = [0,0,0,4,8,12,30];
+            $this->Paytable[10] = [0,0,0,2,4,8,20];
+            $this->Paytable[11] = [0,0,0,2,4,8,20];
+            $this->Paytable[12] = [0,0,0,2,4,8,20];
+            $this->Paytable[13] = [0,0,0,0,0,0,0];
+            $this->Paytable[14] = [0,0,0,0,0,0,0];
+            $this->Paytable[15] = [0,0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -87,11 +102,11 @@ namespace VanguardLTE\Games\pearldiverbng
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 10,000,000.00
+            // $game->rezerv => 500,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -215,8 +230,11 @@ namespace VanguardLTE\Games\pearldiverbng
             foreach( $history as $log ) 
             {
                 $jsonLog = json_decode($log->str);
-                $this->lastEvent = $jsonLog;
-                break;
+                if( $jsonLog->responseEvent != 'gambleResult' ) 
+                {
+                    $this->lastEvent = $log->str;
+                    break;
+                }
             }
             if( isset($jsonLog) ) 
             {
@@ -439,9 +457,9 @@ namespace VanguardLTE\Games\pearldiverbng
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'respin' ) 
+            else if( $slotState == 'slotGamble' ) 
             {
-                $slotstate = $this->slotId . ' doRespin';
+                $slotstate = $this->slotId . ' DG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -484,8 +502,67 @@ namespace VanguardLTE\Games\pearldiverbng
                 ]);
             }
         }
-        public function SaveBNGLogReport($model){
-            \VanguardLTE\BNGGameLog::create($model);
+        public function saveGameLog($strLog, $roundID){
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
+                'user_id' => $this->playerId, 
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
+            ]);
+        }
+        public function GetFreeStack($betLine)
+        {
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = 35;
+            if ($this->happyhouruser)
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine);
+            }
+            else
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+                if($limitOdd < 35){
+                    $limitOdd = 35;
+                }else if($limitOdd > 100){
+                    $limitOdd = 100;
+                }
+            }
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $this->game->original_id, 
+                $limitOdd,
+                $this->playerId
+            ])->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+            }else{
+                \VanguardLTE\PPGameFreeStackLog::where([
+                    'user_id' => $this->playerId,
+                    'game_id' => $this->game->original_id
+                    ])->where('odd', '<=', $limitOdd)->delete();
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                        $this->game->original_id, 
+                        $limitOdd,
+                        $this->playerId
+                    ])->get();
+                    if (count($freeStacks) > 0) {
+                        $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
+                    }else{
+                        $freeStack = null;
+                    }
+            }
+            if($freeStack){
+                \VanguardLTE\PPGameFreeStackLog::create([
+                    'game_id' => $this->game->original_id, 
+                    'user_id' => $this->playerId, 
+                    'freestack_id' => $freeStack->id, 
+                    'odd' => $freeStack->odd, 
+                    'free_spin_count' => $freeStack->free_spin_count
+                ]);
+                return json_decode($freeStack->free_spin_stack, true);
+            }else{
+                return [];
+            }
         }
         public function GetSpinSettings($garantType = 'doSpin', $bet, $lines, $isdoublechance = 0)
         {
@@ -507,7 +584,7 @@ namespace VanguardLTE\Games\pearldiverbng
             $winline_count = $game->{'winline' . $granttype . $linecount};
             $grantwin_count++;
             if($isdoublechance == 1){
-                $grantbonus_count+=2;
+                $grantbonus_count++;
             }else{
                 $grantbonus_count++;
             }
@@ -549,7 +626,7 @@ namespace VanguardLTE\Games\pearldiverbng
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < (5 * $bet)) 
+                if( $currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 
@@ -564,13 +641,6 @@ namespace VanguardLTE\Games\pearldiverbng
                     'win', 
                     $currentbank
                 ];
-                if( $currentbank < 0) 
-                {
-                    $return = [
-                        'none', 
-                        0
-                    ];
-                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
@@ -608,11 +678,19 @@ namespace VanguardLTE\Games\pearldiverbng
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        
-        public function GetPurMul($pur)
+        public function InitBonus($arr_freeSpins){
+            $length = count($arr_freeSpins) - 2;
+            return mt_rand(0, $length);
+        }
+        public function BonusWinChance($bonusIndex)
         {
-            $purmuls = [100];
-            return $purmuls[$pur];
+            $fsChance = [85, 87, 80, 83, 80, 83, 50]; // [6, 7, 8, 10, 12, 15, 18]
+            $percent = mt_rand(0, 100);
+            if($percent < $fsChance[$bonusIndex] * 0.7){
+                return true;
+            }else{
+                return false;
+            }
         }
         public function SetBet() 
         { 
@@ -628,18 +706,58 @@ namespace VanguardLTE\Games\pearldiverbng
         } 
 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $fsmax, $bet, $ind = -1)
         {
-            // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('id', 92)->first();
-                // return json_decode($stack->spin_stack, true);
+            // if($fsmax > 0){
+            //     $id = 38;
+            //     if($fsmax == 5){
+            //         $id = 30;
+            //     }else if($fsmax == 6){
+            //         $id = 13;
+            //     }else if($fsmax == 7){
+            //         $id = 5;
+            //     }else if($fsmax == 8){
+            //         $id = 32;
+            //     }else if($fsmax == 9){
+            //         $id = 9;
+            //     }else if($fsmax == 10){
+            //         $id = 3;
+            //     }else if($fsmax == 11){
+            //         $id = 241;
+            //     }else if($fsmax == 12){
+            //         $id = 12;
+            //     }else if($fsmax == 13){
+            //         $id = 36;
+            //     }else if($fsmax == 14){
+            //         $id = 18;
+            //     }
+            //     $stack = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesMegawaysStack::where([
+            //         'fsmax' => $fsmax,
+            //         'spin_type' => 1,
+            //         'id' => $id
+            //     ])->first();
+            //     return json_decode($stack->spin_stack, true);
             // }
-            $spintype = 0;
-            if($winType == 'bonus'){
+            $spinType = 0;
+            if($fsmax > 0){
                 $winAvaliableMoney = $this->GetBank('bonus');
-                $spintype = 1;
-            }else if($winType == 'win'){
-                $winAvaliableMoney = $this->GetBank('');
+                $spinType = 1;
+            }else if($winType == 'win' || ($winType == 'bonus' && $fsmax == 0)){
+                if($winType == 'bonus'){
+                    if(mt_rand(0, 100) > 95){
+                        $spinType = 3;
+                        $winAvaliableMoney = $this->GetBank('bonus');
+                        if($winAvaliableMoney < $bet * 35){
+                            $spinType = 2;
+                            $winAvaliableMoney = $this->GetBank('');    
+                        }
+                    }else{
+                        $spinType = 2;
+                        $winAvaliableMoney = $this->GetBank('');
+                    }
+                }else{
+                    $winAvaliableMoney = $this->GetBank('');
+                }
             }else{
                 $winAvaliableMoney = 0;
             }
@@ -649,19 +767,26 @@ namespace VanguardLTE\Games\pearldiverbng
             }
             $isLowBank = false;
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('spin_type','>', 0);
-                }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGamePearlDiverStack::where('spin_type', 0);
+                $index = mt_rand(0, 40000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesMegawaysStack::where('spin_type', $spinType);
+                if($fsmax > 0){
+                    $stacks = $stacks->where('fsmax', $fsmax);
                 }
-                $index = mt_rand(0, 28000);
-                if($winType == 'win'){
-                    $stacks = $stacks->where('odd', '>', 0);
+                if($spinType == 2){
                     $index = mt_rand(0, 70000);
                 }
+                if($winType == 'win'){
+                    $stacks = $stacks->where('odd', '>', 0);
+                }
                 if($isLowBank == true){
-                    if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                    if($spinType == 3){
+                        $stacks = $stacks->where('odd', '<=', 35);    
+                    }else if($fsmax > 0){
+                        if($fsmax == 20){
+                            $stacks = $stacks->where('odd', '<=', 25);    
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', 15);    
+                        }
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -672,7 +797,7 @@ namespace VanguardLTE\Games\pearldiverbng
                         $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus'){
+                        if($fsmax > 0){
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
