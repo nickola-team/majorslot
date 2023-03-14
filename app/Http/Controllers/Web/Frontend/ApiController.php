@@ -458,7 +458,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             //     }
             // }
             // $games = $games->get();
-            $games = $games->orderBy('created_at', 'DESC');
+            $games = $games->orderBy('original_id', 'DESC');
             $org_ids = $games->pluck('original_id')->toArray();
             $game_ids = $games->pluck('id')->toArray();
             $startDate = date('Y-m-d', strtotime('-30 days'));
