@@ -565,6 +565,28 @@ namespace VanguardLTE\Games\CleocatraPM
                             $spinType = 'c';
                             $isEnd = true;
                         }
+                        if($str_sty != ''){
+                            $arr_sty = explode('~', $str_sty);
+                            if(count($arr_sty) < count($arr_slm_mp)){
+                                $arr_pw = [];
+                                $arr_initReel = explode(',', $str_initReel);
+                                for($i = 0; $i < count($arr_slm_mp); $i++){
+                                    $is_new = true;
+                                    for($k = 0; $k < count($arr_sty); $k++){
+                                        if($arr_slm_mp[$i] . ',-1' == $arr_sty[$k]){
+                                            $is_new == false;
+                                            break;
+                                        }
+                                    }
+                                    if($is_new == true){
+                                        $arr_pw[] = $arr_initReel[$arr_slm_mp[$i]] . '~' . $lastReel[$arr_slm_mp[$i]] . '~' . $arr_slm_mp[$i];
+                                    }
+                                }
+                                if(count($arr_pw) > 0){
+                                    $strOtherResponse = $strOtherResponse . '&stf=pw:' . implode(';', $arr_pw);
+                                }
+                            }
+                        }
                     }
                     else
                     {
