@@ -48,7 +48,7 @@ class GameWithdrawAll extends Command
                 $total = 0;
                 foreach ($tpUsers as $user) {
                     try {
-                            $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', $user);
+                            $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::withdrawAll', '', $user);
                             if ($data['error'] == false){
                                 $total = $total + $data['amount'];       
                                 $this->info('Withdraw from ' . $user->username . ' amount = ' . $data['amount'] . ' at ' . $provider);
