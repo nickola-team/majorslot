@@ -1,4 +1,4 @@
-@extends('frontend.sehuwa.layouts.app')
+@extends('frontend.sehwa.layouts.app')
 @section('page-title', $title)
 
 @section('content')
