@@ -521,7 +521,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $roundids = explode('_', $lastround->roundid);
                         if (count($roundids) > 2)
                         {
-                            $lastid = $roundids[0] + 1;
+                            $lastid = $roundids[2] + 1;
                         }
                     }
                 }
