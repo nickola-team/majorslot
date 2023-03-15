@@ -444,7 +444,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [KTENController::KTEN_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($thirdparty,$startDate)
+        public static function gamerounds($thirdparty,$startDate, $lastid)
         {
             
             $op = config('app.kten_op');
@@ -461,6 +461,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'pageSize' => 1000,
                 'pageStart' => 1,
                 'time' => time(),
+                'lastid' => $lastid
             ];
             try
             {
@@ -509,16 +510,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     continue;
                 }
                 $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
+                $lastid = 0;
                 $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
                     $d = strtotime($lastround->date_time);
                     if ($d > strtotime("-12 hours"))
                     {
-                        $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                        $lasttime = $lastround->date_time;
+                        $roundids = explode('_', $lastround->roundid);
+                        if (count($roundids) > 2)
+                        {
+                            $lastid = $roundids[0] + 1;
+                        }
                     }
                 }
-                $data = KTENController::gamerounds($thirdId, $lasttime);
+                $data = KTENController::gamerounds($thirdId, $lasttime, $lastid);
                 if (isset($data['totalPageSize']) && $data['totalPageSize'] > 0)
                 {
                     
@@ -671,7 +678,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'shop_id' => $shop?$shop->shop_id:0,
                             'category_id' => isset($category)?$category->id:0,
                             'game_id' =>  $gameName,
-                            'roundid' => $round['gameId'] . '_' . $round['roundID'],
+                            'roundid' => $round['gameId'] . '_' . $round['roundID'] . '_' . $round['id'],
                         ]);
                         $count = $count + 1;
                     }
