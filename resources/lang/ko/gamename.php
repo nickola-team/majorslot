@@ -1076,6 +1076,10 @@ return [
         "GatotKacasFury"=> "가토 카카즈 퓨리",
         "Mochimon"=> "모치몬",
 
+        "ClubTropicana" => "클럽 트로피카나",
+        "FireArcher" => "파이어 아처",
+        "WildWildRichesMegaways" => "와일드 와일드 리치스 메가웨이즈",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1101,5 +1105,16 @@ return [
         "tigersgold" => "타이거스 골드",
         "greatpanda" => "그레이트 판다 : 홀드 앤드 윈",
         "moonsisters" => "문 시스터즈",
+
+        "aztecsun" => "아즈택 썬",
+        "supermarble" => "슈퍼 마블",
+        "15dragonpearls" => "15드래곤 펄스",
+        "thunderofolympus" => "썬더 오브 올림푸스",
+        "scarabtemple" => "스캐럽 템플",
+        "sunofegypt2" => "썬 오브 이집트 2",
+        "_3coins" => "3 코인스",
+        "superrichgod" => "슈퍼 리치 갓",
+        "magicapple" => "매직 애플",
+        "wukong" => "우공",
 
 ];
