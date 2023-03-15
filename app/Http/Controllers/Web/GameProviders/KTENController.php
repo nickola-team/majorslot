@@ -518,7 +518,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if ($d > strtotime("-12 hours"))
                     {
                         $lasttime = $lastround->date_time;
-                        $roundids = explode('_', $lastround->roundid);
+                        $roundids = explode('#', $lastround->roundid);
                         if (count($roundids) > 2)
                         {
                             $lastid = $roundids[2] + 1;
@@ -678,7 +678,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'shop_id' => $shop?$shop->shop_id:0,
                             'category_id' => isset($category)?$category->id:0,
                             'game_id' =>  $gameName,
-                            'roundid' => $round['gameId'] . '_' . $round['roundID'] . '_' . $round['id'],
+                            'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
                         ]);
                         $count = $count + 1;
                     }
