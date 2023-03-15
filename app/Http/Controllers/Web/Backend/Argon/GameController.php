@@ -79,10 +79,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function domain_provider_update(\Illuminate\Http\Request $request)
         {
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = [auth()->user()->id];
+            $siteIds = \VanguardLTE\WebSite::orderby('id')->whereIn('adminid', $availablePartners)->get()->pluck('id')->toArray();
+
             $categoryid = $request->cat_id;
             $provider = $request->provider;
             $category = \VanguardLTE\Category::where('id', $categoryid)->first();
-            if (!$category)
+            if (!$category || !in_array($category->site_id, $siteIds))
             {
                 return redirect()->back()->withErrors(['게임을 찾을수 없습니다']);
             }
@@ -140,7 +144,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             // $status = $request->status;
             // $view = $request->view;
             $category = \VanguardLTE\Category::where('id', $categoryid)->first();
-            if (!$category)
+
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = [auth()->user()->id];
+            $siteIds = \VanguardLTE\WebSite::orderby('id')->whereIn('adminid', $availablePartners)->get()->pluck('id')->toArray();
+
+            if (!$category  || !in_array($category->site_id, $siteIds))
             {
                 return redirect()->back()->withErrors(['게임을 찾을수 없습니다']);
             }
