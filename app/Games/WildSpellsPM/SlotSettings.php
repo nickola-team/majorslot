@@ -728,7 +728,7 @@ namespace VanguardLTE\Games\WildSpellsPM
                 }
                 if($isLowBank == true){
                     if($ind > -1){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
