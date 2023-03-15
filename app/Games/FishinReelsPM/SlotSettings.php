@@ -735,7 +735,7 @@ namespace VanguardLTE\Games\FishinReelsPM
                 }
                 if($isLowBank == true){
                     if($fsmax == 10){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }else if($fsmax > 10){
                         $stacks = $stacks->where('odd', '<=', 10);    
                     }

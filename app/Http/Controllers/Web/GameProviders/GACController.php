@@ -89,6 +89,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betlimitD = json_decode($default_config->config, true);
             $betlimit = $betlimitD;
             $parent = $user;
+            $partner_config = false;
             while ($parent)
             {
                 $user_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'gac')->first();
@@ -96,6 +97,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     if ($userlimit==null){
                         $userlimit = json_decode($user_config->config, true);
+                        if ($parent->role_id > 1)
+                        {
+                            if (!isset($userlimit[0]['BetLimit']))
+                            {
+                                $userlimit = [
+                                    [
+                                        'tableIds' => ['default'],
+                                        'BetLimit' => $userlimit
+                                    ]
+                                ];
+                            }
+                            $partner_config = true;
+
+                        }
                     }
                 }
                 $hirechyUsers[] = $parent->id;
@@ -111,86 +126,106 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($userlimit)
             {
-                foreach ($betlimitD as $idx => $limit)
+                if ($partner_config)
                 {
-                    foreach ($limit['BetLimit'] as $k => $v)
+                    $updateLimits = [];
+                    foreach ($betlimitD as $limit)
                     {
-                        //bacmin, bacmax, scmin, scmax, dtmin, dtmax, rlmin, rlmax
-                        if (isset($userlimit[$k])) 
+                        foreach ($userlimit as $limit1)
                         {
-                            $betlimit[$idx]['BetLimit'][$k] = $userlimit[$k];
-                        }
-                        else if ($k=='Baccarat_Min') 
-                        {
-                            if (isset($userlimit['bacmin']))
+                            if ($limit['tableIds'] == $limit1['tableIds'])
                             {
-                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmin'];
+                                $limit = $limit1;
                             }
                         }
-                        else if (str_contains($k,'Baccarat_'))
-                        {
+                        $updateLimits[] = $limit;
+                    }
 
-                            if (str_contains($k,'Pair') || str_contains($k,'Bonus'))
+                    $betlimit = $updateLimits;
+                }
+                else
+                {
+                    foreach ($betlimitD as $idx => $limit)
+                    {
+                        foreach ($limit['BetLimit'] as $k => $v)
+                        {
+                            //bacmin, bacmax, bacpair, scmin, scmax, dtmin, dtmax, rlmin, rlmax
+                            if (isset($userlimit[$k])) 
                             {
-                                if (isset($userlimit['bacpair']))
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit[$k];
+                            }
+                            else if ($k=='Baccarat_Min') 
+                            {
+                                if (isset($userlimit['bacmin']))
                                 {
-                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacpair'];
+                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmin'];
                                 }
                             }
-                            else  if (str_contains($k,'Tie'))
+                            else if (str_contains($k,'Baccarat_'))
                             {
-                                if (isset($userlimit['bacmax']))
+
+                                if (str_contains($k,'Pair') || str_contains($k,'Bonus'))
                                 {
-                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'] / 10;
+                                    if (isset($userlimit['bacpair']))
+                                    {
+                                        $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacpair'];
+                                    }
+                                }
+                                else  if (str_contains($k,'Tie'))
+                                {
+                                    if (isset($userlimit['bacmax']))
+                                    {
+                                        $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'] / 10;
+                                    }
+                                }
+                                else 
+                                {
+                                    if (isset($userlimit['bacmax']))
+                                    {
+                                        $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'];
+                                    }
                                 }
                             }
-                            else 
+                            
+
+                            //Dragon&Tiger
+                            else if ($k=='DragonTiger_Min')
                             {
-                                if (isset($userlimit['bacmax']))
+                                if (isset($userlimit['dtmin']))
                                 {
-                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['bacmax'];
+                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['dtmin'];
                                 }
                             }
-                        }
-                        
-
-                        //Dragon&Tiger
-                        else if ($k=='DragonTiger_Min')
-                        {
-                            if (isset($userlimit['dtmin']))
+                            else if (isset($userlimit['dtmax']) && str_contains($k,'DragonTiger_'))
                             {
-                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['dtmin'];
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['dtmax'];
                             }
-                        }
-                        else if (isset($userlimit['dtmax']) && str_contains($k,'DragonTiger_'))
-                        {
-                            $betlimit[$idx]['BetLimit'][$k] = $userlimit['dtmax'];
-                        }
 
-                        //SicBo
-                        else if ($k=='SicBo_Min')
-                        {
-                            if (isset($userlimit['scmin']))
+                            //SicBo
+                            else if ($k=='SicBo_Min')
                             {
-                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['scmin'];
+                                if (isset($userlimit['scmin']))
+                                {
+                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['scmin'];
+                                }
                             }
-                        }
-                        else if (isset($userlimit['scmax']) && str_contains($k,'SicBo_'))
-                        {
-                            $betlimit[$idx]['BetLimit'][$k] = $userlimit['scmax'];
-                        }
+                            else if (isset($userlimit['scmax']) && str_contains($k,'SicBo_'))
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['scmax'];
+                            }
 
-                        //Roulette
-                        else if ($k=='Roulette_Min')
-                        {
-                            if (isset($userlimit['rlmin']))
+                            //Roulette
+                            else if ($k=='Roulette_Min')
                             {
-                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['rlmin'];
+                                if (isset($userlimit['rlmin']))
+                                {
+                                    $betlimit[$idx]['BetLimit'][$k] = $userlimit['rlmin'];
+                                }
                             }
-                        }
-                        else if (isset($userlimit['rlmax']) && str_contains($k,'Roulette_'))
-                        {
-                            $betlimit[$idx]['BetLimit'][$k] = $userlimit['rlmax'];
+                            else if (isset($userlimit['rlmax']) && str_contains($k,'Roulette_'))
+                            {
+                                $betlimit[$idx]['BetLimit'][$k] = $userlimit['rlmax'];
+                            }
                         }
                     }
                 }

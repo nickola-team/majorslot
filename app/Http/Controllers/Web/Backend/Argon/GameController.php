@@ -571,26 +571,70 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function game_betlimit(\Illuminate\Http\Request $request)
         {
-            $betConfig = null;
-            $default = false;
+            $betConfig = \VanguardLTE\ProviderInfo::where('user_id', 0)->where('provider', 'gac')->first();
+            if (!$betConfig)
+            {
+                return redirect()->back()->withErrors(['기본 배팅한도 설정을 찾을수 없습니다.']);
+            }
+
+            $betLimits = json_decode($betConfig->config, true);
+            $betLimits1 = null;
+
             if (!auth()->user()->hasRole('admin'))
             {
-                $betConfig = \VanguardLTE\ProviderInfo::where('user_id', auth()->user()->id)->where('provider', 'gac')->first();
+                $betConfig1 = \VanguardLTE\ProviderInfo::where('user_id', auth()->user()->id)->where('provider', 'gac')->first();
+                if ($betConfig1)
+                {
+                    $betLimits1 = json_decode($betConfig1->config, true);
+                    if (!isset($betLimits1[0]['BetLimit']))
+                    {
+                        $betLimits1 = [
+                            [
+                                'tableIds' => ['default'],
+                                'BetLimit' => $betLimits1
+                            ]
+                        ];
+                    }
+                }
             }
-            if (!$betConfig)
+            
+            foreach ($betLimits as $limit)
             {
-                $default = true;
-                $betConfig = \VanguardLTE\ProviderInfo::where('user_id', 0)->where('provider', 'gac')->first();
+                if ($betLimits1)
+                {
+                    foreach ($betLimits1 as $limit1)
+                    {
+                        if ($limit['tableIds'] == $limit1['tableIds'])
+                        {
+                            $limit = $limit1;
+                        }
+                    }
+                }
+
+                foreach ($limit['tableIds'] as $tblId)
+                {
+                    if ($tblId == 'default')
+                    {
+                        $limit['tableName'][] = '기본설정';
+                    }
+                    else
+                    {
+                        $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::getGameObj($tblId);
+                        if (!$gameObj)
+                        {
+                            $limit['tableName'][] = $tblId;
+                        }
+                        else
+                        {
+                            $limit['tableName'][] = $gameObj['title'];
+                        }
+                    }
+                    
+                }
+                $betUpdateTableName[] = $limit;
             }
-            if (!$betConfig)
-            {
-                return redirect()->back()->withErrors(['배팅한도 설정을 찾을수 없습니다.']);
-            }
-            $betLimits = json_decode($betConfig->config, true);
-            if ($default)
-            {
-                $betLimits = $betLimits[0]['BetLimit'];
-            }
+            $betLimits = $betUpdateTableName;
+
             
             return view('backend.argon.game.betlimit', compact('betLimits'));
         }
@@ -598,7 +642,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function game_betlimitupdate(\Illuminate\Http\Request $request)
         {
-            $data = $request->all();
+            $data = $request->except('tableid');
+            $tableIds = explode(',', $request->tableid);
             if (auth()->user()->hasRole('admin'))
             {
                 $betConfig = \VanguardLTE\ProviderInfo::where('user_id', 0)->where('provider', 'gac')->first();
@@ -608,31 +653,69 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 else
                 {
-                    $betConfig->update(['config' => json_encode(
-                        [
-                            [
-                                'tableIds' => ['default'],
-                                'BetLimit' => $data
-                            ]
-                        ]
-                    )]);
+                    $betLimits = json_decode($betConfig->config, true);
+                    $updateLimits = [];
+                    foreach ($betLimits as $limit)
+                    {
+                        if ($limit['tableIds'] == $tableIds)
+                        {
+                            $limit['BetLimit'] = $data;
+                        }
+                        $updateLimits[] = $limit;
+                    }
+
+                    $betConfig->update(['config' => json_encode($updateLimits)]);
                 }
             }
             else
             {
-
                 $betConfig = \VanguardLTE\ProviderInfo::where('user_id', auth()->user()->id)->where('provider', 'gac')->first();
                 if (!$betConfig)
                 {
+                    $updateLimits[] = [
+                        'tableIds' => $tableIds,
+                        'BetLimit' => $data
+                    ];
                     \VanguardLTE\ProviderInfo::create([
                         'user_id' => auth()->user()->id,
                         'provider' => 'gac',
-                        'config' => json_encode($data)
+                        'config' => json_encode($updateLimits)
                     ]);
                 }
                 else
                 {
-                    $betConfig->update(['config' => json_encode($data)]);
+                    $betLimits = json_decode($betConfig->config, true);
+                    if (!isset($betLimits[0]['BetLimit']))
+                    {
+                        $betLimits = [
+                            [
+                                'tableIds' => ['default'],
+                                'BetLimit' => $betLimits
+                            ]
+                        ];
+                    }
+
+                    $updateLimits = [];
+                    $bfound = false;
+                    foreach ($betLimits as $limit)
+                    {
+                        if ($limit['tableIds'] == $tableIds)
+                        {
+                            $limit['BetLimit'] = $data;
+                            $bfound = true;
+                        }
+                        $updateLimits[] = $limit;
+                    }
+
+                    if (!$bfound)
+                    {
+                        $updateLimits[] = [
+                            'tableIds' => $tableIds,
+                            'BetLimit' => $data
+                        ];
+                    }
+
+                    $betConfig->update(['config' => json_encode($updateLimits)]);
                 }
             }
             
