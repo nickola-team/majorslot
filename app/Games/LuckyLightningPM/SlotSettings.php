@@ -735,7 +735,7 @@ namespace VanguardLTE\Games\LuckyLightningPM
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 5);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

@@ -3,17 +3,17 @@
         'elementName' => 'game-betlimit'
     ])
 @section('page-title',  '에볼루션 배팅한도')
-
 @section('content')
 <div class="container-fluid">
-    <!-- Search -->
+@foreach ($betLimits as $tbllimit)
     <div class="row">
     <div class="col">
         <div class="card">
             <div class="card-header border-0">
-                <h3 class="mb-0">설정</h3>
+                <h3 class="mb-0">설정 [{{implode(',', $tbllimit['tableName'])}}]</h3>
             </div>
             <form action="" method="POST" >
+                <input type="hidden" id="tableid" name="tableid" value="{{implode(',', $tbllimit['tableIds'])}}">
             <div class="table-responsive">
             <table class="table align-items-center table-flush" id="agentlist">
                 <thead class="thead-light">
@@ -23,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody class="list">
-                    @foreach ($betLimits as $k=>$v)
+                    @foreach ($tbllimit['BetLimit'] as $k=>$v)
                         <tr>
                             <td>{{$k}}</td>
                             <td>
@@ -44,5 +44,6 @@
         </div>
     </div>
     </div>
+@endforeach
 </div>
 @stop

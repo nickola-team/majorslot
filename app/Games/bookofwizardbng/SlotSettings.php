@@ -654,14 +654,14 @@ namespace VanguardLTE\Games\bookofwizardbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBookofWizardStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 75000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 25);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

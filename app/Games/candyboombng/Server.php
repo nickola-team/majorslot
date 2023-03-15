@@ -341,12 +341,12 @@ namespace VanguardLTE\Games\candyboombng
                         }
                         return json_encode($objRes);
                     }else if($slotEvent['slotEvent'] == 'freespin'){
-                        if($totalFreeGames <= 0 || ($currentFreeGames >= $totalFreeGames)) 
-                        {
-                            // throw error
-                            return '';
-                        }
                         if($action['name'] != 'respin'){
+                            if($totalFreeGames <= 0 || ($currentFreeGames >= $totalFreeGames)) 
+                            {
+                                // throw error
+                                return '';
+                            }
                             $currentFreeGames++;
                             $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $currentFreeGames);
                         }
