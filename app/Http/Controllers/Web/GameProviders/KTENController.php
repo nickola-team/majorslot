@@ -498,6 +498,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             foreach (KTENController::KTEN_GAME_IDENTITY as $catname => $thirdId)
             {
+                if ($catname == 'kten-ppl')
+                {
+                    continue;
+                }
                 $category = \VanguardLTE\Category::where([
                     'provider'=> KTENController::KTEN_PROVIDER,
                     'href' => $catname,
@@ -601,29 +605,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         else if ($catname == 'kten-pp')
                         {
-                            if ($round['gameType'] != 'SLOT')
+                            if ($round['gameType'] == 'CASINO')
                             {
-                                continue;
+                                $category = \VanguardLTE\Category::where([
+                                    'provider'=> KTENController::KTEN_PROVIDER,
+                                    'href' => 'kten-ppl',
+                                    'shop_id' => 0,
+                                    'site_id' => 0,
+                                    ])->first();
+                                if (!$category)
+                                {
+                                    continue;
+                                }
+                                $type = 'table';
                             }
-
-                            if ($round['type'] == 'BET')
-                            {
-                                $bet = $round['amount'];
-                            }
-                            else
-                            {
-                                $win = $round['amount'];
-                            }
-
-                            $balance = -1;
-                        }
-                        else if ($catname == 'kten-ppl')
-                        {
-                            if ($round['gameType'] != 'CASINO')
-                            {
-                                continue;
-                            }
-                            $type = 'table';
 
                             if ($round['type'] == 'BET')
                             {
