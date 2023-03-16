@@ -41,9 +41,7 @@ document.location.href='../../';
 <body style="margin:0px;width:100%;background-color:black;overflow:hidden">
 
 
-
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/_BigBassBonanzaPM/openGame.do?lang=en&cur=@if( auth()->user() != null && auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs10bbbonanza&websiteUrl=&lobbyURL=&replayMode={{isset($replay)?$replay:"false"}}&envID={{isset($env_id)?$env_id:0}}&roundID={{isset($round_id)?$round_id:0}}' allowfullscreen  onLoad="injectJS()" >
-
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/_BigBassBonanzaPM/openGame.do?lang=en&cur=@if( auth()->user() != null && auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs10bbbonanza&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}' allowfullscreen>
 
 </iframe>
 
