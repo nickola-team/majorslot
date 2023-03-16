@@ -20,12 +20,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-og' => 'Og',
             'kten-ppl' => 'Pragmatic',
             'kten-dragon' => 'Dragongaming',
-            'kten-ezg' => 'Ezugi',
             'kten-playstar' => 'Playstar',
-            'kten-ttg' => 'Ttg',
             'kten-gameart' => 'Gameart',
             'kten-dreamtech' => 'Dreamtech',
             'kten-mg' => 'Microgaming',
+            'kten-mgl' => 'Microgaming',
+            'kten-dg' => 'Dreamgame',
+            'kten-rtg' => 'Rtg',
+            'kten-pgsoft' => 'Pgsoft',
+            'kten-playngo' => 'Playngo',
         ];
 
         const KTEN_GAME_TYPE = [
@@ -36,6 +39,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-bng' => 'slot',
             'kten-og' => 'casino',
             'kten-ppl' => 'casino',
+            'kten-dragon' => 'slot',
+            'kten-playstar' => 'slot',
+            'kten-gameart' => 'slot',
+            'kten-dreamtech' => 'slot',
+            'kten-mg' => 'slot',
+            'kten-mgl' => 'casino',
+            'kten-dg' => 'casino',
+            'kten-rtg' => 'slot',
+            'kten-pgsoft' => 'slot',
+            'kten-playngo' => 'slot',
         ];
 
         public static function getGameObj($uuid)

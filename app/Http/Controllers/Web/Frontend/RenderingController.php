@@ -459,16 +459,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 abort(404);
             }
 
-            $game = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getGameObj', $gamecode);
-            if (!$game)
-            {
-                abort(404);
-            }
+            // $game = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getGameObj', $gamecode);
+            // if (!$game)
+            // {
+            //     abort(404);
+            // }
 
-            $user->update([
-                'playing_game' => $game['href'],
-                'played_at' => time(),
-            ]);
+            // $user->update([
+            //     'playing_game' => $game['href'],
+            //     'played_at' => time(),
+            // ]);
             
 
             if ($provider == 'bnn')
@@ -505,6 +505,29 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if (!$game)
                 {
                     abort(404);
+                }
+                if ($game['href'] == 'kten-hbn') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'habaneroplay',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => 'SGThe' . $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $url = url('/game/' . $embed_games->name);
+                        $alonegame = 1;
+                        $data = null;
+                        return view('frontend.Default.games.theplus', compact('url', 'alonegame', 'data'));
+                    }
                 }
                 $user->update([
                     'playing_game' => $game['href'],
