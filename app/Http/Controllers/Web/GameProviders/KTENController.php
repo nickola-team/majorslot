@@ -858,7 +858,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'user_id' => $userid, 
                                     'bet' => $bet, 
                                     'win' => $win, 
-                                    'game' =>$gameName . '_kten', 
                                     'date_time' => $time,
                                 ])->first();
                                 if (!$checkGameStat)
