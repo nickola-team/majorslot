@@ -13,6 +13,7 @@ use VanguardLTE\Events\User\IrLoggedIn;
 use VanguardLTE\Events\User\LoggedOut;
 use VanguardLTE\Events\User\Registered;
 use VanguardLTE\Events\User\UpdatedByAdmin;
+use VanguardLTE\Events\User\TerminatedByAdmin;
 use VanguardLTE\Events\User\UpdatedProfileDetails;
 use VanguardLTE\Events\User\UserEventContract;
 use VanguardLTE\Services\Logging\UserActivity\Logger;
@@ -90,6 +91,18 @@ class UserEventsSubscriber
         $this->logger->log($message);
     }
 
+    public function onTermiatedByAdmin(TerminatedByAdmin $event)
+    {
+        $this->logger->setUser($event->getTerminatedUser());
+
+        $message = trans(
+            'log.terminated_game_by',
+            ['name' => auth()->user()->username]
+        );
+
+        $this->logger->log($message);
+    }
+
     public function onCreate(Created $event)
     {
         $message = trans(
@@ -126,5 +139,6 @@ class UserEventsSubscriber
         $events->listen(Deleted::class, "{$class}@onDelete");
         $events->listen(Banned::class, "{$class}@onBan");
         $events->listen(SettingsUpdated::class, "{$class}@onSettingsUpdate");
+        $events->listen(TerminatedByAdmin::class, "{$class}@onTermiatedByAdmin");
     }
 }

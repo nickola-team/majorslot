@@ -89,7 +89,6 @@
                     </div>
                 </div>
                 <!-- Latest Log -->
-                @if (auth()->user()->hasRole('admin'))
 
                 <div class="card">
                     <!-- Card header -->
@@ -104,7 +103,9 @@
                         <thead class="thead-light">
                             <tr>
                             <th scope="col">시간</th>
+                            @if (auth()->user()->hasRole('admin'))
                             <th scope="col">아이피</th>
+                            @endif
                             <th scope="col">내역</th>
                             </tr>
                         </thead>
@@ -112,7 +113,7 @@
                             @foreach($userActivities as $activity)
                                 <tr>
                                     <td>{{ $activity->created_at}}</td>
-                                    @if (auth()->user()->isInOutPartner())
+                                    @if (auth()->user()->hasRole('admin'))
                                         <td>{{ $activity->ip_address }}</td>
                                     @endif
                                     <td>{{ $activity->description }}</td>
@@ -123,7 +124,6 @@
                     </div>
                     </div>
                 </div>
-                @endif
 
             </div>
             <div class="col-xl-8 order-xl-1">

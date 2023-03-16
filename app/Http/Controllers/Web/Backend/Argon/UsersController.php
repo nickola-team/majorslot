@@ -612,6 +612,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withSuccess(['게임종료시 오류가 발생했습니다.']);
             }
 
+            event(new \VanguardLTE\Events\User\TerminatedByAdmin($user));
+
             return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);
         }
 
@@ -634,6 +636,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user->update(['api_token' => null]);
 
             $sessionRepository->invalidateAllSessionsForUser($user->id);
+
+            event(new \VanguardLTE\Events\User\TerminatedByAdmin($user));
 
             return redirect()->back()->withSuccess(['플레이어를 로그아웃시켰습니다.']);
         }
