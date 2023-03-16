@@ -698,6 +698,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $from = $start;
             $last = date('Y-m-d H:i:s', strtotime($from . " +10 minutes"));
             $lastid = 0;
+            $totalcount = 0;
             while (strtotime($last) < strtotime($end))
             {
                 Log::info('KTEN Omitted rounds : ' . $from . '~' . $last);
@@ -881,6 +882,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
                         }
                     }
+                    $totalcount = $totalcount+1;
                     Log::info("KTEN Omitted rounds stat : $catname rounds=" . $data['totalDataSize'].", omitted=$count" );
 
                 }
@@ -889,7 +891,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             
             
-            return [$count, 0];
+            return [$totalcount, 0];
         }
 
         public static function getAgentBalance()
