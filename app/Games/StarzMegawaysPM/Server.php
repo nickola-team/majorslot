@@ -336,7 +336,18 @@ namespace VanguardLTE\Games\StarzMegawaysPM
                         $scatterPoses[] = $i;
                     }
                 }
-
+                if($scatterCount >= 3 && $str_sn != ''){
+                    $arr_sn = explode(';', $str_sn);
+                    for($i = 0; $i < count($arr_sn); $i++){
+                        $sub_sns = explode('~', $arr_sn[$i]);
+                        $next_reel = explode(',', $sub_sns[2]);
+                        for($k = 0; $k < count($next_reel); $k++){
+                            if($next_reel[$k] == $scatter){
+                                $scatterCount++;
+                            }
+                        }
+                    }
+                }
                 $_lineWinNumber = 1;
                 $_obf_winCount = 0;
                 $wlc_vs = [];
