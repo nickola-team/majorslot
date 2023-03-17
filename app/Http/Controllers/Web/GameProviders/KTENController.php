@@ -838,6 +838,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         }
                                         $type = 'table';
                                     }
+                                    else
+                                    {
+                                        $category = \VanguardLTE\Category::where([
+                                            'provider'=> KTENController::KTEN_PROVIDER,
+                                            'href' => 'kten-pp',
+                                            'shop_id' => 0,
+                                            'site_id' => 0,
+                                            ])->first();
+                                        if (!$category)
+                                        {
+                                            continue;
+                                        }
+                                    }
 
                                     if ($round['type'] == 'BET')
                                     {
