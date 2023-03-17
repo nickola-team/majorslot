@@ -91,6 +91,8 @@ namespace VanguardLTE\Console
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
+            $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
+
             $schedule->command('gp:genTrend')->dailyAt('08:00')->runInBackground();
 
             // $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
@@ -1568,10 +1570,19 @@ namespace VanguardLTE\Console
                 $this->info("End processTrend");
             });
 
-            \Artisan::command('kten:omitted {start} {end}', function ($start, $end) {
-                $this->info("Begin test");
+            \Artisan::command('kten:omitted {start=today} {end=today}', function ($start, $end) {
+                if ($start == 'today')
+                {
+                    $start = date('Y-m-d 0:0:0',strtotime("-1 days"));
+                }
+                if ($end == 'today')
+                {
+                    $end = date('Y-m-d 23:59:59',strtotime("-1 days"));
+                }
+                $this->info("Begin kten rounds : $start ~ $end");
+
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::processGameOmittedRound($start, $end);
-                $this->info("End test");
+                $this->info("End kten rounds");
             });
 
             
