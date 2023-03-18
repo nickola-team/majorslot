@@ -225,7 +225,11 @@ function stopDrag() {
 		@if ($categories && count($categories))
 			@foreach($categories AS $index=>$category)
 				@if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false))
+					@if ($category->status == 0)
+					<a href="javascript:void(0);" class="slot-btn" onclick="alert('점검중입니다');">
+					@else
 					<a href="javascript:void(0);" class="slot-btn" onclick="goSlot('{{ $category->title }}', '{{ $category->href }}', 0)">
+					@endif
 						<div class="inner-cont">
 							<div class="main-cont">
 								<img class="main-img" src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}">
