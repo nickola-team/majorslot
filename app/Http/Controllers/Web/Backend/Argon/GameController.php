@@ -163,7 +163,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             //check if admin category is enabled
             $orgCategory = \VanguardLTE\Category::where('id' , $category->original_id)->first();
-            if ($orgCategory || $orgCategory->status == 0)
+            if (!auth()->user()->hasRole('admin') && ($orgCategory || $orgCategory->status == 0))
             {
                 return redirect()->back()->withErrors(['상위파트너에 의하여 점검조치된 게임입니다.']);
             }
