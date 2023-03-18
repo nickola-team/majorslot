@@ -26,5 +26,6 @@ return [
     'enabled_2fa_for' => '사용자 : name에 대해 2 단계 인증을 활성화했습니다.',
     'disabled_2fa_for' => '사용자에 대한 2 단계 인증 비활성화 :name.',
     'requested_password_reset' => '비밀번호 재설정 이메일을 요청했습니다.',
-    'reseted_password' => '"비밀번호 분실"옵션을 사용하여 비밀번호를 재설정했습니다.'
+    'reseted_password' => '"비밀번호 분실"옵션을 사용하여 비밀번호를 재설정했습니다.',
+    'terminated_game_by' => ':name에서 게임을 종료시켰습니다'
 ];

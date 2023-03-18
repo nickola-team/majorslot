@@ -785,11 +785,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
+            \DB::beginTransaction();
             if ($request->user_id)
             {
                 $users = auth()->user()->availableUsers();
                 if( count($users) && !in_array($request->user_id, $users) ) 
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '비정상적인 접근입니다.',
@@ -804,6 +806,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if (!$user)
             {
+                \DB::commit();
                 return response()->json([
                     'error' => true, 
                     'msg' => '다시 시도해주세요.',
@@ -813,6 +816,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($user->hasRole('user') && $user->playing_game != null)
             {
+                \DB::commit();
                 return response()->json([
                     'error' => true, 
                     'msg' => '게임중에 딜비전환을 할수 없습니다.',
@@ -825,6 +829,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if($user->hasRole('manager')){
                 if (!$shop)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '다시 시도해주세요.',
@@ -842,6 +847,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $summ = abs($summ);
                 if ($real_deal_balance < $summ)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '딜비수익이 부족합니다.',
@@ -865,6 +871,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 if ($master == null)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '총본사를 찾을수 없습니다.',
@@ -874,6 +881,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 
                 if ($master->balance < $summ)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '총본사보유금이 부족합니다',
@@ -948,6 +956,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ]);
                 }
             }
+
+            \DB::commit();
             
             return response()->json(['error' => false]);
         }

@@ -199,7 +199,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->to(argon_route('argon.dashboard'))->withErrors(['삭제된 유저입니다.']);
             }
-            $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
+            $userActivities = $activities->getLatestActivitiesForUser($user->id, 20);
             $rtppercent = 0;
             if ($user->isInOutPartner())
             {

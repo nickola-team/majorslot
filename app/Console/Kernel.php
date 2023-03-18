@@ -91,6 +91,8 @@ namespace VanguardLTE\Console
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
+            $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
+
             $schedule->command('gp:genTrend')->dailyAt('08:00')->runInBackground();
 
             // $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
@@ -1568,28 +1570,19 @@ namespace VanguardLTE\Console
                 $this->info("End processTrend");
             });
 
-            \Artisan::command('spg:test {id=1}', function ($id) {
-                $this->info("Begin test");
-                $user = \VanguardLTE\User::find($id);
-                // if ($user){
-                //     $b = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::getUserBalance($user);
-                //     $this->info("Balance = " . $b);
-                // }
-                // else
-                // {
-                //     $this->info("User not found");
-                // }
+            \Artisan::command('kten:omitted {start=today} {end=today}', function ($start, $end) {
+                if ($start == 'today')
+                {
+                    $start = date('Y-m-d 0:0:0',strtotime("-1 days"));
+                }
+                if ($end == 'today')
+                {
+                    $end = date('Y-m-d 23:59:59',strtotime("-1 days"));
+                }
+                $this->info("Begin kten rounds : $start ~ $end");
 
-                // $gamelist = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::getgamelist('spg-bng');
-                
-                // $this->info(json_encode($gamelist));
-                // $url = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::makegamelink('book_of_sun', $user);
-                // $this->info($url);
-
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\SPGController::withdrawAll($user);
-                $this->info(json_encode($data));
-
-                $this->info("End test");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::processGameOmittedRound($start, $end);
+                $this->info("End kten rounds");
             });
 
             
