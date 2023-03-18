@@ -163,6 +163,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             $admin = $site->admin;
             $availableShops = $admin->availableShops();
+            //remove 0 shop id
+            if (($key = array_search(0, $availableShops)) !== false) {
+                unset($availableShops[$key]);
+            }
             \VanguardLTE\Category::where('original_id' , $category->original_id)->whereIn('shop_id', $availableShops)->update($data);
             \VanguardLTE\Category::where('original_id' , $category->original_id)->where('site_id', $site_id)->update($data);
 
