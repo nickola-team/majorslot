@@ -165,7 +165,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $orgCategory = \VanguardLTE\Category::where('id' , $category->original_id)->first();
             if (!auth()->user()->hasRole('admin') && ($orgCategory && $orgCategory->status == 0))
             {
-                return redirect()->back()->withErrors(['상위파트너에 의하여 점검조치된 게임입니다.']);
+                return redirect()->back()->withErrors(['상위파트너에 의하여 조작이 불가능한 게임입니다.']);
             }
             $admin = $site->admin;
             $availableShops = $admin->availableShops();
