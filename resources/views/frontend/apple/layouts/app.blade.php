@@ -503,7 +503,7 @@
 					//5min EOS
 					data += `<li>`;
 					@if(Auth::check())
-					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGame('EOSPowerBall5GP', 'max');">`;
+					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('점검중입니다');return false;">`;
 					@else
 					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 					@endif										
@@ -515,7 +515,7 @@
 					//3min EOS
 					data += `<li>`;
 					@if(Auth::check())
-					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGame('EOSPowerBall3GP', 'max');">`;
+					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('점검중입니다');return false;">`;
 					@else
 					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 					@endif										
@@ -526,7 +526,7 @@
 
 					data += `<li>`;
 					@if(Auth::check())
-					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGame('WinPowerBallGP', 'max');">`;
+					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('점검중입니다');return false;">`;
 					@else
 					data += `<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;">`;
 					@endif										
