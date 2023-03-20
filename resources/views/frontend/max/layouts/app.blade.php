@@ -29,6 +29,29 @@
 <script type="text/javascript" src="/frontend/kdior/jq/hamburger1/menu.js"></script>
 
 <script src="/frontend/kdior/js/func.js"></script>
+
+<style>
+
+.contacts {
+        position: fixed;
+        right: 60px;
+        bottom: 25px;
+		width : 6rem;
+        height: 6rem;
+		text-align : center;
+      }
+
+.contacts button {
+		width: 50px;
+		height: 50px;
+		background-color: transparent;
+		border: solid 2px #666666;
+		border-radius: 50%;
+		padding: 0;
+		margin: 0 2px;
+	  }
+
+</style> 
 </head>
 
 <body>
@@ -54,6 +77,15 @@
 		@endif
 		
 	</div><!-- wrap -->
+	@if( ($detect->isMobile() || $detect->isTablet() )) 
+	@else
+	<div class="contacts">
+		<button type="button" style="cursor: auto;"><img src="/frontend/iris/theme/fm/images/icon/tele.png" alt="텔레그램"></button>
+		@max_8282
+	</div>
+	@endif
+
+
 	@yield('content')
 	@auth()
 		@include('frontend.kdior.modals.common')
