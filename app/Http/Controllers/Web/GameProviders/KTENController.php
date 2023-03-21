@@ -674,6 +674,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             {
                                 $win = 0;
                             }
+                            if ($bet==0 && $win==0)
+                            {
+                                continue;
+                            }
                             $time = $round['trans_time'];
 
                             $userid = intval(preg_replace('/'. self::KTEN_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
@@ -883,6 +887,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 if (is_null($win))
                                 {
                                     $win = 0;
+                                }
+                                if ($bet==0 && $win==0)
+                                {
+                                    continue;
                                 }
                                 $time = $round['trans_time'];
 
