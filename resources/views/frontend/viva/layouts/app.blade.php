@@ -361,7 +361,7 @@
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 										@if ($category->status == 1)
-										<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
+									<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
 										@else
 										<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('점검중입니다');return false;">
 										@endif
