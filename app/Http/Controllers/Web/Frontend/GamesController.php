@@ -322,10 +322,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $available_provider_cats = \VanguardLTE\Category::where('shop_id', $user->shop_id)->whereNotNull('provider')->where('view',1)->get();
             foreach ($available_provider_cats as $ct)
             {
-                $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
-                if ($res['error'] == false)
+                $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getGameObj', $gamecode);
+                if (!$gameobj)
                 {
-                    return redirect($res['data']['url']);
+                    $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
+                    if ($res['error'] == false)
+                    {
+                        return redirect($res['data']['url']);
+                    }
                 }
             }
 
