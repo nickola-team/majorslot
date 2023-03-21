@@ -647,7 +647,7 @@ namespace VanguardLTE\Games\aztecfirebng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameAztecFireStack::where('id', 562)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameAztecFireStack::where('id', 33819)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -676,10 +676,10 @@ namespace VanguardLTE\Games\aztecfirebng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameAztecFireStack::where('spin_type', 0);
                 }
-                $index = 0; // mt_rand(0, 28000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    $index = mt_rand(0, 108000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){

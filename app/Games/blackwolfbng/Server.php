@@ -218,7 +218,9 @@ namespace VanguardLTE\Games\blackwolfbng
                                 }
                                 if(isset($stack[$spin_type]['bs'])){
                                     for($i = 0; $i < count($stack[$spin_type]['bs']); $i++){
-                                        $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs'][$i]['value']))){
+                                            $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                        }
                                     }
                                 }
                             }
@@ -412,7 +414,9 @@ namespace VanguardLTE\Games\blackwolfbng
                             }
                             if(isset($stack[$spin_type]['bs'])){
                                 for($i = 0; $i < count($stack[$spin_type]['bs']); $i++){
-                                    $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                    if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs'][$i]['value']))){
+                                        $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                    }
                                 }
                             }
                             if($slotEvent['slotEvent'] != 'respin' && $spin_types[$k] != 'bonus' && isset($stack[$spin_type]['board'])){

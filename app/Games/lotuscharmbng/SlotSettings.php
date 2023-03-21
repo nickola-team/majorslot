@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\lotuscharmbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameLotusCharmStack::where('id', 862)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameLotusCharmStack::where('id', 52667)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -654,7 +654,7 @@ namespace VanguardLTE\Games\lotuscharmbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameLotusCharmStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 42000);
+                $index = mt_rand(0, 55000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 78000);
