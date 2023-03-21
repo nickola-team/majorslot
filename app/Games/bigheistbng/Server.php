@@ -226,9 +226,9 @@ namespace VanguardLTE\Games\bigheistbng
                                             if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
                                                 $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                             }
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
-                                                $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
+                                            // if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
+                                            //     $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
+                                            // }
                                         }
                                     }
                                 }
@@ -436,9 +436,9 @@ namespace VanguardLTE\Games\bigheistbng
                                         if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
                                             $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                         }
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
-                                            $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
-                                        }
+                                        // if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
+                                        //     $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
+                                        // }
                                     }
                                 }
                             }
