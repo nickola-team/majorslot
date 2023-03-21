@@ -231,7 +231,9 @@ namespace VanguardLTE\Games\hitmoregoldbng
                                 } 
                                 if(isset($stack[$spin_type]['bs'])){
                                     for($i = 0; $i < count($stack[$spin_type]['bs']); $i++){
-                                        $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs'][$i]['value']))){
+                                            $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                        }
                                     }
                                 }
                                 if(isset($stack[$spin_type]['bs_v'])){
@@ -240,9 +242,9 @@ namespace VanguardLTE\Games\hitmoregoldbng
                                             if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
                                                 $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                             }
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
-                                                $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
+                                            // if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
+                                            //     $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
+                                            // }
                                         }
                                     }
                                 }
@@ -464,7 +466,9 @@ namespace VanguardLTE\Games\hitmoregoldbng
                             }
                             if(isset($stack[$spin_type]['bs'])){
                                 for($i = 0; $i < count($stack[$spin_type]['bs']); $i++){
-                                    $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                    if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs'][$i]['value']))){
+                                        $stack[$spin_type]['bs'][$i]['value'] = $stack[$spin_type]['bs'][$i]['value'] * $betline * $DENOMINATOR;
+                                    }
                                 }
                             }
                             if(isset($stack[$spin_type]['bs_v'])){
@@ -473,9 +477,9 @@ namespace VanguardLTE\Games\hitmoregoldbng
                                         if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
                                             $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                         }
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
-                                            $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
-                                        }
+                                        // if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
+                                        //     $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
+                                        // }
                                     }
                                 }
                             }

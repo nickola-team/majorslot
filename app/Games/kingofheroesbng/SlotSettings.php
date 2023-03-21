@@ -654,7 +654,7 @@ namespace VanguardLTE\Games\kingofheroesbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameKingofHeroesStack::where('spin_type', 0);
                 }
-                $index = 0; // mt_rand(0, 52000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 78000);
