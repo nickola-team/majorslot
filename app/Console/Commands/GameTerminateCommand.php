@@ -44,7 +44,7 @@ class GameTerminateCommand extends Command
         $gameUsers = User::whereNotNull('playing_game')->get();
         foreach ($gameUsers as $user)
         {
-            $validTimestamp = \Carbon\Carbon::now()->subMinutes(60)->timestamp;
+            $validTimestamp = \Carbon\Carbon::now()->subMinutes(300)->timestamp;
             $onlineSession = \VanguardLTE\Session::where('user_id', $user->id)->where('last_activity', '>=', $validTimestamp)->get();
             if (count($onlineSession) == 0)
             {
