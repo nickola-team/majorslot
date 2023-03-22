@@ -655,8 +655,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                         $category = \VanguardLTE\Category::where('href', $catname)->first();
 
-                        if ($checkduplicate)
-                        {
+                        // if ($checkduplicate)
+                        // {
                             $checkGameStat = \VanguardLTE\StatGame::where([
                                 'user_id' => $userid, 
                                 'bet' => $bet, 
@@ -668,7 +668,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             {
                                 continue;
                             }
-                        }
+                        // }
                         
                         \VanguardLTE\StatGame::create([
                             'user_id' => $userid, 
