@@ -49,7 +49,7 @@ class GameTerminateCommand extends Command
             if (count($onlineSession) == 0)
             {
                 //human user
-                $b = $user->withdrawAll();
+                $b = $user->withdrawAll('gameterminate');
 
             }
         }

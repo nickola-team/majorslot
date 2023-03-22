@@ -606,7 +606,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             //대기중의 게임입장큐 삭제
             \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->delete();
-            $b = $user->withdrawAll();
+            $b = $user->withdrawAll('playerterminate');
             if (!$b)
             {
                 return redirect()->back()->withSuccess(['게임종료시 오류가 발생했습니다.']);
@@ -631,7 +631,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
             }
             \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->delete();
-            $b = $user->withdrawAll();
+            $b = $user->withdrawAll('playerlogout');
 
             $user->update(['api_token' => null]);
 
@@ -839,12 +839,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return response()->json(['error'=>true, 'msg'=> '유저를 찾을수 없습니다']);
             }
             //게임사 연동 위해 대기중이면 머니동기화 하지 않기
-            $launchRequests = \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->balance)->get();
+            $launchRequests = \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->get();
             if (count($launchRequests) > 0)
             {
-                return response()->json(['error'=>true, 'msg'=> '잠시후 다시 요청하세요']);
+                return response()->json(['error'=>false, 'balance'=> number_format($user->balance)]);
             }
-            $balance = \VanguardLTE\User::syncBalance($user);
+            $balance = \VanguardLTE\User::syncBalance($user, 'playerrefresh');
             if ($balance < 0)
             {
                 return response()->json(['error'=>true, 'msg'=> '게임사머니 연동오류']);

@@ -322,16 +322,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             event(new \VanguardLTE\Events\User\LoggedOut());
             if (\Auth::check()){
                 $user = auth()->user();
-                $balance = \VanguardLTE\User::syncBalance($user);
-                if ($balance < 0)
-                {
-                    Log::info('sync failed');
-                }
-                
-                $b = $user->withdrawAll();
-                
+                $b = $user->withdrawAll('getlogout');                
                 $user->update([
-                    'playing_game' => null,
                     'api_token' => null
                 ]);
             }
