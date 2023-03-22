@@ -1482,9 +1482,6 @@ var xigame_id = '488';
         type: "POST",
         url: "/api/addbalance",
         data: { 
-          accountName: $("#depoFrm #recommender").val(),
-          bank:$("#depoFrm #bankname").val(),
-          no:$("#depoFrm #accountnumber").val(),
           money: $("#depoFrm #depositAmount").val() },
         cache: false,
         async: false,
