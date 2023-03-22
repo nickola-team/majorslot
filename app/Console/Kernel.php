@@ -1586,7 +1586,7 @@ namespace VanguardLTE\Console
                     }
                     $from = $res[1];
                 }
-                $this->info("End kten rounds");
+                $this->info("End kten rounds. last id = " . $from);
             });
 
             
