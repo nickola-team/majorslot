@@ -105,7 +105,10 @@ namespace VanguardLTE
                 {
                     $attributes['game_id'] = $game->id;
                     $category = $game->categories->first();
-                    $attributes['category_id'] = $category->category_id;
+                    if ($category)
+                    {
+                        $attributes['category_id'] = $category->category_id;
+                    }
                 }
                 else
                 {

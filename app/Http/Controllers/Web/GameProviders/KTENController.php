@@ -12,43 +12,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const KTEN_PROVIDER = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
         const KTEN_GAME_IDENTITY = [
-            'kten-pp' => 'Pragmatic',
-            'kten-cq9' => 'Cq9',
-            'kten-hbn' => 'Habanero',
-            'kten-playson' => 'Playson',
-            'kten-bng' => 'Booongo',
-            'kten-og' => 'Og',
-            'kten-ppl' => 'Pragmatic',
-            'kten-dragon' => 'Dragongaming',
-            'kten-playstar' => 'Playstar',
-            'kten-gameart' => 'Gameart',
-            'kten-dreamtech' => 'Dreamtech',
-            'kten-mg' => 'Microgaming',
-            'kten-mgl' => 'Microgaming',
-            'kten-dg' => 'Dreamgame',
-            'kten-rtg' => 'Rtg',
-            'kten-pgsoft' => 'Pgsoft',
-            'kten-playngo' => 'Playngo',
-        ];
+            //==== SLOT ====
+            'kten-pp' => ['thirdname' =>'Pragmatic','type' => 'slot'],
+            'kten-cq9' => ['thirdname' =>'Cq9','type' => 'slot'],
+            'kten-hbn' => ['thirdname' =>'Habanero','type' => 'slot'],
+            'kten-playson' => ['thirdname' =>'Playson','type' => 'slot'],
+            'kten-bng' => ['thirdname' =>'Booongo','type' => 'slot'],
+            'kten-dragon' => ['thirdname' =>'Dragongaming','type' => 'slot'],
+            'kten-playstar' => ['thirdname' =>'Playstar','type' => 'slot'],
+            'kten-gameart' => ['thirdname' =>'Gameart','type' => 'slot'],
+            'kten-dreamtech' => ['thirdname' =>'Dreamtech','type' => 'slot'],
+            'kten-mg' => ['thirdname' =>'Microgaming','type' => 'slot'],
+            'kten-rtg' => ['thirdname' =>'Rtg','type' => 'slot'],
+            'kten-pgsoft' => ['thirdname' =>'Pgsoft','type' => 'slot'],
+            'kten-playngo' => ['thirdname' =>'Playngo','type' => 'slot'],
 
-        const KTEN_GAME_TYPE = [
-            'kten-pp' => 'slot',
-            'kten-cq9' => 'slot',
-            'kten-hbn' => 'slot',
-            'kten-playson' => 'slot',
-            'kten-bng' => 'slot',
-            'kten-og' => 'casino',
-            'kten-ppl' => 'casino',
-            'kten-dragon' => 'slot',
-            'kten-playstar' => 'slot',
-            'kten-gameart' => 'slot',
-            'kten-dreamtech' => 'slot',
-            'kten-mg' => 'slot',
-            'kten-mgl' => 'casino',
-            'kten-dg' => 'casino',
-            'kten-rtg' => 'slot',
-            'kten-pgsoft' => 'slot',
-            'kten-playngo' => 'slot',
+            //==== CASINO ====
+            'kten-og' => ['thirdname' =>'Og','type' => 'casino'],
+            'kten-ppl' => ['thirdname' =>'Pragmatic','type' => 'casino'],
+            'kten-mgl' => ['thirdname' =>'Microgaming','type' => 'casino'],
+            'kten-dg' => ['thirdname' =>'Dreamgame','type' => 'casino'],
         ];
 
         public static function getGameObj($uuid)
@@ -131,7 +114,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return $games;
                 }
             }
-            $type = KTENController::KTEN_GAME_TYPE[$href];
+            $category = KTENController::KTEN_GAME_IDENTITY[$href];
+            $type = $category['type'];
+            
             if ($type=='slot')
             {
                 $url = config('app.kten_api') . '/api/getGameList';
@@ -143,12 +128,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $op = config('app.kten_op');
             $token = config('app.kten_key');
 
-            $category = KTENController::KTEN_GAME_IDENTITY[$href];
 
             $params = [
                 'agentId' => $op,
                 'token' => $token,
-                'thirdname' => $category,
+                'thirdname' => $category['thirdname'],
                 'time' => time(),
             ];
 
@@ -201,7 +185,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['cp_game_name_en']),
                         'title' => $korname,
                         'icon' => $game['thumbnail'],
-                        'type' => strtolower($game['game_type']),
+                        'type' => $type=='casino'?'table':'slot',
                         'view' => $view
                     ]);
                 }
@@ -456,15 +440,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            $user = auth()->user();
-            // if ($user->playing_game != null) //already playing game.
-            // {
-            //     return ['error' => true, 'data' => '이미 실행중인 게임을 종료해주세요. 이미 종료했음에도 불구하고 이 메시지가 계속 나타난다면 매장에 문의해주세요.'];
-            // }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [KTENController::KTEN_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($thirdparty,$startDate, $endDate, $lastid, $pageIdx)
+        public static function gamerounds($lastid, $pageIdx)
         {
             
             $op = config('app.kten_op');
@@ -472,11 +451,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
             $params = [
-                'endDate' => $endDate,
                 'agentId' => $op,
                 'token' => $token,
-                'startDate' => $startDate,
-                'thirdname' => $thirdparty,
                 'pageSize' => 1000,
                 'pageStart' => $pageIdx,
                 'time' => time(),
@@ -511,436 +487,208 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return null;
         }
 
-        public static function processGameRound()
+        public static function processGameRound($frompoint=-1, $checkduplicate=false)
         {
-            $count = 0;
-
-            foreach (KTENController::KTEN_GAME_IDENTITY as $catname => $thirdId)
+            $timepoint = 0;
+            if ($frompoint == -1)
             {
-                if ($catname == 'kten-ppl')
+                $tpoint = \VanguardLTE\Settings::where('key', self::KTEN_PROVIDER . 'timepoint')->first();
+                if ($tpoint)
                 {
-                    continue;
+                    $timepoint = $tpoint->value;
                 }
-                $category = \VanguardLTE\Category::where([
-                    'provider'=> KTENController::KTEN_PROVIDER,
-                    'href' => $catname,
-                    'shop_id' => 0,
-                    'site_id' => 0,
-                    ])->first();
+            }
+            else
+            {
+                $timepoint = $frompoint;
+            }
 
-                if (!$category)
+            $count = 0;
+            $curPage = 1;
+            $data = null;
+            $data = KTENController::gamerounds($timepoint, $curPage);
+            if (isset($data['totalPageSize']) && $data['totalPageSize'] > 0)
+            {
+                foreach ($data['data'] as $round)
                 {
-                    continue;
-                }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
-                $lastid = 0;
-                $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
-                if ($lastround)
-                {
-                    $d = strtotime($lastround->date_time);
-                    if ($d > strtotime("-12 hours"))
+                    $bet = 0;
+                    $win = 0;
+                    $gameName = $round['gameId'];
+                    $thirdname = $round['cp_name'];
+                    if ($thirdname == 'Og')
                     {
-                        $lasttime = $lastround->date_time;
-                        $roundids = explode('#', $lastround->roundid);
-                        if (count($roundids) > 2)
-                        {
-                            $lastid = $roundids[2] + 1;
-                        }
+                        $gameName = 'ogplus_' . $gameName;
                     }
-                }
-                $endDate = date('Y-m-d H:i:s');
-                $curPage = 1;
-                $data = null;
-                do{
-                    $data = KTENController::gamerounds($thirdId, $lasttime, $endDate, $lastid, $curPage);
-                    if (isset($data['totalPageSize']) && $data['totalPageSize'] > 0)
+                    $gameObj = self::getGameObj($gameName);
+                    if (!$gameObj)
                     {
-                        foreach ($data['data'] as $round)
+                        Log::error('KTEN Game could not found : '. $thirdname . ' -' . $gameName);
+                        continue;
+                    }
+                    //only check thirdname
+                    if (self::KTEN_GAME_IDENTITY[$gameObj['href']]['thirdname'] != $thirdname)
+                    {
+                        Log::error('KTEN Game category is mismatched : '. self::KTEN_GAME_IDENTITY[$gameObj['href']]['thirdname'] . ' -' . $thirdname);
+                    }
+
+
+                    $type = $gameObj['type'];
+                    $catname = $gameObj['href'];
+                    if ($catname == 'kten-cq9')
+                    {
+                        if ($round['type'] == 'WIN')
                         {
-                            $bet = 0;
-                            $win = 0;
-                            $gameName = $round['gameId'];
-                            $type = 'slot';
-                            if ($catname == 'kten-cq9')
-                            {
-                                if ($round['type'] == 'WIN')
-                                {
-                                    continue;
-                                }
-                                $betdata = json_decode($round['details'],true);
-                                $bet = $betdata['bet'];
-                                $win = $betdata['win'];
-                                $balance = $betdata['balance'];
-                            }
-                            else if ($catname == 'kten-bng' || $catname == 'kten-playson')
-                            {
-                                if ($round['type'] == 'WIN')
-                                {
-                                    continue;
-                                }
-
-                                $betdata = json_decode($round['details'],true);
-                                $bet = $betdata['bet']??0;
-                                $win = $betdata['win'];
-                                $balance = $betdata['balance_after'];
-                                if ($bet==0 && $win==0)
-                                {
-                                    continue;
-                                }
-                            }
-                            else if ($catname == 'kten-hbn')
-                            {
-                                if ($round['type'] == 'WIN')
-                                {
-                                    continue;
-                                }
-                                if (!isset($round['details']))
-                                {
-                                    Log::error('KTEN HBN round : '. json_encode($round));
-                                    break;
-                                }
-
-                                $betdata = json_decode($round['details'],true);
-                                $bet = $betdata['Stake'];
-                                $win = $betdata['Payout'];
-                                $balance = $betdata['BalanceAfter'];
-                                // $gameName = $betdata['GameKeyName'];
-                            }
-                            else if ($catname == 'kten-og')
-                            {
-                                $type = 'table';
-                                if ($round['type'] == 'WIN')
-                                {
-                                    continue;
-                                }
-
-                                $betdata = json_decode($round['details'],true);
-                                if (!$betdata)
-                                {
-                                    Log::error('KTEN OG round : '. json_encode($round));
-                                    continue;
-                                }
-                                $bet = $betdata['bettingamount'];
-                                $win = $bet + $betdata['winloseamount'];
-                                $balance = $betdata['balance'];
-                                $gameName = 'ogplus_' . $gameName;
-                            }
-                            else if ($catname == 'kten-pp')
-                            {
-                                if ($round['gameType'] == 'CASINO')
-                                {
-                                    $category = \VanguardLTE\Category::where([
-                                        'provider'=> KTENController::KTEN_PROVIDER,
-                                        'href' => 'kten-ppl',
-                                        'shop_id' => 0,
-                                        'site_id' => 0,
-                                        ])->first();
-                                    if (!$category)
-                                    {
-                                        continue;
-                                    }
-                                    $type = 'table';
-                                }
-
-                                if ($round['type'] == 'BET')
-                                {
-                                    $bet = $round['amount'];
-                                }
-                                else
-                                {
-                                    $win = $round['amount'];
-                                }
-
-                                $balance = -1;
-                            }
-                            else
-                            {
-                                if ($round['gameType'] == 'CASINO')
-                                {
-                                    $type = 'table';
-                                }
-                                if ($round['type'] == 'BET')
-                                {
-                                    $bet = $round['amount'];
-                                }
-                                else
-                                {
-                                    $win = $round['amount'];
-                                }
-
-                                $balance = -1;
-                            }
-                            if (is_null($win))
-                            {
-                                $win = 0;
-                            }
-                            if ($bet==0 && $win==0)
-                            {
-                                continue;
-                            }
-                            $time = $round['trans_time'];
-
-                            $userid = intval(preg_replace('/'. self::KTEN_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
-                            $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
-                            
-                            \VanguardLTE\StatGame::create([
-                                'user_id' => $userid, 
-                                'balance' => $balance, 
-                                'bet' => $bet, 
-                                'win' => $win, 
-                                'game' =>$gameName . '_kten', 
-                                'type' => $type,
-                                'percent' => 0, 
-                                'percent_jps' => 0, 
-                                'percent_jpg' => 0, 
-                                'profit' => 0, 
-                                'denomination' => 0, 
-                                'date_time' => $time,
-                                'shop_id' => $shop?$shop->shop_id:0,
-                                'category_id' => isset($category)?$category->id:0,
-                                'game_id' =>  $gameName,
-                                'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
-                            ]);
-                            $count = $count + 1;
+                            continue;
                         }
-                        $lastid = $data['lastid'];
+                        $betdata = json_decode($round['details'],true);
+                        $bet = $betdata['bet'];
+                        $win = $betdata['win'];
+                        $balance = $betdata['balance'];
+                    }
+                    else if ($catname == 'kten-bng' || $catname == 'kten-playson')
+                    {
+                        if ($round['type'] == 'WIN')
+                        {
+                            continue;
+                        }
+                        $betdata = json_decode($round['details'],true);
+                        $bet = $betdata['bet']??0;
+                        $win = $betdata['win'];
+                        $balance = $betdata['balance_after'];
+                    }
+                    else if ($catname == 'kten-hbn')
+                    {
+                        if ($round['type'] == 'WIN')
+                        {
+                            continue;
+                        }
+                        if (!isset($round['details']))
+                        {
+                            Log::error('KTEN HBN round : '. json_encode($round));
+                            continue;
+                        }
+
+                        $betdata = json_decode($round['details'],true);
+                        $bet = $betdata['Stake'];
+                        $win = $betdata['Payout'];
+                        $balance = $betdata['BalanceAfter'];
+                    }
+                    // else if ($catname == 'kten-pp')
+                    // {
+                    //     if ($round['type'] == 'WIN')
+                    //     {
+                    //         continue;
+                    //     }
+                    //     if (!isset($round['details']))
+                    //     {
+                    //         Log::error('KTEN PP round : '. json_encode($round));
+                    //         continue;
+                    //     }
+
+                    //     $betdata = json_decode($round['details'],true);
+                    //     $bet = intval($betdata['bet']);
+                    //     $win = intval($betdata['win']);
+                    //     $balance = intval($betdata['balance']);
+                    // }
+                    else if ($catname == 'kten-og')
+                    {
+                        if ($round['type'] == 'WIN')
+                        {
+                            continue;
+                        }
+
+                        $betdata = json_decode($round['details'],true);
+                        if (!$betdata)
+                        {
+                            Log::error('KTEN OG round : '. json_encode($round));
+                            continue;
+                        }
+                        $bet = $betdata['bettingamount'];
+                        $win = $bet + $betdata['winloseamount'];
+                        $balance = $betdata['balance'];
                     }
                     else
                     {
-                        $data['totalPageSize'] = 0;
-                    }
-                }
-                while ($data['totalPageSize'] > 0);
-
-            }
-            
-            
-            return [$count, 0];
-        }
-
-        public static function processGameOmittedRound($start,$end)
-        {
-
-            $from = $start;
-            $last = date('Y-m-d H:i:s', strtotime($from . " +10 minutes"));
-            $lastid = 0;
-            $totalcount = 0;
-            while (strtotime($last) < strtotime($end))
-            {
-                Log::info('KTEN Omitted rounds : ' . $from . '~' . $last);
-
-                foreach (KTENController::KTEN_GAME_IDENTITY as $catname => $thirdId)
-                {
-                    $count = 0;
-
-                    if ($catname == 'kten-ppl')
-                    {
-                        continue;
-                    }
-                    $category = \VanguardLTE\Category::where([
-                        'provider'=> KTENController::KTEN_PROVIDER,
-                        'href' => $catname,
-                        'shop_id' => 0,
-                        'site_id' => 0,
-                        ])->first();
-
-                    if (!$category)
-                    {
-                        continue;
-                    }
-
-                    $curPage = 1;
-                    $data = null;
-                    do{
-                        $data = KTENController::gamerounds($thirdId, $from, $last, $lastid, $curPage);
-
-                        if (isset($data['totalPageSize']) && $data['totalPageSize'] > 0)
+                        if ($round['type'] == 'BET')
                         {
-                            foreach ($data['data'] as $round)
-                            {
-                                $bet = 0;
-                                $win = 0;
-                                $gameName = $round['gameId'];
-                                $type = 'slot';
-                                if ($catname == 'kten-cq9')
-                                {
-                                    if ($round['type'] == 'WIN')
-                                    {
-                                        continue;
-                                    }
-                                    $betdata = json_decode($round['details'],true);
-                                    $bet = $betdata['bet'];
-                                    $win = $betdata['win'];
-                                    $balance = $betdata['balance'];
-                                }
-                                else if ($catname == 'kten-bng' || $catname == 'kten-playson')
-                                {
-                                    if ($round['type'] == 'WIN')
-                                    {
-                                        continue;
-                                    }
+                            $bet = $round['amount'];
+                        }
+                        else
+                        {
+                            $win = $round['amount'];
+                        }
 
-                                    $betdata = json_decode($round['details'],true);
-                                    $bet = $betdata['bet']??0;
-                                    $win = $betdata['win'];
-                                    $balance = $betdata['balance_after'];
-                                    if ($bet==0 && $win==0)
-                                    {
-                                        continue;
-                                    }
-                                }
-                                else if ($catname == 'kten-hbn')
-                                {
-                                    if ($round['type'] == 'WIN')
-                                    {
-                                        continue;
-                                    }
-                                    if (!isset($round['details']))
-                                    {
-                                        Log::error('KTEN HBN round : '. json_encode($round));
-                                        break;
-                                    }
-
-                                    $betdata = json_decode($round['details'],true);
-                                    $bet = $betdata['Stake'];
-                                    $win = $betdata['Payout'];
-                                    $balance = $betdata['BalanceAfter'];
-                                    // $gameName = $betdata['GameKeyName'];
-                                }
-                                else if ($catname == 'kten-og')
-                                {
-                                    $type = 'table';
-                                    if ($round['type'] == 'WIN')
-                                    {
-                                        continue;
-                                    }
-
-                                    $betdata = json_decode($round['details'],true);
-                                    if (!$betdata)
-                                    {
-                                        Log::error('KTEN OG round : '. json_encode($round));
-                                        continue;
-                                    }
-                                    $bet = $betdata['bettingamount'];
-                                    $win = $bet + $betdata['winloseamount'];
-                                    $balance = $betdata['balance'];
-                                    $gameName = 'ogplus_' . $gameName;
-                                }
-                                else if ($catname == 'kten-pp')
-                                {
-                                    if ($round['gameType'] == 'CASINO')
-                                    {
-                                        $category = \VanguardLTE\Category::where([
-                                            'provider'=> KTENController::KTEN_PROVIDER,
-                                            'href' => 'kten-ppl',
-                                            'shop_id' => 0,
-                                            'site_id' => 0,
-                                            ])->first();
-                                        if (!$category)
-                                        {
-                                            continue;
-                                        }
-                                        $type = 'table';
-                                    }
-                                    else
-                                    {
-                                        $category = \VanguardLTE\Category::where([
-                                            'provider'=> KTENController::KTEN_PROVIDER,
-                                            'href' => 'kten-pp',
-                                            'shop_id' => 0,
-                                            'site_id' => 0,
-                                            ])->first();
-                                        if (!$category)
-                                        {
-                                            continue;
-                                        }
-                                    }
-
-                                    if ($round['type'] == 'BET')
-                                    {
-                                        $bet = $round['amount'];
-                                    }
-                                    else
-                                    {
-                                        $win = $round['amount'];
-                                    }
-
-                                    $balance = -1;
-                                }
-                                else
-                                {
-                                    if ($round['gameType'] == 'CASINO')
-                                    {
-                                        $type = 'table';
-                                    }
-                                    if ($round['type'] == 'BET')
-                                    {
-                                        $bet = $round['amount'];
-                                    }
-                                    else
-                                    {
-                                        $win = $round['amount'];
-                                    }
-
-                                    $balance = -1;
-                                }
-                                if (is_null($win))
-                                {
-                                    $win = 0;
-                                }
-                                if ($bet==0 && $win==0)
-                                {
-                                    continue;
-                                }
-                                $time = $round['trans_time'];
-
-                                $userid = intval(preg_replace('/'. self::KTEN_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
-                                $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
-
-                                $checkGameStat = \VanguardLTE\StatGame::where([
-                                    'user_id' => $userid, 
-                                    'bet' => $bet, 
-                                    'win' => $win, 
-                                    'date_time' => $time,
-                                ])->first();
-                                if (!$checkGameStat)
-                                {
-                                    \VanguardLTE\StatGame::create([
-                                        'user_id' => $userid, 
-                                        'balance' => $balance, 
-                                        'bet' => $bet, 
-                                        'win' => $win, 
-                                        'game' =>$gameName . '_kten', 
-                                        'type' => $type,
-                                        'percent' => 0, 
-                                        'percent_jps' => 0, 
-                                        'percent_jpg' => 0, 
-                                        'profit' => 0, 
-                                        'denomination' => 0, 
-                                        'date_time' => $time,
-                                        'shop_id' => $shop?$shop->shop_id:0,
-                                        'category_id' => isset($category)?$category->id:0,
-                                        'game_id' =>  $gameName,
-                                        'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
-                                    ]);
-                                    $count = $count + 1;
-                                }
-                            }
-                        } 
-                        $curPage = $curPage + 1;
+                        $balance = -1;
                     }
-                    while ($curPage <= $data['totalPageSize']);
+                    if (is_null($win))
+                    {
+                        $win = 0;
+                    }
+                    if ($bet==0 && $win==0)
+                    {
+                        continue;
+                    }
+                    $time = $round['trans_time'];
 
-                    $totalcount = $totalcount+1;
-                    Log::info("KTEN Omitted rounds stat : $catname rounds=" . $data['totalDataSize'].", omitted=$count" );
+                    $userid = intval(preg_replace('/'. self::KTEN_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
+                    $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                    $category = \VanguardLTE\Category::where('href', $catname)->first();
+
+                    if ($checkduplicate)
+                    {
+                        $checkGameStat = \VanguardLTE\StatGame::where([
+                            'user_id' => $userid, 
+                            'bet' => $bet, 
+                            'win' => $win, 
+                            'date_time' => $time,
+                            'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
+                        ])->first();
+                        if ($checkGameStat)
+                        {
+                            continue;
+                        }
+                    }
+                    
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $userid, 
+                        'balance' => $balance, 
+                        'bet' => $bet, 
+                        'win' => $win, 
+                        'game' =>$gameObj['name'] . '_kten', 
+                        'type' => $type,
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'date_time' => $time,
+                        'shop_id' => $shop?$shop->shop_id:0,
+                        'category_id' => $category?$category->original_id:0,
+                        'game_id' =>  $gameName,
+                        'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
+                    ]);
+                    $count = $count + 1;
                 }
-                $from = $last;
-                $last = date('Y-m-d H:i:s', strtotime($from . " +10 minutes"));
+
+                $timepoint = $data['lastid'];
+
+                if ($frompoint == -1)
+                {
+
+                    if ($tpoint)
+                    {
+                        $tpoint->update(['value' => $timepoint]);
+                    }
+                    else
+                    {
+                        \VanguardLTE\Settings::create(['key' => self::KTEN_PROVIDER .'timepoint', 'value' => $timepoint]);
+                    }
+                }
             }
             
-            
-            return [$totalcount, 0];
+            return [$count, $timepoint];
         }
+
 
         public static function getAgentBalance()
         {

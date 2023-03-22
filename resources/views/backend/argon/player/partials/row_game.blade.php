@@ -7,7 +7,8 @@
         $cc = explode('_', $game);
         if (count($cc) > 1)
         {
-            $game = $cc[0];
+            array_pop($cc);
+            $game = implode(' ', $cc);
         }
         if ($gacmerge == 1)
         {
