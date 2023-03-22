@@ -336,26 +336,21 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
             $user = auth()->user();
-            // if ($user->playing_game != null)
-            // {
-            //     return response()->json(['error' => true, 'msg' => '이미 실행중인 게임을 종료하세요', 'code' => '001']);
-            // }
-            //reset playing_game field to null for provider games.
-            $balance = \VanguardLTE\User::syncBalance($user);
+            $provider = $request->provider;
+            $gamecode = $request->gamecode;
 
-            if ($balance < 0)
+            //withdraw all balance from old game provider.
+            $b = $user->withdrawAll('getgamelink');
+
+            if (!$b)
             {
                 return response()->json(['error' => true, 'msg' => '잠시후 다시 시도하세요', 'code' => '002']);
             }
 
-            auth()->user()->balance = $balance; //
-
-            $provider = $request->provider;
-            $gamecode = $request->gamecode;
             $user->update([
-                'playing_game' => null,
                 'remember_token' => $user->api_token
             ]);
+
             if ($provider == 'null')
             {
                 $fakeparams = [
@@ -1794,24 +1789,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $transaction->update([
                     'status' => 1
                 ]);
-            }
-
-            if ($requestuser->hasRole('user') && $requestuser->playing_game == 'pp')
-            {
-                if ($type == 'add')
-                {
-                    $summ = abs($amount);
-                }
-                else
-                {
-                    $summ = -abs($amount);
-                }
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($requestuser->id, $summ);
-                if ($data['error'] == -1) //밸런스 전송시 오류, 게임사게임 종료시킬것
-                {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($requestuser->id);
-                    $requestuser->update(['playing_game' => null]);
-                }
             }
 
             return redirect()->route(config('app.admurl').'.in_out_manage', $type)->withSuccess(['조작이 성공적으로 진행되었습니다.']);
