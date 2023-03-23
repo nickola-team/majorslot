@@ -1383,7 +1383,7 @@ namespace VanguardLTE
                     if ($balance >= 0)
                     {
                         Log::channel('monitor_game')->info('SyncBalance Success | ' . strtoupper($ct->provider) . ' : ' . $lockUser->playing_game . ' : ' . $lockUser->username . '('.$user->id . ') [old=' . $lockUser->balance. '],[new=' . $balance . ']' . ' | reason = ' . $reason);
-                        $lockUser->update(['balance' => $balance]);
+                        $lockUser->update(['balance' => $balance, 'played_at' => time()]);
                     }
                     else
                     {
