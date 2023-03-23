@@ -24,7 +24,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-dreamtech' => ['thirdname' =>'Dreamtech','type' => 'slot'],
             'kten-mg' => ['thirdname' =>'Microgaming','type' => 'slot'],
             'kten-rtg' => ['thirdname' =>'Rtg','type' => 'slot'],
-            'kten-pgsoft' => ['thirdname' =>'Pgsoft','type' => 'slot'],
+            'kten-pgsoft' => ['thirdname' =>'Pgs','type' => 'slot'],
             'kten-playngo' => ['thirdname' =>'Playngo','type' => 'slot'],
             'kten-evoplay' => ['thirdname' =>'Evoplay','type' => 'slot'],
 
