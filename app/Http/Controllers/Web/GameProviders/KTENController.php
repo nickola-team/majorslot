@@ -545,8 +545,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $gameObj = self::getGameObj($gameName);
                         if (!$gameObj)
                         {
-                            Log::error('KTEN Game could not found : '. $thirdname . ' -' . $gameName);
-                            continue;
+                            
+                            
+                            foreach (KTENController::KTEN_GAME_IDENTITY as $ref => $value)
+                            {
+                                if ($value['thirdname'] == $thirdname)
+                                {
+                                    $gameObj = self::getGameObj($ref);
+                                    break;
+                                }
+                            }
+                            if (!$gameObj)
+                            {
+                                Log::error('KTEN Game could not found : '. $thirdname . ' -' . $gameName);
+                                continue;
+                            }
                         }
                         //only check thirdname
                         if (self::KTEN_GAME_IDENTITY[$gameObj['href']]['thirdname'] != $thirdname)
