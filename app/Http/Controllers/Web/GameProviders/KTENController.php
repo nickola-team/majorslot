@@ -33,6 +33,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-ppl' => ['thirdname' =>'Pragmatic','type' => 'casino'],
             'kten-mgl' => ['thirdname' =>'Microgaming','type' => 'casino'],
             'kten-dg' => ['thirdname' =>'Dreamgame','type' => 'casino'],
+            'kten-asia' => ['thirdname' =>'Ag','type' => 'casino'],
         ];
 
         public static function getGameObj($uuid)
