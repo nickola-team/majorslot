@@ -26,6 +26,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-rtg' => ['thirdname' =>'Rtg','type' => 'slot'],
             'kten-pgsoft' => ['thirdname' =>'Pgsoft','type' => 'slot'],
             'kten-playngo' => ['thirdname' =>'Playngo','type' => 'slot'],
+            'kten-evoplay' => ['thirdname' =>'Evoplay','type' => 'slot'],
 
             //==== CASINO ====
             'kten-og' => ['thirdname' =>'Og','type' => 'casino'],
