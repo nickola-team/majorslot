@@ -1116,5 +1116,17 @@ return [
         "superrichgod" => "슈퍼 리치 갓",
         "magicapple" => "매직 애플",
         "wukong" => "우공",
+        
+        "scarabboost" => "스캐럽 부스트",
+        "pearldiver" => "펄 다이버",
+        "3coinsegypt" => "3 코인즈: 이집트",
+        "ganeshaboost" => "가네샤 부스트",
+        "bookofwizard" => "북 오브 위자드",
+        "lordfortune2" => "로드 포츈 2",
+        "goldexpress" => "골드 익스프레스",
+        "candyboom" => "캔디 붐",
+        "goldendancinglion" => "골든 댄싱 라이온",
+        "queenofthesun" => "퀸 오브 더 썬",
+
 
 ];

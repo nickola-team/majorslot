@@ -24,14 +24,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-dreamtech' => ['thirdname' =>'Dreamtech','type' => 'slot'],
             'kten-mg' => ['thirdname' =>'Microgaming','type' => 'slot'],
             'kten-rtg' => ['thirdname' =>'Rtg','type' => 'slot'],
-            'kten-pgsoft' => ['thirdname' =>'Pgsoft','type' => 'slot'],
+            'kten-pgsoft' => ['thirdname' =>'Pgs','type' => 'slot'],
             'kten-playngo' => ['thirdname' =>'Playngo','type' => 'slot'],
+            'kten-evoplay' => ['thirdname' =>'Evoplay','type' => 'slot'],
 
             //==== CASINO ====
             'kten-og' => ['thirdname' =>'Og','type' => 'casino'],
             'kten-ppl' => ['thirdname' =>'Pragmatic','type' => 'casino'],
             'kten-mgl' => ['thirdname' =>'Microgaming','type' => 'casino'],
             'kten-dg' => ['thirdname' =>'Dreamgame','type' => 'casino'],
+            'kten-asia' => ['thirdname' =>'Ag','type' => 'casino'],
         ];
 
         public static function getGameObj($uuid)
@@ -543,8 +545,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $gameObj = self::getGameObj($gameName);
                         if (!$gameObj)
                         {
-                            Log::error('KTEN Game could not found : '. $thirdname . ' -' . $gameName);
-                            continue;
+                            
+                            
+                            foreach (KTENController::KTEN_GAME_IDENTITY as $ref => $value)
+                            {
+                                if ($value['thirdname'] == $thirdname)
+                                {
+                                    $gameObj = self::getGameObj($ref);
+                                    break;
+                                }
+                            }
+                            if (!$gameObj)
+                            {
+                                Log::error('KTEN Game could not found : '. $thirdname . ' -' . $gameName);
+                                continue;
+                            }
                         }
                         //only check thirdname
                         if (self::KTEN_GAME_IDENTITY[$gameObj['href']]['thirdname'] != $thirdname)

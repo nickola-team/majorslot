@@ -41,12 +41,12 @@ class GameTerminateCommand extends Command
      */
     public function handle()
     {
+        return;
         $gameUsers = User::whereNotNull('playing_game')->get();
         foreach ($gameUsers as $user)
         {
-            $validTimestamp = \Carbon\Carbon::now()->subMinutes(300)->timestamp;
-            $onlineSession = \VanguardLTE\Session::where('user_id', $user->id)->where('last_activity', '>=', $validTimestamp)->get();
-            if (count($onlineSession) == 0)
+            $validTimestamp = strtotime("-12 hours");
+            if ($user->played_at <= $validTimestamp)
             {
                 //human user
                 $b = $user->withdrawAll('gameterminate');
