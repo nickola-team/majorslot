@@ -195,7 +195,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
             {
-                return redirect()->route('/');
+                return redirect('/');
             }
             if( !\Illuminate\Support\Facades\Auth::check() ) 
             {
