@@ -1080,6 +1080,10 @@ return [
         "FireArcher" => "파이어 아처",
         "WildWildRichesMegaways" => "와일드 와일드 리치스 메가웨이즈",
 
+        "PeakPower" => "피크 파워",
+        "MysteryoftheOrient" => "미스테리 오브 더 오리엔트",
+        "WildWestDuels" => "와일드 웨스트 두얼스",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
