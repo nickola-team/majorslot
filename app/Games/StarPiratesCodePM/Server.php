@@ -275,7 +275,7 @@ namespace VanguardLTE\Games\StarPiratesCodePM
                     $slotEvent['slotEvent'] = 'bet';
                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                     $_sum = $allBet / 100 * $slotSettings->GetPercent();
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
+                    $slotSettings->SetBank('', $_sum, $slotEvent['slotEvent']);
                     $bonusMpl = 1;
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
@@ -441,7 +441,7 @@ namespace VanguardLTE\Games\StarPiratesCodePM
                 {
                     $spinType = 'c';
                     $slotSettings->SetBalance($totalWin);
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    $slotSettings->SetBank('', -1 * $totalWin);
                 }
                 $_obf_totalWin = $totalWin;
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $rs_p);
