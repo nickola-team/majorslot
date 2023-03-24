@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\sunlightprincessbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameSunLightPrincessStack::where('id', 209)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameSunLightPrincessStack::where('id', 45036)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -659,7 +659,7 @@ namespace VanguardLTE\Games\sunlightprincessbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameSunLightPrincessStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 48000);
+                $index = mt_rand(0, 52000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 78000);
