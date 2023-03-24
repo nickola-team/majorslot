@@ -249,7 +249,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
     Route::get('providers/waiting/{provider}/{gamecode}', [
         'as' => 'frontend.providers.waiting',
         'uses' => 'RenderingController@waiting'
-    ]);
+    ])->middleware('simultaneous:1');
 
     Route::get('providers/launch/{requestid}', [
         'as' => 'frontend.providers.launch',
