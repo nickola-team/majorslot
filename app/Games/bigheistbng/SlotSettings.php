@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\bigheistbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBigHeistStack::where('id', 228)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBigHeistStack::where('id', 59878)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -654,10 +654,10 @@ namespace VanguardLTE\Games\bigheistbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBigHeistStack::where('spin_type', 0);
                 }
-                $index = 0;// mt_rand(0, 48000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    $index = mt_rand(0, 68000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
