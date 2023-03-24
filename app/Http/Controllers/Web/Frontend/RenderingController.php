@@ -535,6 +535,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
             }
             $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode, $user);
+            if ($url == null)
+            {
+                abort(404);
+            }
             return redirect($url);
             
         }

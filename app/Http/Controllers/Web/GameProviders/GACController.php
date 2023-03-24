@@ -866,7 +866,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => true, 'msg' => '게임이 없습니다'];
             }
             $detect = new \Detection\MobileDetect();
-            if ($detect->isiOS() || $detect->isiPadOS())
+            $embed = env('GAC_EMBED', true);
+
+            if (!$embed || $detect->isiOS() || $detect->isiPadOS())
             {
                 $url = GACController::makegamelink($gamecode);
             }

@@ -91,7 +91,7 @@ namespace VanguardLTE\Console
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
-            $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
+            // $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
 
             $schedule->command('gp:genTrend')->dailyAt('08:00')->runInBackground();
 
@@ -1570,19 +1570,23 @@ namespace VanguardLTE\Console
                 $this->info("End processTrend");
             });
 
-            \Artisan::command('kten:omitted {start=today} {end=today}', function ($start, $end) {
-                if ($start == 'today')
-                {
-                    $start = date('Y-m-d 0:0:0',strtotime("-1 days"));
-                }
-                if ($end == 'today')
-                {
-                    $end = date('Y-m-d 23:59:59',strtotime("-1 days"));
-                }
-                $this->info("Begin kten rounds : $start ~ $end");
+            \Artisan::command('kten:omitted {from} {to}', function ($from, $to) {
 
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::processGameOmittedRound($start, $end);
-                $this->info("End kten rounds");
+                $this->info("Begin kten rounds : $from ~ $to");
+
+                while ($from <= $to)
+                {
+                    $this->info("Getting omitted history from " . $from);
+                    $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::processGameRound($from, true);
+                    $this->info("Proceed omitted records count = " . $res[0]);
+                    if ($from == $res[1])
+                    {
+                        $this->info("No more history after " . $from);
+                        break;
+                    }
+                    $from = $res[1];
+                }
+                $this->info("End kten rounds. last id = " . $from);
             });
 
             

@@ -1330,13 +1330,8 @@ namespace VanguardLTE
             $data = json_decode($session,true);
             return $data;
         }
-        public  function currblanace()
-        {
-            $balance = User::syncBalance($this);
-            return $balance;
-        }
 
-        public function withdrawAll()
+        public function withdrawAll($reason='')
         {
             \DB::beginTransaction();
             $lockUser = \VanguardLTE\User::lockForUpdate()->find($this->id);
@@ -1347,14 +1342,14 @@ namespace VanguardLTE
                 {
                     $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::withdrawAll', $lockUser->playing_game, $this);
                     if ($data['error'] == false){
-                        Log::channel('monitor_game')->info('Withdraw from ' . $lockUser->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider);
+                        Log::channel('monitor_game')->info('Withdraw from ' . $lockUser->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider . ' | reason = ' . $reason);
                         $lockUser->update(['playing_game' => null, 'balance' => $data['amount']]);
                         \DB::commit();
                         return true;
                     }
                     else
                     {
-                        Log::channel('monitor_game')->info('Withdraw failed ' . $lockUser->username  . ' at ' . $ct->provider);
+                        Log::channel('monitor_game')->info('Withdraw failed ' . $lockUser->username  . ' at ' . $ct->provider. ' | reason = ' . $reason);
                         \DB::commit();
                         return false;
                     }
@@ -1365,7 +1360,7 @@ namespace VanguardLTE
             return true;
         }
 
-        public static function syncBalance(\VanguardLTE\User $user)
+        public static function syncBalance(\VanguardLTE\User $user, $reason='')
         {
             \DB::beginTransaction();
             $lockUser = \VanguardLTE\User::lockForUpdate()->find($user->id);
@@ -1387,12 +1382,12 @@ namespace VanguardLTE
                     $balance = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getUserBalance', $lockUser->playing_game, $user);
                     if ($balance >= 0)
                     {
-                        Log::channel('monitor_game')->info('SyncBalance Success | ' . strtoupper($ct->provider) . ' : ' . $lockUser->playing_game . ' : ' . $lockUser->username . '('.$user->id . ') [old=' . $lockUser->balance. '],[new=' . $balance . ']');
-                        $lockUser->update(['balance' => $balance]);
+                        Log::channel('monitor_game')->info('SyncBalance Success | ' . strtoupper($ct->provider) . ' : ' . $lockUser->playing_game . ' : ' . $lockUser->username . '('.$user->id . ') [old=' . $lockUser->balance. '],[new=' . $balance . ']' . ' | reason = ' . $reason);
+                        $lockUser->update(['balance' => $balance, 'played_at' => time()]);
                     }
                     else
                     {
-                        Log::channel('monitor_game')->info('SyncBalance Failed | ' . strtoupper($ct->provider) . ' : ' . $lockUser->playing_game . ' : ' . $lockUser->username . '('.$lockUser->id . ') [old=' . $lockUser->balance. '],[new=-1]');
+                        Log::channel('monitor_game')->info('SyncBalance Failed | ' . strtoupper($ct->provider) . ' : ' . $lockUser->playing_game . ' : ' . $lockUser->username . '('.$lockUser->id . ') [old=' . $lockUser->balance. '],[new=-1]' . ' | reason = ' . $reason);
                         \DB::commit();
                         return -1;
                     }
