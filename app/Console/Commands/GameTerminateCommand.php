@@ -41,17 +41,13 @@ class GameTerminateCommand extends Command
      */
     public function handle()
     {
-        return;
-        $gameUsers = User::whereNotNull('playing_game')->get();
+        // return;
+        $validTimestamp = strtotime("-12 hours");
+        $gameUsers = User::whereNotNull('playing_game')->where('played_at', '<', $validTimestamp)->get();
         foreach ($gameUsers as $user)
         {
-            $validTimestamp = strtotime("-12 hours");
-            if ($user->played_at <= $validTimestamp)
-            {
-                //human user
-                $b = $user->withdrawAll('gameterminate');
-
-            }
+               //human user
+            $b = $user->withdrawAll('gameterminate');
         }
     }
 }
