@@ -32,6 +32,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['에이전트를 찾을수 없습니다']);
             }
             $shops = $user->shops(true);
+            if ($user->hasRole('admin'))
+            {
+                $shops[] = 0; // include all domain settings
+            }
             if (count($shops) == 0)
             {
                 return redirect()->back()->withErrors(['하부매장이 없습니다']);
