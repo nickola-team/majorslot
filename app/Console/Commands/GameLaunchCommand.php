@@ -58,13 +58,14 @@ class GameLaunchCommand extends Command
             }
 
             $launchRequests = GameLaunch::where('finished', 0)->orderby('created_at', 'desc')->get();
-            $launchRequests = \VanguardLTE\GameLaunch::where(['finished'=> 0, 'provider' => strtolower($provider)])->orderby('created_at', 'asc')->get();
+            $launchRequests = \VanguardLTE\GameLaunch::where(['finished'=> 0, 'provider' => strtolower($provider)])->orderby('created_at', 'desc')->get();
             $processed_users = [];
             foreach ($launchRequests as $request)
             {
                 if (in_array($request->user_id, $processed_users)) //process 1 request per one user
                 {
                     $this->info('skipping userid=' . $request->user_id . ', id=' . $request->id);
+                    $request->delete();
                     continue;
                 }
                 $processed_users[] = $request->user_id;
