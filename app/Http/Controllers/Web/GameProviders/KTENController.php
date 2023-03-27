@@ -443,6 +443,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
+            if (isset(self::KTEN_GAME_IDENTITY[$gamecode]) && self::KTEN_GAME_IDENTITY[$gamecode]['type']=='casino')
+            {
+                $gamelist = KTENController::getgamelist($gamecode);
+                if (count($gameList) > 0)
+                {
+                    $gamecode = $gamelist[0];
+                }
+            }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [KTENController::KTEN_PROVIDER, $gamecode])]];
         }
 
