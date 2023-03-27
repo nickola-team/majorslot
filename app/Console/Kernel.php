@@ -506,24 +506,49 @@ namespace VanguardLTE\Console
         {
             require(base_path('routes/console.php'));
 
-            \Artisan::command('daily:gamesummary {date=today}', function ($date) {
+            \Artisan::command('daily:gamesummary {date=today} {partnerid=0}', function ($date, $partnerid) {
                 $this->info("Begin daily game summary adjustment.");
-
-                $admins = \VanguardLTE\User::where('role_id',9)->get();
-                foreach ($admins as $admin)
+                if ($partnerid == 0)
                 {
+                    $admins = \VanguardLTE\User::where('role_id',9)->get();
+                    foreach ($admins as $admin)
+                    {
+                        if ($date == 'today') {
+                            \VanguardLTE\CategorySummary::summary($admin->id);
+                        }
+                        else{
+                            \VanguardLTE\CategorySummary::summary($admin->id, $date);
+                        }
+                    }
                     if ($date == 'today') {
-                        \VanguardLTE\CategorySummary::summary($admin->id);
+                        $day = date("Y-m-d", strtotime("-1 days"));
+                        \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $day])->delete();
+                        \VanguardLTE\GameSummary::where(['type' => 'today', 'date' => $day])->delete();
+                    }
+                }
+                else
+                {
+                    $partner = \VanguardLTE\User::find($partnerid);
+                    if (!$partner)
+                    {
+                        $this->error('Not found partnerid');
+                        return;
+                    }
+                    if ($date == 'today') {
+                        \VanguardLTE\CategorySummary::summary($partnerid);
                     }
                     else{
-                        \VanguardLTE\CategorySummary::summary($admin->id, $date);
+                        \VanguardLTE\CategorySummary::summary($partnerid, $date);
+                    }
+                    if ($date == 'today') {
+                        $availablePartners = $partner->hierarchyPartners();
+                        $availablePartners[] = $partnerid;
+                        $day = date("Y-m-d", strtotime("-1 days"));
+                        \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $day])->whereIn('user_id', $availablePartners)->delete();
+                        \VanguardLTE\GameSummary::where(['type' => 'today', 'date' => $day])->whereIn('user_id', $availablePartners)->delete();
                     }
                 }
-                if ($date == 'today') {
-                    $day = date("Y-m-d", strtotime("-1 days"));
-                    \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $day])->delete();
-                    \VanguardLTE\GameSummary::where(['type' => 'today', 'date' => $day])->delete();
-                }
+                
                 $this->info("End daily game summary adjustment.");
             });
             \Artisan::command('today:gamesummary', function () {
