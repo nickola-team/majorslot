@@ -103,7 +103,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $virtualtech = \VanguardLTE\Category::where(['href'=> 'virtualtech', 'shop_id'=>0, 'site_id'=>0])->first();
             if ($virtualtech)
             {
-                $gamecats = $virtualtech->games()->orderby('game_id', ($shop_id==0)?'desc':'asc')->get();
+                $gamecats = $virtualtech->games()->orderby('game_id', 'desc')->get();
                 foreach ($gamecats as $gc)
                 {
                     if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
