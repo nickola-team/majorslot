@@ -34,32 +34,26 @@
 		</div>
 	</div>
 
-	<!-- 호텔 라이브카지노 -->
 	<div id="casino_2" class="popup_style04 popup_none">
 		<div class="popup_wrap_1360">   
 			<div class="close_box"><a href="#" class="casino_2_close"><img src="/frontend/kdior/images/popup_close.png?v=202301301150"></a></div>
 			<div class="popupbox">
 				<div class="title1"><img src="/frontend/kdior/images/title02.png?v=202301301150"></div><!-- 타이틀 -->
 				<div class="game">
-					<ul   class="categorylist">
+					<ul   class="gamelist">
 
-						@foreach($categories AS $index=>$category)
-						@if ($category->type =='live' && $category->provider == 'kuza')
+						@foreach($hotgames AS $hotgame)
 						<li>
 							<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
 							@auth 
-								@if ($category->status == 0)
-								onclick="alert('점검중입니다');"
-								@else
-								onclick="casinoGameStart('{{$category->href}}');"
-								@endif
+								onclick="startGameByProvider(null, '{{$hotgame['name']}}');"
 							@endif
 							>
-							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png">
-							<img src="/frontend/kdior/images/game/{{strtoupper($category->title)}}.png" class="mouseover3 casino_1_close etc_pop2_open" style="display:none;">
+							<img src="/frontend/Default/ico/{{$hotgame['name']}}.jpg">
+							<img src="/frontend/Default/ico/{{$hotgame['name']}}.jpg" class="mouseover3 casino_1_close etc_pop2_open" style="display:none;">
+							<br>{{$hotgame['title']}}
 							</a>
 						</li>
-						@endif
 						@endforeach
 
 					</ul>
