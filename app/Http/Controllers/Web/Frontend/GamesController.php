@@ -80,7 +80,32 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $categories = \VanguardLTE\Category::where(['shop_id' => $shop_id, 'view' => 1,'parent' => 0,])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
             }
+
             $hotgames = [];
+            //add virtualtech games
+            $hotnames = [
+                //add virtualtech games
+                'DuoFuDuoCai5Treasures','DuoFuDuoCai88Fortune','DuoFuDuoCaiDancingDrum',
+                //add  greentube games
+                'BookOfRaCL','BookOfRaDXGT','BookOfRaDX6GT','KatanaGT','AmericanGangsterGT','AttilaDX','BurningHot7GT','OrcaGT'
+            ];
+            $hgames = \VanguardLTE\Game::whereIn('name', $hotnames)->where('shop_id', $shop_id)->where('view', 1)->orderby('id', 'desc')->get();
+            foreach ($hgames as $h)
+            {
+
+                $hotgames[] = ['name' => $h->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$h->title)? __('gamename.'.$h->title):$h->title];
+            }
+           
+            //add aristocrat games
+            $aristocrat = \VanguardLTE\Category::where(['href'=> 'aristocrat', 'shop_id'=>0, 'site_id'=>0])->first();
+            if ($aristocrat)
+            {
+                $gamecats = $aristocrat->games;
+                foreach ($gamecats as $gc)
+                {
+                    $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                }
+            }
 
             $ppgames = [];
             $livegames = [];
