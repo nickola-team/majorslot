@@ -35,7 +35,7 @@
 		<div class="popup_wrap_1360">   
 			<div class="close_box"><a href="#" class="casino_2_close"><img src="/frontend/kdior/images/popup_close.png?v=202301301150"></a></div>
 			<div class="popupbox">
-				<div class="title1"><img src="/frontend/kdior/images/title02.png?v=202301301150"></div><!-- 타이틀 -->
+				<div class="title1"><img src="/frontend/kdior/images/title04.png?v=202301301150"></div><!-- 타이틀 -->
 				<div class="game">
 					<ul   class="gamelist">
 

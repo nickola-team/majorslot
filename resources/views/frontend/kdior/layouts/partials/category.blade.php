@@ -13,7 +13,7 @@
         @else
         class="casino_2_open"
         @endif
-        ><img src="/frontend/kdior/images/main_game2.png?v=202301301150" class="item front"><img src="/frontend/kdior/images/main_game2_h.png?v=202301301150" class="item back"></a></li>                
+        ><img src="/frontend/kdior/images/main_game4.png?v=202301301150" class="item front"><img src="/frontend/kdior/images/main_game4_h.png?v=202301301150" class="item back"></a></li>                
         <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/main_game3.png?v=202301301150" class="item front"><img src="/frontend/kdior/images/main_game3_h.png?v=202301301150" class="item back"></a></li>                                
     </ul>
 </div>
