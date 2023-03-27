@@ -448,7 +448,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gamelist = KTENController::getgamelist($gamecode);
                 if (count($gamelist) > 0)
                 {
-                    $gamecode = $gamelist[0];
+                    $gamecode = $gamelist[0]['gamecode'];
                 }
             }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [KTENController::KTEN_PROVIDER, $gamecode])]];
