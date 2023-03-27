@@ -82,20 +82,37 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $hotgames = [];
-            //add virtualtech games
-            $hotnames = [
-                //add virtualtech games
-                'DuoFuDuoCai5Treasures','DuoFuDuoCai88Fortune','DuoFuDuoCaiDancingDrum',
-                //add  greentube games
-                'BookOfRaCL','BookOfRaDXGT','BookOfRaDX6GT','KatanaGT','AmericanGangsterGT','AttilaDX','BurningHot7GT','OrcaGT'
-            ];
-            $hgames = \VanguardLTE\Game::whereIn('name', $hotnames)->where('shop_id', $shop_id)->where('view', 1)->orderby('id', 'desc')->get();
-            foreach ($hgames as $h)
+            $detect = new \Detection\MobileDetect();
+            $devices = [];
+            if( $detect->isMobile() || $detect->isTablet() ) 
             {
-
-                $hotgames[] = ['name' => $h->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$h->title)? __('gamename.'.$h->title):$h->title];
+                $devices = [
+                    0, 
+                    2
+                ];
             }
-           
+            else
+            {
+                $devices = [
+                    1, 
+                    2
+                ];
+            }
+
+            //add virtualtech games
+            $virtualtech = \VanguardLTE\Category::where(['href'=> 'virtualtech', 'shop_id'=>0, 'site_id'=>0])->first();
+            if ($virtualtech)
+            {
+                $gamecats = $virtualtech->games()->orderby('game_id', ($shop_id==0)?'desc':'asc')->get();
+                foreach ($gamecats as $gc)
+                {
+                    if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
+                    {
+                        $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                    }
+                }
+            }
+
             //add aristocrat games
             $aristocrat = \VanguardLTE\Category::where(['href'=> 'aristocrat', 'shop_id'=>0, 'site_id'=>0])->first();
             if ($aristocrat)
@@ -103,7 +120,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $gamecats = $aristocrat->games;
                 foreach ($gamecats as $gc)
                 {
-                    $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                    if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
+                    {
+                        $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                    }
                 }
             }
 
