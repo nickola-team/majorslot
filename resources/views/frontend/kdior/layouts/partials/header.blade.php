@@ -4,7 +4,7 @@
             <div class="gnb_left">
                 <ul>
                     <li><a href="#" class="casino_1_open"><img src="/frontend/kdior/images/gnb1.png?v=202301301150"></a></li>
-                    <li><a href="#" class="casino_2_open"><img src="/frontend/kdior/images/gnb2.png?v=202301301150"></a></li>
+                    <li><a href="#" class="casino_2_open"><img src="/frontend/kdior/images/gnb4.png?v=202301301150"></a></li>
                     <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/gnb3.png?v=202301301150"></a></li>                           
                 </ul>
             </div>

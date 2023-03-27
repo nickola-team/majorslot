@@ -80,7 +80,52 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $categories = \VanguardLTE\Category::where(['shop_id' => $shop_id, 'view' => 1,'parent' => 0,])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
             }
+
             $hotgames = [];
+            $detect = new \Detection\MobileDetect();
+            $devices = [];
+            if( $detect->isMobile() || $detect->isTablet() ) 
+            {
+                $devices = [
+                    0, 
+                    2
+                ];
+            }
+            else
+            {
+                $devices = [
+                    1, 
+                    2
+                ];
+            }
+
+            //add virtualtech games
+            $virtualtech = \VanguardLTE\Category::where(['href'=> 'virtualtech', 'shop_id'=>0, 'site_id'=>0])->first();
+            if ($virtualtech)
+            {
+                $gamecats = $virtualtech->games()->orderby('game_id', ($shop_id==0)?'desc':'asc')->get();
+                foreach ($gamecats as $gc)
+                {
+                    if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
+                    {
+                        $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                    }
+                }
+            }
+
+            //add aristocrat games
+            $aristocrat = \VanguardLTE\Category::where(['href'=> 'aristocrat', 'shop_id'=>0, 'site_id'=>0])->first();
+            if ($aristocrat)
+            {
+                $gamecats = $aristocrat->games;
+                foreach ($gamecats as $gc)
+                {
+                    if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
+                    {
+                        $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                    }
+                }
+            }
 
             $ppgames = [];
             $livegames = [];

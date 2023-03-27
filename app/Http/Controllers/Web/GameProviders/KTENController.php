@@ -232,7 +232,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response = Http::get($url, $params);
             if (!$response->ok())
             {
-                Log::error('KTENGetLink : Game url request failed. ' . $response->body());
+                Log::error('KTENGetLink : Game url request failed. status=' . $response->status());
+                Log::error('KTENGetLink : Game url request failed. param=' . json_encode($params));
 
                 return null;
             }
@@ -442,6 +443,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
+            if (isset(self::KTEN_GAME_IDENTITY[$gamecode]) && self::KTEN_GAME_IDENTITY[$gamecode]['type']=='casino')
+            {
+                $gamelist = KTENController::getgamelist($gamecode);
+                if (count($gamelist) > 0)
+                {
+                    $gamecode = $gamelist[0]['gamecode'];
+                }
+            }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [KTENController::KTEN_PROVIDER, $gamecode])]];
         }
 
