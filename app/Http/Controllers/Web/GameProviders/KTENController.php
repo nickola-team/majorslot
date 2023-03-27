@@ -232,7 +232,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $response = Http::get($url, $params);
             if (!$response->ok())
             {
-                Log::error('KTENGetLink : Game url request failed. ' . $response->body());
+                Log::error('KTENGetLink : Game url request failed. status=' . $response->status());
+                Log::error('KTENGetLink : Game url request failed. param=' . json_encode($params));
 
                 return null;
             }
