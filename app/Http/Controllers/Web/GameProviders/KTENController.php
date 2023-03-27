@@ -446,7 +446,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (isset(self::KTEN_GAME_IDENTITY[$gamecode]) && self::KTEN_GAME_IDENTITY[$gamecode]['type']=='casino')
             {
                 $gamelist = KTENController::getgamelist($gamecode);
-                if (count($gameList) > 0)
+                if (count($gamelist) > 0)
                 {
                     $gamecode = $gamelist[0];
                 }
