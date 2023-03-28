@@ -187,7 +187,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['cp_game_name_en']),
                         'title' => $korname,
                         'icon' => $game['thumbnail'],
-                        'type' => $type=='casino'?'table':'slot',
+                        'type' => (($type=='casino')?'table':'slot'),
                         'view' => $view
                     ]);
                 }
@@ -203,7 +203,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'name' => 'UnknownGame',
                 'title' => 'UnknownGame',
                 'icon' => '',
-                'type' => 'slot',
+                'type' => (($type=='casino')?'table':'slot'),
                 'view' => 0
             ]);
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -709,7 +709,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'date_time' => $time,
                             'shop_id' => $shop?$shop->shop_id:0,
                             'category_id' => $category?$category->original_id:0,
-                            'game_id' =>  $gameName,
+                            'game_id' =>  $gameObj['gamecode'],
                             'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
                         ]);
                         $count = $count + 1;

@@ -15,8 +15,8 @@
     data-cycle-pager-event="mouseover"
     data-cycle-slides="> a">
       <a href="#"><img src="/frontend/ferrari/images/slideshow1.png?v=202301301150"></a>
-      <a href="#"><img src="/frontend/ferrari/images/slideshow2.png?v=202301301150"></a>
-      <a href="#"><img src="/frontend/ferrari/images/slideshow3.png?v=202301301150"></a>            
+      <a href="#"><img src="/frontend/kdior/images/slideshow2.png?v=202301301150"></a>
+      <a href="#"><img src="/frontend/kdior/images/slideshow3.png?v=202301301150"></a>            
 
       <!-- 화살표 스타일1 -->
       <div class="arrow_wrap">

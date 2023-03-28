@@ -103,7 +103,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $virtualtech = \VanguardLTE\Category::where(['href'=> 'virtualtech', 'shop_id'=>0, 'site_id'=>0])->first();
             if ($virtualtech)
             {
-                $gamecats = $virtualtech->games()->orderby('game_id', ($shop_id==0)?'desc':'asc')->get();
+                $gamecats = $virtualtech->games()->orderby('game_id', 'desc')->get();
                 foreach ($gamecats as $gc)
                 {
                     if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
@@ -415,11 +415,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         public function game_result(\Illuminate\Http\Request $request)
         {
-            if (!\Illuminate\Support\Facades\Auth::check())
+            $username = $request->username;
+            $user = \VanguardLTE\User::where('username', $username)->first();
+            if (!$user)
             {
                 abort(404);
             }
-            $user_id = auth()->user()->id;
+            $user_id = $user->id;
             $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
             $statistics = $statistics->where('stat_game.user_id', $user_id);
             $game_name = $request->gameType;

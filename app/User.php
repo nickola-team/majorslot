@@ -955,7 +955,7 @@ namespace VanguardLTE
                             //error
                             return $deal_data;
                         }
-                        if ($deal_balance > $deal_mileage)
+                        // if ($deal_balance > $deal_mileage)
                         {
                             $deal_data[] = [
                                 'user_id' => $this->id, 

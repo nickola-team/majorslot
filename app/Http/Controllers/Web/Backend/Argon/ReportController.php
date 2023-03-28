@@ -297,11 +297,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $availablePartners = auth()->user()->hierarchyPartners();
                 if ($request->role != '')
                 {
-                    $user = \VanguardLTE\User::where('username', 'like', '%'. $request->partner . '%')->whereIn('id', $availablePartners)->where('role_id',$request->role)->first();
+                    $user = \VanguardLTE\User::where('username', $request->partner)->whereIn('id', $availablePartners)->where('role_id',$request->role)->first();
                 }
                 else
                 {
-                    $user = \VanguardLTE\User::where('username', 'like', '%'. $request->partner . '%')->whereIn('id', $availablePartners)->first();
+                    $user = \VanguardLTE\User::where('username', $request->partner )->whereIn('id', $availablePartners)->first();
                 }
                 if (!$user || !in_array($user->id, $availablePartners))
                 {

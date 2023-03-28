@@ -655,6 +655,7 @@ namespace VanguardLTE\Console
                 $this->info("Begin adding bulk new game to all shop");
                 
                 for ($originalid = $startid; $originalid<$endid; $originalid++){
+                    $this->info("creating  " . $originalid . " game..");
                     $buffgame = \VanguardLTE\Game::where('id', $originalid)->first();
                     if (!$buffgame)
                     {
@@ -670,6 +671,7 @@ namespace VanguardLTE\Console
                             $this->info("Game already exist in " . $id . " shop");
                         }
                         else{
+                            $this->info("=== creating  game at " . $id . " shop");
                             $data['shop_id'] = $id;
                             if ($buffgame->game_win)
                             {
@@ -683,10 +685,12 @@ namespace VanguardLTE\Console
                                 $data['winbonus10'] = $bonus[$number];
                             }
                             $game = \VanguardLTE\Game::create($data);
+                            $this->info("=== creating  gamecategory at " . $id . " shop");
                             $cat = \VanguardLTE\Category::where(['shop_id' => $id, 'original_id' => $categoryid])->first();
                             if ($cat){
                                 \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$cat->id]);
                             }
+                            $this->info("=== done");
                         }
                     }
                 }

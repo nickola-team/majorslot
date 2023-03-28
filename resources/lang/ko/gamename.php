@@ -1132,5 +1132,25 @@ return [
         "goldendancinglion" => "골든 댄싱 라이온",
         "queenofthesun" => "퀸 오브 더 썬",
 
+        "happyfish" =>"해피 피쉬",
+        "sunofegypt3" =>"썬 오브 이집트 3",
+        "caishenwealth" =>"카이셴 웰스",
+        "kingofheroes" =>"더 킹 오브 히어로즈",
+        "eggsofgold" =>"에그즈 오브 골드",
+        "magicapple2" =>"매직 애플 2",
+        "lotuscharm" =>"로투스 참",
+        "aztecfire" =>"아즈텍 파이어",
+        "bigheist" =>"빅 헤이스트",
+        "riogems" =>"리오 젬스",
+        "eyeofgold" =>"아이 오브 골드",
+        "goddessofegypt" =>"가더스 오브 이집트",
+        "dragonwealth" =>"드래곤 웰스",
+        "sunlightprincess" =>"선라이트 프린세스",
+        "scarabriches" =>"스캐럽 리치스",
+        "hitthegold" =>"히트 더 골드!",
+
+        "magicball" =>"매직 볼",
+        "boomgold" =>"붐!붐! 골드!",
+
 
 ];
