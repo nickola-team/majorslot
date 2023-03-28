@@ -227,10 +227,8 @@ namespace VanguardLTE\Games\goldexpressbng
                                 
                                 if(isset($stack[$spin_type]['bagchance'])){
                                     for($i = 0; $i < count($stack[$spin_type]['bagchance']); $i++){
-                                        for($j = 0; $j < 4; $j++){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bagchance'][$i][$j]))){
-                                                $stack[$spin_type]['bagchance'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bagchance'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bagchance'][$i]))){
+                                            $stack[$spin_type]['bagchance'][$i] = str_replace(',', '', $stack[$spin_type]['bagchance'][$i]) * $betline * $DENOMINATOR;
                                         }
                                     }
                                 }
@@ -471,10 +469,8 @@ namespace VanguardLTE\Games\goldexpressbng
                             }
                             if(isset($stack[$spin_type]['bagchance'])){
                                 for($i = 0; $i < count($stack[$spin_type]['bagchance']); $i++){
-                                    for($j = 0; $j < 4; $j++){
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bagchance'][$i][$j]))){
-                                            $stack[$spin_type]['bagchance'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bagchance'][$i][$j]) * $betline * $DENOMINATOR;
-                                        }
+                                    if(is_numeric(str_replace(',', '', $stack[$spin_type]['bagchance'][$i]))){
+                                        $stack[$spin_type]['bagchance'][$i] = str_replace(',', '', $stack[$spin_type]['bagchance'][$i]) * $betline * $DENOMINATOR;
                                     }
                                 }
                             }
