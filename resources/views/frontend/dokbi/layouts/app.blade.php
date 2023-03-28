@@ -97,7 +97,7 @@
 </div>
 
 <div class="wrapper">
-    @include('frontend.iris.layouts.partials.header', ['logo' => 'dokbi'])
+    @include('frontend.dokbi.layouts.partials.header', ['logo' => 'dokbi'])
     @include('frontend.iris.layouts.partials.banner')
     @include('frontend.iris.layouts.partials.category')
     
