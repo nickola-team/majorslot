@@ -631,8 +631,8 @@ namespace VanguardLTE\Games\boomgoldbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                $stack = \VanguardLTE\BNGGameStackModel\BNGGameBoomGoldStack::where('id', 20526)->first();
-                return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBoomGoldStack::where('id', 20526)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
