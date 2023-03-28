@@ -151,7 +151,7 @@ namespace VanguardLTE\Games\MysteryoftheOrientPM
                         $arr_psym = explode(';', $str_psym);
                         for($k = 0; $k < count($arr_psym); $k++){
                             $arr_sub_lines = explode('~', $arr_psym[$k]);
-                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $bet * $betline;
+                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
                             $arr_psym[$k] = implode('~', $arr_sub_lines);
                         }
                         $strOtherResponse = $strOtherResponse . '&psym=' . $str_psym;
