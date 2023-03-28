@@ -203,7 +203,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'name' => 'UnknownGame',
                 'title' => 'UnknownGame',
                 'icon' => '',
-                'type' => 'slot',
+                'type' => (($type=='casino')?'table':'slot'),
                 'view' => 0
             ]);
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
