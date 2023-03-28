@@ -1146,8 +1146,11 @@ return [
         "goddessofegypt" =>"가더스 오브 이집트",
         "dragonwealth" =>"드래곤 웰스",
         "sunlightprincess" =>"선라이트 프린세스",
-        "scarabriches" =>"스래럽 리치스",
+        "scarabriches" =>"스캐럽 리치스",
         "hitthegold" =>"히트 더 골드!",
+
+        "magicball" =>"매직 볼",
+        "boomgold" =>"붐!붐! 골드!",
 
 
 ];
