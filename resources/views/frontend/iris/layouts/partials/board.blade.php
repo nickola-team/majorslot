@@ -27,26 +27,8 @@
                     @if (count($noticelist) > 0)
                     @foreach ($noticelist as $ntc)
                     <tr>
-                        @auth()
-                        <?php
-                            $detect = new \Detection\MobileDetect();
-                            if( $detect->isMobile() || $detect->isTablet() ) 
-                            {
-                                $top = 0;
-                                $left = 0;
-                                $width = 'window.innerWidth';
-                                $height = 'window.innerHeight';
-                            }
-                            else
-                            {
-                                $top = 100;
-                                $left = 100;
-                                $width = 420;
-                                $height = 380;
-                            }
-                        ?>
-                        
-                        <td class="text-left"  onclick="addPopup('popupID{{$ntc->id}}', {{$top}}, {{$left}}, {{$width}}, {{$height}});">
+                        @auth()                        
+                        <td class="text-left"  onclick="boardnotice();">
                         @else
                         <td class="text-left"  onclick="mustSignIn('로그인이 필요한 메뉴입니다.')">
                         @endif
