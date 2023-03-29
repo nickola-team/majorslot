@@ -1,5 +1,5 @@
 @extends('backend.argon.layouts.app')
-@section('page-title',  $type=='add'?'충전':'환전')
+@section('page-title',  $type=='add'?'지급':'회수')
 
 @section('content')
 <div class="container-fluid">
@@ -9,7 +9,7 @@
             <div class="card-header border-0" id="headingOne">
                 <div class="row align-items-center box">
                     <div class="col-8">
-                        <h3 class="mb-0">{{$type=='add'?'충전':'환전'}}</h3>
+                        <h3 class="mb-0">{{$type=='add'?'지급':'회수'}}</h3>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                        {{$type=='add'?'충전':'환전'}}사유
+                        {{$type=='add'?'지급':'회수'}}사유
                         </div>
                         <div class="col-7">
                             <input class="form-control col-8" type="text" value="" id="reason" name="reason">
@@ -88,17 +88,17 @@
                     <div class="form-group row">
                         @if ($type=='add')
                             <div class="col-6 text-center">
-                                <button type="button" class="btn btn-primary col-8" id="doSubmit">충전</button>
+                                <button type="button" class="btn btn-primary col-8" id="doSubmit">지급</button>
                             </div>
                             <div class="col-6 text-center">
                                 <button type="button" class="btn btn-secondary col-8" onclick="location.href='{{$url}}';">취소</button>
                             </div>
                         @else
                             <div class="col-4 text-center">
-                                <button type="button" class="btn btn-warning col-12" id="doSubmit">환전</button>
+                                <button type="button" class="btn btn-warning col-12" id="doSubmit">회수</button>
                             </div>
                             <div class="col-4 text-center">
-                                <button type="button" class="btn btn-danger col-12" id="doOutAll">모두환전</button>
+                                <button type="button" class="btn btn-danger col-12" id="doOutAll">모두회수</button>
                             </div>
                             <div class="col-4 text-center">
                                 <button type="button" class="btn btn-secondary col-12" onclick="location.href='{{$url}}';">취소</button>
