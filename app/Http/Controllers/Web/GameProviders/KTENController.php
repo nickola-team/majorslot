@@ -348,7 +348,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 Log::error('KTENcheckuser : checkUser Exception. Exception=' . $ex->getMessage());
                 Log::error('KTENcheckuser : checkUser Exception. PARAMS=' . json_encode($params));
-                return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
+                return null;
             }
             if ($alreadyUser == 0){
                 //create kten account
@@ -381,7 +381,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     Log::error('KTENcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
                     Log::error('KTENcheckuser : createAccount Exception. PARAMS=' . json_encode($params));
-                    return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
+                    return null;
                 }
             }
             
