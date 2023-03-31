@@ -1084,6 +1084,9 @@ return [
         "MysteryoftheOrient" => "미스테리 오브 더 오리엔트",
         "WildWestDuels" => "와일드 웨스트 두얼스",
 
+        "RabbitGarden" => "래빗 가든",
+        "TheDogHouseMultihold" => "더 도그 하우스 멀티홀드",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",

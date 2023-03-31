@@ -367,6 +367,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
             }
+            if (!class_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller')) 
+            {
+                return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
+            }
             
             $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
            

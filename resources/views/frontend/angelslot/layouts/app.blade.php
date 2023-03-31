@@ -296,7 +296,7 @@
           </div>
           <div class="visual_ling_2"></div>
           <div class="visual_wrap" style="background: url(/frontend/angelslot/images/visual_bg.jpg) center top no-repeat;!important;">
-          <div id="wrap-casino" style=" text-align: right; padding: 10px; margin-right:450px;">
+          <div id="wrap-casino" style=" text-align: right; padding: 10px; margin-right:450px;height:380px;">
           @if ($categories && count($categories))
             <?php 
               $livecats = [];
