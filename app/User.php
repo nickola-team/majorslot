@@ -611,7 +611,7 @@ namespace VanguardLTE
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
                 ]);
-            } */
+            } 
             if( $payeer->hasRole('agent') && (!$this->hasRole('distributor') && !$this->hasRole('user')) ) 
             {
                 return json_encode([
@@ -632,7 +632,7 @@ namespace VanguardLTE
                     'status' => 'error', 
                     'message' => trans('app.wrong_user')
                 ]);
-            }
+            }*/
             if( !$summ ) 
             {
                 return json_encode([
