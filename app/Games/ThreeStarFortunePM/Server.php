@@ -391,7 +391,7 @@ namespace VanguardLTE\Games\ThreeStarFortunePM
                 {
                     $spinType = 'c';
                     $slotSettings->SetBalance($totalWin);
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    $slotSettings->SetBank('', -1 * $totalWin);
                 }
                 $_obf_totalWin = $totalWin;
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $rs_p);
