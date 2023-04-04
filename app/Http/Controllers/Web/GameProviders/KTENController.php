@@ -547,11 +547,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $win = 0;
                         $gameName = $round['gameId'];
                         $thirdname = $round['cp_name'];
-                        if ($thirdname == 'Og')
+                        $gameObj = self::getGameObj($gameName);
+                        
+                        if ($thirdname == 'Og' && !$gameObj)
                         {
                             $gameName = 'ogplus_' . $gameName;
+                            $gameObj = self::getGameObj($gameName);
                         }
-                        $gameObj = self::getGameObj($gameName);
+                        
                         if (!$gameObj)
                         {
                             
