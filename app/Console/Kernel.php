@@ -666,7 +666,8 @@ namespace VanguardLTE\Console
                     $data = $buffgame->toArray();
                     foreach ($shop_ids as $id)
                     {
-                        if (\VanguardLTE\Game::where(['shop_id'=> $id, 'original_id' => $originalid])->first())
+                        $game = \VanguardLTE\Game::where(['shop_id'=> $id, 'original_id' => $originalid])->first();
+                        if ($game)
                         {
                             $this->info("Game already exist in " . $id . " shop");
                         }
@@ -685,13 +686,19 @@ namespace VanguardLTE\Console
                                 $data['winbonus10'] = $bonus[$number];
                             }
                             $game = \VanguardLTE\Game::create($data);
-                            $this->info("=== creating  gamecategory at " . $id . " shop");
-                            $cat = \VanguardLTE\Category::where(['shop_id' => $id, 'original_id' => $categoryid])->first();
-                            if ($cat){
-                                \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$cat->id]);
-                            }
-                            $this->info("=== done");
+                            
+                            
                         }
+                        $this->info("=== creating  gamecategory at " . $id . " shop");
+                        $cat = \VanguardLTE\Category::where(['shop_id' => $id, 'original_id' => $categoryid])->first();
+                        if ($cat){
+                            $gcat = \VanguardLTE\GameCategory::where(['game_id'=>$game->id, 'category_id'=>$cat->id])->first();
+                            if (!$gcat)
+                            {
+                                $gcat = \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$cat->id]);
+                            }
+                        }
+                        $this->info("=== done");
                     }
                 }
                 $this->info('End');
