@@ -27,6 +27,42 @@
                         <span class="nav-link-text text-white">대시보드</span>
                     </a>
                 </li>
+                @if (auth()->user()->isInoutPartner())
+                <hr class="my-0 sidebar-hr">
+                <li class="nav-item">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'agent') ? 'active' : '' }}" href="#navbar-agents" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-agents">
+                        <i class="ni ni-single-02 text-white"></i>
+                        <span class="nav-link-text text-white">받치기</span>
+                    </a>
+                    <div class="collapse {{  (isset($parentSection) && $parentSection == 'agent') ? 'show' : '' }}" id="navbar-agents">
+                    <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기설정
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기게임내역
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기일별정산
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기게임별정산
+                        </a>
+                    </li>
+                    </div>
+                </li>
+                @endif
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link {{ (isset($parentSection) && $parentSection == 'agent') ? 'active' : '' }}" href="#navbar-agents" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-agents">
