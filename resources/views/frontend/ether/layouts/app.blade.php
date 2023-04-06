@@ -19,6 +19,21 @@
     <link rel="stylesheet" href="/frontend/iris/theme/sp/css/style.css?v=1673872993">
     <link rel="stylesheet" href="/frontend/iris/css/loader.css?v=1649740588">    
     <link rel="stylesheet" href="/frontend/iris/theme/sp/css/fdsi_common.css"> 
+    <style>
+        
+    @media(max-width:1100px){
+        .nav-main .nav-center .logo{
+            margin-right:0px;
+            position:absolute;
+            left:0;
+            right:0;
+            margin-left:auto;
+            margin-top:0px;
+            z-index:0;
+            height: 100%;
+        }
+    }
+    </style>
 
     <script type="text/javascript" src="/frontend/iris/theme/sp/js/fdsi.min.js?v=1673873466"></script>
 
