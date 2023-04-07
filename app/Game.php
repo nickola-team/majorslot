@@ -641,6 +641,7 @@ namespace VanguardLTE
             'fish' => 'Fish'
         ];
         public $divBanks = [500, 1000, 2000, 5000];
+        public $limitBonusMoney = 500;
         public static function boot()
         {
             parent::boot();
