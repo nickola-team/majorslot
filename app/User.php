@@ -879,6 +879,7 @@ namespace VanguardLTE
             $ggr_percent = 0;
 
             $deal_data = [];
+            $share_data = [];
             $deal_percent = $this->{$deal_field[$type]};
             if ($deal_percent > 0) //user can get deal percent
             {
@@ -1064,7 +1065,7 @@ namespace VanguardLTE
                 }
             }
             else
-            {            
+            {
                 $deal_data = $this->getDealData($betMoney, $winMoney, $type, $stat_game);
                 if (count($deal_data) > 0)
                 {

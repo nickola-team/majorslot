@@ -92,7 +92,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     }
                 }
             }
-            return redirect()->back()->withSuccess(['받치기 설정을 업데이트했습니다']);
+            return redirect()->to(argon_route('argon.share.index'))->withSuccess(['받치기 설정을 업데이트했습니다']);
 
         }
         public function convert_deal(\Illuminate\Http\Request $request)
