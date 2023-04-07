@@ -458,8 +458,8 @@ namespace VanguardLTE\Games\blackwolfbng
                     }
                     if($newMoneyCount > 0){
                         $moneyCount = $moneyCount + $newMoneyCount;
-                        if($moneyCount > 129){
-                            $moneyCount = 129;
+                        if($moneyCount > 130){
+                            $moneyCount = 130;
                         }
                         $slotSettings->SetGameData($slotSettings->slotId . 'MoneyCount', $moneyCount);
                     }
