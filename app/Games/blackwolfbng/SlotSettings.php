@@ -627,15 +627,18 @@ namespace VanguardLTE\Games\blackwolfbng
            $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
         public function GetAchievements($moneyCount){
-            $totalPercent = number_format($moneyCount / 130, 3);
             $number = $moneyCount;
+            if($moneyCount > 130){
+                return ['level'=> 4, 'level_percent'=> 1, 'number'=> $number, 'total_percent'=> 1];
+            }
+            $totalPercent = number_format($moneyCount / 130, 3);
             $levels = [0, 20, 40, 85, 130];
             $level = 0;
             $levelPercent = 0;
             if($moneyCount > 0){
                 for($k = 0; $k < 5; $k++){
                     if($levels[$k] >= $moneyCount){
-                        $level = $k-1;
+                        $level = $k;
                         $levelPercent = number_format(($moneyCount - $levels[$k - 1]) / $levels[$k], 3);
                         break;
                     }
