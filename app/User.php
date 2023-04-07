@@ -918,7 +918,7 @@ namespace VanguardLTE
                     if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                     {
                         //error
-                        return $deal_data;
+                        return ['deal' => $deal_data, 'share' => $share_data];
                     }
                     $deal_data[] = [
                         'user_id' => $this->id, 
@@ -986,10 +986,33 @@ namespace VanguardLTE
                 if ($partner!=null && $partner->{$deal_field[$type]} < $deal_percent  )
                 {
                     //error
-                    return [];
+                    return ['deal' => [], 'share' => []];
+                }
+                $sharebetinfo = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id, 'category_id' => $category_id])->first();
+                if ($sharebetinfo && $sharebetinfo->minlimit>0 && $sharebetinfo->minlimit < $betMoney)
+                {
+                    $share_data = [
+                        'user_id' => $this->id, 
+                        'date_time' => $date_time, 
+                        'game' => $game,
+                        'partner_id'=> $partner->id,
+                        'share_id'=> $partner->parent_id,
+                        'bet'=> $betMoney,
+                        'win' => $winMoney,
+                        'minlimit' => $sharebetinfo->minlimit,
+                        'sharebet'=> $betMoney-$sharebetinfo->minlimit,
+                        'sharewin'=> $winMoney - $winMoney * $sharebetinfo->minlimit / $betMoney,
+                        'deal_percent'=> $deal_percent,
+                        'deal_profit' => $deal_balance,
+                        'deal_share' => $deal_balance - $deal_percent * $sharebetinfo->minlimit / 100,
+                        'shop_id'=> $this->shop_id,
+                        'category_id'=> $category_id,
+                        'game_id' => $game_id,
+                    ];
+
                 }
             }
-            return $deal_data;
+            return ['deal' => $deal_data, 'share' => $share_data];
         }
 
         public function processBetDealerMoney_Queue($stat_game) 
@@ -1058,7 +1081,7 @@ namespace VanguardLTE
                         $type = 'pbcomb';
                     }
                     $deal_data = $this->getDealData($betMoney, $winMoney, $type, $stat_game);
-                    if (count($deal_data) > 0)
+                    if (isset($deal_data['deal']) && count($deal_data['deal']) > 0)
                     {
                         \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
                     }
@@ -1067,7 +1090,7 @@ namespace VanguardLTE
             else
             {
                 $deal_data = $this->getDealData($betMoney, $winMoney, $type, $stat_game);
-                if (count($deal_data) > 0)
+                if (isset($deal_data['deal']) && count($deal_data['deal']) > 0)
                 {
                     \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
                 }
