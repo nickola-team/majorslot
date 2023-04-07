@@ -138,14 +138,14 @@ namespace VanguardLTE\Games\MysteryoftheOrientPM
                         $strOtherResponse = $strOtherResponse. '&g={fs_h3:{reel_set:"1"},fs_h4:{reel_set:"2"},fs_h5:{reel_set:"3"},fs_h6:{reel_set:"4"}}';
                     }
                     if($strWinLine != ''){
-                        $arr_lines = explode('&', $strWinLine);
+                        $arr_lines = explode(';', $strWinLine);
                         for($k = 0; $k < count($arr_lines); $k++){
                             $arr_sub_lines = explode('~', $arr_lines[$k]);
                             $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
                             $arr_lines[$k] = implode('~', $arr_sub_lines);
                         }
-                        $strWinLine = implode('&', $arr_lines);
-                        $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
+                        $strWinLine = implode(';', $arr_lines);
+                        $strOtherResponse = $strOtherResponse . '&wlc_v=' . $strWinLine;
                     }
                     if($str_psym != ''){
                         $arr_psym = explode(';', $str_psym);

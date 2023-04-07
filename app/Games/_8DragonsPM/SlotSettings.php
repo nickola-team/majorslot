@@ -742,7 +742,7 @@ namespace VanguardLTE\Games\_8DragonsPM
                     if($ind > -1){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                     }else{
-                        if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                        if($bet > $this->game->limitBonusMoney && $limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                             $this->game->garant_bonus3 = 0;
                             $win = explode(',', $this->game->game_win->winbonus3);
