@@ -732,7 +732,7 @@ namespace VanguardLTE\Games\TheGreatStickupPM
                     }else{
                         $index = mt_rand(0, 83000);
                     }
-                    if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                    if($bet > $this->game->limitBonusMoney && $limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         $this->game->garant_bonus3 = 0;
                         $win = explode(',', $this->game->game_win->winbonus3);
