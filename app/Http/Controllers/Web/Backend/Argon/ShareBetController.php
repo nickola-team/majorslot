@@ -101,6 +101,50 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function gamestat(\Illuminate\Http\Request $request)
         {
+            $user = auth()->user();
+            $sharebetlogs = \VanguardLTE\ShareBetLog::orderBy('date_time', 'desc');
+            $start_date = date("Y-m-d H:i:s", strtotime("-1 days"));
+            $end_date = date("Y-m-d H:i:s");
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $sharebetlogs = $sharebetlogs->where('date_time', '>=', $start_date);
+            $sharebetlogs = $sharebetlogs->where('date_time', '<=', $end_date );
+
+            if ($request->player != '')
+            {
+                $statistics = $statistics->where('users.username', 'like', '%' . $request->player . '%');
+            }
+            if ($request->game != '')
+            {
+                $statistics = $statistics->where('stat_game.game', 'like', '%'. $request->game . '%');
+            }
+
+            if( $request->win_from != '' ) 
+            {
+                $statistics = $statistics->where('stat_game.win', '>=', $request->win_from);
+            }
+            if( $request->win_to != '' ) 
+            {
+                $statistics = $statistics->where('stat_game.win', '<=', $request->win_to);
+            }
+            
+            if ($request->shop != '')
+            {
+                $shop_ids = \VanguardLTE\Shop::where('name', 'like', '%' . $request->shop . '%')->whereIn('id', $availableShops)->pluck('id')->toArray();
+                if (count($shop_ids) > 0) 
+                {
+                    $availableShops = $shop_ids;
+                }
+                else
+                {
+                    $availableShops = [-1];
+                }
+            }
+
 
         }
 

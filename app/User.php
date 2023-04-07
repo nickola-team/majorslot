@@ -879,7 +879,7 @@ namespace VanguardLTE
             $ggr_percent = 0;
 
             $deal_data = [];
-            $share_data = [];
+            $share_data = null;
             $deal_percent = $this->{$deal_field[$type]};
             if ($deal_percent > 0) //user can get deal percent
             {
@@ -954,7 +954,7 @@ namespace VanguardLTE
                         if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                         {
                             //error
-                            return $deal_data;
+                            return ['deal' => $deal_data, 'share' => $share_data];
                         }
                         // if ($deal_balance > $deal_mileage)
                         {
@@ -986,7 +986,7 @@ namespace VanguardLTE
                 if ($partner!=null && $partner->{$deal_field[$type]} < $deal_percent  )
                 {
                     //error
-                    return ['deal' => [], 'share' => []];
+                    return ['deal' => [], 'share' => null];
                 }
                 $sharebetinfo = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id, 'category_id' => $category_id])->first();
                 if ($sharebetinfo && $sharebetinfo->minlimit>0 && $sharebetinfo->minlimit < $betMoney)

@@ -146,13 +146,15 @@ class UpdateDeal implements ShouldQueue
         if (isset($this->deal_data['share']))
         {
             $sharejobData = $this->deal_data['share'];
-            $partner = \VanguardLTE\User::lockForUpdate()->where('id', $sharejobData['partner_id'])->first();
-            $partner->update(
-                [
-                    'deal_balance' => $partner->deal_balance + $deal['deal_share'], 
-                ]
-                );
-            \VanguardLTE\ShareBetLog::insert($sharejobData);
+            if ($sharejobData){
+                $partner = \VanguardLTE\User::lockForUpdate()->where('id', $sharejobData['partner_id'])->first();
+                $partner->update(
+                    [
+                        'deal_balance' => $partner->deal_balance + $sharejobData['deal_share'], 
+                    ]
+                    );
+                \VanguardLTE\ShareBetLog::insert($sharejobData);
+            }
         }
 
     }
