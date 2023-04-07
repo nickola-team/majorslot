@@ -1317,6 +1317,11 @@ namespace VanguardLTE
             return $this->hasMany('VanguardLTE\Info', 'user_id');
         }
 
+        public function sharebetinfo()
+        {
+            return $this->hasMany('VanguardLTE\ShareBetInfo', 'partner_id');
+        }
+
         public function isLoggedIn()
         {
             $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;

@@ -39,11 +39,25 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'DashboardController@index',
         ]);
 
-        //share route
-        Route::get('/share/setting', [
+        //sharebet route
+        Route::get('/share/list', [
             'as' => 'argon.share.index',
             'uses' => 'ShareBetController@index',
         ]);
+        Route::get('/share/setting', [
+            'as' => 'argon.share.setting',
+            'uses' => 'ShareBetController@setting',
+        ]);
+        Route::post('/share/setting', [
+            'as' => 'argon.share.setting.post',
+            'uses' => 'ShareBetController@setting_store',
+        ]);
+
+        Route::get('/share/rolling/convert', [
+            'as' => 'argon.share.rolling.convert',
+            'uses' => 'ShareBetController@convert_deal',
+        ]);
+
         Route::get('/share/gamestat', [
             'as' => 'argon.share.gamestat',
             'uses' => 'ShareBetController@gamestat',

@@ -107,8 +107,7 @@
                 <th scope="col">보유금</th>
                 <th scope="col">받치기롤링금</th>
                 <th scope="col">받치기상위</th>
-                <th scope="col">받치기적용최소베팅금</th>
-                <th scope="col">받치기적용게임사</th>
+                <th scope="col">받치기상태</th>
                 <th></th>
                 </tr>
             </thead>

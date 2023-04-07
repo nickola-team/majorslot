@@ -37,7 +37,11 @@
                     <div class="collapse {{  (isset($parentSection) && $parentSection == 'share') ? 'show' : '' }}" id="navbar-share">
                     <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
+                        @if (auth()->user()->hasRole('comaster'))
+                        <a class="nav-link  text-white" href="{{argon_route('argon.share.setting')}}">
+                        @else
                         <a class="nav-link  text-white" href="{{argon_route('argon.share.index')}}">
+                        @endif
                             <i class="far fa-circle text-white sub-i"></i>
                             받치기설정
                         </a>
