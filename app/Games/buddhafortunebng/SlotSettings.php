@@ -549,7 +549,7 @@ namespace VanguardLTE\Games\buddhafortunebng
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < (5 * $bet)) 
+                if( $currentbank < (15 * $bet)) 
                 {
                     $return = [
                         'none', 
@@ -665,7 +665,7 @@ namespace VanguardLTE\Games\buddhafortunebng
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($bet > $this->game->limitBonusMoney && $limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                    if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         $this->game->garant_bonus3 = 0;
                         $win = explode(',', $this->game->game_win->winbonus3);

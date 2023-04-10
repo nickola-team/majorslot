@@ -459,9 +459,6 @@ namespace VanguardLTE\Games\aztecfirebng
                     }
                     if($newMoneyCount > 0){
                         $moneyCount = $moneyCount + $newMoneyCount;
-                        if($moneyCount > 129){
-                            $moneyCount = 129;
-                        }
                         $slotSettings->SetGameData($slotSettings->slotId . 'MoneyCount', $moneyCount);
                     }
                     if( $totalWin > 0) 
