@@ -331,8 +331,32 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     if ($parent!=null &&  isset($data[$dealtype]) && $parent->{$dealtype} < $data[$dealtype])
                     {
-                        return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+                        return redirect()->back()->withErrors(['롤링는 상위에이전트보다 클수 없습니다']);
                     }
+                }
+            }
+            if (!$user->hasRole('user'))
+            {
+                $childs = $user->childPartners();
+                if (count($childs) > 0)
+                {
+                    $highRateUsers = \VanguardLTE\User::whereIn('id', $childs)->where('deal_percent', '>', $data['deal_percent'])->get();
+
+                    if (count($highRateUsers) > 0)
+                    {
+                        $firstUser = $highRateUsers->first();
+                        return redirect()->back()->withErrors([$firstUser->username . '을 포함한 ' . count($highRateUsers) . '명의 하위파트너 롤링이 설정하려는 롤링보다 큽니다']);
+                    }
+
+                    $highRateUsers = \VanguardLTE\User::whereIn('id', $childs)->where('table_deal_percent', '>', $data['table_deal_percent'])->get();
+
+                    if (count($highRateUsers) > 0)
+                    {
+                        $firstUser = $highRateUsers->first();
+                        return redirect()->back()->withErrors([$firstUser->username . '을 포함한 ' . count($highRateUsers) . '명의 하위파트너 라이브롤링이 설정하려는 롤링보다 큽니다']);
+                    }
+
+
                 }
             }
             if ($user->hasRole('manager'))
