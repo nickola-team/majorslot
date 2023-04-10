@@ -988,7 +988,7 @@ namespace VanguardLTE
                     //error
                     return ['deal' => [], 'share' => null];
                 }
-                $sharebetinfo = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id, 'category_id' => $category_id])->first();
+                $sharebetinfo = null;//\VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id, 'category_id' => $category_id])->first();
                 if ($sharebetinfo && $sharebetinfo->minlimit>0 && $sharebetinfo->minlimit < $betMoney)
                 {
                     $share_data = [
