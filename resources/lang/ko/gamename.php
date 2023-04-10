@@ -1156,7 +1156,10 @@ return [
         "boomgold" =>"붐!붐! 골드!",
 
         "bookofwizardcrystal" => "북 오브 위자드 크리스탈 찬스",
-        "stickypiggy" => "스티키 피기"
+        "stickypiggy" => "스티키 피기",
+
+        "yohogold" => "요-호 골드!",
+        "mayasun" => "마야 썬",
 
 
 ];
