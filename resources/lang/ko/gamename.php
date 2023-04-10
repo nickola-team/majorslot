@@ -1087,6 +1087,9 @@ return [
         "RabbitGarden" => "래빗 가든",
         "TheDogHouseMultihold" => "더 도그 하우스 멀티홀드",
 
+        "FruitsoftheAmazon" => "후르츠 오브 더 아마존",
+        "TheKnightKing" => "더 나이트 킹",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
