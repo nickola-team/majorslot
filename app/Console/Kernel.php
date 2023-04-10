@@ -70,6 +70,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
                 \VanguardLTE\GACTransaction::where('date_time', '<', $start_date)->delete();
                 \VanguardLTE\PPGameLog::where('time', '<', $start_date)->delete();
+                \VanguardLTE\BNGGameLog::where('time', '<', $start_date)->delete();
 
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-90 days"));
