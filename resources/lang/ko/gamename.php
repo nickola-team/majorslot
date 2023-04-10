@@ -1119,7 +1119,7 @@ return [
         "thunderofolympus" => "썬더 오브 올림푸스",
         "scarabtemple" => "스캐럽 템플",
         "sunofegypt2" => "썬 오브 이집트 2",
-        "_3coins" => "3 코인스",
+        "3coins" => "3 코인스",
         "superrichgod" => "슈퍼 리치 갓",
         "magicapple" => "매직 애플",
         "wukong" => "우공",
