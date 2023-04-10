@@ -1087,6 +1087,9 @@ return [
         "RabbitGarden" => "래빗 가든",
         "TheDogHouseMultihold" => "더 도그 하우스 멀티홀드",
 
+        "FruitsoftheAmazon" => "후르츠 오브 더 아마존",
+        "TheKnightKing" => "더 나이트 킹",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1119,7 +1122,7 @@ return [
         "thunderofolympus" => "썬더 오브 올림푸스",
         "scarabtemple" => "스캐럽 템플",
         "sunofegypt2" => "썬 오브 이집트 2",
-        "_3coins" => "3 코인스",
+        "3coins" => "3 코인스",
         "superrichgod" => "슈퍼 리치 갓",
         "magicapple" => "매직 애플",
         "wukong" => "우공",
@@ -1156,7 +1159,10 @@ return [
         "boomgold" =>"붐!붐! 골드!",
 
         "bookofwizardcrystal" => "북 오브 위자드 크리스탈 찬스",
-        "stickypiggy" => "스티키 피기"
+        "stickypiggy" => "스티키 피기",
+
+        "yohogold" => "요-호 골드!",
+        "mayasun" => "마야 썬",
 
 
 ];
