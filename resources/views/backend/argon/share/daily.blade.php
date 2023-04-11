@@ -2,7 +2,7 @@
         'parentSection' => 'share',
         'elementName' => 'share-game'
     ])
-@section('page-title',  '받치기 게임내역')
+@section('page-title',  '받치기 일별정산')
 @section('content-header')
 <div class="row">
     <div class="col-xl-2 col-lg-2">
@@ -91,6 +91,23 @@
             </div>
         </div>
     </div>
+    <div class="col-xl-2 col-lg-2">
+        <div class="card card-stats  mb-xl-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col ">
+                        <h3 class="card-title text-dark mb-0 ">롤링전환</h3>
+                        <span class="h2 font-weight-bold mb-0 text-dark">{{number_format($total['dealout'])}}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-dark text-white rounded-circle shadow">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 @endsection
@@ -114,37 +131,7 @@
             <div id="collapseOne" class="collapse show">
                 <div class="card-body">
                     <form action="" method="GET" >
-                        <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
-                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">유저이름</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('player')}}" id="player"  name="player">
-                            </div>
-                            <label for="game" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
-                            </div>
-
-                            <div class="col-md-1">
-                            </div>
-                        </div>
                         
-                        <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
-                            <label for="win_from" class="col-md-2 col-form-label form-control-label text-center">최소당첨금</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('win_from')}}" id="win_from"  name="win_from">
-                            </div>
-                            <label for="win_to" class="col-md-2 col-form-label form-control-label text-center">최대당첨금</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('win_to')}}" id="win_to"  name="win_to">
-                            </div>
-
-                            <div class="col-md-1">
-                            </div>
-                        </div>
                         @if (!auth()->user()->hasRole('comaster'))
                         <div class="form-group row">
                             <div class="col-md-1">
@@ -157,17 +144,17 @@
                         @endif
 
                         <div class="form-group row">
-                            <div class="col-md-1">
+                                <div class="col-md-1">
+                                </div>
+                                <label for="dates" class="col-md-2 col-form-label form-control-label text-center">기간선택</label>
+                                <div class="col-md-2">
+                                <input class="form-control" type="date" value="{{Request::get('dates')[0]??date('Y-m-d', strtotime('-1 days'))}}" id="dates" name="dates[]">
+                                </div>
+                                <label for="dates" class="col-form-label form-control-label" >~</label>
+                                <div class="col-md-2">
+                                <input class="form-control" type="date" value="{{Request::get('dates')[1]??date('Y-m-d')}}" id="dates" name="dates[]">
+                                </div>
                             </div>
-                            <label for="dates" class="col-md-2 col-form-label form-control-label text-center">배팅시간</label>
-                            <div class="col-md-2">
-                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[0]??date('Y-m-d\TH:i', strtotime('-1 days'))}}" id="dates" name="dates[]">
-                            </div>
-                            <label for="dates" class="col-form-label form-control-label" >~</label>
-                            <div class="col-md-2">
-                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[1]??date('Y-m-d\TH:i')}}" id="dates" name="dates[]">
-                            </div>
-                        </div>
                             
                         <div class="form-group row">
                             <div class="col-md-1">
@@ -189,43 +176,40 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">받치기 게임내역</h3>
+        <h3 class="mb-0">받치기 일별정산</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush">
             <thead class="thead-light">
                 <tr>
-                <th scope="col">유저</th>
                 <th scope="col">파트너이름</th>
-                <th scope="col">받치기상위</th>
-                <th scope="col">게임사</th>
-                <th scope="col">게임명</th>
+                <th scope="col">날짜</th>
+                <!-- <th scope="col">게임사</th> -->
                 <th scope="col">배팅금</th>
                 <th scope="col">당첨금</th>
-                <th scope="col">롤링</th>
+                <th scope="col">벳원금</th>
                 <th scope="col">롤링금</th>
 
+                <th scope="col">롤링전환</th>
 
-                <th scope="col">배팅시간</th>
-                <th scope="col">배팅상세</th>
                 </tr>
             </thead>
             <tbody class="list">
-                @if (count($sharebetlogs) > 0)
-                    @foreach ($sharebetlogs as $stat)
+                @if (count($summary) > 0)
+                    @foreach ($summary as $adjustment)
                         <tr>
-                            @include('backend.argon.share.partials.row_game')
+                            @include('backend.argon.share.partials.row_daily')
                         </tr>
                     @endforeach
                 @else
-                    <tr><td colspan="11">{{__('No Data')}}</td></tr>
+                    <tr><td colspan="10">{{__('No Data')}}</td></tr>
                 @endif
             </tbody>
             </table>
     </div>
     <!-- Card footer -->
     <div class="card-footer py-4">
-        {{ $sharebetlogs->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
+        {{ $summary->withQueryString()->links('backend.argon.vendor.pagination.argon') }}
     </div>
     </div>
 </div>

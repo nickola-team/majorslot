@@ -193,11 +193,58 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             return view('backend.argon.share.game', compact('sharebetlogs','total'));
 
-
         }
 
         public function report_daily(\Illuminate\Http\Request $request)
         {
+            $users = [auth()->user()->id];
+            if (auth()->user()->hasRole('admin'))
+            {
+                $users = auth()->user()->childPartners();
+            }
+            $user = null;
+            if ($request->partner != '')
+            {
+                $availablePartners = auth()->user()->hierarchyPartners();
+                $partners = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->whereIn('id', $availablePartners)->pluck('id')->toArray();
+                if (count($partners) == 0)
+                {
+                    $partners = [-1];
+                }
+                $users = $partners;
+            }
+
+            
+            $start_date = date("Y-m-d");
+            $end_date = date("Y-m-d");
+            if ($request->dates != '')
+            {
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+
+            if (!auth()->user()->hasRole('admin'))
+            {
+                $d = strtotime($start_date);
+                if ($d < strtotime("-30 days"))
+                {
+                    $start_date = date("Y-m-d",strtotime("-30 days"));
+                }
+            }
+
+            $summary = \VanguardLTE\ShareBetSummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
+            $total = [
+                'bet' => $summary->sum('bet'),
+                'win' => $summary->sum('win'),
+                'deallimit' => $summary->sum('deal_limit'),
+                'sharebet' => $summary->sum('bet') - $summary->sum('betlimit'),
+                'sharewin' => $summary->sum('win') - $summary->sum('winlimit'),
+                'sharedeal' => $summary->sum('deal_share'),
+                'dealout' => $summary->sum('deal_out'),
+            ];
+            $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
+            $summary = $summary->paginate(31);
+            return view('backend.argon.share.daily', compact('summary','total'));
 
         }
 
