@@ -66,6 +66,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.share.report.daily',
             'uses' => 'ShareBetController@report_daily',
         ]);
+        Route::get('/share/report/childdaily', [
+            'as' => 'argon.share.report.childdaily',
+            'uses' => 'ShareBetController@report_childdaily',
+        ]);
         Route::get('/share/report/game', [
             'as' => 'argon.share.report.game',
             'uses' => 'ShareBetController@report_game',

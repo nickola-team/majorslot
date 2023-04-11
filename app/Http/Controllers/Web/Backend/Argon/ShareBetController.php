@@ -194,6 +194,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             return view('backend.argon.share.game', compact('sharebetlogs','total'));
 
         }
+        public function report_childdaily(\Illuminate\Http\Request $request, $argon)
+        {
+            $parent_id = $request->id;
+            $param = explode('~', $parent_id);
+            if(!is_array($param) || count($param) < 2){
+                return redirect()->back()->withErrors('찾을수 없습니다.');
+            }
+            $user_id = $param[0];
+            $date = $param[1];
+            $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors('찾을수 없습니다.');
+            }
+            $users = $user->childPartners();
+
+            $summary = \VanguardLTE\ShareBetSummary::where('date', '=', $date)->whereIn('user_id', $users);
+            
+            $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
+            $summary = $summary->get();
+            return view('backend.argon.share.partials.childs_daily', compact('summary', 'parent_id'));
+        }
 
         public function report_daily(\Illuminate\Http\Request $request)
         {

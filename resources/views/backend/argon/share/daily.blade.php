@@ -3,6 +3,13 @@
         'elementName' => 'share-game'
     ])
 @section('page-title',  '받치기 일별정산')
+
+@push('css')
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
+<link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@endpush
+
+
 @section('content-header')
 <div class="row">
     <div class="col-xl-2 col-lg-2">
@@ -179,7 +186,7 @@
         <h3 class="mb-0">받치기 일별정산</h3>
     </div>
     <div class="table-responsive">
-            <table class="table align-items-center table-flush">
+            <table class="table align-items-center table-flush" id="dailylist">
             <thead class="thead-light">
                 <tr>
                 <th scope="col">파트너이름</th>
@@ -198,7 +205,7 @@
                 @if (count($summary) > 0)
                     @foreach ($summary as $adjustment)
                         <tr>
-                            @include('backend.argon.share.partials.row_daily')
+                            @include('backend.argon.share.partials.childs_daily')
                         </tr>
                     @endforeach
                 @else
@@ -206,6 +213,9 @@
                 @endif
             </tbody>
             </table>
+    </div>
+    <div id="waitAjax" class="loading" style="margin-left: 0px; display:none;">
+        <img src="{{asset('back/argon')}}/img/theme/loading.gif">
     </div>
     <!-- Card footer -->
     <div class="card-footer py-4">
@@ -215,3 +225,30 @@
 </div>
 </div>
 @stop
+
+@push('js')
+<script src="{{ asset('back/argon') }}/js/jquery.treetable.js"></script>
+<script>
+    var table = $("#dailylist");
+    $("#dailylist").treetable({ 
+        expandable: true ,
+        onNodeCollapse: function() {
+            var node = this;
+            table.treetable("unloadBranch", node);
+        },
+        onNodeExpand: function() {
+            var node = this;
+            table.treetable("unloadBranch", node);
+            $('#waitAjax').show();
+            $.ajax({
+                async: true,
+                url: "{{argon_route('argon.share.report.childdaily')}}?id="+node.id
+                }).done(function(html) {
+                    var rows = $(html).filter("tr");
+                    table.treetable("loadBranch", node, rows);
+                    $('#waitAjax').hide();
+            });
+        }
+    });
+</script>
+@endpush
