@@ -15,7 +15,6 @@ namespace VanguardLTE\Games\_5RabbitsMegawaysPM
         public $Balance = null;
         public $GambleType = null;
         public $Jackpots = [];
-        public $keyController = null;
         public $slotViewState = null;
         public $hideButtons = null;
         public $slotFreeCount = null;
@@ -641,6 +640,13 @@ namespace VanguardLTE\Games\_5RabbitsMegawaysPM
                     'win', 
                     $currentbank
                 ];
+                if( $currentbank < $bet / 2) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
