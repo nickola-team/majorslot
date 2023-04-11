@@ -714,6 +714,13 @@ namespace VanguardLTE\Games\Dragons888PM
                     'win', 
                     $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032
                 ];
+                if( $_obf_0D5C330B390E2B18235C030D36342F03311A2118233032 < $bet / 2) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {

@@ -820,6 +820,13 @@ namespace VanguardLTE\Games\_5LionsPM
                     'win', 
                     $_obf_currentbank
                 ];
+                if( $_obf_currentbank < $bet / 2) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'doSpin' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
