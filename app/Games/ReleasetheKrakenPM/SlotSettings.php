@@ -992,6 +992,13 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     'win', 
                     $_obf_currentbank
                 ];
+                if( $_obf_currentbank < $bet / 2) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
