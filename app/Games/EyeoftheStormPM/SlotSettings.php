@@ -644,6 +644,13 @@ namespace VanguardLTE\Games\EyeoftheStormPM
                     'win', 
                     $currentbank
                 ];
+                if( $currentbank < $bet / 2) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {

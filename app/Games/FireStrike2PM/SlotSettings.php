@@ -641,6 +641,13 @@ namespace VanguardLTE\Games\FireStrike2PM
                     'win', 
                     $currentbank
                 ];
+                if( $currentbank < $bet / 2) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
@@ -732,7 +739,7 @@ namespace VanguardLTE\Games\FireStrike2PM
                     }else{
                         $index = mt_rand(0, 29000);
                     }
-                    if($bet > $this->game->limitBonusMoney && $limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                    if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         $this->game->garant_bonus3 = 0;
                         $win = explode(',', $this->game->game_win->winbonus3);
