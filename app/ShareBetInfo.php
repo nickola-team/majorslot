@@ -8,9 +8,19 @@ namespace VanguardLTE
             'partner_id', 
             'share_id', 
             'minlimit', 
+            'limit_info',
             'category_id', 
         ];
         public $timestamps = false;
+        const BET_TYPES = [
+            'baccarat'=> [
+                'Baccarat_Player' => 0,
+                'Baccarat_Banker' => 0,
+                'Baccarat_Tie' => 0,
+                'Baccarat_PlayerPair' => 0,
+                'Baccarat_BankerPair' => 0,
+            ]
+        ];
         public static function boot()
         {
             parent::boot();

@@ -89,6 +89,7 @@ namespace VanguardLTE\Console
             })->dailyAt('08:00');
 
             $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
+            $schedule->command('daily:sharesummary')->dailyAt('02:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
@@ -506,6 +507,24 @@ namespace VanguardLTE\Console
         protected function commands()
         {
             require(base_path('routes/console.php'));
+            \Artisan::command('daily:sharesummary {date=today}', function ($date) {
+                $this->info("Begin daily share summary adjustment.");
+                $groups = \VanguardLTE\User::where('role_id',8)->get();
+                foreach ($groups as $g)
+                {
+                    if ($date == 'today') {
+                        \VanguardLTE\ShareBetSummary::summary($g->id);
+                    }
+                    else{
+                        \VanguardLTE\ShareBetSummary::summary($g->id, $date);
+                    }
+                }
+                if ($date == 'today') {
+                    $day = date("Y-m-d", strtotime("-1 days"));
+                    \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $day])->delete();
+                }
+                $this->info("End daily share summary adjustment.");
+            });
 
             \Artisan::command('daily:gamesummary {date=today} {partnerid=0}', function ($date, $partnerid) {
                 $this->info("Begin daily game summary adjustment.");

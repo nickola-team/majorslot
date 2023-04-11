@@ -988,7 +988,7 @@ namespace VanguardLTE
                     //error
                     return ['deal' => [], 'share' => null];
                 }
-                $sharebetinfo = null;//\VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id, 'category_id' => $category_id])->first();
+                $sharebetinfo = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id, 'category_id' => $category_id])->first();
                 if ($sharebetinfo && $sharebetinfo->minlimit>0 && $sharebetinfo->minlimit < $betMoney)
                 {
                     $share_data = [
@@ -999,15 +999,14 @@ namespace VanguardLTE
                         'share_id'=> $partner->parent_id,
                         'bet'=> $betMoney,
                         'win' => $winMoney,
-                        'minlimit' => $sharebetinfo->minlimit,
-                        'sharebet'=> $betMoney-$sharebetinfo->minlimit,
-                        'sharewin'=> $winMoney - $winMoney * $sharebetinfo->minlimit / $betMoney,
+                        'betlimit' => $sharebetinfo->minlimit,
+                        'winlimit'=> 0,
                         'deal_percent'=> $deal_percent,
-                        'deal_profit' => $deal_balance,
-                        'deal_share' => $deal_balance - $deal_percent * $sharebetinfo->minlimit / 100,
+                        'deal_limit' => 0,
                         'shop_id'=> $this->shop_id,
                         'category_id'=> $category_id,
                         'game_id' => $game_id,
+                        'stat_id' => $stat_game->id
                     ];
 
                 }
@@ -1093,6 +1092,10 @@ namespace VanguardLTE
                 if (isset($deal_data['deal']) && count($deal_data['deal']) > 0)
                 {
                     \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
+                }
+                if (isset($deal_data['share']))
+                {
+                    \VanguardLTE\Jobs\ShareBet::dispatch(['share' => $deal_data['share']])->onQueue('share');
                 }
             }
 

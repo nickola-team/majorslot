@@ -47,23 +47,23 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.share.gamestat')}}">
                             <i class="far fa-circle text-white sub-i"></i>
                             받치기게임내역
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.share.report.daily')}}">
                             <i class="far fa-circle text-white sub-i"></i>
                             받치기일별정산
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
                             <i class="far fa-circle text-white sub-i"></i>
                             받치기게임별정산
                         </a>
-                    </li>
+                    </li> -->
                     </div>
                 </li>
                 @endif

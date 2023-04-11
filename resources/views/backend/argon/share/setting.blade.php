@@ -9,40 +9,38 @@
 @section('content')
 <div class="container-fluid">
 <div class="row">
-    <div class="col col-lg-8 m-auto">
+    <div class="col col-lg-12 m-auto">
         <div class="card">
             <div class="card-header border-0" id="headingOne">
                 <div class="row align-items-center box">
-                    <div class="col-8">
+                    <div class="col-12">
                         <h3 class="mb-0">받치기 설정</h3>
                     </div>
                 </div>
             </div>
             <hr class="my-1">
             <div class="card-body">
-                <form action="" method="POST"  id="form">
-                    <input type="hidden" value="{{$partner->id}}" name="user_id">
                     <div class="form-group row">
-                        <div class="col-5 text-center">
+                        <div class="col-4 text-center">
                             이 름
                         </div>
-                        <div class="col-7">
+                        <div class="col-8">
                             {{$partner->username}}
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-5 text-center">
+                        <div class="col-4 text-center">
                             레 벨
                         </div>
-                        <div class="col-7">
+                        <div class="col-8">
                             {{$partner->role->description}}
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-5 text-center">
+                        <div class="col-4 text-center">
                             받치기롤링금
                         </div>
-                        <div class="col-7">
+                        <div class="col-8">
                             {{number_format($partner->deal_balance)}}
                             @if ($partner->id == auth()->user()->id)
                             &nbsp;<a class="btn btn-success btn-sm" href="{{argon_route('argon.share.rolling.convert')}}">롤링금전환</a>
@@ -52,38 +50,73 @@
                     </div>
                     
                     <div class="form-group row">
-                        <div class="col-5 text-center">
+                        <div class="col-4 text-center">
                             받치기설정
                         </div>
-                        <div class="col-7">
-                            <div class="form-group">
+                        <div class="col-8">
+                            <div class="table-responsive">
                                 <table class="table align-items-center table-flush">
                                     <thead class="thead-light">
                                     <tr>
                                         <th>게임사</th>
+                                        <th>게임타입</th>
+                                        <th>베팅판</th>
                                         <th>최소베팅금</th>
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <?php 
+                                        $type_counts = [
+                                            'total' => 0
+                                        ];
+                                        foreach (\VanguardLTE\ShareBetInfo::BET_TYPES as $type => $values)
+                                        {
+                                            $type_counts[$type] = count($values);
+                                            $type_counts['total'] = $type_counts['total'] + count($values);
+                                        }
+                                    ?>
                                     @foreach ($categories as $cat)
+                                    <form action="" method="POST"  id="form">
+                                    <input type="hidden" value="{{$partner->id}}" name="user_id">
+                                    <input type="hidden" value="{{$cat->original_id}}" name="cat_id">
                                     <tr>
-                                        <td style="padding:3px;">{{($cat->trans)?$cat->trans->trans_title:$cat->title}}</td>
-
-                                        <td style="padding:3px;">
-                                        <?php $minlimit = 0; ?>
-                                        @foreach ($sharebetinfos as $info)
-                                            @if ($info->category_id == $cat->original_id)
-                                                <?php $minlimit = intval($info->minlimit); ?>                                                
+                                        <td style="padding:3px;" rowspan="{{$type_counts['total']}}">{{($cat->trans)?$cat->trans->trans_title:$cat->title}}</td>
+                                        @foreach (\VanguardLTE\ShareBetInfo::BET_TYPES as $type => $values)
+                                            <?php $limitinfo = $values; ?>
+                                            @if ($loop->index == 0)
+                                            <td style="padding:3px;" rowspan="{{$type_counts[$type]}}">{{__($type)}}</td>
                                             @endif
+                                            @foreach ($sharebetinfos as $info)
+                                                @if ($info->category_id == $cat->original_id)
+                                                    <?php $partner_limitinfo = json_decode($info->limit_info, true); ?>
+                                                @endif
+                                            @endforeach
+                                            
+                                            @foreach ($limitinfo as $betname => $betvalue)
+                                                @if ($loop->index > 0)
+                                                <tr>
+                                                @endif
+                                                <td style="padding:3px;">{{__($betname)}}</td>
+                                                <td style="padding:3px;">
+                                                @if (isset($partner_limitinfo[$betname]))
+                                                <?php $betvalue = $partner_limitinfo[$betname]; ?>
+                                                @endif
+                                                @if ($partner->id == auth()->user()->id)
+                                                    {{number_format($betvalue)}}
+                                                @else
+                                                    <input type="text" name="{{$betname}}"  class="form-control" value="{{$betvalue}}">
+                                                @endif
+                                                </td>
+                                                @if ($loop->index > 0)
+                                                </tr>
+                                                @endif
+                                            @endforeach
                                         @endforeach
-
-                                        @if ($partner->id == auth()->user()->id)
-                                            {{number_format($minlimit)}}
-                                        @else
-                                            <input type="text" name="share_{{$cat->original_id}}" id="share_{{$cat->original_id}}" class="form-control" value="{{$minlimit}}">
-                                        @endif
-                                        </td>
                                     </tr>
+                                    @if ($partner->role_id < auth()->user()->role_id)
+                                    <tr><td colspan="3"></td><td><button type="button" class="btn btn-primary col-12" id="doSubmit">설정</button></td></tr>
+                                    @endif
+                                    </form>
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -95,18 +128,6 @@
                             </div>
                         </div>
                     </div>
-                    @if ($partner->id != auth()->user()->id)
-                    <div class="form-group row">
-                        <div class="col-6 text-center">
-                            <button type="button" class="btn btn-primary col-8" id="doSubmit">설정</button>
-                        </div>
-                        <div class="col-6 text-center">
-                            <button type="button" class="btn btn-secondary col-8" onclick="window.history.go(-1); return false;">취소</button>
-                        </div>
-                        
-                    </div>
-                    @endif
-                </form>
             </div>
         </div>
     </div>

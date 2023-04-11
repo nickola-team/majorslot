@@ -51,47 +51,70 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     return redirect()->back()->withErrors(['파트너를 찾을수 없습니다']);
                 }
             }
-            $categories = \VanguardLTE\Category::where(['shop_id'=>0,'site_id'=>0,'type' => 'live','view' => 1])->get();
+            //currently support gac
+            $categories = \VanguardLTE\Category::where(['shop_id'=>0,'site_id'=>0,'type' => 'live','view' => 1, 'href'=>'gvo'])->get();
+
             $sharebetinfos = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id])->get();
+
             return view('backend.argon.share.setting', compact('partner', 'categories','sharebetinfos'));
         }
         public function setting_store(\Illuminate\Http\Request $request)
         {
             $partner_id = $request->user_id;
+            $cat_id = $request->cat_id;
+
             $partner = \VanguardLTE\User::where('id', $partner_id)->first();
             $comasterIds = auth()->user()->availableUsersByRole('comaster');
             if (!$partner || !in_array($partner_id, $comasterIds))
             {
                 return redirect()->back()->withErrors(['파트너를 찾을수 없습니다']);
             }
-            $data = $request->except(['user_id']);
-            foreach ($data as $key => $value)
+            $sharekeys = [];
+            foreach (\VanguardLTE\ShareBetInfo::BET_TYPES as $type => $values)
             {
-                if (str_contains($key, 'share_'))
+                foreach ($values as $k => $v)
                 {
-                    $catdata = explode('_',$key);
-                    $catid = $catdata[1];
-                    $alreadydata = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner_id, 'share_id' => $partner->parent_id, 'category_id' => $catid])->first();
-                    if ($alreadydata)
-                    {
-                        if ($value == 0)
-                        {
-                            $alreadydata->delete();
-                        }
-                        else
-                        {
-                            $alreadydata->update(['minlimit' => $value]);
-                        }
-                    }
-                    else
-                    {
-                        if ($value > 0)
-                        {
-                            \VanguardLTE\ShareBetInfo::create(['partner_id' => $partner_id, 'share_id' => $partner->parent_id, 'category_id' => $catid, 'minlimit' => $value]);
-                        }
-                    }
+                    $sharekeys[] = $k;
                 }
             }
+            $data = $request->all($sharekeys);
+            //filter minimum value
+            $minlimit = 0;
+            foreach ($data as $key => $value)
+            {
+                if ($value > 0 && ($minlimit==0 || $minlimit > $value))
+                {
+                    $minlimit = $value;
+                }
+            }
+
+
+            $alreadydata = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner_id, 'share_id' => $partner->parent_id, 'category_id' => $cat_id])->first();
+            if ($alreadydata)
+            {
+                if ($minlimit == 0)
+                {
+                    $alreadydata->delete();
+                }
+                else
+                {
+                    $alreadydata->update(['minlimit' => $minlimit, 'limit_info' => json_encode($data)]);
+                }
+            }
+            else
+            {
+                if ($minlimit > 0)
+                {
+                    \VanguardLTE\ShareBetInfo::create([
+                        'partner_id' => $partner_id, 
+                        'share_id' => $partner->parent_id, 
+                        'category_id' => $cat_id, 
+                        'minlimit' => $minlimit,
+                        'limit_info' => json_encode($data)
+                    ]);
+                }
+            }
+
             return redirect()->to(argon_route('argon.share.index'))->withSuccess(['받치기 설정을 업데이트했습니다']);
 
         }
@@ -102,7 +125,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function gamestat(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();
-            $sharebetlogs = \VanguardLTE\ShareBetLog::orderBy('date_time', 'desc');
+            
+            $sharebetlogs = \VanguardLTE\ShareBetLog::select('sharebet_log.*')->orderBy('sharebet_log.date_time', 'desc');
+            if ($user->hasRole('comaster'))
+            {
+                $sharebetlogs = $sharebetlogs->where('partner_id', $user->id);
+            }
+            else if ($user->hasRole('group'))
+            {
+                $sharebetlogs = $sharebetlogs->where('share_id', $user->id);
+            }
+
             $start_date = date("Y-m-d H:i:s", strtotime("-1 days"));
             $end_date = date("Y-m-d H:i:s");
             if ($request->dates != '')
@@ -111,39 +144,54 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
             }
-            $sharebetlogs = $sharebetlogs->where('date_time', '>=', $start_date);
-            $sharebetlogs = $sharebetlogs->where('date_time', '<=', $end_date );
+            $sharebetlogs = $sharebetlogs->where('sharebet_log.date_time', '>=', $start_date);
+            $sharebetlogs = $sharebetlogs->where('sharebet_log.date_time', '<=', $end_date );
+
+            $sharebetlogs = $sharebetlogs->join('users', 'users.id', '=', 'sharebet_log.user_id');
 
             if ($request->player != '')
             {
-                $statistics = $statistics->where('users.username', 'like', '%' . $request->player . '%');
+                $sharebetlogs = $sharebetlogs->where('users.username', 'like', '%' . $request->player . '%');
             }
             if ($request->game != '')
             {
-                $statistics = $statistics->where('stat_game.game', 'like', '%'. $request->game . '%');
+                $sharebetlogs = $sharebetlogs->where('sharebet_log.game', 'like', '%'. $request->game . '%');
             }
 
             if( $request->win_from != '' ) 
             {
-                $statistics = $statistics->where('stat_game.win', '>=', $request->win_from);
+                $sharebetlogs = $sharebetlogs->where('sharebet_log.win', '>=', $request->win_from);
             }
             if( $request->win_to != '' ) 
             {
-                $statistics = $statistics->where('stat_game.win', '<=', $request->win_to);
+                $sharebetlogs = $sharebetlogs->where('sharebet_log.win', '<=', $request->win_to);
             }
-            
-            if ($request->shop != '')
+
+            if ($request->partner != '')
             {
-                $shop_ids = \VanguardLTE\Shop::where('name', 'like', '%' . $request->shop . '%')->whereIn('id', $availableShops)->pluck('id')->toArray();
-                if (count($shop_ids) > 0) 
+                $availableUsers = auth()->user()->availableUsers();
+                $user_ids = \VanguardLTE\User::where('username', $request->partner)->whereIn('id', $availableUsers)->pluck('id')->toArray();
+                if (count($user_ids) > 0) 
                 {
-                    $availableShops = $shop_ids;
+                    $sharebetlogs = $sharebetlogs->whereIn('sharebet_log.partner_id', $user_ids);
                 }
                 else
                 {
-                    $availableShops = [-1];
+                    $sharebetlogs = $sharebetlogs->whereIn('sharebet_log.partner_id', [-1]);
                 }
             }
+            $totallogs = (clone $sharebetlogs)->get();
+            $total = [
+                'bet' => $totallogs->sum('bet'),
+                'win' => $totallogs->sum('win'),
+                'sharebet' => $totallogs->sum('bet') - $totallogs->sum('betlimit'),
+                'sharewin' => $totallogs->sum('win') - $totallogs->sum('winlimit'),
+                'sharedeal' => $totallogs->sum('deal_share'),
+            ];
+
+            $sharebetlogs = $sharebetlogs->paginate(20);
+            
+            return view('backend.argon.share.game', compact('sharebetlogs','total'));
 
 
         }

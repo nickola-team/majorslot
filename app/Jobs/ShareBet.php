@@ -45,33 +45,71 @@ class ShareBet implements ShouldQueue
 
     public function handle()
     {
-        foreach ($this->bet_data as $index => $deal)
+        $sharejobData = null;
+        if (isset($this->bet_data['share']))
         {
-            if ($deal['type'] == 'shop')
-            {
-                $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$deal['shop_id'])->first();               
-                
-                $shop->update([
-                    'deal_balance' => $shop->deal_balance + $deal['deal_profit'], 
-                    'mileage' => $shop->mileage +  $deal['mileage'],
-                    'ggr_balance' => $shop->ggr_balance + $deal['ggr_profit'], 
-                    'ggr_mileage' => $shop->ggr_mileage +  $deal['ggr_mileage'],
-                    $type . '_garant_deal' => (($count_miss>0)?$garant_deal:0)
-                ]);
-            }
-            else
-            {
-                $partner = \VanguardLTE\User::lockForUpdate()->where('id',$deal['partner_id'])->first();
-                $partner->update([
-                    'deal_balance' => $partner->deal_balance + $deal['deal_profit'], 
-                    'mileage' => $partner->mileage +  $deal['mileage'],
-                    'ggr_balance' => $partner->ggr_balance + $deal['ggr_profit'], 
-                    'ggr_mileage' => $partner->ggr_mileage +  $deal['ggr_mileage'],
-                ]);
-            }
+            $sharejobData = $this->bet_data['share'];
+            if ($sharejobData){
+                $statgame = \VanguardLTE\StatGame::where('id', $sharejobData['stat_id'])->first();
+                $sharebetinfo = \VanguardLTE\ShareBetInfo::where(['partner_id' => $sharejobData['partner_id'], 'share_id' => $sharejobData['share_id'], 'category_id' => $sharejobData['category_id']])->first();
+                if ($statgame && $sharebetinfo)
+                {
+                    $ct = $statgame->category;
+                    $gamedetail = null;
+                    if ($ct->provider != null)
+                    {
+                        if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
+                        {
+                            $gamedetail = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
+                        }
+                    }
+                    $limit_data = json_decode($sharebetinfo->limit_info, true);
+                    if ($gamedetail && isset(\VanguardLTE\ShareBetInfo::BET_TYPES[strtolower($gamedetail['type'])]))
+                    {
+                        $betlimit = 0;
+                        $winlimit = 0;
+                        foreach ($gamedetail['bets'] as $userbet)
+                        {
+                            $keyname = $gamedetail['type'] . '_' . $userbet['betValue'];
+                            $betAmount = $userbet['betAmount'];
+                            $winAmount = $userbet['winAmount'];
+                            if (isset($limit_data[$keyname]) && $limit_data[$keyname] > 0)
+                            {
+                                if ($limit_data[$keyname] < $userbet['betAmount'])
+                                {
+                                    $betAmount = $limit_data[$keyname];
+                                    if ($userbet['winAmount'] > 0)
+                                    {
+                                        $winAmount = $betAmount * $userbet['odds'];
+                                    }
+                                }
+                            }
+                            $betlimit = $betlimit + $betAmount;
+                            $winlimit = $winlimit + $winAmount;
+                        }
 
+                        if ($betlimit != $sharejobData['bet']) // this is shared bet
+                        {
+                            $sharejobData['betlimit'] = $betlimit;
+                            $sharejobData['winlimit'] = $winlimit;
+                            $sharejobData['deal_limit'] = $betlimit * $sharejobData['deal_percent'] / 100;
+
+                            $deal_share = ($sharejobData['bet'] - $betlimit) * $sharejobData['deal_percent'] / 100;
+
+                            $sharejobData['deal_share'] = $deal_share;
+
+                            $partner = \VanguardLTE\User::lockForUpdate()->where('id', $sharejobData['partner_id'])->first();
+                            $partner->update(
+                                [
+                                    'deal_balance' => $partner->deal_balance + $deal_share, 
+                                ]
+                                );
+                            \VanguardLTE\ShareBetLog::insert($sharejobData);
+                        }
+                    }
+                }   
+            }
         }
-        \VanguardLTE\ShareBetLog::insert($this->deal_data);
     }
     public function failed(\Exception $exception)
     {
