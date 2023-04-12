@@ -762,6 +762,8 @@ namespace VanguardLTE\Games\LegendofHeroesMegawaysPM
                         $stacks = $stacks->where('odd', '<=', 35);    
                     }else if($fsmax > 0){
                         $stacks = $stacks->where('odd', '<=', 15);    
+                    }else if($winType == 'bonus' && $fsmax == 0){
+                        $stacks = $stacks->where('odd', '<=', 0); 
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
