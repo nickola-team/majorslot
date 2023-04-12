@@ -104,7 +104,7 @@ class ShareBet implements ShouldQueue
                                     'deal_balance' => $partner->deal_balance + $deal_share, 
                                 ]
                                 );
-                            \VanguardLTE\ShareBetLog::insert($sharejobData);
+                            \VanguardLTE\ShareBetlog::insert($sharejobData);
                         }
                     }
                 }   
