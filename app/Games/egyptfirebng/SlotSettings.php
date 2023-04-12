@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\scarabrichesbng
+namespace VanguardLTE\Games\egyptfirebng
 {
     class SlotSettings
     {
@@ -549,7 +549,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < (15 * $bet)) 
+                if( $currentbank < (5 * $bet)) 
                 {
                     $return = [
                         'none', 
@@ -626,12 +626,31 @@ namespace VanguardLTE\Games\scarabrichesbng
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-
+        public function GetAchievements($moneyCount){
+            $number = $moneyCount;
+            if($moneyCount > 130){
+                return ['level'=> 4, 'level_percent'=> 1, 'number'=> $number, 'total_percent'=> 1];
+            }
+            $totalPercent = number_format($moneyCount / 130, 3);
+            $levels = [0, 20, 40, 85, 130];
+            $level = 0;
+            $levelPercent = 0;
+            if($moneyCount > 0){
+                for($k = 0; $k < 5; $k++){
+                    if($levels[$k] >= $moneyCount){
+                        $level = $k-1;
+                        $levelPercent = number_format(($moneyCount - $levels[$k - 1]) / $levels[$k], 3);
+                        break;
+                    }
+                }
+            }
+            return ['level'=> $level, 'level_percent'=> $levelPercent, 'number'=> $number, 'total_percent'=> $totalPercent];
+        }
 
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameScarabRichesStack::where('id', 662)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('id', 34221)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -650,18 +669,22 @@ namespace VanguardLTE\Games\scarabrichesbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameScarabRichesStack::where('spin_type','>', 0);
+                    if($this->GetGameData($this->slotId . 'MoneyCount') >= 129){
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('spin_type',2);
+                    }else{
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('spin_type','>', 0);
+                    }
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameScarabRichesStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('spin_type', 0);
                 }
                 $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    // $index = mt_rand(0, 108000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
