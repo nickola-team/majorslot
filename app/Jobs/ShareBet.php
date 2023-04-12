@@ -111,8 +111,8 @@ class ShareBet implements ShouldQueue
             }
         }
     }
-    public function failed(\Exception $exception)
+    public function failed($exception)
     {
-        Log::channel('monitor_game')->info($exception->getMessage());
+        $this->log($exception->getMessage());
     }
 }
