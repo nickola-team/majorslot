@@ -126,7 +126,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $user = auth()->user();
             
-            $sharebetlogs = \VanguardLTE\ShareBetLog::select('sharebet_log.*')->orderBy('sharebet_log.date_time', 'desc');
+            $sharebetlogs = \VanguardLTE\ShareBetlog::select('sharebet_log.*')->orderBy('sharebet_log.date_time', 'desc');
             if ($user->hasRole('comaster'))
             {
                 $sharebetlogs = $sharebetlogs->where('partner_id', $user->id);
