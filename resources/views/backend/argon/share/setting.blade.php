@@ -43,7 +43,7 @@
                         <div class="col-8">
                             {{number_format($partner->deal_balance)}}
                             @if ($partner->id == auth()->user()->id)
-                            &nbsp;<a class="btn btn-success btn-sm" href="{{argon_route('argon.share.rolling.convert')}}">롤링금전환</a>
+                            &nbsp;<a class="btn btn-success btn-sm" href="#" onclick="convert_deal_balance();">롤링금전환</a>
                             @endif  
                         </div>
                         
@@ -133,6 +133,26 @@
     </div>
 </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="alarm">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">알림</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="msgbody"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 @stop
 
 @push('js')
@@ -141,6 +161,37 @@
         $(this).attr('disabled', 'disabled');
         $('form#form').submit();
     });
+
+    function show_alarm(msg, aftercallback)
+    {
+        $('#msgbody').html(msg);
+        $('#alarm').on('hidden.bs.modal', function () {
+                if (aftercallback) {
+                    aftercallback();
+                }
+        });
+        $('#alarm').modal();
+    }
+
+    function convert_deal_balance() {
+        $.ajax({
+            type: 'POST',
+            url: "{{route('frontend.api.convert_deal_balance')}}",
+            data: { summ: 0},
+            cache: false,
+            async: false,
+            success: function (data) {
+                if (data.error) {
+                    show_alarm(data.msg);
+                    return;
+                }
+                show_alarm('롤링금이 전환되었습니다.', function() { location.reload(true);});
+            },
+            error: function (err, xhr) {
+                show_alarm(err.responseText);
+            }
+        });
+    }
     
 </script>
 @endpush

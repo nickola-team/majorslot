@@ -237,7 +237,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             
-            $start_date = date("Y-m-d");
+            $start_date = date("Y-m-d", strtotime("-1 days"));
             $end_date = date("Y-m-d");
             if ($request->dates != '')
             {
@@ -256,9 +256,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $summary = \VanguardLTE\ShareBetSummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $total = [
+                'daterange' => "$start_date~$end_date",
                 'bet' => $summary->sum('bet'),
                 'win' => $summary->sum('win'),
                 'deallimit' => $summary->sum('deal_limit'),
+                'betlimit' => $summary->sum('betlimit'),
+                'winlimit' => $summary->sum('winlimit'),
                 'sharebet' => $summary->sum('bet') - $summary->sum('betlimit'),
                 'sharewin' => $summary->sum('win') - $summary->sum('winlimit'),
                 'sharedeal' => $summary->sum('deal_share'),

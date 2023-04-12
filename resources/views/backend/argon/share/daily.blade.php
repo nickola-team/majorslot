@@ -186,6 +186,48 @@
         <h3 class="mb-0">받치기 일별정산</h3>
     </div>
     <div class="table-responsive">
+            <table class="table align-items-center table-flush" id="dailysummary">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col"></th>
+                <th scope="col">기간내 합계</th>
+                <th scope="col">배팅금</th>
+                <th scope="col">당첨금</th>
+                <th scope="col">벳원금</th>
+                <th scope="col">롤링금</th>
+
+                <th scope="col">롤링전환</th>
+
+                </tr>
+            </thead>
+            <tbody class="list">
+                <tr>
+                <td colspan='2'>{{$total['daterange']}}</td>
+                <td ><ul>
+                    <li>총배팅금 : {{number_format($total['bet'])}}</li>
+                    <li><span class='text-green'>파트너배팅금 : {{number_format($total['betlimit'])}}</span></li>
+                    <li><span class='text-red'>받치기배팅금 : {{number_format($total['sharebet'])}}</span></li>
+                </ul></td>
+                <td ><ul>
+                    <li>총당첨금 : {{number_format($total['win'])}}</li>
+                    <li><span class='text-green'>파트너당첨금 : {{number_format($total['winlimit'])}}</span></li>
+                    <li><span class='text-red'>받치기당첨금 : {{number_format($total['sharewin'])}}</span></li>
+                </ul></td>
+                <td ><ul>
+                    <li>총벳윈 : {{number_format($total['bet']-$total['win'])}}</li>
+                    <li><span class='text-green'>파트너벳윈 : {{number_format($total['betlimit']-$total['winlimit'])}}</span></li>
+                    <li><span class='text-red'>받치기벳윈 : {{number_format($total['sharebet']-$total['sharewin'])}}</span></li>
+                </ul></td>
+                <td ><ul>
+                    <li>총롤링금 : {{number_format($total['deallimit']+$total['sharedeal'])}}</li>
+                    <li><span class='text-green'>파트너롤링금 : {{number_format($total['deallimit'])}}</span></li>
+                    <li><span class='text-red'>받치기롤링금 : {{number_format($total['sharedeal'])}}</span></li>
+                </ul></td>
+                <td>{{number_format($total['dealout'])}}</td>
+                </tr>
+            </tbody>
+            </table>
+
             <table class="table align-items-center table-flush" id="dailylist">
             <thead class="thead-light">
                 <tr>
@@ -202,15 +244,7 @@
                 </tr>
             </thead>
             <tbody class="list">
-                @if (count($summary) > 0)
-                    @foreach ($summary as $adjustment)
-                        <tr>
-                            @include('backend.argon.share.partials.childs_daily')
-                        </tr>
-                    @endforeach
-                @else
-                    <tr><td colspan="10">{{__('No Data')}}</td></tr>
-                @endif
+                @include('backend.argon.share.partials.childs_daily')
             </tbody>
             </table>
     </div>

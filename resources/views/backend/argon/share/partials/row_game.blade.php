@@ -50,17 +50,20 @@
 <td>
 <ul>
     <li>총배팅금 : {{ number_format($stat->bet,0)}}</li>
+    <li>파트너배팅금 : {{ number_format($stat->betlimit,0)}}</li>
     <li>받치기배팅금 : {{ number_format($stat->bet - $stat->betlimit,0)}}</li>
 </ul>
 </td>
 <td><ul>
     <li>총당첨금 : {{ number_format($stat->win,0)}}</li>
+    <li>파트너당첨금 : {{ number_format($stat->winlimit,0)}}</li>
     <li>받치기당첨금 : {{ number_format($stat->win - $stat->winlimit,0)}}</li>
 </ul>
 </td>
 <td>{{number_format($stat->deal_percent,2)}}</td>
 <td><ul>
     <li>총롤링금 : {{ number_format(($stat->bet * $stat->deal_percent) / 100,0)}}</li>
+    <li>파트너롤링금 : {{ number_format($stat->deal_limit,0)}}</li>
     <li>받치기롤링금 : {{ number_format($stat->deal_share,0)}}</li>
 </ul>
 </td>
