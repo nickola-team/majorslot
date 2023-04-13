@@ -30,11 +30,11 @@
                 @if (auth()->user()->isInoutPartner())
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'share') ? 'active' : '' }}" href="#navbar-share" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-share">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'share') ? 'active' : '' }}" >
                         <i class="ni ni-single-02 text-white"></i>
                         <span class="nav-link-text text-white">받치기</span>
                     </a>
-                    <div class="collapse {{  (isset($parentSection) && $parentSection == 'share') ? 'show' : '' }}" id="navbar-share">
+                    <div class="collapse show" id="navbar-share">
                     <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
                         @if (auth()->user()->hasRole('comaster'))
