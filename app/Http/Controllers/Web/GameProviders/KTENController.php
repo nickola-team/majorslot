@@ -621,6 +621,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $win = $betdata['Payout'];
                             $balance = $betdata['BalanceAfter'];
                         }
+                        else if ($catname == 'kten-playngo')
+                        {
+                            if ($round['type'] == 'WIN')
+                            {
+                                continue;
+                            }
+                            if (!isset($round['details']))
+                            {
+                                Log::error('KTEN PLAYNGO round : '. json_encode($round));
+                                continue;
+                            }
+
+                            $betdata = json_decode($round['details'],true);
+                            $bet = $betdata['RoundLoss'];
+                            $win = $betdata['Amount'];
+                            $balance = $betdata['Balance'];
+                        }
                         // else if ($catname == 'kten-pp')
                         // {
                         //     if ($round['type'] == 'WIN')
