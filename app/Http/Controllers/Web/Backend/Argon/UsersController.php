@@ -562,8 +562,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $usersId = (clone $users)->pluck('id')->toArray();
 
             $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+            $validTime = date('Y-m-d H:i:s', strtotime("-5 minutes"));
             $onlineUsers = \VanguardLTE\Session::whereIn('user_id', $usersId)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
+            $onlineUserByGame = \VanguardLTE\StatGame::whereIn('user_id', $usersId)->where('date_time', '>=', $validTime)->pluck('user_id')->toArray();
+            
             $onlineUsers = array_unique($onlineUsers);
+            $onlineUserByGame = array_unique($onlineUserByGame);
+            
+            $onlineUsers = array_merge_recursive($onlineUsers, $onlineUserByGame);
 
             if ($request->online == 1)
             {
