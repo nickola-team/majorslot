@@ -480,7 +480,7 @@ namespace VanguardLTE\Games\yohogoldbng
                         }
                         $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                         $_sum = $allBet / 100 * $slotSettings->GetPercent();
-                        $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
+                        $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], $isBuyFreeSpin);
                         $bonusMpl = 1;
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
