@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\yohogoldbng
+namespace VanguardLTE\Games\egyptfirebng
 {
     class SlotSettings
     {
@@ -296,10 +296,6 @@ namespace VanguardLTE\Games\yohogoldbng
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
-                $_allBets = $sum / $this->GetPercent() * 100;
-                $normal_sum = $_allBets * 10 / 100;
-                $game->set_gamebank($normal_sum, 'inc', '');
-                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -631,8 +627,11 @@ namespace VanguardLTE\Games\yohogoldbng
            $this->game->allBet = $this->GetGameData($this->slotId . 'Bet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
         public function GetAchievements($moneyCount){
-            $totalPercent = number_format($moneyCount / 130, 3);
             $number = $moneyCount;
+            if($moneyCount > 130){
+                return ['level'=> 4, 'level_percent'=> 1, 'number'=> $number, 'total_percent'=> 1];
+            }
+            $totalPercent = number_format($moneyCount / 130, 3);
             $levels = [0, 20, 40, 85, 130];
             $level = 0;
             $levelPercent = 0;
@@ -651,7 +650,7 @@ namespace VanguardLTE\Games\yohogoldbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameYoHoGoldStack::where('id', 21163)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('id', 34221)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -670,18 +669,22 @@ namespace VanguardLTE\Games\yohogoldbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameYoHoGoldStack::where('spin_type','>', 0);
+                    if($this->GetGameData($this->slotId . 'MoneyCount') >= 129){
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('spin_type',2);
+                    }else{
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('spin_type','>', 0);
+                    }
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameYoHoGoldStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameEgyptFireStack::where('spin_type', 0);
                 }
                 $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    // $index = mt_rand(0, 108000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
