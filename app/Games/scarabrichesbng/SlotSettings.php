@@ -549,7 +549,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < (5 * $bet)) 
+                if( $currentbank < (15 * $bet)) 
                 {
                     $return = [
                         'none', 
@@ -661,7 +661,7 @@ namespace VanguardLTE\Games\scarabrichesbng
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 35);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
