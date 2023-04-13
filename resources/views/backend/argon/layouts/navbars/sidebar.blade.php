@@ -69,11 +69,11 @@
                 @endif
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'agent') ? 'active' : '' }}" href="#navbar-agents" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-agents">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'agent') ? 'active' : '' }}" >
                         <i class="ni ni-single-02 text-white"></i>
                         <span class="nav-link-text text-white">파트너</span>
                     </a>
-                    <div class="collapse {{  (isset($parentSection) && $parentSection == 'agent') ? 'show' : '' }}" id="navbar-agents">
+                    <div class="collapse show" id="navbar-agents">
                     <ul class="nav nav-sm flex-column">
                     @if (!auth()->user()->hasRole('manager'))
                         <li class="nav-item">
@@ -105,12 +105,12 @@
                 </li>
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'player') ? 'active' : '' }}" href="#navbar-players" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'player') ? 'active' : '' }}" >
                         <i class="ni ni-user-run text-white"></i>
                         <span class="nav-link-text text-white">유저</span>
                     </a>
 
-                    <div class="collapse {{ (isset($parentSection) && $parentSection == 'player') ? 'show' : '' }}" id="navbar-players">
+                    <div class="collapse show" id="navbar-players">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.create')}}">
@@ -163,12 +163,12 @@
                 
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'game') ? 'active' : '' }}" href="#navbar-games" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'game') ? 'active' : '' }}">
                         <i class="ni ni-controller text-white"></i>
                         <span class="nav-link-text text-white">게임설정</span>
                     </a>
 
-                    <div class="collapse {{ (isset($parentSection) && $parentSection == 'game') ? 'show' : '' }}" id="navbar-games">
+                    <div class="collapse show" id="navbar-games">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.domain')}}">
@@ -227,12 +227,12 @@
 
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'dw') ? 'active' : '' }}" href="#navbar-deposit" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'dw') ? 'active' : '' }}">
                         <i class="ni ni-money-coins text-white"></i>
                         <span class="nav-link-text text-white">충환전</span>
                     </a>
 
-                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'dw') ? 'show' : '' }}" id="navbar-deposit">
+                    <div class="collapse show" id="navbar-deposit">
                         <ul class="nav nav-sm flex-column">
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
@@ -279,12 +279,12 @@
 
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{(isset($parentSection) && $parentSection == 'report') ? 'active' : '' }}" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{(isset($parentSection) && $parentSection == 'report') ? 'active' : '' }}">
                         <i class="ni ni-chart-pie-35 text-white"></i>
                         <span class="nav-link-text text-white">보고서</span>
                     </a>
 
-                    <div class="collapse {{(isset($parentSection) && $parentSection == 'report') ? 'show' : '' }}" id="navbar-report">
+                    <div class="collapse show" id="navbar-report">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw')}}">
@@ -337,12 +337,12 @@
                 
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'customer') ? 'active' : '' }}" href="#navbar-customer" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'customer') ? 'active' : '' }}">
                         <i class="ni ni-headphones text-white"></i>
                         <span class="nav-link-text text-white">고객센터</span>
                     </a>
                     
-                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'customer') ? 'show' : '' }}" id="navbar-customer">
+                    <div class="collapse show" id="navbar-customer">
                         <ul class="nav nav-sm flex-column">
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
@@ -381,12 +381,12 @@
                 @if (auth()->user()->hasRole('admin'))
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'setting') ? 'active' : '' }}" href="#navbar-system" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'setting') ? 'active' : '' }}">
                         <i class="ni ni-settings text-white"></i>
                         <span class="nav-link-text text-white">시스템설정</span>
                     </a>
 
-                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'setting') ? 'show' : '' }}" id="navbar-system">
+                    <div class="collapse show" id="navbar-system">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.website.list')}}">
