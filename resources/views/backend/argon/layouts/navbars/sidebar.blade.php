@@ -88,6 +88,14 @@
                                 <span class="nav-link-text text-white">파트너목록</span>
                             </a>
                         </li>
+                        @for ($role=auth()->user()->role_id-1;$role>=3;$role--)
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="{{argon_route('argon.agent.list', ['role' => $role ])}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                <span class="nav-link-text text-white">{{\VanguardLTE\Role::where('level',$role)->first()->description}}</span>
+                            </a>
+                        </li>
+                        @endfor
                     @endif
                     <li class="nav-item">
                         <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
@@ -130,6 +138,12 @@
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     유저목록
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.list',['online' => 1])}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    접속중유저
                                 </a>
                             </li>
                             <li class="nav-item">
