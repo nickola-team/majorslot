@@ -873,7 +873,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     \DB::commit();
                     return response()->json([
                         'error' => true, 
-                        'msg' => '총본사를 찾을수 없습니다.',
+                        'msg' => '상위파트너를 찾을수 없습니다.',
                         'code' => '000'
                     ], 200);
                 }
@@ -883,7 +883,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     \DB::commit();
                     return response()->json([
                         'error' => true, 
-                        'msg' => '총본사보유금이 부족합니다',
+                        'msg' => '상위파트너보유금이 부족합니다',
                         'code' => '000'
                     ], 200);
                 }

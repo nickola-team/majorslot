@@ -92,7 +92,17 @@ class UpdateDeal implements ShouldQueue
 
     public function handle()
     {
-        foreach ($this->deal_data as $index => $deal)
+        $dealjobData = null;
+        if (isset($this->deal_data['deal']))
+        {
+            $dealjobData = $this->deal_data['deal'];
+        }
+        else
+        {
+            $dealjobData = $this->deal_data;
+        }
+
+        foreach ($dealjobData as $index => $deal)
         {
             if ($deal['type'] == 'shop')
             {
@@ -129,9 +139,8 @@ class UpdateDeal implements ShouldQueue
                     'ggr_mileage' => $partner->ggr_mileage +  $deal['ggr_mileage'],
                 ]);
             }
-
         }
-        \VanguardLTE\DealLog::insert($this->deal_data);
+        \VanguardLTE\DealLog::insert($dealjobData);
     }
     public function failed(\Exception $exception)
     {
