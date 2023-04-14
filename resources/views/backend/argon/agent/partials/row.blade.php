@@ -21,14 +21,12 @@
 <td class="text-right">
 <a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>
 <a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm" >회 수</button></a>
-
+<a href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}"><button class="btn btn-primary btn-sm" >설정</button></a>
 <div class="dropdown">
     <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fas fa-ellipsis-v"></i>
+        <button class="btn btn-danger btn-sm">기타<i class="dropdown-caret fa fa-caret-down"></i></button>
     </a>
     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-        <a class="dropdown-item" href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}">설정 및 정보</a>
-        <hr class="my-1">
         @if (auth()->user()->hasRole('admin'))
         <a class="dropdown-item" href="{{argon_route('argon.agent.move', ['id' => $user->id])}}">파트너 이동</a>
         @endif

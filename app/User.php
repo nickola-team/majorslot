@@ -879,6 +879,7 @@ namespace VanguardLTE
             $ggr_percent = 0;
 
             $deal_data = [];
+            $share_data = null;
             $deal_percent = $this->{$deal_field[$type]};
             if ($deal_percent > 0) //user can get deal percent
             {
@@ -917,7 +918,7 @@ namespace VanguardLTE
                     if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                     {
                         //error
-                        return $deal_data;
+                        return ['deal' => $deal_data, 'share' => $share_data];
                     }
                     $deal_data[] = [
                         'user_id' => $this->id, 
@@ -953,7 +954,7 @@ namespace VanguardLTE
                         if ($betMoney > 0 && ($deal_balance < $deal_mileage))
                         {
                             //error
-                            return $deal_data;
+                            return ['deal' => $deal_data, 'share' => $share_data];
                         }
                         // if ($deal_balance > $deal_mileage)
                         {
@@ -985,10 +986,32 @@ namespace VanguardLTE
                 if ($partner!=null && $partner->{$deal_field[$type]} < $deal_percent  )
                 {
                     //error
-                    return [];
+                    return ['deal' => [], 'share' => null];
+                }
+                $sharebetinfo = \VanguardLTE\ShareBetInfo::where(['partner_id' => $partner->id, 'share_id' => $partner->parent_id, 'category_id' => $category_id])->first();
+                if ($sharebetinfo && $sharebetinfo->minlimit>0 && $sharebetinfo->minlimit < $betMoney)
+                {
+                    $share_data = [
+                        'user_id' => $this->id, 
+                        'date_time' => $date_time, 
+                        'game' => $game,
+                        'partner_id'=> $partner->id,
+                        'share_id'=> $partner->parent_id,
+                        'bet'=> $betMoney,
+                        'win' => $winMoney,
+                        'betlimit' => $sharebetinfo->minlimit,
+                        'winlimit'=> 0,
+                        'deal_percent'=> $deal_percent,
+                        'deal_limit' => 0,
+                        'shop_id'=> $this->shop_id,
+                        'category_id'=> $category_id,
+                        'game_id' => $game_id,
+                        'stat_id' => $stat_game->id
+                    ];
+
                 }
             }
-            return $deal_data;
+            return ['deal' => $deal_data, 'share' => $share_data];
         }
 
         public function processBetDealerMoney_Queue($stat_game) 
@@ -1057,18 +1080,22 @@ namespace VanguardLTE
                         $type = 'pbcomb';
                     }
                     $deal_data = $this->getDealData($betMoney, $winMoney, $type, $stat_game);
-                    if (count($deal_data) > 0)
+                    if (isset($deal_data['deal']) && count($deal_data['deal']) > 0)
                     {
                         \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
                     }
                 }
             }
             else
-            {            
+            {
                 $deal_data = $this->getDealData($betMoney, $winMoney, $type, $stat_game);
-                if (count($deal_data) > 0)
+                if (isset($deal_data['deal']) && count($deal_data['deal']) > 0)
                 {
                     \VanguardLTE\Jobs\UpdateDeal::dispatch($deal_data)->onQueue('deal');
+                }
+                if (isset($deal_data['share']))
+                {
+                    \VanguardLTE\Jobs\ShareBet::dispatch(['share' => $deal_data['share']])->onQueue('share');
                 }
             }
 
@@ -1315,6 +1342,11 @@ namespace VanguardLTE
         public function info()
         {
             return $this->hasMany('VanguardLTE\Info', 'user_id');
+        }
+
+        public function sharebetinfo()
+        {
+            return $this->hasMany('VanguardLTE\ShareBetInfo', 'partner_id');
         }
 
         public function isLoggedIn()
