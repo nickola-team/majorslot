@@ -323,7 +323,7 @@ namespace VanguardLTE\Games\stickypiggybng
                         }
                         $winChance = $slotSettings->IsWinChance($percent, $freespinNum);
                         if($winChance == true){
-                            $freemore = $slotSettings->moreFreeCount();
+                            $freemore = $slotSettings->moreFreeCount($freespinNum);
                             $gameble = $context['freespins']['gamble'];
                             $freespinNum += $freemore;
                             $gameble['freespins'] = $freespinNum;
