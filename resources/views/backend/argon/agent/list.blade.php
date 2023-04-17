@@ -87,6 +87,18 @@
                             <div class="col-md-1">
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="status" class="col-md-2 col-form-label form-control-label text-center">상태</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="status" name="status">
+                                    <option value="" @if (Request::get('status') == '') selected @endif>@lang('app.all')</option>
+									<option value="{{\VanguardLTE\Support\Enum\UserStatus::ACTIVE}}" @if (Request::get('status') == \VanguardLTE\Support\Enum\UserStatus::ACTIVE) selected @endif>활성</option>
+                                    <option value="{{\VanguardLTE\Support\Enum\UserStatus::BANNED}}" @if (Request::get('status') == \VanguardLTE\Support\Enum\UserStatus::BANNED) selected @endif>차단</option>
+                                </select>
+                            </div>
+                        </div>
                             
                         <div class="form-group row">
                             <div class="col-md-1">
@@ -159,7 +171,7 @@
             $('#waitAjax').show();
             $.ajax({
                 async: true,
-                url: "{{argon_route('argon.agent.child')}}?id="+node.id
+                url: "{{argon_route('argon.agent.child')}}?id="+node.id+"status="+"{{Request::get('status')}}"
                 }).done(function(html) {
                     var rows = $(html).filter("tr");
                     table.treetable("loadBranch", node, rows);
