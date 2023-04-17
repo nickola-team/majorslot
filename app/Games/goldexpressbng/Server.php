@@ -503,13 +503,13 @@ namespace VanguardLTE\Games\goldexpressbng
                     }
                     if($moneyCount > 0){
                         $currentHill[1]++;
-                        if($currentHill[1] >= 10){
-                            if($currentHill[0] < 10){
+                        if($currentHill[1] >= 9){
+                            if($currentHill[0] < 9){
                                 $currentHill[0]++;
                                 $currentHill[1] = 0;
                             }else{
-                                $currentHill[0] = 10;
-                                $currentHill[1] = 9;
+                                $currentHill[0] = 9;
+                                $currentHill[1] = 0;
                             }
                         }
                     }
