@@ -346,7 +346,7 @@
 			</div>
 				<div class="main_best_wrap">
 					<div class="main_best_box">
-					<div class="main_best_title">
+					<div class="main_best_title" style="background: url(/frontend/champion/tutu/images/slot_title.png) center top no-repeat; !important;">
 					</div>
 					<div class="game_list_wrap">
 						<ul>
