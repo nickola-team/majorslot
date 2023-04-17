@@ -634,16 +634,19 @@ namespace VanguardLTE\Games\stickypiggybng
 
         public function IsWinChance($percent, $freespinNum){
             $rand = mt_rand(0, 100);
-            if($freespinNum > 22){
+            if($freespinNum >= 21){
                 return false;
             }
-            if($rand < $percent){
+            if($rand < $percent / 2){
                 return true;
             }else{
                 return false;
             }
         }
-        public function moreFreeCount(){
+        public function moreFreeCount($freespinNum){
+            if($freespinNum > 20){
+                return 1;
+            }
             $percent = mt_rand(0, 100);
             $freeIndexs = [70, 25, 5];
             $sum = 0;
@@ -699,7 +702,7 @@ namespace VanguardLTE\Games\stickypiggybng
                             if($ind >= 22){
                                 $limitOdd = 100;
                             }
-                            $stacks = $stacks->where('odd', '<=', 15);    
+                            $stacks = $stacks->where('odd', '<=', $limitOdd);    
                         } 
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take($takeCount)->get();
