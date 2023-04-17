@@ -116,10 +116,6 @@ function onAskAccount(){
 
 function convertDeal(money) {
 
-    if (money < 30000) {
-        alert("전환 최소금액은 30,000원 입니다.");
-        return;
-    }
 
     $.ajax({
         type: 'POST',
@@ -153,9 +149,6 @@ function DepositProc(){
         alert("입금하실 금액을 입력하여 주세요");
         $("#deposit_amount").focus();  
         return; 
-    }
-    if (amount < 30000) { 
-        alert("입금은 3만원 이상부터 가능합니다"); $("#deposit_amount").focus();  return false; 
     }
 
 
