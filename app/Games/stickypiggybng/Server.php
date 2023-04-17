@@ -306,10 +306,12 @@ namespace VanguardLTE\Games\stickypiggybng
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
                         $context['freespins']['gamble']['history'] = [
                             'result' => 'refuse',
-                            'selected_mode' => 0,
-                            'variants' => $context['freespins']['gamble']['variants']
+                            'selected_mode' => 0
                         ];
-                        unset($context['freespins']['gamble']['variants']);
+                        if(isset($context['freespins']['gamble']['variants'])){
+                            $context['freespins']['gamble']['history']['variants'] = $context['freespins']['gamble']['variants'];
+                            unset($context['freespins']['gamble']['variants']);
+                        }
                         $context['freespins']['rounds_granted'] = $freespinNum;
                         $context['freespins']['rounds_left'] = $freespinNum;
                         $context['freespins']['rounds_lefts'] = $freespinNum;
