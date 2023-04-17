@@ -537,16 +537,11 @@ namespace VanguardLTE\Games\scarabtemplebng
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                         
-                        if($slotEvent['slotEvent'] == 'respin'){
-                            $rounds_left = $stack['bonus']['rounds_left'];
-                        }else{
-                            $rounds_left = $stack['freespins']['rounds_left'];
-                        }
                         if($slotEvent['slotEvent'] == 'freespin'){
                             $objRes['context']['current'] = 'freespins';
                             $objRes['context']['round_finished'] = false;
                             $objRes['context']['last_args'] = [];  
-                            if($rounds_left == 0) 
+                            if($stack['actions'][0] == 'freespin_stop') 
                             {
                                 $isEndFreeSpin = true;
                                 $isState = true;
@@ -555,7 +550,7 @@ namespace VanguardLTE\Games\scarabtemplebng
                             $objRes['context']['current'] = 'bonus';
                             $objRes['context']['round_finished'] = false;
                             $objRes['context']['last_args'] = [];
-                            if($rounds_left == 0) 
+                            if($stack['actions'][0] == 'bonus_spins_stop' || $stack['actions'][0] == 'bonus_freespins_stop') 
                             {
                                 if($totalFreeGames <= 0 || $totalFreeGames == $currentFreeGames){
                                     $isEndFreeSpin = true;
