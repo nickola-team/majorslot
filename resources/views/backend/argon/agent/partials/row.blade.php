@@ -19,9 +19,12 @@
 @endif
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
+@if ($user->status == \VanguardLTE\Support\Enum\UserStatus::ACTIVE)
 <a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>
 <a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm" >회 수</button></a>
+@endif
 <a href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}"><button class="btn btn-primary btn-sm" >설정</button></a>
+@if ($user->status == \VanguardLTE\Support\Enum\UserStatus::ACTIVE)
 <div class="dropdown">
     <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <button class="btn btn-danger btn-sm">기타<i class="dropdown-caret fa fa-caret-down"></i></button>
@@ -34,4 +37,5 @@
         <a class="dropdown-item" href="{{argon_route('argon.agent.transaction', ['user' => $user->username, 'role' => $user->role_id])}}">지급내역</a>
     </div>
 </div>
+@endif
 </td>
