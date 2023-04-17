@@ -48,7 +48,8 @@ namespace VanguardLTE\Games\blackwolfbng
             $WILD = 12;
             $SCATTER = 13;
 
-            $Counter = $slotSettings->GetGameData($slotSettings->slotId . 'Counter') ?? 0;
+            $Counter = $slotSettings->GetGameData($slotSettings->slotId . 'Counter') ?? 0;           
+            $slotSettings->SetBet();
             if($slotEvent['command'] == 'login'){
                 $slotSettings->SetGameData($slotSettings->slotId . 'BalanceVersion', $BALANCE * $DENOMINATOR);
                 $user = [
@@ -369,6 +370,9 @@ namespace VanguardLTE\Games\blackwolfbng
                     if($slotEvent['slotEvent'] != 'freespin' && $slotEvent['slotEvent'] != 'respin'){
                         $slotSettings->SetBalance(-1 * ($betline * $LINES), $slotEvent['slotEvent']);
                         $_sum = ($betline * $LINES) / 100 * $slotSettings->GetPercent();
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $betline);  
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $LINES);             
+                        $slotSettings->SetBet();
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
                         $bonusMpl = 1;
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
@@ -381,7 +385,7 @@ namespace VanguardLTE\Games\blackwolfbng
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
 
                         $totalSpinCount = 0;
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $betline);
+                        
                         $roundstr = sprintf('%.4f', microtime(TRUE));
                         $roundstr = str_replace('.', '', $roundstr);
                         $roundstr = '273' . substr($roundstr, 4, 10) . '001';
