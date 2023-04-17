@@ -85,6 +85,8 @@ namespace VanguardLTE\Console
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
 
             $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
+
+            $schedule->command('delete:spinstack')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
@@ -1388,6 +1390,12 @@ namespace VanguardLTE\Console
                 $this->info("Begin pp game verify bet");
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::verify_bet();
                 $this->info($res['msg']);
+            });
+            \Artisan::command('delete:spinstack', function () {
+                $this->info('Delete SpinStack');
+                $currentTime = date("Y-m-d H:i:s", strtotime("-2 hour")) ;
+                \VanguardLTE\PPGameFreeStackLog::where('created_at' , '<=', $currentTime)->delete();
+                $this->info('End Delete SpinStack');
             });
         }
     }
