@@ -745,9 +745,9 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBuffaloKingMegawaysStack::where('spin_type','>', 0);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBuffaloKingMegawaysStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBuffaloKingMegawaysStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBuffaloKingMegawaysStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
                 $index = mt_rand(0, 48000);
                 if($winType == 'win'){
