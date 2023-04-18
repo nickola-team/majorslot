@@ -63,7 +63,6 @@ namespace VanguardLTE\Console
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
                 \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
-                \VanguardLTE\PPGameFreeStackLog::where('created_at', '<', $start_date)->delete();
 
                 
                 $start_date = date("Y-m-d H:i:s",strtotime("-3 days"));
@@ -145,7 +144,12 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Session::where('user_id', 'NULL')->delete();
                 \VanguardLTE\Session::where('user_id', '')->delete();
                 \VanguardLTE\Task::where('finished', 1)->delete();
+
+                $start_date = date("Y-m-d H:i:s", strtotime("-2 hours")) ;
+                \VanguardLTE\PPGameFreeStackLog::where('created_at' , '<=', $start_date)->delete();
             })->everyMinute();
+
+
             $schedule->call(function()
             {
                 $task = \VanguardLTE\Task::where([
@@ -1643,9 +1647,7 @@ namespace VanguardLTE\Console
                     $from = $res[1];
                 }
                 $this->info("End kten rounds. last id = " . $from);
-            });
-
-            
+            });            
 
         }
     }
