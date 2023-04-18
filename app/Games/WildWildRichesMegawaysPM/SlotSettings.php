@@ -773,9 +773,13 @@ namespace VanguardLTE\Games\WildWildRichesMegawaysPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
+            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
+                'user_id' => $this->playerId,
+                'game_id' => $this->game->original_id
+                ])->pluck('freestack_id');
             while(true){
                 $index = mt_rand(0, 40000);
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesMegawaysStack::where('spin_type', $spinType);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesMegawaysStack::where('spin_type', $spinType)->whereNotIn('id', $existIds);
                 if($fsmax > 0){
                     $stacks = $stacks->where('fsmax', $fsmax);
                 }
@@ -812,13 +816,22 @@ namespace VanguardLTE\Games\WildWildRichesMegawaysPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
                     $isLowBank = true;
                 }else{
                     break;
                 }
             }
-            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
-            return json_decode($stack, true);
+            $stack = $stacks[rand(0, count($stacks) - 1)];
+            \VanguardLTE\PPGameFreeStackLog::create([
+                'game_id' => $this->game->original_id, 
+                'user_id' => $this->playerId, 
+                'freestack_id' => $stack->id,
+                'odd' => $stack->odd
+            ]);
+            return json_decode($stack->spin_stack, true);
         }
     }
 }
