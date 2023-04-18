@@ -733,12 +733,9 @@ namespace VanguardLTE\Games\SuperXPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
-            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
-                'user_id' => $this->playerId,
-                'game_id' => $this->game->original_id
-                ])->pluck('freestack_id');
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameSuperXStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameSuperXStack::where('spin_type', $spintype);
+                $index =  mt_rand(0, 90000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
@@ -751,28 +748,19 @@ namespace VanguardLTE\Games\SuperXPM
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->inRandomOrder()->take(100)->get();
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                     }else{
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('pur_level', ($bl - 1))->inRandomOrder()->take(100)->get();
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->where('pur_level', ($bl - 1))->take(100)->get();
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
-                    if($isLowBank == true){
-                        $existIds = [0];
-                    }
                     $isLowBank = true;
                 }else{
                     break;
                 }
             }
-            $stack = $stacks[rand(0, count($stacks) - 1)];
-            \VanguardLTE\PPGameFreeStackLog::create([
-                'game_id' => $this->game->original_id, 
-                'user_id' => $this->playerId, 
-                'freestack_id' => $stack->id,
-                'odd' => $stack->odd
-            ]);
-            return json_decode($stack->spin_stack, true);
+            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
+            return json_decode($stack, true);
         }
     }
 }

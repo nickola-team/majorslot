@@ -721,12 +721,8 @@ namespace VanguardLTE\Games\FireStrike2PM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
-            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
-                'user_id' => $this->playerId,
-                'game_id' => $this->game->original_id
-                ])->pluck('freestack_id');
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameFireStrike2PMStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameFireStrike2PMStack::where('spin_type', $spintype);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
@@ -736,6 +732,13 @@ namespace VanguardLTE\Games\FireStrike2PM
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
+                    if($spintype == 1){
+                        $index = mt_rand(0, 170000);
+                    }else if($winType == 'win'){
+                        $index = mt_rand(0, 90000);
+                    }else{
+                        $index = mt_rand(0, 29000);
+                    }
                     if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         $this->game->garant_bonus3 = 0;
@@ -743,26 +746,21 @@ namespace VanguardLTE\Games\FireStrike2PM
                         $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->inRandomOrder()->take(100)->get();
+                        if($winType == 'bonus'){
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        }
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
-                    if($isLowBank == true){
-                        $existIds = [0];
-                    }
                     $isLowBank = true;
                 }else{
                     break;
                 }
             }
-            $stack = $stacks[rand(0, count($stacks) - 1)];
-            \VanguardLTE\PPGameFreeStackLog::create([
-                'game_id' => $this->game->original_id, 
-                'user_id' => $this->playerId, 
-                'freestack_id' => $stack->id,
-                'odd' => $stack->odd
-            ]);
-            return json_decode($stack->spin_stack, true);
+            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
+            return json_decode($stack, true);
         }
     }
 }
