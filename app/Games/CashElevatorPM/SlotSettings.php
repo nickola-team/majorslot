@@ -731,9 +731,13 @@ namespace VanguardLTE\Games\CashElevatorPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
+            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
+                'user_id' => $this->playerId,
+                'game_id' => $this->game->original_id
+                ])->pluck('freestack_id');
             $loopCount = 0;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashElevatorStack::where('pur_level', $currentElevator);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashElevatorStack::where('pur_level', $currentElevator)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 100000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
@@ -759,6 +763,9 @@ namespace VanguardLTE\Games\CashElevatorPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
                     $isLowBank = true;
                 }else{
                     break;
@@ -772,8 +779,14 @@ namespace VanguardLTE\Games\CashElevatorPM
                     }
                 }
             }
-            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
-            return json_decode($stack, true);
+            $stack = $stacks[rand(0, count($stacks) - 1)];
+            \VanguardLTE\PPGameFreeStackLog::create([
+                'game_id' => $this->game->original_id, 
+                'user_id' => $this->playerId, 
+                'freestack_id' => $stack->id,
+                'odd' => $stack->odd
+            ]);
+            return json_decode($stack->spin_stack, true);
         }
     }
 }
