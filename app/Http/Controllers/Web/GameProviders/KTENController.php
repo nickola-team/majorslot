@@ -161,6 +161,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $view = 0; // hide other tables
                     }
+                    if ($href == 'kten-asia' && $game['game_id'] != 'SG_Ag')
+                    {
+                        $view = 0; // hide other tables
+                    }
                     $korname = $game['cp_game_name_kor'];
                     if ($href == 'kten-bng')
                     {

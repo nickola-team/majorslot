@@ -152,6 +152,7 @@ function DepositProc(){
     }
 
 
+
     if(!confirm("입금신청 하시겠습니까?")) return;
 
     var data = { accountName: $(".userName").val(), bank:$(".userBankName").val(), no:$(".accountNo").val(), money: amount };
