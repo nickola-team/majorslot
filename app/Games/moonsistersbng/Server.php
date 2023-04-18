@@ -24,6 +24,7 @@ namespace VanguardLTE\Games\moonsistersbng
                 $response = '{"responseEvent":"error","responseType":"error","serverResponse":"Error LicenseDK"}';
                 exit( $response );
             }*/
+            $str='';
             $response = '';
             \DB::beginTransaction();
             // $userId = \Auth::id();// changed by game developer
