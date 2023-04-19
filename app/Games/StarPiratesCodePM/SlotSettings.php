@@ -719,7 +719,7 @@ namespace VanguardLTE\Games\StarPiratesCodePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameStarPiratesCodeStack::where('spin_type', '<', 2)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameStarPiratesCodeStack::where('spin_type', '<', 2);
                 $index = mt_rand(0, 45000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

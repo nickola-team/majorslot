@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\GemsBonanzaPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameGemsBonanzaStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameGemsBonanzaStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

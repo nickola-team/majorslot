@@ -722,7 +722,7 @@ namespace VanguardLTE\Games\MagicMoneyMazePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameMagicMoneyMazeStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameMagicMoneyMazeStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

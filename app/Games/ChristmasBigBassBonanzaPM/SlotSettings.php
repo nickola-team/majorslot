@@ -719,7 +719,7 @@ namespace VanguardLTE\Games\ChristmasBigBassBonanzaPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameChristmasBigBassBonanzaStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameChristmasBigBassBonanzaStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 40000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

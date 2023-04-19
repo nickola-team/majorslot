@@ -725,7 +725,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsMegawaysStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsMegawaysStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 70000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

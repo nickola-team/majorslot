@@ -708,7 +708,7 @@ namespace VanguardLTE\Games\AztecGemsPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameAztecGemsStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameAztecGemsStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 41000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
@@ -742,14 +742,7 @@ namespace VanguardLTE\Games\AztecGemsPM
                 }
             }
             
-            $stack = $stacks[rand(0, count($stacks) - 1)];
-            \VanguardLTE\PPGameFreeStackLog::create([
-                'game_id' => $this->game->original_id, 
-                'user_id' => $this->playerId, 
-                'freestack_id' => $stack->id,
-                'odd' => $stack->odd
-            ]);
-            return json_decode($stack->spin_stack, true);
+            return json_decode($stacks[rand(0, count($stacks) - 1)]->spin_stack, true);
         }
     }
 }
