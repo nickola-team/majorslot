@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\CashElevatorPM
             $isLowBank = false;
             $loopCount = 0;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashElevatorStack::where('pur_level', $currentElevator);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashElevatorStack::where('pur_level', $currentElevator)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 100000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

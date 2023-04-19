@@ -724,7 +724,7 @@ namespace VanguardLTE\Games\PyramidKingPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGamePyramidKingStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGamePyramidKingStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

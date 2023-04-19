@@ -765,7 +765,7 @@ namespace VanguardLTE\Games\MuertosMultiplierMegawaysPM
                         'spin_type' => 1
                     ]);
                 }else if($fsmax == 0 && $winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameMuertosMultiplierMegawaysStack::where('spin_type', 2);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameMuertosMultiplierMegawaysStack::where('spin_type', 2)->whereNotIn('id', $existIds);
                     $index = mt_rand(0, 9500);
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameMuertosMultiplierMegawaysStack::where('spin_type', 0);

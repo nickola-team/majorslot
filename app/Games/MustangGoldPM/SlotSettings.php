@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\MustangGoldPM
                 if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameMustangGoldStack::where('spin_type', 1);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameMustangGoldStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameMustangGoldStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                     // $index = mt_rand(0, 50000);
                 }
                 if($winType == 'win'){

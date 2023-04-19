@@ -729,7 +729,7 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildBoosterStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildBoosterStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 38000);
                 if($ind >= 0){
                     $stacks = $stacks->where(['pur_level'=>$ind, 'scatter_count'=>$scatterCount]);

@@ -736,7 +736,7 @@ namespace VanguardLTE\Games\CowboysGoldPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameCowboysGoldStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameCowboysGoldStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(50000, 95000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

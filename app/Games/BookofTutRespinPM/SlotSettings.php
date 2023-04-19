@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\BookofTutRespinPM
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfTutRespinStack::where(['spin_type' => 1, 'pur_level' => $ind]);
                 }else if($winType == 'bonus'){
                     $index = mt_rand(0, 39000);
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfTutRespinStack::where('spin_type', 2);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfTutRespinStack::where('spin_type', 2)->whereNotIn('id', $existIds);
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfTutRespinStack::where('spin_type', 0);
                 }
