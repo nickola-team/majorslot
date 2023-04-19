@@ -727,7 +727,7 @@ namespace VanguardLTE\Games\EmeraldKingPM
             $isLowBank = false;
             $count = 0;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameEmeraldKingStack::where('spin_type', $spintype)->where('pur_level', $this->GetGameData($this->slotId . 'Wmv'));
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameEmeraldKingStack::where('spin_type', $spintype)->where('pur_level', $this->GetGameData($this->slotId . 'Wmv'))->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 75000); 
                 if($winType == 'win' && $count < 300){
                     $stacks = $stacks->where('odd', '>', 0);

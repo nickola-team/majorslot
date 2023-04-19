@@ -715,7 +715,7 @@ namespace VanguardLTE\Games\_888DragonsPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGame888DragonsStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGame888DragonsStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 29000);
                 if($winType == 'win' && $limitOdd > 5){
                     $stacks = $stacks->where('odd', '>', 0);

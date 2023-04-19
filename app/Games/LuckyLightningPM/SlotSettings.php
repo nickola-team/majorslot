@@ -736,7 +736,7 @@ namespace VanguardLTE\Games\LuckyLightningPM
             $isLowBank = false;
             while(true){
                 $index = mt_rand(0, 45000);
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameLuckyLightningStack::where(['spin_type' => $spintype, 'pur_level'=> $pur]);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameLuckyLightningStack::where(['spin_type' => $spintype, 'pur_level'=> $pur])->whereNotIn('id', $existIds);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }

@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\DancePartyPM
                 if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameDancePartyStack::where('spin_type', 1);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameDancePartyStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameDancePartyStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                     // $index = mt_rand(0, 50000);
                 }
                 if($winType == 'win'){

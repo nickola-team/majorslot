@@ -715,7 +715,7 @@ namespace VanguardLTE\Games\MoneyMoneyMoneyPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameMoneyMoneyMoneyStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameMoneyMoneyMoneyStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

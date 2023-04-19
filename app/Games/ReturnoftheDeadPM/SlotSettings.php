@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\ReturnoftheDeadPM
                 if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameReturnoftheDeadStack::where('spin_type', 1);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameReturnoftheDeadStack::where('spin_type', 0);                    
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameReturnoftheDeadStack::where('spin_type', 0)->whereNotIn('id', $existIds);                    
                 }
                 if($winType == 'win'){
                     $index = mt_rand(0, 95000);

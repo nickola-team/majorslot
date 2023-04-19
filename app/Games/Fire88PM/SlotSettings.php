@@ -721,7 +721,7 @@ namespace VanguardLTE\Games\Fire88PM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameFire88Stack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameFire88Stack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

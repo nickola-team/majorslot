@@ -723,7 +723,7 @@ namespace VanguardLTE\Games\TheGreatStickupPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheGreatStickUpStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheGreatStickUpStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
