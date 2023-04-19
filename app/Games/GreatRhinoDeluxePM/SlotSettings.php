@@ -724,7 +724,7 @@ namespace VanguardLTE\Games\GreatRhinoDeluxePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameGreatRhinoDeluxeStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameGreatRhinoDeluxeStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

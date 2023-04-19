@@ -718,7 +718,7 @@ namespace VanguardLTE\Games\BookofTutPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfTutStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfTutStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 41000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

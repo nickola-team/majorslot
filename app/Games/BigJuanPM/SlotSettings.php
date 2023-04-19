@@ -739,7 +739,7 @@ namespace VanguardLTE\Games\BigJuanPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameBigJuanStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameBigJuanStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 35000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

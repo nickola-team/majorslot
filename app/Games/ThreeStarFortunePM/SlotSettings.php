@@ -731,7 +731,7 @@ namespace VanguardLTE\Games\ThreeStarFortunePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameThreeStarFortuneStack::where('spin_type', '<', 2)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameThreeStarFortuneStack::where('spin_type', '<', 2);
                 $index = mt_rand(0, 29000);
                 if($winType == 'win' || $winType == 'bonus'){
                     $stacks = $stacks->where('odd', '>', 0);

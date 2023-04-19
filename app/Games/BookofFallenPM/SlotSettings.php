@@ -722,7 +722,7 @@ namespace VanguardLTE\Games\BookofFallenPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfFallenStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameBookOfFallenStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 51500);
                 if($winType == 'win' && $pur_level < 0){
                     $stacks = $stacks->where('odd', '>', 0);

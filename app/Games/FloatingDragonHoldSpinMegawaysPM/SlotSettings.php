@@ -728,7 +728,7 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameFloatingDragonHoldSpinMegawaysStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameFloatingDragonHoldSpinMegawaysStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 49000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

@@ -719,7 +719,7 @@ namespace VanguardLTE\Games\LuckyNewYearTigerTreasuresPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameBullFiestaStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameBullFiestaStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

@@ -727,7 +727,7 @@ namespace VanguardLTE\Games\WildWalkerPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWalkerStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWalkerStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 33000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

@@ -725,10 +725,6 @@ namespace VanguardLTE\Games\LuckyGraceCharmPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
-            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
-                'user_id' => $this->playerId,
-                'game_id' => $this->game->original_id
-                ])->pluck('freestack_id');
             while(true){                
                 $index = mt_rand(0, 58000);
                 if($winType == 'bonus'){
