@@ -715,7 +715,7 @@ namespace VanguardLTE\Games\ElementalGemsMegawaysPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameElementalGemsMegawaysStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameElementalGemsMegawaysStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 29000);
                 if($winType == 'win' || $winType == 'bonus'){
                     $stacks = $stacks->where('odd', '>', 0);

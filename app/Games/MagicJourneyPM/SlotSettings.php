@@ -719,7 +719,7 @@ namespace VanguardLTE\Games\MagicJourneyPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameMagicJourneyStack::where('spin_type', '<', 2);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameMagicJourneyStack::where('spin_type', '<', 2)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 30000);
                 if($winType == 'win' || $winType == 'bonus'){
                     $stacks = $stacks->where('odd', '>', 0);

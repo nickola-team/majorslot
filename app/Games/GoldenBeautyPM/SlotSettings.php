@@ -743,7 +743,7 @@ namespace VanguardLTE\Games\GoldenBeautyPM
                 }else if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldenBeautyStack::where('spin_type', 2);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldenBeautyStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldenBeautyStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                     // $index = mt_rand(0, 50000);
                 }
                 if($fsmax <= 0 && $limitOdd < 0.5){

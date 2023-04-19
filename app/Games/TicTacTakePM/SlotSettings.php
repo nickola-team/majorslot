@@ -721,7 +721,7 @@ namespace VanguardLTE\Games\TicTacTakePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameTicTacTakeStack::where('pur_level', $pur_level);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTicTacTakeStack::where('pur_level', $pur_level)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 51000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

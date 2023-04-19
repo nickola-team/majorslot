@@ -729,7 +729,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseMegawaysStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseMegawaysStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 48000);
                 if($ind >= 0){
                     $stacks = $stacks->where(['pur_level'=>$ind, 'scatter_count'=>$scatterCount]);

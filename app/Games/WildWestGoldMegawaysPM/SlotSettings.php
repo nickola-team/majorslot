@@ -723,7 +723,7 @@ namespace VanguardLTE\Games\WildWestGoldMegawaysPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWestGoldMegawaysStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWestGoldMegawaysStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 $index = mt_rand(1000, 80000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

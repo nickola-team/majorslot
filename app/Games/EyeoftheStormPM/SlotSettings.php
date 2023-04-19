@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\EyeoftheStormPM
             $isLowBank = false;
             while(true){
                 $index = mt_rand(0, 24000);
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameEyeoftheStormStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameEyeoftheStormStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

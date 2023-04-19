@@ -720,7 +720,7 @@ namespace VanguardLTE\Games\DragonKingdomEyesofFirePM
             $isLowBank = false;
             while(true){
                 $index = mt_rand(0, 25000);
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameDragonKingdomEyesofFireStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameDragonKingdomEyesofFireStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

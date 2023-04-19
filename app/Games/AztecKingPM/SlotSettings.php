@@ -726,7 +726,7 @@ namespace VanguardLTE\Games\AztecKingPM
             $isLowBank = false;
             while(true){
                 $index = mt_rand(0, 45000);
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashPatrolStack::where('spin_type', $spintype);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameCashPatrolStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
                 
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
