@@ -724,7 +724,7 @@ namespace VanguardLTE\Games\HottoBurnHoldandSpinPM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameHottoBurnHoldandSpinStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameHottoBurnHoldandSpinStack::where('spin_type', $spintype);
                 $index = mt_rand(0, 53000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

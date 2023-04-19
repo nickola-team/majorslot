@@ -724,10 +724,6 @@ namespace VanguardLTE\Games\CashPatrolPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
-            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
-                'user_id' => $this->playerId,
-                'game_id' => $this->game->original_id
-                ])->pluck('freestack_id');
             $index = mt_rand(0, 45000);
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameCashPatrolStack::where('spin_type', $spintype);

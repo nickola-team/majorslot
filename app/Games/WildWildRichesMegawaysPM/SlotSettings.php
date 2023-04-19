@@ -775,7 +775,7 @@ namespace VanguardLTE\Games\WildWildRichesMegawaysPM
             $isLowBank = false;
             while(true){
                 $index = mt_rand(0, 40000);
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesMegawaysStack::where('spin_type', $spinType)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameWildWildRichesMegawaysStack::where('spin_type', $spinType);
                 if($fsmax > 0){
                     $stacks = $stacks->where('fsmax', $fsmax);
                 }

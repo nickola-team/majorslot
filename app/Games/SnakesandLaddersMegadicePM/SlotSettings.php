@@ -727,7 +727,7 @@ namespace VanguardLTE\Games\SnakesandLaddersMegadicePM
             }
             $isLowBank = false;
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameTicTacTakePMStack::where('pur_level', $pur_level)->whereNotIn('id', $existIds);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTicTacTakePMStack::where('pur_level', $pur_level);
                 $index = 0; //mt_rand(0, 41000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

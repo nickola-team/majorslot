@@ -732,9 +732,9 @@ namespace VanguardLTE\Games\FishinReelsPM
                 if($fsmax > 0){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameFishinReelsStack::where(['spin_type' => 1, 'pur_level' => $ind, 'fsmax' => $fsmax]);
                 }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFishinReelsStack::where('spin_type', 2)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFishinReelsStack::where('spin_type', 2);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFishinReelsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFishinReelsStack::where('spin_type', 0);
                     $index = mt_rand(0, 50000);
                 }
                 if($winType == 'win'){

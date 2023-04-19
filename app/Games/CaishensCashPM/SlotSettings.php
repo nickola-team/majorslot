@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\CaishensCashPM
                 if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameCaishensCashStack::where('spin_type', 1);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCaishensCashStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCaishensCashStack::where('spin_type', 0);
                     // $index = mt_rand(0, 50000);
                 }
                 if($winType == 'win'){
