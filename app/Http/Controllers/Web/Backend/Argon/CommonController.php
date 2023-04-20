@@ -311,13 +311,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 unset($data['gamertp']);
 
             }
-            if (isset($data['account_no']) || isset($data['recommender']))
-            {
-                if (($user->account_no != $data['account_no']) || ($user->recommender != $data['recommender']))
-                {
-                    return redirect()->back()->withErrors(['임시 계좌설정을 할수 없습니다']);
-                }
-            }
+            // if (isset($data['account_no']) || isset($data['recommender']))
+            // {
+            //     if (($user->account_no != $data['account_no']) || ($user->recommender != $data['recommender']))
+            //     {
+            //         return redirect()->back()->withErrors(['임시 계좌설정을 할수 없습니다']);
+            //     }
+            // }
             
             if( !$user->isInOutPartner())
             {
