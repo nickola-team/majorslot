@@ -94,7 +94,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    Log::error('KTENgetuserbalance : response is not okay. ' . $response->body());
+                    Log::error('KTENgetuserbalance : response is not okay. ' . json_encode($params) . '===body==' . $response->body());
                 }
             }
             catch (\Exception $ex)
