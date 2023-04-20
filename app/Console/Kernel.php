@@ -7,6 +7,9 @@ namespace VanguardLTE\Console
     use GuzzleHttp\Psr7\Request;
     use GuzzleHttp\Psr7\Response;
     use \VanguardLTE\Http\Controllers\Web\GameProviders\PPController;
+    use Illuminate\Support\Facades\Crypt;
+
+
     class Kernel extends \Illuminate\Foundation\Console\Kernel
     {
         protected $commands = [
@@ -1647,6 +1650,19 @@ namespace VanguardLTE\Console
                     $from = $res[1];
                 }
                 $this->info("End kten rounds. last id = " . $from);
+            });            
+
+            \Artisan::command('session:cookie {session}', function ($session) {
+
+                $this->info("Begin");
+                
+                $base64_key = env('APP_KEY');
+                $payload = json_decode(base64_decode(urldecode($session)), true);
+                $iv = base64_decode($payload['iv']);
+                $key = base64_decode(substr($base64_key, 7));
+                $sessionId = openssl_decrypt($payload['value'],  'AES-256-CBC', $key, 0, $iv);
+                $this->info($sessionId);
+                $this->info("End");
             });            
 
         }
