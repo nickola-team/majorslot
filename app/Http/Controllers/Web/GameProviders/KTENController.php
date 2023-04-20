@@ -1183,6 +1183,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($response->status() == 302)
             {
                 $location = $response->header('location');
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($location);
+                $datapath = $ppgameserver . '/gs2c/common/games-html5/games/vs/'. $gamecode . '/';
+                $gameservice = $ppgameserver. '/gs2c/ge/v3/gameService';
+                if ($response->ok())
+                {
+                    $content = $response->body();
+                    preg_match("/\"datapath\":\"([^\"]*)/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $datapath = $match[1];
+                    }
+                    preg_match("/\"gameService\":\"([^\"]*)/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $gameservice = $match[1];
+                    }
+                }
                 $keys = explode('&', $location);
                 $mgckey = null;
                 foreach ($keys as $key){
@@ -1201,7 +1216,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
 
                 $cver = 99951;
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/common/games-html5/games/vs/'. $gamecode .'/desktop/bootstrap.js');
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($datapath .'desktop/bootstrap.js');
                 if ($response->ok())
                 {
                     $content = $response->body();
@@ -1222,17 +1237,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $v_type = 'v3';
                 $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
                     'Content-Type' => 'application/x-www-form-urlencoded'
-                    ])->asForm()->post($ppgameserver. '/gs2c/ge/' . $v_type . '/gameService', $data);
+                    ])->asForm()->post($gameservice, $data);
                 if (!$response->ok())
                 {
-                    $v_type = 'v4';
-                    $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
-                        'Content-Type' => 'application/x-www-form-urlencoded'
-                        ])->asForm()->post($ppgameserver . '/gs2c/ge/' . $v_type . '/gameService', $data);
-                        if(!$response->ok()){
-                            $this->ppverifyLog($gamecode, $user->id, 'doInit request error');
-                            return redirect($failed_url);
-                        }
+                    $this->ppverifyLog($gamecode, $user->id, 'doInit request error');
+                    return redirect($failed_url);
                 }
 
                 if($stat_game != null){
@@ -1259,8 +1268,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $data = [
                                     'action' => 'doSpin',
                                     'symbol' => $gamecode,
-                                    'c' => $bet,
-                                    'l' => $line,
                                     'index' => $index + 1,
                                     'counter' => $counter + 1,
                                     'repeat' => 0,
@@ -1269,7 +1276,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 if($spinType != 'b'){
                                     $isRespin = false;
                                 }
-                                if($spinType == 'fso'){
+                                if($spinType == 's'){
+                                    $data['c'] = $bet;
+                                    $data['l'] = $line;
+                                }else if($spinType == 'c'){
+                                    $data['action'] = 'doCollect';
+                                }else if($spinType == 'cb'){
+                                    $data['action'] = 'doCollectBonus';
+                                }else if($spinType == 'fso'){
                                     $data['action'] = 'doFSOption';
                                     $data['ind'] = 0;
                                 }else if($spinType == 'm'){
@@ -1317,34 +1331,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 if($bl >= 0){
                                     $data['bl'] = $bl;
                                 }
-                                if($spinType == 's' || $spinType == 'c'){
-                                    $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
-                                        'Content-Type' => 'application/x-www-form-urlencoded'
-                                        ])->asForm()->post($ppgameserver . '/gs2c/ge/'. $v_type .'/gameService', $data);
-                                    if (!$response->ok())
-                                    {
-                                        $this->ppverifyLog($gamecode, $user->id, 'doSpin Error, Body => ' . $response->body());
-                                        break;
-                                    }
-                                    $result = PPController::toJson($response->body());
-                                    $spinType = $result['na'] ?? 's';
-                                    $rs_p = $result['rs_p'] ?? -1;
-                                    $fsmax = $result['fsmax'] ?? -1;
-                                    $index = $result['index'] ?? 1;
-                                    $counter = $result['counter'] ?? 2;
-                                    $bw = $result['bw'] ?? -1;
-                                    $end = $result['end'] ?? -1;
-                                    $bgt = $result['bgt'] ?? -1;
-                                    if($spinType == 'c' || $spinType == 'cb' || ($spinType == 's' && $rs_p == -1 && $fsmax == -1)){
-                                        \VanguardLTE\PPGameVerifyLog::create([
-                                            'game_id' => $game->original_id, 
-                                            'user_id' => $user->id, 
-                                            'bet' => $bet * $line
-                                        ]);
-                                        break;
-                                    }
-                                }else{
-                                    $this->ppverifyLog($gamecode, $user->id, 'Bonus => spinType=' . $spinType);
+                                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
+                                    'Accept' => '*/*',
+                                    'Content-Type' => 'application/x-www-form-urlencoded'
+                                    ])->asForm()->post($gameservice, $data);
+                                if (!$response->ok())
+                                {
+                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin Error, Body => ' . $response->body());
+                                    break;
+                                }
+                                $result = PPController::toJson($response->body());
+                                $spinType = $result['na'] ?? 's';
+                                $rs_p = $result['rs_p'] ?? -1;
+                                $fsmax = $result['fsmax'] ?? -1;
+                                $index = $result['index'] ?? 1;
+                                $counter = $result['counter'] ?? 2;
+                                $bw = $result['bw'] ?? -1;
+                                $end = $result['end'] ?? -1;
+                                $bgt = $result['bgt'] ?? -1;
+                                if($spinType == 's' && $rs_p == -1 && $fsmax == -1){
+                                    \VanguardLTE\PPGameVerifyLog::create([
+                                        'game_id' => $game->original_id, 
+                                        'user_id' => $user->id, 
+                                        'bet' => $bet * $line
+                                    ]);
                                     break;
                                 }
                                 
