@@ -1097,7 +1097,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if($verify_log != null){
                 $last_bet_time = $verify_log->date_time;
             }
-            $stat_game = \VanguardLTE\StatGame::where(['user_id' => $user->id]);
+            $pm_category = \VanguardLTE\Category::where('href', 'pragmatic')->first();
+            $cat_id = $pm_category->original_id;
+            $stat_game = \VanguardLTE\StatGame::where(['user_id' => $user->id, 'category_id' => $cat_id]);
             if($last_bet_time != null){
                 $stat_game = $stat_game->where('date_time', '>', $last_bet_time);
             }
@@ -1130,12 +1132,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return redirect($failed_url);
                 }
                 //Add balance
-
-                if ($user->balance > 0)
+                $adduserbalance = $stat_game->bet;   // 유저머니를 베트머니만큼 충전한다.
+                if ($adduserbalance > 0)
                 {
                     //addMemberPoint
                     $params = [
-                        'amount' => floatval($user->balance),
+                        'amount' => floatval($adduserbalance),
                         'agentId' => $op,
                         'token' => $token,
                         'transactionID' => uniqid(self::KTEN_PROVIDER),
@@ -1197,7 +1199,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols'];
                 $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum'];
                 $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
-                
+
                 $cver = 99951;
                 $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/common/games-html5/games/vs/'. $gamecode .'/desktop/bootstrap.js');
                 if ($response->ok())
