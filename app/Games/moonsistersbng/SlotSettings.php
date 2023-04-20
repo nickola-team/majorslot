@@ -487,10 +487,21 @@ namespace VanguardLTE\Games\moonsistersbng
         public function SaveBNGLogReport($model){
             \VanguardLTE\BNGGameLog::create($model);
         }
-        public function GetSpinSettings($garantType = 'doSpin', $bet, $lines, $isdoublechance = 0)
+        public function GetSpinSettings($garantType = 'bet', $bet, $lines, $isdoublechance = 0)
         {
             $linecount = 10;
-            if( $garantType != 'doSpin' ) 
+            if(isset($this->game->divBanks)){
+                if(isset($this->game->divBanks[0]) && $bet <= $this->game->divBanks[0]){
+                    $linecount = 1;
+                }else if(isset($this->game->divBanks[1]) && $bet <= $this->game->divBanks[1]){
+                    $linecount = 5;
+                }else if(isset($this->game->divBanks[2]) && $bet <= $this->game->divBanks[2]){
+                    $linecount = 7;
+                }else if(isset($this->game->divBanks[3]) && $bet <= $this->game->divBanks[3]){
+                    $linecount = 9;
+                }
+            }
+            if( $garantType != 'bet' ) 
             {
                 $granttype = '_bonus';
             }
@@ -586,10 +597,10 @@ namespace VanguardLTE\Games\moonsistersbng
             }
             return $return;
         }
-        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'doSpin')
+        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $linecount = 10;
-            if( $garantType != 'doSpin' ) 
+            if( $garantType != 'bet' ) 
             {
                 $granttype = '_bonus';
             }
