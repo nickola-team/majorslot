@@ -235,6 +235,12 @@ return [
     'cipher' => 'AES-256-CBC',
 
     /*
+    KTEN Auth key
+    */
+    'kten_api' => env('KTEN_API', ''),
+    'kten_op' => env('KTEN_OP', ''),
+    'kten_key' => env('KTEN_KEY', ''),
+    /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
