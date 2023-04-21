@@ -403,7 +403,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'user_id' => $userId,
                     'game_id' => $gameId,
                     'betInfo' => 1,
-                    'type' => 1
+                    'type' => 1,
+                    'status' => 0
                     ])->first();
                 if ($record)
                 {
