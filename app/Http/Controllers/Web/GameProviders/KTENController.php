@@ -255,7 +255,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function withdrawAll($href, $user, $prefix=self::KTEN_PROVIDER)
         {
-            $balance = KTENController::getuserbalance($href,$user);
+            $balance = KTENController::getuserbalance($href,$user, $prefix);
             if ($balance < 0)
             {
                 return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
