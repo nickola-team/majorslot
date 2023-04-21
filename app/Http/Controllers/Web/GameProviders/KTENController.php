@@ -11,7 +11,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         const KTEN_PROVIDER = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
-        const KTEN_PPVERIFY_PROVIDER = 'kten-vrf';
+        const KTEN_PPVERIFY_PROVIDER = 'vrf';
         const KTEN_GAME_IDENTITY = [
             //==== SLOT ====
             'kten-pp' => ['thirdname' =>'Pragmatic','type' => 'slot'],
