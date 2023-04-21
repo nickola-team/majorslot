@@ -11,6 +11,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         const KTEN_PROVIDER = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
+        const KTEN_PPVERIFY_PROVIDER = 'kten-provider';
         const KTEN_GAME_IDENTITY = [
             //==== SLOT ====
             'kten-pp' => ['thirdname' =>'Pragmatic','type' => 'slot'],
@@ -1026,7 +1027,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'agentId' => $op,
                 'token' => $token,
-                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
                 'time' => time(),
             ];
             $alreadyUser = 1;
@@ -1061,9 +1062,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $params = [
                     'agentId' => $op,
                     'token' => $token,
-                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
                     'time' => time(),
-                    'email' => self::KTEN_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'email' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
                     'password' => '111111'
                 ];
                 try
@@ -1140,8 +1141,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'amount' => floatval($adduserbalance),
                         'agentId' => $op,
                         'token' => $token,
-                        'transactionID' => uniqid(self::KTEN_PROVIDER),
-                        'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                        'transactionID' => uniqid(self::KTEN_PPVERIFY_PROVIDER),
+                        'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
                         'time' => time(),
                     ];
                     try {
@@ -1341,6 +1342,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     break;
                                 }
                                 $result = PPController::toJson($response->body());
+                                if(count($result) == 0){
+                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Data=' . json_encode($data));
+                                    break;
+                                }
                                 $spinType = $result['na'] ?? 's';
                                 $rs_p = $result['rs_p'] ?? -1;
                                 $fsmax = $result['fsmax'] ?? -1;
