@@ -125,7 +125,7 @@ namespace VanguardLTE\Games\DaVincisTreasurePM
                 }
                 else
                 {
-                    $bet = '50.00';
+                    $bet = '40.00';
                 }
                 $currentReelSet = 0;
                 $fsmul = 1;

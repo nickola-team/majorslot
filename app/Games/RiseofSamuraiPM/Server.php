@@ -93,7 +93,7 @@ namespace VanguardLTE\Games\RiseofSamuraiPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '40.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;
