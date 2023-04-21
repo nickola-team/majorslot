@@ -504,7 +504,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function processGameRound($frompoint=-1, $checkduplicate=false)
         {
-            return [0, -1];
             $timepoint = 0;
             if ($frompoint == -1)
             {
