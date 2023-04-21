@@ -11,6 +11,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         const KTEN_PROVIDER = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
+        const KTEN_PPVERIFY_PROVIDER = 'vrf';
         const KTEN_GAME_IDENTITY = [
             //==== SLOT ====
             'kten-pp' => ['thirdname' =>'Pragmatic','type' => 'slot'],
@@ -65,7 +66,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         
-        public static function getUserBalance($href, $user) {
+        public static function getUserBalance($href, $user, $prefix=self::KTEN_PROVIDER) {
             $url = config('app.kten_api') . '/api/getAccountBalance';
             $op = config('app.kten_op');
             $token = config('app.kten_key');
@@ -74,7 +75,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'agentId' => $op,
                 'token' => $token,
                 'time' => time(),
-                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'userId' => $prefix . sprintf("%04d",$user->id),
             ];
             $balance = -1;
 
@@ -215,7 +216,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode, $user) 
+        public static function makegamelink($gamecode, $user, $prefix=self::KTEN_PROVIDER) 
         {
 
             $op = config('app.kten_op');
@@ -229,7 +230,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'agentId' => $op,
                 'token' => $token,
                 'time' => time(),
-                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'userId' => $prefix . sprintf("%04d",$user->id),
             ];
 
             $url = config('app.kten_api') . '/api/getGameUrl';
@@ -252,7 +253,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url;
         }
         
-        public static function withdrawAll($href, $user)
+        public static function withdrawAll($href, $user, $prefix=self::KTEN_PROVIDER)
         {
             $balance = KTENController::getuserbalance($href,$user);
             if ($balance < 0)
@@ -268,8 +269,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'amount' => $balance,
                     'agentId' => $op,
                     'token' => $token,
-                    'transactionID' => uniqid(self::KTEN_PROVIDER),
-                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'transactionID' => uniqid($prefix),
+                    'userId' => $prefix . sprintf("%04d",$user->id),
                     'time' => time(),
                 ];
 
@@ -700,6 +701,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $time = $round['trans_time'];
 
                         $userid = intval(preg_replace('/'. self::KTEN_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
+                        if ($userid == 0)
+                        {
+                            $userid = intval(preg_replace('/'. self::KTEN_PPVERIFY_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
+                            continue;
+                        }
                         $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                         $category = \VanguardLTE\Category::where('href', $catname)->first();
 
@@ -1012,6 +1018,386 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => true, 'msg' => 'server response is not 302.'];
             }          
             
+        }
+        public function ppverify($gamecode, \Illuminate\Http\Request $request){
+            $failed_url = "http://404.pragmaticplay.com";
+            $user = \Auth()->user();
+            $op = config('app.kten_op');
+            $token = config('app.kten_key');
+            if($user == null){
+                $this->ppverifyLog($gamecode, '', 'There is no user');
+                return redirect($failed_url); 
+            }
+            //check kten account
+            $params = [
+                'agentId' => $op,
+                'token' => $token,
+                'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time(),
+            ];
+            $alreadyUser = 1;
+            try
+            {
+
+                $url = config('app.kten_api') . '/api/checkUser';
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'KTENmakelink : checkUser request failed. ' . $response->body());
+                    return redirect($failed_url);
+                }
+                $data = $response->json();
+                if ($data==null || ($data['errorCode'] != 0 && $data['errorCode'] != 4))
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'KTENmakelink : checkUser result failed. ' . ($data==null?'null':$data['msg']));
+                    return redirect($failed_url);
+                }
+                if ($data['errorCode'] == 4)
+                {
+                    $alreadyUser = 0;
+                }
+            }
+            catch (\Exception $ex)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'KTENcheckuser : checkUser Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                return redirect($failed_url);
+            }
+            if ($alreadyUser == 0){
+                //create kten account
+                $params = [
+                    'agentId' => $op,
+                    'token' => $token,
+                    'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time(),
+                    'email' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
+                ];
+                try
+                {
+
+                    $url = config('app.kten_api') . '/api/createAccount';
+                    $response = Http::asForm()->post($url, $params);
+                    if (!$response->ok())
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'KTENmakelink : createAccount request failed. ' . $response->body());
+                        return redirect($failed_url);
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['errorCode'] != 0)
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'KTENmakelink : createAccount result failed. ' . ($data==null?'null':$data['msg']));
+                        return redirect($failed_url);
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'KTENcheckuser : checkUser Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                    return redirect($failed_url);
+                }
+            }
+            
+            
+            // 유저마지막 베팅로그 얻기
+            $verify_log = \VanguardLTE\PPGameVerifyLog::where('user_id', $user->id)->orderby('date_time', 'desc')->first();
+            $last_bet_time = null;
+            if($verify_log != null){
+                $last_bet_time = $verify_log->date_time;
+            }
+            $pm_category = \VanguardLTE\Category::where('href', 'pragmatic')->first();
+            $cat_id = $pm_category->original_id;
+            $stat_game = \VanguardLTE\StatGame::where(['user_id' => $user->id, 'category_id' => $cat_id]);
+            if($last_bet_time != null){
+                $stat_game = $stat_game->where('date_time', '>', $last_bet_time);
+            }
+            $stat_game = $stat_game->orderby('date_time', 'desc')->first();
+            if($stat_game != null){
+                $game = \VanguardLTE\Game::where('original_id', $stat_game->game_id)->where('shop_id', $user->shop_id)->first();
+                if($game == null){
+                    $this->ppverifyLog($gamecode, $user->id, 'there is no gamecode => ' . $gamecode);
+                    return redirect($failed_url);
+                }else{
+                    $gamecode = $game->label;
+                }
+            }
+
+            ///////////////////////<--- User Balance Transfer --->/////////////////////////
+            $balance = KTENController::getuserbalance($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
+            if ($balance == -1)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'UserBalance => ' . $balance);
+                return redirect($failed_url);
+            }
+
+            if ($balance != $user->balance && $stat_game != null)
+            {
+                //withdraw all balance
+                $data = KTENController::withdrawAll($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
+                if ($data['error'])
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'withdrawAll error');
+                    return redirect($failed_url);
+                }
+                //Add balance
+                $adduserbalance = $stat_game->bet;   // 유저머니를 베트머니만큼 충전한다.
+                if ($adduserbalance > 0)
+                {
+                    //addMemberPoint
+                    $params = [
+                        'amount' => floatval($adduserbalance),
+                        'agentId' => $op,
+                        'token' => $token,
+                        'transactionID' => uniqid(self::KTEN_PPVERIFY_PROVIDER),
+                        'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
+                        'time' => time(),
+                    ];
+                    try {
+                        $url = config('app.kten_api') . '/api/addMemberPoint';
+                        $response = Http::get($url, $params);
+                        if (!$response->ok())
+                        {
+                            $this->ppverifyLog($gamecode, $user->id, 'KTENmakelink : addMemberPoint request failed. ' . $response->body());
+                            return redirect($failed_url);
+                        }
+                        $data = $response->json();
+                        if ($data==null || $data['errorCode'] != 0)
+                        {
+                            $this->ppverifyLog($gamecode, $user->id, 'KTENmakelink : addMemberPoint result failed. ' . ($data==null?'null':$data['errorCode']));
+                            return redirect($failed_url);
+                        }
+                    }
+                    catch (\Exception $ex)
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'addMemberPoint exception=' . $ex->getMessage() . ', PARAM=' . json_encode($params));
+                        return redirect($failed_url);
+                    }
+                }
+            }
+            ///////////////////////<--- End --->/////////////////////////
+
+            $url = KTENController::makegamelink($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
+            if ($url == null)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'make game link error');
+                return redirect($failed_url);
+            }
+
+            $parse = parse_url($url);
+            $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
+        
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($location);
+                $datapath = $ppgameserver . '/gs2c/common/games-html5/games/vs/'. $gamecode . '/';
+                $gameservice = $ppgameserver. '/gs2c/ge/v3/gameService';
+                if ($response->ok())
+                {
+                    $content = $response->body();
+                    preg_match("/\"datapath\":\"([^\"]*)/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $datapath = $match[1];
+                    }
+                    preg_match("/\"gameService\":\"([^\"]*)/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $gameservice = $match[1];
+                    }
+                }
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                    }
+                }
+                if (!$mgckey){
+                    $this->ppverifyLog($gamecode, $user->id, 'could not find mgckey value');
+                    return redirect($failed_url);
+                }
+
+                $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols'];
+                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum'];
+                $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
+
+                $cver = 99951;
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($datapath .'desktop/bootstrap.js');
+                if ($response->ok())
+                {
+                    $content = $response->body();
+                    preg_match("/UHT_REVISION={common:'(\d+)',desktop:'\d+',mobile/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $cver = $match[1];
+                    }
+                }
+                $data = [
+                    'action' => 'doInit',
+                    'symbol' => $gamecode,
+                    'cver' => $cver,
+                    'index' => 1,
+                    'counter' => 1,
+                    'repeat' => 0,
+                    'mgckey' => explode('=', $mgckey)[1]
+                ];
+                $v_type = 'v3';
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post($gameservice, $data);
+                if (!$response->ok())
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'doInit request error');
+                    return redirect($failed_url);
+                }
+
+                if($stat_game != null){
+                    $result = PPController::toJson($response->body());
+                    $line = (int)$result['l'] ?? 20;
+                    $bet = (float)$result['c'] ?? 100;
+                    $arr_bets = isset( $result['sc']) ? explode(',', $result['sc']) : [];
+                    $bl = $result['bl'] ?? -1;
+                    $spinType = $result['na'] ?? 's';
+                    $rs_p = $result['rs_p'] ?? -1;
+                    $fsmax = $result['fsmax'] ?? -1;
+                    $index = $result['index'] ?? 1;
+                    $counter = $result['counter'] ?? 2;
+                    $bw = -1;
+                    $end = -1;
+                    $bgt = -1;
+                    $ind = 0;
+                    $isRespin = false;
+                    $bet = $stat_game->bet / $line;
+                    if(in_array($bet, $arr_bets) == true){
+                        while(true){
+                            try
+                            {
+                                $data = [
+                                    'action' => 'doSpin',
+                                    'symbol' => $gamecode,
+                                    'index' => $index + 1,
+                                    'counter' => $counter + 1,
+                                    'repeat' => 0,
+                                    'mgckey' => explode('=', $mgckey)[1]
+                                ];
+                                if($spinType != 'b'){
+                                    $isRespin = false;
+                                }
+                                if($spinType == 's'){
+                                    $data['c'] = $bet;
+                                    $data['l'] = $line;
+                                }else if($spinType == 'c'){
+                                    $data['action'] = 'doCollect';
+                                }else if($spinType == 'cb'){
+                                    $data['action'] = 'doCollectBonus';
+                                }else if($spinType == 'fso'){
+                                    $data['action'] = 'doFSOption';
+                                    $data['ind'] = 0;
+                                }else if($spinType == 'm'){
+                                    $data['action'] = 'doMysteryScatter';
+                                    if($gamecode == 'vs10bookfallen'){
+                                        $data['ind'] = 0;
+                                    }
+                                }else if($spinType == 'go'){
+                                    $data['action'] = 'doGambleOption';
+                                    $data['g_a'] = 'stand';
+                                    $data['g_o_ind'] = -1;
+                                }else if($spinType == 'b'){
+                                    $data['action'] = 'doBonus';
+                                    if($isRespin == false){
+                                        $isRespin = true;
+                                        $ind = 0;
+                                    }else{
+                                        $ind++;
+                                    }
+                                    if($gamecode == 'vs7pigs'){
+                                        $arr_i_pos = isset($result['i_pos']) ? explode(',', $result['i_pos']) : [1,1,1];
+                                        $data['ind'] = $arr_i_pos[$ind];
+                                    }else if($gamecode == 'vs243queenie'){
+                                        if($bw != 1){
+                                            $data['ind'] = isset($result['wi']) ? ($result['wi'] + 1) : 1;
+                                        }
+                                    }else if(in_array($gamecode, $arr_b_gamble_games)){
+                                        $data['ind'] = 1;
+                                    }else if(in_array($gamecode, $arr_b_no_ind_games)){
+                                        $data['ind'] = 0;
+                                    }else if(in_array($gamecode, $arr_b_ind_games)){
+                                        if($bgt == 9 || $bgt == 23){
+                                            $data['ind'] = 0;
+                                        }else if($bgt == 11 || $bgt == 31){
+                                            
+                                        }else if($bgt == 21){
+                                            if($end == 0){
+                                                $data['ind'] = 0;
+                                            }
+                                        }else{
+                                            $data['ind'] = $ind;
+                                        }
+                                    }
+                                }
+                                if($bl >= 0){
+                                    $data['bl'] = $bl;
+                                }
+                                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
+                                    'Accept' => '*/*',
+                                    'Content-Type' => 'application/x-www-form-urlencoded'
+                                    ])->asForm()->post($gameservice, $data);
+                                if (!$response->ok())
+                                {
+                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin Error, Body => ' . $response->body());
+                                    break;
+                                }
+                                $result = PPController::toJson($response->body());
+                                if(count($result) == 0){
+                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Data=' . json_encode($data));
+                                    break;
+                                }
+                                $spinType = $result['na'] ?? 's';
+                                $rs_p = $result['rs_p'] ?? -1;
+                                $fsmax = $result['fsmax'] ?? -1;
+                                $index = $result['index'] ?? 1;
+                                $counter = $result['counter'] ?? 2;
+                                $bw = $result['bw'] ?? -1;
+                                $end = $result['end'] ?? -1;
+                                $bgt = $result['bgt'] ?? -1;
+                                if($spinType == 's' && $rs_p == -1 && $fsmax == -1){
+                                    \VanguardLTE\PPGameVerifyLog::create([
+                                        'game_id' => $game->original_id, 
+                                        'user_id' => $user->id, 
+                                        'bet' => $bet * $line
+                                    ]);
+                                    break;
+                                }
+                                
+                            }
+                            catch (\Exception $ex)
+                            {
+                                $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Exception=' . $ex->getMessage() . ', Data=' . json_encode($data));
+                                break;
+                            }
+                        }
+                    }
+                }
+                return redirect($ppgameserver . '/gs2c/session/verify?lang=ko&'.$mgckey);
+            }else{
+                Log::error('server response is not 302.');
+                return redirect($failed_url);
+            }
+        }
+        public function ppverifyLog($gamecode, $user_id, $msg)
+        {
+            $strlog = '';
+            $strlog .= "\n";
+            $strlog .= date("Y-m-d H:i:s") . ' ';
+            $strlog .= $user_id . '->' . $gamecode . ' : ' . $msg;
+            $strlog .= "\n";
+            $strlog .= ' ############################################### ';
+            $strlog .= "\n";
+            $strinternallog = '';
+            if( file_exists(storage_path('logs/') . 'PPVerify.log') ) 
+            {
+                $strinternallog = file_get_contents(storage_path('logs/') . 'PPVerify.log');
+            }
+            file_put_contents(storage_path('logs/') . 'PPVerify.log', $strinternallog . $strlog);
         }
 
     }
