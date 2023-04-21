@@ -66,7 +66,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         
-        public static function getUserBalance($href, $user) {
+        public static function getUserBalance($href, $user, $prefix=self::KTEN_PROVIDER) {
             $url = config('app.kten_api') . '/api/getAccountBalance';
             $op = config('app.kten_op');
             $token = config('app.kten_key');
@@ -75,7 +75,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'agentId' => $op,
                 'token' => $token,
                 'time' => time(),
-                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'userId' => $prefix . sprintf("%04d",$user->id),
             ];
             $balance = -1;
 
@@ -216,7 +216,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode, $user) 
+        public static function makegamelink($gamecode, $user, $prefix=self::KTEN_PROVIDER) 
         {
 
             $op = config('app.kten_op');
@@ -230,7 +230,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'agentId' => $op,
                 'token' => $token,
                 'time' => time(),
-                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'userId' => $prefix . sprintf("%04d",$user->id),
             ];
 
             $url = config('app.kten_api') . '/api/getGameUrl';
@@ -253,7 +253,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url;
         }
         
-        public static function withdrawAll($href, $user)
+        public static function withdrawAll($href, $user, $prefix=self::KTEN_PROVIDER)
         {
             $balance = KTENController::getuserbalance($href,$user);
             if ($balance < 0)
@@ -269,8 +269,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'amount' => $balance,
                     'agentId' => $op,
                     'token' => $token,
-                    'transactionID' => uniqid(self::KTEN_PROVIDER),
-                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'transactionID' => uniqid($prefix),
+                    'userId' => $prefix . sprintf("%04d",$user->id),
                     'time' => time(),
                 ];
 
@@ -1121,7 +1121,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             ///////////////////////<--- User Balance Transfer --->/////////////////////////
-            $balance = KTENController::getuserbalance($gamecode, $user);
+            $balance = KTENController::getuserbalance($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
             if ($balance == -1)
             {
                 $this->ppverifyLog($gamecode, $user->id, 'UserBalance => ' . $balance);
@@ -1131,7 +1131,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance && $stat_game != null)
             {
                 //withdraw all balance
-                $data = KTENController::withdrawAll($gamecode, $user);
+                $data = KTENController::withdrawAll($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
                 if ($data['error'])
                 {
                     $this->ppverifyLog($gamecode, $user->id, 'withdrawAll error');
@@ -1174,7 +1174,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             ///////////////////////<--- End --->/////////////////////////
 
-            $url = KTENController::makegamelink($gamecode, $user);
+            $url = KTENController::makegamelink($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
             if ($url == null)
             {
                 $this->ppverifyLog($gamecode, $user->id, 'make game link error');
