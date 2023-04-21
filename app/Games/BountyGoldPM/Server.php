@@ -94,7 +94,7 @@ namespace VanguardLTE\Games\BountyGoldPM
                 }
                 else
                 {
-                    $bet = '80.00';
+                    $bet = '40.00';
                 }
                 $spinType = 's';
                 if($stack != null){

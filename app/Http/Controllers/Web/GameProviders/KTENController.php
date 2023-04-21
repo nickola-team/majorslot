@@ -1375,6 +1375,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 break;
                             }
                         }
+                    }else{
+                        $this->ppverifyLog($gamecode, $user->id, 'doSpin BetMoney =' . $bet . ', BetList=' . json_encode($arr_bets));
                     }
                 }
                 return redirect($ppgameserver . '/gs2c/session/verify?lang=ko&'.$mgckey);

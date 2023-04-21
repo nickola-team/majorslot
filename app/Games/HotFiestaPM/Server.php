@@ -93,7 +93,7 @@ namespace VanguardLTE\Games\HotFiestaPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '40.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
