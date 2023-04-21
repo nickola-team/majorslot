@@ -701,6 +701,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $time = $round['trans_time'];
 
                         $userid = intval(preg_replace('/'. self::KTEN_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
+                        if ($userid == 0)
+                        {
+                            $userid = intval(preg_replace('/'. self::KTEN_PPVERIFY_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
+                            continue;
+                        }
                         $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                         $category = \VanguardLTE\Category::where('href', $catname)->first();
 
