@@ -1120,14 +1120,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
 
-            ///////////////////////<--- User Balance Transfer --->/////////////////////////
-            $balance = KTENController::getuserbalance($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
-            if ($balance == -1)
-            {
-                $this->ppverifyLog($gamecode, $user->id, 'UserBalance => ' . $balance);
-                return redirect($failed_url);
-            }
-
             if ($stat_game != null)
             {
                 //withdraw all balance
