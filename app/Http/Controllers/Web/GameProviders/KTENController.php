@@ -255,7 +255,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         
         public static function withdrawAll($href, $user, $prefix=self::KTEN_PROVIDER)
         {
-            $balance = KTENController::getuserbalance($href,$user, $prefix);
+            $balance = KTENController::getuserbalance($href,$user,$prefix);
             if ($balance < 0)
             {
                 return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
@@ -1020,7 +1020,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
         public function ppverify($gamecode, \Illuminate\Http\Request $request){
-            $failed_url = "http://404.pragmaticplay.com";
+            $failed_url = '/gs2c/session/play-verify/'. $gamecode .'?lang=ko&mgckey=AUTHTOKEN@1788e7bf943b9d54907c1b8c7211c4307b9be071e1501f0b09a6b069b6e58~stylename@' . self::KTEN_PPVERIFY_PROVIDER.'-'.self::KTEN_PPVERIFY_PROVIDER . '~SESSION@d016e80c-2a3d-4e6a-b2a9-43b61b0c98dc~SN@5e05f7a7';
             $user = \Auth()->user();
             $op = config('app.kten_op');
             $token = config('app.kten_key');
@@ -1128,7 +1128,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return redirect($failed_url);
             }
 
-            if ($balance != $user->balance && $stat_game != null)
+            if ($stat_game != null)
             {
                 //withdraw all balance
                 $data = KTENController::withdrawAll($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
@@ -1266,117 +1266,142 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $bgt = -1;
                     $ind = 0;
                     $isRespin = false;
-                    $bet = $stat_game->bet / $line;
-                    if(in_array($bet, $arr_bets) == true){
-                        while(true){
-                            try
-                            {
-                                $data = [
-                                    'action' => 'doSpin',
-                                    'symbol' => $gamecode,
-                                    'index' => $index + 1,
-                                    'counter' => $counter + 1,
-                                    'repeat' => 0,
-                                    'mgckey' => explode('=', $mgckey)[1]
-                                ];
-                                if($spinType != 'b'){
-                                    $isRespin = false;
-                                }
-                                if($spinType == 's'){
-                                    $data['c'] = $bet;
-                                    $data['l'] = $line;
-                                }else if($spinType == 'c'){
-                                    $data['action'] = 'doCollect';
-                                }else if($spinType == 'cb'){
-                                    $data['action'] = 'doCollectBonus';
-                                }else if($spinType == 'fso'){
-                                    $data['action'] = 'doFSOption';
-                                    $data['ind'] = 0;
-                                }else if($spinType == 'm'){
-                                    $data['action'] = 'doMysteryScatter';
-                                    if($gamecode == 'vs10bookfallen'){
-                                        $data['ind'] = 0;
-                                    }
-                                }else if($spinType == 'go'){
-                                    $data['action'] = 'doGambleOption';
-                                    $data['g_a'] = 'stand';
-                                    $data['g_o_ind'] = -1;
-                                }else if($spinType == 'b'){
-                                    $data['action'] = 'doBonus';
-                                    if($isRespin == false){
-                                        $isRespin = true;
-                                        $ind = 0;
-                                    }else{
-                                        $ind++;
-                                    }
-                                    if($gamecode == 'vs7pigs'){
-                                        $arr_i_pos = isset($result['i_pos']) ? explode(',', $result['i_pos']) : [1,1,1];
-                                        $data['ind'] = $arr_i_pos[$ind];
-                                    }else if($gamecode == 'vs243queenie'){
-                                        if($bw != 1){
-                                            $data['ind'] = isset($result['wi']) ? ($result['wi'] + 1) : 1;
-                                        }
-                                    }else if(in_array($gamecode, $arr_b_gamble_games)){
-                                        $data['ind'] = 1;
-                                    }else if(in_array($gamecode, $arr_b_no_ind_games)){
-                                        $data['ind'] = 0;
-                                    }else if(in_array($gamecode, $arr_b_ind_games)){
-                                        if($bgt == 9 || $bgt == 23){
-                                            $data['ind'] = 0;
-                                        }else if($bgt == 11 || $bgt == 31){
-                                            
-                                        }else if($bgt == 21){
-                                            if($end == 0){
-                                                $data['ind'] = 0;
-                                            }
-                                        }else{
-                                            $data['ind'] = $ind;
-                                        }
-                                    }
-                                }
-                                if($bl >= 0){
-                                    $data['bl'] = $bl;
-                                }
-                                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
-                                    'Accept' => '*/*',
-                                    'Content-Type' => 'application/x-www-form-urlencoded'
-                                    ])->asForm()->post($gameservice, $data);
-                                if (!$response->ok())
-                                {
-                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin Error, Body => ' . $response->body());
-                                    break;
-                                }
-                                $result = PPController::toJson($response->body());
-                                if(count($result) == 0){
-                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Data=' . json_encode($data));
-                                    break;
-                                }
-                                $spinType = $result['na'] ?? 's';
-                                $rs_p = $result['rs_p'] ?? -1;
-                                $fsmax = $result['fsmax'] ?? -1;
-                                $index = $result['index'] ?? 1;
-                                $counter = $result['counter'] ?? 2;
-                                $bw = $result['bw'] ?? -1;
-                                $end = $result['end'] ?? -1;
-                                $bgt = $result['bgt'] ?? -1;
-                                if($spinType == 's' && $rs_p == -1 && $fsmax == -1){
-                                    \VanguardLTE\PPGameVerifyLog::create([
-                                        'game_id' => $game->original_id, 
-                                        'user_id' => $user->id, 
-                                        'bet' => $bet * $line
-                                    ]);
-                                    break;
-                                }
-                                
+                    $pur_ind = -1;
+                    $ppgamelog = \VanguardLTE\PPGameLog::where(['user_id' => $user->id, 'game_id'=>$game->id, 'roundid' => $stat_game->roundid])->orderby('id', 'asc')->first();
+                    $ppgamelog = json_decode($ppgamelog->str);
+                    $pur = -1;
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->pur) && $ppgamelog->request->pur >= 0){
+                        $pur = $ppgamelog->request->pur;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->bl)){
+                        $bl = $ppgamelog->request->bl;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->c)){
+                        $bet = $ppgamelog->request->c;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->l)){
+                        $line = $ppgamelog->request->l;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->ind)){
+                        $pur_ind = $ppgamelog->request->ind;
+                    }
+                    while(true){
+                        try
+                        {
+                            $data = [
+                                'action' => 'doSpin',
+                                'symbol' => $gamecode,
+                                'index' => $index + 1,
+                                'counter' => $counter + 1,
+                                'repeat' => 0,
+                                'mgckey' => explode('=', $mgckey)[1]
+                            ];
+                            if($spinType != 'b'){
+                                $isRespin = false;
                             }
-                            catch (\Exception $ex)
+                            if($spinType == 's'){
+                                $data['c'] = $bet;
+                                $data['l'] = $line;
+                                if($pur_ind >= 0){
+                                    $data['ind'] = $pur_ind;
+                                    $pur_ind = -1;
+                                }
+                            }else if($spinType == 'c'){
+                                $data['action'] = 'doCollect';
+                            }else if($spinType == 'cb'){
+                                $data['action'] = 'doCollectBonus';
+                            }else if($spinType == 'fso'){
+                                $data['action'] = 'doFSOption';
+                                $data['ind'] = 0;
+                            }else if($spinType == 'm'){
+                                $data['action'] = 'doMysteryScatter';
+                                if($gamecode == 'vs10bookfallen'){
+                                    $data['ind'] = 0;
+                                }
+                            }else if($spinType == 'go'){
+                                $data['action'] = 'doGambleOption';
+                                $data['g_a'] = 'stand';
+                                $data['g_o_ind'] = -1;
+                            }else if($spinType == 'b'){
+                                $data['action'] = 'doBonus';
+                                if($isRespin == false){
+                                    $isRespin = true;
+                                    $ind = 0;
+                                }else{
+                                    $ind++;
+                                }
+                                if($gamecode == 'vs7pigs'){
+                                    $arr_i_pos = isset($result['i_pos']) ? explode(',', $result['i_pos']) : [1,1,1];
+                                    $data['ind'] = $arr_i_pos[$ind];
+                                }else if($gamecode == 'vs243queenie'){
+                                    if($bw != 1){
+                                        $data['ind'] = isset($result['wi']) ? ($result['wi'] + 1) : 1;
+                                    }
+                                }else if(in_array($gamecode, $arr_b_gamble_games)){
+                                    $data['ind'] = 1;
+                                }else if(in_array($gamecode, $arr_b_no_ind_games)){
+                                    $data['ind'] = 0;
+                                }else if(in_array($gamecode, $arr_b_ind_games)){
+                                    if($bgt == 9 || $bgt == 23){
+                                        $data['ind'] = 0;
+                                    }else if($bgt == 11 || $bgt == 31){
+                                        
+                                    }else if($bgt == 21){
+                                        if($end == 0){
+                                            $data['ind'] = 0;
+                                        }
+                                    }else{
+                                        $data['ind'] = $ind;
+                                    }
+                                }
+                            }
+                            if($bl >= 0){
+                                $data['bl'] = $bl;
+                            }
+                            if($pur >= 0){
+                                $data['pur'] = $pur;
+                            }
+                            $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
+                                'Accept' => '*/*',
+                                'Content-Type' => 'application/x-www-form-urlencoded'
+                                ])->asForm()->post($gameservice, $data);
+                            if (!$response->ok())
                             {
-                                $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Exception=' . $ex->getMessage() . ', Data=' . json_encode($data));
+                                $this->ppverifyLog($gamecode, $user->id, 'doSpin Error, Body => ' . $response->body());
+                                if(in_array($bet, $arr_bets) == false){
+                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin BetMoney =' . $bet . ', BetList=' . json_encode($arr_bets));
+                                }
                                 break;
                             }
+                            $result = PPController::toJson($response->body());
+                            if(count($result) == 0){
+                                $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Data=' . json_encode($data));
+                                break;
+                            }
+                            $spinType = $result['na'] ?? 's';
+                            $rs_p = $result['rs_p'] ?? -1;
+                            $fsmax = $result['fsmax'] ?? -1;
+                            $index = $result['index'] ?? 1;
+                            $counter = $result['counter'] ?? 2;
+                            $bw = $result['bw'] ?? -1;
+                            $end = $result['end'] ?? -1;
+                            $bgt = $result['bgt'] ?? -1;
+                            $pur = -1;
+                            if($spinType == 's' && $rs_p == -1 && $fsmax == -1){
+                                \VanguardLTE\PPGameVerifyLog::create([
+                                    'game_id' => $game->original_id, 
+                                    'user_id' => $user->id, 
+                                    'bet' => $stat_game->bet
+                                ]);
+                                break;
+                            }
+                            
                         }
-                    }else{
-                        $this->ppverifyLog($gamecode, $user->id, 'doSpin BetMoney =' . $bet . ', BetList=' . json_encode($arr_bets));
+                        catch (\Exception $ex)
+                        {
+                            $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Exception=' . $ex->getMessage() . ', Data=' . json_encode($data));
+                            break;
+                        }
                     }
                 }
                 return redirect($ppgameserver . '/gs2c/session/verify?lang=ko&'.$mgckey);

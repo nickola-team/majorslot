@@ -1808,7 +1808,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             catch (\Exception $ex)
             {
-                redirect($failed_url);
+                return redirect($failed_url);
             }               
 
         }
