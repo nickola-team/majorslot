@@ -769,7 +769,7 @@ namespace VanguardLTE
         }
         public function set_gamebank($balance, $type = 'update', $slotState = '')
         {
-            if($balance >= $this->limitBonusMoney && $slotState == ''){
+            if($balance > 0 && $this->allBet > $this->limitBonusMoney && $slotState == ''){
                 $this->garant_bonus3++;
                 $this->save();
             }
