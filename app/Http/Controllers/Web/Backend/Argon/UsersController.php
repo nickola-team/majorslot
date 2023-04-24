@@ -98,7 +98,22 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $users = \VanguardLTE\User::where('parent_id', $child_id)->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->get();
             }
-            return view('backend.argon.agent.partials.childs', compact('users', 'child_id'));
+
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if ($user->isInOutPartner())
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+            return view('backend.argon.agent.partials.childs', compact('users', 'child_id','moneyperm'));
         }
 
         public function agent_create(\Illuminate\Http\Request $request)
