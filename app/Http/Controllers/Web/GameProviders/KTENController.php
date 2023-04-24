@@ -1131,12 +1131,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($stat_game != null)
             {
                 //withdraw all balance
-                $data = KTENController::withdrawAll($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
-                if ($data['error'])
-                {
-                    $this->ppverifyLog($gamecode, $user->id, 'withdrawAll error');
-                    return redirect($failed_url);
-                }
+                // $data = KTENController::withdrawAll($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
+                // if ($data['error'])
+                // {
+                //     $this->ppverifyLog($gamecode, $user->id, 'withdrawAll error');
+                //     return redirect($failed_url);
+                // }
                 //Add balance
                 $adduserbalance = $stat_game->bet;   // 유저머니를 베트머니만큼 충전한다.
                 if ($adduserbalance > 0)
