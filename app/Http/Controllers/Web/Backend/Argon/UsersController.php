@@ -496,7 +496,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $parent = $parent->referral;
             }
             $moneyperm = 0;
-            if ($user->isInOutPartner())
+            if (auth()->user()->isInOutPartner() || auth()->user()->hasRole('manager'))
             {
                 $moneyperm = 1;
             }
@@ -588,7 +588,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $parent = $parent->referral;
             }
             $moneyperm = 0;
-            if ($user->isInOutPartner())
+            if ($user->isInOutPartner() || $user->hasRole('manager'))
             {
                 $moneyperm = 1;
             }
