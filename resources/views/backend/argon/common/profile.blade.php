@@ -227,6 +227,13 @@
                                         <input type="radio"    name="gameOn" value="0" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==0?'checked':''}}   /> <span>없음</span>
 
                                     </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-moneyperm">파트너간 머니이동</label>
+                                        <p>
+                                        <input type="radio"    name="moneyperm" value="1" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']==1?'checked':''}}   /> <span>가능</span>
+                                        <input type="radio"    name="moneyperm" value="0" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']!=1?'checked':''}}   /> <span>불가능</span>
+
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-gameOn">게임환수율%</label>
