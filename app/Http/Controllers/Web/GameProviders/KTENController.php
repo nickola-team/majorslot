@@ -1020,6 +1020,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
         public function ppverify($gamecode, \Illuminate\Http\Request $request){
+            set_time_limit(0);
             $failed_url = '/gs2c/session/play-verify/'. $gamecode .'?lang=ko&mgckey=AUTHTOKEN@1788e7bf943b9d54907c1b8c7211c4307b9be071e1501f0b09a6b069b6e58~stylename@' . self::KTEN_PPVERIFY_PROVIDER.'-'.self::KTEN_PPVERIFY_PROVIDER . '~SESSION@d016e80c-2a3d-4e6a-b2a9-43b61b0c98dc~SN@5e05f7a7';
             $user = \Auth()->user();
             $op = config('app.kten_op');
@@ -1123,12 +1124,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($stat_game != null)
             {
                 //withdraw all balance
-                $data = KTENController::withdrawAll($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
-                if ($data['error'])
-                {
-                    $this->ppverifyLog($gamecode, $user->id, 'withdrawAll error');
-                    return redirect($failed_url);
-                }
+                // $data = KTENController::withdrawAll($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
+                // if ($data['error'])
+                // {
+                //     $this->ppverifyLog($gamecode, $user->id, 'withdrawAll error');
+                //     return redirect($failed_url);
+                // }
                 //Add balance
                 $adduserbalance = $stat_game->bet;   // 유저머니를 베트머니만큼 충전한다.
                 if ($adduserbalance > 0)
@@ -1385,6 +1386,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'user_id' => $user->id, 
                                     'bet' => $stat_game->bet
                                 ]);
+                                sleep(5);
                                 break;
                             }
                             

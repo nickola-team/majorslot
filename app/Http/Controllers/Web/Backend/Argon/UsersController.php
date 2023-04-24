@@ -98,7 +98,22 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $users = \VanguardLTE\User::where('parent_id', $child_id)->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->get();
             }
-            return view('backend.argon.agent.partials.childs', compact('users', 'child_id'));
+
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if ($user->isInOutPartner())
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+            return view('backend.argon.agent.partials.childs', compact('users', 'child_id','moneyperm'));
         }
 
         public function agent_create(\Illuminate\Http\Request $request)
@@ -225,6 +240,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $childPartners = $user->childPartners();
             }
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if ($user->isInOutPartner())
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
             
             $status = [];
             if ($request->status == '')
@@ -265,10 +294,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'balance' => $users->sum('balance'),
                 'childbalance' => $sum
             ];
+
             
 
             $users = $users->paginate(20);
-            return view('backend.argon.agent.list', compact('users','total'));
+            return view('backend.argon.agent.list', compact('users','total', 'moneyperm'));
         }
 
         public function agent_deal_stat(\Illuminate\Http\Request $request)
@@ -460,6 +490,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function vplayer_list(\Illuminate\Http\Request $request)
         {
             $partner_users = auth()->user()->availableUsers();
+            $parent = auth()->user();
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if (auth()->user()->isInOutPartner() || auth()->user()->hasRole('manager'))
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+
             $users = [];
             $joinusers = [];
             $confirmusers = [];
@@ -493,6 +538,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $users = $users->paginate(20);
 
             }
+
 
             return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total'));
         }
@@ -536,6 +582,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $user = auth()->user();
             $availableUsers = $user->hierarchyUsersOnly();
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if ($user->isInOutPartner() || $user->hasRole('manager'))
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+
 
             $users = \VanguardLTE\User::whereIn('id', $availableUsers)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
 
@@ -609,7 +670,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             ];
             
             $users = $users->paginate(20);
-            return view('backend.argon.player.list', compact('users','total'));
+            return view('backend.argon.player.list', compact('users','total','moneyperm'));
         }
         public function player_terminate(\Illuminate\Http\Request $request)
         {

@@ -288,7 +288,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $userdata['gameOn'] = $data['gameOn'];
                 $data['session'] = json_encode($userdata);
                 unset($data['gameOn']);
-
+            }
+            if (isset($data['moneyperm']))
+            {
+                $userdata = $user->sessiondata();
+                $userdata['moneyperm'] = $data['moneyperm'];
+                $data['session'] = json_encode($userdata);
+                unset($data['moneyperm']);
             }
             if (isset($data['gamertp']))
             {
