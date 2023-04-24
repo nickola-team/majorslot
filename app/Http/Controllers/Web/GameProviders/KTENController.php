@@ -1393,6 +1393,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     'user_id' => $user->id, 
                                     'bet' => $stat_game->bet
                                 ]);
+                                sleep(5);
                                 break;
                             }
                             
