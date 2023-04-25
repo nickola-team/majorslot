@@ -540,7 +540,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
 
-            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total'));
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total','moneyperm'));
         }
 
         public function player_join(\Illuminate\Http\Request $request)
