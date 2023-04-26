@@ -241,6 +241,13 @@ return [
     'kten_op' => env('KTEN_OP', ''),
     'kten_key' => env('KTEN_KEY', ''),
     /*
+    
+    /*
+    HONOR Auth key
+    */
+    'honor_api' => env('HONOR_API', ''),
+    'honor_key' => env('HONOR_KEY', ''),
+    /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
