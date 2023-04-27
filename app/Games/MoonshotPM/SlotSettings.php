@@ -310,6 +310,10 @@ namespace VanguardLTE\Games\MoonshotPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                $_allBets = $sum / $this->GetPercent() * 100;
+                $normal_sum = $_allBets * 10 / 100;
+                $game->set_gamebank($normal_sum, 'inc', '');
+                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -720,12 +724,9 @@ namespace VanguardLTE\Games\MoonshotPM
                 'user_id' => $this->playerId,
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
-            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
-                'user_id' => $this->playerId,
-                'game_id' => $this->game->original_id
-                ])->pluck('freestack_id');
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameGorillaMayhemStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $index = mt_rand(0, 100);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
@@ -742,13 +743,17 @@ namespace VanguardLTE\Games\MoonshotPM
                         $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->inRandomOrder()->take(100)->get();
+                        if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
+                            }
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        }
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
-                    if($isLowBank == true){
-                        $existIds = [0];
-                    }
                     if($isLowBank == true){
                         $existIds = [0];
                     }
