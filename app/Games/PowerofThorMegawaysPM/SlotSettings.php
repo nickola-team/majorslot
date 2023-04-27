@@ -779,6 +779,9 @@ namespace VanguardLTE\Games\PowerofThorMegawaysPM
                         $this->game->save();
                     }else{
                         if($fsmax > 0){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
+                            }
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();

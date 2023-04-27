@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\TheDogHouseMultiholdPM
+namespace VanguardLTE\Games\TheRedQueenPM
 {
     class SlotSettings
     {
@@ -73,21 +73,17 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,20,40,200,500,1000];
-            $this->Paytable[4] = [0,0,0,20,40,50,100];
-            $this->Paytable[5] = [0,0,0,6,10,20,50];
-            $this->Paytable[6] = [0,0,0,6,10,16,40];
-            $this->Paytable[7] = [0,0,0,4,8,12,30];
-            $this->Paytable[8] = [0,0,0,4,8,12,30];
-            $this->Paytable[9] = [0,0,0,4,8,12,30];
-            $this->Paytable[10] = [0,0,0,2,4,8,20];
-            $this->Paytable[11] = [0,0,0,2,4,8,20];
-            $this->Paytable[12] = [0,0,0,2,4,8,20];
-            $this->Paytable[13] = [0,0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,10,30,100,400];
+            $this->Paytable[3] = [0,0,3,10,40,100];
+            $this->Paytable[4] = [0,0,2,8,25,50];
+            $this->Paytable[5] = [0,0,2,7,20,30];
+            $this->Paytable[6] = [0,0,1,5,15,25];
+            $this->Paytable[7] = [0,0,0,3,10,15];
+            $this->Paytable[8] = [0,0,0,3,10,15];
+            $this->Paytable[9] = [0,0,0,2,8,13];
+            $this->Paytable[10] = [0,0,0,2,8,13];
+            $this->Paytable[11] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -102,11 +98,11 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
             $this->hideButtons = [];
             $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); //[20.00,40.00,60.00,80.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,1500.00,2500.00,5000.00,7500.00,10000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 8,000,000.00
+            // $game->rezerv => 12,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -314,10 +310,6 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
-                $_allBets = $sum / $this->GetPercent() * 100;
-                $normal_sum = $_allBets * 10 / 100;
-                $game->set_gamebank($normal_sum, 'inc', '');
-                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -689,6 +681,12 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
+        
+        public function GetPurMul($pur)
+        {
+            $purmuls = [100];
+            return $purmuls[$pur];
+        }
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'Bet') == null) 
@@ -705,12 +703,14 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
 
         public function GetReelStrips($winType, $bet)
         {
-            // if($fsmax > 0){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseMultiholdStack::where('id', 12515)->first();
+            // if($winType == 'bonus'){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheRedQueenStack::where('id', 42)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
+            $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
+                $spintype = 1;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -721,19 +721,20 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
+            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
+                'user_id' => $this->playerId,
+                'game_id' => $this->game->original_id
+                ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseMultiholdStack::where('spin_type', 1);
-                }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseMultiholdStack::where('spin_type', 0);
-                }
-                $index = mt_rand(0, 38000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheRedQueenStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $index = 0; //mt_rand(0, 29000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
+                    // $index = mt_rand(0, 85000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 30);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -745,9 +746,6 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
                         $this->game->save();
                     }else{
                         if($winType == 'bonus'){
-                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
-                                $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
-                            }
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
@@ -755,13 +753,22 @@ namespace VanguardLTE\Games\TheDogHouseMultiholdPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
                     $isLowBank = true;
                 }else{
                     break;
                 }
             }
-            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
-            return json_decode($stack, true);
+            $stack = $stacks[rand(0, count($stacks) - 1)];
+            \VanguardLTE\PPGameFreeStackLog::create([
+                'game_id' => $this->game->original_id, 
+                'user_id' => $this->playerId, 
+                'freestack_id' => $stack->id,
+                'odd' => $stack->odd
+            ]);
+            return json_decode($stack->spin_stack, true);
         }
     }
 }
