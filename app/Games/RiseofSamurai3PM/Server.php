@@ -376,7 +376,7 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
                     $strWinLine = $stack['win_line'];
                     $fsmore = $stack['fsmore'];
                 }else{
-                    $stack = $slotSettings->GetReelStrips($winType, $pur, $betline * $lines);
+                    $stack = $slotSettings->GetReelStrips($winType, $pur, $betline * $lines / 2);
                     if($stack == null){
                         $response = 'unlogged';
                         exit( $response );

@@ -25,7 +25,11 @@
 <td>{{ $user->last_login }}</td>
 <td class="text-right">
 <a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => Request::getRequestUri()])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>
-<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => Request::getRequestUri()])}}"><button class="btn btn-warning btn-sm" >회 수</button></a>
+@if ($moneyperm || (auth()->user()->role_id==$user->role_id+1))
+<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => Request::getRequestUri()])}}"><button class="btn btn-warning btn-sm">회 수</button></a>
+@else
+<a href="#"><button class="btn btn-warning btn-sm" disabled>회 수</button></a>
+@endif
 <a href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}"><button class="btn btn-primary btn-sm" >설정</button></a>
 
 <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

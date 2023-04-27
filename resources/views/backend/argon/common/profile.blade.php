@@ -103,7 +103,7 @@
                         <thead class="thead-light">
                             <tr>
                             <th scope="col">시간</th>
-                            @if (auth()->user()->hasRole('admin'))
+                            @if (auth()->user()->isInoutPartner())
                             <th scope="col">아이피</th>
                             @endif
                             <th scope="col">내역</th>
@@ -113,7 +113,7 @@
                             @foreach($userActivities as $activity)
                                 <tr>
                                     <td>{{ $activity->created_at}}</td>
-                                    @if (auth()->user()->hasRole('admin'))
+                                    @if (auth()->user()->isInoutPartner())
                                         <td>{{ $activity->ip_address }}</td>
                                     @endif
                                     <td>{{ $activity->description }}</td>
@@ -237,6 +237,13 @@
                                         <p>
                                         <input type="radio"    name="gameOn" value="1" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==1?'checked':''}}   /> <span>있음</span>
                                         <input type="radio"    name="gameOn" value="0" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==0?'checked':''}}   /> <span>없음</span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-moneyperm">파트너간 머니이동</label>
+                                        <p>
+                                        <input type="radio"    name="moneyperm" value="1" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']==1?'checked':''}}   /> <span>가능</span>
+                                        <input type="radio"    name="moneyperm" value="0" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']!=1?'checked':''}}   /> <span>불가능</span>
 
                                     </div>
 

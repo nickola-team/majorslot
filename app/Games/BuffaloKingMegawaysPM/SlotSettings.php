@@ -324,6 +324,10 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                $_allBets = $sum / $this->GetPercent() * 100;
+                $normal_sum = $_allBets * 10 / 100;
+                $game->set_gamebank($normal_sum, 'inc', '');
+                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -735,6 +739,10 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
             $isLowBank = false;
+            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
+                'user_id' => $this->playerId,
+                'game_id' => $this->game->original_id
+                ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameBuffaloKingMegawaysStack::where('spin_type','>', 0);
@@ -760,6 +768,12 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                         $this->game->save();
                     }else{
                         if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                if($limitOdd > 500){
+                                    $limitOdd = 500;
+                                }
+                                $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
+                            }
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
@@ -767,13 +781,22 @@ namespace VanguardLTE\Games\BuffaloKingMegawaysPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
                     $isLowBank = true;
                 }else{
                     break;
                 }
             }
-            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
-            return json_decode($stack, true);
+            $stack = $stacks[rand(0, count($stacks) - 1)];
+            \VanguardLTE\PPGameFreeStackLog::create([
+                'game_id' => $this->game->original_id, 
+                'user_id' => $this->playerId, 
+                'freestack_id' => $stack->id,
+                'odd' => $stack->odd
+            ]);
+            return json_decode($stack->spin_stack, true);
         }
     }
 }

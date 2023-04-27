@@ -21,7 +21,11 @@
 <td class="text-right">
 @if ($user->status == \VanguardLTE\Support\Enum\UserStatus::ACTIVE)
 <a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>
-<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm" >회 수</button></a>
+@if ($moneyperm || (auth()->user()->role_id==$user->role_id+1))
+<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm">회 수</button></a>
+@else
+<a href="#"><button class="btn btn-warning btn-sm" disabled>회 수</button></a>
+@endif
 @endif
 <a href="{{argon_route('argon.common.profile', ['id'=>$user->id])}}"><button class="btn btn-primary btn-sm" >설정</button></a>
 @if ($user->status == \VanguardLTE\Support\Enum\UserStatus::ACTIVE)
