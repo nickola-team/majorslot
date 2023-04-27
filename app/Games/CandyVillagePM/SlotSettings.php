@@ -765,6 +765,9 @@ namespace VanguardLTE\Games\CandyVillagePM
                     }else{
                         if($winType == 'bonus'){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                if($limitOdd > 500){
+                                    $limitOdd = 500;
+                                }
                                 $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
                             }
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
