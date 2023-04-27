@@ -103,7 +103,7 @@
                         <thead class="thead-light">
                             <tr>
                             <th scope="col">시간</th>
-                            @if (auth()->user()->hasRole('admin'))
+                            @if (auth()->user()->isInoutPartner())
                             <th scope="col">아이피</th>
                             @endif
                             <th scope="col">내역</th>
@@ -113,7 +113,7 @@
                             @foreach($userActivities as $activity)
                                 <tr>
                                     <td>{{ $activity->created_at}}</td>
-                                    @if (auth()->user()->hasRole('admin'))
+                                    @if (auth()->user()->isInoutPartner())
                                         <td>{{ $activity->ip_address }}</td>
                                     @endif
                                     <td>{{ $activity->description }}</td>
