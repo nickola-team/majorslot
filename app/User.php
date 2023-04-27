@@ -54,7 +54,7 @@ namespace VanguardLTE
             'account_no',
             'api_token',
             'ggr_percent',
-            'ggr_balance',
+            'table_ggr_percent',
             'ggr_mileage',
             'reset_days',
             'last_reset_at',
