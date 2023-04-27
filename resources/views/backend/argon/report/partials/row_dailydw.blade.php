@@ -13,19 +13,44 @@
         $adjustment->moneyout = $inout['moneyout'];
     }
 ?>
-<td>{{ number_format($adjustment->totalin,0) }}</td>
-<td>{{ number_format($adjustment->totalout,0) }}</td>
-<td>{{ number_format($adjustment->moneyin,0) }}</td>
-<td>{{ number_format($adjustment->moneyout,0) }}</td>
+<td><ul>
+    <li>
+        <span class='text-green'>충전 : {{number_format($adjustment->totalin)}}</span>
+    </li>
+    <li>
+        <span class='text-red'>환전 : {{number_format($adjustment->totalout)}}</span>
+    </li>
+</ul></td>
+<td><ul>
+    <li>
+        <span class='text-green'>충전 : {{number_format($adjustment->moneyin)}}</span>
+    </li>
+    <li>
+        <span class='text-red'>환전 : {{number_format($adjustment->moneyout)}}</span>
+    </li>
+</ul></td>
 <td>{{ number_format($adjustment->dealout,0) }}</td>
-<td>{{ number_format($adjustment->totalbet,0)}}</td>
-<td>{{ number_format($adjustment->totalwin,0)}}</td>
+<td><ul>
+    <li>
+        <span class='text-green'>배팅 : {{number_format($adjustment->totalbet)}}</span>
+    </li>
+    <li>
+        <span class='text-red'>당첨 : {{number_format($adjustment->totalwin)}}</span>
+    </li>
+</ul></td>
 <td>{{ number_format($adjustment->totalbet-$adjustment->totalwin,0) }}</td>
 <td>
     <ul>
-    <li>총롤링금 : {{ number_format($adjustment->total_deal,0)}}</li>
-    <li>하부롤링금 : {{ number_format($adjustment->total_mileage,0)}}</li>
-    <li>본인롤링금 : {{ number_format($adjustment->total_deal-$adjustment->total_mileage,0)}}</li>
+    <li>총죽장 : {{ number_format($adjustment->total_ggr,0)}}</li>
+    <li>하부죽장 : {{ number_format($adjustment->total_ggr_mileage,0)}}</li>
+    <li>본인죽장 : {{ number_format($adjustment->total_ggr-$adjustment->total_ggr_mileage,0)}}</li>
+    </ul>
+</td>
+<td>
+    <ul>
+    <li>총롤링 : {{ number_format($adjustment->total_deal,0)}}</li>
+    <li>하부롤링 : {{ number_format($adjustment->total_mileage,0)}}</li>
+    <li>본인롤링 : {{ number_format($adjustment->total_deal-$adjustment->total_mileage,0)}}</li>
     </ul>
 </td>
 <td>{{ number_format($adjustment->balance+$adjustment->childsum,0)}}</td>

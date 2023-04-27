@@ -332,13 +332,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     'deal_percent',
                     'table_deal_percent',
                     'pball_single_percent',
-                    'pball_comb_percent'
+                    'pball_comb_percent',
+                    'ggr_percent',
+                    'table_ggr_percent'
                 ];
                 foreach ($check_deals as $dealtype)
                 {
                     if ($parent!=null &&  isset($data[$dealtype]) && $parent->{$dealtype} < $data[$dealtype])
                     {
-                        return redirect()->back()->withErrors(['롤링는 상위에이전트보다 클수 없습니다']);
+                        return redirect()->back()->withErrors(['롤링이나 죽장은 상위에이전트보다 클수 없습니다']);
                     }
                 }
             }
@@ -347,28 +349,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $childs = $user->childPartners();
                 if (count($childs) > 0)
                 {
-                    if (isset($data['deal_percent']))
+                    $check_deals = [
+                        'deal_percent',
+                        'table_deal_percent',
+                        'pball_single_percent',
+                        'pball_comb_percent',
+                        'ggr_percent',
+                        'table_ggr_percent'
+                    ];
+                    foreach ($check_deals as $dealtype)
                     {
-                        $highRateUsers = \VanguardLTE\User::whereIn('id', $childs)->where('deal_percent', '>', $data['deal_percent'])->get();
-
-                        if (count($highRateUsers) > 0)
+                        if (isset($data[$dealtype]))
                         {
-                            $firstUser = $highRateUsers->first();
-                            return redirect()->back()->withErrors([$firstUser->username . '을 포함한 ' . count($highRateUsers) . '명의 하위파트너 롤링이 설정하려는 롤링보다 큽니다']);
+                            $highRateUsers = \VanguardLTE\User::whereIn('id', $childs)->where($dealtype, '>', $data[$dealtype])->get();
+
+                            if (count($highRateUsers) > 0)
+                            {
+                                $firstUser = $highRateUsers->first();
+                                return redirect()->back()->withErrors([$firstUser->username . '을 포함한 ' . count($highRateUsers) . '명의 하위파트너 롤링이나 죽장이 설정하려는 값보다 큽니다']);
+                            }
                         }
                     }
-                    if (isset($data['table_deal_percent']))
-                    {
-                        $highRateUsers = \VanguardLTE\User::whereIn('id', $childs)->where('table_deal_percent', '>', $data['table_deal_percent'])->get();
-
-                        if (count($highRateUsers) > 0)
-                        {
-                            $firstUser = $highRateUsers->first();
-                            return redirect()->back()->withErrors([$firstUser->username . '을 포함한 ' . count($highRateUsers) . '명의 하위파트너 라이브롤링이 설정하려는 롤링보다 큽니다']);
-                        }
-                    }
-
-
                 }
             }
             if ($user->hasRole('manager'))

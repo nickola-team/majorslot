@@ -869,6 +869,10 @@ namespace VanguardLTE
                 'pbsingle' => 'pball_single_percent',
                 'pbcomb' => 'pball_comb_percent'
             ];
+            $ggr_field = [
+                'slot' => 'ggr_percent',
+                'table' => 'table_ggr_percent'
+            ];
 
             $shop = $this->shop;
             $deal_balance = 0;
@@ -881,7 +885,8 @@ namespace VanguardLTE
             $deal_data = [];
             $share_data = null;
             $deal_percent = $this->{$deal_field[$type]};
-            if ($deal_percent > 0) //user can get deal percent
+            $ggr_percent = $this->{$ggr_field[$type]};
+            if ($deal_percent > 0 || $ggr_percent > 0) //user can get deal percent
             {
                 $deal_balance = $betMoney * $deal_percent  / 100;
                 $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
@@ -906,10 +911,11 @@ namespace VanguardLTE
                     'game_id' => $game_id,
                 ];
                 $deal_mileage = $deal_balance;
+                $ggr_mileage = $ggr_profit;
             }
 
             $deal_percent = $shop->{$deal_field[$type]};
-            $ggr_percent = $shop->ggr_percent;
+            $ggr_percent = $shop->{$ggr_field[$type]};
             $manager = $this->referral;
             if ($manager != null){
                 if($deal_percent > 0 || $ggr_percent > 0) {
@@ -947,7 +953,7 @@ namespace VanguardLTE
                     $deal_mileage = $deal_balance;
                     $ggr_mileage = $ggr_profit;
                     $deal_percent = $partner->{$deal_field[$type]};
-                    $ggr_percent = $partner->ggr_percent;
+                    $ggr_percent = $partner->{$ggr_field[$type]};
                     if($deal_percent > 0 || $ggr_percent > 0) {
                         $deal_balance = $betMoney * $deal_percent  / 100;
                         $ggr_profit = ($betMoney - $winMoney) * $ggr_percent / 100;
