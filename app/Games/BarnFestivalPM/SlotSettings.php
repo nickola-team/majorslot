@@ -320,6 +320,10 @@ namespace VanguardLTE\Games\BarnFestivalPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                $_allBets = $sum / $this->GetPercent() * 100;
+                $normal_sum = $_allBets * 10 / 100;
+                $game->set_gamebank($normal_sum, 'inc', '');
+                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -753,6 +757,11 @@ namespace VanguardLTE\Games\BarnFestivalPM
                         $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
+                        if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
+                            }
+                        }
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                     }
                 }
