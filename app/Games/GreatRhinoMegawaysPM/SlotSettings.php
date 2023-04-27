@@ -755,6 +755,9 @@ namespace VanguardLTE\Games\GreatRhinoMegawaysPM
                     }else{
                         if($winType == 'bonus' && $ind > -1){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                if($limitOdd > 500){
+                                    $limitOdd = 500;
+                                }
                                 $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
                             }
                         }

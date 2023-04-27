@@ -759,6 +759,9 @@ namespace VanguardLTE\Games\BarnFestivalPM
                     }else{
                         if($winType == 'bonus'){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                if($limitOdd > 500){
+                                    $limitOdd = 500;
+                                }
                                 $stacks = $stacks->where('odd', '>=', $limitOdd / mt_rand(2,4));
                             }
                         }
