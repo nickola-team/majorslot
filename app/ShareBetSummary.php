@@ -36,7 +36,7 @@ namespace VanguardLTE
             {
                 return null;
             }
-            $sharebetlogs = \VanguardLTE\ShareBetLog::select('sharebet_log.*')->orderBy('sharebet_log.date_time', 'desc');;
+            $sharebetlogs = \VanguardLTE\ShareBetlog::select('sharebet_log.*')->orderBy('sharebet_log.date_time', 'desc');;
             $sharebetlogs = $sharebetlogs->where('partner_id', $user_id);
             $sharebetlogs = $sharebetlogs->where('sharebet_log.date_time', '>=', $from);
             $sharebetlogs = $sharebetlogs->where('sharebet_log.date_time', '<=', $to);
