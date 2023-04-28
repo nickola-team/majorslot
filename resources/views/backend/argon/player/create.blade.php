@@ -47,19 +47,19 @@
                                     <label class="form-control-label" for="recommender">예금주명</label>
                                     <input type="text" name="recommender" id="recommender" class="form-control" value="" >
                                 </div>
-				                <div class="form-group{{ $errors->has('deal_percent') ? ' has-danger' : '' }}">
-                                    <table>
+				                <div class="form-group table-responsive">
+                                    <table class="table align-items-center table-flush">
                                         <tr>
                                             <th>슬롯롤링%</th>
                                             <th>라이브롤링%</th>
-                                            <th>파워볼단폴롤링%</th>
-                                            <th>파워볼조합롤링%</th>
+                                            <th style="width:25%"></th>
+                                            <th style="width:25%"></th>
                                         </tr>
                                         <tr>
                                             <td style="padding:3px;"><input type="text" name="deal_percent" id="deal_percent" class="form-control" value="0"></td>
                                             <td style="padding:3px;"><input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control" value="0"></td>
-                                            <td style="padding:3px;"><input type="text" name="pball_single_percent" id="pball_single_percent" class="form-control" value="0"></td>
-                                            <td style="padding:3px;"><input type="text" name="pball_comb_percent" id="pball_comb_percent" class="form-control" value="0"></td>
+                                            <td style="padding:3px;"></td>
+                                            <td style="padding:3px;"></td>
                                         </tr>
                                     </table>
                                 </div>
