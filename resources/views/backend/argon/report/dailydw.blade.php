@@ -162,14 +162,12 @@
                             <tr>
                                 <th scope="col"></th>
                                 <th scope="col">기간내 합계</th>
-                                <th scope="col">계좌충전</th>
-                                <th scope="col">계좌환전</th>
-                                <th scope="col">수동충전</th>
-                                <th scope="col">수동환전</th>
+                                <th scope="col">계좌충환전</th>
+                                <th scope="col">수동충환전</th>
                                 <th scope="col">롤링전환</th>
-                                <th scope="col">배팅금</th>
-                                <th scope="col">당첨금</th>
+                                <th scope="col">배팅/당첨금</th>
                                 <th scope="col">벳윈수익</th>
+                                <th scope="col">죽장금</th>
                                 <th scope="col">롤링금</th>
                                 <th scope="col">총보유금</th>
                             </tr>
@@ -177,19 +175,44 @@
                             <tbody class="list">
                                 <tr>
                                     <td colspan='2'>{{$total['daterange']}}</td>
-                                    <td>{{number_format($total['totalin'])}}</td>
-                                    <td>{{number_format($total['totalout'])}}</td>
-                                    <td>{{number_format($total['moneyin'])}}</td>
-                                    <td>{{number_format($total['moneyout'])}}</td>
+                                    <td><ul>
+                                        <li>
+                                            <span class='text-green'>충전 : {{number_format($total['totalin'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>환전 : {{number_format($total['totalout'])}}</span>
+                                        </li>
+                                    </ul></td>
+                                    <td><ul>
+                                        <li>
+                                            <span class='text-green'>충전 : {{number_format($total['moneyin'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>환전 : {{number_format($total['moneyout'])}}</span>
+                                        </li>
+                                    </ul></td>
                                     <td>{{number_format($total['dealout'])}}</td>
-                                    <td>{{number_format($total['totalbet'])}}</td>
-                                    <td>{{number_format($total['totalwin'])}}</td>
+                                    <td><ul>
+                                        <li>
+                                            <span class='text-green'>배팅 : {{number_format($total['totalbet'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>당첨 : {{number_format($total['totalwin'])}}</span>
+                                        </li>
+                                    </ul></td>
                                     <td>{{number_format($total['totalbet']-$total['totalwin'])}}</td>
                                     <td>
                                         <ul>
-                                            <li>총롤링금 : {{ number_format($total['total_deal'])}}</li>
-                                            <li>하부롤링금 : {{ number_format($total['total_mileage'])}}</li>
-                                            <li>본인롤링금 : {{ number_format($total['total_deal']-$total['total_mileage'])}}</li>
+                                            <li>총죽장 : {{ number_format($total['total_ggr'])}}</li>
+                                            <li>하부죽장 : {{ number_format($total['total_ggr_mileage'])}}</li>
+                                            <li>본인죽장 : {{ number_format($total['total_ggr']-$total['total_ggr_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>총롤링 : {{ number_format($total['total_deal'])}}</li>
+                                            <li>하부롤링 : {{ number_format($total['total_mileage'])}}</li>
+                                            <li>본인롤링 : {{ number_format($total['total_deal']-$total['total_mileage'])}}</li>
                                         </ul>
                                     </td>
                                     <td>{{number_format($total['balance']+$total['childsum'])}}</td>
@@ -201,14 +224,12 @@
                             <tr>
                                 <th scope="col">이름</th>
                                 <th scope="col">날짜</th>
-                                <th scope="col">계좌충전</th>
-                                <th scope="col">계좌환전</th>
-                                <th scope="col">수동충전</th>
-                                <th scope="col">수동환전</th>
+                                <th scope="col">계좌충환전</th>
+                                <th scope="col">수동충환전</th>
                                 <th scope="col">롤링전환</th>
-                                <th scope="col">배팅금</th>
-                                <th scope="col">당첨금</th>
+                                <th scope="col">배팅/당첨금</th>
                                 <th scope="col">벳윈수익</th>
+                                <th scope="col">죽장금</th>
                                 <th scope="col">롤링금</th>
                                 <th scope="col">총보유금</th>
                                 @if (auth()->user()->hasRole('admin'))

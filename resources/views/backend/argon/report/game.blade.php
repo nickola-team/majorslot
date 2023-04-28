@@ -183,7 +183,8 @@
                                 <th>게임사이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
-								<th>벳윈</th>
+								<th>벳윈금</th>
+                                <th>죽장금</th>
 								<th>롤링금</th>
                             </tr>
                         </thead>
@@ -191,13 +192,41 @@
                             @if (count($totalstatics) > 0)
                                 @foreach ($totalstatics as $stat)
                                     @if ($loop->index == 0)
-                                        <tr><td rowspan="{{count($totalstatics)}}" style="border-right: 1px solid rgb(233 236 239);"></td>
+                                        <tr><td rowspan="{{count($totalstatics)+count($totalbyType)}}" style="border-right: 1px solid rgb(233 236 239);"></td>
                                     @else
                                         <tr>
                                     @endif
                                     @include('backend.argon.report.partials.row_game', ['total' => true])
                                     </tr>
                                 @endforeach
+
+                                @foreach ($totalbyType as $k => $stat)
+                                    @if ($loop->index == 0)
+                                        <tr><td rowspan="{{count($totalbyType)}}" style="border-right: 1px solid rgb(233 236 239);"><span class="text-red">타입별 합계</span></td>
+                                    @else
+                                        <tr>
+                                    @endif
+                                    <td>{{__($k)}}</td>
+                                    <td>{{number_format($stat['totalbet'])}}</td>
+                                    <td>{{number_format($stat['totalwin'])}}</td>
+                                    <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>총죽장 : {{ number_format($stat['total_ggr'])}}</li>
+                                            <li>하부죽장 : {{ number_format($stat['total_ggr_mileage'])}}</li>
+                                            <li>본인죽장 : {{ number_format($stat['total_ggr']-$stat['total_ggr_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>총롤링 : {{ number_format($stat['total_deal'])}}</li>
+                                            <li>하부롤링 : {{ number_format($stat['total_mileage'])}}</li>
+                                            <li>본인롤링 : {{ number_format($stat['total_deal']-$stat['total_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                @endforeach
+
                             @else
                                 <tr><td colspan="6">{{__('No Data')}}</td></tr>
                             @endif
@@ -211,7 +240,8 @@
                                 <th>게임사이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
-								<th>벳윈</th>
+								<th>벳윈금</th>
+                                <th>죽장금</th>
 								<th>롤링금</th>
                             </tr>
                         </thead>
