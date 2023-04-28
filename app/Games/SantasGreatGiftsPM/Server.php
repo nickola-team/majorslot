@@ -459,7 +459,11 @@ namespace VanguardLTE\Games\SantasGreatGiftsPM
                 {
                     $spinType = 'c';
                     $slotSettings->SetBalance($totalWin);
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    if($scatterCount >= 4 && $slotEvent['slotEvent'] != 'freespin'){
+                        $slotSettings->SetBank('bonus', -1 * $totalWin);
+                    }else{
+                        $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    }
                 }
 
                 $_obf_totalWin = $totalWin;
