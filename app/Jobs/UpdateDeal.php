@@ -124,8 +124,6 @@ class UpdateDeal implements ShouldQueue
                 $shop->update([
                     'deal_balance' => $shop->deal_balance + $deal['deal_profit'], 
                     'mileage' => $shop->mileage +  $deal['mileage'],
-                    'ggr_balance' => $shop->ggr_balance + $deal['ggr_profit'], 
-                    'ggr_mileage' => $shop->ggr_mileage +  $deal['ggr_mileage'],
                     $type . '_garant_deal' => (($count_miss>0)?$garant_deal:0)
                 ]);
             }
@@ -135,8 +133,6 @@ class UpdateDeal implements ShouldQueue
                 $partner->update([
                     'deal_balance' => $partner->deal_balance + $deal['deal_profit'], 
                     'mileage' => $partner->mileage +  $deal['mileage'],
-                    'ggr_balance' => $partner->ggr_balance + $deal['ggr_profit'], 
-                    'ggr_mileage' => $partner->ggr_mileage +  $deal['ggr_mileage'],
                 ]);
             }
         }

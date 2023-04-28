@@ -7,15 +7,31 @@
 @if ($user->hasRole('manager'))
 <td>{{number_format($user->shop->balance)}}</td>
 <td>{{ number_format($user->shop->deal_balance - $user->shop->mileage,0) }}</td>
-<td>{{ number_format($user->shop->deal_percent,2) }}</td>
-<td>{{ number_format($user->shop->table_deal_percent,2) }}</td>
-<td>{{ number_format($user->shop->ggr_percent,2) }}</td>
+<td>
+    <ul>
+    <li>슬롯 : {{ number_format($user->shop->deal_percent,2) }}</li>
+    <li>라이브 : {{ number_format($user->shop->table_deal_percent,2) }}</li>
+    </ul>
+</td>
+<td>
+    <ul>
+    <li>슬롯 : {{ number_format($user->shop->ggr_percent,2) }}</li>
+    <li>라이브 : {{ number_format($user->shop->table_ggr_percent,2) }}</li>
+    </ul>
+</td>
 @else
 <td>{{number_format($user->balance)}}</td>
 <td>{{ number_format($user->deal_balance - $user->mileage,0) }}</td>
-<td>{{ number_format($user->deal_percent,2) }}</td>
-<td>{{ number_format($user->table_deal_percent,2) }}</td>
-<td>{{ number_format($user->ggr_percent,2) }}</td>
+<td><ul>
+    <li>슬롯 : {{ number_format($user->deal_percent,2) }}</li>
+    <li>라이브 : {{ number_format($user->table_deal_percent,2) }}</li>
+    </ul>
+</td>
+<td><ul>
+    <li>슬롯 : {{ number_format($user->ggr_percent,2) }}</li>
+    <li>라이브 : {{ number_format($user->table_ggr_percent,2) }}</li>
+    </ul>
+</td>
 @endif
 <td>{{ $user->created_at }}</td>
 <td class="text-right">

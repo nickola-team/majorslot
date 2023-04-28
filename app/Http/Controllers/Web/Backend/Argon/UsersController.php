@@ -140,29 +140,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $check_deals = [
                 'deal_percent',
                 'table_deal_percent',
-                'pball_single_percent',
-                'pball_comb_percent'
+                'ggr_percent',
+                'table_ggr_percent'
             ];
             foreach ($check_deals as $dealtype)
             {
                 if (isset($data[$dealtype]) && $parent!=null &&  $parent->{$dealtype} < $data[$dealtype])
                 {
-                    return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+                    return redirect()->back()->withErrors(['롤링이나 죽장은 상위에이전트보다 클수 없습니다']);
                 }
             }
 
-            // if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
-            // }
-            // if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['라이브딜비는 상위에이전트보다 클수 없습니다']);
-            // }
-            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['죽장퍼센트는 상위에이전트보다 클수 없습니다']);
-            // }
 
             $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();

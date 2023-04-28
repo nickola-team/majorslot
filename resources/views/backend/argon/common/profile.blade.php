@@ -185,25 +185,37 @@
                                 </div>
                                 @endif
 
-				                <div class="form-group">
-                                    <table>
+				                <div class="form-group table-responsive">
+                                    <table class="table align-items-center table-flush">
                                         <tr>
                                             <th>슬롯롤링%</th>
                                             <th>라이브롤링%</th>
-                                            <th>파워볼단폴롤링%</th>
-                                            <th>파워볼조합롤링%</th>
+                                            <th style="width:25%"></th>
+                                            <th style="width:25%"></th>
                                         </tr>
                                         <tr>
                                             <td style="padding:3px;"><input type="text" name="deal_percent" id="deal_percent" class="form-control" value="{{$user->deal_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
                                             <td style="padding:3px;"><input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control" value="{{$user->table_deal_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
-                                            <td style="padding:3px;"><input type="text" name="pball_single_percent" id="pball_single_percent" class="form-control" value="{{$user->pball_single_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
-                                            <td style="padding:3px;"><input type="text" name="pball_comb_percent" id="pball_comb_percent" class="form-control" value="{{$user->pball_comb_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                            <td style="padding:3px;"></td>
+                                            <td style="padding:3px;"></td>
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="ggr">죽장%</label>
-                                    <input type="text" name="ggr_percent" id="ggr_percent" class="form-control{{ $errors->has('ggr_percent') ? ' is-invalid' : '' }}" value="{{ old('ggr_percent', $user->ggr_percent) }}" {{$user->id == auth()->user()->id?'disabled':''}}>
+                                <div class="form-group table-responsive">
+                                    <table class="table align-items-center table-flush">
+                                        <tr>
+                                            <th>슬롯죽장%</th>
+                                            <th>라이브죽장%</th>
+                                            <th style="width:25%"></th>
+                                            <th style="width:25%"></th>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:3px;"><input type="text" name="ggr_percent" id="ggr_percent" class="form-control" value="{{$user->ggr_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                            <td style="padding:3px;"><input type="text" name="table_ggr_percent" id="table_ggr_percent" class="form-control" value="{{$user->table_ggr_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                            <td style="padding:3px;"></td>
+                                            <td style="padding:3px;"></td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 @if (auth()->user()->isInOutPartner())
                                 <div class="form-group">
