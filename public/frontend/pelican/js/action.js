@@ -343,6 +343,13 @@ function getSlotGames(title, category) {
 
             $(".tp-name").text(title);
             var strHtml = "";
+            var gameperline = 6;
+            var imgId = 'xImag';
+            if (window.screen.width < 720)
+            {
+                gameperline = 3;
+                imgId = 'xImag1';
+            }
             if (data.games.length > 0) {
                 strHtml = `<div class="con_box10">
                                 <div class="title1"> `+ title +` <span style="float:right; padding:0 10px 0 10px;margin-top:-5px;"></span>
@@ -353,7 +360,7 @@ function getSlotGames(title, category) {
                                 <tbody>`;
                 for (var i = 0; i < data.games.length; i++) {
 
-                    if( i % 6  == 0 )
+                    if( i % gameperline  == 0 )
                     {
                         strHtml += `<tr><td height="20">&nbsp;</td></tr>
                                     <tr>
@@ -372,14 +379,14 @@ function getSlotGames(title, category) {
                         strHtml +='<a style="cursor:pointer" onclick="startGameByProvider(\'' + data.games[i].provider + '\',\'' + data.games[i].gamecode + '\');">';
                         if (data.games[i].icon)
                             {
-                                strHtml += `<img src="${data.games[i].icon}" id="xImag" />
+                                strHtml += `<img src="${data.games[i].icon}" id="${imgId}" />
                                                         </a>
                                                     </div>
                                                 </td>
                                             </tr>`;
                             }
                             else {
-                                strHtml += `<img src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg" id="xImag" />
+                                strHtml += `<img src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg" id="${imgId}" />
                                                         </a>
                                                     </div>
                                                 </td>
@@ -389,7 +396,7 @@ function getSlotGames(title, category) {
                     else
                     {
                         strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].name}');">
-                                                        <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="xImag" />
+                                                        <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="${imgId}" />
                                                     </a>
                                                 </div>
                                             </td>
@@ -397,7 +404,7 @@ function getSlotGames(title, category) {
                     }
                     strHtml += `<tr>
                                 <td height="30px">
-                                    <div style="text-align:center;position:absolute;width:203px;margin: auto; ">
+                                    <div style="text-align:center;margin: auto; font-size:16px;">
                                         <span class="slot_txt_style">${data.games[i].title}</span>
                                     </div>
                                 </td>
@@ -405,7 +412,7 @@ function getSlotGames(title, category) {
                         </table>
                     </td>`;
 
-                    if( i % 6  == 5 )
+                    if( i % gameperline  == gameperline-1 )
                     {
                         strHtml += `</tr> </tbody></table></td> </tr>`;
                     }
