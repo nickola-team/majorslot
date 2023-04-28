@@ -344,8 +344,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $check_deals = [
                     'deal_percent',
                     'table_deal_percent',
-                    'pball_single_percent',
-                    'pball_comb_percent',
                     'ggr_percent',
                     'table_ggr_percent'
                 ];
@@ -365,8 +363,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $check_deals = [
                         'deal_percent',
                         'table_deal_percent',
-                        'pball_single_percent',
-                        'pball_comb_percent',
                         'ggr_percent',
                         'table_ggr_percent'
                     ];
