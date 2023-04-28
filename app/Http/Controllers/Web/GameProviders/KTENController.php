@@ -1269,6 +1269,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $isRespin = false;
                     $pur_ind = -1;
                     $ppgamelog = \VanguardLTE\PPGameLog::where(['user_id' => $user->id, 'game_id'=>$game->id, 'roundid' => $stat_game->roundid])->orderby('id', 'asc')->first();
+                    if(!isset($ppgamelog)){
+                        return redirect($ppgameserver . '/gs2c/session/verify?lang=ko&'.$mgckey);
+                    }
                     $ppgamelog = json_decode($ppgamelog->str);
                     $pur = -1;
                     if(isset($ppgamelog->request) && isset($ppgamelog->request->pur) && $ppgamelog->request->pur >= 0){
