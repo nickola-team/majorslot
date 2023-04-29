@@ -675,7 +675,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         if ($data == null)
                         {
                             Log::error('XMX gamerounds failed : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . date('Y-m-d H:i:s', $curend_timeStamp));
-                            return [0, 0];
+                            sleep(60);
+                            continue;
                         }
                         
                         if (isset($data['totalDataSize']) && $data['totalDataSize'] > 0)
