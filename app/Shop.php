@@ -20,6 +20,7 @@ namespace VanguardLTE
             'user_id', 
             'pending',
             'ggr_percent',
+            'table_ggr_percent',
             'ggr_balance',
             'ggr_mileage',
             'slot_garant_deal', 
