@@ -674,7 +674,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $data = XMXController::gamerounds($thirdId, $curPage, date('Y-m-d H:i:s', $start_timeStamp), date('Y-m-d H:i:s', $curend_timeStamp));
                         if ($data == null)
                         {
-                            Log::error('XMX gamerounds failed : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . $date('Y-m-d H:i:s', $curend_timeStamp));
+                            Log::error('XMX gamerounds failed : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . date('Y-m-d H:i:s', $curend_timeStamp));
                             return [0, 0];
                         }
                         
