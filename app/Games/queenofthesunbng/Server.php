@@ -130,11 +130,11 @@ namespace VanguardLTE\Games\queenofthesunbng
                 ];
                 if( $LASTSPIN !== NULL ) {
                     if(isset($LASTSPIN->context)){
-                        // if(isset($LASTSPIN->context->spins)){
-                        //     $LASTSPIN->context->spins->board = $LASTSPIN->context->spins->feature_board;
-                        // }else if(isset($LASTSPIN->context->freespins)){
-                        //     $LASTSPIN->context->freespins->board = $LASTSPIN->context->freespins->feature_board;
-                        // }
+                        if(isset($LASTSPIN->context->spins)){
+                            $LASTSPIN->context->spins->hill = $currentHill;
+                        }else if(isset($LASTSPIN->context->freespins)){
+                            $LASTSPIN->context->freespins->hill = $currentHill;
+                        }
                         $objRes['context'] = $LASTSPIN->context;
                     }
                 }
