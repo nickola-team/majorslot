@@ -1,5 +1,6 @@
 <?php
 return [
+    "TaishanGame" => "타이산로비",
     "Action Money" => "액션 머니",
     "Admiral Nelson" => "어드미럴 넬슨",
     "Africa" => "아프리카",

@@ -231,6 +231,14 @@ return [
     'spg_secret' => env('SPG_SECRET', ''),
     'spg_key' => env('SPG_KEY', ''),
 
+    /*
+    TAISHAN Auth key
+    */
+    'taishan_api' => env('TAISHAN_API', ''),
+    'taishan_op' => env('TAISHAN_OP', ''),
+    'taishan_pass' => env('TAISHAN_PASS', ''),
+    'taishan_token' => env('TAISHAN_TOKEN', ''),
+
 
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
