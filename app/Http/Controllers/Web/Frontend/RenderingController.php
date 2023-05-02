@@ -537,7 +537,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             else
             {
                 $user->update([
-                    'playing_game' => $game['href'],
+                    'playing_game' => $gamecode,
                     'played_at' => time(),
                 ]);
             }
