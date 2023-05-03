@@ -457,7 +457,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $win = $round['TOTAL_BETTING'] + $round['USER_BALANCE'];
                                 $balance = $round['END_BALANCE'];
 
-                                $gameName = $round['CHANNEL_NAME'];
+                                $gameName = str_replace(' ', '', $round['CHANNEL_NAME']);
                                 $time = $round['REG_YMDT'];
 
                                 $userid = intval(preg_replace('/'. self::TAISHAN_PROVIDER .'(\d+)/', '$1', $round['USER_ID'])) ;
