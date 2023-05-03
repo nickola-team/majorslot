@@ -706,7 +706,7 @@ namespace VanguardLTE\Games\GodsofGizaPM
         public function GetReelStrips($winType, $bet)
         {
             // if($fsmax > 0){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameGodsofGizaStack::where('id', 268)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameGodsofGizaStack::where('id', 18481)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -731,13 +731,13 @@ namespace VanguardLTE\Games\GodsofGizaPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameGodsofGizaStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 30000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 20);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
