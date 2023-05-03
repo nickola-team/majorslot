@@ -100,6 +100,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($msg && $msg->user_id != 0){
                 $msg->delete();
             }
+            \VanguardLTE\Message::where('ref_id', $message)->delete();
             return redirect()->back()->withSuccess(['쪽지가 삭제되었습니다']);
         }
 

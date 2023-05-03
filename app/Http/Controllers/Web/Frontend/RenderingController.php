@@ -534,6 +534,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'played_at' => time(),
                 ]);
             }
+            else
+            {
+                $user->update([
+                    'playing_game' => $gamecode,
+                    'played_at' => time(),
+                ]);
+            }
             $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode, $user);
             if ($url == null)
             {
