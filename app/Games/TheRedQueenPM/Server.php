@@ -385,8 +385,6 @@ namespace VanguardLTE\Games\TheRedQueenPM
                 }
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
                 {
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                     $spinType = 's';
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                     $isEnd = false;
@@ -442,7 +440,7 @@ namespace VanguardLTE\Games\TheRedQueenPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+                    // $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                 }
                 //------------ ReplayLog ---------------
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');

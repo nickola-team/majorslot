@@ -560,19 +560,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [XMXController::XMX_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($thirdparty,$startDate)
+        public static function gamerounds($thirdparty, $pageIdx, $startDate, $endDate)
         {
             
             $op = config('app.xmx_op');
-
-            $endDate = date('Y-m-d H:i:s');
-
             $params = [
                 'endDate' => $endDate,
                 'operatorID' => $op,
                 'startDate' => $startDate,
                 'thirdPartyCode' => $thirdparty,
                 'pageSize' => 1000,
+                'pageStart' => $pageIdx,
                 'time' => time()*1000,
                 'vendorID' => 0,
             ];
@@ -606,7 +604,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return null;
         }
 
-        public static function processGameRound()
+        public static function processGameRound($from='', $to='', $checkduplicate=false)
         {
             $count = 0;
 
@@ -623,120 +621,187 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     continue;
                 }
-                $lasttime = date('Y-m-d H:i:s',strtotime('-12 hours'));
-                $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
-                if ($lastround)
+                $roundfrom = '';
+                $roundto = '';
+
+                if ($from == '')
                 {
-                    $d = strtotime($lastround->date_time);
-                    if ($d > strtotime("-12 hours"))
+                    $roundfrom = date('Y-m-d H:i:s',strtotime('-12 hours'));
+                    $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
+                    if ($lastround)
                     {
-                        $lasttime = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                        $d = strtotime($lastround->date_time);
+                        if ($d > strtotime("-12 hours"))
+                        {
+                            $roundfrom = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                        }
                     }
                 }
-                $data = XMXController::gamerounds($thirdId, $lasttime);
-                if (isset($data['totalDataSize']) && $data['totalDataSize'] > 0)
+                else
                 {
-                    
-                    foreach ($data['history'] as $round)
+                    $roundfrom = $from;
+                }
+
+                if ($to == '')
+                {
+                    $roundto = date('Y-m-d H:i:s');
+                }
+                else
+                {
+                    $roundto = $to;
+                }
+
+                $start_timeStamp = strtotime($roundfrom);
+                $end_timeStamp = strtotime($roundto);
+                if ($end_timeStamp < $start_timeStamp)
+                {
+                    Log::error('XMX processGameRound : '. $roundto . '>' . $roundfrom);
+                    return [0, 0];
+                }
+
+                do
+                {
+                    $curend_timeStamp = $start_timeStamp + 3600; // 1hours
+                    if ($curend_timeStamp > $end_timeStamp)
                     {
-                        $bet = 0;
-                        $win = 0;
-                        $gameName = $round['gameID'];
-                        if ($catname == 'xmx-cq9')
-                        {
-                            if ($round['transType'] == 'BET')
-                            {
-                                continue;
-                            }
-                            $betdata = json_decode($round['history'],true);
-                            $bet = $betdata['bet'];
-                            $win = $betdata['win'];
-                            $balance = $betdata['balance'];
-                        }
-                        else if ($catname == 'xmx-bng' || $catname == 'xmx-playson')
-                        {
-                            if ($round['transType'] == 'WIN')
-                            {
-                                continue;
-                            }
+                        $curend_timeStamp = $end_timeStamp;
+                    }
 
-                            $betdata = json_decode($round['history'],true);
-                            $bet = $betdata['bet']??0;
-                            $win = $betdata['win'];
-                            $balance = $betdata['balance_after'];
-                            if ($bet==0 && $win==0)
-                            {
-                                continue;
-                            }
-                        }
-                        else if ($catname == 'xmx-hbn')
+                    $curPage = 1;
+                    $data = null;
+                    do
+                    {
+                        $data = XMXController::gamerounds($thirdId, $curPage, date('Y-m-d H:i:s', $start_timeStamp), date('Y-m-d H:i:s', $curend_timeStamp));
+                        if ($data == null)
                         {
-                            if ($round['transType'] == 'BET')
-                            {
-                                continue;
-                            }
-
-                            $betdata = json_decode($round['history'],true);
-                            $bet = $betdata['stake'];
-                            $win = $betdata['payout'];
-                            $balance = -1;
-                            $gameName = $betdata['gameKeyName'];
+                            Log::error('XMX gamerounds failed : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . date('Y-m-d H:i:s', $curend_timeStamp));
+                            sleep(60);
+                            continue;
                         }
-                        else if ($catname == 'xmx-pp')
-                        {
-                            if ($round['transType'] == 'WIN')
-                            {
-                                continue;
-                            }
-
-                            $betdata = explode(',', $round['history']);
-                            $bet = $betdata[9];
-                            $win = $betdata[10];
-                            $balance = -1;
-                        }
-                        else
-                        {
-                            if ($round['transType'] == 'BET')
-                            {
-                                $bet = $round['amount'];
-                            }
-                            else
-                            {
-                                $win = $round['amount'];
-                            }
-
-                            $balance = -1;
-                        }
-                        if (is_null($win))
-                        {
-                            $win = 0;
-                        }
-                        $time = $round['transTime'];
-
-                        $userid = intval(preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['userID'])) ;
-                        $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                         
-                        \VanguardLTE\StatGame::create([
-                            'user_id' => $userid, 
-                            'balance' => $balance, 
-                            'bet' => $bet, 
-                            'win' => $win, 
-                            'game' =>$gameName . '_xmx', 
-                            'type' => 'slot',
-                            'percent' => 0, 
-                            'percent_jps' => 0, 
-                            'percent_jpg' => 0, 
-                            'profit' => 0, 
-                            'denomination' => 0, 
-                            'date_time' => $time,
-                            'shop_id' => $shop?$shop->shop_id:0,
-                            'category_id' => isset($category)?$category->id:0,
-                            'game_id' => $catname,
-                            'roundid' => $round['gameID'] . '_' . $round['roundID'],
-                        ]);
-                        $count = $count + 1;
-                    }
-                }
+                        if (isset($data['totalDataSize']) && $data['totalDataSize'] > 0)
+                        {
+                            foreach ($data['history'] as $round)
+                            {
+                                $bet = 0;
+                                $win = 0;
+                                $gameName = $round['gameID'];
+                                if ($catname == 'xmx-cq9')
+                                {
+                                    if ($round['transType'] == 'BET')
+                                    {
+                                        continue;
+                                    }
+                                    $betdata = json_decode($round['history'],true);
+                                    $bet = $betdata['bet'];
+                                    $win = $betdata['win'];
+                                    $balance = $betdata['balance'];
+                                }
+                                else if ($catname == 'xmx-bng' || $catname == 'xmx-playson')
+                                {
+                                    if ($round['transType'] == 'WIN')
+                                    {
+                                        continue;
+                                    }
+
+                                    $betdata = json_decode($round['history'],true);
+                                    $bet = $betdata['bet']??0;
+                                    $win = $betdata['win'];
+                                    $balance = $betdata['balance_after'];
+                                    if ($bet==0 && $win==0)
+                                    {
+                                        continue;
+                                    }
+                                }
+                                else if ($catname == 'xmx-hbn')
+                                {
+                                    if ($round['transType'] == 'BET')
+                                    {
+                                        continue;
+                                    }
+
+                                    $betdata = json_decode($round['history'],true);
+                                    $bet = $betdata['stake'];
+                                    $win = $betdata['payout'];
+                                    $balance = -1;
+                                    $gameName = $betdata['gameKeyName'];
+                                }
+                                else if ($catname == 'xmx-pp')
+                                {
+                                    if ($round['transType'] == 'WIN')
+                                    {
+                                        continue;
+                                    }
+
+                                    $betdata = explode(',', $round['history']);
+                                    $bet = $betdata[9];
+                                    $win = $betdata[10];
+                                    $balance = -1;
+                                }
+                                else
+                                {
+                                    if ($round['transType'] == 'BET')
+                                    {
+                                        $bet = $round['amount'];
+                                    }
+                                    else
+                                    {
+                                        $win = $round['amount'];
+                                    }
+
+                                    $balance = -1;
+                                }
+                                if (is_null($win))
+                                {
+                                    $win = 0;
+                                }
+                                $time = $round['transTime'];
+
+                                $userid = intval(preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['userID'])) ;
+                                $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+
+                                if ($checkduplicate)
+                                {
+                                    $checkGameStat = \VanguardLTE\StatGame::where([
+                                        'user_id' => $userid, 
+                                        'bet' => $bet, 
+                                        'win' => $win, 
+                                        'date_time' => $time,
+                                        'roundid' => $round['gameID'] . '_' . $round['roundID'],
+                                    ])->first();
+                                    if ($checkGameStat)
+                                    {
+                                        continue;
+                                    }
+                                }
+
+                                \VanguardLTE\StatGame::create([
+                                    'user_id' => $userid, 
+                                    'balance' => $balance, 
+                                    'bet' => $bet, 
+                                    'win' => $win, 
+                                    'game' =>$gameName . '_xmx', 
+                                    'type' => 'slot',
+                                    'percent' => 0, 
+                                    'percent_jps' => 0, 
+                                    'percent_jpg' => 0, 
+                                    'profit' => 0, 
+                                    'denomination' => 0, 
+                                    'date_time' => $time,
+                                    'shop_id' => $shop?$shop->shop_id:0,
+                                    'category_id' => isset($category)?$category->id:0,
+                                    'game_id' => $catname,
+                                    'roundid' => $round['gameID'] . '_' . $round['roundID'],
+                                ]);
+                                $count = $count + 1;
+                            }
+                        }
+                        $curPage = $curPage + 1;
+                    } while ($data!=null && $curPage <= $data['totalPageSize']);
+
+                    $start_timeStamp = $curend_timeStamp;
+
+                }while ($start_timeStamp<$end_timeStamp);
 
             }
             

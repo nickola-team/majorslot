@@ -1632,6 +1632,14 @@ namespace VanguardLTE\Console
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
                 $this->info("End processTrend");
             });
+            \Artisan::command('xmx:omitted {from} {to}', function ($from, $to) {
+
+                $this->info("Begin xmx rounds : $from ~ $to");
+
+                $this->info("Getting omitted history from " . $from);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\XMXController::processGameRound($from, $to,true);
+                $this->info("Proceed omitted records count = " . $res[0]);
+            });  
 
             \Artisan::command('kten:omitted {from} {to}', function ($from, $to) {
 

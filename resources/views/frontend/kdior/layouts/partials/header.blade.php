@@ -3,9 +3,22 @@
         <div class="top1_box">
             <div class="gnb_left">
                 <ul>
-                    <li><a href="#" class="casino_1_open"><img src="/frontend/kdior/images/gnb1.png?v=202301301150"></a></li>
-                    <li><a href="#" class="casino_2_open"><img src="/frontend/kdior/images/gnb4.png?v=202301301150"></a></li>
                     <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/gnb3.png?v=202301301150"></a></li>                           
+                    <li><a href="#" 
+                    @if (isset($live) && $live=='disabled')
+                    onclick="alert('점검중입니다');"
+                    @else
+                    class="casino_1_open"
+                    @endif
+                    ><img src="/frontend/kdior/images/gnb1.png?v=202301301150"></a></li>
+                    <li><a href="#" 
+                    @if (isset($hotel) && $hotel=='disabled')
+                    onclick="alert('점검중입니다');"
+                    @else
+                    class="casino_2_open"
+                    @endif
+                    ><img src="/frontend/kdior/images/gnb4.png?v=202301301150"></a></li>
+                    
                 </ul>
             </div>
             <div class="logo" style="margin-left:-130px;"><a href="/"><img src="/frontend/{{$logo}}/images/logo.png?v=202301301150" class="bounce" width="260px"></a></div>
