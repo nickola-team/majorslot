@@ -704,7 +704,7 @@ namespace VanguardLTE\Games\TheRedQueenPM
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheRedQueenStack::where('id', 42)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheRedQueenStack::where('id', 255334)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -727,7 +727,7 @@ namespace VanguardLTE\Games\TheRedQueenPM
                 ])->pluck('freestack_id');
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGameTheRedQueenStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
-                $index = 0; //mt_rand(0, 29000);
+                $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 85000);
