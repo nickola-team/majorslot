@@ -416,7 +416,11 @@ namespace VanguardLTE\Games\TicTacTakePM
                 {
                     $spinType = 'c';
                     $slotSettings->SetBalance($totalWin);
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    if($winType == 'bonus'){
+                        $slotSettings->SetBank('bonus', -1 * $totalWin);
+                    }else{
+                        $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    }
                 }
                 $_obf_totalWin = $totalWin;
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $rs_p);
