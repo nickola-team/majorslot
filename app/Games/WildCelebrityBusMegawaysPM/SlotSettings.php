@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\BigBassHoldSpinnerPM
+namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
 {
     class SlotSettings
     {
@@ -722,13 +722,13 @@ namespace VanguardLTE\Games\BigBassHoldSpinnerPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameBigBassHoldSpinnerStack::where('id', 31612)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameWildCelebrityBusMegawaysStack::where('id', 811)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
-            }else if($winType == 'win'){
+            }else if($winType == 'win' || $pur == 0){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -743,25 +743,26 @@ namespace VanguardLTE\Games\BigBassHoldSpinnerPM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonus'){
-                    if($pur == 0){
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassHoldSpinnerStack::where('spin_type',1)->whereNotIn('id', $existIds);
-                    }else if($pur == 1){                        
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassHoldSpinnerStack::where('spin_type', 2)->whereNotIn('id', $existIds);
-                    }else{
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassHoldSpinnerStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
-                    }
-                }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBigBassHoldSpinnerStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                if($pur == 0){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameWildCelebrityBusMegawaysStack::where('pur_level',0)->whereNotIn('id', $existIds);
+                }else if($pur == 1){                        
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameWildCelebrityBusMegawaysStack::where('pur_level', 1)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 29000);
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameWildCelebrityBusMegawaysStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                }else{
+                    if($pur != 0){
+                        $stacks = \VanguardLTE\PPGameStackModel\PPGameWildCelebrityBusMegawaysStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    }
+                }
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 85000);
+                    // $index = mt_rand(0, 85000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 20);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
