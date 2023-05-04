@@ -526,7 +526,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $userId = $record->user_id;
 
             //get bet history
+            $user = $record->user;
+            if ($user == null)
+            {
+                return ['error'=>true];
+            }
+            $master = $user->referral;
+            while ($master!=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            if ($master == null)
+            {
+                return ['error'=>true];
+            }
+            
             $recommend = config('app.gac_key');
+            $agentinfo = \VanguardLTE\ProviderInfo::where('user_id', $master->id)->where('provider', 'gacagent')->first();
+            if ($agentinfo)
+            {
+                $recommend = $agentinfo->config;
+            }
 
             $param = [
                 'userId' => $record->user_id,
@@ -827,7 +847,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $username = $username . '#' . strval($user->id);
             $username = mb_substr($username, -10);
 
+            $master = $user->referral;
+            while ($master!=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            if ($master == null)
+            {
+                return null;
+            }
+
             $recommend = config('app.gac_key');
+            $agentinfo = \VanguardLTE\ProviderInfo::where('user_id', $master->id)->where('provider', 'gacagent')->first();
+            if ($agentinfo)
+            {
+                $recommend = $agentinfo->config;
+            }
+            
             $data = [
                 'userId' => strval($user->id),
                 'userName' => $username,
@@ -907,7 +943,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
+            $user = $stat->user;
+            if (!$user)
+            {
+                return null;
+            }
+            $master = $user->referral;
+            while ($master!=null && !$master->isInoutPartner())
+            {
+                $master = $master->referral;
+            }
+            if ($master == null)
+            {
+                return null;
+            }
+            
             $recommend = config('app.gac_key');
+            $agentinfo = \VanguardLTE\ProviderInfo::where('user_id', $master->id)->where('provider', 'gacagent')->first();
+            if ($agentinfo)
+            {
+                $recommend = $agentinfo->config;
+            }
+
             $param = [
                 'betId' => intval($betId) - 1,
                 'recommend' => $recommend,
