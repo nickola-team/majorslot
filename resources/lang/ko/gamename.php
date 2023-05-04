@@ -1091,6 +1091,14 @@ return [
         "FruitsoftheAmazon" => "후르츠 오브 더 아마존",
         "TheKnightKing" => "더 나이트 킹",
 
+        "BigBassHoldSpinner" => "빅 베스 홀드 앤드 스피너",
+        "Moonshot" => "문샷",
+        "TheRedQueen" => "더 레드 퀸",
+        "3DancingMonkeys" => "3 댄싱 몽키즈",
+        "AfricanElephant" => "아프리칸 엘러펀트",
+        "WildCelebrityBusMegaways" => "와일드 셀레브리티 버스",
+        "GodsofGiza" => "갓즈 오브 기자",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1164,6 +1172,8 @@ return [
 
         "yohogold" => "요-호 골드!",
         "mayasun" => "마야 썬",
+
+        "egyptfire" => "이집트 파이어",
 
 
 ];
