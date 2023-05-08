@@ -44,6 +44,10 @@
                             <?php
                                 $badge_class = \VanguardLTE\User::badgeclass();
                                 $statuses = \VanguardLTE\Support\Enum\UserStatus::lists();
+                                if (!$deluser)
+                                {
+                                    unset($statuses[\VanguardLTE\Support\Enum\UserStatus::DELETED]);
+                                }
                             ?>
                             <h5 class="h3">
                                 {{ $user->username }} , {{$user->id}}
@@ -60,6 +64,7 @@
                         </div>
                         @if (auth()->user()->role_id > $user->role_id)
                         <div class="row" style="padding:1rem 0;">
+                            @if ($deluser)
                             <div class="col justify-content-center text-center">
                             <a href="{{argon_route('argon.common.profile.delete',['id'=>$user->id])}}"
                                 class="btn btn-warning col-8"
@@ -71,6 +76,7 @@
                                 삭제
                             </a>
                             </div>
+                            @endif
                             @if (auth()->user()->hasRole('admin'))
                             <div class="col justify-content-center text-center">
                                 <a href="{{argon_route('argon.common.profile.delete',['id'=>$user->id, 'hard'=>1])}}"
@@ -244,6 +250,14 @@
                                         <p>
                                         <input type="radio"    name="moneyperm" value="1" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']==1?'checked':''}}   /> <span>가능</span>
                                         <input type="radio"    name="moneyperm" value="0" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']!=1?'checked':''}}   /> <span>불가능</span>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-deluser">파트너 및 회원 삭제기능</label>
+                                        <p>
+                                        <input type="radio"    name="deluser" value="1" {{isset($user->sessiondata()['deluser']) && $user->sessiondata()['deluser']==1?'checked':''}}   /> <span>가능</span>
+                                        <input type="radio"    name="deluser" value="0" {{isset($user->sessiondata()['deluser']) && $user->sessiondata()['deluser']!=1?'checked':''}}   /> <span>불가능</span>
 
                                     </div>
 
