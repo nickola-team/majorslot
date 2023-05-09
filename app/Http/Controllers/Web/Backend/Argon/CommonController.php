@@ -209,7 +209,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $rtppercent = \VanguardLTE\Shop::whereIn('id', $shopIds)->avg('percent');
                 }
             }
-            return view('backend.argon.common.profile', compact('user', 'userActivities', 'rtppercent'));
+            $parent = auth()->user();
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $deluser = 1;
+            if (auth()->user()->isInOutPartner())
+            {
+                $deluser = 1;
+            }
+            else if (isset($parent->sessiondata()['deluser']))
+            {
+                $deluser = $parent->sessiondata()['deluser'];
+            }
+            return view('backend.argon.common.profile', compact('user', 'userActivities', 'rtppercent', 'deluser'));
         }
         public function updatePassword(\VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
@@ -282,27 +296,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             $data = $request->all();
-            if (isset($data['gameOn']))
+            $customesettings = [
+                'gameOn',
+                'moneyperm',
+                'deluser'
+            ];
+            foreach ($customesettings as $setting)
             {
-                $userdata = $user->sessiondata();
-                $userdata['gameOn'] = $data['gameOn'];
-                $data['session'] = json_encode($userdata);
-                unset($data['gameOn']);
-            }
-            if (isset($data['moneyperm']))
-            {
-                if (isset($data['session']))
+                if (isset($data[$setting]))
                 {
-                    $userdata = json_decode($data['session'], true);
+                    if (isset($data['session']))
+                    {
+                        $userdata = json_decode($data['session'], true);
+                    }
+                    else
+                    {
+                        $userdata = $user->sessiondata();
+                    }
+                    $userdata[$setting] = $data[$setting];
+                    $data['session'] = json_encode($userdata);
+                    unset($data[$setting]);
                 }
-                else
-                {
-                    $userdata = $user->sessiondata();
-                }
-                $userdata['moneyperm'] = $data['moneyperm'];
-                $data['session'] = json_encode($userdata);
-                unset($data['moneyperm']);
             }
+
             if (isset($data['gamertp']))
             {
                 if ($data['gamertp'] >= 90 && $data['gamertp'] <= 100)
