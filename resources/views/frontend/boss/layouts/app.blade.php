@@ -129,19 +129,16 @@
       @include('frontend.boss.modals.slot')
       
     @endif
-    @if( $detect->isMobile() || $detect->isTablet() ) 
-    @else
-      @foreach ($noticelist as $ntc)
-        @if ($ntc->popup == 'popup')
-          @include('frontend.boss.modals.popup',  ['notice' => $ntc])
-          <script>
-            if (getCookie('pop{{$ntc->id}}') === "done") {
-              closeWinpop({{$ntc->id}});
-            }
-          </script>
-        @endif
-      @endforeach
-    @endif
+    @foreach ($noticelist as $ntc)
+      @if ($ntc->popup == 'popup')
+        @include('frontend.boss.modals.popup',  ['notice' => $ntc])
+        <script>
+          if (getCookie('pop{{$ntc->id}}') === "done") {
+            closeWinpop({{$ntc->id}});
+          }
+        </script>
+      @endif
+    @endforeach
     </div>
 @if( $detect->isMobile() || $detect->isTablet() ) 
 @else

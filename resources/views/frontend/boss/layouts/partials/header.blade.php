@@ -34,7 +34,7 @@
                   <div style="margin-bottom: 5px">
                     <strong class="guest_name">{{auth()->user()->username}}</strong>
                     <strong>
-                      <i role="button" onclick="navClick('msg-popup');setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');getCustomerPage(1);" class="guest-dm fa fa-envelope">
+                      <i role="button" onclick="navClick('msg-popup');setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');getCustomerPage();" class="guest-dm fa fa-envelope">
                         <span ng-bind="UnreadDM" class="ng-binding msg-text" id="_top_msg">{{$unreadmsg}}</span>
                       </i>
                     </strong>
