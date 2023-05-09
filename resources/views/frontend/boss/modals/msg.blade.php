@@ -1,4 +1,4 @@
-<div id="msg-popup" class="ngdialog ngdialog-theme-default ngdialog-main-default ng-scop ng-hide">
+<div id="msg-popup" class="ngdialog ngdialog-theme-default ngdialog-main-default ngdialog-msg ng-scope ng-hide">
         <div class="ngdialog-overlay"></div>
         <div class="ngdialog-content" role="document">
           <div class="ngdialog-customer-page ngdialog-main-default-page ng-scope" ng-controller="CustomerController" ng-init="setTab(selectCustomerTab)">

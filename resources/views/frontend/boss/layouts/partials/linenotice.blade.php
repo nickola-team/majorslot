@@ -8,9 +8,9 @@
 <div class="notice_wrap">
     <div class="notice_box">
         <div class="notice_text">
-            <marquee id="NewsMarQuee" onmouseover="stop()" style="margin-top: 0px; width: 1300px; height: 51px;" onmouseout="start()" scrollamount="8" scrolldelay="1" direction="left">
+            <marquee id="NewsMarQuee" onmouseover="stop()" style="margin-top: 0px; width: 100%; height: 51px;" onmouseout="start()" scrollamount="8" scrolldelay="1" direction="left">
             @foreach ($noticelist as $ntc)
-                <span style="cursor: pointer;" onclick="showNoticeDetail({{$ntc->id}});" class="sub_pop1_open"> <img src="/frontend/boss/V/notice_title.png" /> {{$ntc->title}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span style="cursor: pointer;" class="sub_pop1_open"> <img src="/frontend/boss/V/notice_title.png" /> {{$ntc->title}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             @endforeach
         </marquee>
         </div>

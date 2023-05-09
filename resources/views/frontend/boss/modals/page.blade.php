@@ -7,6 +7,8 @@
             <div class="ngdialog__heading">
               <h4 class="ngdialog__title ng-scope" translate="" tabindex="-1" style="outline: 0px;">마이페이지</h4>
             </div>
+            @if( $detect->isMobile() || $detect->isTablet() ) 
+            @else
             <ul class="ngdialog-main-nav list-inline clearfix mr-auto">
               <li onclick="setTab('main-set',this);">
                 <span class="main-nav__label ng-scope" translate="">내 프로필</span>
@@ -22,6 +24,7 @@
                 <span class="main-nav__label ng-scope" translate="">비밀번호 변경</span>
               </li>
             </ul>
+            @endif
             <div id="main-set" class="ngdialog-main-default__content withdraw ng-scope set-content font-white ng-hide">
               <div class="withdraw manual">
                 <form novalidate="" ng-submit="processForm();" class="ngdialog-wallet__form ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-valid-have-special-char ng-valid-special-char-c ng-valid-no-match">
@@ -105,7 +108,7 @@
                         <span translate="" class="ng-scope">입금하실 금액</span>
                         <span>*</span>
                       </label>
-                      <div class="col-xs-4">
+                      <div class="col-xs-3">
                         <input type="text" class="form-control text-right wonText bg-dark ng-pristine ng-untouched ng-valid ng-valid-maxlength money" placeholder="0" value="0" id="charge_money" onkeyup="changeChargeMoney(this);numChk(this);" onchange="numChk(this)" onclick="this.value=''">
                         <p class="won-text deposit">원</p>
                         <strong class="mini-notice ng-scope" translate=""></strong>
@@ -126,7 +129,7 @@
                         <span translate="" class="ng-scope">입금자명</span>
                         <span>*</span>
                       </label>
-                      <div class="col-xs-4">
+                      <div class="col-xs-3">
                         <input type="text" class="form-control ng-pristine ng-untouched ng-valid" placeholder="이름은 한글 2-5자리 입니다" disabled="disabled" value="{{mb_substr(auth()->user()->recommender, 0, 2) . '*'}}">
                       </div>
                     </fieldset>
@@ -150,14 +153,14 @@
                 
               </table>
             </div>
-
-            <script type="text/javascript">
-              
-            </script>
-
 <!-- 출금신청-->
             <div id="withdraw-set" class="ngdialog-main-default__content withdraw font-white ng-scope ng-hide">
               <div class="withdraw manual">
+                <div>
+                  <p>
+                  </p>
+                  <!-- <p><strong>IDN 포커는 타 게임과 머니이동이 불가능합니다. 포커를 플레이하기 원하시면 IDN 포커 게임 선택후 입금을 진행해주시기 바랍니다.</strong></p> -->
+                </div>
                 <form novalidate="" ng-submit="processForm();" class="ng-pristine ng-valid-maxlength ng-invalid ng-invalid-required">
                   <div class="ngdialog-wallet__form">
                     <fieldset style="position: relative">
@@ -165,9 +168,9 @@
                         <span translate="" class="ng-scope">보유머니</span>
                       </label>
                       <div class="col-xs-4">
-						<strong class="text-uppercase font-white pull-right ng-binding ">
-                         <h4><span class="mbalance" id="_my_money">{{number_format(auth()->user()->balance)}}</span> 원 </h4>
-						</strong>
+                        <strong class="text-uppercase font-white pull-right ng-binding ">
+                                    <h4><span class="mbalance" id="_my_money">{{number_format(auth()->user()->balance)}}</span> 원 </h4>
+                        </strong>
                       </div>
                     </fieldset>
                     <fieldset style="position: relative;">
@@ -175,7 +178,7 @@
                         <span translate="" class="ng-scope">출금하실 금액</span>
                         <span>*</span>
                       </label>
-                      <div class="col-xs-4">
+                      <div class="col-xs-3">
                         <input type="text" class="form-control bg-dark text-right wonText ng-pristine ng-untouched ng-valid ng-valid-maxlength exchange_money" onkeyup="numChk(this);" onchange="numChk(this)" onclick="this.value=''" value="0" id="exchange_money">
                         <p class="won-text withdraw">원</p>
                         <strong class="mini-notice ng-scope" translate=""></strong>

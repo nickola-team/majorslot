@@ -68,9 +68,6 @@
     <!--  -->
     <!-- <script language="javascript" type="text/javascript" src="/frontend/boss/V/socket.io.js"></script> -->
     <script language="javascript" type="text/javascript" src="/frontend/boss/V/customFunc.js"></script>
-    <script type="text/javascript">
-      var isSport = 0;
-    </script>
     <style>
       .ng-hide {
         display: none !important;
@@ -78,100 +75,114 @@
     </style>
   </head>
 
+  <?php
+    $detect = new \Detection\MobileDetect();
+  ?>
+@if( $detect->isMobile() || $detect->isTablet() ) 
+  <link rel="stylesheet" href="/frontend/boss/V/app-mobile.css">
+@endif
   <body class="ng-scope bg-main">
     <div class="wrapper">
-
+      @if( $detect->isMobile() || $detect->isTablet() ) 
+      @else
       @include('frontend.boss.layouts.partials.header')
+      @endif
       
       <div ng-view="" class="ng-scope">
         <main-page class="ng-scope">
           <div class="main-page">
+            @if( $detect->isMobile() || $detect->isTablet() ) 
+              @include('frontend.boss.layouts.partials.m.banner')
+            @else
             @include('frontend.boss.layouts.partials.banner')
+            @endif
+
             @include('frontend.boss.layouts.partials.linenotice')
 
-
-              <div class="main-container games">
+            @if( $detect->isMobile() || $detect->isTablet() ) 
+              @include('frontend.boss.layouts.partials.m.content')
+            @else
+            <div class="main-container games">
                 <div class="content">
                 @include('frontend.boss.layouts.partials.category')
                 @include('frontend.boss.layouts.partials.notice')
                 @include('frontend.boss.layouts.partials.footer')
                 </div>
               </div>
+            @endif
+              
             </div>
-      <script type="text/javascript">
-        depositRealtime();
-        withdrawRealtime();
-        function getCookieWel(name) {
-          var Found = false;
-          var start, end;
-          var i = 0;
-          while (i <= document.cookie.length) {
-            start = i;
-            end = start + name.length;
-            if (document.cookie.substring(start, end) == name) {
-              Found = true;
-              break;
-            }
-            i++
-          }
-          if (Found == true) {
-            start = end + 1;
-            end = document.cookie.indexOf(";", start);
-            if (end < start) end = document.cookie.length;
-            return document.cookie.substring(start, end)
-          }
-          return ""
-        }
-        function setCookie( name, value, expiredays ) { 
-        var todayDate = new Date(); 
-        todayDate.setDate( todayDate.getDate() + expiredays ); 
-        document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
-        } 
-
-        function closeWinpopDay(id) { 
-          if ( document.getElementById("notice_chk" + id).checked ){ 
-          setCookie( "pop" + id, "done" , 1 ); 
-          } 
-
-          document.getElementById("pop" + id).style.visibility = "hidden"; 
-        } 
-
-        function closeWinpop(id) {
-          document.getElementById("pop" + id).style.visibility = "hidden"; 
-        }
-        
-      </script>
       </main-page>
     </div>
-    <?php
-    $detect = new \Detection\MobileDetect();
-  ?>
+
     @include('frontend.boss.modals.common')
     @if (!Auth::check())    
-    @include('frontend.boss.modals.login')
-    @include('frontend.boss.modals.register')
+      @include('frontend.boss.modals.login')
+      @include('frontend.boss.modals.register')
     @else
-    @include('frontend.boss.modals.page')      
-    @include('frontend.boss.modals.msg')      
-    @include('frontend.boss.modals.casino')      
-    @include('frontend.boss.modals.slot')
+      @if( $detect->isMobile() || $detect->isTablet() ) 
+        @include('frontend.boss.modals.m.myinfo')
+      @endif
+      @include('frontend.boss.modals.page')      
+      @include('frontend.boss.modals.msg')      
+      @include('frontend.boss.modals.casino')
+      @include('frontend.boss.modals.slot')
+      
     @endif
-    @foreach ($noticelist as $ntc)
-    @if ($ntc->popup == 'popup')
-      @include('frontend.boss.modals.popup',  ['notice' => $ntc])
-      <script>
-        if (getCookie('pop{{$ntc->id}}') === "done") {
-          closeWinpop({{$ntc->id}});
-        }
-      </script>
+    @if( $detect->isMobile() || $detect->isTablet() ) 
+    @else
+      @foreach ($noticelist as $ntc)
+        @if ($ntc->popup == 'popup')
+          @include('frontend.boss.modals.popup',  ['notice' => $ntc])
+          <script>
+            if (getCookie('pop{{$ntc->id}}') === "done") {
+              closeWinpop({{$ntc->id}});
+            }
+          </script>
+        @endif
+      @endforeach
     @endif
-    @endforeach
     </div>
-
+@if( $detect->isMobile() || $detect->isTablet() ) 
+@else
 <div class="customizer-tele">
 	<span class="tele" onclick="window.open('https://t.me/Boss텔레');" style="cursor:pointer;"><img src="/frontend/boss/v/quick_customer2.png">Boss텔레</span>
 </div>
+@endif
   </body>
 
 <!-- dd -->
 </html>
+
+@push('js')
+<script>
+  $(document).ready(function(){
+    @if( $detect->isMobile() || $detect->isTablet() ) 
+    $('.jackpot-odometer').jOdometer({
+        increment: 24,
+        counterStart: 39888441,
+        counterEnd: false,
+        numbersImage: '/frontend/boss/V/mobile-odometer-small.png',
+        spaceNumbers: 0,
+        formatNumber: true,
+        widthNumber: 17,
+        heightNumber: 36
+      });
+    @else
+    $('.jackpot-odometer').jOdometer({
+        increment: 24,
+        counterStart: 48878441,
+        counterEnd: false,
+        numbersImage: '/frontend/boss/V/odometer.png?ver=1.01',
+        spaceNumbers: -3,
+        formatNumber: true,
+        widthNumber: 45,
+        heightNumber: 95
+      });
+    @endif
+      depositRealtime();
+      withdrawRealtime();
+      
+});
+</script>
+endpush

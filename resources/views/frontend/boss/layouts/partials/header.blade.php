@@ -183,7 +183,7 @@
                   @else
                     navClick('login-popup');
                   @endif
-                  setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');getCustomerPage(1);" class="ng-scope">
+                  setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');getCustomerPage();" class="ng-scope">
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>

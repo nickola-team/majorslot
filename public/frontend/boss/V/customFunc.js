@@ -122,18 +122,47 @@ function getGame(ptype,cname) {
 function logOut() {
     top.location.href="/logout";
 }
-$(document).ready(function(){
-    $('.jackpot-odometer').jOdometer({
-        increment: 24,
-        counterStart: 48878441,
-        counterEnd: false,
-        numbersImage: '/frontend/boss/V/odometer.png?ver=1.01',
-        spaceNumbers: -3,
-        formatNumber: true,
-        widthNumber: 45,
-        heightNumber: 95
-      });
-});
+
+function getCookieWel(name) {
+    var Found = false;
+    var start, end;
+    var i = 0;
+    while (i <= document.cookie.length) {
+      start = i;
+      end = start + name.length;
+      if (document.cookie.substring(start, end) == name) {
+        Found = true;
+        break;
+      }
+      i++
+    }
+    if (Found == true) {
+      start = end + 1;
+      end = document.cookie.indexOf(";", start);
+      if (end < start) end = document.cookie.length;
+      return document.cookie.substring(start, end)
+    }
+    return ""
+  }
+  function setCookie( name, value, expiredays ) { 
+  var todayDate = new Date(); 
+  todayDate.setDate( todayDate.getDate() + expiredays ); 
+  document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+  } 
+
+  function closeWinpopDay(id) { 
+    if ( document.getElementById("notice_chk" + id).checked ){ 
+    setCookie( "pop" + id, "done" , 1 ); 
+    } 
+
+    document.getElementById("pop" + id).style.visibility = "hidden"; 
+  } 
+
+  function closeWinpop(id) {
+    document.getElementById("pop" + id).style.visibility = "hidden"; 
+  }
+
+
 function _number(id, amount) {
     //$('.jack-money'+idx).val("0");
     var comma_separator_number_step = $.animateNumber.numberStepFactories.separator(',');

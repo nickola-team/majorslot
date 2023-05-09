@@ -6,8 +6,7 @@
         <div class="logo text-center">
             <img src="/frontend/boss/assets/images/logo/Boss/LOGO.png" width="50%">
         </div>
-        <p class="text-center">이용 권한이 없습니다</p>
-        <form ng-submit="processForm()" class="ng-pristine ng-valid">
+        <form ng-submit="processForm()" class="ng-pristine ng-valid form-login">
             <input type="text" class="form-control ng-pristine ng-valid ng-touched" ng-model="loginForm.nickname" placeholder="아이디" id="sID">
             <input type="password" class="form-control ng-pristine ng-untouched ng-valid" autocomplete="new-password" ng-model="loginForm.password" placeholder="비밀번호" id="sPASS">
             <button class="btn btn-block btn-yellow ng-scope sbmt-login" type="button" ng-disabled="isProcessing" translate="">로그인</button>
@@ -54,17 +53,7 @@ $(document).ready(function() {
 var ip = "";
 var provider = "";
 var address = "";
-// $(document).ready(function() {
-/*
-$.get("//ipinfo.io/json", function (response) {
-    ip ="IP: " + response.ip;
-    provider = response.org;
-    address = response.city + ", " + response.region + ", " + response.country;
 
-    localStorage.setItem("location", address);
-    localStorage.setItem("provider", provider);
-}, "jsonp");
-*/
 $('#sPASS, #sID').keypress(function(e) {
   $(".sbmt-login").removeAttr('style');
   if (e.which == 13) {
