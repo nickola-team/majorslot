@@ -503,7 +503,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $curPage = $curPage + 1;
                         $totalcount = isset($data['totalCount'])?$data['totalCount']:0;
 
-                    } while ($data!=null && $curPage <= $data['totalCount'] / 1000);
+                    } while ($data!=null && $curPage <= $totalcount / 1000);
 
                     $start_timeStamp = $curend_timeStamp;
 
