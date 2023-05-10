@@ -429,7 +429,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     Log::error('TAISHAN processGameRound : '. $roundto . '>' . $roundfrom);
                     return [0, 0];
                 }
-
+                $totalcount = 0;
                 do
                 {
                     $curend_timeStamp = $start_timeStamp + 3600; // 1hours
@@ -501,8 +501,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
                         }
                         $curPage = $curPage + 1;
-
-                    } while ($data!=null && $curPage <= $data['totalCount'] / 1000);
+                        if (isset($data['totalCount']))
+                        {
+                            $totalcount = $data['totalCount'];
+                        }
+                        
+                    } while ($data!=null && $curPage <= $totalcount / 1000);
 
                     $start_timeStamp = $curend_timeStamp;
 
