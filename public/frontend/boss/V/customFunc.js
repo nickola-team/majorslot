@@ -199,106 +199,87 @@ $(document).on('click', '.ngdialog-close', function() {
     $(this).parent().parent().addClass('ng-hide');
 });
 
+function replaceComma(str)
+{
+	if(str==null || str.length==0) return "";
+	while(str.indexOf(",")>-1){
+		str = str.replace(",","");
+	}
+	return str;
+}
 
+function insertComma(str)
+{
+	var rightchar = replaceComma(str);
+	var moneychar="";
+	for(index=rightchar.length-1;index>=0;index--){
+		splitchar = rightchar.charAt(index);
+		if(isNaN(splitchar)){
+			return "";
+		}
+		moneychar = splitchar+moneychar;
+		if(index%3==rightchar.length%3 && index  !=0) {
+			moneychar = ','+moneychar;
+		}
+	}
+	str = moneychar;
+	return str;
+}
 function withdrawRealtime() {
-    e = `
+    var html = ``;
+    var date = new Date();
+
+    for (i=0;i<5;i++)
+    {
+        var delta = Math.floor(Math.random() * 10);
+        var amount = Math.floor(Math.random() * 500) * 10000;
+        var id = Math.random().toString(36).substr(2,3) + "***";
+        date.setMinutes(date.getMinutes() - delta);
+
+        fakedata = {
+            date : date.toLocaleString(),
+            amount : insertComma("" + amount),
+            id : id
+        };
+        html += `<li class="items ng-scope">
+                <div class="transaction-date text-left"><span class="ng-binding">${fakedata['date']}</span></div>
+                <div class="transaction-item goldTxt text-center"><span class="ng-binding">${fakedata['amount']}원</span></div>
+                <div class="transaction-item text-left"><span class="ng-binding">${fakedata['id']}</span></div>
+            </li>`
+
+    }
     
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:20:23</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">3,450,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">mxa****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:16:36</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">1,240,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">yoa****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:11:30</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">3,930,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">djt****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:09:58</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">3,700,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">iie****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 2:59:41</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">1,560,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">iuk****</span></div>
-            </li>
-            `;
-        $("#withdraw-ticker").html(e);
+        $("#withdraw-ticker").html(html);
   }
 
   function depositRealtime() {
-    e = `    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:30:12</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">1,980,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">tsx****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:27:15</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">1,660,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">jpy****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:23:48</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">330,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">xcw****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:22:51</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">140,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">opx****</span></div>
-            </li>
-    
-            <li class="items ng-scope">
-                <div class="transaction-item text-left"><span class="ng-binding">2023-05-05 오후 3:18:59</span></div>
-                <div class="transaction-item goldTxt text-center"><span class="ng-binding">8,800,000 원</span></div>
-                <div class="transaction-item text-left"><span class="ng-binding">jhe****</span></div>
-            </li>
-    `;
-        $("#deposit-ticker").html(e);
+        var html = ``;
+        var date = new Date();
+
+        for (i=0;i<5;i++)
+        {
+            var delta = Math.floor(Math.random() * 10);
+            var amount = Math.floor(Math.random() * 500) * 10000;
+            var id = Math.random().toString(36).substr(2,3) + "***";
+            date.setMinutes(date.getMinutes() - delta);
+
+            fakedata = {
+                date : date.toLocaleString(),
+                amount : insertComma("" + amount),
+                id : id
+            };
+            html += `<li class="items ng-scope">
+                    <div class="transaction-date text-left"><span class="ng-binding">${fakedata['date']}</span></div>
+                    <div class="transaction-item goldTxt text-center"><span class="ng-binding">${fakedata['amount']}원</span></div>
+                    <div class="transaction-item text-left"><span class="ng-binding">${fakedata['id']}</span></div>
+                </li>`
+
+        }
+        
+        $("#deposit-ticker").html(html);
   }
 
-function resetLocal(){
-    var location = localStorage.getItem('location');
-    var provider = localStorage.getItem('provider');
-    var conf     = confirm("로그 아웃. 이용해 주셔서 감사합니다.");
-    if(!conf){
-        return false;
-    }
-
-
-    /*if(userid_log =="1.00.01.00004"){
-        deleteAllCookies();
-        return;
-    }*/
-
-    $.ajax({
-        url: "/ajax/logout.asp",
-        type: "GET",
-        data: {"action" : 'manual', "location" : location, "provider" : provider},
-        success: function(a){
-            deleteAllCookies();
-            // window.location.href = "/login.php";
-            // return false;
-            window.location.href = "/index.asp";
-        }
-    });
-    }
-
-    function deleteAllCookies() {
+function deleteAllCookies() {
         var cookies = document.cookie.split(";");
         for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i];

@@ -125,3 +125,7 @@ ul.transaction-list .items {
 ul.transaction-list .transaction-item {
   width: calc(100% / 3);
 }
+
+ul.transaction-list  .transaction-date {
+  width: calc(100% / 2);
+}

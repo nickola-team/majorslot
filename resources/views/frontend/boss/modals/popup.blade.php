@@ -1,14 +1,14 @@
 <div id="pop{{$notice->id}}" 
 @if( $detect->isMobile() || $detect->isTablet() ) 
 <?php
-$width = '100%'; $height = '100%';
+$width = '100vw'; $height = '100vh';
 ?>
   style="position:absolute; left:0px; top:0px; z-index:200; width:100vw;height:100vh; visibility:visible; display:table;border: 2px solid #d5a451;" 
 @else
 <?php
 $width = '330px'; $height = '400px';
 ?>
-    style="position:absolute; left:{{50+$loop->index * 350}}px; top:150px; z-index:200; width:330;height:400; visibility:visible; display:table;border: 2px solid #d5a451;" 
+    style="position:absolute; left:{{50+$loop->index * 350}}px; top:150px; z-index:200; width:{{$width}};height:{{$width}}; visibility:visible; display:table;border: 2px solid #d5a451;" 
 @endif
 >
 <form name="notice_formpop{{$notice->id}}">
@@ -20,7 +20,7 @@ $width = '330px'; $height = '400px';
     </tr>
     <tr>
         <td valign="top" style="padding-left: 5px !important; padding-right : 5px !important;">
-        <div style="height: calc(100vh - 77px); overflow:auto; background-color:RGBA(0,0,0,0.9);"><?php echo $notice->content; ?>
+        <div style="height: calc({{$height}} - 77px); overflow:auto; background-color:RGBA(0,0,0,0.9);"><?php echo $notice->content; ?>
         </div>
       </td>
     </tr>
