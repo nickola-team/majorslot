@@ -125,6 +125,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'RespinType', '');  // lwb, cw, iw
                 $slotSettings->SetGameData($slotSettings->slotId . 'SubLevel', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
@@ -147,6 +148,9 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     $bet = $lastEvent->serverResponse->bet;
                     if (isset($lastEvent->serverResponse->RoundID)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    }
+                    if (isset($lastEvent->serverResponse->ReplayGameLogs)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
                     if (isset($lastEvent->serverResponse->FreeStacks)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', json_decode(json_encode($lastEvent->serverResponse->FreeStacks), true)); // FreeStack
@@ -214,6 +218,37 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
             {
                 $Balance = $slotSettings->GetBalance();
                 $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                //------------ ReplayLog ---------------                
+                $lastEvent = $slotSettings->GetHistory();
+                if($lastEvent != NULL){
+                    $betline = $lastEvent->serverResponse->bet;
+                }
+                else
+                {
+                    $betline = $slotSettings->Bet[0];
+                }
+                $lines = 20;      
+                $allBet = $betline * $lines;
+                $totalWin = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if($replayLog && count($replayLog) && $totalWin >= ($allBet * 10)){
+                    $current_replayLog["cr"] = $paramData;
+                    $current_replayLog["sr"] = $response;
+                    array_push($replayLog, $current_replayLog);
+
+                    \VanguardLTE\Jobs\UpdateReplay::dispatch([
+                        'user_id' => $userId,
+                        'game_id' => $slotSettings->game->original_id,
+                        'bet' => $allBet,
+                        'brand_id' => config('app.stylename'),
+                        'base_bet' => $allBet,
+                        'win' => $totalWin,
+                        'rtp' => $totalWin / $allBet,
+                        'game_logs' => urlencode(json_encode($replayLog))
+                    ]);
+                }
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []);
+                //------------ *** ---------------
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
@@ -319,6 +354,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                         $roundstr = '275' . substr($roundstr, 4, 7);
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                         $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'RegularSpinCount') + 1);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalRepeatFreeCount', 0);
                         $leftFreeGames = 0;
@@ -758,8 +794,16 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }
+                //------------ ReplayLog ---------------
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if (!$replayLog) $replayLog = [];
+                $current_replayLog["cr"] = $paramData;
+                $current_replayLog["sr"] = $response;
+                array_push($replayLog, $current_replayLog); 
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
+                //------------ *** ---------------
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"Bgt":' . $bgt . ',"RespinType":"' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinType') . '","Level":' . $level.',"Wins":' . json_encode($wins) .',"Status":' . json_encode($status) .',"FreeSpinNums":' . json_encode($freeSpinNums). ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'). ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks'))  . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"ReplayGameLogs":'.json_encode($replayLog) . ',"Bgt":' . $bgt . ',"RespinType":"' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinType') . '","Level":' . $level.',"Wins":' . json_encode($wins) .',"Status":' . json_encode($status) .',"FreeSpinNums":' . json_encode($freeSpinNums). ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'). ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks'))  . ',"Balance":' . $Balance . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';
                 $allBet = $betline * $lines;
                 if($slotEvent['slotEvent'] == 'freespin' && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
                     $allBet = $betline * 2000;
@@ -1111,9 +1155,16 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                     $response = 'bgid=3&spn='.$spn.'&balance='.$Balance . $otherResponse .'&wins='. implode(',', $wins).'&level='.$level.'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.'&status='.implode(',', $status).'&stime=' . floor(microtime(true) * 1000) .'&bgt='.$bgt.'&wins_mask='.implode(',', $win_mask).'&win_p='.implode(',', $wildPoses).'&sver=5&counter='. ((int)$slotEvent['counter'] + 1).'&s='.implode(',', $lastReel).'&sublevel=' . $subLevel;
                 }
                 
-                
+                //------------ ReplayLog ---------------
+                $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+                if (!$replayLog) $replayLog = [];
+                $current_replayLog["cr"] = $paramData;
+                $current_replayLog["sr"] = $response;
+                array_push($replayLog, $current_replayLog); 
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
+                //------------ *** ---------------
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')  . ',"RespinType":"' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinType') . '","Bgt":' . $slotSettings->GetGameData($slotSettings->slotId . 'Bgt') . ',"Level":' . $slotSettings->GetGameData($slotSettings->slotId . 'Level').',"Wins":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'Wins')) .',"Status":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'Status')) .',"FreeSpinNums":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeSpinNums')) . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'). ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"Balance":' . $Balance . ',"Wp":' . $wp . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'LastReel')).'}}';
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"ReplayGameLogs":'.json_encode($replayLog)  . ',"RespinType":"' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinType') . '","Bgt":' . $slotSettings->GetGameData($slotSettings->slotId . 'Bgt') . ',"Level":' . $slotSettings->GetGameData($slotSettings->slotId . 'Level').',"Wins":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'Wins')) .',"Status":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'Status')) .',"FreeSpinNums":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeSpinNums')) . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'). ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin').',"FreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks')) . ',"Balance":' . $Balance . ',"Wp":' . $wp . ',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $totalWin . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'LastReel')).'}}';
                 $slotSettings->SaveLogReport($_GameLog, $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
             }
             if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){
