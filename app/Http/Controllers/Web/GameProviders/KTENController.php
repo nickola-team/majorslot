@@ -523,6 +523,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $curPage = 1;
             $data = null;
             $newtimepoint = $timepoint;
+            $totalCount = 0;
             do
             {
                 $data = KTENController::gamerounds($timepoint, $curPage);
@@ -744,12 +745,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         ]);
                         $count = $count + 1;
                     }
-                    $newtimepoint = $data['lastid'];
+                    if (isset($data['lastid']))
+                    {
+                        $newtimepoint = $data['lastid'];
+                    }
+                    
 
                 }
                 $curPage = $curPage + 1;
+                if (isset($data['totalPageSize']))
+                {
+                    $totalPage = $data['totalPageSize'];
+                }
             }
-            while ($curPage <= $data['totalPageSize']);
+            while ($curPage <= $totalPage);
 
             $timepoint = $newtimepoint;
 
