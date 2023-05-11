@@ -1,6 +1,12 @@
 <td>{{$user->id}}</td>
 <td>
      {{$user->username}}
+     @if ($user->role_id > 1)
+     <?php 
+        $badge_class = \VanguardLTE\User::badgeclass();
+    ?>
+        <span class="badge {{$badge_class[$user->role_id]}}">{{$user->role->description}}</span>
+    @endif
 </td>
 <td>
 @if ($user->referral)

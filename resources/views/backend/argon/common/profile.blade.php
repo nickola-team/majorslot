@@ -42,6 +42,7 @@
                         </div>
                         <div class="text-center">
                             <?php
+                                $status_class = \VanguardLTE\Support\Enum\UserStatus::bgclass(); 
                                 $badge_class = \VanguardLTE\User::badgeclass();
                                 $statuses = \VanguardLTE\Support\Enum\UserStatus::lists();
                                 if (!$deluser)
@@ -53,7 +54,7 @@
                                 {{ $user->username }} , {{$user->id}}
                             </h5>
                             <div class="h5 font-weight-300">
-                                <span class="badge {{$badge_class[$user->role_id]}}">{{$user->role->description}}</span>
+                                <span class="badge {{$badge_class[$user->role_id]}}">{{$user->role->description}}</span>&nbsp; <span class="badge badge-dot mr-4"><i class="{{$status_class[$user->status]}}"></i><span class="status">{{$statuses[$user->status]}}</span></span>
                             </div>
                             <div class="h5 font-weight-300">
                                 {{$user->created_at}}
@@ -238,32 +239,26 @@
                                     <textarea id="memo" name="memo" class="form-control" rows="5">{{$user->memo?$user->memo->memo:''}}</textarea>
                                 </div>
                                 @if (auth()->user()->hasRole('admin') && $user->isInOutPartner())
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-gameOn">게임관리권한</label>
-                                        <p>
-                                        <input type="radio"    name="gameOn" value="1" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==1?'checked':''}}   /> <span>있음</span>
-                                        <input type="radio"    name="gameOn" value="0" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==0?'checked':''}}   /> <span>없음</span>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-moneyperm">파트너간 머니이동</label>
-                                        <p>
-                                        <input type="radio"    name="moneyperm" value="1" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']==1?'checked':''}}   /> <span>가능</span>
-                                        <input type="radio"    name="moneyperm" value="0" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']!=1?'checked':''}}   /> <span>불가능</span>
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-deluser">파트너 및 회원 삭제기능</label>
-                                        <p>
-                                        <input type="radio"    name="deluser" value="1" {{isset($user->sessiondata()['deluser']) && $user->sessiondata()['deluser']==1?'checked':''}}   /> <span>가능</span>
-                                        <input type="radio"    name="deluser" value="0" {{isset($user->sessiondata()['deluser']) && $user->sessiondata()['deluser']!=1?'checked':''}}   /> <span>불가능</span>
-
+                                    <div class="form-group table-responsive">
+                                        <table class="table align-items-center table-flush">
+                                            <tr>
+                                                <th>게임관리권한</th>
+                                                <th>파트너간 머니이동</th>
+                                                <th>유저삭제기능</th>
+                                                <th>유저가입 수동승인</th>
+                                            </tr>
+                                            <tr>
+                                                <td><label class="custom-toggle"><input type="checkbox" name="gameOn" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
+                                                <td><label class="custom-toggle"><input type="checkbox" name="moneyperm" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
+                                                <td><label class="custom-toggle"><input type="checkbox" name="deluser" {{isset($user->sessiondata()['deluser']) && $user->sessiondata()['deluser']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
+                                                <td><label class="custom-toggle"><input type="checkbox" name="manualjoin" {{isset($user->sessiondata()['manualjoin']) && $user->sessiondata()['manualjoin']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
+                                            </tr>
+                                        </table>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-gameOn">게임환수율%</label>
-                                        <input type="text" name="gamertp" id="gamertp" class="form-control{{ $errors->has('gamertp') ? ' is-invalid' : '' }}" value="{{ $rtppercent }}" >
+                                        <input type="text" name="gamertp" id="gamertp" class="form-control{{ $errors->has('gamertp') ? ' is-invalid' : '' }}" value="{{ number_format($rtppercent,2) }}" >
                                     </div>
                                 @endif
                                 @endif

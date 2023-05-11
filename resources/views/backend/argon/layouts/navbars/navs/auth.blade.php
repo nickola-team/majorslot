@@ -19,7 +19,7 @@
                 @if (auth()->user()->isInoutPartner())
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link btn btn-primary" href="{{argon_route('argon.player.vlist')}}">
+                        <a class="nav-link btn btn-primary" href="{{argon_route('argon.joiners.list')}}">
                             신규가입<span id="join_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>

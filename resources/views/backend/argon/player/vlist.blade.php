@@ -2,11 +2,12 @@
         'parentSection' => 'player',
         'elementName' => 'player-list'
     ])
-@section('page-title',  '개인유저 목록')
+@section('page-title',  $title??'개인유저 목록')
 <?php 
     $statuses = \VanguardLTE\Support\Enum\UserStatus::lists(); 
     $status_class = \VanguardLTE\Support\Enum\UserStatus::bgclass(); 
 ?>
+@if ($total)
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -47,6 +48,7 @@
 
 </div>
 @endsection
+@endif
 @section('content')
 <div class="container-fluid">
 
@@ -64,7 +66,7 @@
                 <tr>
                 <th scope="col">번호</th>
                 <th scope="col">이름</th>
-                <th scope="col">추천인</th>
+                <th scope="col">상위</th>
                 <th scope="col">연락처</th>
                 <th scope="col">계좌정보</th>
                 <th scope="col">신청시간</th>
@@ -105,7 +107,7 @@
                 <tr>
                 <th scope="col">번호</th>
                 <th scope="col">이름</th>
-                <th scope="col">추천인</th>
+                <th scope="col">상위</th>
                 <th scope="col">연락처</th>
                 <th scope="col">계좌정보</th>
                 <th scope="col">신청시간</th>
@@ -132,6 +134,7 @@
 </div>
 </div>
 
+@if ($users)
     <!-- Search -->
 <div class="row">
     <div class="col">
@@ -225,6 +228,7 @@
     </div>
 </div>
 </div>
+@endif
 @stop
 
 @push('js')

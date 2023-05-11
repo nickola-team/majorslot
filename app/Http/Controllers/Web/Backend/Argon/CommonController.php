@@ -297,27 +297,22 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             
             $data = $request->all();
             $customesettings = [
-                'gameOn',
-                'moneyperm',
-                'deluser'
+                'gameOn' => 0,
+                'moneyperm' => 0,
+                'deluser' => 0,
+                'manualjoin' => 0
             ];
-            foreach ($customesettings as $setting)
+            foreach ($customesettings as $setting => $value)
             {
-                if (isset($data[$setting]))
+                if (isset($data[$setting]) && $data[$setting]=='on')
                 {
-                    if (isset($data['session']))
-                    {
-                        $userdata = json_decode($data['session'], true);
-                    }
-                    else
-                    {
-                        $userdata = $user->sessiondata();
-                    }
-                    $userdata[$setting] = $data[$setting];
-                    $data['session'] = json_encode($userdata);
+                    $customesettings[$setting] = 1;
                     unset($data[$setting]);
                 }
             }
+
+            $data['session'] = json_encode($customesettings);
+
 
             if (isset($data['gamertp']))
             {
