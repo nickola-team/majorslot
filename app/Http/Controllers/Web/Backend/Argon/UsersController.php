@@ -11,6 +11,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('permission:access.admin.panel');
             $this->users = $users;
         }
+        public function joiners_list(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+
+            $joinusers = \VanguardLTE\User::where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN])->whereIn('users.id', $partner_users)->orderby('role_id', 'desc')->get();
+
+            $goto = argon_route('argon.player.vlist');
+            foreach ($joinusers as $joiner)
+            {
+                if ($joiner->role_id > 1)
+                {
+                    $goto = argon_route('argon.agent.joinlist');
+                    break;
+                }
+                else if ($joiner->email == '')
+                {
+                    $goto = argon_route('argon.player.joinlist');
+                    break;
+                }
+            }
+            return redirect()->to($goto);
+        }
         
         public function agent_move(\Illuminate\Http\Request $request)
         {
@@ -151,6 +173,25 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
+            $comaster = auth()->user();
+            while ($comaster && !$comaster->isInOutPartner())
+            {
+                $comaster = $comaster->referral;
+            }
+            $manualjoin = 0; //default 0
+            if (auth()->user()->isInOutPartner())
+            {
+                $manualjoin = 0;
+            }
+            else if (isset($comaster->sessiondata()['manualjoin']))
+            {
+                $manualjoin = $comaster->sessiondata()['manualjoin'];
+            }
+
+            if ($manualjoin == 1)
+            {
+                $data['status'] = \VanguardLTE\Support\Enum\UserStatus::JOIN;
+            }
 
             $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();
@@ -210,7 +251,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 event(new \VanguardLTE\Events\Shop\ShopCreated($shop));
 
             }
-            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]));
+            if ($manualjoin == 1)
+            {
+                return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['파트너생성이 신청되었습니다. 승인될때까지 기다려주세요']);
+            }
+
+            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['파트너가 생성되었습니다']);
+        }
+        public function agent_joinlist(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+            $users = null;
+            $total = null;
+            $joinusers = [];
+            $confirmusers = [];
+            $title = '신규가입파트너';
+            if (count($partner_users) > 0){
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN])->where('role_id','>', 1)->where('email', '')->whereIn('users.id', $partner_users)->get();
+
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED])->where('role_id','>', 1)->where('email','')->whereIn('users.id', $partner_users)->get();
+            }
+
+            $moneyperm = 0;
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total','moneyperm','title'));
         }
 
         public function agent_list(\Illuminate\Http\Request $request)
@@ -449,20 +512,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
 
-            // if (isset($data['deal_percent']) && $shop!=null &&  $shop->deal_percent < $data['deal_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
-            // }
-            // if (isset($data['table_deal_percent']) && $shop!=null && $shop->table_deal_percent < $data['table_deal_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['라이브딜비는 매장보다 클수 없습니다']);
-            // }
-            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['죽장퍼센트는 매장보다 클수 없습니다']);
-            // }
             $data['shop_id'] = $shop->id;
             $data['role_id'] = $role->id;
+
+            $comaster = auth()->user();
+            while ($comaster && !$comaster->isInOutPartner())
+            {
+                $comaster = $comaster->referral;
+            }
+            $manualjoin = 0; //default 0
+            if (auth()->user()->isInOutPartner())
+            {
+                $manualjoin = 0;
+            }
+            else if (isset($comaster->sessiondata()['manualjoin']))
+            {
+                $manualjoin = $comaster->sessiondata()['manualjoin'];
+            }
+
+            if ($manualjoin == 1)
+            {
+                $data['status'] = \VanguardLTE\Support\Enum\UserStatus::JOIN;
+            }
+
             $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();
             $user->attachRole($role);
@@ -472,7 +544,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'shop_id' => $shop->id, 
                 'user_id' => $user->id
             ]);
-           return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어가 생성되었습니다']);
+            if ($manualjoin == 1)
+            {
+                return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어생성이 신청되었습니다. 승인될때까지 기다려주세요']);
+            }
+            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어가 생성되었습니다']);
+        }
+        public function player_joinlist(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+            $users = null;
+            $total = null;
+            $joinusers = [];
+            $confirmusers = [];
+            $title = '신규가입유저';
+            if (count($partner_users) > 0){
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN, 'role_id' => 1])->where('email', '')->whereIn('users.id', $partner_users)->get();
+
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED, 'role_id' => 1])->where('email','')->whereIn('users.id', $partner_users)->get();
+            }
+
+            $moneyperm = 0;
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total','moneyperm','title'));
         }
 
         public function vplayer_list(\Illuminate\Http\Request $request)
@@ -497,12 +590,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $joinusers = [];
             $confirmusers = [];
             if (count($partner_users) > 0){
-                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('users.id', $partner_users)->get();
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN, 'role_id' => 1])->where('email','<>', '')->whereIn('users.id', $partner_users)->get();
 
-                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)->whereIn('users.id', $partner_users)->get();
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED, 'role_id' => 1])->where('email','<>', '')->whereIn('users.id', $partner_users)->get();
 
                 $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->where('email','<>', '')->whereIn('id', $partner_users);
-                $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+
                 
                 if ($request->user != '')
                 {

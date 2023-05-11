@@ -309,7 +309,7 @@
 .header-top .logo-container {
   position: absolute;
   top: 0;
-  left: 50%;
+  left: 41%;
   z-index: 0;
 }
 
@@ -319,7 +319,6 @@
 
 .header-top .logo-container .content {
   position: relative;
-  left: -50%;
 }
 
 .header-top .logo-container .content img{

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-	<title>&starf;&starf;!!Boss!!!&starf;&starf;</title>
+	<title>&starf;&starf;!!@yield('page-title')!!!&starf;&starf;</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="/frontend/boss/V/swal.css">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
