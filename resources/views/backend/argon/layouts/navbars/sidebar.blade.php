@@ -1,3 +1,11 @@
+<?php
+    $manualjoin = 0;
+    if (isset(auth()->user()->sessiondata()['manualjoin']))
+    {
+        $manualjoin = auth()->user()->sessiondata()['manualjoin'];
+    }
+?>
+
 <nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-blue sidenav-bg" id="sidenav-main">
     <div class="scrollbar-inner scroll-scrollx_visible">
         <div class="sidenav-header d-flex align-items-center">
@@ -82,6 +90,15 @@
                                 <span class="nav-link-text text-white">파트너생성</span>
                             </a>
                         </li>
+
+                        @if (auth()->user()->isInOutPartner() && $manualjoin)
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{{argon_route('argon.agent.joinlist')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                <span class="nav-link-text text-white">신규가입파트너</span>
+                            </a>
+                        </li>
+                        @endif
                         <li class="nav-item ">
                             <a class="nav-link text-white" href="{{argon_route('argon.agent.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
@@ -126,6 +143,14 @@
                                     유저생성
                                 </a>
                             </li>
+                            @if (auth()->user()->isInOutPartner() && $manualjoin)
+                            <li class="nav-item">
+                                <a class="nav-link  text-white" href="{{argon_route('argon.player.joinlist')}}">
+                                    <i class="far fa-circle text-white sub-i"></i>
+                                    <span class="nav-link-text text-white">신규가입유저</span>
+                                </a>
+                            </li>
+                            @endif
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.vlist')}}">

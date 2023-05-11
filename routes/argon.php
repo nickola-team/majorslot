@@ -39,6 +39,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'DashboardController@index',
         ]);
 
+        Route::get('/joiners/list', [
+            'as' => 'argon.joiners.list',
+            'uses' => 'UsersController@joiners_list',
+        ]);
+
         //sharebet route
         Route::get('/share/list', [
             'as' => 'argon.share.index',
@@ -81,9 +86,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'UsersController@agent_create',
         ]);
 
+
         Route::post('/agent/create', [
             'as' => 'argon.agent.store',
             'uses' => 'UsersController@agent_store',
+        ]);
+
+        Route::get('/agent/joinlist', [
+            'as' => 'argon.agent.joinlist',
+            'uses' => 'UsersController@agent_joinlist',
         ]);
 
         Route::get('/agent/move', [
@@ -147,9 +158,14 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'UsersController@player_logout',
         ])->middleware('simultaneous:1');
 
-        Route::get('/player/join', [
+        Route::get('/player/processjoin', [
             'as' => 'argon.player.join',
             'uses' => 'UsersController@player_join',
+        ]);
+
+        Route::get('/player/joinlist', [
+            'as' => 'argon.player.joinlist',
+            'uses' => 'UsersController@player_joinlist',
         ]);
 
         Route::get('/player/refresh', [

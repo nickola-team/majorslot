@@ -517,8 +517,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $res['join'] = 0;
             $res['msg'] = count($unreadmsgs);
             if (auth()->user()->isInOutPartner()) {
-                $shops = auth()->user()->availableShops();
-                $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('shop_id', $shops);
+                $availableUsers = auth()->user()->availableUsers();
+                $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('id', $availableUsers);
                 $res['join'] = $joinUsers->count();
             }
             $res['add'] = $transactions1->count();
