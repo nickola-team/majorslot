@@ -547,6 +547,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $recommend = $agentinfo->config;
             }
+            else
+            {
+                //get group admin's config
+                $agentinfo = \VanguardLTE\ProviderInfo::where('user_id', $master->parent_id)->where('provider', 'gacagent')->first();
+                if ($agentinfo)
+                {
+                    $recommend = $agentinfo->config;
+                }
+            }
 
             $param = [
                 'userId' => $record->user_id,
@@ -863,6 +872,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $recommend = $agentinfo->config;
             }
+            else
+            {
+                //get group admin's config
+                $agentinfo = \VanguardLTE\ProviderInfo::where('user_id', $master->parent_id)->where('provider', 'gacagent')->first();
+                if ($agentinfo)
+                {
+                    $recommend = $agentinfo->config;
+                }
+            }
             
             $data = [
                 'userId' => strval($user->id),
@@ -963,6 +981,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($agentinfo)
             {
                 $recommend = $agentinfo->config;
+            }
+            else
+            {
+                //get group admin's config
+                $agentinfo = \VanguardLTE\ProviderInfo::where('user_id', $master->parent_id)->where('provider', 'gacagent')->first();
+                if ($agentinfo)
+                {
+                    $recommend = $agentinfo->config;
+                }
             }
 
             $param = [
