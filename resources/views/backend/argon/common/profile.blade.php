@@ -250,7 +250,7 @@
                                             <tr>
                                                 <td><label class="custom-toggle"><input type="checkbox" name="gameOn" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
                                                 <td><label class="custom-toggle"><input type="checkbox" name="moneyperm" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
-                                                <td><label class="custom-toggle"><input type="checkbox" name="deluser" {{isset($user->sessiondata()['deluser']) && $user->sessiondata()['deluser']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
+                                                <td><label class="custom-toggle"><input type="checkbox" name="deluser" {{empty($user->sessiondata()['deluser']) || $user->sessiondata()['deluser']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
                                                 <td><label class="custom-toggle"><input type="checkbox" name="manualjoin" {{isset($user->sessiondata()['manualjoin']) && $user->sessiondata()['manualjoin']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle"></span></label></td>
                                             </tr>
                                         </table>
