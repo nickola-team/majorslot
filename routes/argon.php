@@ -305,6 +305,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.report.childdaily',
             'uses' => 'ReportController@report_childdaily',
         ]);
+        Route::post('/report/dailydw', [
+            'as' => 'argon.report.daily.dw.post',
+            'uses' => 'ReportController@update_dailydw',
+        ]);
         Route::get('/report/dailydw', [
             'as' => 'argon.report.daily.dw',
             'uses' => 'ReportController@report_dailydw',
@@ -320,6 +324,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::get('/report/monthly', [
             'as' => 'argon.report.monthly',
             'uses' => 'ReportController@report_monthly',
+        ]);
+        Route::post('/report/game', [
+            'as' => 'argon.report.game.post',
+            'uses' => 'ReportController@update_game',
         ]);
     
         Route::get('/report/game', [
