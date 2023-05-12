@@ -7,6 +7,16 @@
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@if (auth()->user()->hasRole('admin'))
+<style>
+    .bw-btn {
+        display: none;
+      }
+    .bw-title:hover .bw-btn {
+        display: inline-block;
+      }
+</style>
+@endif
 @endpush
 
 @section('content-header')
