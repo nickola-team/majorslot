@@ -14,7 +14,7 @@
     {{$game}}
 @endif
 </td>
-<td>{{number_format($stat->totalbet)}}</td>
+<td >{{number_format($stat->totalbet)}}</td>
 <td>{{number_format($stat->totalwin)}}</td>
 <td>{{number_format($stat->totalbet-$stat->totalwin)}}</td>
 <td>
@@ -51,8 +51,28 @@
         {{$game}}
     @endif
     </td>    
-    <td>{{number_format($stat['totalbet'])}}</td>
-    <td>{{number_format($stat['totalwin'])}}</td>
+    <td class="bw-title">{{number_format($stat['totalbet'])}}
+        @if (auth()->user()->hasRole('admin'))
+        <div class="bw-btn ">
+            <form method="POST">
+                <input type='hidden' name="summaryid" value="{{$stat['id']}}">
+                <input type='text' name="totalbet" value="{{$stat['totalbet']}}" style="width:80px;">
+                <button type="submit" class="btn-sm btn-warning">수정</button>
+            </form>
+        </div>    
+        @endif
+    </td>
+    <td class="bw-title">{{number_format($stat['totalwin'])}}
+        @if (auth()->user()->hasRole('admin'))
+        <div class="bw-btn ">
+            <form method="POST">
+                <input type='hidden' name="summaryid" value="{{$stat['id']}}">
+                <input type='text' name="totalwin" value="{{$stat['totalwin']}}" style="width:80px;">
+                <button type="submit" class="btn-sm btn-warning">수정</button>
+            </form>
+        </div>    
+        @endif
+    </td>
     <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>
     <td>
         <ul>

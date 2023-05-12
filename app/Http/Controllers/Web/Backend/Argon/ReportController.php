@@ -104,6 +104,62 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $type = 'daily';
             return view('backend.argon.report.daily', compact('summary','total','type'));
         }
+        public function update_dailydw(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->hasRole('admin'))
+            {
+                return redirect()->back()->withSuccess(['허용되지 않은 조작입니다']);    
+            }
+            $summaryId = $request->summaryid;
+            $summary = \VanguardLTE\DailySummary::where('id', $summaryId)->first();
+            if (!$summary)
+            {
+                return redirect()->back()->withSuccess(['정산데이터를 찾을수 없습니다']);    
+            }
+            $eventString = '일별정산데이터 수정 : '. $summary->user->username . '/' . $summary->date . '/'  ;
+
+            if ($request->has('totalbet'))
+            {
+                $eventString .= '베팅금 / ' . $summary->totalbet . '=>' . $request->totalbet;
+                $summary->update(['totalbet' => $request->totalbet]);
+            }
+
+            if ($request->has('totalwin'))
+            {
+                $eventString .= '당첨금 / ' . $summary->totalwin . '=>' . $request->totalwin;
+                $summary->update(['totalwin' => $request->totalwin]);
+            }
+            event(new \VanguardLTE\Events\GeneralEvent($eventString));
+            return redirect()->back()->withSuccess(['정산데이터를 수정했습니다']);
+        }
+        public function update_game(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->hasRole('admin'))
+            {
+                return redirect()->back()->withSuccess(['허용되지 않은 조작입니다']);    
+            }
+            $summaryId = $request->summaryid;
+            $summary = \VanguardLTE\CategorySummary::where('id', $summaryId)->first();
+            if (!$summary)
+            {
+                return redirect()->back()->withSuccess(['정산데이터를 찾을수 없습니다']);    
+            }
+            $eventString = '게임정산데이터 수정 : '. $summary->user->username . '/' . $summary->date . '/'  . $summary->category->title . '/' ;
+            if ($request->has('totalbet'))
+            {
+                $eventString .= '베팅금 / ' . $summary->totalbet . '=>' . $request->totalbet;
+                $summary->update(['totalbet' => $request->totalbet]);
+                
+            }
+
+            if ($request->has('totalwin'))
+            {
+                $eventString .= '당첨금 / ' . $summary->totalwin . '=>' . $request->totalwin;
+                $summary->update(['totalwin' => $request->totalwin]);
+            }
+            event(new \VanguardLTE\Events\GeneralEvent($eventString));
+            return redirect()->back()->withSuccess(['정산데이터를 수정했습니다']);
+        }
         public function report_dailydw(\Illuminate\Http\Request $request)
         {
             $users = [auth()->user()->id];
@@ -277,9 +333,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $statistics = \VanguardLTE\CategorySummary::orderBy('category_summary.date', 'DESC');
         
-            $totalQuery = 'SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal) as total_deal, SUM(total_mileage) as total_mileage, SUM(total_ggr) as total_ggr, SUM(total_ggr_mileage) as total_ggr_mileage, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title, w_categories.type FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+            $totalQuery = 'SELECT w_category_summary.id as id, SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal) as total_deal, SUM(total_mileage) as total_mileage, SUM(total_ggr) as total_ggr, SUM(total_ggr_mileage) as total_ggr_mileage, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title, w_categories.type FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
 
-            $dateQuery = 'SELECT totalbet, totalwin, total_deal,total_mileage, total_ggr, total_ggr_mileage, category_id, date, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title AS title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+            $dateQuery = 'SELECT w_category_summary.id as id, totalbet, totalwin, total_deal,total_mileage, total_ggr, total_ggr_mileage, category_id, date, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title AS title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
 
             $start_date = date("Y-m-1");
             $end_date = date("Y-m-d");
@@ -395,6 +451,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                             'date' => $cat->date,
                         ];
                     }
+                    $info['id'] = $cat->id;
                     $info['totalbet'] = $cat->totalbet;
                     $info['totalwin'] = $cat->totalwin;
                     $info['total_deal'] = $cat->total_deal;

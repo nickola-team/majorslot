@@ -31,11 +31,29 @@
 </ul></td>
 <td>{{ number_format($adjustment->dealout,0) }}</td>
 <td><ul>
-    <li>
+    <li class="bw-title">
         <span class='text-green'>배팅 : {{number_format($adjustment->totalbet)}}</span>
+        @if (auth()->user()->hasRole('admin'))
+        <div class="bw-btn ">
+            <form method="POST">
+                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
+                <input type='text' name="totalbet" value="{{$adjustment->totalbet}}" style="width:80px;">
+                <button type="submit" class="btn-sm btn-warning">수정</button>
+            </form>
+        </div>    
+        @endif
     </li>
-    <li>
+    <li class="bw-title">
         <span class='text-red'>당첨 : {{number_format($adjustment->totalwin)}}</span>
+        @if (auth()->user()->hasRole('admin'))
+        <div class="bw-btn ">
+            <form method="POST">
+                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
+                <input type='text' name="totalwin"  value="{{$adjustment->totalwin}}" style="width:80px;">
+                <button type="submit"class="btn-sm btn-warning">수정</button>
+            </form>
+        </div>
+        @endif
     </li>
 </ul></td>
 <td>{{ number_format($adjustment->totalbet-$adjustment->totalwin,0) }}</td>
