@@ -1680,10 +1680,23 @@ namespace VanguardLTE\Console
                 $this->info("Begin");
                 $warningtime = date('Y-m-d H:i:s', strtotime("-5 minutes"));
                 $pendings = \VanguardLTE\GACTransaction::where(['gactransaction.type'=>1,'gactransaction.status'=>0])->where('date_time', '<', $warningtime)->get();
+                $this->info('pending bet count = '. count($pendings));
+                $prcCount = 0;
+                $cancelCount = 0;
                 foreach ($pendings as $bet)
                 {
                     $result = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::processResult($bet->id);
+                    if ($result['error'] == false)
+                    {
+                        $prcCount = $prcCount + 1;
+                    }
+                    else
+                    {
+                        \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::cancelResult($bet->id);
+                        $cancelCount = $cancelCount + 1;
+                    }
                 }
+                $this->info("Proceed $prcCount, Cancel $cancelCount");
                 $this->info("End");
             });         
 
