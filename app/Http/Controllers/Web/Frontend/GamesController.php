@@ -373,6 +373,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
                     if ($res['error'] == false)
                     {
+                        if ($ct->status == 0)
+                        {
+                            return view('errors.maintenance');
+                        }
                         return redirect($res['data']['url']);
                     }
                 }
