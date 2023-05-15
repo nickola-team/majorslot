@@ -1678,7 +1678,7 @@ namespace VanguardLTE\Console
             \Artisan::command('gac:processpending', function () {
 
                 $this->info("Begin");
-                $warningtime = strtotime("-5 minutes");
+                $warningtime = date('Y-m-d H:i:s', strtotime("-5 minutes"));
                 $pendings = \VanguardLTE\GACTransaction::where(['gactransaction.type'=>1,'gactransaction.status'=>0])->where('date_time', '<', $warningtime)->get();
                 foreach ($pendings as $bet)
                 {
