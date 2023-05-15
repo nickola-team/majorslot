@@ -368,7 +368,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             foreach ($available_provider_cats as $ct)
             {
                 $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getGameObj', $gamecode);
-                if ($gameobj)
+                if ($gameobj && $gameobj['href'] == $ct->href)
                 {
                     $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
                     if ($res['error'] == false)
