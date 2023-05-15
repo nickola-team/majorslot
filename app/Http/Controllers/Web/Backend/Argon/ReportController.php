@@ -419,7 +419,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, SUM(a.total_ggr) as total_ggr, SUM(a.total_ggr_mileage) as total_ggr_mileage, a.parent AS category_id, b.title, b.type  FROM ($totalQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent ORDER BY totalbet desc";
 
-                $dateQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, SUM(a.total_ggr) as total_ggr,SUM(a.total_ggr_mileage) as total_ggr_mileage, date, a.parent AS category_id, b.title FROM ($dateQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent, a.date ORDER BY a.date desc";
+                $dateQuery = "SELECT a.id as id, SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, SUM(a.total_ggr) as total_ggr,SUM(a.total_ggr_mileage) as total_ggr_mileage, date, a.parent AS category_id, b.title FROM ($dateQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent, a.date ORDER BY a.date desc";
             }
         
             $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.total_deal) as total_deal, SUM(c.total_mileage) as total_mileage ,SUM(c.total_ggr) as total_ggr, SUM(c.total_ggr_mileage) as total_ggr_mileage FROM ($totalQuery) c";
