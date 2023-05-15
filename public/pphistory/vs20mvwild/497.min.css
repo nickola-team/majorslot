@@ -1,0 +1,32 @@
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot {
+    overflow: hidden
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: none
+}
+
+.ExpandedWild {
+    position: absolute;
+    right: 0;
+    z-index: 1
+}
+
+.ExpandedWild--top {
+    top: 0
+}
+
+.ExpandedWild--bottom {
+    bottom: 0
+}
+
+.WinLines-Block .ExpandedWild {
+    display: none
+}
