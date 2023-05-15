@@ -329,20 +329,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             $usersum = (clone $users)->get();
-            $sum = 0;
+            $childsum = 0;
+            $balancesum = 0;
             $count = 0;
             foreach ($usersum as $u)
             {
-                $sum = $sum + $u->childBalanceSum();
+                $childsum = $childsum + $u->childBalanceSum();
                 if ($u->role_id > 3)
                 {
                     $count = $count + count($u->hierarchyPartners());
+                    $balancesum = $balancesum + $u->balance;
+                }
+                else if ($u->role_id==3)
+                {
+                    $balancesum = $balancesum + $u->shop->balance;
                 }
             }
 
             $total = [
                 'count' => $users->count() + $count,
-                'balance' => $users->sum('balance'),
+                'balance' => $balancesum,
                 'childbalance' => $sum
             ];
 
