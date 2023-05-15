@@ -1099,6 +1099,11 @@ return [
         "WildCelebrityBusMegaways" => "와일드 셀레브리티 버스",
         "GodsofGiza" => "갓즈 오브 기자",
 
+        "CowboyCoins" => "카우보이 코인스",
+        "JaneHunterandtheMaskofMontezuma" => "제인 헌터 앤드 마스크 오브 몬테주마",
+        "JasmineDreams" => "자스민 드림즈",
+        "KingdomoftheDead" => "킹덤 오브 더 데드",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
