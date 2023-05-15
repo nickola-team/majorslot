@@ -375,7 +375,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     {
                         if ($ct->status == 0)
                         {
-                            return view('errors.maintenance');
+                            return response()->view('errors.maintenance', [], 200)->header('Content-Type', 'text/html');
                         }
                         return redirect($res['data']['url']);
                     }
