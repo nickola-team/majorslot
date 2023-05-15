@@ -28,6 +28,62 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return null;
         }
 
+        public static function refreshToken()
+        {
+            $url = config('app.taishan_api') . '/oauth/refreshToken';
+            $op = config('app.taishan_op');
+            $oppass = config('app.taishan_pass');
+            $token = config('app.taishan_token');
+            $curToken = \VanguardLTE\Settings::where('key', self::TAISHAN_PROVIDER . 'token')->first();
+            if ($curToken)
+            {
+                $token = $curToken->value;
+            }
+
+            $params = [
+                'partnerid' => $op,
+                'partnerpass' => $oppass,
+            ];
+
+            $headers = [
+                'Authorization' => 'Bearer ' . $token
+            ];
+
+            try {       
+                $response = Http::withHeaders($headers)->get($url, $params);
+                
+                if ($response->ok()) {
+                    $res = $response->json();
+        
+                    if ($res!=null && isset($res['result']) && $res['result'] == 'success') {
+                        $token = $res['token'];
+                        if ($curToken)
+                        {
+                            $curToken->update(['value' => $token]);
+                        }
+                        else
+                        {
+                            \VanguardLTE\Settings::create(['key' => self::TAISHAN_PROVIDER . 'token', 'value' => $token]);
+                        }
+                    }
+                    else
+                    {
+                        Log::error('TAISAHN refreshToken : return failed. ' . $response->body());
+                    }
+                }
+                else
+                {
+                    Log::error('TAISAHN refreshToken : response is not okay. ' . json_encode($params) . '===body==' . $response->body());
+                }
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('TAISAHN refreshToken : refreshToken Excpetion. exception= ' . $ex->getMessage());
+                Log::error('TAISAHN refreshToken : refreshToken Excpetion. PARAMS= ' . json_encode($params));
+            }
+
+        }
+
         /*
         */
 
@@ -41,6 +97,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = config('app.taishan_api') . '/api/userInfo';
             $op = config('app.taishan_op');
             $token = config('app.taishan_token');
+
+            $curToken = \VanguardLTE\Settings::where('key', self::TAISHAN_PROVIDER . 'token')->first();
+            if ($curToken)
+            {
+                $token = $curToken->value;
+            }
     
             $params = [
                 'partnerid' => $op,
@@ -116,6 +178,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $op = config('app.taishan_op');
             $token = config('app.taishan_token');
+            $curToken = \VanguardLTE\Settings::where('key', self::TAISHAN_PROVIDER . 'token')->first();
+            if ($curToken)
+            {
+                $token = $curToken->value;
+            }
             
                //Create Game link
 
@@ -160,6 +227,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $op = config('app.taishan_op');
                 $oppass = config('app.taishan_pass');
                 $token = config('app.taishan_token');
+                $curToken = \VanguardLTE\Settings::where('key', self::TAISHAN_PROVIDER . 'token')->first();
+                if ($curToken)
+                {
+                    $token = $curToken->value;
+                }
 
                 $params = [
                     'cash' => $balance,
@@ -220,6 +292,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $op = config('app.taishan_op');
             $oppass = config('app.taishan_pass');
             $token = config('app.taishan_token');
+            $curToken = \VanguardLTE\Settings::where('key', self::TAISHAN_PROVIDER . 'token')->first();
+            if ($curToken)
+            {
+                $token = $curToken->value;
+            }
 
             //create taishan account
             $params = [
@@ -246,6 +323,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($data==null || ($data['result'] != 'success' && $data['result'] != 'exist'))
                 {
                     Log::error('TAISAHNmakelink : createAccount result failed. '  . $response->body());
+                    if (isset($data['code']) && $data['code']=='OAUTH007')
+                    {
+                        TAISHANController::refreshToken();
+                    }
                     return null;
                 }
             }
@@ -333,6 +414,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $op = config('app.taishan_op');
             $oppass = config('app.taishan_pass');
             $token = config('app.taishan_token');
+            $curToken = \VanguardLTE\Settings::where('key', self::TAISHAN_PROVIDER . 'token')->first();
+            if ($curToken)
+            {
+                $token = $curToken->value;
+            }
 
             $params = [
                 'partnerid' => $op,
