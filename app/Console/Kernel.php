@@ -105,6 +105,8 @@ namespace VanguardLTE\Console
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
 
+            $schedule->command('gac:processpending')->everyMinute()->withoutOverlapping()->runInBackground();
+
             $schedule->command('monitor:betwin')->cron('0 * * * *'); //every hour
             // $schedule->command('monitor:rtp')->dailyAt('12:00')->runInBackground();
 
@@ -1672,6 +1674,18 @@ namespace VanguardLTE\Console
                 $this->info($sessionId);
                 $this->info("End");
             });            
+
+            \Artisan::command('gac:processpending', function () {
+
+                $this->info("Begin");
+                $warningtime = strtotime("-5 minutes");
+                $pendings = \VanguardLTE\GACTransaction::where(['gactransaction.type'=>1,'gactransaction.status'=>0])->where('date_time', '<', $warningtime)->get();
+                foreach ($pendings as $bet)
+                {
+                    $result = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::processResult($bet->id);
+                }
+                $this->info("End");
+            });         
 
         }
     }
