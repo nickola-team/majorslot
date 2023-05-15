@@ -371,8 +371,26 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
             }
+            //check if this game is available for this user
+            if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller','getGameObj'))
+            {
+                $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getGameObj', $gamecode);
+                if ($gameobj && isset($gameobj['href']))
+                {
+                    $category = \VanguardLTE\Category::where(['provider' => $provider, 'href' => $gameobj['href'], 'shop_id' => $user->shop_id])->first();
+                    if ($category->view == 0 )
+                    {
+                        return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
+                    }
+                    if ($category->status == 0 )
+                    {
+                        return response()->json(['error' => true, 'msg' => '점검중입니다', 'code' => '003']);
+                    }
+                }
+            }
             
             $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
+            
            
             return response()->json($res);
         }
