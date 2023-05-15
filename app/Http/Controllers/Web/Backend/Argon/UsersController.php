@@ -349,7 +349,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $total = [
                 'count' => $users->count() + $count,
                 'balance' => $balancesum,
-                'childbalance' => $sum
+                'childbalance' => $childsum
             ];
 
             
