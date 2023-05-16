@@ -397,10 +397,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($request->gametype != '')
             {
                 $category = \VanguardLTE\Category::where('type', $request->gametype);
-                if (!auth()->user()->hasRole('admin'))
-                {
-                    $category = $category->where('parent', 0);
-                }
+                // if (!auth()->user()->hasRole('admin'))
+                // {
+                //     $category = $category->where('parent', 0);
+                // }
                 $category = $category->pluck('original_id')->toArray();
                 $uniqueCat = array_unique($category);
                 if (count($uniqueCat) == 0)
