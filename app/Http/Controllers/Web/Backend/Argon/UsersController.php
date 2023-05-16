@@ -329,21 +329,27 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             $usersum = (clone $users)->get();
-            $sum = 0;
+            $childsum = 0;
+            $balancesum = 0;
             $count = 0;
             foreach ($usersum as $u)
             {
-                $sum = $sum + $u->childBalanceSum();
+                $childsum = $childsum + $u->childBalanceSum();
                 if ($u->role_id > 3)
                 {
                     $count = $count + count($u->hierarchyPartners());
+                    $balancesum = $balancesum + $u->balance;
+                }
+                else if ($u->role_id==3)
+                {
+                    $balancesum = $balancesum + $u->shop->balance;
                 }
             }
 
             $total = [
                 'count' => $users->count() + $count,
-                'balance' => $users->sum('balance'),
-                'childbalance' => $sum
+                'balance' => $balancesum,
+                'childbalance' => $childsum
             ];
 
             
@@ -367,6 +373,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 // $dates = explode(' - ', $request->dates);
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            if (strtotime($end_date) - strtotime($start_date) >= 7200)
+            {
+                return redirect()->back()->withErrors(['검색시간을 2시간 이내로 설정해주세요.']);
             }
             $statistics = $statistics->where('deal_log.date_time', '>=', $start_date);
             $statistics = $statistics->where('deal_log.date_time', '<=', $end_date );
@@ -872,6 +882,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 // $dates = explode(' - ', $request->dates);
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            if (strtotime($end_date) - strtotime($start_date) >= 7200)
+            {
+                return redirect()->back()->withErrors(['검색시간을 2시간 이내로 설정해주세요.']);
             }
             $statistics = $statistics->where('stat_game.date_time', '>=', $start_date);
             $statistics = $statistics->where('stat_game.date_time', '<=', $end_date );

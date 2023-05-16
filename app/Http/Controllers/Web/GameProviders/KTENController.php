@@ -652,7 +652,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         //     }
                         //     if (!isset($round['details']))
                         //     {
-                        //         Log::error('KTEN PP round : '. json_encode($round));
+                        //         Log::error('KTEN PP round has no details : '. json_encode($round));
                         //         continue;
                         //     }
 

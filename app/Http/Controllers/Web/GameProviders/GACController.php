@@ -1081,7 +1081,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else
             {
-                return null;
+                $gametype = $userbets[0]['gameKind'];
+                $result = [
+                    'tableName' => $userbets[0]['tableName'],
+                    'type' => $gametype,
+                    'gameNumber' => $userbets[0]['gameNumber'],
+                    'regdate' => $userbets[0]['regdate'],
+                ];
             }
             
 
