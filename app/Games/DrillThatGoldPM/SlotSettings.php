@@ -703,7 +703,7 @@ namespace VanguardLTE\Games\DrillThatGoldPM
         } 
 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $bl=0)
         {
             $spintype = 0;
             if($winType == 'bonus'){
