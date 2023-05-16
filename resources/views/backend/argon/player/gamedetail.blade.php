@@ -125,7 +125,7 @@
             <div class="row">
         <div class="card">
             <div class="card-body">
-                <table class="table card-table table-vcenter text-nowrap table-nowrap table-border">
+                <table class="table card-table table-vcenter table-border" style="table-layout: fixed;">
                     <thead class="bg-primary text-white">
                         <tr>
                             <th class="text-white">항목</th>
@@ -134,7 +134,11 @@
                     </thead>
                     <tbody>
                         @if ($res)
+                        @if(View::exists('backend.argon.player.gamedetail.' . $res['type']))
                             @include('backend.argon.player.gamedetail.' . $res['type'])
+                        @else
+                            @include('backend.argon.player.gamedetail.General')
+                        @endif
                         @else
                             <tr>
                                 <td colspan='2'>상세보기를 지원하지 않는 게임입니다.</td>
