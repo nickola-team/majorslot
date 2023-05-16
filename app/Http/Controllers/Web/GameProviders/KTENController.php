@@ -644,23 +644,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $win = $betdata['Amount'];
                             $balance = $betdata['Balance'];
                         }
-                        // else if ($catname == 'kten-pp')
-                        // {
-                        //     if ($round['type'] == 'WIN')
-                        //     {
-                        //         continue;
-                        //     }
-                        //     if (!isset($round['details']))
-                        //     {
-                        //         Log::error('KTEN PP round : '. json_encode($round));
-                        //         continue;
-                        //     }
+                        else if ($catname == 'kten-pp')
+                        {
+                            if ($round['type'] == 'WIN')
+                            {
+                                continue;
+                            }
+                            if (!isset($round['details']))
+                            {
+                                Log::error('KTEN PP round has no details : '. json_encode($round));
+                                continue;
+                            }
 
-                        //     $betdata = json_decode($round['details'],true);
-                        //     $bet = intval($betdata['bet']);
-                        //     $win = intval($betdata['win']);
-                        //     $balance = intval($betdata['balance']);
-                        // }
+                            $betdata = json_decode($round['details'],true);
+                            $bet = intval($betdata['bet']);
+                            $win = intval($betdata['win']);
+                            $balance = intval($betdata['balance']);
+                        }
                         else if ($catname == 'kten-og')
                         {
                             if ($round['type'] == 'WIN')
