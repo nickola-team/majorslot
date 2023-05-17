@@ -580,7 +580,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $bngLoges = \VanguardLTE\BNGGameLog::where([
                 'player_id' => $request->player_id, 
                 'game_id' => $request->game_id
-            ])->orderBy('c_at', 'DESC');
+            ]);
+            if(isset($request->round_id)){
+                $bngLoges = $bngLoges->where('round_id', $request->round_id);
+            }
+            $bngLoges = $bngLoges->orderBy('c_at', 'DESC');
             $paginator = $bngLoges->paginate($fetchSize);
             $array = $paginator->toArray();
             $data = [
