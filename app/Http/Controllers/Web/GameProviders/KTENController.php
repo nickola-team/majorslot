@@ -819,6 +819,43 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         }
 
+        public static function getgamedetail(\VanguardLTE\StatGame $stat)
+        {
+            $betrounds = explode('#',$stat->roundid);
+            if (count($betrounds) < 3)
+            {
+                return null;
+            }
+            $betId = $betrounds[2];
+            
+            $data = KTENController::gamerounds($betId, 1);
+            if ($data==null || $data['errorCode'] != 0)
+            {
+                return null;
+            }
+
+
+            $betdetails = null;
+            $gametype = 'slot';
+            $result = null;
+            foreach ($data['data'] as $bet)
+            {
+                if (isset($bet['id']) && ($bet['id'] == $betId))
+                {
+                    $gametype = $bet['gameType'];
+                    $betdetails = $bet['details'];
+                    break;
+                }
+            }
+
+            return [
+                'type' => $gametype,
+                'result' => $result,
+                'bets' => $betdetails,
+                'stat' => $stat
+            ];
+        }
+
         public static function syncpromo()
         {
             $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
