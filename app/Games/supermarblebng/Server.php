@@ -389,7 +389,7 @@ namespace VanguardLTE\Games\supermarblebng
                         
                         $roundstr = sprintf('%.4f', microtime(TRUE));
                         $roundstr = str_replace('.', '', $roundstr);
-                        $roundstr = '273' . substr($roundstr, 4, 10) . '001';
+                        $roundstr = '513' . substr($roundstr, 4, 10) . '001';
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
                     }
                     if(count($tumbAndFreeStacks) > 0 && isset($tumbAndFreeStacks[$totalSpinCount])){
