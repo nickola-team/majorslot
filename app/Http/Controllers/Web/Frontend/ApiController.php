@@ -612,6 +612,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                                 ]]);
                             }
                         }
+                        else if ($gcat->category->href == 'bngplay') // booongo game history
+                        {
+                            if ($statgame->user)
+                            {
+                                return response()->json(['error' => false, 'res' => [
+                                    'href' => "op/major/history.html?session_id=68939e9a5d134e78bfd9993d4a2cc34e#player_id=".$statgame->user->id."&brand=*&show=transactions&game_id=".$statgame->game_id."&tz=0&start_date=&end_date=&per_page=100&round_id=".$statgame->roundid."&currency=KRW&mode=REAL&report_type=GGR&header=0&totals=1&info=0&exceeds=0&lang=ko"
+                                ]]);
+                            }
+                        }
                     }
 
 
