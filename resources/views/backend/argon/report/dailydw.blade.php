@@ -118,8 +118,14 @@
                                 <div class="col-md-1">
                                 </div>
                                 <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="display:flex;">
+                                    <div class="col-md-8">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
+                                    </div>
+                                    <div class="custom-control custom-checkbox mt-2">
+                                    <input class="custom-control-input" id="includename" name="includename" type="checkbox" {{Request::get('includename')=='on'?'checked':''}}>   <label class="custom-control-label" for="includename">비슷한이름</label>
+
+                                    </div>
                                 </div>
                                 <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                                 <div class="col-md-3">
@@ -170,7 +176,7 @@
                         <table class="table align-items-center table-flush" id="dailydwtotal">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col"></th>
+                                <th scope="col">이름</th>
                                 <th scope="col">기간내 합계</th>
                                 <th scope="col">계좌충환전</th>
                                 <th scope="col">수동충환전</th>
@@ -183,8 +189,13 @@
                             </tr>
                             </thead>
                             <tbody class="list">
+                                @if ($total['id'] != '')
+                                <tr data-tt-id="{{$total['user_id'] }}~{{$total['daterange']}}" data-tt-parent-id="{{$total['user_id']}}" data-tt-branch="{{$total['role_id']>3?'true':'false'}}">
+                                @else
                                 <tr>
-                                    <td colspan='2'>{{$total['daterange']}}</td>
+                                @endif
+                                    <td>{{$total['id']}}</td>
+                                    <td>{{$total['daterange']}}</td>
                                     <td><ul>
                                         <li>
                                             <span class='text-green'>충전 : {{number_format($total['totalin'])}}</span>
@@ -287,6 +298,28 @@
                 }).done(function(html) {
                     var rows = $(html).filter("tr");
                     table.treetable("loadBranch", node, rows);
+                    $('#waitAjax').hide();
+            });
+        }
+    });
+
+    var table1 = $("#dailydwtotal");
+    $("#dailydwtotal").treetable({ 
+        expandable: true ,
+        onNodeCollapse: function() {
+            var node = this;
+            table1.treetable("unloadBranch", node);
+        },
+        onNodeExpand: function() {
+            var node = this;
+            table1.treetable("unloadBranch", node);
+            $('#waitAjax').show();
+            $.ajax({
+                async: true,
+                url: "{{argon_route('argon.report.childdaily.dw', 'dw')}}?id="+node.id
+                }).done(function(html) {
+                    var rows = $(html).filter("tr");
+                    table1.treetable("loadBranch", node, rows);
                     $('#waitAjax').hide();
             });
         }

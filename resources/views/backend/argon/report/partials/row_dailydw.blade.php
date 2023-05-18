@@ -2,7 +2,11 @@
     $badge_class = \VanguardLTE\User::badgeclass();
 ?>
 <td><span class="{{$adjustment->user->role_id>3?'partner':'shop'}}">{{ $adjustment->user->username }}</span>&nbsp;<span class="badge {{$badge_class[$adjustment->user->role_id]}}">{{$adjustment->user->role->description}}</span></td>
+@if ($adjustment->date=='')
+<td></td>
+@else
 <td>{{ date('Y-m-d',strtotime($adjustment->date)) }}</td>
+@endif
 <?php
     if ($adjustment->date == date('Y-m-d'))
     {
@@ -72,6 +76,8 @@
     </ul>
 </td>
 <td>{{ number_format($adjustment->balance+$adjustment->childsum,0)}}</td>
+@if (isset($sumInfo) && $sumInfo!='')
+@else
 @if (auth()->user()->hasRole('admin'))
 <td>
     <?php
@@ -99,4 +105,5 @@
 @endif
 @if(auth()->user()->isInoutPartner())
     <td>{{ number_format($adjustment->totalin - $adjustment->totalout,0) }}</td>
+@endif
 @endif
