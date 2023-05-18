@@ -20,21 +20,33 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             $user_id = $param[0];
             $date = $param[1];
-            $user = \VanguardLTE\User::where('id', $user_id)->get()->first();
-            if (!$user)
+            $availableUsers = auth()->user()->availableUsers();
+            $user = \VanguardLTE\User::where('id', $user_id)->first();
+            if (!$user || !in_array($user_id, $availableUsers))
             {
                 return redirect()->back()->withErrors('찾을수 없습니다.');
             }
             $users = $user->childPartners();
-
-            $summary = \VanguardLTE\DailySummary::where('date', '=', $date)->whereIn('user_id', $users);
+            $sumInfo = '';
+            if (count($param) > 2)
+            {
+                $enddate = $param[2];
+                $summary = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $date)->where('date', '<=', $enddate)->whereIn('user_id', $users)->selectRaw('sum(totalin) as totalin, sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, user_id, "" as date')->get();            
+                $sumInfo = $date .'~' .$enddate;
+            }
+            else
+            {
+                $summary = \VanguardLTE\DailySummary::where('date', '=', $date)->whereIn('user_id', $users);
             
-            $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
-            $summary = $summary->get();
+                $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
+                $summary = $summary->get();
+                $sumInfo = '';
+            }
+            
             if(isset($daily_type) && $daily_type == 'dw'){
-                return view('backend.argon.report.partials.childs_dailydw', compact('summary', 'parent_id'));
+                return view('backend.argon.report.partials.childs_dailydw', compact('summary', 'parent_id','sumInfo'));
             }else{
-                return view('backend.argon.report.partials.childs_daily', compact('summary', 'parent_id'));
+                return view('backend.argon.report.partials.childs_daily', compact('summary', 'parent_id','sumInfo'));
             }
         }
         public function report_daily(\Illuminate\Http\Request $request)
@@ -167,10 +179,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($request->partner != '')
             {
                 $availablePartners = auth()->user()->hierarchyPartners();
-                $partners = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->whereIn('id', $availablePartners)->pluck('id')->toArray();
-                if (count($partners) == 0)
+                if ($request->includename == 'on')
                 {
-                    return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
+                    $partners = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->whereIn('id', $availablePartners)->pluck('id')->toArray();
+                    if (count($partners) == 0)
+                    {
+                        return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
+                    }
+                }
+                else
+                {
+                    $partners = \VanguardLTE\User::where('username',  $request->partner)->whereIn('id', $availablePartners)->pluck('id')->toArray();
+                    if (count($partners) == 0)
+                    {
+                        return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
+                    }
                 }
                 $users = $partners;
             }
@@ -184,6 +207,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     {
                         return redirect()->back()->withErrors('에이전트를 찾을수 없습니다.');
                     }
+                        
                     $users = $partners;
                 }
                 else
@@ -218,6 +242,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $total = [
+                'id' => count($users)>1?'':$summary->first()->user->username,
+                'user_id' => $summary->first()->user->id,
+                'role_id' => $summary->first()->user->role_id,
                 'daterange' => "$start_date~$end_date",
                 'totalin' => $summary->sum('totalin'),
                 'totalout' => $summary->sum('totalout'),
