@@ -123,7 +123,7 @@
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
                                     </div>
                                     <div class="custom-control custom-checkbox mt-2">
-                                    <input class="custom-control-input" id="includename" name="includename" type="checkbox" {{Request::get('includename')=='on'?'checked':''}}>   <label class="custom-control-label" for="includename">비슷한이름</label>
+                                    <input class="custom-control-input" id="includename" name="includename" type="checkbox" {{Request::get('includename')=='on'?'checked':''}}>   <label class="custom-control-label" for="includename">포함된이름</label>
 
                                     </div>
                                 </div>
