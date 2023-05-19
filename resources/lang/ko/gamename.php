@@ -1180,5 +1180,8 @@ return [
 
         "egyptfire" => "이집트 파이어",
 
+        "moremagicapple" => "모어 매직 애플",
+        "grabthegold" => "그랩 더 골드",
+
 
 ];
