@@ -143,7 +143,7 @@
 @if( $detect->isMobile() || $detect->isTablet() ) 
 @else
 <div class="customizer-tele">
-	<span class="tele" onclick="window.open('https://t.me/Boss텔레');" style="cursor:pointer;"><img src="/frontend/boss/V/quick_customer2.png">Boss텔레</span>
+	<span class="tele" onclick="window.open('https://t.me/{{$telegram??'Boss텔레'}}');" style="cursor:pointer;"><img src="/frontend/boss/V/quick_customer2.png"></span>
 </div>
 @endif
   </body>

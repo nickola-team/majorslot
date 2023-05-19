@@ -4,7 +4,7 @@
     <div class="ngdialog-login-page ng-scope" ng-controller="LoginController">
         <div class="ngdialog-login__content">
         <div class="logo text-center">
-            <img src="/frontend/boss/assets/images/logo/Boss/LOGO.png" width="50%">
+            <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="50%">
         </div>
         <form ng-submit="processForm()" class="ng-pristine ng-valid form-login">
             <input type="text" class="form-control ng-pristine ng-valid ng-touched" ng-model="loginForm.nickname" placeholder="아이디" id="sID">
