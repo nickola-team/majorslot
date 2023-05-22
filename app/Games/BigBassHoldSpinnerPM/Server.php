@@ -493,6 +493,9 @@ namespace VanguardLTE\Games\BigBassHoldSpinnerPM
                     $totalWin += $moneyWin;
                 }
 
+                if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
+                    $slotEvent['slotEvent'] = 'doRespin';
+                }
                 $spinType = 's';
                 if( $totalWin > 0) 
                 {
@@ -658,9 +661,6 @@ namespace VanguardLTE\Games\BigBassHoldSpinnerPM
                     $allBet = $allBet * 100;
                 }else if($slotSettings->GetGameData($slotSettings->slotId . 'Bl') > 0){
                     $allBet = $betline * 15;
-                }
-                if($rs_t > 0 && $isState == true){
-                    $slotEvent['slotEvent'] == 'doRespin';
                 }
                 $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
             }

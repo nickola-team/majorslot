@@ -268,7 +268,7 @@ namespace VanguardLTE\Games\BigBassHoldSpinnerPM
                 $this->Bank = $this->happyhouruser->current_bank;
                 return $this->Bank / $this->CurrentDenom;
             }
-        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'doRespin' ) 
 
 
             {
@@ -310,7 +310,7 @@ namespace VanguardLTE\Games\BigBassHoldSpinnerPM
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'doRespin' ) 
 
 
             {
