@@ -412,6 +412,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 exit('unlogged-1'); // it must be different per every game. but...
             }
+            if (!$user || $user->playing_game != null)
+            {
+                exit('double game detected'); // it must be different per every game. but...
+            }
             $object = '\VanguardLTE\Games\\' . $game . '\Server';
             $server = new $object();
             echo $server->get($request, $game, $userId);
