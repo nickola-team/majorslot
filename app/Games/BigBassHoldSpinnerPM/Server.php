@@ -493,6 +493,9 @@ namespace VanguardLTE\Games\BigBassHoldSpinnerPM
                     $totalWin += $moneyWin;
                 }
 
+                if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
+                    $slotEvent['slotEvent'] = 'doRespin';
+                }
                 $spinType = 's';
                 if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
                     $slotEvent['slotEvent'] = 'doRespin';

@@ -732,11 +732,11 @@ namespace VanguardLTE\Games\FireStrikePM
                     $stacks = $stacks->orderby('odd', 'asc')->where('id', '>=', $index)->take(5)->get();
                 }else{
                     $index = mt_rand(0, 52000);
-                    if($limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                    if($limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
-                        $this->game->garant_bonus3 = 0;
-                        $win = explode(',', $this->game->game_win->winbonus3);
-                        $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
+                        $this->game->garant_special_winbonus = 0;
+                        $win = explode(',', $this->game->game_win->special_winbonus);
+                        $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
