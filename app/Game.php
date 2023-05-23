@@ -73,7 +73,10 @@ namespace VanguardLTE
             'in_jpg', 
             'in_jps', 
             'profit', 
-            'rtp'
+            'rtp', 
+            'special_winbonus', 
+            'garant_special_winbonus', 
+            'special_limitmoney'
         ];
         public static $values = [
             'jp_1_percent' => [
@@ -641,7 +644,6 @@ namespace VanguardLTE
             'fish' => 'Fish'
         ];
         public $divBanks = [500, 1000, 2000, 5000];
-        public $limitBonusMoney = 400;
         public static function boot()
         {
             parent::boot();
@@ -769,8 +771,8 @@ namespace VanguardLTE
         }
         public function set_gamebank($balance, $type = 'update', $slotState = '')
         {
-            if($balance > 0 && $this->allBet > $this->limitBonusMoney && $slotState == ''){
-                $this->garant_bonus3++;
+            if($balance > 0 && $this->allBet > $this->special_limitmoney && $slotState == ''){
+                $this->garant_special_winbonus++;
                 $this->save();
             }
             if( $this->gamebank != null || $slotState == 'bonus' ) 

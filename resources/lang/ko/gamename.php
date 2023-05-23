@@ -1104,6 +1104,10 @@ return [
         "JasmineDreams" => "자스민 드림즈",
         "KingdomoftheDead" => "킹덤 오브 더 데드",
 
+        "DiamondsofEgypt" => "다이아몬즈 오브 이집트",
+        "HolidayRide" => "홀리데이 라이드",
+        "KnightHotSpotz" => "나이트 핫 스팟즈",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",

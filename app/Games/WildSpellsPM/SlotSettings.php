@@ -743,11 +743,11 @@ namespace VanguardLTE\Games\WildSpellsPM
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($bet > $this->game->limitBonusMoney && $limitOdd > 10 && $this->game->garant_bonus3 >= $this->game->winbonus3){
+                    if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
-                        $this->game->garant_bonus3 = 0;
-                        $win = explode(',', $this->game->game_win->winbonus3);
-                        $this->game->winbonus3 = $win[rand(0, count($win) - 1)];
+                        $this->game->garant_special_winbonus = 0;
+                        $win = explode(',', $this->game->game_win->special_winbonus);
+                        $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
                         if($ind > -1){
