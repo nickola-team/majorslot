@@ -1748,13 +1748,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($stat_game)
             {
-                $gamename = $stat_game->game_id;
+                $gamename = $stat_game->game_item->title;
 
                 $pm_games = \VanguardLTE\Game::where('id', $stat_game->game_id)->first();
                 $gamelist1 = KTENController::getgamelist('kten-pp');
                 foreach($gamelist1 as $game)
                 {
-                    $gamename = $game['name'];
+                    // $gamename = $game['name'];
                     if ($game['gamecode'] == $pm_games->label)
                     {
                         $gamename = $game['enname'];
