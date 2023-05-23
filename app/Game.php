@@ -75,7 +75,7 @@ namespace VanguardLTE
             'profit', 
             'rtp', 
             'special_winbonus', 
-            'grant_special_winbonus', 
+            'garant_special_winbonus', 
             'special_limitmoney'
         ];
         public static $values = [
@@ -772,7 +772,7 @@ namespace VanguardLTE
         public function set_gamebank($balance, $type = 'update', $slotState = '')
         {
             if($balance > 0 && $this->allBet > $this->special_limitmoney && $slotState == ''){
-                $this->grant_special_winbonus++;
+                $this->garant_special_winbonus++;
                 $this->save();
             }
             if( $this->gamebank != null || $slotState == 'bonus' ) 

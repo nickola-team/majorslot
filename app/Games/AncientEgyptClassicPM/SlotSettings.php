@@ -737,9 +737,9 @@ namespace VanguardLTE\Games\AncientEgyptClassicPM
                     }else{
                         $index = mt_rand(0, 110000);
                     }
-                    if($limitOdd > 10 && $this->game->grant_special_winbonus >= $this->game->special_winbonus){
+                    if($limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
-                        $this->game->grant_special_winbonus = 0;
+                        $this->game->garant_special_winbonus = 0;
                         $win = explode(',', $this->game->game_win->special_winbonus);
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
