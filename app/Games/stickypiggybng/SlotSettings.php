@@ -296,6 +296,12 @@ namespace VanguardLTE\Games\stickypiggybng
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                if ($this->happyhouruser)
+                {
+                    $this->happyhouruser->increment('current_bank', $sum);
+                    $this->happyhouruser->save();
+                    return $game;
+                }
                 if($buyType >= 3){
                     $regularsum = $sum * 15 / 100;
                     $sum = $sum - $regularsum;

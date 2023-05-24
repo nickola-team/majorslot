@@ -317,6 +317,12 @@ namespace VanguardLTE\Games\CashPatrolPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                if ($this->happyhouruser)
+                {
+                    $this->happyhouruser->increment('current_bank', $sum);
+                    $this->happyhouruser->save();
+                    return $game;
+                }
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;

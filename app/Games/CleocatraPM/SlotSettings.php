@@ -313,6 +313,12 @@ namespace VanguardLTE\Games\CleocatraPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                if ($this->happyhouruser)
+                {
+                    $this->happyhouruser->increment('current_bank', $sum);
+                    $this->happyhouruser->save();
+                    return $game;
+                }
                 $_allBets = $sum / $this->GetPercent() * 100;
                 $normal_sum = $_allBets * 10 / 100;
                 $game->set_gamebank($normal_sum, 'inc', '');
