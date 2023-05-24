@@ -766,8 +766,17 @@ namespace VanguardLTE\Games\MadameDestinyMegawaysPM
                                 }
                                 $stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
+                            if ($this->happyhouruser)
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                            }
+                            else
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                            }
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                         }
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){

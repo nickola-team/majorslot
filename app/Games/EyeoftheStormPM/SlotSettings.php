@@ -760,7 +760,14 @@ namespace VanguardLTE\Games\EyeoftheStormPM
                         $this->game->save();
                     }else{
                         if($winType == 'bonus'){
-                            $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                            if ($this->happyhouruser)
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                            }
+                            else
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                            }
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                         }

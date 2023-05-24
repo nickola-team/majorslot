@@ -758,7 +758,14 @@ namespace VanguardLTE\Games\SuperXPM
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        if ($this->happyhouruser)
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                            }
+                            else
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                            }
                     }else{
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->where('pur_level', ($bl - 1))->take(100)->get();
                     }
