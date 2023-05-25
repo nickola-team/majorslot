@@ -315,6 +315,12 @@ namespace VanguardLTE\Games\MadameDestinyMegawaysPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                if ($this->happyhouruser)
+                {
+                    $this->happyhouruser->increment('current_bank', $sum);
+                    $this->happyhouruser->save();
+                    return $game;
+                }
                 $_allBets = $sum / $this->GetPercent() * 100;
                 $normal_sum = $_allBets * 10 / 100;
                 $game->set_gamebank($normal_sum, 'inc', '');
@@ -760,8 +766,17 @@ namespace VanguardLTE\Games\MadameDestinyMegawaysPM
                                 }
                                 $stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
+                            if ($this->happyhouruser)
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                            }
+                            else
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                            }
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                         }
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
