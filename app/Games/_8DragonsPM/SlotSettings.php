@@ -314,6 +314,12 @@ namespace VanguardLTE\Games\_8DragonsPM
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
             if($isFreeSpin == true){
+                if ($this->happyhouruser)
+                {
+                    $this->happyhouruser->increment('current_bank', $sum);
+                    $this->happyhouruser->save();
+                    return $game;
+                }
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -751,7 +757,14 @@ namespace VanguardLTE\Games\_8DragonsPM
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($ind > -1){
-                        $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                        if ($this->happyhouruser)
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                            }
+                            else
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                            }
                     }else{
                         if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();

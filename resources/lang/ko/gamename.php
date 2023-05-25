@@ -1108,6 +1108,9 @@ return [
         "HolidayRide" => "홀리데이 라이드",
         "KnightHotSpotz" => "나이트 핫 스팟즈",
 
+        "ExcaliburUnleashed" => "엑스칼리버 언리쉬드",
+        "WildBisonCharge" => "와일드 바이슨 차지",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",

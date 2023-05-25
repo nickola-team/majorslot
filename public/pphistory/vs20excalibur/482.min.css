@@ -1,0 +1,94 @@
+:root {
+    --slot-item-height: 40px;
+    --slot-item-width: 56px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--3,
+.LinesSlot .ReelsSlot__Item--4 {
+    align-items: flex-end;
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot {
+    align-items: center
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    box-shadow: 0 0 0 1px #4c4c4c
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-grow: 0
+}
+
+.LinesSlot .SlotWrap__Field {
+    border: unset
+}
+
+.Colossal {
+    height: 118px;
+    width: 56px;
+    z-index: 2;
+    background-size: 100% 100%;
+    background-image: -webkit-image-set(url(./images/vs20excalibur/colossal2.png) 1x, url(./images/vs20excalibur/colossal2@2x.png) 2x)
+}
+
+.Action:not(.FreeSpin) .Colossal--1,
+.Colossal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Action:not(.FreeSpin) .Colossal--1 {
+    background-image: -webkit-image-set(url(./images/vs20excalibur/colossal1.png) 1x, url(./images/vs20excalibur/colossal1@2x.png) 2x)
+}
+
+.Action:not(.FreeSpin) .Colossal--1 .MoneyScatter__Label {
+    display: none
+}
+
+.Colossal .MoneyScatter__LabelWrap {
+    justify-content: flex-end;
+    margin-bottom: 12px
+}
+
+.Colossal .MoneyScatter__Label {
+    font-size: 14px
+}
+
+@media(max-width:830px) {
+    .Colossal .MoneyScatter__Label {
+        font-size: 1.9vw
+    }
+}
+
+.WinLines-Block .Colossal {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
