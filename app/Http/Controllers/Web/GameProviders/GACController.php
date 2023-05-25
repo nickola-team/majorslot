@@ -278,6 +278,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameId = isset($data['gameId'])?$data['gameId']:0;
             if (!isset($data['userId']) || !isset($data['tableName']) || !isset($data['betAmount']) || !isset($data['gameId']))
             {
+                \DB::commit();
                 return response()->json([
                     'result' => false,
                     'message' => 'No Parameter',
@@ -302,6 +303,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
             if (!$user || $user->playing_game != null || $user->remember_token != $user->api_token)
             {
+                \DB::commit();
                 return response()->json([
                     'result' => false,
                     'message' => 'Not found user',
@@ -326,6 +328,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             if (count($closetables) > 0 && in_array($tableName, $closetables))
             {
+                \DB::commit();
                 return response()->json([
                         'result' => false,
                         'message' => 'This table '.$tableName.' is in maintenance',
@@ -352,6 +355,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $main_amount = abs($main_data['betAmount']);
                     if ($amount < $main_amount)
                     {
+                        \DB::commit();
                         return response()->json([
                             'result' => false,
                             'message' => 'Main amount must large than additional bet amount. main=' . $main_amount . ', addamount=' . $amount,
@@ -363,6 +367,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $amount = $amount - $main_amount;
                     if ($user->balance < $amount)
                     {
+                        \DB::commit();
                         return response()->json([
                             'result' => false,
                             'message' => 'balance is not enough',
@@ -388,6 +393,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
+                    \DB::commit();
                     return response()->json([
                         'result' => false,
                         'message' => 'Could not find main bet',
@@ -408,21 +414,48 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ])->first();
                 if ($record)
                 {
+                    
+                    $json_data = json_decode($record->data, true);
+                    $gameObj = GACController::getGameObj($json_data['tableName']);
+                    if (!$gameObj)
+                    {
+                        $gameObj = GACController::getGameObj('unknowntable');
+                    }
+                    $category = \VanguardLTE\Category::where(['provider' => 'gac', 'shop_id' => 0, 'href' => $gameObj['href']])->first();
+                    $ctime = date('Y-m-d/H:i:s');
+
                     $user->balance = $user->balance + intval($amount);
                     $user->save();
                     $user = $user->fresh();
                     $record->update(['status' => 2]);
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $user->id, 
+                        'balance' => intval($user->balance), 
+                        'bet' => intval($amount), 
+                        'win' => intval($amount),
+                        'game' =>  $gameObj['name'] . '[C'.$ctime.']_' . $gameObj['href'], 
+                        'type' => 'table',
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'shop_id' => $user->shop_id,
+                        'category_id' => isset($category)?$category->id:0,
+                        'game_id' => $gameObj['gamecode'],
+                        'roundid' =>  '000000-' . $json_data['tableName'],
+                        'date_time' => $record->date_time
+                    ]);
                 }
                 else
                 {
-                    \VanguardLTE\GACTransaction::create([
-                        'user_id' => $userId, 
-                        'game_id' => $gameId,
-                        'betInfo' => $betInfo,
-                        'type' => 1,
-                        'data' => json_encode($data),
-                        'response' => $user->balance,
-                        'status' => 0
+                    \DB::commit();
+                    return response()->json([
+                        'result' => false,
+                        'message' => 'Could not find main bet for cancel',
+                        'data' => [
+                            'balance' => $user->balance,
+                        ]
                     ]);
                 }
             }
@@ -430,6 +463,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 if ($user->balance < $amount)
                 {
+                    \DB::commit();
                     return response()->json([
                         'result' => false,
                         'message' => 'balance is not enough',
@@ -679,6 +713,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameId = isset($data['gameId'])?$data['gameId']:0;
             if (!$userId || !$tableName || !$betAmount || !isset($data['winAmount']) || !$gameId)
             {
+                \DB::commit();
                 return response()->json([
                     'result' => false,
                     'message' => 'No Parameter',
@@ -690,6 +725,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             if ($betId == 0)
             {
+                \DB::commit();
                 return response()->json([
                     'result' => false,
                     'message' => 'betid is 0',
@@ -702,6 +738,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
             if (!$user)
             {
+                \DB::commit();
                 return response()->json([
                     'result' => false,
                     'message' => 'Not found user',
@@ -719,6 +756,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ])->get();
             if (count($betrecords) == 0)
             {
+                \DB::commit();
                 return response()->json([
                     'result' => false,
                     'message' => 'No placebet exist',
@@ -736,6 +774,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ])->first();
             if ($winrecord)
             {
+                \DB::commit();
                 return response()->json([
                     'result' => false,
                     'message' => 'duplicated betid - ' . $betId,
