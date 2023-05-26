@@ -738,7 +738,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'profit' => 0, 
                             'denomination' => 0, 
                             'date_time' => $time,
-                            'shop_id' => $shop?$shop->shop_id:0,
+                            'shop_id' => $shop?$shop->shop_id:-1,
                             'category_id' => $category?$category->original_id:0,
                             'game_id' =>  $gameObj['gamecode'],
                             'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
