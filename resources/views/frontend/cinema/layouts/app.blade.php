@@ -34,11 +34,14 @@
 <body>
 	<!-- ★메인★ -->
 	<div id="wrap">
+		@if (empty($logo))
+		<?php $logo = 'cinema'; ?>
+		@endif
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'cinema'])
+			@include('frontend.kdior.layouts.partials.m.header')
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'cinema'])
+			@include('frontend.kdior.layouts.partials.header')
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
@@ -50,7 +53,7 @@
 
 		@include('frontend.kdior.layouts.partials.footer')
 		@if( ($detect->isMobile() || $detect->isTablet() ) && Auth::check()) 
-			@include('frontend.kdior.layouts.partials.m.aside', ['logo' => 'cinema'])
+			@include('frontend.kdior.layouts.partials.m.aside')
 		@endif
 		
 	</div><!-- wrap -->
