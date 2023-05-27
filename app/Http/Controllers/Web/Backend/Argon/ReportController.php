@@ -242,13 +242,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
             $sumuser = null;
+            $user_id = -1;
+            $role_id = -1;
             if ($summary->first()){
                 $sumuser = $summary->first()->user;
+                $user_id = $summary->first()->user->id;
+                $role_id = $summary->first()->user->role_id;
             }
             $total = [
                 'id' => (count($users)==1 && $sumuser)?$sumuser->username:'',
-                'user_id' => $summary->first()->user->id,
-                'role_id' => $summary->first()->user->role_id,
+                'user_id' => $user_id,
+                'role_id' => $role_id,
                 'daterange' => "$start_date~$end_date",
                 'totalin' => $summary->sum('totalin'),
                 'totalout' => $summary->sum('totalout'),
