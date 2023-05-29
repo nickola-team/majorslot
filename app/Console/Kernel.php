@@ -80,11 +80,18 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
                 \VanguardLTE\WithdrawDeposit::where('created_at', '<', $start_date)->delete();
 
+
                 $start_date = date("Y-m-d H:i:s",strtotime("-1 hours"));
                 \VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->delete();
 
                 $start_date = date("Y-m-d",strtotime("-7 days")) . 'T00:00:00';
                 \VanguardLTE\GPGameTrend::where('sDate','<', $start_date)->delete();
+
+                $start_date = date("Y-m-d",strtotime("-90 days"));
+                \VanguardLTE\DailySummary::where('date', '<', $start_date)->delete();
+                \VanguardLTE\CategorySummary::where('date', '<', $start_date)->delete();
+                \VanguardLTE\GameSummary::where('date', '<', $start_date)->delete();
+                
 
                 // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
