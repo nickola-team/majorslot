@@ -46,7 +46,7 @@
     ?>
     <td>
     @if (auth()->user()->hasRole(['admin','comaster']))
-        <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat['category_id'], 'user_id'=>$user->id, ,'dates'=>[$category['date'], $category['date']]])}}">{{$game}}</a>
+        <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat['category_id'], 'user_id'=>$user->id, 'dates'=>[$category['date'], $category['date']]])}}">{{$game}}</a>
     @else
         {{$game}}
     @endif
