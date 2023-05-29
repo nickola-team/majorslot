@@ -148,6 +148,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             $gameList = [];
 
+            $pp_exgames = ['cs5moneyroll', 'sc7piggiesai', 'scpandai'];
+
             foreach ($data as $game)
             {
                 if (strtolower($game['game_type']) == $type) 
@@ -181,6 +183,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if ($korname == '')
                     {
                         $korname = $game['cp_game_name_en'];
+                    }
+                    if (in_array($game['game_id'], $pp_exgames))
+                    {
+                        continue;
                     }
 
                     array_push($gameList, [
@@ -738,7 +744,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'profit' => 0, 
                             'denomination' => 0, 
                             'date_time' => $time,
-                            'shop_id' => $shop?$shop->shop_id:0,
+                            'shop_id' => $shop?$shop->shop_id:-1,
                             'category_id' => $category?$category->original_id:0,
                             'game_id' =>  $gameObj['gamecode'],
                             'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],

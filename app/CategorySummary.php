@@ -306,13 +306,13 @@ namespace VanguardLTE
             }
             $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
             $catsum = [];
-            if ($user->hasRole('admin'))
+            if ($user->hasRole(['admin','comaster']))
             {
                 \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
             }
             foreach ($adj_cats as $adj)
             {
-                if ($user->hasRole('admin'))
+                if ($user->hasRole(['admin','comaster']))
                 {
                     $games = [];
                     foreach ($adj['games'] as $adjgame)
@@ -375,7 +375,7 @@ namespace VanguardLTE
                 }
                 foreach ($adj_cats as $adj)
                 {
-                    if ($user->hasRole('admin'))
+                    if ($user->hasRole(['admin','comaster']))
                     {
                         $todaygamesumm = \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today', 'category_id' => $adj['category_id']])->get();
                         if (count($todaygamesumm) > 0){
