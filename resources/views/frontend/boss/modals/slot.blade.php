@@ -7,7 +7,11 @@
             <div class="game-button-container live">
 				@foreach($categories AS $index=>$category)
 				@if ($category->type =='slot')
+        @if ($category->status == 0)
+        <a href="javascript:void(0);" onclick="swal('점검중입니다');" class="slot-btn gl-title-click">
+        @else
 					<a href="javascript:void(0);" onclick="slotGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');" class="slot-btn gl-title-click">
+        @endif
 						<div class="inner">
 							<img class="slot-bg" src="/frontend/jungle/images/slot-bg.png">
 							<div class="hover-bg">
@@ -21,7 +25,7 @@
 				@endif
 				@endforeach
 
-                    </div>
+        </div>
 
           </div>
           <div class="ngdialog-close"></div>
