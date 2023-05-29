@@ -671,6 +671,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '존재하지 않는 카테고리입니다.', 'code' => '002']);
             }
+            if( $cat1->status == 0) 
+            {
+                return response()->json(['error' => true, 'msg' => '점검중입니다', 'code' => '002']);
+            }
 
             if ($cat1->view == 0)
             {
