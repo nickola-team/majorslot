@@ -8,8 +8,8 @@
     }
 ?>
 <td>
-@if (auth()->user()->hasRole('admin'))
-    <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat->category_id, 'dates' => Request::get('dates')])}}">{{$game}}</a>
+@if (auth()->user()->hasRole(['admin','comaster']))
+    <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat->category_id, 'user_id'=>$user->id, 'dates' => Request::get('dates')])}}">{{$game}}</a>
 @else
     {{$game}}
 @endif
@@ -45,8 +45,8 @@
         }
     ?>
     <td>
-    @if (auth()->user()->hasRole('admin'))
-        <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat['category_id'],'dates'=>[$category['date'], $category['date']]])}}">{{$game}}</a>
+    @if (auth()->user()->hasRole(['admin','comaster']))
+        <a href="{{argon_route('argon.report.game.details', ['cat_id'=>$stat['category_id'], 'user_id'=>$user->id, ,'dates'=>[$category['date'], $category['date']]])}}">{{$game}}</a>
     @else
         {{$game}}
     @endif
