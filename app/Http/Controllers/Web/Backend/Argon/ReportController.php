@@ -562,9 +562,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['파트너를 찾을수 없습니다']);
             }
 
-            $statistics = \VanguardLTE\GameSummary::orderBy('game_summary.date', 'DESC')->where('category_id', $category_id)->where('user_id', $user_id);
+            $statistics = \VanguardLTE\GameSummary::orderBy('game_summary.date', 'DESC')->where('category_id', $category_id);
         
-            $totalQuery = "SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal-total_mileage) as totaldeal, name as title FROM w_game_summary WHERE w_game_summary.category_id=$category_id and w_game_summary.user_id=$user_id";
+            $totalQuery = "SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal-total_mileage) as totaldeal, name as title FROM w_game_summary WHERE w_game_summary.category_id=$category_id";
 
             $start_date = date("Y-m-1");
             $end_date = date("Y-m-d");
@@ -578,9 +578,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $statistics = $statistics->where('game_summary.date', '<=', $end_date);
             $totalQuery = $totalQuery . " AND w_game_summary.date>=\"$start_date\" AND w_game_summary.date<=\"$end_date\" ";
 
-            $user = auth()->user();
-
-            // $statistics = $statistics->where('user_id', $user->id);
+            $statistics = $statistics->where('user_id', $user->id);
             $totalQuery = $totalQuery . " AND w_game_summary.user_id=$user->id ";
 
             if ($request->game != '')
