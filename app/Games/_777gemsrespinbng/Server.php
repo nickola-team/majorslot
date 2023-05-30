@@ -424,7 +424,7 @@ namespace VanguardLTE\Games\_777gemsrespinbng
                     {
                         $spinType = 'c';
                         $slotSettings->SetBalance($totalWin);
-                        $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                        $slotSettings->SetBank('', -1 * $totalWin);
                         $slotSettings->SetGameData($slotSettings->slotId . 'LastWin', $totalWin);
                     }
                     $BALANCE = $slotSettings->GetBalance();
