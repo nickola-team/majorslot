@@ -493,6 +493,7 @@ namespace VanguardLTE\Games\grabthegoldbng
                             }
                         }
                     }
+                    $oldCurrentSac = $currentsac[0];
                     if($scaCount > 0){
                         if($currentsac[0] < 3){
                             $currentsac[1]++;    
@@ -634,7 +635,7 @@ namespace VanguardLTE\Games\grabthegoldbng
                         if($stack['actions'][0] == 'freespin_init' || $stack['actions'][0] == 'bonus_init'){
                             $objRes['context']['round_finished'] = false;
                             if($stack['actions'][0] == 'freespin_init'){
-                                if($currentsac[0] >= 9){
+                                if($oldCurrentSac >= 9){
                                     $objRes['context']['spins']['sac_win'] = true;
                                     $currentsac[0] = 0;
                                     $currentsac[1] = 0;
