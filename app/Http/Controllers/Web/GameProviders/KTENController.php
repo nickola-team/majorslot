@@ -319,7 +319,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $game = KTENController::getGameObj($gamecode);
             if ($game == null)
             {
-                Log::error('KTENMakeLink : Game not find  ' . $game);
+                Log::error('KTENMakeLink : Game not find  ' . $gamecode);
                 return null;
             }
 
@@ -396,7 +396,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             
-            $balance = KTENController::getuserbalance($gamecode, $user);
+            $balance = KTENController::getuserbalance(null, $user);
             if ($balance == -1)
             {
                 return null;
@@ -405,7 +405,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance)
             {
                 //withdraw all balance
-                $data = KTENController::withdrawAll($gamecode, $user);
+                $data = KTENController::withdrawAll(null, $user);
                 if ($data['error'])
                 {
                     return null;
