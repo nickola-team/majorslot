@@ -69,10 +69,13 @@
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('player')}}" id="player"  name="player">
                             </div>
-                            <label for="game" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
+                            @if (!auth()->user()->hasRole('manager'))
+                            <label for="shop" class="col-md-2 col-form-label form-control-label text-center">매장이름</label>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
+                                <input class="form-control" type="text" value="{{Request::get('shop')}}" id="shop"  name="shop">
                             </div>
+                            @endif
+                            
 
                             <div class="col-md-1">
                             </div>
@@ -80,12 +83,36 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            @if (!auth()->user()->hasRole('manager'))
-                            <label for="shop" class="col-md-2 col-form-label form-control-label text-center">매장이름</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('shop')}}" id="shop"  name="shop">
+                            <label for="game" class="col-md-2 col-form-label form-control-label text-center">게임사</label>
+                            <div class="col-md-8">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons" style="display: inline-table;">
+                                <?php
+                                        $selected_cat_ids = Request::get('categories');
+                                ?>
+                                    <label class="btn btn-info {{count($selected_cat_ids)>0?'':'active'}}" >
+                                        <input type="checkbox" name="categories_all" id="category_all" class="category_ids"> 전체
+                                    </label>
+                                    @foreach ($categories as $category)
+                                    <?php
+                                        $selected = in_array($category->original_id, $selected_cat_ids);
+                                    ?>
+                                        <label class="btn  btn-info {{$selected?'active':''}}">
+                                            <input type="checkbox" name="categories[]"  class="category_ids" value="{{$category->original_id}}" {{$selected?'checked':''}}> {{$category->trans?$category->trans->trans_title:$category->title}}
+                                        </label>
+                                    @endforeach
+                                </div>
                             </div>
-                            @endif
+                            
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="game" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
+                            </div>
                             <label for="shop" class="col-md-2 col-form-label form-control-label text-center">게임타입</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="gametype" name="gametype">
@@ -97,6 +124,7 @@
                             <div class="col-md-1">
                             </div>
                         </div>
+                        
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
@@ -183,3 +211,22 @@
 </div>
 </div>
 @stop
+
+@push('js')
+<script>
+    $(function () {
+    $(".category_ids").each(function () {
+        $(this).parent().click(function () {
+            var $btn_all = $("#category_all").parent();
+            if ($(this).index() === 0) {
+                $(this).siblings().removeClass("active");
+                $(this).siblings().find(".category_ids").prop("checked", false);
+            } else {
+                $btn_all.removeClass("active");
+                $btn_all.find(".category_ids").prop("checked", false);
+            }
+        });
+    });
+    });
+</script>
+@endpush

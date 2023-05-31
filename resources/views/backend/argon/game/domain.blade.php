@@ -31,9 +31,19 @@
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('domain')}}" id="domain" name="domain">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
+                            <label for="category" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('category')}}" id="category" name="category">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="username" class="col-md-2 col-form-label form-control-label text-center">총본사이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('username')}}" id="username" name="username">
                             </div>
                             <div class="col-md-1">
                             </div>

@@ -78,6 +78,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $sites = $sites->where('title', 'like', '%'. $request->domain . '%');
             }
+            if ($request->username != '')
+            {
+                $comaster = \VanguardLTE\User::where('username', $request->username)->first();
+                if (!$comaster || !in_array( $comaster->id, $availablePartners))
+                {
+                    return redirect()->back()->withErrors(['총본사를 찾을수 없습니다']);
+                }
+                $sites = $sites->where('adminid', $comaster->id);
+                
+            }
             $sites = $sites->paginate(5);
             return view('backend.argon.game.domain', compact('sites'));
         }
