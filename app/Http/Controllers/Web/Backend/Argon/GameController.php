@@ -127,7 +127,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $admin = $site->admin;
-            $availableShops = $admin->availableShops();
+            $availableShops = $admin->shops(true);
+            // $availableShops = $admin->availableShops();
 
             \VanguardLTE\Category::where('original_id' , $category->original_id)->whereIn('shop_id', $availableShops)->update(['view' => 0]);
             \VanguardLTE\Category::where('original_id' , $category->original_id)->where('site_id', $site_id)->update(['view' => 0]);
@@ -147,6 +148,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             ]);
             // $status = $request->status;
             // $view = $request->view;
+            if (!auth()->user()->hasRole('admin')) //if user is not admin, could not change category view
+            {
+                unset($data['view']);
+            }
             $category = \VanguardLTE\Category::where('id', $categoryid)->first();
 
             $availablePartners = auth()->user()->hierarchyPartners();
