@@ -31,6 +31,10 @@
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('domain')}}" id="domain" name="domain">
                             </div>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('category')}}" id="category" name="category">
+                            </div>
                             <div class="col-md-1">
                             </div>
                         </div>
@@ -82,7 +86,11 @@
                             if (!auth()->user()->hasRole('admin'))
                             {
                                 $excat = ['habaneroplay', 'bngplay','cq9play'];
-                                $categories = $categories->where('view',1)->whereNotIn('href', $excat);
+                                $categories = $categories->where('view',1)->where('parent', 0);
+                            }
+                            if (Request::get('category') != '')
+                            {
+                                $categories = $categories->where('title', Request::get('category'));
                             }
                         ?>
                         @if (count($categories)>0)
