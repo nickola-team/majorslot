@@ -929,6 +929,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $statistics = $statistics->where('stat_game.type', $request->gametype);
             }
 
+            if( $request->has('categories') && count($request->categories) > 0 ) 
+            {
+
+                $statistics = $statistics->whereIn('stat_game.category_id', $request->categories);
+            }
+
             $total = [
                 'bet' => (clone $statistics)->sum('bet'),
                 'win' => (clone $statistics)->sum('win'),
@@ -943,7 +949,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $master = $master->referral;
             }
             $gacmerge = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::mergeGAC_EVO($master->id);
-            return view('backend.argon.player.game', compact('statistics', 'total', 'gacmerge'));
+            $categories = null;
+            $website = \VanguardLTE\WebSite::where('adminid', $master->id)->first();
+            if ($website)
+            {
+                $categories = $website->categories->where('parent', 0)->where('view', 1);
+            }
+            else
+            {
+                $categories = \VanguardLTE\Category::where(['site_id' => 0, 'shop_id' => 0,'view' => 1])->orderby('position', 'desc')->get();
+            }
+            return view('backend.argon.player.game', compact('statistics', 'total', 'gacmerge', 'categories'));
         }
 
         public function player_game_pending(\Illuminate\Http\Request $request)
