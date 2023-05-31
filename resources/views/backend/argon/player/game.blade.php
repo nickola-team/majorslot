@@ -89,12 +89,12 @@
                                 <?php
                                         $selected_cat_ids = Request::get('categories');
                                 ?>
-                                    <label class="btn btn-info {{count($selected_cat_ids)>0?'':'active'}}" >
-                                        <input type="checkbox" name="categories_all" id="category_all" class="category_ids"> 전체
+                                    <label class="btn btn-info {{$selected_cat_ids && count($selected_cat_ids)>0?'':'active'}}" >
+                                        <input type="checkbox" name="categories_all" id="category_all" class="category_ids" {{$selected_cat_ids && count($selected_cat_ids)>0?'':'checked'}}> 전체
                                     </label>
                                     @foreach ($categories as $category)
                                     <?php
-                                        $selected = in_array($category->original_id, $selected_cat_ids);
+                                        $selected = $selected_cat_ids && in_array($category->original_id, $selected_cat_ids);
                                     ?>
                                         <label class="btn  btn-info {{$selected?'active':''}}">
                                             <input type="checkbox" name="categories[]"  class="category_ids" value="{{$category->original_id}}" {{$selected?'checked':''}}> {{$category->trans?$category->trans->trans_title:$category->title}}
