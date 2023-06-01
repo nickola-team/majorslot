@@ -267,7 +267,7 @@
                                 </div>
                             </div>
                         </form>
-                        @if ($user->role_id > 3 && auth()->user()->role_id>$user->role_id && auth()->user()->hasRole(['admin','comaster']))
+                        @if ($user->role_id >= 3 && auth()->user()->role_id>$user->role_id && auth()->user()->hasRole(['admin','comaster']))
                         <hr class="my-4" />
                         <form method="post" action="{{argon_route('argon.common.profile.accessrule')}}" autocomplete="off">
                             @csrf
