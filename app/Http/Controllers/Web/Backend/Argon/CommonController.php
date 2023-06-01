@@ -225,6 +225,39 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             return view('backend.argon.common.profile', compact('user', 'userActivities', 'rtppercent', 'deluser'));
         }
+        public function updateAccessrule(\Illuminate\Http\Request $request)
+        {
+            $user_id = $request->id;
+            $user = \VanguardLTE\User::find($user_id);
+            $users = auth()->user()->hierarchyPartners();
+            if( !$user || (count($users) && !in_array($user_id, $users) )) 
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다']);
+            }
+            $data = $request->all();
+            if ($user->accessrule)
+            {
+                if ($data['ip_address'] == '' && isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')
+                {
+                    $user->accessrule->delete();
+                }
+                $user->accessrule->update([
+                    'ip_address' => $data['ip_address'],
+                    'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0
+                ]);
+            }
+            else
+            {
+                \VanguardLTE\AccessRule::create([
+                    'user_id' => $user->id,
+                    'ip_address' => $data['ip_address'],
+                    'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0
+                ]);
+            }
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'ipaddress'));
+            return redirect()->back()->withSuccess(['접근 설정을 업데이트 했습니다.']);
+
+        }
         public function updatePassword(\VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
             $user_id = $request->id;
@@ -241,7 +274,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 unset($data['id']);
                 $user->update($data);
             }
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'password'));
             return redirect()->back()->withSuccess(trans('app.login_updated'));
         }
 
@@ -268,7 +301,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $data['confirmation_token'] = \Illuminate\Support\Facades\Hash::make($data['confirmation_token']);
                 $user->update($data);
             }
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'depositinfo'));
             return redirect()->back()->withSuccess(['환전비번을 업데이트했습니다']);
         }
 
@@ -420,7 +453,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     ]);
                 }
             }
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'profile'));
 
             if( $this->userIsBanned($user, $request) ) 
             {

@@ -85,7 +85,7 @@ class UserEventsSubscriber
     {
         $message = trans(
             'log.updated_profile_details_for',
-            ['name' => $event->getUpdatedUser()->present()->username]
+            ['name' => $event->getUpdatedUser()->present()->username . '/' . $event->getMention()]
         );
 
         $this->logger->log($message);

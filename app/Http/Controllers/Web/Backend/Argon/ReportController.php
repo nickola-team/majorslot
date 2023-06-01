@@ -557,6 +557,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user_id = $request->user_id;
             $user = \VanguardLTE\User::where('id', $user_id)->first();
             $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;
             if (!$user || !in_array($user_id, $availablePartners))
             {
                 return redirect()->back()->withErrors(['파트너를 찾을수 없습니다']);
