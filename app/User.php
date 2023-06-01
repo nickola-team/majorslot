@@ -575,6 +575,12 @@ namespace VanguardLTE
         {
             return $this->hasOne('VanguardLTE\UserMemo', 'user_id');
         }
+
+        public function accessrule()
+        {
+            return $this->hasOne('VanguardLTE\AccessRule', 'user_id');
+        }
+
         public function getJWTIdentifier()
         {
             return $this->id;

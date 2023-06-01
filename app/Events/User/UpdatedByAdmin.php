@@ -10,10 +10,12 @@ class UpdatedByAdmin
      * @var User
      */
     protected $updatedUser;
+    protected $mention;
 
-    public function __construct(User $updatedUser)
+    public function __construct(User $updatedUser, $mention='')
     {
         $this->updatedUser = $updatedUser;
+        $this->mention = $mention;
     }
 
     /**
@@ -22,5 +24,9 @@ class UpdatedByAdmin
     public function getUpdatedUser()
     {
         return $this->updatedUser;
+    }
+    public function getMention()
+    {
+        return $this->mention;
     }
 }
