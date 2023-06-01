@@ -27,7 +27,7 @@ Route::prefix('{slug}')->middleware(['argonbackend'])->group(function () {
 });
 
 
-Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function () {
+Route::prefix('{slug}')->middleware(['argonbackend', 'auth', 'argonaccessrule'])->group(function () {
 	Route::namespace('Backend\Argon')->group(function () {
         Route::get('logout', [
             'as' => 'argon.auth.logout',
@@ -232,6 +232,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::post('/common/profile/password', [
             'as' => 'argon.common.profile.password',
             'uses' => 'CommonController@updatePassword',
+        ]);
+        Route::post('/common/profile/accessrule', [
+            'as' => 'argon.common.profile.accessrule',
+            'uses' => 'CommonController@updateAccessrule',
         ]);
         Route::post('/common/profile/dwpass', [
             'as' => 'argon.common.profile.dwpass',

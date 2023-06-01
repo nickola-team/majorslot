@@ -267,6 +267,35 @@
                                 </div>
                             </div>
                         </form>
+                        @if ($user->role_id >= 3 && auth()->user()->role_id>$user->role_id && auth()->user()->hasRole(['admin','comaster']))
+                        <hr class="my-4" />
+                        <form method="post" action="{{argon_route('argon.common.profile.accessrule')}}" autocomplete="off">
+                            @csrf
+                            <h6 class="heading-small text-muted mb-4">접근설정</h6>
+                            <input type="hidden" name="id" value="{{$user->id}}">
+                            <div class="pl-lg-4">
+                                <div class="form-group{{ $errors->has('ip_address') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="ip_address">접근아이피 <span class="text-red"> ***아이피가 여러개이면 반점(,)으로 구분해주세요***</span></label>
+                                    <textarea id="ip_address" name="ip_address" class="form-control" rows="5">{{$user->accessrule?$user->accessrule->ip_address:''}}</textarea>
+                                </div>
+                                <!-- <div class="form-group">
+                                    <label class="form-control-label" for="user_agent">브라우저</label>
+                                    <textarea id="user_agent" name="user_agent" class="form-control" rows="5"></textarea>
+                                </div> -->
+                                <div class="form-group">
+                                    <label class="form-control-label" for="allow_ipv6">IPv6 허용</label>
+                                    <div>
+                                    <label class="custom-toggle"><input type="checkbox" name="allow_ipv6" {{$user->accessrule==null || $user->accessrule->allow_ipv6==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="안함" data-label-on="허용"></span></label>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success mt-4">적용</button>
+                                </div>
+                            </div>
+                        </form>
+                        @endif
+
                         @if ($user->id == auth()->user()->id || auth()->user()->isInoutPartner() || (auth()->user()->hasRole('manager') && $user->hasRole('user')))
                         <hr class="my-4" />
                         <form method="post" action="{{argon_route('argon.common.profile.password')}}" autocomplete="off">
@@ -290,6 +319,9 @@
                             </div>
                         </form>
                         @endif
+
+                        
+                        
                         @if (auth()->user()->isInOutPartner())
                         <hr class="my-4" />
                         <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>

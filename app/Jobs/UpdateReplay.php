@@ -35,7 +35,7 @@ class UpdateReplay implements ShouldQueue
             $response = Http::timeout(10)->asForm()->post(config('app.replayurl') . '/api/top/winnings', $this->replay_data);
             if (!$response->ok())
             {
-                Log::info('report replay request failed: ' . $response->body());
+                Log::info('report replay request failed: ' . $response->status());
                 return -1;
             }
         }

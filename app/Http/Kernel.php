@@ -50,7 +50,8 @@ namespace VanguardLTE\Http
             'hbn' => 'VanguardLTE\Http\Middleware\HBNMiddleware',
             'hpc' => 'VanguardLTE\Http\Middleware\HPCMiddleware',
             'simultaneous' => 'VanguardLTE\Http\Middleware\ThrottleSimultaneousRequests',
-            'argonbackend' => '\VanguardLTE\Http\Middleware\ArgonBackend'
+            'argonbackend' => '\VanguardLTE\Http\Middleware\ArgonBackend',
+            'argonaccessrule' => '\VanguardLTE\Http\Middleware\ArgonAccessRule',
         ];
     }
 
