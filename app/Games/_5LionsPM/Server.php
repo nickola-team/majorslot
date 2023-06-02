@@ -84,7 +84,7 @@ namespace VanguardLTE\Games\_5LionsPM
             $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
 
              if($replayLog && count($replayLog) && $slotEvent['slotEvent'] == 'doCollect'){
-                $allBet = $slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? 50 * $lines;
+                $allBet = ($slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? 50) * 50;
                 $totalWin = $this->slotSettings->GetGameData($this->slotSettings->slotId . 'TotalWin');
                 if($totalWin >= ($allBet * 10)){
                     \VanguardLTE\Jobs\UpdateReplay::dispatch([
