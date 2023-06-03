@@ -1308,7 +1308,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $data['l'] = $line;
                                 if($pur_ind >= 0){
                                     $data['ind'] = $pur_ind;
-                                    $pur_ind = -1;
+                                    if($gamecode != 'vs15godsofwar'){
+                                        $pur_ind = -1;
+                                    }
                                 }
                             }else if($spinType == 'c'){
                                 $data['action'] = 'doCollect';
