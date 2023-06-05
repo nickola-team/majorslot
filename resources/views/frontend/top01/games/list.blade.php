@@ -1,4 +1,4 @@
-@extends('frontend.cinema.layouts.app', ['logo' => 'hera','hotel' => 'disabled'])
+@extends('frontend.cinema.layouts.app', ['logo' => 'top01'])
 @section('page-title', $title)
 
 @section('content')
