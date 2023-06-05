@@ -8,7 +8,8 @@ namespace VanguardLTE
             'user_id', 
             'ip_address', 
             'user_agent', 
-            'allow_ipv6'
+            'allow_ipv6',
+            'check_cloudflare'
         ];
         public static function boot()
         {

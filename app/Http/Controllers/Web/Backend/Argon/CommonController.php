@@ -237,22 +237,30 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $data = $request->all();
             if ($user->accessrule)
             {
-                if ($data['ip_address'] == '' && isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')
+                if ($data['ip_address'] == '' && isset($data['allow_ipv6']) && $data['allow_ipv6']=='on' && $request->check_cloudflare == '')
                 {
                     $user->accessrule->delete();
                 }
                 $user->accessrule->update([
                     'ip_address' => $data['ip_address'],
-                    'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0
+                    'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0,
+                    'check_cloudflare' => (isset($data['check_cloudflare']) && $data['check_cloudflare']=='on')?1:0,
                 ]);
             }
             else
             {
-                \VanguardLTE\AccessRule::create([
-                    'user_id' => $user->id,
-                    'ip_address' => $data['ip_address'],
-                    'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0
-                ]);
+                if ($data['ip_address'] == '' && isset($data['allow_ipv6']) && $data['allow_ipv6']=='on' && $request->check_cloudflare == '')
+                {
+                }
+                else
+                {
+                    \VanguardLTE\AccessRule::create([
+                        'user_id' => $user->id,
+                        'ip_address' => $data['ip_address'],
+                        'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0,
+                        'check_cloudflare' => (isset($data['check_cloudflare']) && $data['check_cloudflare']=='on')?1:0,
+                    ]);
+                }
             }
             event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'ipaddress'));
             return redirect()->back()->withSuccess(['접근 설정을 업데이트 했습니다.']);

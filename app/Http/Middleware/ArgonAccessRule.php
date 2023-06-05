@@ -32,23 +32,25 @@ namespace VanguardLTE\Http\Middleware
                 $user = auth()->user();
                 if ($user->accessrule)
                 {
-                    $remote_addr = $request->server('REMOTE_ADDR');
-                    $bIsCloud = false;
-                    foreach (self::CLOUDFLARE_IPS as $clf)
-                    {
-                        if ($this->cidr_match($remote_addr, $clf))
+                    if ($user->accessrule->check_cloudflare == 1){
+                        $remote_addr = $request->server('REMOTE_ADDR');
+                        $bIsCloud = false;
+                        foreach (self::CLOUDFLARE_IPS as $clf)
                         {
-                            $bIsCloud = true;
-                            break;
+                            if ($this->cidr_match($remote_addr, $clf))
+                            {
+                                $bIsCloud = true;
+                                break;
+                            }
+                        }
+                        if (!$bIsCloud)
+                        {
+                            $response = \Response::json(['error' => '허용되지 않은 접근입니다'], 401, []);
+                            $response->header('Content-Type', 'application/json');
+                            return $response;
                         }
                     }
-                    if (!$bIsCloud)
-                    {
-                        $response = \Response::json(['error' => '허용되지 않은 접근입니다'], 401, []);
-                        $response->header('Content-Type', 'application/json');
-                        return $response;
-                    }
-                    
+
                     $allow_ips = explode(',', $user->accessrule->ip_address);
                     if ($ipversion == 6 && $user->accessrule->allow_ipv6 == 1)
                     {

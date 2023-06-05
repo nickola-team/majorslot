@@ -289,6 +289,13 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="form-control-label" for="check_cloudflare">클플아이피 검사</label>
+                                    <div>
+                                    <label class="custom-toggle"><input type="checkbox" name="check_cloudflare" {{$user->accessrule && $user->accessrule->check_cloudflare==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="안함" data-label-on="적용"></span></label>
+                                    </div>
+                                </div>
+
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">적용</button>
                                 </div>
