@@ -21,7 +21,7 @@ namespace VanguardLTE\Games\_5LionsPM
 
             $slotSettings = new SlotSettings($game, $userId, $credits);
             $this->slotSettings = $slotSettings;
-            
+            $paramData = trim(file_get_contents('php://input'));
             $slotEvent = $request->all();
             if( !isset($slotEvent['action']) ) 
             {
@@ -74,6 +74,34 @@ namespace VanguardLTE\Games\_5LionsPM
                 ];
             }
             $response = $this->toResponse($objRes);
+            
+            //------------ ReplayLog ---------------
+            $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
+            if (!$replayLog) $replayLog = [];
+            $current_replayLog["cr"] = $paramData;
+            $current_replayLog["sr"] = $response;
+            array_push($replayLog, $current_replayLog); 
+            $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
+
+             if($replayLog && count($replayLog) && $slotEvent['slotEvent'] == 'doCollect'){
+                $allBet = ($slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? 50) * 50;
+                $totalWin = $this->slotSettings->GetGameData($this->slotSettings->slotId . 'TotalWin');
+                if($totalWin >= ($allBet * 10)){
+                    \VanguardLTE\Jobs\UpdateReplay::dispatch([
+                        'user_id' => $userId,
+                        'game_id' => $this->slotSettings->game->original_id,
+                        'bet' => $allBet,
+                        'brand_id' => config('app.stylename'),
+                        'base_bet' => $allBet,
+                        'win' => $totalWin,
+                        'rtp' => $totalWin / $allBet,
+                        'game_logs' => urlencode(json_encode($replayLog))
+                    ]);
+                }
+                $this->slotSettings->SetGameData($this->slotSettings->slotId . 'ReplayGameLogs', []);
+             }
+             //------------ *** ---------------
+
             if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doFSOption'){
                 $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
             }
@@ -85,6 +113,9 @@ namespace VanguardLTE\Games\_5LionsPM
         public function doInit($slotEvent, $slotSettings) {
             $BALANCE = $slotSettings->GetBalance();
             $LASTSPIN = $slotSettings->GetHistory();
+            if($slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs') == null){
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
+            }
 
             $objRes = [
                 'def_s' => '14,14,14,14,14,8,9,5,10,3,9,1,13,5,8,6,12,7,12,5',
@@ -236,7 +267,7 @@ namespace VanguardLTE\Games\_5LionsPM
                 
                 $bankMoney = $allBet / 100 * $slotSettings->GetPercent();
                 $slotSettings->SetBank(($slotEvent['slotEvent'] ?? ''), $bankMoney);
-                
+                $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $roundstr = sprintf('%.4f', microtime(TRUE));
                 $roundstr = str_replace('.', '', $roundstr);
                 $roundstr = '446' . substr($roundstr, 4, 10);
@@ -446,6 +477,8 @@ namespace VanguardLTE\Games\_5LionsPM
             if ($slotEvent['slotEvent'] == 'freespin' && $isState == true) {
                 $allBet = $bet * $lines;
             }
+            $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $objRes['tw']);
+            
             $slotSettings->SaveLogReport($_GameLog, $allBet, $slotEvent['l'], $objRes['tw'], $slotEvent['slotEvent'], $isState);
             
             return $objRes;
@@ -466,7 +499,6 @@ namespace VanguardLTE\Games\_5LionsPM
                 'sver' => '5',
                 'counter' => ((int)$slotEvent['counter'] + 1),
             ];
-            
             return $objRes;
         }
 

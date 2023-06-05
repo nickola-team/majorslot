@@ -34,9 +34,7 @@ document.location.href='../../';
 <body style="margin:0px;width:100%;background-color:black;overflow:hidden">
 
 
-
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/_{{ $game->name }}/openGame.do?lang=en&cur=@if( auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs243lions&websiteUrl=&lobbyURL=' allowfullscreen>
-
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/_{{ $game->name }}/openGame.do?lang=en&cur=@if( auth()->user() != null && auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs243lions&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}' allowfullscreen>
 
 </iframe>
 
