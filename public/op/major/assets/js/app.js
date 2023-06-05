@@ -1774,7 +1774,7 @@
             '       <tfoot data-region="footer"></tfoot>',
             '   </table>',
             '</div>',
-            '<div class="box-footer" style="display:none">',
+            '<div class="box-footer">',
             '   <div class="mg-sizer pull-left" data-region="sizer"></div>',
             '   <div class="mg-paginator pull-right" data-region="paginator"></div>',
             '</div>'
