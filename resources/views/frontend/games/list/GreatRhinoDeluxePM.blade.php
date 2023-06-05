@@ -35,8 +35,7 @@ document.location.href='../../';
 
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/_GreatRhinoDeluxePM/openGame.do?lang=en&cur=CAD&gameSymbol=vs20rhinoluxe&websiteUrl=&lobbyURL=' allowfullscreen>
-
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/_GreatRhinoDeluxePM/openGame.do?lang=en&cur=@if( auth()->user() != null && auth()->user()->present()->shop ){{ auth()->user()->present()->shop->currency }}@endif&extGame=1&gameSymbol=vs20rhinoluxe&websiteUrl=&lobbyURL=&envID={{isset($envID)?$envID:0}}&userID={{isset($userId)?$userId:0}}&styleName={{isset($styleName)?$styleName:""}}&replayURL={{isset($replayUrl)?$replayUrl:""}}' allowfullscreen>
 
 </iframe>
 
