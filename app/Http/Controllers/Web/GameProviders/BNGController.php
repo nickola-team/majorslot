@@ -585,14 +585,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $bngLoges = $bngLoges->where('round_id', $request->round_id);
             }
             $bngLoges = $bngLoges->orderBy('c_at', 'DESC');
-            $paginator = $bngLoges->paginate($fetchSize);
+            $totalCount = $bngLoges->count(); 
+            $paginator = $bngLoges->skip(($fetch_state - 1) * $fetchSize)->take($fetchSize)->get();
             $array = $paginator->toArray();
             $data = [
-                'items' => $array['data']
+                'items' => $array
             ];
-            if($array['next_page_url'] != NULL){
-                // $nextPageLink = $array['next_page_url'];
-                // $data['fetch_state'] = explode('page=', $nextPageLink)[1];
+            // if($array['next_page_url'] != NULL){
+            //     $nextPageLink = $array['next_page_url'];
+            //     $data['fetch_state'] = explode('page=', $nextPageLink)[1];
+            // }
+            if(($fetch_state - 1) * $fetchSize + count($array) < $totalCount){
+                $data['fetch_state'] = $fetch_state + 1;
             }
             return response($data, 200)->header('Content-Type', 'application/json');
         }
@@ -601,7 +605,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if(!isset($request->player_id) || !isset($request->game_id)){
                 return '[]';
             }
-            $bngLoges = \VanguardLTE\BNGGameLog::whereRaw('game_id=? and player_id=? ORDER BY c_at DESC LIMIT 100', [
+            $bngLoges = \VanguardLTE\BNGGameLog::whereRaw('game_id=? and player_id=? ORDER BY c_at DESC', [
                 $request->game_id, 
                 $request->player_id
             ])->get();
