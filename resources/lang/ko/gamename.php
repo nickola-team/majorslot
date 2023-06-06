@@ -1111,6 +1111,8 @@ return [
         "ExcaliburUnleashed" => "엑스칼리버 언리쉬드",
         "WildBisonCharge" => "와일드 바이슨 차지",
 
+        "ZeusvsHadesGodsofWar" => "제우스 vs 하데스",
+
 
         //Booongo
         "tigerstone" => "타이거 스톤",
