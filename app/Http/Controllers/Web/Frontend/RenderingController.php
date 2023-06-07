@@ -534,6 +534,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'played_at' => time(),
                 ]);
             }
+            else if ($provider == 'honor')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\HONORController::getGameObj($gamecode);
+                if (!$game)
+                {
+                    abort(404);
+                }
+                $user->update([
+                    'playing_game' => $game['href'],
+                    'played_at' => time(),
+                ]);
+            }
             else
             {
                 $user->update([
