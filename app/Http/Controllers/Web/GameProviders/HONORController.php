@@ -530,12 +530,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($from == '')
             {
-                $roundfrom = date('Y-m-d H:i:s',strtotime('-6 hours'));
+                $roundfrom = date('Y-m-d H:i:s',strtotime('-2 hours'));
                 $lastround = \VanguardLTE\StatGame::whereIn('category_id', $category_ids)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
                     $d = strtotime($lastround->date_time);
-                    if ($d > strtotime("-6 hours"))
+                    if ($d > strtotime("-2 hours"))
                     {
                         $roundfrom = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
                     }
