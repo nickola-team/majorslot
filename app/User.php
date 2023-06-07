@@ -695,13 +695,13 @@ namespace VanguardLTE
                     'type' => 'shop',
                     'end_date' => null
                 ])->first();
-                if( !$open_shift ) 
-                {
-                    return json_encode([
-                        'status' => 'error', 
-                        'message' => trans('app.shift_not_opened')
-                    ]);
-                }
+                // if( !$open_shift ) 
+                // {
+                //     return json_encode([
+                //         'status' => 'error', 
+                //         'message' => trans('app.shift_not_opened')
+                //     ]);
+                // }
             }
             if ($this->hasRole(['comaster','master','agent','distributor'])) 
             {
@@ -793,11 +793,11 @@ namespace VanguardLTE
                 $payer_balance = $shop->balance;
                 if( $type == 'out' ) 
                 {
-                    $open_shift->increment('money_out', abs($summ));
+                    if ($open_shift) $open_shift->increment('money_out', abs($summ));
                 }
                 else
                 {
-                    $open_shift->increment('money_in', abs($summ));
+                    if ($open_shift) $open_shift->increment('money_in', abs($summ));
                 }
             }
             if ($payeer->hasRole(['admin','comaster','master','agent'])) 
