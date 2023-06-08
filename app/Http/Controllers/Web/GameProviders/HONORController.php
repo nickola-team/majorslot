@@ -77,6 +77,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'honor-ezugi' => ['vendor' =>'ezugi'],
             'honor-bitville' => ['vendor' =>'bitville'],
             'honor-gamedaddy' => ['vendor' =>'gamedaddy'],
+            'honor-playngo' => ['vendor' =>'playngo'],
         ];
 
         public static function getGameObj($uuid)
