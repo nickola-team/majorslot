@@ -226,7 +226,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $view = 1;
 
                 $korname = '';
-                if(isset($game['ko']) && isset($game['langs']['ko'])){
+                if(isset($game['langs']) && isset($game['langs']['ko'])){
                     $korname = $game['langs']['ko'];
                 }else{
                     $korname = $game['title'];
