@@ -182,32 +182,31 @@ namespace VanguardLTE
 
 
             foreach($stat_games as $stat_game) {
-                $bfound_game = false;
+                $bfound_cat = false;
                 foreach ($adjustments as $i => $adj)
                 {
+                    if($stat_game->category_id == $adj['category_id'])
+                    {
+                        $adj['totalbet'] = $adj['totalbet'] + $stat_game->totalbet;
+                        $adj['totalwin'] = $adj['totalwin'] + $stat_game->totalwin;
+                        $adj['totalcount'] = $adj['totalcount'] + $stat_game->betcount;
+                        $bfound_cat = true;
+                    }
+
+                    $bfound_game = false;
                     foreach ($adj['games'] as $j => $game)
                     {
-                        // $real_gamename = explode(' ', $stat_game->game)[0];
-                        // if (strpos($real_gamename, '_') !== false)
-                        // {
-                        //     $real_gamename = explode('_', $real_gamename)[0];
-                        // }
-                        // if($real_gamename == $game['name'])
-                        if($stat_game->game_id == $game['game_id'] && $stat_game->category_id == $adj['category_id'])
+                        if ($stat_game->game_id == $game['game_id'])
                         {
                             $game['totalbet'] = $game['totalbet'] + $stat_game->totalbet;
                             $game['totalwin'] = $game['totalwin'] + $stat_game->totalwin;
                             $game['totalcount'] = $game['totalcount'] + $stat_game->betcount;
-
-                            $adj['totalbet'] = $adj['totalbet'] + $stat_game->totalbet;
-                            $adj['totalwin'] = $adj['totalwin'] + $stat_game->totalwin;
-                            $adj['totalcount'] = $adj['totalcount'] + $stat_game->betcount;
                             $adj['games'][$j] = $game;
                             $bfound_game = true;
                             break;
                         }
                     }
-                    if ($bfound_game){ 
+                    if ($bfound_cat){ 
                         $adjustments[$i] = $adj;
                         break; 
                     }
