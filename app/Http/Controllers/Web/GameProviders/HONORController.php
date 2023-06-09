@@ -385,7 +385,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ])->get(config('app.honor_api') . '/user?username='.$username);
                 if ($response->getStatusCode() != 200)
                 {
-                    Log::error('HONORmakelink : checkUser request failed. ' . $response->body());
+                    // Log::error('HONORmakelink : checkUser request failed. ' . $response->body());
                     $alreadyUser = 0;
                 }
             }
