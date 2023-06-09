@@ -145,7 +145,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'provider' => self::GOLD_PROVIDER,
                 'href' => $href,
                 'symbol' => 'Unknown',
-                'gamecode' => $href,
+                'gamecode' => 'Unknown',
                 'enname' => 'UnknownGame',
                 'name' => 'UnknownGame',
                 'title' => 'UnknownGame',
@@ -344,8 +344,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         
                         if (!$gameObj)
                         {
-                            Log::error('GOLD Game could not found : '. $round['table_code']);
-                            continue;
+                            $gameObj = self::getGameObj('Unknown');
+                            if (!$gameObj)
+                            {
+                                Log::error('GOLD Game could not found : '. $round['table_code']);
+                                continue;
+                            }
                         }
                         $bet = $round['bet_money'];
                         $win = $round['win_money'];
