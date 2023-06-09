@@ -30,7 +30,8 @@ class GameLaunchCommand extends Command
         'XMX',
         'KTEN',
         'TAISHAN',
-        'HONOR'
+        'HONOR',
+        'GOLD'
     ];
 
     /**
