@@ -124,6 +124,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['table_name']),
                         'title' => $game['table_name'],
                         'type' => 'table',
+                        'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
                         'view' => 0
                     ]);
                 }
@@ -136,6 +137,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'name' => 'Lobby',
                     'title' => 'Lobby',
                     'type' => 'table',
+                    'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
                     'view' => 1
                 ]);
             }
