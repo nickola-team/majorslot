@@ -292,6 +292,13 @@ return [
     */
     'honor_api' => env('HONOR_API', ''),
     'honor_key' => env('HONOR_KEY', ''),
+
+    /*
+    GOLDCASINO Auth key
+    */
+    'gold_api' => env('GOLD_API', ''),
+    'gold_op' => env('GOLD_OP', ''),
+    'gold_key' => env('GOLD_KEY', ''),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
