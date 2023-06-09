@@ -77,6 +77,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'honor-ezugi' => ['vendor' =>'ezugi'],
             'honor-bitville' => ['vendor' =>'bitville'],
             'honor-gamedaddy' => ['vendor' =>'gamedaddy'],
+            'honor-playngo' => ['vendor' =>'playngo'],
         ];
 
         public static function getGameObj($uuid)
@@ -88,7 +89,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     foreach($gamelist as $game)
                     {
-                        if ($game['id'] == $uuid)
+                        if ($game['gamecode'] == $uuid)
                         {
                             return $game;
                             break;
@@ -122,7 +123,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->get($url . $param);
+                    ])->get($url , $param);
                 if ($response->getStatusCode() == 200) {
                     $res = $response->json();
         
@@ -163,7 +164,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->patch($url . $param);
+                    ])->patch($url , $param);
                 if ($response->getStatusCode() == 200) {
                     $res = $response->json();
         
@@ -213,7 +214,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
-                ])->get($url . $param);
+                ])->get($url , $param);
             if ($response->getStatusCode() != 200)
             {
                 return [];
@@ -226,7 +227,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $view = 1;
 
                 $korname = '';
-                if(isset($game['ko']) && isset($game['langs']['ko'])){
+                if(isset($game['langs']) && isset($game['langs']['ko'])){
                     $korname = $game['langs']['ko'];
                 }else{
                     $korname = $game['title'];
@@ -235,7 +236,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 array_push($gameList, [
                     'provider' => self::HONOR_PROVIDER,
                     'href' => $href,
-                    'gamecode' => $game['id'],
+                    'gamecode' => 'honor_' . $game['id'] . '_' . $game['vendor'],
                     'symbol' => $game['id'],
                     'enname' => $game['title'],
                     'name' => preg_replace('/\s+/', '', $game['title']),
@@ -264,17 +265,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode, $user, $href, $prefix=self::HONOR_PROVIDER) 
+        public static function makegamelink($gamecode, $user,  $prefix=self::HONOR_PROVIDER) 
         {
 
             $token = config('app.honor_key');
             
+            $game = HONORController::getGameObj($gamecode);
+            if (!$game)
+            {
+                return null;
+            }
 
-            $usertoken = HONORController::getUserToken($href, $user, $prefix);
+            $usertoken = HONORController::getUserToken($game['href'], $user, $prefix);
             //Create Game link
-            $category = HONORController::HONOR_GAME_IDENTITY[$href];
+            $category = HONORController::HONOR_GAME_IDENTITY[$game['href']];
+            $real_code = explode('_', $game['gamecode'])[1];
             $param = [
-                'game_id' => $gamecode,
+                'game_id' => $real_code,
                 'token' => $usertoken,
                 'vendor' => $category['vendor']
             ];
@@ -284,7 +291,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
-                ])->get($url . $param);
+                ])->get($url , $param);
             if ($response->getStatusCode() != 200)
             {
                 Log::error('HONORGetLink : Game url request failed. status=' . $response->status());
@@ -378,7 +385,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ])->get(config('app.honor_api') . '/user?username='.$username);
                 if ($response->getStatusCode() != 200)
                 {
-                    Log::error('HONORmakelink : checkUser request failed. ' . $response->body());
+                    // Log::error('HONORmakelink : checkUser request failed. ' . $response->body());
                     $alreadyUser = 0;
                 }
             }
@@ -479,7 +486,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->post($url . $params);
+                    ])->get($url , $params);
                 if (!$response->ok())
                 {
                     Log::error('HONORgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
@@ -507,28 +514,29 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function processGameRound($from='', $to='')
         {
-            return;
             $count = 0;
 
 
-            $category = \VanguardLTE\Category::where([
-                'provider'=> XMXController::XMX_PROVIDER,
-                'href' => $catname,
+            $category_ids = \VanguardLTE\Category::where([
+                'provider'=> HONORController::HONOR_PROVIDER,
                 'shop_id' => 0,
                 'site_id' => 0,
-                ])->first();
-
+                ])->pluck('original_id')->toArray();
+            if (count($category_ids) == 0)
+            {
+                return [$count, 0];
+            }
             $roundfrom = '';
             $roundto = '';
 
             if ($from == '')
             {
-                $roundfrom = date('Y-m-d H:i:s',strtotime('-12 hours'));
-                $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
+                $roundfrom = date('Y-m-d H:i:s',strtotime('-2 hours'));
+                $lastround = \VanguardLTE\StatGame::whereIn('category_id', $category_ids)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
                     $d = strtotime($lastround->date_time);
-                    if ($d > strtotime("-12 hours"))
+                    if ($d > strtotime("-2 hours"))
                     {
                         $roundfrom = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
                     }
@@ -552,7 +560,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $end_timeStamp = strtotime($roundto);
             if ($end_timeStamp < $start_timeStamp)
             {
-                Log::error('XMX processGameRound : '. $roundto . '>' . $roundfrom);
+                Log::error('HONOR processGameRound : '. $roundto . '>' . $roundfrom);
                 return [0, 0];
             }
 
@@ -563,113 +571,66 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $curend_timeStamp = $end_timeStamp;
                 }
-
                 $curPage = 1;
                 $data = null;
                 do
                 {
-                    $data = HONORController::gamerounds($thirdId, $curPage, date('Y-m-d H:i:s', $start_timeStamp), date('Y-m-d H:i:s', $curend_timeStamp));
+                    // Log::info('HONOR processGameRound : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . date('Y-m-d H:i:s', $curend_timeStamp));
+
+                    $data = HONORController::gamerounds($curPage, date('Y-m-d H:i:s', $start_timeStamp - 9 * 60 * 60), date('Y-m-d H:i:s', $curend_timeStamp  - 9 * 60 * 60));
                     if ($data == null)
                     {
-                        Log::error('XMX gamerounds failed : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . date('Y-m-d H:i:s', $curend_timeStamp));
-                        sleep(60);
-                        continue;
+                        Log::error('HONOR gamerounds failed : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . date('Y-m-d H:i:s', $curend_timeStamp));
+                        return [0,0];
                     }
                     
-                    if (isset($data['totalDataSize']) && $data['totalDataSize'] > 0)
+                    if (isset($data['data']) && count($data['data']) > 0)
                     {
-                        foreach ($data['history'] as $round)
+                        foreach ($data['data'] as $round)
                         {
+                            if ($round['type'] != 'bet' && $round['type'] != 'win' )
+                            {
+                                continue;
+                            }
+
                             $bet = 0;
                             $win = 0;
-                            $gameName = $round['gameID'];
-                            if ($catname == 'xmx-cq9')
+                            $balance = -1;
+                            if ($round['type'] == 'bet')
                             {
-                                if ($round['transType'] == 'BET')
-                                {
-                                    continue;
-                                }
-                                $betdata = json_decode($round['history'],true);
-                                $bet = $betdata['bet'];
-                                $win = $betdata['win'];
-                                $balance = $betdata['balance'];
+                                $bet = abs($round['amount']);
                             }
-                            else if ($catname == 'xmx-bng' || $catname == 'xmx-playson')
+                            else if ($round['type'] == 'win')
                             {
-                                if ($round['transType'] == 'WIN')
-                                {
-                                    continue;
-                                }
-
-                                $betdata = json_decode($round['history'],true);
-                                $bet = $betdata['bet']??0;
-                                $win = $betdata['win'];
-                                $balance = $betdata['balance_after'];
-                                if ($bet==0 && $win==0)
+                                $win = abs($round['amount']);
+                                if ($win == 0)
                                 {
                                     continue;
                                 }
                             }
-                            else if ($catname == 'xmx-hbn')
-                            {
-                                if ($round['transType'] == 'BET')
-                                {
-                                    continue;
-                                }
 
-                                $betdata = json_decode($round['history'],true);
-                                $bet = $betdata['stake'];
-                                $win = $betdata['payout'];
-                                $balance = -1;
-                                $gameName = $betdata['gameKeyName'];
-                            }
-                            else if ($catname == 'xmx-pp')
-                            {
-                                if ($round['transType'] == 'WIN')
-                                {
-                                    continue;
-                                }
+                            $balance = $round['before'] + $round['amount'];
+                            $gameId = 'honor_' . $round['details']['game']['id'] . '_' . $round['details']['game']['vendor'];
+                            $game = HONORController::getGameObj($gameId);
+                            
+                            
+                            $time = date('Y-m-d H:i:s',strtotime($round['processed_at']));
+                            $type = ($round['details']['game']['type'] == 'slot')?'slot':'table';
+                            $category = \VanguardLTE\Category::where('provider', self::HONOR_PROVIDER)->where('href', $game['href'])->where(['shop_id'=>0, 'site_id'=>0])->first();
 
-                                $betdata = explode(',', $round['history']);
-                                $bet = $betdata[9];
-                                $win = $betdata[10];
-                                $balance = -1;
-                            }
-                            else
-                            {
-                                if ($round['transType'] == 'BET')
-                                {
-                                    $bet = $round['amount'];
-                                }
-                                else
-                                {
-                                    $win = $round['amount'];
-                                }
-
-                                $balance = -1;
-                            }
-                            if (is_null($win))
-                            {
-                                $win = 0;
-                            }
-                            $time = $round['transTime'];
-
-                            $userid = intval(preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['userID'])) ;
+                            $userid = intval(preg_replace('/'. self::HONOR_PROVIDER .'(\d+)/', '$1', $round['user']['username'])) ;
                             $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
 
-                            if ($checkduplicate)
+                            $checkGameStat = \VanguardLTE\StatGame::where([
+                                'user_id' => $userid, 
+                                'bet' => $bet, 
+                                'win' => $win, 
+                                'date_time' => $time,
+                                'roundid' => $round['id'],
+                            ])->first();
+                            if ($checkGameStat)
                             {
-                                $checkGameStat = \VanguardLTE\StatGame::where([
-                                    'user_id' => $userid, 
-                                    'bet' => $bet, 
-                                    'win' => $win, 
-                                    'date_time' => $time,
-                                    'roundid' => $round['gameID'] . '_' . $round['roundID'],
-                                ])->first();
-                                if ($checkGameStat)
-                                {
-                                    continue;
-                                }
+                                continue;
                             }
 
                             \VanguardLTE\StatGame::create([
@@ -677,8 +638,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'balance' => $balance, 
                                 'bet' => $bet, 
                                 'win' => $win, 
-                                'game' =>$gameName . '_xmx', 
-                                'type' => 'slot',
+                                'game' =>$game['name'] . '_honor', 
+                                'type' => $type,
                                 'percent' => 0, 
                                 'percent_jps' => 0, 
                                 'percent_jpg' => 0, 
@@ -687,21 +648,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 'date_time' => $time,
                                 'shop_id' => $shop?$shop->shop_id:0,
                                 'category_id' => isset($category)?$category->id:0,
-                                'game_id' => $catname,
-                                'roundid' => $round['gameID'] . '_' . $round['roundID'],
+                                'game_id' => $game['gamecode'],
+                                'roundid' => $round['id'],
                             ]);
                             $count = $count + 1;
                         }
                     }
+                    else
+                    {
+                        break;
+                    }
                     $curPage = $curPage + 1;
-                } while ($data!=null && $curPage <= $data['totalPageSize']);
-
+                } while ($data!=null);
+                sleep(60);
                 $start_timeStamp = $curend_timeStamp;
-
             }while ($start_timeStamp<$end_timeStamp);
-
-            
-            
             return [$count, 0];
         }
 

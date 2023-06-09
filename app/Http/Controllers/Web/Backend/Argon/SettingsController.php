@@ -199,25 +199,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors([trans('app.no_permission')]);
             }
             $serverstat = server_stat();
-            $bnnmoney = -1;
-            $kuzanmoney = -1;
-            $ktennmoney = -1;
-            try
+            $agents = [];
+            foreach (\VanguardLTE\Console\Commands\GameLaunchCommand::GAME_PROVIDERS as $provider)
             {
-                $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
-                $kuzanmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KUZAController::getAgentBalance();
-                $ktennmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::getAgentBalance();
-
+                $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
+                if (!class_exists($object))
+                {
+                    continue;
+                }
+                if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller','getAgentBalance'))
+                {
+                    $money = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getAgentBalance');
+                    $agents[strtoupper($provider)] =  $money;
+                }
             }
-            catch (\Exception $e)
-            {
-
-            }
-            $agents = [
-                'bnn' => $bnnmoney,
-                'kuza' => $kuzanmoney,
-                'kten' => $ktennmoney
-            ];
             $strinternallog = '';
             $filesize = 0;
             $laravel = storage_path('logs/laravel.log');

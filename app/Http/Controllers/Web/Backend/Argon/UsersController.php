@@ -235,6 +235,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 else
                 {
                     $site = \VanguardLTE\WebSite::where('adminid', $parent->id)->first();
+                    if (!$site)
+                    {
+                        $site = \VanguardLTE\WebSite::where('domain', \Request::root())->first();
+                    }
+                }
+                if ($site == null)
+                {
+                    return redirect()->back()->withErrors(['파트너생성이 실패하였습니다']);
                 }
                 \VanguardLTE\Task::create([
                     'category' => 'shop', 
