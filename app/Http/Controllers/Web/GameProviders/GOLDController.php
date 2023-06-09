@@ -271,6 +271,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
+            if (isset(self::GOLD_GAME_IDENTITY[$gamecode]))
+            {
+                $gamelist = GOLDController::getgamelist($gamecode);
+                if (count($gamelist) > 0)
+                {
+                    foreach ($gamelist as $g)
+                    {
+                        if ($g['view'] == 1)
+                        {
+                            $gamecode = $g['gamecode'];
+                            break;
+                        }
+                    }
+                    
+                }
+            }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [GOLDController::GOLD_PROVIDER, $gamecode])]];
         }
 
