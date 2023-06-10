@@ -58,13 +58,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    Log::error('GOLD Request : response is not okay. ' . json_encode($params) . '===body==' . $response->body());
+                    Log::error('GOLD Request : response is not okay. ' . json_encode($param) . '===body==' . $response->body());
                 }
             }
             catch (\Exception $ex)
             {
                 Log::error('GOLD Request :  Excpetion. exception= ' . $ex->getMessage());
-                Log::error('GOLD Request :  Excpetion. PARAMS= ' . json_encode($params));
+                Log::error('GOLD Request :  Excpetion. PARAMS= ' . json_encode($param));
             }
             return null;
         }
