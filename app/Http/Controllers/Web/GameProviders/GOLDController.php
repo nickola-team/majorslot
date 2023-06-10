@@ -13,6 +13,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const GOLD_GAME_IDENTITY = [
             //==== CASINO ====
             'gold-evo' => ['thirdname' =>'EVOLUTION','type' => 'casino'],
+            'gold-dg' => ['thirdname' =>'DREAMGAME','type' => 'casino'],
         ];
         public static function getGameObj($uuid)
         {
@@ -132,8 +133,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 array_push($gameList, [
                     'provider' => self::GOLD_PROVIDER,
                     'href' => $href,
-                    'gamecode' => 'EVOLUTION',
-                    'symbol' => 'gcevolobby',
+                    'gamecode' => $category['thirdname'],
+                    'symbol' => 'gclobby',
                     'name' => 'Lobby',
                     'title' => 'Lobby',
                     'type' => 'table',
@@ -362,7 +363,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         
                         if (!$gameObj)
                         {
-                            $gameObj = self::getGameObj('Unknown');
+                            $gameObj = self::getGameObj($round['provider_code']);
                             if (!$gameObj)
                             {
                                 Log::error('GOLD Game could not found : '. $round['table_code']);
