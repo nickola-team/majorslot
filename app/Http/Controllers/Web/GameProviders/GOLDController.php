@@ -228,7 +228,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
             $data = GOLDController::sendRequest($params);
-            if ($data==null || ($data['msg'] != 'SUCCESS' && $data['msg'] != 'DUPLICATE_USER'))
+            if ($data==null || ($data['msg'] != 'SUCCESS' && $data['msg'] != 'DUPLICATE_USER' && $data['msg'] != 'INVALID_USER'))
             {
                 return null;
             }
