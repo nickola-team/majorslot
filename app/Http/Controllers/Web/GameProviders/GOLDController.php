@@ -13,6 +13,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const GOLD_GAME_IDENTITY = [
             //==== CASINO ====
             'gold-evo' => ['thirdname' =>'EVOLUTION','type' => 'casino'],
+            'gold-dg' => ['thirdname' =>'DREAMGAME','type' => 'casino'],
         ];
         public static function getGameObj($uuid)
         {
@@ -57,13 +58,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    Log::error('GOLD Request : response is not okay. ' . json_encode($params) . '===body==' . $response->body());
+                    Log::error('GOLD Request : response is not okay. ' . json_encode($param) . '===body==' . $response->body());
                 }
             }
             catch (\Exception $ex)
             {
                 Log::error('GOLD Request :  Excpetion. exception= ' . $ex->getMessage());
-                Log::error('GOLD Request :  Excpetion. PARAMS= ' . json_encode($params));
+                Log::error('GOLD Request :  Excpetion. PARAMS= ' . json_encode($param));
             }
             return null;
         }
@@ -132,8 +133,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 array_push($gameList, [
                     'provider' => self::GOLD_PROVIDER,
                     'href' => $href,
-                    'gamecode' => 'EVOLUTION',
-                    'symbol' => 'gcevolobby',
+                    'gamecode' => $category['thirdname'],
+                    'symbol' => 'gclobby',
                     'name' => 'Lobby',
                     'title' => 'Lobby',
                     'type' => 'table',
@@ -362,7 +363,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         
                         if (!$gameObj)
                         {
-                            $gameObj = self::getGameObj('Unknown');
+                            $gameObj = self::getGameObj($round['provider_code']);
                             if (!$gameObj)
                             {
                                 Log::error('GOLD Game could not found : '. $round['table_code']);
