@@ -892,8 +892,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $username = $parse[count($parse) - 1];
             }
 
-            $username =  strval($user->id) . '#' . $username;
-            $username = mb_substr($username, -10);
+            $username =  strval($user->id) . '#' . base64_encode($username);
+            $username = mb_substr($username, 0, 12);
 
             $master = $user->referral;
             while ($master!=null && !$master->isInoutPartner())

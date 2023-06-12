@@ -422,7 +422,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
                 $curPage = $curPage + 1;
-                if (count($data['data']) == 0)
+                if (isset($data['data']) && count($data['data']) == 0)
                 {
                     break;
                 }
