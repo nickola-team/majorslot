@@ -503,6 +503,15 @@ namespace VanguardLTE\Games\RiseofGizaPowerNudgePM
                 $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
                 $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
 
+                if($isNewTumb == true && (count($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks')) >= $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1)){
+                    $subSaStack = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks')[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                    $subsaReel = explode(',', $subSaStack['reel']);
+                    for($i = 0; $i < 5; $i++){
+                        $reelA[$i] = $subsaReel[$i];
+                    }
+                    $strReelSa = implode(',', $reelA);
+                }
+
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 $strOtherResponse = '';
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
