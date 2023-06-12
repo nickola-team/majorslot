@@ -13,6 +13,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const GOLD_GAME_IDENTITY = [
             //==== CASINO ====
             'gold-evo' => ['thirdname' =>'EVOLUTION','type' => 'casino'],
+            'gold-dg' => ['thirdname' =>'DREAMGAME','type' => 'casino'],
         ];
         public static function getGameObj($uuid)
         {
@@ -57,13 +58,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    Log::error('GOLD Request : response is not okay. ' . json_encode($params) . '===body==' . $response->body());
+                    Log::error('GOLD Request : response is not okay. ' . json_encode($param) . '===body==' . $response->body());
                 }
             }
             catch (\Exception $ex)
             {
                 Log::error('GOLD Request :  Excpetion. exception= ' . $ex->getMessage());
-                Log::error('GOLD Request :  Excpetion. PARAMS= ' . json_encode($params));
+                Log::error('GOLD Request :  Excpetion. PARAMS= ' . json_encode($param));
             }
             return null;
         }
@@ -124,6 +125,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['table_name']),
                         'title' => $game['table_name'],
                         'type' => 'table',
+                        'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
                         'view' => 0
                     ]);
                 }
@@ -131,11 +133,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 array_push($gameList, [
                     'provider' => self::GOLD_PROVIDER,
                     'href' => $href,
-                    'gamecode' => 'EVOLUTION',
-                    'symbol' => 'gcevolobby',
+                    'gamecode' => $category['thirdname'],
+                    'symbol' => 'gclobby',
                     'name' => 'Lobby',
                     'title' => 'Lobby',
                     'type' => 'table',
+                    'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
                     'view' => 1
                 ]);
             }
@@ -225,7 +228,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
 
             $data = GOLDController::sendRequest($params);
-            if ($data==null || ($data['msg'] != 'SUCCESS' && $data['msg'] != 'DUPLICATE_USER'))
+            if ($data==null || ($data['msg'] != 'SUCCESS' && $data['msg'] != 'DUPLICATE_USER' && $data['msg'] != 'INVALID_USER'))
             {
                 return null;
             }
@@ -271,6 +274,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
+            if (isset(self::GOLD_GAME_IDENTITY[$gamecode]))
+            {
+                $gamelist = GOLDController::getgamelist($gamecode);
+                if (count($gamelist) > 0)
+                {
+                    foreach ($gamelist as $g)
+                    {
+                        if ($g['view'] == 1)
+                        {
+                            $gamecode = $g['gamecode'];
+                            break;
+                        }
+                    }
+                    
+                }
+            }
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [GOLDController::GOLD_PROVIDER, $gamecode])]];
         }
 
@@ -344,7 +363,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         
                         if (!$gameObj)
                         {
-                            $gameObj = self::getGameObj('Unknown');
+                            $gameObj = self::getGameObj($round['provider_code']);
                             if (!$gameObj)
                             {
                                 Log::error('GOLD Game could not found : '. $round['table_code']);
@@ -403,7 +422,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
                 $curPage = $curPage + 1;
-                if (count($data['data']) == 0)
+                if (isset($data['data']) && count($data['data']) == 0)
                 {
                     break;
                 }
