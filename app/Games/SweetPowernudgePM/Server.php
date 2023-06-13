@@ -142,14 +142,17 @@ namespace VanguardLTE\Games\SweetPowernudgePM
                     if($gwm > 0){
                         $strOtherResponse = $strOtherResponse . '&gwm=' . $gwm;
                     }
-                    if($str_trail){
+                    if($str_trail != ''){
                         $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
                     }
-                    if($str_stf){
+                    if($str_stf != ''){
                         $strOtherResponse = $strOtherResponse . '&stf=' . $str_stf;
                     }
-                    if($str_s_mark){
+                    if($str_s_mark != ''){
                         $strOtherResponse = $strOtherResponse . '&s_mark=' . $str_s_mark;
+                    }
+                    if($str_initReel != ''){
+                        $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
                     }
                     if($strWinLine != ''){
                         $arr_lines = explode('&', $strWinLine);
@@ -535,14 +538,17 @@ namespace VanguardLTE\Games\SweetPowernudgePM
                 if($gwm > 0){
                     $strOtherResponse = $strOtherResponse . '&gwm=' . $gwm;
                 }
-                if($str_trail){
+                if($str_trail != ''){
                     $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
                 }
-                if($str_stf){
+                if($str_stf != ''){
                     $strOtherResponse = $strOtherResponse . '&stf=' . $str_stf;
                 }
-                if($str_s_mark){
+                if($str_s_mark != ''){
                     $strOtherResponse = $strOtherResponse . '&s_mark=' . $str_s_mark;
+                }
+                if($str_initReel != ''){
+                    $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
                 }
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
