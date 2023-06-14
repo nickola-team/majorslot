@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
+namespace VanguardLTE\Games\LampofInfinityPM
 {
     class Server
     {
@@ -62,8 +62,9 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Bl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 20);
-                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [7,9,12,6,3,8,5,10,3,8,6,11,6,12,10,4,4,10,4,9,7,5,3,9,6,10,12,10,6,12,13,11,7,7,13,9,13,13,4,13,13,12]);
+                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,11,5,3,7,4,9,8,4,8,5,11,11,6,11]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
@@ -82,6 +83,7 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $lastEvent->serverResponse->TotalSpinCount);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lastEvent->serverResponse->lines);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $lastEvent->serverResponse->BuyFreeSpin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Bl', $lastEvent->serverResponse->Bl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
@@ -106,9 +108,6 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $str_initReel = $stack['initreel'];
                     $currentReelSet = $stack['reel_set'];
                     $fsmore = $stack['fsmore'];
-                    $str_accm = $stack['accm'];
-                    $str_acci = $stack['acci'];
-                    $str_accv = $stack['accv'];
                     $str_stf = $stack['stf'];
                     $str_srf = $stack['srf'];
                     $str_rs_p = $stack['rs_p'];
@@ -116,9 +115,8 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $str_rs_m = $stack['rs_m'];
                     $str_rs_t = $stack['rs_t'];
                     $str_rs_more = $stack['rs_more'];
-                    $str_rs_iw = $stack['rs_iw'];
-                    $str_rs_win = $stack['rs_win'];
-                    $str_rs = $stack['rs'];
+                    $str_lmv = $stack['lmv'];
+                    $str_lmi = $stack['lmi'];
                     $strReelSa = $stack['sa'];
                     $strReelSb = $stack['sb'];
                     $str_s_mark = $stack['s_mark'];
@@ -127,22 +125,13 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $wmv = $stack['wmv'];
                     $fsmax = $stack['fsmax'];
                     $str_trail = $stack['trail'];
-                    $strWinLine = $stack['wlc_v'];
+                    $strWinLine = $stack['win_line'];
 
                     if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                         $strOtherResponse = $strOtherResponse . '&puri=' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin');
                     }
                     if($str_initReel != ''){
                         $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
-                    }
-                    if($str_accm != ''){
-                        $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm;
-                    }
-                    if($str_accv != ''){
-                        $strOtherResponse = $strOtherResponse . '&accv=' . $str_accv;
-                    }
-                    if($str_acci != ''){
-                        $strOtherResponse = $strOtherResponse . '&acci=' . $str_acci;
                     }
                     if($str_stf != ''){
                         $strOtherResponse = $strOtherResponse . '&stf=' . $str_stf;
@@ -162,26 +151,8 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     if($str_rs_t != ''){
                         $strOtherResponse = $strOtherResponse . '&rs_t=' . $str_rs_t;
                     }
-                    if($str_rs != ''){
-                        $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;
-                    }
-                    if($str_rs_iw != ''){
-                        $arr_rs_iw = explode($str_rs_iw, ',');
-                        for($k = 0; $k < count($arr_rs_iw); $k++){
-                            if($arr_rs_iw[$k] != null && $arr_rs_iw[$k] != '' && $arr_rs_iw[$k] > 0){
-                                $arr_rs_iw[$k] = '' . ($arr_rs_iw[$k] / $original_bet * $bet);
-                            }
-                        }
-                        $strOtherResponse = $strOtherResponse . '&rs_iw=' . implode(',', $arr_rs_iw);
-                    }
-                    if($str_rs_win != ''){
-                        $arr_rs_win = explode($str_rs_win, ',');
-                        for($k = 0; $k < count($arr_rs_win); $k++){
-                            if($arr_rs_win[$k] != null && $arr_rs_win[$k] != '' && $arr_rs_win[$k] > 0){
-                                $arr_rs_win[$k] = '' . ($arr_rs_win[$k] / $original_bet * $bet);
-                            }
-                        }
-                        $strOtherResponse = $strOtherResponse . '&rs_win=' . implode(',', $arr_rs_win);
+                    if($str_lmv != ''){
+                        $strOtherResponse = $strOtherResponse . '&lmi=' . $str_lmi . '&lmv=' . $str_lmv;
                     }
                     if($str_rs_more != ''){
                         $strOtherResponse = $strOtherResponse . '&rs_more=' . $str_rs_more;
@@ -199,14 +170,14 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                         $strOtherResponse = $strOtherResponse . '&sty=' . $str_sty;
                     }
                     if($strWinLine != ''){
-                        $arr_lines = explode(';', $strWinLine);
+                        $arr_lines = explode('&', $strWinLine);
                         for($k = 0; $k < count($arr_lines); $k++){
                             $arr_sub_lines = explode('~', $arr_lines[$k]);
                             $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
                             $arr_lines[$k] = implode('~', $arr_sub_lines);
                         }
-                        $strWinLine = implode(';', $arr_lines);
-                        $strOtherResponse = $strOtherResponse . '&wlc_v=' . $strWinLine;
+                        $strWinLine = implode('&', $arr_lines);
+                        $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                     }
                     $strOtherResponse = $strOtherResponse . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 || $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') > 0)
@@ -226,7 +197,7 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 }
                 
                 $Balance = $slotSettings->GetBalance();  
-                $response = 'def_s=7,9,12,6,3,8,5,10,3,8,6,11,6,12,10,4,4,10,4,9,7,5,3,9,6,10,12,10,6,12,13,11,7,7,13,9,13,13,4,13,13,12&balance='. $Balance .'&cfgs=7992&ver=3&index=1&balance_cash='. $Balance .'&def_sb=4,8,3,8,7,11&reel_set_size=11&def_sa=6,10,7,12,6,8&reel_set=0&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0,0~0,0,0,0,0,0~1,1,1,1,1,1&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"5662514",max_rnd_win:"10000"}}&wl_i=tbm~10000&stime='. floor(microtime(true) * 1000) .'&sa=6,10,7,12,6,8&sb=4,8,3,8,7,11&reel_set10=5,9,10,7,7,4,9,8,8,10,7,6,12,8,4,4,3,4,4,4,7,5,12,6,6,12,9,8,6,3,9,4,5,6,3,11,4,7,6,6,6,10,1,5,7,6,5,11,4,9,5,7,6,6,11,3,3,7,6,10,5,5,5,3,3,8,7,9,12,7,6,6,5,7,4,4,12,5,7,4,4,3,3,3,6,6,4,4,8,7,12,7,11,7,4,8,5,7,4,11,3,4,11~7,9,6,7,10,7,3,5,8,11,8,4,4,4,5,2,5,6,4,6,3,10,10,11,2,7,5,6,6,6,11,4,12,5,8,9,4,4,6,10,8,10,7,3,3,3,5,8,6,8,3,3,1,8,6,3,8,5,6,5,5,5,5,9,7,7,5,6,7,5,4,7,9,4,3,3,12~4,11,6,7,4,3,7,8,4,10,3,12,4,6,11,12,4,6,6,6,7,7,10,7,7,12,4,6,7,5,8,3,5,8,1,3,5,8,5,5,5,6,4,4,8,3,9,7,6,5,2,3,4,5,5,10,9,8,3,3,3,7,8,11,12,6,6,11,6,4,5,5,7,2,7,8,3,9,12,12,3~6,12,7,4,3,5,7,11,5,3,8,8,12,5,6,3,4,10,11,3,7,4,3,7,11,3,3,3,8,7,4,3,9,7,12,5,1,7,10,6,10,8,12,11,3,8,5,5,8,7,10,2,8,4,8,6,6,6,12,9,6,3,10,4,6,7,8,4,1,3,2,6,12,6,11,11,7,2,10,7,4,6,5,10,5~7,12,11,4,2,12,4,9,9,9,9,9,9,9,5,12,8,11,6,11,6,10,5,5,5,5,5,5,5,1,11,4,5,5,9,6,5,12,12,12,12,12,12,12,5,7,5,11,8,3,4,9,11,11,11,11,11,11,11,6,3,7,9,8,9,7,10,7,7,7,7,7,7,7,8,11,5,12,10,7,3,3,3,9,2,8,5,7,9,7,3,7~11,12,8,11,8,11,9,6,6,6,6,6,6,6,3,1,12,8,6,5,7,6,6,7,11,11,11,11,11,11,11,10,7,11,12,4,8,7,12,6,7,7,7,7,7,7,7,9,9,6,10,11,5,9,6,6,11,3,3,3,3,9,12,7,8,4,4,7,6,3,6,8,8,8,8,11,10,7,8,11,8,9,7,3,4,4,4,4,7,8,12,5,5,6,5,3,6,12,12,12,12,4,8,9,4,6,4,8,9,12,5,5,5,5,3,8,9,11,10,5,11,3,9,9,9,9,8,10,7,4,7,7,8,11,6,7,7&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=50.00&purInit_e=1,1&sh=7&wilds=2~0,0,0,0,0,0~1,1,1,1,1,1&bonuses=0&st=rect&c='. $bet .'&sw=6&sver=5&counter=2&paytable=0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;500,200,100,50,0,0;150,50,40,20,0,0;80,30,20,5,0,0;40,15,10,5,0,0;40,15,10,5,0,0;35,12,8,4,0,0;20,12,5,4,0,0;20,10,5,3,0,0;18,10,5,3,0,0;16,8,4,2,0,0;0,0,0,0,0,0;0,0,0,0,0,0&l=20&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=12,9,12,3,9,12,10,10,6,12,10,10,10,10,10,10,10,8,12,7,10,11,11,5,12,10,8,12,11,6,6,6,6,6,6,6,10,3,6,12,10,10,5,9,8,12,4,4,12,12,12,12,12,12,12,7,10,5,4,11,4,4,5,12,5,12,9,9,9,9,9,9,9,7,7,6,7,11,12,11,6,6,7,9,7,7,7,7,7,7,7,8,8,10,10,8,10,10,9,8,8,7,6,5,5,5,12,6,6,7,7,12,10,11,8,10,9,1,4,4,4,12,4,6,6,8,10,9,10,11,7,12,10,6~8,5,10,8,7,3,10,9,8,11,11,11,11,11,11,11,8,12,11,8,7,10,11,6,7,6,8,12,8,8,8,8,8,8,8,11,6,8,8,5,11,7,8,12,3,9,8,5,5,5,5,5,5,5,9,11,8,10,9,3,6,5,4,8,12,12,12,11,9,6,12,4,12,11,10,12,4,5,11,6,6,6,6,5,1,10,11,9,11,5,6,5,7,11,11,8~12,7,10,12,11,5,8,8,4,9,5,10,7,9,3,7,12,6,6,6,8,9,6,7,6,7,6,9,10,5,7,6,12,12,9,6,8,4,7,7,7,7,5,11,9,12,4,9,9,8,5,12,11,10,7,11,3,12,12,3,12,12,12,7,3,2,9,10,6,3,9,11,6,6,12,9,3,4,10,6,9,4,4,4,12,7,10,11,6,5,7,9,12,9,11,1,11,7,11,12,6,7,8~10,12,8,4,7,5,11,6,8,6,9,12,10,4,8,3,12,5,2,12,10,11,9,8,11,3,12,12,12,5,12,8,9,12,10,5,9,4,6,5,11,6,11,8,6,9,8,5,9,10,7,8,7,6,7,3,11,6,6,6,8,10,4,9,6,9,10,12,12,3,10,7,10,8,10,5,4,1,12,3,11,7,11,12,4,11,7,4,5~9,6,8,4,7,2,12,11,4,3,6,10,8,8,9,6,6,6,12,12,8,11,6,7,11,7,5,10,3,11,11,12,12,1,9,9,9,9,3,4,5,6,4,9,7,5,9,6,6,9,7,9,12,8,8,8,5,1,12,10,5,10,3,4,10,10,7,9,8,8,7,11,12,9~6,4,10,7,3,12,6,12,7,6,6,6,6,8,1,7,9,4,7,10,12,12,6,10,10,10,9,10,5,12,11,9,5,8,10,10,11,11,11,11,8,6,8,9,1,10,3,6,12,10,7,7,7,8,4,7,10,5,10,11,10,9,9,3,3,3,6,11,12,11,7,11,11,7,11,3,8&s='.$lastReelStr.'&accInit=[{id:0,mask:"fgm"}]&reel_set2=8,12,4,9,6,7,8,9,4,6,7,8,6,11,3,3,5,12,12,12,7,1,5,12,8,7,8,12,10,8,8,7,4,5,6,6,4,6,6,6,6,5,8,12,9,8,11,10,10,3,12,5,9,12,11,4,12,4,12,6,7~5,5,6,5,12,5,10,10,11,11,10,11,7,7,7,3,11,6,8,6,11,11,10,7,12,9,4,4,4,7,3,12,7,5,6,6,7,5,4,6,3,6,11,11,11,7,6,7,11,11,12,9,8,10,7,3,4,11,10,10,10,7,5,8,10,7,8,10,11,10,5,11,11,4,6,6,6,7,4,5,7,7,9,11,6,4,4,1,4,7,7~6,9,10,7,9,3,8,6,11,7,10,3,3,9,11,4,10,10,9,10,9,9,9,9,12,9,6,6,10,9,11,9,4,9,5,5,8,9,9,7,9,1,9,4,10,2,10,10,10,10,6,11,5,6,12,10,7,3,6,9,9,5,6,7,7,9,12,5,5,7,10,7,7,7,7,6,9,6,10,12,4,9,8,4,7,10,6,7,11,6,9,12,6,10,5,11,8,9~12,3,11,8,10,9,11,12,4,1,11,6,6,8,4,11,5,11,9,7,11,12,5,12,7,10,12,8,6,7,7,12,12,7,10,5,4,9,11,6,8,9,10,3,7,3,8,4,12,11,7,11,12,4,8,11,3,7,6,11,4,6,12,4,5,8,8,10,12,9,12,5,5,8,1,8,4,6,7,9,7,10,5,10,7,12,5,7,12,3,7,4,8,12,8,8,12,8,7,10,12,11,10~6,5,9,8,11,9,9,6,11,1,9,9,9,9,9,9,9,12,11,9,6,7,11,11,3,7,9,8,10,10,11,11,11,11,11,11,11,6,2,10,3,12,6,4,4,5,5,6,8,6,6,6,6,6,6,6,10,12,8,7,10,5,12,12,11,8,3,6,9,10,10,10,10,10,10,10,11,12,11,9,10,11,10,4,9,12,7,12,12,12,12,8,9,10,6,10,8,10,4,4,9,8,11,11,10~11,4,9,8,12,10,7,10,4,4,4,4,4,4,4,9,5,3,10,8,7,8,7,5,8,8,8,8,8,8,8,4,12,4,9,12,8,8,12,3,12,12,12,12,12,12,12,1,11,8,1,5,9,11,12,8,9,9,9,9,12,11,7,3,5,12,10,7,7,7,7,3,6,4,6,12,4,8,8,10,6,6,6,6,12,8,7,9,11,7,7,6,8,12&reel_set1=7,1,8,7,5,11,7,10,9,5,5,5,7,6,11,10,5,5,11,9,4,4,6,3,6,6,6,5,6,11,9,6,4,4,12,7,9,9,11,7,7,7,7,9,11,9,3,6,5,7,12,3,4,11,11,11,11,9,12,8,11,3,6,4,5,5,4,11,6,11~4,7,5,4,8,11,8,10,3,3,6,12,10,5,6,8,8,8,8,6,3,7,7,10,12,6,7,6,5,10,6,10,10,3,5,7,7,7,8,8,5,1,7,9,8,4,10,12,2,4,7,6,10,8,4,4,4,8,4,11,7,10,4,5,11,7,5,9,5,8,6,7,8,6,6,6,10,6,5,8,8,4,4,9,7,8,8,6,4,7,10,7,10~5,5,11,4,12,6,3,5,11,7,7,7,7,7,7,7,12,11,12,11,5,7,11,4,11,4,12,11,11,11,11,11,11,11,7,9,7,8,5,5,4,11,12,11,6,8,8,8,8,8,8,8,9,8,12,3,6,12,5,4,4,7,12,12,12,12,12,12,12,3,7,6,11,6,11,3,7,8,12,3,5,5,5,6,11,8,7,6,9,8,10,1,6,10,6,6,6,11,7,8,12,12,6,12,9,7,11~12,10,11,9,3,2,8,7,10,12,11,7,4,9,9,9,9,9,9,9,10,10,12,9,5,9,5,5,12,12,8,5,11,6,10,10,10,10,10,10,10,3,9,10,11,6,7,7,10,7,8,12,3,6,3,12,12,12,12,12,12,12,4,9,10,10,4,7,9,5,12,4,6,7,6,3,6,6,6,6,6,4,9,6,10,5,8,12,12,6,1,8,6,12,7,9,5,5,5,9,12,10,11,9,11,10,5,11,10,10,12,10,12,11,12,4~4,11,10,1,11,7,12,8,4,11,11,6,11,4,12,11,9,11,7,11,9,12,6,3,10,2,8,11,8,12,9,12,7,5,12,4,11,12,8,11,5,6,7,8,10,7,10,4,9,11,5,4,9,7,10,11,8,11,9,1,12,5,8,3,9,11,10,10,6,12,8,5,12,8,11,7,10,5,9,10,9,6,7,3,10,4~11,5,4,4,10,6,7,1,9,10,8,11,7,8,12,11,11,12,6,4,10,5,3,11,11,6,7,7,7,5,7,7,3,9,4,10,6,8,3,8,9,4,8,5,9,8,11,4,12,11,12,11,8,7,11,12,9,1,7&reel_set4=6,7,6,7,4,10,4,9,9,7,11,11,11,5,10,11,10,10,11,7,4,5,11,11,9,5~11,11,8,12,5,8,7,7,5,3,11,12,7,12,3~9,12,4,6,4,10,8,3,9,12,8,12,3,9,12,8,8,6,12,6,10,10,9~11,6,9,12,4,10,4,7,5,11,6,10,4,5,8,12,9,8,7,3~7,4,12,6,4,11,8,12,11,9,12,3,6,3,4,7,11,10,11,8,9,5~8,9,11,11,4,5,12,10,10,6,6,7,3&purInit=[{bet:400,type:"default"},{bet:2000,type:"fs"}]&reel_set3=9,9,6,6,4,5,12,6,10,5,8,8,12,9,11,3,10,5,9,9,9,11,7,7,12,10,8,12,9,5,6,4,12,9,11,8,10,7,12,4,5,5,5,11,7,10,7,6,6,8,9,8,8,12,9,3,10,8,9,4,11,7,12,12,12,4,11,10,7,5,5,6,11,10,9,4,12,4,9,12,8,6,8,6,3,3,3,8,8,9,12,5,7,11,3,1,10,7,11,9,12,7,7,9,7,5,12,11~5,5,10,8,1,4,6,7,10,7,12,10,6,8,11,7,7,7,11,7,7,10,11,12,12,6,12,11,8,10,9,6,4,10,5,8,9,9,9,4,11,3,8,12,8,11,7,10,5,5,9,7,11,6,8,2,5,10,10,10,7,9,7,10,9,4,11,10,4,11,12,8,11,7,9,3,5,12,8~8,2,9,6,12,8,5,5,5,5,5,5,5,8,6,5,9,11,8,9,12,12,12,12,12,12,12,10,5,9,4,9,10,11,11,11,11,11,11,11,3,10,11,9,11,7,12,4,8,8,8,8,8,8,8,6,11,12,12,11,12,11,6,6,6,6,6,6,6,9,6,6,3,11,8,9,9,9,9,9,9,9,10,4,12,12,7,9,12,7,10,10,10,10,10,10,10,8,7,5,8,7,10,5,7,7,7,7,7,7,7,3,9,8,12,8,5,5,4,4,4,11,9,6,3,11,1,9,10,11~6,7,8,3,12,6,9,3,4,4,4,4,4,4,4,6,9,8,5,7,12,12,9,6,6,6,6,6,6,6,12,11,5,11,8,9,12,4,4,8,8,8,8,8,8,8,3,10,6,9,11,10,12,6,12,12,12,12,12,12,12,5,7,3,9,11,4,12,8,9,5,5,5,5,5,5,5,10,3,8,4,10,7,3,8,3,9,9,9,9,9,9,9,12,6,8,3,5,10,10,12,1,11,11,11,11,11,11,11,5,12,2,10,8,9,4,6,10,10,10,10,10,10,10,9,9,7,8,3,8,12,8,12,7,7,7,7,7,7,7,9,5,7,12,7,11,9,8,4,4,11~5,12,7,3,7,8,9,7,8,11,12,11,6,4,5,12,11,4,7,10,6,8,3,4,12,10,7,6,4,5,11,7,4,9,11,6,9,7,2,8,5,8,9,11,8,12,8,7,6,11,5,12,10,10,4,11,10,7,10,7,7,1,10,7,7,12,9,12,11,8,4,12,11,10,5,4,11,8,7,3,10,11,10,11,7,3,11,9,6,5,7~1,8,4,11,8,11,6,7,11,4,12,11,7,12,3,9,7,12,6,9,9,8,5,7,10,4,7,10,4,11,5,12,8,9,11,7,11,8,7,8,3,8,8,10,6,11,12,8,8,7,9,7,9,12,11,7,12,10,8,5,8,7,3,4,10,8,6,11,8,11,7,12,8,7,11,7,8,5,4,8,10,5,6,4,9&reel_set6=12,9,8,6,12,5,11,6,9,11,10,3,9,10,8,9,8,8,8,8,3,10,11,3,12,4,6,11,8,6,5,6,8,10,5,11,6,5,5,5,5,12,8,8,9,4,10,3,11,7,11,5,6,9,8,10,11,6,10,6,6,6,6,7,9,4,5,5,3,4,4,7,11,12,8,1,10,8,8,3,7,7,7,11,9,4,7,12,6,5,7,4,12,4,12,7,4,8,7,7,5~1,9,11,3,5,12,6,4,11,8,4,10,4,7,3,6,4,8,7,7,7,7,11,11,12,8,8,10,12,11,7,8,8,9,5,9,10,7,7,10,6,11,6,10,10,10,7,10,7,12,8,11,9,6,10,4,7,4,12,10,10,4,6,12,10,9,12,12,12,12,3,11,7,2,11,12,7,12,9,4,8,5,6,6,12,4,7,5,3,8,7~10,8,12,6,11,5,9,3,12,12,4,10,8,11,5,7,10,7,12,8,5,7,9,11,10,6,6,6,6,10,7,5,1,4,5,8,6,11,12,10,8,12,8,8,9,4,8,7,7,12,11,4,10,4,5,12,12,12,12,7,3,6,6,9,8,11,2,9,2,12,11,3,7,9,7,3,8,10,5,8,6,9,7,7,5,6~10,9,5,10,1,11,3,8,6,2,4,8,4,8,9,8,6,11,7,12,11,5,3,12,5,6,10,7,5,12,7,5,8,12,7,6,6,6,6,1,4,5,7,7,5,6,9,7,7,8,6,5,7,11,6,3,5,2,6,10,7,9,12,5,12,7,10,11,11,7,11,6,11,6,8,9,9,9,4,6,10,7,10,12,5,8,6,9,4,3,4,7,10,12,8,12,6,9,11,8,6,11,2,12,3,6,11,3,8,6,9,12,8,10,5,6~11,3,7,11,10,12,12,7,7,9,11,6,5,5,4,2,5,8,3,12,9,4,8,2,11,12,4,8,7,7,5,11,6,5,5,5,5,12,7,5,11,5,12,8,10,3,6,4,2,6,8,3,5,9,8,3,5,7,5,4,7,7,8,7,4,6,7,6,8,7,4,6,6,6,6,12,7,7,4,7,11,1,11,8,3,10,3,5,10,12,7,9,3,1,6,11,7,11,7,5,9,8,4,11,4,7,6,4,8,7,12~8,4,12,11,7,6,10,5,4,5,12,8,7,8,7,5,7,7,7,7,9,8,6,11,4,4,5,7,9,6,7,7,8,3,3,8,7,8,8,8,8,10,7,8,6,3,3,6,3,11,4,6,11,7,5,4,11,7,6,6,6,6,5,8,3,8,7,8,1,11,3,4,12,8,7,10,6,12,4,9&reel_set5=8,9,10,11,9,8,9,6,11,12,12,3,5,10,7,8,8,8,8,10,12,4,8,12,7,12,4,11,12,11,10,4,9,12,9,5,5,5,5,7,8,8,5,11,5,10,11,4,7,6,9,6,9,5,3,9,9,9,12,7,12,9,12,7,9,6,11,7,6,11,10,3,11,10,6,6,6,6,5,5,12,7,8,6,4,8,6,5,5,6,8,6,9,4,7,7,7,8,5,8,4,7,1,3,8,7,3,11,10,8,12,6,9,11,10~12,11,4,7,11,8,10,12,9,12,2,8,11,1,6,2,7,12,8,6,7,9,6,8,10,10,7,7,10,11,9,4,10,12,4,10,12,12,2,3,10,10,10,8,6,5,6,4,5,6,12,7,9,5,3,12,5,11,10,7,3,9,6,8,3,4,11,11,9,8,7,5,11,8,4,10,9,9,6,11,7,8,10,9,5~3,4,9,10,12,6,3,12,4,8,1,9,3,12,11,12,4,7,11,6,9,8,7,12,8,7,6,2,10,10,8,5,11,6,6,6,6,1,10,7,8,11,5,12,4,9,10,4,9,2,7,5,8,7,6,10,11,11,9,9,12,5,8,12,5,9,7,6,10,10,8,7,12,12,12,12,8,11,12,10,8,5,9,8,10,7,10,7,7,6,7,3,5,12,7,10,11,3,9,11,2,12,9,11,7,6,8,2,4,8,2,6~8,7,11,8,11,10,11,4,3,9,3,7,10,9,7,5,6,7,3,6,7,9,6,9,11,9,10,3,6,6,6,6,11,12,5,12,10,11,7,8,5,2,6,12,8,3,6,7,6,9,12,6,12,12,6,7,10,12,6,5,5,9,9,9,11,7,11,8,4,6,6,5,5,1,5,11,8,11,4,7,12,12,7,5,10,10,8,10,8,6,8,5,12,4~12,2,1,12,4,11,4,10,8,7,6,9,9,6,7,5,7,3,7,10,5,9,6,5,8,12,5,5,5,5,11,9,6,5,3,4,5,10,10,11,8,5,3,9,2,6,8,7,5,4,12,6,11,7,4,5,6,6,6,6,4,5,6,7,5,11,4,7,4,8,10,7,12,8,9,11,8,10,12,9,8,11,12,4,10,3,3~6,11,6,11,4,7,1,8,7,11,5,4,4,3,8,8,7,7,7,7,10,11,6,7,5,4,7,8,12,12,3,5,3,6,3,7,8,8,6,7,8,8,8,8,9,8,4,10,12,5,9,11,8,4,5,6,6,4,11,8,7,9,6,6,6,6,10,4,3,3,7,7,3,12,5,10,8,3,9,8,7,11,4,7,11,8&reel_set8=12,9,12,12,11,10,9,5,8,12,11,5,9,8,6,10,6,5,11,1,8,6,5,3,5,4,12,7,6,10,12,11,3,10,8,5,6,4,12,4,12,6,12,8,12,12,12,12,8,4,11,8,10,5,6,10,7,4,6,7,12,4,6,11,7,6,8,8,4,6,12,12,9,4,9,12,8,12,6,9,12,8,6,7,8,8,12,12,11,12,6,7,12~10,10,11,10,7,7,12,11,10,5,10,2,10,7,3,5,7,6,9,7,11,4,7,6,11,7,5,5,5,8,5,8,9,10,8,11,5,12,8,6,1,9,9,12,10,6,12,10,11,4,7,12,11,9,7,11~6,5,12,8,11,9,1,12,7,12,8,4,5,9,8,12,6,10,9,7,4,7,12,6,5,5,8,11,5,10,9,5,9,5,8,8,4,2,10,8,9,10,9,5,3,4,11,6,3,7,11,8,6,10,9,9,7,11,11,8~10,10,4,8,12,3,8,6,12,6,5,10,10,7,5,11,12,9,8,5,7,12,10,12,11,12,6,4,9,4,9,9,9,9,12,6,9,9,5,10,7,4,5,6,5,6,11,7,8,7,6,10,7,6,6,10,8,10,5,10,9,9,8,9,4,10,10,10,5,6,6,3,12,9,12,5,7,3,12,11,4,12,2,8,4,1,10,12,6,10,6,4,11,6,6,11,3,6,12~6,11,8,4,7,4,6,8,9,7,11,7,3,4,7,8,6,6,6,6,5,9,8,7,7,12,5,8,7,6,1,10,2,5,12,6,6,5,9,9,9,10,3,12,7,9,11,7,6,11,4,7,1,9,10,12,8,12,7,11~11,11,4,8,11,7,9,6,4,7,6,9,7,8,7,8,10,9,5,10,12,7,7,6,8,5,4,7,5,4,5,9,7,12,8,4,11,3,4,10,12,5,1,9,12,11,7,1,4,4,11,12,7,5,10,8,8,12,6,8&reel_set7=7,4,10,5,7,3,9,8,4,10,8,11,12,8,8,8,8,4,5,4,7,3,6,10,4,12,10,8,3,3,8,8,5,5,5,5,12,11,6,5,5,9,11,5,8,6,8,6,7,11,6,6,6,6,11,3,4,6,7,9,8,9,5,6,5,7,11,6,7,6,7,7,7,11,4,11,3,7,12,8,8,12,9,3,9,12,4,10,12~9,4,8,10,8,5,11,12,3,12,6,12,6,11,10,8,5,7,7,7,7,10,8,6,5,7,12,6,6,12,12,8,12,4,4,8,11,6,10,10,10,7,9,10,7,5,2,4,4,9,9,7,8,7,11,6,3,8,10,12,12,12,12,7,11,10,5,11,3,9,11,7,5,7,7,4,11,7,12,4,4,10~12,11,6,10,5,3,3,9,5,6,11,10,8,7,11,7,8,6,6,6,6,7,12,12,6,10,7,9,12,7,10,8,11,7,7,5,9,8,6,2,12,12,12,12,7,9,4,5,2,11,10,12,10,11,4,3,5,8,8,12,8,4,8,4~10,6,7,11,6,6,12,10,9,3,12,8,3,2,8,4,9,5,6,6,6,6,10,11,6,2,7,6,3,12,11,5,8,5,7,8,3,7,12,12,11,5,11,9,9,9,6,8,4,12,7,5,9,7,6,6,12,7,10,4,11,7,9,10,5,11,6,5,8~7,8,11,7,5,4,5,8,10,3,7,6,10,7,5,8,11,7,12,5,4,11,12,11,7,11,4,5,7,5,6,7,5,4,5,5,5,5,8,3,5,7,6,8,2,4,11,9,7,3,7,12,7,6,11,10,8,3,6,5,3,4,7,5,12,6,11,2,11,4,10,5,6,6,6,6,4,6,8,11,3,8,7,8,9,9,4,9,3,3,12,5,2,12,7,12,8,7,12,7,4,5,8,6,9,7,6,7,11,7,4,12~5,8,8,7,3,8,7,11,8,9,8,9,7,4,11,3,4,4,8,11,4,5,8,7,7,7,7,9,6,12,3,8,11,7,6,9,7,4,12,11,8,3,5,4,8,12,3,4,5,8,8,11,10,8,8,8,8,3,5,4,3,11,7,9,4,7,3,8,7,7,11,6,6,8,10,7,6,5,6,7,10,11,6,6,6,6,5,12,7,7,3,10,6,6,7,9,6,7,3,5,8,8,7,7,4,6,12,11,4,10,8,12,4,3&reel_set9=3,4,7,7,3,6,11,11,5,7,5,8,7,4,10,12,1,5,9,7,7,10,3,8,6,3,4,11,10,12,12,7,9,8,6,5,7,12,9,8,9,5,7,8,10,8,12,4,4,9,11,11,6,7,7~3,9,8,6,6,7,10,8,9,9,4,6,9,8,2,12,3,3,7,11,9,11,8,12,12,6,7,12,6,7,3,4,6,10,5,4,12,5,11,10,9,5,12,11,4,7,11,6,7,9,10,2,4,12,11,5,1,10,3,12,9~10,7,1,8,9,3,7,5,10,12,10,12,7,11,5,8,10,10,10,10,10,10,10,7,6,11,9,7,7,8,11,5,12,12,11,6,7,9,8,10,9,5,5,5,5,10,6,10,1,5,9,8,10,9,5,4,5,4,3,11,4,7,10,8,8,8,8,8,8,8,6,6,7,9,12,8,5,5,4,12,3,8,3,10,7,6,11,6,6,6,6,5,5,6,6,2,12,5,4,7,11,10,8,6,3,9,3,9,3,7,7,7,7,7,7,7,2,4,10,12,11,8,5,5,9,5,5,8,5,3,4,8,10,7~3,12,7,11,8,9,3,8,9,10,6,12,12,12,12,12,12,12,5,6,5,10,9,5,11,3,12,5,12,9,5,9,9,9,9,9,9,9,10,11,8,4,7,2,9,6,4,4,5,5,3,6,6,6,6,12,6,11,9,9,6,6,1,8,9,7,12,5,5,5,5,5,5,5,4,12,6,10,7,8,7,3,10,12,5,4,4,5,5~11,8,3,5,7,8,4,5,4,6,3,11,11,7,8,8,10,9,5,2,5,4,11,8,6,12,7,3,11,8,6,7,5,7,4,8,7,12,12,7,8,11,10,9,10,7,12,10,9,9,4,2,7,12,6,11,6,12,7,1,4,10,12,8,8,12,4,7,4,6,11,3~8,12,8,5,12,9,8,6,10,7,5,8,7,4,5,8,4,6,11,10,4,11,7,9,6,10,11,9,11,6,9,7,12,10,3,11,11,10,9,3,7,11,9,5,8,12,1,11,10,8,10,7,9,7,5,12,6,11,7,4,7,4,3,12,6,7,11,6&total_bet_min=10.00';
+                $response = 'def_s=6,11,5,3,7,4,9,8,4,8,5,11,11,6,11&balance='. $Balance .'&cfgs=8328&ver=3&index=1&balance_cash='. $Balance .'&def_sb=6,8,11,3,8&reel_set_size=3&def_sa=5,9,5,4,9&reel_set=0&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"1000000",max_rnd_win:"5000",max_rnd_win_a:"3334",max_rnd_hr_a:"1000000"}}&wl_i=tbm~5000;tbm_a~3334&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&stime='. floor(microtime(true) * 1000) .'&sa=5,9,5,4,9&sb=6,8,11,3,8&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=50.00&purInit_e=1&sh=3&wilds=2~0,0,0,0,0~1,1,1,1,1&bonuses=0&st=rect&c='. $bet .'&sw=5&sver=5&bls=20,30&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;2000,1000,400,200,0;1000,400,200,100,0;400,200,100,40,0;200,100,40,20,0;100,40,20,10,0;100,40,20,10,0;40,20,10,0,0;40,20,10,0,0;40,20,10,0,0&l=20&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=4,8,7,11,6,11,10,11,7,10,10,10,5,9,7,10,5,10,10,6,11,9,11,11,11,9,10,9,8,3,4,1,11,7,8~10,5,10,9,4,9,8,11,6,11,11,10,10,5,3,9,6,9,4,7,1,11,8,7,8,7,9,7,11,10,8,5~10,8,10,11,4,10,11,6,11,7,1,3,7,5,4,7,8,9,4,8,9,11,6,10,9,9~9,10,5,10,8,9,10,10,10,9,11,9,5,4,9,10,9,9,9,7,8,6,8,11,7,11,11,11,7,3,10,1,10,11,11,4~7,1,11,10,8,9,8,9,11,7,10,10,10,9,5,3,8,4,6,11,10,9,10,11,6,4&s='.$lastReelStr.'&reel_set2=11,11,9,9,6,9,11,10,11,7,11,9,7,11,8,5,6,7,11,10,10,9,8,10,9,9,11,7,9,10,11,3,10,9,4,8,10,8,10,10,9,11,10~7,9,11,11,8,10,5,10,10,9,9,9,10,4,10,11,11,8,11,11,9,10,10,10,9,8,9,7,11,10,9,3,10,9,6,7~2,2,2,2,2~2,2,2,2,2~2,2,2,2,2&reel_set1=11,4,7,9,8,4,11,7,5,10,10,10,6,8,6,7,9,10,1,11,9,5,11,11,11,10,11,9,9,8,10,3,8,7,10,10~4,10,6,3,1,10,9,10,10,8,9,7,11,11,5,9,7,11,8~11,4,6,7,5,11,10,8,10,1,9,5,11,7,9,6,7,8,9,8,6,8,4,7,11,3,10,5,10,9,10,11,9,4~10,11,1,6,8,10,10,10,9,11,11,10,6,5,9,9,9,3,4,11,1,4,9,11,11,11,5,7,10,9,10,8,9~3,8,9,7,11,6,4,10,11,8,7,9,11,10,10,9,10,10,10,11,5,8,6,9,7,1,7,11,9,10,9,6,4,1,8,11&purInit=[{bet:2000,type:"default"}]&total_bet_min=10.00';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
@@ -274,6 +245,7 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 if(isset($slotEvent['pur'])){
                     $pur = $slotEvent['pur'];
                 }
+                $bl = $slotEvent['bl'];
                 $slotEvent['slotLines'] = 20;
                 if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 ) 
                 {
@@ -317,9 +289,11 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 // $winType = 'bonus';
 
                 $allBet = $betline * $lines;
-                $purMuls = [20, 100];
+                $purMuls = [100];
                 if($pur >= 0 && $slotEvent['slotEvent'] != 'freespin'){
                     $allBet = $allBet * $purMuls[$pur];
+                }else if($bl > 0){
+                    $allBet = $betline * 30;
                 }
                 $tumbAndFreeStacks = []; 
                 $isGeneratedFreeStack = false;
@@ -334,7 +308,7 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $slotEvent['slotEvent'] = 'bet';
                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                     $_sum = $allBet / 100 * $slotSettings->GetPercent();
-                    if($pur > 0){                            
+                    if($pur == 0){                            
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], true);
                         $winType = 'bonus';
                         $_winAvaliableMoney = $slotSettings->GetBank('bonus');
@@ -347,6 +321,7 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Bl', $bl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RespinWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
@@ -372,9 +347,6 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 $winLineCount = 0;
                 $str_initReel = '';
                 $fsmore = 0;
-                $str_accm = '';
-                $str_acci = '';
-                $str_accv = '';
                 $str_stf = 0;
                 $str_srf = 0;
                 $str_trail = 0;
@@ -384,9 +356,8 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 $str_rs_m = '';
                 $str_rs_t = '';
                 $str_rs_more = '';
-                $str_rs_iw = '';
-                $str_rs_win = '';
-                $str_rs = '';
+                $str_lmv = '';
+                $str_lmi = '';
                 $fsmax = 0;
                 $strReelSa = '';
                 $strReelSb = '';
@@ -401,9 +372,6 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $str_initReel = $stack['initreel'];
                     $currentReelSet = $stack['reel_set'];
                     $fsmore = $stack['fsmore'];
-                    $str_accm = $stack['accm'];
-                    $str_acci = $stack['acci'];
-                    $str_accv = $stack['accv'];
                     $str_stf = $stack['stf'];
                     $str_srf = $stack['srf'];
                     $str_rs_p = $stack['rs_p'];
@@ -411,9 +379,8 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $str_rs_m = $stack['rs_m'];
                     $str_rs_t = $stack['rs_t'];
                     $str_rs_more = $stack['rs_more'];
-                    $str_rs_iw = $stack['rs_iw'];
-                    $str_rs_win = $stack['rs_win'];
-                    $str_rs = $stack['rs'];
+                    $str_lmv = $stack['lmv'];
+                    $str_lmi = $stack['lmi'];
                     $strReelSa = $stack['sa'];
                     $strReelSb = $stack['sb'];
                     $str_s_mark = $stack['s_mark'];
@@ -422,7 +389,7 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $wmv = $stack['wmv'];
                     $fsmax = $stack['fsmax'];
                     $str_trail = $stack['trail'];
-                    $strWinLine = $stack['wlc_v'];
+                    $strWinLine = $stack['win_line'];
                 }else{
                     $stack = $slotSettings->GetReelStrips($winType, $betline * $lines, $pur);
                     if($stack == null){
@@ -435,9 +402,6 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $str_initReel = $stack[0]['initreel'];
                     $currentReelSet = $stack[0]['reel_set'];
                     $fsmore = $stack[0]['fsmore'];
-                    $str_accm = $stack[0]['accm'];
-                    $str_acci = $stack[0]['acci'];
-                    $str_accv = $stack[0]['accv'];
                     $str_stf = $stack[0]['stf'];
                     $str_srf = $stack[0]['srf'];
                     $str_rs_p = $stack[0]['rs_p'];
@@ -445,9 +409,8 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $str_rs_m = $stack[0]['rs_m'];
                     $str_rs_t = $stack[0]['rs_t'];
                     $str_rs_more = $stack[0]['rs_more'];
-                    $str_rs_iw = $stack[0]['rs_iw'];
-                    $str_rs_win = $stack[0]['rs_win'];
-                    $str_rs = $stack[0]['rs'];
+                    $str_lmv = $stack[0]['lmv'];
+                    $str_lmi = $stack[0]['lmi'];
                     $strReelSa = $stack[0]['sa'];
                     $strReelSb = $stack[0]['sb'];
                     $str_s_mark = $stack[0]['s_mark'];
@@ -456,18 +419,18 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $wmv = $stack[0]['wmv'];
                     $fsmax = $stack[0]['fsmax'];
                     $str_trail = $stack[0]['trail'];
-                    $strWinLine = $stack[0]['wlc_v'];
+                    $strWinLine = $stack[0]['win_line'];
                 }
                 
                 if($strWinLine != ''){
-                    $arr_lines = explode(';', $strWinLine);
+                    $arr_lines = explode('&', $strWinLine);
                     for($k = 0; $k < count($arr_lines); $k++){
                         $arr_sub_lines = explode('~', $arr_lines[$k]);
                         $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
                         $totalWin = $totalWin + $arr_sub_lines[1];
                         $arr_lines[$k] = implode('~', $arr_sub_lines);
                     }
-                    $strWinLine = implode(';', $arr_lines);
+                    $strWinLine = implode('&', $arr_lines);
                 } 
 
                 $spinType = 's';
@@ -546,15 +509,6 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 if($str_initReel != ''){
                     $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
                 }
-                if($str_accm != ''){
-                    $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm;
-                }
-                if($str_accv != ''){
-                    $strOtherResponse = $strOtherResponse . '&accv=' . $str_accv;
-                }
-                if($str_acci != ''){
-                    $strOtherResponse = $strOtherResponse . '&acci=' . $str_acci;
-                }
                 if($str_stf != ''){
                     $strOtherResponse = $strOtherResponse . '&stf=' . $str_stf;
                 }
@@ -575,26 +529,8 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 if($str_rs_t != ''){
                     $strOtherResponse = $strOtherResponse . '&rs_t=' . $str_rs_t;
                 }
-                if($str_rs != ''){
-                    $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;
-                }
-                if($str_rs_iw != ''){
-                    $arr_rs_iw = explode($str_rs_iw, ',');
-                    for($k = 0; $k < count($arr_rs_iw); $k++){
-                        if($arr_rs_iw[$k] != null && $arr_rs_iw[$k] != '' && $arr_rs_iw[$k] > 0){
-                            $arr_rs_iw[$k] = '' . ($arr_rs_iw[$k] / $original_bet * $betline);
-                        }
-                    }
-                    $strOtherResponse = $strOtherResponse . '&rs_iw=' . implode(',', $arr_rs_iw);
-                }
-                if($str_rs_win != ''){
-                    $arr_rs_win = explode($str_rs_win, ',');
-                    for($k = 0; $k < count($arr_rs_win); $k++){
-                        if($arr_rs_win[$k] != null && $arr_rs_win[$k] != '' && $arr_rs_win[$k] > 0){
-                            $arr_rs_win[$k] = '' . ($arr_rs_win[$k] / $original_bet * $betline);
-                        }
-                    }
-                    $strOtherResponse = $strOtherResponse . '&rs_win=' . implode(',', $arr_rs_win);
+                if($str_lmv != ''){
+                    $strOtherResponse = $strOtherResponse . '&lmi=' . $str_lmi . '&lmv=' . $str_lmv;
                 }
                 if($str_rs_more != ''){
                     $strOtherResponse = $strOtherResponse . '&rs_more=' . $str_rs_more;
@@ -612,9 +548,9 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $strOtherResponse = $strOtherResponse . '&sty=' . $str_sty;
                 }
                 if($strWinLine != ''){
-                    $strOtherResponse = $strOtherResponse . '&wlc_v=' . $strWinLine;
+                    $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=7&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.$totalWin.'&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $str_rs_p == '') 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -622,7 +558,7 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     // $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }
-                if( $slotEvent['slotEvent'] != 'freespin' && $fsmax > 0 && $str_rs == '') 
+                if( $slotEvent['slotEvent'] != 'freespin' && $fsmax > 0 && $str_rs_p == '') 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
@@ -638,10 +574,12 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
                 //------------ *** ---------------
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"CurrentRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RespinWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') . ',"TumbAndFreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"CurrentRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RespinWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"Bl":' . $slotSettings->GetGameData($slotSettings->slotId . 'Bl') . ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') . ',"TumbAndFreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
                 $allBet = $betline * $lines;
                 if(($slotEvent['slotEvent'] == 'freespin' || ($str_rs_p == '' && $str_rs_t != '')) && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $allBet = $allBet * $purMuls[$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin')];
+                }else if($slotSettings->GetGameData($slotSettings->slotId . 'Bl') > 0 && $isState == true){
+                    $allBet = $betline * 30;
                 }
                 if($str_rs_p == '' && $str_rs_t != '' && $isState == true){
                     $slotEvent['slotEvent'] == 'doRespin';
