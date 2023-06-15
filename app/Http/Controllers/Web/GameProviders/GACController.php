@@ -892,7 +892,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $username = $parse[count($parse) - 1];
             }
 
-            $username =  strval($user->id) . '#' . base64_encode($username);
+            $text = preg_replace("/[ #\&\+\-%@=\/\\\:;,\.'\"\^`~\_|\!\?\*$#<>()\[\]\{\}]/i", "", base64_encode($username));
+
+            $username =  strval($user->id) . '#' . $text;
             $username = mb_substr($username, 0, 12);
 
             $master = $user->referral;
