@@ -12,7 +12,6 @@ namespace VanguardLTE\Console
 
     class Kernel extends \Illuminate\Foundation\Console\Kernel
     {
-        //test
         protected $commands = [
 
             \VanguardLTE\Console\Commands\GameLaunchCommand::class,
