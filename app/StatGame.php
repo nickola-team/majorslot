@@ -87,14 +87,14 @@ namespace VanguardLTE
 
         public static function create(array $attributes = [])
         {
-            $filterGames = [' FG', ' FG1', ' respin', ' RS', ' doBonus'];
-            foreach($filterGames as $ignoreGame) 
-            {
-                if (strlen($attributes['game']) >= strlen($ignoreGame) && substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
-                {
-                    $attributes['bet'] = 0;
-                }
-            }
+            // $filterGames = [' FG', ' FG1', ' respin', ' RS', ' doBonus'];
+            // foreach($filterGames as $ignoreGame) 
+            // {
+            //     if (strlen($attributes['game']) >= strlen($ignoreGame) && substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
+            //     {
+            //         $attributes['bet'] = 0;
+            //     }
+            // }
 
             if (empty($attributes['category_id']) || empty($attributes['game_id']))
             {
@@ -105,7 +105,10 @@ namespace VanguardLTE
                 {
                     $attributes['game_id'] = $game->id;
                     $category = $game->categories->first();
-                    $attributes['category_id'] = $category->category_id;
+                    if ($category)
+                    {
+                        $attributes['category_id'] = $category->category_id;
+                    }
                 }
                 else
                 {
@@ -126,12 +129,12 @@ namespace VanguardLTE
             {
                 return $model;
             }
-            if ($model->bet > 0 || $model->win > 0) {
+            // if ($model->bet > 0) {
                 $user = \VanguardLTE\User::where('id',$model->user_id)->first();
                 if ($user){
                     $user->processBetDealerMoney_Queue($model);
                 }
-            }
+            // }
             return $model;
         }
     }

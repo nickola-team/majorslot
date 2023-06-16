@@ -3,6 +3,7 @@
 namespace VanguardLTE\Listeners;
 
 use VanguardLTE\Activity;
+use VanguardLTE\Events\GeneralEvent;
 use VanguardLTE\Events\Game\NewGame;
 use VanguardLTE\Events\Game\PPGameVerified;
 use VanguardLTE\Events\Game\GameEdited;
@@ -71,6 +72,11 @@ class GameEventsSubscriber
         $this->logger->log('PP Game Verify/ ' . $string);
     }
 
+    public function onGeneralEvent(GeneralEvent $event)
+    {
+        $string = $event->getEventString();
+        $this->logger->log('ActivityLog / ' . $string);
+    }
 
     /**
      * Register the listeners for the subscriber.
@@ -85,5 +91,6 @@ class GameEventsSubscriber
         $events->listen(GameEdited::class, "{$class}@onGameEdited");
         $events->listen(DeleteGame::class, "{$class}@onDeleteGame");
         $events->listen(PPGameVerified::class, "{$class}@onPPGameVerified");
+        $events->listen(GeneralEvent::class, "{$class}@onGeneralEvent");
     }
 }

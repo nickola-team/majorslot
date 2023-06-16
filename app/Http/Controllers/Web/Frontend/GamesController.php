@@ -21,22 +21,40 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $title = trans('app.games');
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
             $frontend = 'Default';
-            $excat = ['pragmatic','hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan', 'habaneroplay', 'cq9play','bngplay'];
-            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            $excat = ['hot', 'new', 'card','bingo','roulette', 'keno', 'novomatic','wazdan', 'habaneroplay', 'cq9play'];
+            $sites = \VanguardLTE\WebSite::where('domain', $request->root())->get();
             $adminid = 1;
-            if ($site)
+            if (count($sites) > 0)
             {
+                $site = $sites->first();
+
                 $frontend = $site->frontend;
                 $title = $site->title;
                 $adminid = $site->adminid;
-                if ($frontend != 'Default') {
-                    // $excat[] = 'virtualtech';
-                    $excat[] = 'skywind';
+                if (count($sites) > 1)
+                {
+                    $adminid = -1;
                 }
             }
             else
             {
+                if (str_contains($request->root(),env('SESSION_SECURE_DOMAIN')))
+                {
+                    return response()->view('system.pages.unlogged', [], 200)->header('Content-Type', 'text/html');
+                }
                 return response()->view('system.pages.siteisclosed', [], 200)->header('Content-Type', 'text/html');
+            }
+
+            if ($shop_id != 0)
+            {
+                $parent = auth()->user()->referral;
+                
+                while($parent!=null && !$parent->isInOutPartner())
+                {
+                    $parent = $parent->referral;
+
+                }
+                $adminid = $parent->id;
             }
 
             if ($shop_id == 0)
@@ -62,100 +80,58 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $categories = \VanguardLTE\Category::where(['shop_id' => $shop_id, 'view' => 1,'parent' => 0,])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
             }
+
             $hotgames = [];
-
-            $ppgames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('pp');
-            $livegames = [];
-            if (\VanguardLTE\Category::where('shop_id' , $shop_id)->where('href','live')->first())
+            $detect = new \Detection\MobileDetect();
+            $devices = [];
+            if( $detect->isMobile() || $detect->isTablet() ) 
             {
-                $pplivegames = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::getgamelist('live');
-                $gameid = [413,201,101,104,518,513,512,224];
-                foreach ($pplivegames as $l)
-                {
-                    if (in_array($l['gamecode'], $gameid))
-                    {
-                        $livegames[] = $l;
-                    }
-                }
-            }
-
-            if ($shop_id == 0 || str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // not logged in or test account for game providers
-            {
-                if (count($ppgames) > 0){
-                    $newgames = \VanguardLTE\NewGame::where('provider', 'pp')->get()->pluck('gameid')->toArray();
-                    foreach ($ppgames as $game)
-                    {
-                        if (in_array($game['gamecode'] , $newgames))
-                        {
-                            $hotgames[] = $game;
-                        }
-                    }
-                }
+                $devices = [
+                    0, 
+                    2
+                ];
             }
             else
             {
-                $pmId = \VanguardLTE\Category::where([
-                    'href' => 'pragmatic', 
-                    'shop_id' => 0
-                ])->first();
-                $games = \VanguardLTE\Game::select('games.*')->where('shop_id', 0)->orderBy('name', 'ASC');
-                $games = $games->join('game_categories', 'game_categories.game_id', '=', 'games.id');
-                $games = $games->where('game_categories.category_id', $pmId->id);
-                $ppgamenames = $games->get()->pluck('name')->toArray();
-                if (count($ppgames) > 0){
-                    foreach ($ppgames as $pg)
-                    {
-                        $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $pg['name']) . 'PM';
-                        if (in_array($gamename, $ppgamenames))
-                        {
-                            $hotgames[] = $pg;
-                        }
-                    }
-                }
-                $hotgames[] = ['name' => 'DuoFuDuoCai5Treasures', 'title' => '5트레저 다복이'];
-                $hotgames[] = ['name' => 'DuoFuDuoCai88Fortune', 'title' => '88포츈 다복이'];
-                $hotgames[] = ['name' => 'DuoFuDuoCaiDancingDrum', 'title' => '댄싱드럼 다복이'];
-                //$hotgames[] = ['name' => 'BlackjackSurrenderPT', 'title' => '블랙 잭 써랜더'];
-                //$hotgames[] = ['name' => 'BlackJackAM', 'title' => '블랙 잭'];
+                $devices = [
+                    1, 
+                    2
+                ];
             }
 
-            //add bng hot games
-            $bnggames = \VanguardLTE\Http\Controllers\Web\GameProviders\BNGController::getgamelist('booongo');
-            if (count($bnggames) > 0){
-                $newgames = \VanguardLTE\NewGame::where('provider', 'bng')->get()->pluck('gameid')->toArray();
-                foreach ($bnggames as $game)
-                {
-                    if (in_array($game['gamecode'] , $newgames))
-                    {
-                        $hotgames[] = $game;
-                    }
-                }
-            }
-            if (count($hotgames) % 4 > 0)
+            //add virtualtech games
+            $virtualtech = \VanguardLTE\Category::where(['href'=> 'virtualtech', 'shop_id'=>0, 'site_id'=>0])->first();
+            if ($virtualtech)
             {
-                $len = 4 - count($hotgames) % 4;
-                if (count($ppgames) > 0){
-                    for ($i=0;$i<$len;$i++)
+                $gamecats = $virtualtech->games()->orderby('game_id', 'desc')->get();
+                foreach ($gamecats as $gc)
+                {
+                    if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
                     {
-                        $exist = false;
-                        do {
-                            $idx = mt_rand(0, count($ppgames)-1);
-                            $exist = false;
-                            foreach ($hotgames as $game)
-                            {
-                                if (isset($game['gamecode']) && $game['gamecode'] == $ppgames[$idx]['gamecode'])
-                                {
-                                    $exist = true;
-                                }
-                            }
-                        } while ($exist);
-                        $hotgames[] = $ppgames[$idx];
+                        $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
                     }
                 }
             }
-            shuffle($hotgames);
 
-            $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
+            //add aristocrat games
+            $aristocrat = \VanguardLTE\Category::where(['href'=> 'aristocrat', 'shop_id'=>0, 'site_id'=>0])->first();
+            if ($aristocrat)
+            {
+                $gamecats = $aristocrat->games;
+                foreach ($gamecats as $gc)
+                {
+                    if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
+                    {
+                        $hotgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                    }
+                }
+            }
+
+            $ppgames = [];
+            $livegames = [];
+            
+
+            $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for admin's popup
             $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
             $msgs = [];
@@ -167,8 +143,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $trhistory = [];
             if ($shop_id != 0)
             {
-                $msgs = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->get(); //messages
-                $unreadmsg = \VanguardLTE\Message::whereIn('user_id', [0, auth()->user()->id])->whereNull('read_at')->count();
+                // $msgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->get(); //messages
+                $personmsgs = \VanguardLTE\Message::where(function ($query) {
+                    $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
+                });
+                $grpmsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::GROUP_MSG_ID, 'writer_id' => $adminid]);
+                $msgs = $grpmsgs->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
+
+                $unreadmsg = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->count();
                 //transaction history
 
                 $trhistory = \VanguardLTE\WithdrawDeposit::leftJoin('transactions', function($join){
@@ -183,6 +165,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ]
                 );
             }
+            if (!\View::exists('frontend.' . $frontend . '.games.list')) { 
+                abort(404);
+             }
+
+             //we must sync balance
+             if (\Illuminate\Support\Facades\Auth::check()){
+                //게임사 연동 위해 대기중이면 머니동기화 하지 않기
+                $launchRequests = \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', auth()->user()->id)->get();
+                if (count($launchRequests) == 0)
+                {
+                    $balance = \VanguardLTE\User::syncbalance(auth()->user(), 'gameindex');
+                    if ($balance >= 0)
+                    {
+                        auth()->user()->balance = $balance;
+                    }
+                }
+             }
+
             return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'noticelist','msgs','unreadmsg', 'ppgames', 'trhistory'));
         }
         public function setpage(\Illuminate\Http\Request $request)
@@ -240,7 +240,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
             {
-                return redirect()->route(config('app.admurl').'.dashboard');
+                return redirect('/');
             }
             if( !\Illuminate\Support\Facades\Auth::check() ) 
             {
@@ -253,23 +253,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = auth()->user();
             if ($user)
             {
-                \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
                 $user->update(['playing_game' => null]);
             }
-            if (str_contains($user->username, 'testfor'))
-            {
-                abort(404);
-            }
+            // if (str_contains($user->username, 'testfor'))
+            // {
+            //     abort(404);
+            // }
             if (!isset($game))
             {
                 return redirect()->route('frontend.auth.login');
             }
+            $slot = null;
             $object = '\VanguardLTE\Games\\' . $game . '\SlotSettings';
-            if (!class_exists($object))
+            if (class_exists($object))
             {
-                return redirect()->route('frontend.auth.login');
+                $slot = new $object($game, $userId);
+                // return redirect()->route('frontend.auth.login');
             }
-            $slot = new $object($game, $userId);
             $game = \VanguardLTE\Game::where([
                 'name' => $game, 
                 'shop_id' => \Illuminate\Support\Facades\Auth::user()->shop_id
@@ -309,7 +310,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $cq_loadimg = $cq_promo->promoid;
                 }
             }
-            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg'));
+            $pagelang = 'ko';
+            $parent = auth()->user()->referral;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $pagelang = $parent->language;
+            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
+        }
+        public function startGameWithiFrame(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
+        {
+            $game = $request->game;
+            $url = '/game/' . $game;
+            return view('frontend.Default.games.apigame',compact('url'));
         }
 
         public function startGameWithToken(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
@@ -324,25 +338,58 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404); //player not found
             }
-            if (\Auth::check())
+            if (!\Auth::check())
+            {
+                \Auth::login($user);
+                event(new \VanguardLTE\Events\User\LoggedIn());
+            }
+            else if ($user->id != auth()->user()->id)
             {
                 event(new \VanguardLTE\Events\User\LoggedOut());
-                \Auth::logout();
+                // \Auth::logout();
+                // \DB::table('sessions')
+                // ->where('user_id', $user->id)
+                // ->delete();
+                \Auth::login($user);
+                event(new \VanguardLTE\Events\User\LoggedIn());
             }
-            //invalidate all sessions
-            \DB::table('sessions')
-            ->where('user_id', $user->id)
-            ->delete();
+            
+
+            $user->update([
+                'playing_game' => null,
+                'remember_token' => $user->api_token
+            ]);
+      
             // $sessionRepository->invalidateAllSessionsForUser($user->id);
 
-            \Auth::login($user);
 
             $gamecode = $request->gamecode;
+            $available_provider_cats = \VanguardLTE\Category::where('shop_id', $user->shop_id)->whereNotNull('provider')->where('view',1)->get();
+            foreach ($available_provider_cats as $ct)
+            {
+                $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getGameObj', $gamecode);
+                if ($gameobj && $gameobj['href'] == $ct->href)
+                {
+                    $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
+                    if ($res['error'] == false)
+                    {
+                        if ($ct->status == 0)
+                        {
+                            return response()->view('errors.maintenance', [], 200)->header('Content-Type', 'text/html');
+                        }
+                        return redirect($res['data']['url']);
+                    }
+                }
+            }
 
             $game = \VanguardLTE\Game::where(['shop_id' => $user->shop_id, 'original_id' => $gamecode])->first();
             if (!$game)
             {
                 abort(404);
+            }
+            if ($game->view == 0)
+            {
+                return response()->view('system.pages.gameisclosed', [], 200)->header('Content-Type', 'text/html');
             }
             $url = '/game/' . $game->name;
             return view('frontend.Default.games.apigame',compact('url'));
@@ -361,13 +408,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $GLOBALS['rgrc'] = config('app.salt');
             $userId = \Illuminate\Support\Facades\Auth::id();
             $user = \VanguardLTE\User::find($userId);
-            if (!$user || $user->playing_game == 'pp')
+            if (!$user || $user->remember_token != $user->api_token)
             {
-                exit('unlogged'); // it must be different per every game. but...
+                exit('unlogged-1'); // it must be different per every game. but...
             }
-            if (str_contains($user->username, 'testfor'))
+            if (!$user || $user->playing_game != null)
             {
-                abort(404);
+                exit('double game detected'); // it must be different per every game. but...
             }
             $object = '\VanguardLTE\Games\\' . $game . '\Server';
             $server = new $object();
@@ -376,11 +423,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         public function game_result(\Illuminate\Http\Request $request)
         {
-            if (!\Illuminate\Support\Facades\Auth::check())
+            $username = $request->username;
+            $user = \VanguardLTE\User::where('username', $username)->first();
+            if (!$user)
             {
                 abort(404);
             }
-            $user_id = auth()->user()->id;
+            $user_id = $user->id;
             $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC');
             $statistics = $statistics->where('stat_game.user_id', $user_id);
             $game_name = $request->gameType;

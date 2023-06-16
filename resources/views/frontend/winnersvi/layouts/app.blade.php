@@ -172,9 +172,6 @@
                 <span>trang của tôi</span>
               </a>
               </li>
-              <li>
-                <a href="http://cn.hero-sl.com/"><img src="/frontend/winnersvi/img/CN.png"></a><a href="http://vi.hero-sl.com/"><img src="/frontend/winnersvi/img/VN.png"></a>
-              </li>
           </ul>
         </div>
         <div class="bal-container">
@@ -298,7 +295,7 @@
           <div class="text-cont">
             <div class="inner">
               <p class="title">Chào mừng các bạn đến với </p>
-              <p class="sub">Winner's Pro.</p>
+              <p class="sub">WARRIOR</p>
             </div>
           </div>
         </div>
@@ -314,7 +311,7 @@
           <div class="text-cont">
             <div class="inner">
               <p class="title">Jackpot nổ mỗi ngày!</p>
-              <p class="sub"> Cùng với Winner's Pro!</p>
+              <p class="sub"> Cùng với WARRIOR!</p>
             </div>
           </div>
         </div>
@@ -334,7 +331,7 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">WINNER'S CASINO</span>
+      <span class="a_style">WARRIOR'S CASINO</span>
     </div>
 
     <div class="slot-container">
@@ -343,7 +340,7 @@
 				@foreach($categories AS $index=>$category)
 					@if($category->title != "Hot" && $category->title != "Card" && $category->title != "Bingo" && $category->title != "Roulette" 
 					&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
-          @if($category->provider=='gac')
+          @if($category->provider=='gac' || $category->href=='gameplay')
           @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
             @if ($unreadmsg>0)
             <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('Hãy kiểm tra tờ giấy');">
@@ -366,7 +363,12 @@
               <img class="plate" src="/frontend/winnersvi/img/bg/slot-plate.png">
             </div>
             <div class="icon-cont">
-              <img src="/frontend/winnersvi/img/slot-icon2/{{ $category->title }}.png" />
+              <!-- <img src="/frontend/winnersvi/img/slot-icon2/{{ $category->title }}.png" /> -->
+              @if($category->provider=='gac')
+              <p class="text-red">CASINO</p>
+              @else
+              <p class="text-red">POWERBALL</p>
+              @endif
             </div>
           </a>     
           @endif
@@ -385,17 +387,18 @@
             <div class="sb-inner">
               <div class="main-cont">
                 <div class="inner">
-                  <img class="main-img" src="/frontend/winnerscn/img/slot/Pragmatic Play.jpg">
+                  <img class="main-img" src="/frontend/winnersvi/img/slot/Pragmatic Play.jpg">
                   <button class="start-text">Trò chơi bắt đầu</button>
                 </div>
               </div>
               <button class="name-btn">
                 SlotGames
               </button>
-              <img class="plate" src="/frontend/winnerscn/img/bg/slot-plate.png">
+              <img class="plate" src="/frontend/winnersvi/img/bg/slot-plate.png">
             </div>
             <div class="icon-cont">
-              <img src="/frontend/winnerscn/img/slot-icon2/Hot.png" />
+              <!-- <img src="/frontend/winnersvi/img/slot-icon2/Hot.png" /> -->
+              <p class="text-red">HOT SLOT</p>
             </div>
           </a>
 			@endif
@@ -442,7 +445,7 @@
       </div>
     </div>
     <div class="copyright-cont">
-        <span>&copy; COPYRIGHT  Winner's Pro  {{ now()->year }} ALL RIGHTS RESERVED</span>
+        <span>&copy; COPYRIGHT  WARRIOR  {{ now()->year }} ALL RIGHTS RESERVED</span>
     </div>
 	</div>
 

@@ -5,10 +5,10 @@ namespace VanguardLTE
     {
         protected $table = 'info';
         protected $fillable = [
-            'link', 
-            'title', 
-            'text', 
-            'roles', 
+            'link',   //공배팅수
+            'title',  //공배팅 한도
+            'text',  //공배팅 난수
+            'roles',  //슬롯, 카지노
             'user_id'
         ];
         public $timestamps = false;

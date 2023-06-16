@@ -55,6 +55,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             $data['admin_id'] = auth()->user()->id;
             $happyhour = \VanguardLTE\HappyHourUser::create($data);
+            event(new \VanguardLTE\Events\Jackpot\NewJackpot($happyhour));
             return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['콜이 생성되었습니다']);
         }
         public function edit(\Illuminate\Http\Request $request)
@@ -109,7 +110,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors([trans('app.wrong_shop')]);
             } */
             $happyhour = $request->id;
-            \VanguardLTE\HappyHourUser::where('id', $happyhour)->delete();
+            $jp = \VanguardLTE\HappyHourUser::where('id', $happyhour)->first();
+            event(new \VanguardLTE\Events\Jackpot\DeleteJackpot($jp));
+            // $jp->delete();
+            $jp->update(['status' => 2]);
             return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['유저콜이 삭제되었습니다']);
         }
 

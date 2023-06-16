@@ -27,7 +27,7 @@
     <span class="text-warning">{{number_format($stat->sum,0)}}</span>
     @endif
 </td>
-<td>{{$stat->bankinfo()}}</td>
+<td>{{$stat->bankinfo(!auth()->user()->isInOutPartner())}}</td>
 <td>{{$stat->created_at}}</td>
 <td class="text-right">
 <a href="{{argon_route('argon.dw.process', ['id' => $stat->id])}}" ><button class="btn btn-success btn-sm" >승인</button></a>

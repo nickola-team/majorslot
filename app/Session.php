@@ -5,6 +5,10 @@ namespace VanguardLTE
     {
         protected $table = 'sessions';
         public $timestamps = false;
+        protected $fillable = [
+            'user_id', 
+            'last_activity',
+        ];
         public static function boot()
         {
             parent::boot();

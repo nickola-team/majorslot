@@ -77,7 +77,7 @@
     <script type="text/javascript">
         window.onbeforeunload = function () {
             console.log('exiting game');
-            var formData = new FormData();
+            var formData = new URLSearchParams();
             formData.append("name", "exitGame");
             navigator.sendBeacon('/tp/signal', formData);
         }
@@ -90,7 +90,7 @@
             $.ajax({
                 type: "POST",
                 url: "/tp/signal",
-                data: {'name':'playing'},
+                data: {name:'playing'},
                 processData: false,
                 contentType: false,
                 cache: false,
@@ -98,6 +98,7 @@
                 success: function (data) {
                     if (data.error != 0)
                     {
+                        alert('오류가 발생하였습니다. 게임을 다시 시작해주세요');
                         window.close();
                     }
                     timeout = setTimeout(updateUserBalance, updateTime);

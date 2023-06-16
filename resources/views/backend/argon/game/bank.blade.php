@@ -27,13 +27,13 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="minslot" class="col-md-2 col-form-label form-control-label text-center">최소슬롯환수금</label>
+                            <label for="minslot1" class="col-md-2 col-form-label form-control-label text-center">최소슬롯환수금1</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="minslot" value="{{ $minslot?$minslot->value:'' }}" placeholder="">
+                                <input type="text" class="form-control" name="minslot1" value="{{ $minslot1?$minslot1->value:'' }}" placeholder="">
                             </div>
-                            <label for="maxslot" class="col-md-2 col-form-label form-control-label text-center">최대슬롯환수금</label>
+                            <label for="maxslot1" class="col-md-2 col-form-label form-control-label text-center">최대슬롯환수금1</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="maxslot" value="{{ $maxslot?$maxslot->value:'' }}" placeholder="">
+                                <input type="text" class="form-control" name="maxslot1" value="{{ $maxslot1?$maxslot1->value:'' }}" placeholder="">
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -41,13 +41,125 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="minbonus" class="col-md-2 col-form-label form-control-label text-center">최소보너스환수금</label>
+                            <label for="minslot2" class="col-md-2 col-form-label form-control-label text-center">최소슬롯환수금2</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="minbonus" value="{{ $minbonus?$minbonus->value:'' }}" placeholder="">
+                                <input type="text" class="form-control" name="minslot2" value="{{ $minslot2?$minslot2->value:'' }}" placeholder="">
                             </div>
-                            <label for="maxbonus" class="col-md-2 col-form-label form-control-label text-center">최대보너스환수금</label>
+                            <label for="maxslot2" class="col-md-2 col-form-label form-control-label text-center">최대슬롯환수금2</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="maxbonus" value="{{ $maxbonus?$maxbonus->value:'' }}" placeholder="">
+                                <input type="text" class="form-control" name="maxslot2" value="{{ $maxslot2?$maxslot2->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minslot3" class="col-md-2 col-form-label form-control-label text-center">최소슬롯환수금3</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minslot3" value="{{ $minslot3?$minslot3->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxslot3" class="col-md-2 col-form-label form-control-label text-center">최대슬롯환수금3</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxslot3" value="{{ $maxslot3?$maxslot3->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minslot4" class="col-md-2 col-form-label form-control-label text-center">최소슬롯환수금4</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minslot4" value="{{ $minslot4?$minslot4->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxslot4" class="col-md-2 col-form-label form-control-label text-center">최대슬롯환수금4</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxslot4" value="{{ $maxslot4?$maxslot4->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minslot5" class="col-md-2 col-form-label form-control-label text-center">최소슬롯환수금5</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minslot5" value="{{ $minslot5?$minslot5->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxslot5" class="col-md-2 col-form-label form-control-label text-center">최대슬롯환수금5</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxslot5" value="{{ $maxslot5?$maxslot5->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minbonus1" class="col-md-2 col-form-label form-control-label text-center">최소보너스환수금1</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minbonus1" value="{{ $minbonus1?$minbonus1->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxbonus1" class="col-md-2 col-form-label form-control-label text-center">최대보너스환수금1</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxbonus1" value="{{ $maxbonus1?$maxbonus1->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minbonus2" class="col-md-2 col-form-label form-control-label text-center">최소보너스환수금2</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minbonus2" value="{{ $minbonus2?$minbonus2->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxbonus2" class="col-md-2 col-form-label form-control-label text-center">최대보너스환수금2</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxbonus2" value="{{ $maxbonus2?$maxbonus2->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minbonus3" class="col-md-2 col-form-label form-control-label text-center">최소보너스환수금3</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minbonus3" value="{{ $minbonus3?$minbonus3->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxbonus3" class="col-md-2 col-form-label form-control-label text-center">최대보너스환수금3</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxbonus3" value="{{ $maxbonus3?$maxbonus3->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minbonus4" class="col-md-2 col-form-label form-control-label text-center">최소보너스환수금4</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minbonus4" value="{{ $minbonus4?$minbonus4->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxbonus4" class="col-md-2 col-form-label form-control-label text-center">최대보너스환수금4</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxbonus4" value="{{ $maxbonus4?$maxbonus4->value:'' }}" placeholder="">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="minbonus5" class="col-md-2 col-form-label form-control-label text-center">최소보너스환수금5</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="minbonus5" value="{{ $minbonus5?$minbonus5->value:'' }}" placeholder="">
+                            </div>
+                            <label for="maxbonus5" class="col-md-2 col-form-label form-control-label text-center">최대보너스환수금5</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="maxbonus5" value="{{ $maxbonus5?$maxbonus5->value:'' }}" placeholder="">
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -90,9 +202,14 @@
                 <thead class="thead-light">
                     <tr>
                     <th scope="col">번호</th>
-                    <th scope="col">에이전트이름</th>
+                    <th scope="col">파트너이름</th>
+                    <th scope="col">게임이름</th>
                     <th scope="col">환수율%</th>
-                    <th scope="col">환수금</th>
+                    <th scope="col">환수금1</th>
+                    <th scope="col">환수금2</th>
+                    <th scope="col">환수금3</th>
+                    <th scope="col">환수금4</th>
+                    <th scope="col">환수금5</th>
                     <th scope="col"><a href="{{argon_route('argon.game.bankbalance', ['batch'=>1,'type'=>'slots','id'=>0])}}">일괄수정 <i class="fa fa-arrow-circle-right"></i></a></th>
                     </tr>
                 </thead>
@@ -130,7 +247,7 @@
                 <thead class="thead-light">
                     <tr>
                     <th scope="col">번호</th>
-                    <th scope="col">에이전트이름</th>
+                    <th scope="col">파트너이름</th>
                     <th scope="col">게임갯수</th>
                     <th scope="col">환수금 합계</th>
                     </tr>

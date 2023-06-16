@@ -25,7 +25,7 @@ html {
 }
 
 body {
-    background-color: #000;
+    background-color: #003828;
     height: 100%;
     padding-right: 0 !important;
 }
@@ -1824,6 +1824,7 @@ span {
     width: 100%;
     transition: 0.3s;
     opacity: 1;
+    height : 150px;
 }
 
 .slot-btn:hover .main-cont .inner .main-img {
@@ -3589,6 +3590,7 @@ span {
     width: 100%;
     transition: 0.3s;
     opacity: 1;
+    height : 130px;
 }
 
 .game-btn .info-cont {
@@ -4430,7 +4432,7 @@ ul {
 .a_style {
     font-size: 38px;
     font-family: 'nanumsquare';
-    color: #0054d1;
+    color: #d17d00;
     text-shadow: 1px 1px 2px #000c56, 0 0 25px #ffffff, 0 0 5px #181816;
 }
 

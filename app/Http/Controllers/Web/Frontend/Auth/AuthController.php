@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
 {
+    use Log;
     class AuthController extends \VanguardLTE\Http\Controllers\Controller
     {
         private $users = null;
@@ -219,11 +220,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             while ($tryCount < 20);
             if ($bToken){
                 $user->update(['api_token' => $api_token]);
-                if ($user->playing_game != null)
-                {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
-                    $user->update(['playing_game' => null]);
-                }
+                // if ($user->playing_game != null)
+                // {
+                //     // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                //     $user->update(['playing_game' => null]);
+                // }
                 $user = $user->fresh();
                 if ($user->api_token != $api_token)
                 {
@@ -320,7 +321,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
         {
             event(new \VanguardLTE\Events\User\LoggedOut());
             if (\Auth::check()){
-                auth()->user()->update(['api_token' => null]);
+                $user = auth()->user();
+                $b = $user->withdrawAll('getlogout');                
+                $user->update([
+                    'api_token' => null
+                ]);
             }
             \Auth::logout();
             return redirect('/');

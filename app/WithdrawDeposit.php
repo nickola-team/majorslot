@@ -108,9 +108,25 @@ namespace VanguardLTE
             return $this->hasOne('VanguardLTE\Transaction', 'request_id');
         }
 
-        public function bankinfo()
+        public function bankinfo($bmask=false)
         {
-            return $this->bank_name . " - " . $this->account_no . " - " . $this->recommender;
+            $info = $this->bank_name . ' - ' . $this->account_no . ' - ' . $this->recommender;
+            if ($bmask)
+            {
+                $accno = $this->account_no;
+                $recommender = $this->recommender;
+                if ($accno != '')
+                {
+                    $maxlen = strlen($accno)>1?2:1;
+                    $accno = '******' . substr($accno, -$maxlen);
+                }
+                if ($recommender != '')
+                {
+                    $recommender = mb_substr($recommender, 0, 1) . '***';
+                }
+                $info = $this->bank_name . ' - ' . $accno . ' - ' . $recommender;
+            }
+            return $info;
         }
     }
 

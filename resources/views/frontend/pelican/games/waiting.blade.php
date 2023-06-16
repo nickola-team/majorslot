@@ -24,7 +24,7 @@
 	<link rel="stylesheet" href="/frontend/Default/css/wait/main.css">
     <script src="/frontend/Default/js/jquery-3.4.1.min.js"></script>
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
-    <script src='/frontend/Default/js/dev_tools.js'></script>
+    <!-- <script src='/frontend/Default/js/dev_tools.js'></script> -->
     </head>
     @if ($prompt)
     <body style="background:black;">

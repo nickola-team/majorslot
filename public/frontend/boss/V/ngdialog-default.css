@@ -1,0 +1,149 @@
+.ngdialog.ngdialog-theme-default.ngdialog-main-default .ngdialog-content {
+  width: 900px;
+  border-radius: 0;
+  font-size: 14px;
+  padding: 0;
+}
+
+.ngdialog__heading {
+  background: rgb(75, 54, 47);
+  background: -moz-linear-gradient(0deg, rgba(75, 54, 47, 1) 0%, rgba(197, 153, 83, 1) 100%);
+  background: -webkit-linear-gradient(0deg, rgba(75, 54, 47, 1) 0%, rgba(197, 153, 83, 1) 100%);
+  background: linear-gradient(0deg, rgba(75, 54, 47, 1) 0%, rgba(197, 153, 83, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4b362f", endColorstr="#c59953", GradientType=1);
+}
+
+.ngdialog__title {
+  color: #ffffff;
+  margin: 0;
+  padding: 10px;
+  text-transform: uppercase;
+}
+
+.ngdialog-main-nav{
+  background-color: #000000;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+.ngdialog-main-nav li{
+  padding: 15px;
+  float: left;
+  color: #999999;
+}
+
+.ngdialog-main-nav li:hover,
+.ngdialog-main-nav li:focus{
+  color: #ffffff;
+  cursor: pointer;
+  border-bottom: 2px solid #b73528;
+}
+
+.ngdialog-main-nav li.active{
+  border-bottom: 2px solid #b73528;
+  color: #ffffff;
+}
+
+.ngdialog-main-default__content{
+  padding: 10px;
+  background-color: #ffffff;
+  border-top: 1px solid #000000;
+}
+
+.ngdialog-main-nav .badge{
+  background: #b73528;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-close:before{
+  top: 6px;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-movie .ngdialog-content{
+  border-radius: 0;
+  padding: 0;
+  width: 430px;
+}
+.ngdialog.ngdialog-theme-default.ngdialog-movie-2 .ngdialog-content{
+  border-radius: 0;
+  padding: 0;
+  width: 400px;
+}
+.ngdialog.ngdialog-theme-default.ngdialog-movie-3 .ngdialog-content{
+  border-radius: 0;
+  padding: 0;
+  width: 515px;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-movie{
+  z-index: 10001;
+  padding-top: 250px;
+}
+
+.ngdialog-movie .ngdialog-overlay{
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-movie-2{
+  z-index: 10002;
+  padding-top: 250px;
+}
+
+.ngdialog-movie-2 .ngdialog-overlay{
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-movie-3{
+  z-index: 10003;
+  padding-top: 250px;
+}
+
+.ngdialog-movie-3 .ngdialog-overlay{
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-movie-4{
+  z-index: 10004;
+  padding-top: 250px;
+}
+
+.ngdialog-movie-4 .ngdialog-overlay{
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.change-password .has-not-used.has-success .form-control{
+  background: none #111111 !important;
+  border-color: #585858 !important;
+  box-shadow: none !important;
+}
+
+.change-password .has-success input.form-control, input.no-error {
+  background: url(/V/icon-valid.png) right 10px center no-repeat #302e36;
+  border-color: #53d14c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.change-password .has-error .form-control {
+  background: url(/V/icon-error.png?ver=1.01) right 10px center no-repeat #302e36;
+  border-color: #d54b4b !important;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.change-password-error span {
+  color: #a94442;
+  font-weight: 700;
+}
+
+.notice-container {
+  position: relative;
+  background: #000;
+  width: 100%;
+  height: 40px;
+}
+.csrf-swal .swal-title,
+.csrf-swal .swal-text{
+  font-size: 27px;
+  font-weight: 600;
+  color: rgba(0,0,0,.65);
+}

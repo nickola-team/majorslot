@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
-
+use Log;
 class UpdateReplay implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -32,14 +32,16 @@ class UpdateReplay implements ShouldQueue
     public function handle()
     {
         try {
-            $response = Http::timeout(3)->asForm()->post(config('app.replayurl') . '/api/top/winnings', $this->replay_data);
+            $response = Http::timeout(10)->asForm()->post(config('app.replayurl') . '/api/top/winnings', $this->replay_data);
             if (!$response->ok())
             {
+                Log::info('report replay request failed: ' . $response->status());
                 return -1;
             }
         }
         catch (\Exception $ex)
         {
+            Log::info('Exception to report replay: ' . $ex->getMessage());
             return 0;
         }
 

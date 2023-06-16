@@ -2,7 +2,7 @@
         'parentSection' => 'agent',
         'elementName' => 'agent-deal'
     ])
-@section('page-title',  '에이전트 롤링내역')
+@section('page-title',  '파트너 롤링내역')
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -100,12 +100,12 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')??auth()->user()->username}}" id="user" name="user">
                             </div>
 
-                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">플레이어이름</label>
+                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">유저이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('player')}}" id="player"  name="player">
                             </div>
@@ -153,15 +153,15 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">에이전트 롤링내역</h3>
+        <h3 class="mb-0">파트너 롤링내역</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush">
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">에이전트</th>
-                <th scope="col">플레이어</th>
+                <th scope="col">파트너</th>
+                <th scope="col">유저</th>
                 <th scope="col">게임</th>
                 <th scope="col">게임사</th>
                 <th scope="col">배팅금</th>

@@ -2,7 +2,7 @@
         'parentSection' => 'agent',
         'elementName' => 'agent-move'
     ])
-@section('page-title',  '에이전트 이동')
+@section('page-title',  '파트너 이동')
 
 @section('content')
 <div class="container-fluid">
@@ -12,7 +12,7 @@
             <div class="card-header border-0" id="headingOne">
                 <div class="row align-items-center box">
                     <div class="col-8">
-                        <h3 class="mb-0">에이전트 이동</h3>
+                        <h3 class="mb-0">파트너 이동</h3>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                            이동할 상위에이전트
+                            이동할 상위파트너
                         </div>
                         <div class="col-7">
                             <input class="form-control col-8" type="text" value="" id="parent" name="parent">

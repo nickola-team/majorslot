@@ -27,11 +27,11 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="role" name="role">
                                     <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
@@ -79,13 +79,15 @@
         <table class="table align-items-center table-flush" id="agentlist">
             <thead class="thead-light">
                 <tr>
-                <th scope="col">에이전트</th>
+                <th scope="col">파트너</th>
                 <th scope="col">게임이름</th>
                 <th scope="col">포지션</th>
                 <th scope="col">게임갯수</th>
                 <th scope="col">게임제공사</th>
-                <th scope="col">활성된 매장</th>
-                <th scope="col">비활성된 매장</th>
+                <th scope="col">사용중 매장</th>
+                <th scope="col">미사용 매장</th>
+                <th scope="col">운영중 매장</th>
+                <th scope="col">점검중 매장</th>
                 <th class="text-right">일괄적용</th>
                 </tr>
             </thead>

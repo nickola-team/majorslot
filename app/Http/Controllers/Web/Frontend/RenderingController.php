@@ -75,7 +75,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     return response()->json(['error' => true, 'url' => '']);
                 }
-                if ($launchRequest->finished != 1)
+                if ($launchRequest->finished == 0)
                 {
                     return response()->json(['error' => true, 'url' => '']);
                 }
@@ -103,43 +103,64 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if (!$launchRequest)
             {
                 //this is irlegal request.
-                return redirect('/');
+                abort(404);
             }
             $user = auth()->user();
             if (!$user)
             {
-                return redirect('/');
+                abort(404);
             }
             if ($user->id != $launchRequest->user_id)
             {
-                return redirect('/');
+                abort(404);
             }
 
-            // $launchRequest->delete();
-            //delete all user's request
-            \VanguardLTE\GameLaunch::where('user_id', $user->id)->delete();
+            
 
             $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObj($gamecode);
             if (!$gameObj)
             {
-                return redirect('/');
+                $gameObj = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getGameObjBySymbol(8, $gamecode);
+                if (!$gameObj)
+                {
+                    abort(404);
+                }
             }
-            $gamename = $gameObj['name'];
-            $gamename = preg_replace('/[^a-zA-Z0-9 ]+/', '', $gamename) . 'PM';
-            $gamename = preg_replace('/^(\d)([a-zA-Z0-9 ]+)/', '_$1$2', $gamename);
-            $shop_id = \Auth::user()->shop_id;
-            $cat = \VanguardLTE\Category::where([
-                'shop_id' => $shop_id,
-                'href' => 'pragmatic',
-                'view' => 1
-            ])->first();
+            $cat = null;
+            $embed_games = null;
+            if ($gameObj['href'] == \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::TP_PP_HREF) {
+                $shop_id = \Auth::user()->shop_id;
+                $cat = \VanguardLTE\Category::where([
+                    'shop_id' => $shop_id,
+                    'href' => 'pragmatic',
+                    'view' => 1
+                ])->first();
 
-            $pm_games = \VanguardLTE\Game::where([
-                'shop_id' => $shop_id,
-                'name' => $gamename,
-                'view' => 1,
-                ]
-            )->first();
+                $embed_games = \VanguardLTE\Game::where([
+                    'shop_id' => $shop_id,
+                    'label' => $gameObj['symbol'],
+                    'view' => 1,
+                    ]
+                )->first();
+            }
+
+            if ($gameObj['href'] == 'tp_hbn') {
+                $gamename = $gameObj['name'];
+                $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
+                $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                $shop_id = \Auth::user()->shop_id;
+                $cat = \VanguardLTE\Category::where([
+                    'shop_id' => $shop_id,
+                    'href' => 'habaneroplay',
+                    'view' => 1
+                ])->first();
+                $embed_games = \VanguardLTE\Game::where([
+                    'shop_id' => $shop_id,
+                    'name' => 'SGThe' . $gamename,
+                    'view' => 1,
+                    ]
+                )->first();
+            }
             
             $alonegame = 0;
             $url = null;
@@ -147,16 +168,28 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor'))
             {
-                return redirect('/');
+                abort(404);
             }
            
-            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $pm_games && $cat) {
-                $url = url('/game/' . $gamename);
+            if (!str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor') && $embed_games && $cat) {
+                //you must withdraw user balance
+                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::withdrawAll(auth()->user()->id);
+                // if ($data['error'] == true)
+                // {
+                //     $data['msg'] = 'Withdraw Error';
+                //     return view('frontend.Default.games.theplus', compact('data'));
+                // }
+                $url = url('/game/' . $embed_games->name);
                 $alonegame = 1;
             }
             else {
+                if ($launchRequest->finished > 1) //only use this token once
+                {
+                    abort(404);
+                }
+
                 //게임런칭
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getgamelink_tp($gamecode, $user);
+                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::getgamelink_tp($gameObj['gamecode'], $user);
                 if ($data['error'] == true)
                 {
                     $data['msg'] = 'GameLinkError';
@@ -164,6 +197,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 $url = $data['data']['url'];
             }
+
+            $launchRequest->update([
+                'finished' => $launchRequest->finished + 1
+            ]);
+            //delete all user's request
+            // \VanguardLTE\GameLaunch::where('user_id', $user->id)->delete();
+            
 
             if ($alonegame == 0)
             {
@@ -393,8 +433,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return view('frontend.Default.games.booongo', compact('url', 'alonegame', 'data'));
             
         }
-
-        public function hpcrender($gamecode, \Illuminate\Http\Request $request)
+        public function gamerenderv2($provider, $gamecode, \Illuminate\Http\Request $request)
         {
             $user = auth()->user();
             if (!$user)
@@ -406,20 +445,217 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if (!$launchRequest)
             {
                 //this is irlegal request.
-                return redirect('/');
+                abort(404);
             }
             if ($user->id != $launchRequest->user_id)
             {
-                return redirect('/');
+                abort(404);
             }
 
             $launchRequest->delete();
-            $user->update([
-                'playing_game' => \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::HPC_PROVIDER,
-                'played_at' => time(),
-            ]);
-            $url = \VanguardLTE\Http\Controllers\Web\GameProviders\HPCController::makegamelink($gamecode);
-            return view('frontend.Default.games.hpc', compact('url'));
+            $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
+            if (!class_exists($object))
+            {
+                abort(404);
+            }
+
+            // $game = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getGameObj', $gamecode);
+            // if (!$game)
+            // {
+            //     abort(404);
+            // }
+
+            // $user->update([
+            //     'playing_game' => $game['href'],
+            //     'played_at' => time(),
+            // ]);
+            
+
+            if ($provider == 'bnn')
+            {
+
+                $user->update([
+                    'playing_game' => $gamecode,
+                    'played_at' => time(),
+                ]);
+            }
+            
+            else if ($provider == 'kuza')
+            {
+                $user->update([
+                    'playing_game' => strtolower($provider),
+                    'played_at' => time(),
+                ]);
+            }
+            else if ($provider == 'xmx')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\XMXController::getGameObj($gamecode);
+                if (!$game)
+                {
+                    abort(404);
+                }
+                $user->update([
+                    'playing_game' => $game['href'],
+                    'played_at' => time(),
+                ]);
+            }
+            else if ($provider == 'kten')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::getGameObj($gamecode);
+                if (!$game)
+                {
+                    abort(404);
+                }
+                if ($game['href'] == 'kten-hbn') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'habaneroplay',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => 'SGThe' . $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $url = url('/game/' . $embed_games->name);
+                        $alonegame = 1;
+                        $data = null;
+                        return view('frontend.Default.games.theplus', compact('url', 'alonegame', 'data'));
+                    }
+                }
+                $user->update([
+                    'playing_game' => $game['href'],
+                    'played_at' => time(),
+                ]);
+            }
+            else
+            {
+                $user->update([
+                    'playing_game' => $gamecode,
+                    'played_at' => time(),
+                ]);
+            }
+            $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode, $user);
+            if ($url == null)
+            {
+                abort(404);
+            }
+            return redirect($url);
+            
+        }
+
+        public function gamerender($provider, $gamecode, \Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect('/');
+            }
+            $t = $request->t; //check timestamp if it is normal request
+            $launchRequest = \VanguardLTE\GameLaunch::where('id', $t)->first();
+            if (!$launchRequest)
+            {
+                //this is irlegal request.
+                abort(404);
+            }
+            if ($user->id != $launchRequest->user_id)
+            {
+                abort(404);
+            }
+
+            $launchRequest->delete();
+            $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
+            if (!class_exists($object))
+            {
+                abort(404);
+            }
+
+            $rqtime = 5; //default 5s
+
+            if ($provider == 'bnn')
+            {
+                $user->update([
+                    'playing_game' => strtolower($provider) . '_' . $gamecode,
+                    'played_at' => time(),
+                ]);
+                $rqtime = 30; //default 5s
+            }
+            else if ($provider == 'xmx')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\XMXController::getGameObj($gamecode);
+                if ($game==null)
+                {
+                    abort(404);
+                }
+                if ($game['href'] == 'xmx-cq9') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'CQ9';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'cq9play',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $url = url('/game/' . $embed_games->name);
+                        $alonegame = 1;
+                        $data = null;
+                        return view('frontend.Default.games.theplus', compact('url', 'alonegame', 'data'));
+                    }
+                }
+
+                if ($game['href'] == 'xmx-hbn') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'habaneroplay',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => 'SGThe' . $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $url = url('/game/' . $embed_games->name);
+                        $alonegame = 1;
+                        $data = null;
+                        return view('frontend.Default.games.theplus', compact('url', 'alonegame', 'data'));
+                    }
+                }
+
+                $user->update([
+                    'playing_game' => strtolower($provider) . '_' . $game['href'],
+                    'played_at' => time(),
+                ]);
+                $rqtime = 30; //default 5s
+            }
+            else
+            {
+                $user->update([
+                    'playing_game' => strtolower($provider),
+                    'played_at' => time(),
+                ]);
+            }
+            $url = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::makegamelink', $gamecode, $user);
+            return view('frontend.Default.games.render', compact('provider','url','rqtime'));
             
         }
     }

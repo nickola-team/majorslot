@@ -27,9 +27,23 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="domain" class="col-md-2 col-form-label form-control-label text-center">도메인이름</label>
+                            <label for="domain" class="col-md-2 col-form-label form-control-label text-center">도메인제목</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('domain')}}" id="domain" name="domain">
+                            </div>
+                            <label for="category" class="col-md-2 col-form-label form-control-label text-center">게임이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('category')}}" id="category" name="category">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="username" class="col-md-2 col-form-label form-control-label text-center">총본사이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('username')}}" id="username" name="username">
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -63,7 +77,12 @@
                 <th scope="col">도메인</th>
                 <th scope="col">게임이름</th>
                 <th scope="col">포지션</th>
+                @if (auth()->user()->hasRole('admin'))
                 <th scope="col">게임제공사</th>
+                <th scope="col">사용여부</th>
+                @else
+                <th scope="col">게임제공사</th>
+                @endif
                 <th scope="col">상태</th>
                 <th></th>
                 </tr>
@@ -72,13 +91,26 @@
             @if (count($sites) > 0)
                 @foreach ($sites as $site)
                     <tr>
-                        @if ($site->categories && count($site->categories)>0)
-                            <td rowspan="{{$site->categories->count()}}" style="border-right: 1px solid rgb(233 236 239);" > 
+                        <?php
+                            $categories = $site->categories;
+                            if (!auth()->user()->hasRole('admin'))
+                            {
+                                $excat = ['habaneroplay', 'bngplay','cq9play'];
+                                $categories = $categories->where('view',1)->where('parent', 0);
+                            }
+                            if (Request::get('category') != '')
+                            {
+                                $categories = $categories->where('title', Request::get('category'));
+                            }
+                        ?>
+                        @if (count($categories)>0)
+                            <td rowspan="{{$categories->count()}}" style="border-right: 1px solid rgb(233 236 239);" > 
                                 {{ $site->title }} 
                                 <p>
                                 <a href="{{$site->domain}}">{{$site->domain}}</a>
                             </td>
-                            @include('backend.argon.game.partials.row_domain')
+
+                            @include('backend.argon.game.partials.row_domain', ['categories' => $categories])
                         @else
                         <td > 
                             {{ $site->title }} 

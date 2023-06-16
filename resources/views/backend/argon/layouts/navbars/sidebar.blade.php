@@ -1,3 +1,11 @@
+<?php
+    $manualjoin = 0;
+    if (isset(auth()->user()->sessiondata()['manualjoin']))
+    {
+        $manualjoin = auth()->user()->sessiondata()['manualjoin'];
+    }
+?>
+
 <nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-blue sidenav-bg" id="sidenav-main">
     <div class="scrollbar-inner scroll-scrollx_visible">
         <div class="sidenav-header d-flex align-items-center">
@@ -27,27 +35,84 @@
                         <span class="nav-link-text text-white">대시보드</span>
                     </a>
                 </li>
+                @if (auth()->user()->isInoutPartner())
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'agent') ? 'active' : '' }}" href="#navbar-agents" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-agents">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'share') ? 'active' : '' }}" >
                         <i class="ni ni-single-02 text-white"></i>
-                        <span class="nav-link-text text-white">에이전트</span>
+                        <span class="nav-link-text text-white">받치기</span>
                     </a>
-                    <div class="collapse {{  (isset($parentSection) && $parentSection == 'agent') ? 'show' : '' }}" id="navbar-agents">
+                    <div class="collapse show" id="navbar-share">
+                    <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                        @if (auth()->user()->hasRole('comaster'))
+                        <a class="nav-link  text-white" href="{{argon_route('argon.share.setting')}}">
+                        @else
+                        <a class="nav-link  text-white" href="{{argon_route('argon.share.index')}}">
+                        @endif
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기설정
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.share.gamestat')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기게임내역
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.share.report.daily')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기일별정산
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
+                            <i class="far fa-circle text-white sub-i"></i>
+                            받치기게임별정산
+                        </a>
+                    </li> -->
+                    </div>
+                </li>
+                @endif
+                <hr class="my-0 sidebar-hr">
+                <li class="nav-item">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'agent') ? 'active' : '' }}" >
+                        <i class="ni ni-single-02 text-white"></i>
+                        <span class="nav-link-text text-white">파트너</span>
+                    </a>
+                    <div class="collapse show" id="navbar-agents">
                     <ul class="nav nav-sm flex-column">
                     @if (!auth()->user()->hasRole('manager'))
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{{argon_route('argon.agent.create')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                <span class="nav-link-text text-white">에이전트생성</span>
+                                <span class="nav-link-text text-white">파트너생성</span>
                             </a>
                         </li>
+
+                        @if (auth()->user()->isInOutPartner() && $manualjoin)
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{{argon_route('argon.agent.joinlist')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                <span class="nav-link-text text-white">신규가입파트너</span>
+                            </a>
+                        </li>
+                        @endif
                         <li class="nav-item ">
                             <a class="nav-link text-white" href="{{argon_route('argon.agent.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                <span class="nav-link-text text-white">에이전트목록</span>
+                                <span class="nav-link-text text-white">파트너목록</span>
                             </a>
                         </li>
+                        @for ($role=auth()->user()->role_id-1;$role>=3;$role--)
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="{{argon_route('argon.agent.list', ['role' => $role ])}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                <span class="nav-link-text text-white">{{\VanguardLTE\Role::where('level',$role)->first()->description}}</span>
+                            </a>
+                        </li>
+                        @endfor
                     @endif
                     <li class="nav-item">
                         <a class="nav-link  text-white" href="{{argon_route('argon.agent.transaction')}}">
@@ -65,31 +130,45 @@
                 </li>
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'player') ? 'active' : '' }}" href="#navbar-players" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'player') ? 'active' : '' }}" >
                         <i class="ni ni-user-run text-white"></i>
-                        <span class="nav-link-text text-white">플레이어</span>
+                        <span class="nav-link-text text-white">유저</span>
                     </a>
 
-                    <div class="collapse {{ (isset($parentSection) && $parentSection == 'player') ? 'show' : '' }}" id="navbar-players">
+                    <div class="collapse show" id="navbar-players">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.create')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    플레이어생성
+                                    유저생성
                                 </a>
                             </li>
+                            @if (auth()->user()->isInOutPartner() && $manualjoin)
+                            <li class="nav-item">
+                                <a class="nav-link  text-white" href="{{argon_route('argon.player.joinlist')}}">
+                                    <i class="far fa-circle text-white sub-i"></i>
+                                    <span class="nav-link-text text-white">신규가입유저</span>
+                                </a>
+                            </li>
+                            @endif
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.vlist')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    개인플레이어목록
+                                    개인유저목록
                                 </a>
                             </li>
                             @endif
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    플레이어목록
+                                    유저목록
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.list',['online' => 1])}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    접속중유저
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -105,18 +184,30 @@
                                 </a>
                             </li>
 
+                            @if (auth()->user()->isInOutPartner() )
+
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.player.gamepending')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    미결중 게임내역
+                                </a>
+                            </li>
+                            
+                            @endif
+
                         </ul>
                     </div>
                 </li>
-                @if (auth()->user()->hasRole('admin') )
+                @if (auth()->user()->isInOutPartner() )
+                
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'game') ? 'active' : '' }}" href="#navbar-games" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{ (isset($parentSection) && $parentSection == 'game') ? 'active' : '' }}">
                         <i class="ni ni-controller text-white"></i>
                         <span class="nav-link-text text-white">게임설정</span>
                     </a>
 
-                    <div class="collapse {{ (isset($parentSection) && $parentSection == 'game') ? 'show' : '' }}" id="navbar-games">
+                    <div class="collapse show" id="navbar-games">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.domain')}}">
@@ -124,10 +215,11 @@
                                     도메인별 게임관리
                                 </a>
                             </li>
+                            @if (auth()->user()->hasRole('admin') )
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.category')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    에이전트별 게임관리
+                                    파트너별 게임관리
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -148,6 +240,25 @@
                                     환수금내역
                                 </a>
                             </li>
+                            @endif
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.betlimit')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    에볼루션 배팅한도
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.gactable')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    에볼루션 테이블설정
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.game.missrole')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    공배팅
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -155,12 +266,12 @@
 
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'dw') ? 'active' : '' }}" href="#navbar-deposit" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'dw') ? 'active' : '' }}">
                         <i class="ni ni-money-coins text-white"></i>
                         <span class="nav-link-text text-white">충환전</span>
                     </a>
 
-                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'dw') ? 'show' : '' }}" id="navbar-deposit">
+                    <div class="collapse show" id="navbar-deposit">
                         <ul class="nav nav-sm flex-column">
                             @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
@@ -207,25 +318,25 @@
 
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link {{(isset($parentSection) && $parentSection == 'report') ? 'active' : '' }}" href="#navbar-report" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link {{(isset($parentSection) && $parentSection == 'report') ? 'active' : '' }}">
                         <i class="ni ni-chart-pie-35 text-white"></i>
                         <span class="nav-link-text text-white">보고서</span>
                     </a>
 
-                    <div class="collapse {{(isset($parentSection) && $parentSection == 'report') ? 'show' : '' }}" id="navbar-report">
+                    <div class="collapse show" id="navbar-report">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.daily.dw')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    일별충환전
+                                    일별정산
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.daily')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     일별벳윈
                                 </a>
-                            </li>
+                            </li> -->
                             <!-- <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.monthly')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
@@ -262,16 +373,17 @@
                     </div>
                 </li>
                 @endif -->
-                @if (auth()->user()->isInoutPartner())
+                
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'customer') ? 'active' : '' }}" href="#navbar-customer" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'customer') ? 'active' : '' }}">
                         <i class="ni ni-headphones text-white"></i>
                         <span class="nav-link-text text-white">고객센터</span>
                     </a>
-
-                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'customer') ? 'show' : '' }}" id="navbar-customer">
+                    
+                    <div class="collapse show" id="navbar-customer">
                         <ul class="nav nav-sm flex-column">
+                            @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.notice.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
@@ -279,26 +391,41 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="{{argon_route('argon.msg.list')}}">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msgtemp.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    쪽지
+                                    템플릿
                                 </a>
                             </li>
+                            @endif
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msg.list', ['type'=>1])}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    계좌문의
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.msg.list', ['type'=>0])}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    일반쪽지
+                                </a>
+                            </li>
+
+                            
                             
                         </ul>
                     </div>
                 </li>
-                @endif
+                
 
                 @if (auth()->user()->hasRole('admin'))
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
-                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'setting') ? 'active' : '' }}" href="#navbar-system" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-players">
+                    <a class="nav-link  {{(isset($parentSection) && $parentSection == 'setting') ? 'active' : '' }}">
                         <i class="ni ni-settings text-white"></i>
                         <span class="nav-link-text text-white">시스템설정</span>
                     </a>
 
-                    <div class="collapse  {{(isset($parentSection) && $parentSection == 'setting') ? 'show' : '' }}" id="navbar-system">
+                    <div class="collapse show" id="navbar-system">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.website.list')}}">
@@ -310,6 +437,13 @@
                                 <a class="nav-link text-white" href="{{argon_route('argon.activity.index')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     접속로그
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.system.statistics')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    시스템상황
                                 </a>
                             </li>
                             

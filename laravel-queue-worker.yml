@@ -15,3 +15,14 @@ apps:
     args:
       - queue:work 
       - --queue=deal
+      - --tries=1
+
+  - name: queue-share
+    script: artisan
+    exec_mode: fork
+    interpreter: php
+    instances: 1
+    args:
+      - queue:work 
+      - --queue=share
+      - --tries=1

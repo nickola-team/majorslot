@@ -1,0 +1,55 @@
+.ngdialog.ngdialog-theme-default.ngdialog-mulitple-popup {
+  overflow-y: scroll;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-mulitple-popup .ngdialog-overlay{
+  right: 10px; /* scroll width */
+}
+
+.mp-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mp-popup-container {
+  margin: 10px;
+  position: relative;
+  max-width: 450px;
+}
+
+.ngdialog-mulitple-popup.ngdialog.ngdialog-theme-default .ngdialog-content{
+  width: 1000px;
+  background-color: transparent;
+}
+
+.mp-close-btn {
+  color: #cccccc;
+  font-size: 24px;
+  padding: 4px 8px;
+  background-color: transparent;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 0;
+  line-height: 1;
+  transition: color 200ms ease-in-out;
+}
+
+.mp-close-btn:hover, .mp-close-btn:focus {
+  color: #ffb400;
+}
+
+.mp-not-today-btn {
+  width: 132px;
+  height: 30px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 30px;
+  background: #000000;
+  border: 1px solid #ffb400;
+  color: #ffb400;
+  font-size: 12px;
+  border-radius: 0;
+}

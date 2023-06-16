@@ -42,31 +42,6 @@ function chkLogin() {
 }
 
 function reGetMoney() {
-    var tmpdate = new Date().getTime();
-    if (parseInt($("#is_sign_in").val()) == 1) {
-        //$(".player-balance").text("로딩중···");
-        $.ajax({
-            url: "/api/ximax/mymoney.asp",
-            type: "GET",
-            data: { userid: xigame_id, nowtime: tmpdate },
-            dataType: "html",
-            success: function(data) {
-                $("#ximoney").val(data);
-                $("#wt_curmoney").val(data);
-                dispMoney();
-            }
-        });
-
-        $.ajax({
-            url: "/api/point.asp",
-            type: "GET",
-            dataType: "html",
-            success: function(data) {
-                $("#point").val(data);
-                dispPoint();
-            }
-        });
-    }
 
 }
 

@@ -226,9 +226,9 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.providers.tp.render',
         'uses' => 'RenderingController@theplusrender'
     ]);
-    Route::get('providers/hpc/{gamecode}', [
-        'as' => 'frontend.providers.hpc.render',
-        'uses' => 'RenderingController@hpcrender'
+    Route::get('followgame/{provider}/{gamecode}', [
+        'as' => 'frontend.providers.render',
+        'uses' => 'RenderingController@gamerenderv2'
     ]);
     Route::get('providers/pp/{gamecode}', [
         'as' => 'frontend.providers.pp.render',
@@ -249,7 +249,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
     Route::get('providers/waiting/{provider}/{gamecode}', [
         'as' => 'frontend.providers.waiting',
         'uses' => 'RenderingController@waiting'
-    ]);
+    ])->middleware('simultaneous:1');
 
     Route::get('providers/launch/{requestid}', [
         'as' => 'frontend.providers.launch',
@@ -327,9 +327,19 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.bogetgamelist',
         'uses' => 'ApiController@bo_getgamelist',
     ]);
+    Route::post('bo/getgamedetail', [
+        'as' => 'frontend.api.bogetgamedetail',
+        'uses' => 'ApiController@bo_getgamedetail',
+    ]);
+    //game start
     Route::get('gamestart/endpoint', [
         'as' => 'frontend.api.bostartgame',
         'uses' => 'GamesController@startGameWithToken',
+    ]);
+
+    Route::get('gamestart/go/htmlGame.go', [
+        'as' => 'frontend.game.startgame',
+        'uses' => 'GamesController@startGameWithiFrame',
     ]);
 
     Route::post('api/getgamelink', [
@@ -371,6 +381,14 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.readmsg',
         'uses' => 'ApiController@readMessage',
     ]);
+    Route::post('api/writeMsg', [
+        'as' => 'frontend.api.writemsg',
+        'uses' => 'ApiController@writeMessage',
+    ]);
+    Route::post('api/messages', [
+        'as' => 'frontend.api.msglist',
+        'uses' => 'ApiController@msglist',
+    ]);
     Route::post('api/deleteMsg', [
         'as' => 'frontend.api.deletemsg',
         'uses' => 'ApiController@deleteMessage',
@@ -393,6 +411,17 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.join',
         'uses' => 'ApiController@postJoin'
     ]); 
+
+    Route::post('api/inouthistory', [
+        'as' => 'frontend.api.inouthistory',
+        'uses' => 'ApiController@inoutHistory'
+    ]); 
+
+    Route::post('api/notices', [
+        'as' => 'frontend.api.notices',
+        'uses' => 'ApiController@notices'
+    ]); 
+
 
     Route::get('/api/stat_game_balance', [
         'as' => 'backend.game_stat.balance',
@@ -1418,11 +1447,13 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('/promo/race/details', 'GameProviders\PPController@promoracedetails');
     Route::get('/promo/race/prizes', 'GameProviders\PPController@promoraceprizes');
     Route::post('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
+    Route::post('/promo/race/v2/winners', 'GameProviders\PPController@promoracewinners');
     Route::post('/promo/tournament/player/choice/OPTIN/', 'GameProviders\PPController@promotournamentchoice');
     Route::post('/promo/race/player/choice/OPTIN/', 'GameProviders\PPController@promoracechoice');
     Route::get('/promo/tournament/player/choice/OPTIN/', 'GameProviders\PPController@promotournamentchoice');
     Route::get('/promo/race/player/choice/OPTIN/', 'GameProviders\PPController@promoracechoice');
     Route::get('/promo/race/winners', 'GameProviders\PPController@promoracewinners');
+    Route::get('/promo/race/v2/winners', 'GameProviders\PPController@promoracewinners');
     Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
     Route::get('/promo/tournament/v3/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
     Route::get('/announcements/unread', 'GameProviders\PPController@announcementsunread');
@@ -1520,6 +1551,9 @@ Route::group([ 'prefix' => 'gac',], function () {
     Route::get('/balance/{userid}', 'GameProviders\GACController@balance');
     Route::post('/placeBet', 'GameProviders\GACController@placebet');
     Route::post('/betResult', 'GameProviders\GACController@betresult');
+
+    //for rendering
+    Route::get('/golobby', 'GameProviders\GACController@embedGACgame');
 });
 
 /**
@@ -1534,10 +1568,46 @@ Route::group([ 'prefix' => 'dg',], function () {
     Route::post('/account/unsettle/{agentName}  ', 'GameProviders\DGController@unsettle');
 });
 
+/**
+ * SPOGAME Provider
+ */
+Route::group(['prefix' => 'spogame',], function () {
+	Route::get('/balance', 'GameProviders\SPGController@balance');
+    Route::post('/changebalance', 'GameProviders\SPGController@changebalance');
+});
 
 
 /**
  * HPPlayCasino  Provider
  */
 
-Route::post('/hpc/signal', 'GameProviders\HPCController@userSignal');
+// Route::post('/hpc/signal', 'GameProviders\HPCController@userSignal');
+Route::post('/{provider}/signal', 'GameProviders\ApiController@userSignal');
+
+
+/**
+ * GamePlay Games
+ */
+
+Route::post('/REST/GameEngine/Livebetpool', 'GameProviders\GamePlayController@Livebetpool');
+Route::post('/REST/GameEngine/GetMemberDrawResult', 'GameProviders\GamePlayController@GetMemberDrawResult');
+Route::post('/REST/GameEngine/HistoryBet', 'GameProviders\GamePlayController@HistoryBet');
+Route::post('/REST/GameEngine/MultiLimit', 'GameProviders\GamePlayController@MultiLimit');
+Route::post('/REST/GameEngine/GameSetting', 'GameProviders\GamePlayController@GameSetting');
+Route::post('/REST/GameEngine/DrawResult', 'GameProviders\GamePlayController@DrawResult');
+Route::post('/REST/GameEngine/WinLose', 'GameProviders\GamePlayController@WinLose');
+Route::get('/REST/GameEngine/OpenBet3', 'GameProviders\GamePlayController@OpenBet3');
+Route::get('/REST/GameEngine/ServerTime', 'GameProviders\GamePlayController@ServerTime');
+Route::post('/REST/GameEngine/UserInfo', 'GameProviders\GamePlayController@UserInfo');
+Route::post('/REST/GameEngine/SpreadBet', 'GameProviders\GamePlayController@SpreadBet');
+Route::post('/REST/GameEngine/Trend', 'GameProviders\GamePlayController@Trend');
+
+Route::post('/REST/GameConfig/GetActiveProductsByVendor', 'GameProviders\GamePlayController@GetActiveProductsByVendor');
+
+Route::get('/REST/TrialPromo/GetTrialPromotionInfo', 'GameProviders\GamePlayController@GetTrialPromotionInfo');
+
+//from node server
+
+Route::post('/REST/GameCore/trendInfo', 'GameProviders\GamePlayController@processCurrentTrend');
+
+Route::get('/GamePlay/WinPowerBall', 'GameProviders\GamePlayController@powerball');

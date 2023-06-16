@@ -1033,9 +1033,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
 
                 $shop->ggr_balance = 0;
                 $shop->ggr_mileage = 0;
-                //reset count deal balances
-                $shop->count_deal_balance = 0;
-                $shop->count_mileage = 0;
                 $shop->last_reset_at = date('Y-m-d');
                 $shop->save();
             }
@@ -1089,9 +1086,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 }
                 $partner->ggr_balance = 0;
                 $partner->ggr_mileage = 0;
-                //reset count deal balances
-                $partner->count_deal_balance = 0;
-                $partner->count_mileage = 0;
+                
                 $partner->last_reset_at = date('Y-m-d');
                 $partner->save();
             }
@@ -1121,9 +1116,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 $shop = $partner->shop;
                 $shop->ggr_balance = 0;
                 $shop->ggr_mileage = 0;
-                //reset count deal balances
-                $shop->count_deal_balance = 0;
-                $shop->count_mileage = 0;
+                
                 $shop->last_reset_at = date('Y-m-d');
                 $shop->save();
             }
@@ -1131,9 +1124,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
             {
                 $partner->ggr_balance = 0;
                 $partner->ggr_mileage = 0;
-                //reset count deal balances
-                $partner->count_deal_balance = 0;
-                $partner->count_mileage = 0;
+
                 $partner->last_reset_at = date('Y-m-d');
                 $partner->save();
             }

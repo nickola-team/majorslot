@@ -2,7 +2,7 @@
 
 namespace VanguardLTE\Events\Jackpot;
 
-use VanguardLTE\Jackpot;
+use VanguardLTE\HappyHourUser;
 
 class NewJackpot
 {
@@ -11,7 +11,7 @@ class NewJackpot
      */
     protected $NewJackpot;
 
-    public function __construct(Jackpot $NewJackpot)
+    public function __construct(HappyHourUser $NewJackpot)
     {
         $this->NewJackpot = $NewJackpot;
     }

@@ -17,6 +17,10 @@ namespace VanguardLTE
         {
             return $this->belongsTo('VanguardLTE\Shop');
         }
+        public function info()
+        {
+            return $this->belongsTo('VanguardLTE\Info');
+        }
     }
 
 }

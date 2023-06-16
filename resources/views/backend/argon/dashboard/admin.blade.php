@@ -10,8 +10,18 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 벳윈수익</h5>
-                        <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todaybetwin'])}}</span>
+                        <div class="row">
+                            <div class="col-6">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 배팅금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary?$todaysummary->totalbet:0)}}</span>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 당첨금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($todaysummary?$todaysummary->totalwin:0)}}</span>
+                            </div>
+                            <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 벳윈수익</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todaybetwin'])}}</span>
+                            </div>
+                        </div>
                         <div class="progress progress-xs mt-3 mb-0">
                             <div class="progress-bar bg-success" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                         </div>
@@ -29,8 +39,19 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충환수익</h5>
-                        <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todaydw'])}}</span>
+                        <div class="row">
+                            <div class="col-6">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충전금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todayin'])}}</span>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 환전금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todayout'])}}</span>
+                            </div>
+                            <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충환수익</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todaydw'])}}</span>
+                            </div>
+                        </div>
+                        
                         <div class="progress progress-xs mt-3 mb-0">
                             <div class="progress-bar bg-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                         </div>
@@ -42,12 +63,72 @@
             </div>
         </div>
     </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-gradient-primary border-0 card-bg-1">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-6">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 배팅금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthbet'])}}</span>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 당첨금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthwin'])}}</span>
+                            </div>
+                            <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 벳윈수익</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthbet'] - $stats['monthwin'])}}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="progress progress-xs mt-3 mb-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0 text-sm">
+                    <a href="{{argon_route('argon.report.daily')}}" class="text-nowrap text-white font-weight-600">보고서보기</a>
+                    <!-- <a class="text-nowrap text-white font-weight-600">게임RTP&nbsp;&nbsp;&nbsp;{{number_format($stats['monthrtp'],2)}}%</a> -->
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-gradient-info border-0  card-bg-2">
+            <!-- Card body -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                    <div class="row">
+                        <div class="col-6">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 충전금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthin'])}}</span>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 환전금</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthout'])}}</span>
+                            </div>
+                            <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 충환수익</h5>
+                                <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthin'] - $stats['monthout'])}}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="progress progress-xs mt-3 mb-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0 text-sm">
+                <a class="text-nowrap text-white font-weight-600">페이아웃&nbsp;&nbsp;&nbsp;{{number_format($stats['monthpayout'],2)}}%</a>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xl-6 mb-5 mb-xl-0">
+        <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-transparent">
                     <div class="row align-items-center">
@@ -58,14 +139,32 @@
                 </div>
                 <div class="card-body">
                     <!-- Chart -->
-                    <div class="chart">
+                    <div class="chart-sm">
                         <!-- Chart wrapper -->
                         <canvas id="chart-betwin"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-6">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h2 class="mb-0">게임사별베팅금</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Chart -->
+                    <div class="chart-sm">
+                        <!-- Chart wrapper -->
+                        <canvas id="chart-category"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
             <div class="card   shadow">
                 <div class="card-header bg-transparent">
                     <div class="row align-items-center">
@@ -76,7 +175,7 @@
                 </div>
                 <div class="card-body">
                     <!-- Chart -->
-                    <div class="chart">
+                    <div class="chart-sm">
                         <canvas id="chart-dw"></canvas>
                     </div>
                 </div>
@@ -94,6 +193,7 @@
     $bets = [];
     $totalin = [];
     $totalout = [];
+    
 
     for($i=1; $i<=30; $i++){
         $label = date("m-d", strtotime(-30 + $i . ' days'));
@@ -115,6 +215,17 @@
             $totalout[$label] += $stat->totalout;
         }
     }
+
+    $cat_labels = [];
+    $cat_bet = [];
+
+    foreach($monthcategory AS $cat){
+        $label = $cat->title;
+        $cat_labels[] = $label;
+        $cat_bet[] = $cat->totalbet;
+    }
+
+    
 @endphp
 
 @push('js')
@@ -282,11 +393,58 @@
             }
         };
 
+        var dataset = {
+            label: "게임사별 베팅",
+            backgroundColor: [
+                color(window.chartColors.green).alpha(0.5).rgbString(), 
+                color(window.chartColors.red).alpha(0.5).rgbString(), 
+                color(window.chartColors.yellow).alpha(0.5).rgbString(), 
+                color(window.chartColors.blue).alpha(0.5).rgbString(), 
+                color(window.chartColors.grey).alpha(0.5).rgbString()],//라벨별 컬러설정
+            borderColor: '#119911',
+            data: [{{implode(',', $cat_bet)}}]
+        }
+
+        var labels=["{!! implode('","', $cat_labels) !!}"]; 
+        
+        var datasets={ datasets:[dataset], labels:labels }
+
+        var configpie = {
+            type: 'pie',
+            data: datasets, //데이터 셋 
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, //true 하게 되면 캔버스 width,height에 따라 리사이징된다.
+                legend: {
+                    position: 'top',
+                    fontColor: 'black',
+                    align: 'center',
+                    display: true,
+                    fullWidth: true,
+                    labels: {
+                        fontColor: 'rgb(0, 0, 0)'
+                    }
+                },
+                plugins: {
+                    labels: {//두번째 script태그를 설정하면 각 항목에다가 원하는 데이터 라벨링을 할 수 있다.
+                        render: 'value',
+                        fontColor: 'black',
+                        fontSize: 15,
+                        precision: 2
+                    }
+
+                }
+            }
+        }
+
         window.onload = function() {
             var ctx = document.getElementById('chart-betwin').getContext('2d');
             window.myLine = new Chart(ctx, config);
             var ctx1 = document.getElementById('chart-dw').getContext('2d');
             window.myLine1 = new Chart(ctx1, configbar);
+
+            var ctx2 = document.getElementById('chart-category').getContext('2d');
+            window.myLine2 = new Chart(ctx2, configpie);
         };
 
     </script>

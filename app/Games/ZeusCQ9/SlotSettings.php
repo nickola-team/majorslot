@@ -93,7 +93,7 @@ namespace VanguardLTE\Games\ZeusCQ9
             $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
                 'user_id' => $user->id, 
                 'status' => 1,
-                'time' => date('G')
+                // 'time' => date('G')
             ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
@@ -786,6 +786,10 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $bonusWin = 1;
                 $_obf_grantbonus_count = 0;
                 $game->{'winbonus' . $_obf_granttype . $_obf_linecount} = $this->getNewSpin($game, 0, 1, $lines, $garantType);
+                if ($this->happyhouruser)
+                {
+                    $game->{'winbonus' . $_obf_granttype . $_obf_linecount} = rand(0,50);
+                }
             }
             else if( $_obf_winline_count <= $_obf_grantwin_count ) 
             {
@@ -799,10 +803,10 @@ namespace VanguardLTE\Games\ZeusCQ9
             if ($this->happyhouruser)
             {
                 $bonus_spin = rand(1, 10);
-                $spin_percent = 5;
+                $spin_percent = 8;
                 if ($garantType == 'freespin')
                 {
-                    $spin_percent = 3;
+                    $spin_percent = 9;
                 }
                 $spinWin = ($bonus_spin < $spin_percent) ? 1 : 0;
             }
@@ -1148,7 +1152,37 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            if ($this->happyhouruser && $index<=3 && $winType == 'win')
+                            {
+                                $highsymbols = [1,2,3,4,5];
+                                $selectedsymbol = $highsymbols[rand(0, count($highsymbols)-1)];
+
+                                $chance = rand(0, 10);
+                                if ($chance < 8)
+                                {
+                                    $trycount = 0;
+                                    do
+                                    {
+                                        $selidx = mt_rand(0, count($this->$reelStrip) - 3);
+                                        $_obf_reelStripCounts[$index + 1] = $selidx;
+                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+2]];
+                                        if (in_array($selectedsymbol, $shownsyms))
+                                        {
+                                            break;
+                                        }
+                                        $trycount = $trycount + 1;
+                                    }
+                                    while ($trycount<20);
+                                }
+                                else
+                                {
+                                    $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                                }
+                            }
+                            else
+                            {
+                                $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            }
                         }
                     }
                 }
@@ -1187,7 +1221,37 @@ namespace VanguardLTE\Games\ZeusCQ9
                     {
                         if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
                         {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            if ($this->happyhouruser && $index<=3 && $winType == 'win')
+                            {
+                                $highsymbols = [1,2,3,4,5];
+                                $selectedsymbol = $highsymbols[rand(0, count($highsymbols)-1)];
+
+                                $chance = rand(0, 10);
+                                if ($chance < 8)
+                                {
+                                    $trycount = 0;
+                                    do
+                                    {
+                                        $selidx = mt_rand(0, count($this->$reelStrip) - 3);
+                                        $_obf_reelStripCounts[$index + 1] = $selidx;
+                                        $shownsyms = [$this->$reelStrip[$selidx], $this->$reelStrip[$selidx+1], $this->$reelStrip[$selidx+2]];
+                                        if (in_array($selectedsymbol, $shownsyms))
+                                        {
+                                            break;
+                                        }
+                                        $trycount = $trycount + 1;
+                                    }
+                                    while ($trycount<20);
+                                }
+                                else
+                                {
+                                    $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                                }
+                            }
+                            else
+                            {
+                                $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
+                            }                            
                         }
                     }
                 }

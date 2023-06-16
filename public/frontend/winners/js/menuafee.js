@@ -202,10 +202,16 @@ function usePoint() {
     }
 }
 
-
-
 //-- 쪽지 --//
 function readMessage(idx) {
+    // if($('#cont_'+idx).hasClass("open")){
+    //     $('#cont_'+idx).css('display','none').removeClass('open');
+    //     $('#title_'+idx).removeClass('active');
+    // } else {
+    //     $('#cont_'+idx).css('display','block').addClass('open');
+    //     $('#title_'+idx).addClass('active');
+    // }
+
     if (parseInt($('#is_sign_in').val())) {
         $.ajax({
             url: "/api/readMsg",
@@ -233,97 +239,6 @@ function deleteMessage(idx) {
             }
         });
     }
-}
-
-
-//-- 공지사항 --//
-function viewEventDetail(idx, num) {
-    if (parseInt($("#is_sign_in").val()) == 1) {
-        $(".wrapper_loading").removeClass("hidden");
-        $.ajax({
-            url: "/board/view.asp",
-            type: "GET",
-            data: { target: "event", idx: idx, num: num },
-            dataType: "html",
-            success: function(data) {
-                $('.nav-mdl .event-link').parent().addClass('active');
-                $('.nav-mdl .event-link').parent().siblings('.nav-btn').removeClass('active');
-                $('.tab-mdl.event-view').addClass('active');
-                $('.tab-mdl.event-view').siblings('.tab-mdl').removeClass('active');
-
-                var obj = $(".event-view-section");
-                obj.empty();
-                obj.append(data);
-            },
-            complete: function() { $(".wrapper_loading").addClass("hidden") }
-        });
-    }
-}
-
-function viewNoticeDetail(idx, num) {
-    if (parseInt($("#is_sign_in").val()) == 1) {
-        $(".wrapper_loading").removeClass("hidden");
-        $.ajax({
-            url: "/board/view.asp",
-            type: "GET",
-            data: { target: "notice", idx: idx, num: num },
-            dataType: "html",
-            success: function(data) {
-                $('.nav-mdl .notice-link').parent().addClass('active');
-                $('.nav-mdl .notice-link').parent().siblings('.nav-btn').removeClass('active');
-                $('.tab-mdl.notice-view').addClass('active');
-                $('.tab-mdl.notice-view').siblings('.tab-mdl').removeClass('active');
-
-                var obj = $(".notice-view-section");
-                obj.empty();
-                obj.append(data);
-            },
-            complete: function() { $(".wrapper_loading").addClass("hidden") }
-        });
-    }
-}
-
-function noticeEventBack(type) {
-    switch (type) {
-        case "event":
-            $('.nav-mdl .event-link').parent().addClass('active');
-            $('.nav-mdl .event-link').parent().siblings('.nav-btn').removeClass('active');
-            $('.tab-mdl.event').addClass('active');
-            $('.tab-mdl.event').siblings('.tab-mdl').removeClass('active');
-            noticeEventInit();
-            break;
-        default:
-            $('.nav-mdl .notice-link').parent().addClass('active');
-            $('.nav-mdl .notice-link').parent().siblings('.nav-btn').removeClass('active');
-            $('.tab-mdl.notice').addClass('active');
-            $('.tab-mdl.notice').siblings('.tab-mdl').removeClass('active');
-            noticeEventInit();
-    }
-}
-
-function noticeEventInit() {
-    if ($(".event_table tbody tr td").length === 1) {
-        postAjax(1, "EV");
-    }
-    if ($(".notice_table tbody tr td").length === 1) {
-        postAjax(1, "NT");
-    }
-}
-
-function boardPopup(type, idx, num) {
-    if (parseInt($("#is_sign_in").val()) == 1) {
-        switch (type) {
-            case "event":
-                viewEventDetail(idx, num);
-                break;
-            default:
-                viewNoticeDetail(idx, num);
-        }
-    }
-}
-
-function postAjax(page, type) {
-    
 }
 
 
@@ -461,5 +376,65 @@ function startGameByProvider(provider, gamecode) {
         }
         window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
     }
+    });
+}
+
+function listMessages() {
+	$.post('/api/messages', null, function(data){
+        if(data.error == false){
+			var html = `<table class="bs-table with-depth">
+                        <colgroup>
+                        <col width="40%">
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="10%">
+                        </colgroup>
+                        <thead>
+                                <tr>
+                                    <th>제목</th>
+                                    <th>작성시간</th>
+                                    <th>읽은시간</th>
+                                    <th>타입</th>
+                                </tr>
+                        </thead>
+                        <tbody class="message-list">`;
+			if (data.data.length > 0) {
+				for (var i = 0; i < data.data.length; i++) {
+					var date = new Date(data.data[i].created_at);
+                    var read = '';
+					if (data.data[i].read_at == null)
+					{
+						read = '읽지 않음';
+					}
+					else
+					{
+						var date1 = new Date(data.data[i].read_at);
+						read = date1.toLocaleString();
+					}
+					var type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';
+					html += `<tr class="depth-click" onclick="readMessage('${data.data[i].id}')" id="title_${data.data[i].id}">
+						<td>${data.data[i].title}</td>
+						<td>${date.toLocaleString()}</td>
+						<td>${read}</td>
+						<td>${type}</td>
+						</tr>
+                        <tr class="dropdown">
+                        <td colspan="4">
+                            <div class="mess-cont" style="display: none;" id="cont_${data.data[i].id}">
+                            <div class="inner">${data.data[i].content}
+                            </div>
+                            </div>
+                        </td>
+                        </tr>`;
+				}
+				
+			}
+			html += `</tbody></table>`;
+			$("#msgDiv").html(html);
+            
+			
+        } else {
+            alert(data.msg);
+        }
     });
 }

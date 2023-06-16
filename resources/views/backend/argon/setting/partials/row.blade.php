@@ -1,4 +1,5 @@
 <tr>        
+    <td>{{$website->id}}</td>
     <td>{{$website->domain}}</td>
 	<td>{{ $website->title }}</td>
     <td>{{ $website->frontend }}</td>

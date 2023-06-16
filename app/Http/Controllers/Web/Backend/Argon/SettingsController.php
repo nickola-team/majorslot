@@ -192,14 +192,73 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors([trans('app.no_permission')]);
             }
         }
-    }
+        public function system_values(\Illuminate\Http\Request $request)
+        {
+            if( !auth()->user()->hasRole('admin') ) 
+            {
+                return redirect()->back()->withErrors([trans('app.no_permission')]);
+            }
+            $serverstat = server_stat();
+            $bnnmoney = -1;
+            $kuzanmoney = -1;
+            $ktennmoney = -1;
+            try
+            {
+                $bnnmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\BNNController::getAgentBalance();
+                $kuzanmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KUZAController::getAgentBalance();
+                $ktennmoney = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::getAgentBalance();
 
-}
-namespace 
-{
-    function onkXppk3PRSZPackRnkDOJaZ9()
-    {
-        return 'OkBM2iHjbd6FHZjtvLpNHOc3lslbxTJP6cqXsMdE4evvckFTgS';
+            }
+            catch (\Exception $e)
+            {
+
+            }
+            $agents = [
+                'bnn' => $bnnmoney,
+                'kuza' => $kuzanmoney,
+                'kten' => $ktennmoney
+            ];
+            $strinternallog = '';
+            $filesize = 0;
+            $laravel = storage_path('logs/laravel.log');
+            if ( file_exists($laravel) )
+            {
+                $filesize = filesize($laravel);
+                $operating_system = PHP_OS_FAMILY;
+                if ($operating_system === 'Windows') {
+                    $strinternallog = file_get_contents($laravel);
+                }
+                else
+                {
+                    $strinternallog = `tail -100 $laravel`;
+                }
+
+            }
+            else
+            {
+                $strinternallog = 'Could not find log file';
+            }
+            
+            return view('backend.argon.setting.system', compact('serverstat','agents','strinternallog', 'filesize'));
+        }
+        public function logreset(\Illuminate\Http\Request $request)
+        {
+            $laravel = storage_path('logs/laravel.log');
+            if (file_exists($laravel)) {     // Make sure we don't create the file
+                $fp = fopen($laravel, 'w');  // Sets the file size to zero bytes
+                fclose($fp);
+            }
+            return redirect()->back()->withSuccess(['로그파일을 리셋하였습니다']);
+        }
+
+        public function xmx_withdrawall(\Illuminate\Http\Request $request)
+        {
+            set_time_limit(0);
+            exec('nohup php '. base_path() .'/artisan xmx:withdrawAll > /dev/null &');
+            exec('nohup php '. base_path() .'/artisan game:withdrawAll > /dev/null &');
+            return redirect()->back()->withSuccess(['게임사 머니회수 스케줄을 작동하였습니다']);
+        }
+
     }
 
 }

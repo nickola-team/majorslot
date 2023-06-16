@@ -27,11 +27,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $siteMaintence = env('MAINTENANCE', 0);
 
-            if( $siteMaintence==1 ) 
-            {
-                \Auth::logout();
-                return redirect()->to(argon_route('argon.auth.login'))->withErrors(['사이트 점검중입니다']);
-            }
+            
 
             $throttles = settings('throttle_enabled');
             if( $throttles && $this->hasTooManyLoginAttempts($request) ) 
@@ -58,7 +54,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $admin = $user;
-            if (!$admin->hasRole('admin'))
+            if (!$admin->hasRole(['admin','group']))
             {
 
                 while ($admin !=null && !$admin ->hasRole('comaster'))
@@ -67,10 +63,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     {
                         return redirect()->to(argon_route('argon.auth.login'))->withErrors('삭제된 계정입니다.');
                     }
-                    if (!$admin->isActive())
+                    if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::BANNED)
                     {
                         return redirect()->to(argon_route('argon.auth.login'))->withErrors('계정이 임시 차단되었습니다.');
                     }
+                    if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::JOIN || $admin->status == \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)
+                    {
+                        return redirect()->to(argon_route('argon.auth.login'))->withErrors('가입신청을 처리중입니다.');
+                    }
+                    if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::REJECTED)
+                    {
+                        return redirect()->to(argon_route('argon.auth.login'))->withErrors('가입신청이 거부되었습니다.');
+                    }
+                    
                     $admin = $admin->referral;
                 }
 
@@ -79,13 +84,31 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('auth.failed'));
                 }
 
-                if (!$admin->isActive())
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
                 {
-                    return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+                    return redirect()->to(argon_route('argon.auth.login'))->withErrors('삭제된 계정입니다.');
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::BANNED)
+                {
+                    return redirect()->to(argon_route('argon.auth.login'))->withErrors('계정이 임시 차단되었습니다.');
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::JOIN || $admin->status == \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)
+                {
+                    return redirect()->to(argon_route('argon.auth.login'))->withErrors('가입신청을 처리중입니다.');
+                }
+                if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::REJECTED)
+                {
+                    return redirect()->to(argon_route('argon.auth.login'))->withErrors('가입신청이 거부되었습니다.');
                 }
             }
 
-            if( !$user->hasRole('admin') && setting('siteisclosed') ) 
+            if( !$user->hasRole(['admin']) && $siteMaintence==1 ) 
+            {
+                \Auth::logout();
+                return redirect()->to(argon_route('argon.auth.login'))->withErrors(['사이트 점검중입니다']);
+            }
+            
+            if( !$user->hasRole(['admin','group']) && setting('siteisclosed') ) 
             {
                 \Auth::logout();
                 return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('app.site_is_turned_off'));

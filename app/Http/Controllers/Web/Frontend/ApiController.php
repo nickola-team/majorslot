@@ -31,10 +31,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
             }
             $user = \Auth::getProvider()->retrieveByCredentials($credentials);
-            if( $request->lang ) 
-            {
-                $user->update(['language' => $request->lang]);
-            }
+            // if( $request->lang ) 
+            // {
+            //     $user->update(['language' => $request->lang]);
+            // }
 
             //check admin id per site
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->get();
@@ -130,11 +130,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             while ($tryCount < 20);
             if ($bToken){
                 $user->update(['api_token' => $api_token]);
-                if ($user->playing_game != null)
-                {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
-                    $user->update(['playing_game' => null]);
-                }
+                // if ($user->playing_game != null)
+                // {
+                //     \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
+                //     $user->update(['playing_game' => null]);
+                // }
                 $user = $user->fresh();
                 if ($user->api_token != $api_token)
                 {
@@ -152,6 +152,36 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
 
             return response()->json(['error' => false, 'msg' => '성공']);
+        }
+        public function notices(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return response()->json(['error' => true, 'msg' => '로그인하세요']);
+            }
+            $parent = $user->referral;
+                
+            while($parent!=null && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+
+            }
+            $adminid = $parent->id;
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
+            return response()->json(['error' => false, 'data' => $noticelist]);
+        }
+        public function inoutHistory(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            if (!$user)
+            {
+                return response()->json(['error' => true, 'msg' => '로그인하세요']);
+            }
+            $type = $request->type;
+            $statistics = \VanguardLTE\WithdrawDeposit::select('sum','status','created_at')->where('user_id', $user->id)->where('type', $type)->orderBy('created_at', 'DESC')->take(10)->get();
+            return response()->json(['error' => false, 'balance'=>$user->balance, 'data' => $statistics]);
+
         }
         public function stat_game_balance(\Illuminate\Http\Request $request)
         {
@@ -201,14 +231,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         }
         public function postJoin(\Illuminate\Http\Request $request)
         {
-            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
-            $admin = null;
-            if ($site)
-            {
-                $admin = \VanguardLTE\User::where([
-                    'id' => $site->adminid, 
-                ])->first();
-            }
+            $comasters = \VanguardLTE\WebSite::where('domain', $request->root())->pluck('adminid')->toArray();
+            // $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            // $admin = null;
+            // if ($site)
+            // {
+            //     $admin = \VanguardLTE\User::where([
+            //         'id' => $site->adminid, 
+            //     ])->first();
+            // }
 
             $friend = $request->friend;
             $parent = \VanguardLTE\User::where([
@@ -225,7 +256,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $checkp = $checkp->referral;
             }
 
-            if (!$admin || !$checkp || $admin->id != $checkp->id)
+            if (!$checkp || !in_array($checkp->id, $comasters))
             {
                 return response()->json(['error' => true, 'msg' => '추천인아이디가 정확하지 않습니다']);
             }
@@ -293,10 +324,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
 
-            $balance = number_format(\Illuminate\Support\Facades\Auth::user()->balance,2);
-            $deal_balance = number_format(\Illuminate\Support\Facades\Auth::user()->deal_balance,2);
+            $balance = number_format(auth()->user()->balance);
+            $deal_balance = number_format(auth()->user()->deal_balance);
+            $unreadmsg = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->count();
 
-            return response()->json(['error' => false, 'balance' => $balance, 'deal' => $deal_balance]);
+            return response()->json(['error' => false, 'balance' => $balance, 'deal' => $deal_balance, 'msgCount' => $unreadmsg]);
         }
         public function getgamelink(\Illuminate\Http\Request $request)
         {
@@ -304,28 +336,62 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
             $user = auth()->user();
-            if ($user->playing_game != null)
-            {
-                return response()->json(['error' => true, 'msg' => '이미 실행중인 게임을 종료하세요', 'code' => '001']);
-            }
-
             $provider = $request->provider;
             $gamecode = $request->gamecode;
+
+            //withdraw all balance from old game provider.
+            $b = $user->withdrawAll('getgamelink');
+
+            if (!$b)
+            {
+                return response()->json(['error' => true, 'msg' => '잠시후 다시 시도하세요', 'code' => '002']);
+            }
+
+            $user->update([
+                'remember_token' => $user->api_token
+            ]);
+
             if ($provider == 'null')
             {
-                return response()->json(['error'=>false,'data' => ['url' => '/game/' . $gamecode]]);
+                $fakeparams = [
+                    'jackpotid' => 0,
+                    'exitGame' => 1,
+                    'extra' => 0,
+                    'mjckey' => uniqid('AUTH@') . uniqid('~style@'),
+                    'game' => $gamecode, //this is real param
+                    'lobbyUrl' => 'js://window.close();',
+                ];
+                return response()->json(['error'=>false,'data' => ['url' => route('frontend.game.startgame',$fakeparams)]]);
             }
-            //reset playing_game field to null for provider games.
-            if ($user)
+            if ($provider == '')
             {
-                $user->update([
-                    'playing_game' => null,
-                    'remember_token' => $user->api_token
-                ]);
+                return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
             }
-            $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
-           
+            if (!class_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller')) 
+            {
+                return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
+            }
+            //check if this game is available for this user
+            if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller','getGameObj'))
+            {
+                $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getGameObj', $gamecode);
+                if ($gameobj && isset($gameobj['href']))
+                {
+                    $category = \VanguardLTE\Category::where(['provider' => $provider, 'href' => $gameobj['href'], 'shop_id' => $user->shop_id])->first();
+                    if ($category->view == 0 )
+                    {
+                        return response()->json(['error' => true, 'msg' => '게임사를 찾을수 없습니다', 'code' => '002']);
+                    }
+                    if ($category->status == 0 )
+                    {
+                        return response()->json(['error' => true, 'msg' => '점검중입니다', 'code' => '003']);
+                    }
+                }
+            }
             
+            $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelink', $gamecode);
+            
+           
             return response()->json($res);
         }
 
@@ -387,36 +453,60 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ];
             }
 
-            if( $shop ) 
-            {
-                switch( $shop->orderby ) 
-                {
-                    case 'AZ':
-                        $games = $games->orderBy('name', 'ASC');
-                        break;
-                    case 'Rand':
-                        $games = $games->inRandomOrder();
-                        break;
-                    case 'RTP':
-                        $games = $games->orderBy(\DB::raw('CASE WHEN(stat_in > 0) THEN(stat_out*100)/stat_in ELSE 0 END '), 'DESC');
-                        break;
-                    case 'Count':
-                        $games = $games->orderBy('bids', 'DESC');
-                        break;
-                    case 'Date':
-                        $games = $games->orderBy('created_at', 'DESC');
-                        break;
-                }
-            }
-            $games = $games->get();
+            // if( $shop ) 
+            // {
+            //     switch( $shop->orderby ) 
+            //     {
+            //         case 'AZ':
+            //             $games = $games->orderBy('name', 'ASC');
+            //             break;
+            //         case 'Rand':
+            //             $games = $games->inRandomOrder();
+            //             break;
+            //         case 'RTP':
+            //             $games = $games->orderBy(\DB::raw('CASE WHEN(stat_in > 0) THEN(stat_out*100)/stat_in ELSE 0 END '), 'DESC');
+            //             break;
+            //         case 'Count':
+            //             $games = $games->orderBy('bids', 'DESC');
+            //             break;
+            //         case 'Date':
+            //             $games = $games->orderBy('created_at', 'DESC');
+            //             break;
+            //     }
+            // }
+            // $games = $games->get();
+            $games = $games->orderBy('original_id', 'DESC');
+            $org_ids = $games->pluck('original_id')->toArray();
+            $game_ids = $games->pluck('id')->toArray();
+            $startDate = date('Y-m-d', strtotime('-30 days'));
+            $query = 'SELECT A.*, B.bet from w_games A  left JOIN (SELECT SUM(totalbet) AS bet,SUM(totalwin) AS win, game_id AS game_id FROM w_game_summary WHERE date>="'.$startDate.'" and game_id in ('.implode(',',$org_ids).') GROUP BY game_id) B ON A.original_id=B.game_id WHERE A.id in ('.implode(',',$game_ids).')  ORDER BY B.bet desc limit 20;';
+            $gamerst = \DB::select($query);
             $data = [];
-            foreach ($games as $game)
+            $hotgameids = [];
+            foreach ($gamerst as $game)
             {
                 $data[] = [
                     'name' => $game->name,
-                    'title' => __('gamename.' . $game->title),
+                    'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
                     'enname' => $game->title,
+                    'label' => $game->label,
+                    'date_time' => $game->created_at
                 ];
+                $hotgameids[] = $game->id;
+            }
+            $games = $games->get();
+            foreach ($games as $game)
+            {
+                if (!in_array($game->id, $hotgameids))
+                {
+                    $data[] = [
+                        'name' => $game->name,
+                        'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title,
+                        'enname' => $game->title,
+                        'label' => $game->label,
+                        'date_time' => $game->created_at
+                    ];
+                }
             }
             return $data;
         }
@@ -436,15 +526,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $transactions1 = \VanguardLTE\WithdrawDeposit::where([
                 'type' => 'add',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
-                'payeer_id' => $request->id]);
+                'payeer_id' => auth()->user()->id]);
             $transactions2 = \VanguardLTE\WithdrawDeposit::where([
                 'type' => 'out',
                 'status' => \VanguardLTE\WithdrawDeposit::REQUEST,
-                'payeer_id' => $request->id]);
+                'payeer_id' => auth()->user()->id]);
+            $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get();
             $res['join'] = 0;
+            $res['msg'] = count($unreadmsgs);
             if (auth()->user()->isInOutPartner()) {
-                $shops = auth()->user()->availableShops();
-                $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('shop_id', $shops);
+                $availableUsers = auth()->user()->availableUsers();
+                $joinUsers = \VanguardLTE\User::where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('id', $availableUsers);
                 $res['join'] = $joinUsers->count();
             }
             $res['add'] = $transactions1->count();
@@ -480,6 +572,80 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return response()->json(['error' => false, 'games' => $selectedGames]);
         }
 
+        public function bo_getgamedetail(\Illuminate\Http\Request $request)
+        {
+            $statid = $request->statid;
+            $statgame = \VanguardLTE\StatGame::where('id', $statid)->first();
+            if (!$statgame)
+            {
+                return response()->json(['error' => true, 'res' => null]);
+            }
+            $ct = $statgame->category;
+            $res = null;
+            
+            if ($ct->provider != null)
+            {
+                if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
+                {
+                    $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
+                }
+                else
+                {
+                    
+                }
+            }
+            else //local game
+            {
+                $game = $statgame->game_item;
+                if ($game)
+                {
+                    //check game category
+                    $gameCats = $game->categories;
+                    foreach ($gameCats as $gcat)
+                    {
+                        if ($gcat->category->href == 'pragmatic') //pragmatic game history
+                        {
+                            if ($statgame->user)
+                            {
+                                return response()->json(['error' => false, 'res' => [
+                                    'href' => '/gs2c/lastGameHistory.do?symbol='.$game->label.'&token='.$statgame->user->id.'-'.$statgame->id
+                                ]]);
+                            }
+                        }
+                        else if ($gcat->category->href == 'bngplay') // booongo game history
+                        {
+                            if ($statgame->user)
+                            {
+                                return response()->json(['error' => false, 'res' => [
+                                    'href' => "/op/major/history.html?session_id=68939e9a5d134e78bfd9993d4a2cc34e#player_id=".$statgame->user->id."&brand=*&show=transactions&game_id=".$statgame->game_id."&tz=0&start_date=&end_date=&per_page=100&round_id=".$statgame->roundid."&currency=KRW&mode=REAL&report_type=GGR&header=0&totals=1&info=0&exceeds=0&lang=ko"
+                                ]]);
+                            }
+                        }
+                    }
+
+
+                    $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
+                    if (!class_exists($object))
+                    {
+                        return response()->json(['error' => true, 'res' => null]);
+                    }
+                    $gameObject = new $object();
+                    if (method_exists($gameObject, 'gameDetail'))
+                    {
+                        $res = $gameObject->gameDetail($statgame);
+                    }
+                    else
+                    {
+                    }
+                }
+                else
+                {
+                    return response()->json(['error' => true, 'res' => null]);
+                }
+            }
+            return response()->json(['error' => false, 'res' => $res]);
+        }
+
         public function getgamelist(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
@@ -505,6 +671,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '존재하지 않는 카테고리입니다.', 'code' => '002']);
             }
+            if( $cat1->status == 0) 
+            {
+                return response()->json(['error' => true, 'msg' => '점검중입니다', 'code' => '002']);
+            }
 
             if ($cat1->view == 0)
             {
@@ -516,39 +686,29 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if ($cat1->provider != null)
                 {
                     $selectedGames = $this->gamelistbyProvider($cat1->provider, $cat1->href);
-                    // //include gac lobby at all live casino
-                    // if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
-                    // {
-                    //     //skip
-                    // }
-                    // else {
-                    //     if ($cat1->type == 'live' && $cat1->href != 'gac')
-                    //     {
-                    //         $cat2 = \VanguardLTE\Category::where([
-                    //             'href' => 'gac', 
-                    //             'shop_id' => $shop_id
-                    //         ])->first();
-                    //         if ($cat2 && $cat2->view == 1)
-                    //         {
-                    //             $gacgames = $this->gamelistbyProvider($cat2->provider, $cat2->href);
-                    //             //change game icons
-                    //             foreach ($gacgames as $index=>$gac)
-                    //             {
-                    //                 $icon_name = str_replace(' ', '_', $gacgames[$index]['gameid']);
-                    //                 $icon_name = strtolower(preg_replace('/\s+/', '', $icon_name));
-                    //                 if ($cat1->href == 'live') //pragmatic
-                    //                 {
-                    //                     $gacgames[$index]['icon'] = '/frontend/Default/ico/gac/pp/' .  $icon_name . '.png';
-                    //                 }
-                    //                 else if ($cat1->href == 'evo') //evolution
-                    //                 {
-                    //                     $gacgames[$index]['icon'] = '/frontend/Default/ico/gac/evo/' .  $icon_name . '.png';
-                    //                 }
-                    //             }
-                    //             $selectedGames = array_merge($gacgames, $selectedGames);                                
-                    //         }
-                    //     }
-                    // }
+                    $childcat = \VanguardLTE\Category::where([
+                        'parent' => $cat1->id, 
+                        'shop_id' => $shop_id
+                    ])->first();
+                    if ($childcat)
+                    {
+                        $childgames = $this->gamelist([$childcat->id],false);
+                        $sortedgames = [];
+                        foreach ($childgames as $cg)
+                        {
+                            foreach ($selectedGames as $idx=>$sg)
+                            {
+                                if (isset($sg['symbol']) && ($sg['symbol']==$cg['label']))
+                                {
+                                    $sortedgames[] = $sg;
+                                    unset($selectedGames[$idx]);
+                                    break;
+                                }
+                            }
+                        }
+                        //now add remained games
+                        $selectedGames = array_merge($sortedgames, $selectedGames);
+                    }
                 }
                 else{
                     if (str_contains(\Illuminate\Support\Facades\Auth::user()->username, 'testfor')) // test account for game providers
@@ -580,12 +740,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             return response()->json(['error' => false, 'games' => $selectedGames, 'others' => []]);
         }
 
+        
+
         public function getgamelist_vi(\Illuminate\Http\Request $request){
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
             $shop_id = (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user()->shop_id : 0);
-            $categories = ['pragmatic','cq9play','virtualtech','habaneroplay','greentube'];
+            $categories = ['pragmatic'];
             $selectedGames = [];
             foreach ($categories as $category){
 
@@ -653,11 +815,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if( !\Illuminate\Support\Facades\Auth::check() ) {
                 return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
             }
+            \DB::beginTransaction();
             if ($request->user_id)
             {
                 $users = auth()->user()->availableUsers();
                 if( count($users) && !in_array($request->user_id, $users) ) 
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '비정상적인 접근입니다.',
@@ -672,6 +836,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if (!$user)
             {
+                \DB::commit();
                 return response()->json([
                     'error' => true, 
                     'msg' => '다시 시도해주세요.',
@@ -681,6 +846,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($user->hasRole('user') && $user->playing_game != null)
             {
+                \DB::commit();
                 return response()->json([
                     'error' => true, 
                     'msg' => '게임중에 딜비전환을 할수 없습니다.',
@@ -693,6 +859,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if($user->hasRole('manager')){
                 if (!$shop)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '다시 시도해주세요.',
@@ -710,6 +877,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $summ = abs($summ);
                 if ($real_deal_balance < $summ)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
                         'msg' => '딜비수익이 부족합니다.',
@@ -733,18 +901,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
                 if ($master == null)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
-                        'msg' => '총본사를 찾을수 없습니다.',
+                        'msg' => '상위파트너를 찾을수 없습니다.',
                         'code' => '000'
                     ], 200);
                 }
                 
                 if ($master->balance < $summ)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
-                        'msg' => '총본사보유금이 부족합니다',
+                        'msg' => '상위파트너보유금이 부족합니다',
                         'code' => '000'
                     ], 200);
                 }
@@ -816,6 +986,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     ]);
                 }
             }
+
+            \DB::commit();
             
             return response()->json(['error' => false]);
         }
@@ -934,32 +1106,25 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '001'
                 ], 200);
             }
-            if ($amount == 0)
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '충전금액을 입력하세요',
-                    'code' => '002'
-                ], 200);
-            }
+            
 
-            if ($amount > 5000000)
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '충전금액은 최대 500만원까지 가능합니다.',
-                    'code' => '002'
-                ], 200);
-            }
+            // if ($amount > 5000000)
+            // {
+            //     return response()->json([
+            //         'error' => true, 
+            //         'msg' => '충전금액은 최대 500만원까지 가능합니다.',
+            //         'code' => '002'
+            //     ], 200);
+            // }
 
-            if ($account == '')
-            {
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '입금자명을 입력하세요',
-                    'code' => '003'
-                ], 200);
-            }
+            // if ($account == '')
+            // {
+            //     return response()->json([
+            //         'error' => true, 
+            //         'msg' => '입금자명을 입력하세요',
+            //         'code' => '003'
+            //     ], 200);
+            // }
             $master = $user->referral;
             while ($master!=null && !$master->isInoutPartner())
             {
@@ -975,6 +1140,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             if ($master->bank_name == 'PAYWIN') // 페이윈 가상계좌
             {
+                if ($amount == 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '충전금액을 입력하세요',
+                        'code' => '002'
+                    ], 200);
+                }
                 //상품조회
                 try {
                     $data = [
@@ -1072,6 +1245,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             else if ($master->bank_name == 'JUNCOIN') //준코인 가상계좌
             {
+                if ($amount == 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '충전금액을 입력하세요',
+                        'code' => '002'
+                    ], 200);
+                }
+
                 if ($amount % 10000 != 0)
                 {
                     return response()->json([
@@ -1087,12 +1269,37 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'url' => $url
                 ], 200);
             }
+            else if ($master->bank_name == 'MESSAGE') //계좌를 쪽지방식으로 알려주는 총본사
+            {
+                $date_time = date('Y-m-d H:i:s', strtotime("-2 minutes"));
+                $lastMsgs = \VanguardLTE\Message::where([
+                    'writer_id' => $user->id,
+                ])->where('created_at', '>', $date_time)->get();
+                if (count($lastMsgs) > 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '이미 쪽지를 발송하였습니다. 잠시후 다시 시도하세요',
+                    ], 200);
+                }
+                $data = [
+                    'user_id' => $master->id,
+                    'writer_id' => $user->id,
+                    'type' => 1,
+                    'title' => '계좌문의드립니다',
+                    'content' => '입금계좌 문의드립니다'
+                ];
+                \VanguardLTE\Message::create($data);
+                return response()->json([
+                    'error' => false, 
+                    'msg' => '계좌문의 쪽지가 발송되었습니다',
+                ], 200);
+            }
             else
             {
                 $telegramId = $master->address;
                 if ($force==0 && $user->hasRole('user'))
                 {
-                    
                     return response()->json([
                         'error' => false, 
                         'msg' => '텔레그램 문의, 아이디 ' . $telegramId,
@@ -1122,7 +1329,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '004'
                 ], 200);
             }
-            if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
+            if ($user->hasRole('user') && ($user->recommender == '' || $user->bank_name == ''  || $user->account_no == '') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
             {
                 return response()->json([
                     'error' => true, 
@@ -1145,7 +1352,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'msg' => '충전금액을 입력해주세요'
                 ], 200);
             }
-            if ($user->hasRole('user'))
+            if ($user->hasRole('user')  && ($request->accountName != '' || $request->bank != ''  || $request->no != ''))
             {
                 $user->update([
                     'recommender' => $request->accountName,
@@ -1228,7 +1435,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $user = auth()->user();
 
-            if($user->role_id > 1 && ($user->bank_name == null || $user->bank_name == '')){
+            if(($user->bank_name == null || $user->bank_name == '')){
                 return response()->json([
                     'error' => true, 
                     'msg' => '계좌정보를 입력해주세요',
@@ -1260,7 +1467,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ], 200);
             }
 
-            if ($user->hasRole('user') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
+            if ($user->hasRole('user') && ($user->recommender == '' || $user->bank_name == ''  || $user->account_no == '') && ($request->accountName == '' || $request->bank == ''  || $request->no == ''))
             {
                 return response()->json([
                     'error' => true, 
@@ -1316,12 +1523,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
-                $user->update([
-                    'recommender' => $request->accountName,
-                    'bank_name' => $request->bank,
-                    'account_no' => $request->no
-                ]);
-                $user =  $user->fresh();
+                // $user->update([
+                //     'recommender' => $request->accountName,
+                //     'bank_name' => $request->bank,
+                //     'account_no' => $request->no
+                // ]);
+                // $user =  $user->fresh();
             }
 
 
@@ -1453,6 +1660,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->back()->withErrors(['본사를 찾을수 없습니다.']);
             }
+            if (!$user->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['관리권한이 없습니다.']);
+            }
             if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
@@ -1461,6 +1672,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
             }
+            
             if ($requestuser->hasRole('manager')) // for shops
             {
                 $shop = \VanguardLTE\Shop::lockforUpdate()->where('id', $transaction->shop_id)->get()->first();
@@ -1614,24 +1826,6 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ]);
             }
 
-            if ($requestuser->hasRole('user') && $requestuser->playing_game == 'pp')
-            {
-                if ($type == 'add')
-                {
-                    $summ = abs($amount);
-                }
-                else
-                {
-                    $summ = -abs($amount);
-                }
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($requestuser->id, $summ);
-                if ($data['error'] == -1) //밸런스 전송시 오류, 게임사게임 종료시킬것
-                {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($requestuser->id);
-                    $requestuser->update(['playing_game' => null]);
-                }
-            }
-
             return redirect()->route(config('app.admurl').'.in_out_manage', $type)->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }
 
@@ -1645,6 +1839,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
+            }
+            $user = auth()->user();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['본사를 찾을수 없습니다.']);
+            }
+            if (!$user->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['관리권한이 없습니다.']);
             }
             
             $amount = $transaction->sum;
@@ -1710,12 +1913,86 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             ]);
            return redirect()->back()->withSuccess(['조작이 성공적으로 진행되었습니다.']);
         }
+        public function msglist(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
+            {
+                return response()->json(['error' => true, 'msg'=>'로그인하세요']);
+            }
+            $parent = auth()->user()->referral;
+                
+            while($parent!=null && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $adminid = $parent->id;
+            
+            $personmsgs = \VanguardLTE\Message::where(function ($query) {
+                $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
+            });
+            $grpmsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::GROUP_MSG_ID, 'writer_id' => $adminid]);
+            $msgs = $grpmsgs->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
+            
+            return response()->json(['error' => false, 'user_id'=>auth()->user()->id,'data' => $msgs]);
+        }
+        public function writeMessage(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
+            {
+                return response()->json(['error' => true, 'msg' => '로그인하세요']);
+            }
+            if ($request->title == '' || $request->content == '')
+            {
+                return response()->json(['error' => true, 'msg' => '제목과 내용을 모두 입력하세요']);
+            }
+            $title = $request->title;
+            $content = $request->content;
+            $type = 0;
+            if ($request->type != null)
+            {
+                $type = $request->type;
+            }
+            $parent =auth()->user()->referral;
+            while($parent!=null && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+
+            }
+            $adminid = $parent->id;
+            $msg = \VanguardLTE\Message::create(
+                [
+                    'user_id' => $adminid,
+                    'writer_id' => auth()->user()->id,
+                    'type' => $type,
+                    'title' => $title,
+                    'content' => $content,
+                ]
+                );
+            return response()->json(['error' => false, 'id' => $msg->id]);
+        }
         public function readMessage(\Illuminate\Http\Request $request)
         {
-            $msg = \VanguardLTE\Message::where('id', $request->id)->first();
-            if ($msg && $msg->read_at == null)
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
             {
-                $msg->update(['read_at' => \Carbon\Carbon::now()]);
+                return response()->json(['error' => 0]);
+            }
+            $msg = \VanguardLTE\Message::where('id', $request->id)->first();
+            if ($msg )
+            {
+                if ($msg->user_id == auth()->user()->id)
+                {
+                    $msg->update([
+                            'read_at' => \Carbon\Carbon::now(), 
+                            'count' => 1
+                                ]);
+                }
+                else if ($msg->user_id == \VanguardLTE\Message::GROUP_MSG_ID)
+                {
+                    $msg->update([
+                        'read_at' => \Carbon\Carbon::now(), 
+                        'count' => $msg->count + 1
+                            ]);
+                }
             }
             return response()->json(['error' => 0]);
         }

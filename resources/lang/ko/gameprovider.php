@@ -1,6 +1,7 @@
 <?php
 return [
-    'Aztec Gems' => '아즈텍 젬스',
+        'Lobby' => '로비',
+        'Aztec Gems' => '아즈텍 젬스',
 
         /**
          * Booongo Games

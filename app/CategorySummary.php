@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE
 {
+    use Illuminate\Support\Facades\Log;
     class CategorySummary extends \Illuminate\Database\Eloquent\Model
     {
         protected $table = 'category_summary';
@@ -57,11 +58,20 @@ namespace VanguardLTE
                     'totalcount' => 0,
                     'total_deal' => 0,
                     'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
                     'games' => []
                 ];
                 if ($cat->provider != null)
                 {
-                    $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist', $cat->href);
+                    $games = null;
+                    try {
+                        $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($cat->provider) . 'Controller::getgamelist', $cat->href);
+                    }
+                    catch (\Exception $e)
+                    {
+                        Log::error('getgamelist at category adjustment error');
+                    }
                     if ($games){
                         foreach ($games as $game)
                         {
@@ -76,6 +86,8 @@ namespace VanguardLTE
                                 'totalcount' => 0,
                                 'total_deal' => 0,
                                 'total_mileage' => 0,
+                                'total_ggr' => 0,
+                                'total_ggr_mileage' => 0,
                             ];
                             $adj['games'][] = $adj_game;
                         }
@@ -99,6 +111,8 @@ namespace VanguardLTE
                             'totalcount' => 0,
                             'total_deal' => 0,
                             'total_mileage' => 0,
+                            'total_ggr' => 0,
+                            'total_ggr_mileage' => 0,
                         ];
                         $adj['games'][] = $adj_game;
                     }
@@ -119,50 +133,50 @@ namespace VanguardLTE
             {
                 $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
             }
-            else if ($user->hasRole('comaster'))
+            else if ($user->hasRole(['comaster','group']))
             {
                 if (settings('enable_master_deal'))
                 {
                     $masters = $user->childPartners();
                     if (count($masters) > 0){
-                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$masters) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
+                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage,  0 as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$masters) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
                     }
                     else
                     {
-                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
+                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage,  0 as total_ggr, 0 as total_ggr_mileage';
                     }
                 }
                 else
                 {
-                    $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
+                    $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
                 }
             }
             else if ($user->hasRole('master'))
             {
                 if (settings('enable_master_deal'))
                 {
-                    $query = 'SELECT game,game_id, category_id,  SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
+                    $query = 'SELECT game,game_id, category_id,  SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
 
                 }
                 else
                 {
                     $agents = $user->childPartners();
                     if (count($agents) > 0){
-                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$agents) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
+                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage, 0 as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$agents) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
                     }
                     else
                     {
-                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
+                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
                     }
                 }
             }
             else if($user->hasRole(['agent','distributor']))
             {
-                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
+                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
             }
             else if($user->hasRole('manager'))
             {
-                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $user->shop_id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
+                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $user->shop_id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
             }
             $deal_logs = \DB::select($query);
 
@@ -212,13 +226,17 @@ namespace VanguardLTE
                         //     $real_gamename = explode('_', $real_gamename)[0];
                         // }
                         // if($real_gamename == $game['name'])
-                        if($deal_log->game_id == $game['game_id']&& $deal_log->category_id == $adj['category_id'])
+                        if($deal_log->game_id == $game['game_id'] && $deal_log->category_id == $adj['category_id'])
                         {
                             $game['total_deal'] = $game['total_deal'] + $deal_log->total_deal;
                             $game['total_mileage'] = $game['total_mileage'] + $deal_log->total_mileage;
+                            $game['total_ggr'] = $game['total_ggr'] + $deal_log->total_ggr;
+                            $game['total_ggr_mileage'] = $game['total_ggr_mileage'] + $deal_log->total_ggr_mileage;
 
                             $adj['total_deal'] = $adj['total_deal'] + $deal_log->total_deal;
                             $adj['total_mileage'] = $adj['total_mileage'] + $deal_log->total_mileage;
+                            $adj['total_ggr'] = $adj['total_ggr'] + $deal_log->total_ggr;
+                            $adj['total_ggr_mileage'] = $adj['total_ggr_mileage'] + $deal_log->total_ggr_mileage;
 
                             $bfound_game = true;
                             $adj['games'][$j] = $game;
@@ -288,13 +306,13 @@ namespace VanguardLTE
             }
             $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
             $catsum = [];
-            if ($user->hasRole('admin'))
+            if ($user->hasRole(['admin','comaster']))
             {
                 \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
             }
             foreach ($adj_cats as $adj)
             {
-                if ($user->hasRole('admin'))
+                if ($user->hasRole(['admin','comaster']))
                 {
                     $games = [];
                     foreach ($adj['games'] as $adjgame)
@@ -357,7 +375,7 @@ namespace VanguardLTE
                 }
                 foreach ($adj_cats as $adj)
                 {
-                    if ($user->hasRole('admin'))
+                    if ($user->hasRole(['admin','comaster']))
                     {
                         $todaygamesumm = \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today', 'category_id' => $adj['category_id']])->get();
                         if (count($todaygamesumm) > 0){
@@ -379,6 +397,8 @@ namespace VanguardLTE
                                     $adjgame['totalcount'] = $adjgame['totalcount'] + $t_gamesum['totalcount'];
                                     $adjgame['total_deal'] = $adjgame['total_deal'] + $t_gamesum['total_deal'];
                                     $adjgame['total_mileage'] = $adjgame['total_mileage'] + $t_gamesum['total_mileage'];
+                                    $adjgame['total_ggr'] = $adjgame['total_ggr'] + $t_gamesum['total_ggr'];
+                                    $adjgame['total_ggr_mileage'] = $adjgame['total_ggr_mileage'] + $t_gamesum['total_ggr_mileage'];
                                     $gamesum[$i] = $adjgame;
                                     $bFound = true;
                                     break;
@@ -406,6 +426,8 @@ namespace VanguardLTE
                                 'totalcount' => $update_game['totalcount'],
                                 'total_deal' => $update_game['total_deal'],
                                 'total_mileage' => $update_game['total_mileage'],
+                                'total_ggr' => $update_game['total_ggr'],
+                                'total_ggr_mileage' => $update_game['total_ggr_mileage'],
                             ]; 
                         }
 
@@ -429,6 +451,8 @@ namespace VanguardLTE
                             $adj['totalcount'] = $adj['totalcount'] + $t_sum['totalcount'];
                             $adj['total_deal'] = $adj['total_deal'] + $t_sum['total_deal'];
                             $adj['total_mileage'] = $adj['total_mileage'] + $t_sum['total_mileage'];
+                            $adj['total_ggr'] = $adj['total_ggr'] + $t_sum['total_ggr'];
+                            $adj['total_ggr_mileage'] = $adj['total_ggr_mileage'] + $t_sum['total_ggr_mileage'];
                             $catsum[$i] = $adj;
                             $bFound = true;
                             break;
@@ -454,6 +478,8 @@ namespace VanguardLTE
                          'totalcount' => $update_cat['totalcount'],
                          'total_deal' => $update_cat['total_deal'],
                          'total_mileage' => $update_cat['total_mileage'],
+                         'total_ggr' => $update_cat['total_ggr'],
+                         'total_ggr_mileage' => $update_cat['total_ggr_mileage'],
                      ]; 
                 }
 

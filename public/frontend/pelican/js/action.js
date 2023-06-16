@@ -116,10 +116,6 @@ function onAskAccount(){
 
 function convertDeal(money) {
 
-    if (money < 30000) {
-        alert("전환 최소금액은 30,000원 입니다.");
-        return;
-    }
 
     $.ajax({
         type: 'POST',
@@ -154,9 +150,7 @@ function DepositProc(){
         $("#deposit_amount").focus();  
         return; 
     }
-    if (amount < 30000) { 
-        alert("입금은 3만원 이상부터 가능합니다"); $("#deposit_amount").focus();  return false; 
-    }
+
 
 
     if(!confirm("입금신청 하시겠습니까?")) return;
@@ -234,9 +228,7 @@ function WithdrawProc() {
     if (amount == '' || amount == 0) { 
         alert("출금하실 금액을 입력하여 주세요"); $("#withdraw_amount").focus();  return false; 
     }
-    if (amount < 30000) { 
-        alert("출금은 3만원 이상부터 가능합니다"); $("#withdraw_amount").focus();  return false; 
-    }
+
     if (confirm("출금신청 하시겠습니까?")){
         var data = { accountName: $(".userName").val(), bank:$(".userBankName").val(), no:$(".accountNo").val(), money: amount };
         $.ajax({
@@ -290,11 +282,11 @@ function tabActionSlot(plat, pid, platcode, platidx) {
         }
     });
 }
-function startGame(gamename) {   
-    startGameByProvider(null, gamename);
+function startGame(gamename, winparam="default") {   
+    startGameByProvider(null, gamename, winparam);
 }
 
-function startGameByProvider(provider, gamecode) {
+function startGameByProvider(provider, gamecode, winparam="default") {
     var formData = new FormData();
     formData.append("provider", provider);
     formData.append("gamecode", gamecode);
@@ -311,7 +303,16 @@ function startGameByProvider(provider, gamecode) {
             alert(data.msg + data.data);
             return;
         }
-        window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+        
+        if (winparam=='default')
+        {
+            winparam = 'width=1280, height=720, left=100, top=50';
+        }
+        else if (winparam=='max')
+        {
+            winparam = "width="+screen.availWidth+",height="+screen.availHeight;
+        }
+        window.open(data.data.url, "game", winparam);
     }
     });
     
@@ -342,6 +343,13 @@ function getSlotGames(title, category) {
 
             $(".tp-name").text(title);
             var strHtml = "";
+            var gameperline = 6;
+            var imgId = 'xImag';
+            if (window.screen.width < 720)
+            {
+                gameperline = 3;
+                imgId = 'xImag1';
+            }
             if (data.games.length > 0) {
                 strHtml = `<div class="con_box10">
                                 <div class="title1"> `+ title +` <span style="float:right; padding:0 10px 0 10px;margin-top:-5px;"></span>
@@ -352,7 +360,7 @@ function getSlotGames(title, category) {
                                 <tbody>`;
                 for (var i = 0; i < data.games.length; i++) {
 
-                    if( i % 6  == 0 )
+                    if( i % gameperline  == 0 )
                     {
                         strHtml += `<tr><td height="20">&nbsp;</td></tr>
                                     <tr>
@@ -371,14 +379,14 @@ function getSlotGames(title, category) {
                         strHtml +='<a style="cursor:pointer" onclick="startGameByProvider(\'' + data.games[i].provider + '\',\'' + data.games[i].gamecode + '\');">';
                         if (data.games[i].icon)
                             {
-                                strHtml += `<img src="${data.games[i].icon}" id="xImag" />
+                                strHtml += `<img src="${data.games[i].icon}" id="${imgId}" />
                                                         </a>
                                                     </div>
                                                 </td>
                                             </tr>`;
                             }
                             else {
-                                strHtml += `<img src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg" id="xImag" />
+                                strHtml += `<img src="/frontend/Default/ico/${data.games[i].provider}/${data.games[i].gamecode}_${data.games[i].name}.jpg" id="${imgId}" />
                                                         </a>
                                                     </div>
                                                 </td>
@@ -388,7 +396,7 @@ function getSlotGames(title, category) {
                     else
                     {
                         strHtml +=`<a style="cursor:pointer" onclick="startGame('${data.games[i].name}');">
-                                                        <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="xImag" />
+                                                        <img src="/frontend/Default/ico/${data.games[i].name}.jpg" id="${imgId}" />
                                                     </a>
                                                 </div>
                                             </td>
@@ -396,7 +404,7 @@ function getSlotGames(title, category) {
                     }
                     strHtml += `<tr>
                                 <td height="30px">
-                                    <div style="text-align:center;position:absolute;width:203px;margin: auto; ">
+                                    <div style="text-align:center;margin: auto; font-size:16px;">
                                         <span class="slot_txt_style">${data.games[i].title}</span>
                                     </div>
                                 </td>
@@ -404,7 +412,7 @@ function getSlotGames(title, category) {
                         </table>
                     </td>`;
 
-                    if( i % 6  == 5 )
+                    if( i % gameperline  == gameperline-1 )
                     {
                         strHtml += `</tr> </tbody></table></td> </tr>`;
                     }

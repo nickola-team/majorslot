@@ -20,6 +20,19 @@
     <script src="/frontend/winners/js/TweenMax.min.js"></script>
     <title>@yield('page-title')</title>
     <script type="text/javascript">
+      
+  @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
+  var loginYN='Y';
+  var currentBalance = {{ Auth::user()->balance }};
+  var userName = "{{ Auth::user()->username }}";
+  var unreadmsg = {{$unreadmsg}};
+  @else
+  var loginYN='N';
+  var currentBalance = 0;
+  var userName = "";
+  @endif
+
+
       var depositAccountRequested = false;
       var filter = "win16|win32|win64|mac";
       function isMobile() {
@@ -107,13 +120,8 @@
         <div class="link-main">
           <ul class="bs-ul">
             @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-            @if ($unreadmsg>0)
-            <li class="deposit-link ">
-               <a href="javascript:void(0);"  onclick="alert_error('쪽지를 확인하세요.');">
-            @else
             <li class="deposit-link subpg-link">
               <a href="javascript:void(0);">
-            @endif
             @else
             <li class="deposit-link ">
                <a href="javascript:void(0);"  onclick="alert_error('로그인이 필요합니다.');">
@@ -126,13 +134,8 @@
             </li>
            
             @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-            @if ($unreadmsg>0)
-            <li class="deposit-link ">
-               <a href="javascript:void(0);"  onclick="alert_error('쪽지를 확인하세요.');">
-            @else
             <li class="withdraw-link subpg-link">
               <a href="javascript:void(0);" >
-            @endif
             @else
             <li class="withdraw-link ">
                <a href="javascript:void(0);"  onclick="alert_error('로그인이 필요합니다.');">
@@ -247,9 +250,9 @@
                   <div class="al-cont prog-b">
                   </div>
                   <div class="al-cont btn-grp">
-                    <button class="blue message message-btn" data-toggle="modal" data-target=".mypageModal">
+                    <button class="blue message message-btn" data-toggle="modal" data-target=".mypageModal" onClick="listMessages();">
                       <i class="fa fa-envelope"></i> 쪽지
-                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;">{{$unreadmsg}}</span>
+                      <span class="mess-count" style="animation: letter_anim 0s linear infinite;" id="msgcnt">{{$unreadmsg}}</span>
                     </button>
                     <button class="logout-btn red" onclick="goLogout();"><i class="fa fa-sign-out-alt"></i> 로그아웃</button>
                   </div>
@@ -307,7 +310,7 @@
         <div class="item">
           <div class="text-cont">
             <div class="inner">
-              <p class="title">Winner's Pro에 </p>
+              <p class="title">타이틀리스트에 </p>
               <p class="sub">오신것을 환영합니다.</p>
             </div>
           </div>
@@ -324,7 +327,7 @@
           <div class="text-cont">
             <div class="inner">
               <p class="title">매일매일 터지는 잭팟 !</p>
-              <p class="sub"> Winner's Pro와 함께하세요 !</p>
+              <p class="sub"> 타이틀리스트와 함께하세요 !</p>
             </div>
           </div>
         </div>
@@ -344,7 +347,7 @@
   <div class="page-content">
           
     <div style="margin-top:25px;height:50px;">
-      <span class="a_style">위너스 SLOT</span>
+      <span class="a_style">타이틀리스트 GAMES</span>
     </div>
 
     <div class="slot-container">
@@ -355,10 +358,10 @@
 					&& $category->title != "Novomatic" && $category->title != "Keno" && $category->title != "Vision" && $category->title != "Wazdan")
 
           @if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-            @if ($unreadmsg>0)
-            <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('쪽지를 확인하세요.');">
+            @if ($category->status == 0)
+            <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('점검중입니다.');">
             @else
-            <a href="javascript:void(0);" class="slot-btn" onclick=" getSlotGames('{{ $category->trans->trans_title }}', '{{ $category->href }}', 0)">
+            <a href="javascript:void(0);" class="slot-btn" onclick="if (unreadmsg>0) {alert_error('쪽지를 확인하세요');} else { getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0);}">
             @endif
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('로그인이 필요합니다');">
@@ -378,9 +381,6 @@
               @endif
               </button>
               <img class="plate" src="/frontend/winners/img/bg/slot-plate.png">
-            </div>
-            <div class="icon-cont">
-              <img src="/frontend/winners/img/slot-icon2/{{ $category->title }}.png" />
             </div>
           </a>     
 
@@ -430,7 +430,7 @@
       </div>
     </div>
     <div class="copyright-cont">
-        <span>ⓒ COPYRIGHT  Winner's Pro  2021 ALL RIGHTS RESERVED</span>
+        <span>ⓒ COPYRIGHT  TitleList  2022 ALL RIGHTS RESERVED</span>
     </div>
 	</div>
 
@@ -544,39 +544,6 @@
 								</div>
 								<div class="form-group">
 									<div class="labels">
-										<p>은행명</p>
-									</div>
-									<div class="infos">
-										<label>
-											<select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="5166">
-												<option value="">--은행 선택--</option>
-                        @foreach(\VanguardLTE\User::$values["banks"] AS $val)
-                          @if($val != "")
-                            <option value="{{$val}}">{{$val}}</option>
-                          @endif
-                        @endforeach
-											</select><ul class="parsley-errors-list" id="parsley-id-5166"></ul>
-										</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="labels">
-										<p>계좌번호</p>
-									</div>
-									<div class="infos">
-										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="labels">
-										<p>예금주</p>
-									</div>
-									<div class="infos">
-										<input id="mb_account_name" class="form-control" data-parsley-trigger="change" data-parsley-pattern="/^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]+$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="12" data-parsley-minlength="2" data-parsley-minlength-message="3 자 이상 입력하세요." data-parsley-maxlength="12" data-parsley-maxlength-message="12 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="a_name" type="text" value="" data-parsley-id="0047"><ul class="parsley-errors-list" id="parsley-id-0047"></ul>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="labels">
 										<p>추천인코드(부여받으신 코드 입력)</p>
 									</div>
 									<div class="infos">
@@ -644,10 +611,6 @@
 				</div>
 				<div class="modal-body">
 					<div class="tab-mdl active">
-						<div class="mypage-nav">
-							<button class="account-link active"><i class="icon icon-User"></i> 나의 정보</button>
-							<button class="history-link"><i class="icon icon-List"></i> 입출금내역</button>
-						</div>
 						<div class="mypage-tabs">
 							<div class="mp-tab active">
 								<div class="form-container">
@@ -679,7 +642,7 @@
 											<p>등록계좌정보 :</p>
 										</div>
 										<div class="infos">
-											<p>:****:***</p>
+											<p>{{Auth::check()?Auth::user()->bankInfo(true):''}}</p>
 										</div>
 									</div>
 									<div class="form-group">
@@ -709,7 +672,7 @@
 								</div>
 							</div>
 
-							<div class="mp-tab">
+							<div class="mp-tab" id="msgDiv">
 								<table class="bs-table with-depth">
                 <colgroup>
                   <col width="55%">
@@ -773,13 +736,13 @@
 										</div>
 										<div class="infos">
                       <input type="hidden" value="<?= csrf_token() ?>" name="_token" id="_token">
-											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="30000" data-parsley-min-message="최소입금 30,000원 이상" placeholder="최소입금 30,000원 부터가능(만원단위입금)" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
+											<input class="form-control w400" id="pointAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="0" data-parsley-min-message="" placeholder="" name="point_money" type="text" value="" data-parsley-id="9147"><ul class="parsley-errors-list" id="parsley-id-9147"></ul>
 											<div class="btn-grp" style="margin-top: 25px;">
 												<button type="button" onclick="addAmount(4,1)">1만</button>
 												<button type="button" onclick="addAmount(4,3)">3만</button>
 												<button type="button" onclick="addAmount(4,5)">5만</button>
 												<button type="button" onclick="addAmount(4,10)">10만</button>
-												<button type="button" onclick="addAmount(4,50)">50만</button>
+                        <button type="button" onclick="addAmount(4,{{Auth::check()?(intval(auth()->user()->deal_balance)/10000) : 0}})">전액</button>
 												<button type="button" onclick="resetAmount(4)">정정하기</button>
 											</div>
 										</div>
@@ -798,15 +761,10 @@
 									var df = $("#pointFrm");
 									df.submit(function (e) {
 										var amount = parseInt($("[name=point_money]").val());
-										if (amount % 10000 > 0) {
-											alert_error('입금금액은 만원단위로 입력하세요.');
-											e.preventDefault();
-										} else {
-											$(this).parsley().validate();
-											if ($(this).parsley().isValid()) {
-												$('.wrapper_loading').removeClass('hidden');
-											}
-										}
+                    $(this).parsley().validate();
+                    if ($(this).parsley().isValid()) {
+                      $('.wrapper_loading').removeClass('hidden');
+                    }
 									});
 								</script>
 							</div>
@@ -941,12 +899,7 @@
 									<div class="infos">
 										<label>
 											<select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="5166" value="">
-												<option value="">--은행 선택--</option>
-                        @foreach(\VanguardLTE\User::$values["banks"] AS $val)
-                          @if($val != "")
-                            <option value="{{$val}}" {{Auth::check() && auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
-                          @endif
-                        @endforeach
+                        <option value="{{Auth::check()?auth()->user()->bank_name:''}}" selected>{{Auth::check()?auth()->user()->bank_name:''}}</option>
 											</select><ul class="parsley-errors-list" id="parsley-id-5166"></ul>
 										</label>
 									</div>
@@ -956,7 +909,7 @@
 										<p>계좌번호</p>
 									</div>
 									<div class="infos">
-										<input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()?auth()->user()->account_no:''}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+										<input id="accountnumber" class="form-control "  name="accountnumber" type="text" value="{{Auth::check()?('***'.substr(auth()->user()->account_no,-2)):''}}"  disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
 									</div>
 								</div>
               <div class="form-group">
@@ -964,7 +917,7 @@
                   <p>입금자명</p>
                 </div>
                 <div class="infos">
-                  <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()?auth()->user()->recommender:''}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+                  <input id="recommender" class="form-control "  name="recommender" type="text" value="{{Auth::check()?(mb_substr(auth()->user()->recommender,0,1).'***'):''}}"  disabled><ul class="parsley-errors-list" id="parsley-id-0017" ></ul>
                 </div>
               </div>
               <div class="form-group">
@@ -972,7 +925,7 @@
                   <p>입금금액</p>
                 </div>
                 <div class="infos">
-                  <input class="form-control w400" id="depositAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="30000" data-parsley-min-message="최소입금 30,000원 이상" placeholder="최소입금 30,000원 부터가능(만원단위입금)" name="money" type="text" value="" data-parsley-id="0361"><ul class="parsley-errors-list" id="parsley-id-0361"></ul>
+                  <input class="form-control w400" id="depositAmount" data-parsley-type="digits" data-parsley-type-message="유효하지 않은 값입니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." data-parsley-trigger="focusin change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." data-parsley-min="10000" data-parsley-min-message="최소입금 10,000원 이상" placeholder="최소입금 10,000원 부터가능(만원단위입금)" name="money" type="text" value="" data-parsley-id="0361"><ul class="parsley-errors-list" id="parsley-id-0361"></ul>
                   <div class="btn-grp" style="margin-top: 25px;">
                     <button type="button" onclick="addAmount(1,1)">1만</button>
                     <button type="button" onclick="addAmount(1,3)">3만</button>
@@ -1045,12 +998,7 @@
             <div class="infos">
               <label>
                 <select id="bankname" class="form-control " data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="bankname" data-parsley-id="7298">
-                  <option value="">--은행 선택--</option>
-                  @foreach(\VanguardLTE\User::$values["banks"] AS $val)
-                    @if($val != "")
-                    <option value="{{$val}}" {{Auth::check() && auth()->user()->bank_name == $val?'selected':''}}>{{$val}}</option>
-                    @endif
-                  @endforeach
+                  <option value="{{Auth::check()?auth()->user()->bank_name:''}}" selected>{{Auth::check()?auth()->user()->bank_name:''}}</option>
                 </select><ul class="parsley-errors-list" id="parsley-id-7298"></ul>
               </label>
             </div>
@@ -1060,7 +1008,7 @@
               <p>계좌번호</p>
             </div>
             <div class="infos">
-              <input id="accountnumber" class="form-control " data-parsley-type="digits" data-parsley-type-message="이 값은 숫자만 입력 가능합니다." data-parsley-pattern="/^[0-9]*$/" data-parsley-pattern-message="유효하지 않은 값입니다." maxlength="30" data-parsley-trigger="change" data-parsley-maxlength="30" data-parsley-maxlength-message="30 자 이하로 입력하세요." data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." autocomplete="off" name="accountnumber" type="text" value="{{Auth::check()? auth()->user()->account_no : ''}}" data-parsley-id="1905"><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
+              <input id="accountnumber" class="form-control " name="accountnumber" type="text" value="{{Auth::check()? ('***'.substr(auth()->user()->account_no,-2)) : ''}}"  disabled><ul class="parsley-errors-list" id="parsley-id-1905"></ul>
             </div>
           </div>
           <div class="form-group">
@@ -1068,7 +1016,15 @@
               <p>출금자명</p>
             </div>
             <div class="infos">
-              <input id="recommender" class="form-control "  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="text" value="{{Auth::check()? auth()->user()->recommender:''}}" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+              <input id="recommender" class="form-control "  name="recommender" type="text" value="{{Auth::check()? (mb_substr(auth()->user()->recommender,0,1).'***'):''}}"  disabled><ul class="parsley-errors-list" id="parsley-id-0017"></ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="labels">
+              <p>출금비밀번호</p>
+            </div>
+            <div class="infos">
+              <input id="confirmation_token" class="form-control"  data-parsley-trigger="change" data-parsley-required="true" data-parsley-required-message="필수입력 항목입니다." name="recommender" type="password" value="" data-parsley-id="0017"><ul class="parsley-errors-list" id="parsley-id-0019"></ul>
             </div>
           </div>
 
@@ -1173,9 +1129,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="text-center" colspan="3"></td>
-          </tr>
+        <?php $nidx = 1; ?>
+          @foreach ($noticelist as $notice)
+            @if ($notice->popup == 'general')
+            <tr class="depth-click">
+              <td>{{$nidx}}</td>
+              <td>{{$notice->title}}</td>
+              <td>{{$notice->date_time}}</td>
+            </tr>
+            <tr class="dropdown">
+              <td colspan="3">
+                <div class="mess-cont" style="display: none;">
+                  <div class="inner">
+                    <?php echo $notice->content ?>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <?php $nidx = $nidx + 1; ?>
+
+            @endif
+          @endforeach
         </tbody>
       </table>
     </div>
@@ -1308,10 +1282,6 @@
 				</div>
 				<div class="modal-body">
 					<div class="tab-mdl active">
-						<div class="mypage-nav">
-							<button class="account-link"><i class="icon icon-User"></i> 나의 정보</button>
-							<button class="history-link active"><i class="icon icon-List"></i> 입출금내역</button>
-						</div>
 						<div class="mypage-tabs">
 							<div class="mp-tab deposit-list active">
 								<table class="bs-table deposit-tb">
@@ -1398,16 +1368,21 @@
 	</div>
 </div>
 
-@if ($notice!=null)
-<div class="pop1" id="pop1" >
-    <p><br/></p>
+@if (count($noticelist) > 0)
+<?php $pidx=0;?>
+@foreach ($noticelist as $notice)
+@if ($notice->popup == 'popup')
+<div class="pop1" id="pop{{$notice->id}}" style="left:{{300+$pidx*350}}px;">
     <?php echo $notice->content ?>
-    <p><br/></p>
+    <p></br></p>
     <div style="position:absolute;left:5px;bottom:5px;width:190px;background-color:transparent;color:white;cursor: hand;display:content">
-      <input type="checkbox" name="notice1" id="notice1" value="" style="width:20px;">
-      <label for="notice1">오늘 하루 열지 않음 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop1'), 1, document.getElementById('notice1').checked);">[닫기]</span></label>
+      <input type="checkbox" name="notice1" id="notice{{$notice->id}}" value="" style="width:20px;">
+      <label for="notice{{$notice->id}}">오늘 하루 열지 않음 <span style="cursor:pointer;" onclick="closeWin(document.getElementById('pop{{$notice->id}}'), {{$notice->id}}, document.getElementById('notice{{$notice->id}}').checked);">[닫기]</span></label>
     </div>
   </div>
+  <?php $pidx=$pidx+1;?>
+@endif
+@endforeach
 @endif
 @yield('content')
 
@@ -1415,17 +1390,13 @@
 
 <script type='text/javascript'>
 var xigame_id = '488';
-<!--
-if ( getCookie( "divpopup01" ) == "check" ) {
-	closeWin2(document.getElementById('pop1'));
-}
-if ( getCookie( "divpopup02" ) == "check" ) {
-	closeWin2(document.getElementById('pop2'));
-}
-if ( getCookie( "divpopup03" ) == "check" ) {
-	closeWin2(document.getElementById('pop3'));
-}
--->
+@if (count($noticelist) > 0)
+  @foreach ($noticelist as $notice)
+    if ( getCookie( "divpopup0{{$notice->id}}" ) == "check" ) {
+      closeWin2(document.getElementById('pop{{$notice->id}}'));
+    }
+  @endforeach
+@endif
 
   function loginSubmit() {
       
@@ -1502,18 +1473,15 @@ if ( getCookie( "divpopup03" ) == "check" ) {
 			});
   }
   function depositSubmit() {
-    if (!depositAccountRequested)
-    {
-      alert_error('입금계좌요청을 먼저 하세요');
-      return;
-    }
+    // if (!depositAccountRequested)
+    // {
+    //   alert_error('입금계좌요청을 먼저 하세요');
+    //   return;
+    // }
     $.ajax({
         type: "POST",
         url: "/api/addbalance",
         data: { 
-          accountName: $("#depoFrm #recommender").val(),
-          bank:$("#depoFrm #bankname").val(),
-          no:$("#depoFrm #accountnumber").val(),
           money: $("#depoFrm #depositAmount").val() },
         cache: false,
         async: false,
@@ -1591,26 +1559,39 @@ if ( getCookie( "divpopup03" ) == "check" ) {
     });
 }
 
-@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-var loginYN='Y';
-var currentBalance = {{ Auth::user()->balance }};
-var userName = "{{ Auth::user()->username }}";
-@else
-var loginYN='N';
-var currentBalance = 0;
-var userName = "";
-@endif
-
-
   $(document).ready(function() {
-    var prevTime = localStorage.getItem("hide_notification");
-    if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
-      $("#notification").hide();
-    }
+      var prevTime = localStorage.getItem("hide_notification");
+      if (prevTime && Date.now() - prevTime < 8 * 3600 * 1000) {
+        $("#notification").hide();
+      }
+      @if ($unreadmsg>0)
+      alert_ok('새로운 쪽지가 도착했습니다');
+      @endif
+      timeout = setTimeout(checkMsg, 5000);
   });
 
-  
-<!--
+function checkMsg()
+{
+    $.ajax({
+        type: 'POST',
+        url: '/api/balance',
+        data: null,
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error==false)
+            {
+              unreadmsg = data.msgCount;
+              $('#msgcnt').text(unreadmsg);
+            }
+            timeout = setTimeout(checkMsg, 5000);
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+            timeout = setTimeout(checkMsg, 5000);
+        }
+    });
+}
 function setCookie( name, value, expiredays ) {
     var todayDate = new Date();
     todayDate.setDate( todayDate.getDate() + expiredays );

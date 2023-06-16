@@ -93,11 +93,11 @@
                         <div class="col-7">
                             <div class="row">
                                 <div class="col-6">
-                                    <span>{{auth()->user()->bankInfo()}}</span> 
+                                    <span>{{auth()->user()->bankInfo(true)}}</span> 
                                 </div>
-                                <div class="col-6">
+                                <!-- <div class="col-6">
                                 <a href="{{argon_route('argon.common.profile', ['id' => auth()->user()->id])}}"><button type="button" class="btn btn-info btn-sm">계좌수정</button></a>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -175,6 +175,10 @@
         $("#doSubmit").attr('disabled', 'disabled');
         var money = $('#amount').val();
         var confirmation_token = $('#confirmation_token').val();
+        if (money < 30000)
+        {
+            show_alarm('환전은 3만원이상부터 가능합니다.');
+        }
         $.ajax({
             type: 'POST',
             url: '/api/outbalance',

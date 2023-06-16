@@ -40,8 +40,21 @@
                 }
                 $user = $user->referral;
             }
-            $superadminId = \VanguardLTE\User::where('role_id',8)->first()->id;
+            $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notices = \VanguardLTE\Notice::where(['active' => 1])->whereIn('type', ['all','partner'])->whereIn('user_id',$user_id)->get(); //for admin's popup
+            $msgtype = 0;
+            if (auth()->user()->hasRole('admin'))
+            {
+                $unreadmsgs = [];
+            }
+            else
+            {
+                $unreadmsgs = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->get(); //unread message
+                if (count($unreadmsgs) > 0)
+                {
+                    $msgtype = $unreadmsgs->first()->type;
+                }
+            }
         ?>
         @if (count($notices)>0)
             @foreach ($notices as $notice)
@@ -69,6 +82,48 @@
                 @include('backend.argon.layouts.headers.auth')
             @endauth
             @yield('content')
+            @if (Auth::check() )
+            <!-- for message dialog -->
+            <div class="modal fade" id="openMsgModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title">쪽지내용</h4>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table align-items-left table-flush">
+                                <tbody>
+                                    <tr>
+                                        <td>발신자</td>
+                                        <td><span id="msgWriter"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>상위파트너</td>
+                                        <td><span id="msgWriterParent"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>제목</td>
+                                        <td><span id="msgTitle"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>내용</td>
+                                        <td><span id="msgContent"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary"  data-dismiss="modal">확인</button>
+                        </div>
+                </div>
+            </div>
+            </div>
+            @endif
         </div>
 
         @include('backend.argon.layouts.footers.guest')
@@ -104,6 +159,9 @@
             }
             @endforeach
             @endif
+            @if (count($unreadmsgs) > 0)
+                $("#msgbutton").click();
+            @endif
             @if (!auth()->user()->hasRole('admin') && auth()->user()->isInoutPartner())
             var updateTime = 3000;
             var apiUrl="/api/inoutlist.json";
@@ -112,6 +170,7 @@
             var audio_in = new Audio("{{ url('/frontend/Major/major/audio/door-bell.mp3')}}");
             var audio_out = new Audio("{{ url('/frontend/Major/major/audio/camera-beep.mp3')}}");
             var user_join = new Audio("{{ url('/frontend/Major/major/audio/user-join.mp3')}}");
+            var new_msg = new Audio("{{ url('/frontend/Major/major/audio/new-message.mp3')}}");
             $("#in_newmark").hide();
             $("#out_newmark").hide();
             $("#join_newmark").hide();
@@ -182,6 +241,16 @@
                             {
                                 $('#rateText').text('');
                             }
+
+                            if (inouts['msg'] > 0)
+                            {
+                                if (inouts['rating'] > 0)
+                                {
+                                    new_msg.play();
+                                }
+                                $("#msgbutton").click();
+                            }
+                            $("#unreadmsgcount").text(inouts['msg']);
                             timeout = setTimeout(updateInOutRequest, updateTime);
                             if (callback != null) callback();
                         },
@@ -233,7 +302,29 @@
 
             $("#" + notice).hide();
         }
+
+        function viewMsg(obj) {
+                var content = obj.getAttribute('data-msg');
+                var writer = obj.getAttribute('data-writer');
+                var parent = obj.getAttribute('data-parent');
+                var title = obj.getAttribute('data-title');
+
+                var idx = obj.getAttribute('data-id');
+                $.ajax({
+					url: "/api/readMsg",
+					type: "POST",
+					data: {id: idx },
+					success: function (data) {
+                    }
+				});
+                $('#msgContent').html(content);
+                $('#msgWriter').html(writer);
+                $('#msgWriterParent').html(parent);
+                $('#msgTitle').html(title);
+        }
         @endif
+
+
 
     </script>
     </body>

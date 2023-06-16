@@ -1,0 +1,685 @@
+
+
+.mgpbfx{
+	overflow: hidden; 
+	position: relative; 
+	/*width:830px; */
+  width:100%; 
+	display:block; 
+	height:670px;
+}
+#mobileview{
+  display: none;
+  overflow: hidden;
+}
+.clearallcart{
+  display: none;
+}
+.fxgamesbox { min-height: 926px; }
+.active-cart-body .dummypartss{
+  display: none;
+}
+
+
+@media only screen and (max-width : 800px) { 
+  .col-md-3 img {
+    height: auto !important;
+    max-height: 125px !important;
+  }
+  .m-menu li { 
+    height: auto !important;
+    max-height: 125px !important;
+
+  }
+
+  .carousel-inner>.item>a>img, .carousel-inner>.item>img {
+    height: 170px;
+    width: 130%;
+    max-width: 200%;
+  }
+
+  .category-container {
+    width: 100% !important;
+    max-width: 1410px;
+    justify-content: center !important;
+  }
+
+  .gamelist-header .gl-back {
+    right: 20px;
+  }
+
+  .gamelist-menu {
+    padding-right: 10px;
+  }
+
+  .sec_casino_games .over_txt img {
+    margin-left: -200px;
+    top: -35px;
+  }
+
+  .content-wrapper {
+    padding-right: 0px;
+  }
+
+  .tab_btn {
+    width: 24%;
+  }
+
+  #betlist-tab {
+    position: relative;
+    right: 6px;
+  }
+
+  .title .wallet-balance{
+    margin-left: 55px !important;
+  }
+
+  #receipt_wrap {
+    line-height: normal;
+  }
+
+  .Customer .bbsBtnCont button, .BBS .bbsBtnCont button {
+    padding-top: 8px;
+    position: relative;
+    right: 7px;
+  }
+
+  #result-icon.smallSportsList {
+    width: 120% !important;
+  }
+
+  #sportFilterCont2::-webkit-scrollbar {
+    width: 15px;
+    height: 2px !important;
+  }
+
+  .Games .title {
+    float: none !important;
+    margin-bottom: 2px;
+    padding-top:  4.5px;
+  }
+
+  .info > ul > li span.text {
+    padding-top: 2px;
+    max-height: 20px;
+  }
+
+  .app-contents-title {
+    padding: 10px 10px;
+  }
+
+  .td-title {
+    width: 30%;
+  }
+
+  .carousel-inner>.item.active {
+      /*left: 50px !important;*/
+  }
+
+  .app-contents-title img {
+    width: 40px !important;
+  }
+  .app-contents-title span {
+    font-size: 20px !important;
+  }
+  
+}
+@media only screen and (max-width : 768px) { 
+  .CallCenter {
+      display: none !important;
+  }
+
+  #cart {
+    margin-bottom: 0px;
+  }
+}
+
+
+@media only screen and (max-width : 768px) {
+  .summary span {
+    font-size: 11px !important;
+  }
+  #live_wrap .info {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    float: left;
+    margin-top: 0px;
+  }
+  .serchss{
+    padding-top: 3.6px !important;
+  }
+  .gnb .cur span.menu{
+    color: #ffffff !important;
+  }
+
+    .gnb li.cur{
+    background: #df5700;
+  }
+  #content.fxgamesbox{ min-height: unset; padding-bottom: 0px; }
+  .hollyqn .viewPort {
+    width: 100% !important;
+    left: unset !important;
+    top: -1px !important;
+  }
+  div#calendar ul.dates li img {
+    height: 50px !important;
+    width: 43px !important;
+    margin-top: 26px !important;
+  }
+  .clearallcart{
+    display: inline-block;
+    float: right;
+    color: white;
+    font-size: 14px;
+    padding-right: 10px;
+  }
+  .Games .gameList{
+    background: transparent;
+  }
+
+   .logo {
+    width: 100%;
+    position: relative;
+    top: 10px;
+    left: unset;
+    margin-left: 0px;
+    display: block;
+    text-align: center;
+   }
+   
+   #mobileview.showm{
+      display: block;
+   }
+
+   .logo a{
+   	  width: 100%;
+   	  text-align: center;
+   }
+   /*.logo a img{
+   		max-width: 150px;
+   } */
+   .logo img{
+      max-width: 180px;
+      position: relative;
+      /*margin-left: 108px;*/
+    }
+
+   .btnCart {
+    position: fixed;
+    z-index: 700;
+    bottom: 1px;
+    /*background: #d16824;*/
+    background: #043c82;
+    width: 150px;
+    height: 55px;
+    line-height: 55px;
+    font-size: 18px;
+    text-align: center;
+    left: 50%;
+    margin-left: -75px;
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+    border-top: solid 2px #fff;
+    border-left: solid 2px #fff;
+    border-right: solid 2px #fff;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.3);
+  }
+  .content #betCart {
+    display: none;
+  }
+  .active-cart-body .content #betCart{
+     display: block;
+  }
+  footer.site-footer{
+  	z-index: 607;
+  }
+
+  .site-footer .fRight {
+      padding-right: 5px;
+  }
+  .gltype-text span {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
+  .glcupon-list .glselBox .cuponsbox {
+      max-width: 50%;
+  }
+  .leaguebox {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+  div.commonBg {
+    width: 100%;
+    margin: unset !important;
+    clear: both;
+  }
+
+  .CallCenter {
+  	display: none !important;
+  }
+
+  .hRight a {
+    padding: 0 5px;
+  }
+  .result-inner-layout hr.result{
+    margin-top: 0px;
+  }
+
+  iframe {
+    -webkit-transform: scale(0.433735);
+    -webkit-transform-origin: 0 0;
+  }
+  iframe#evoFrames{
+    -webkit-transform: unset;
+    -webkit-transform-origin: 0 0;
+  }
+
+	iframe.mgpbfx {
+	    width: 1600px;
+	    height: 958px;
+	    margin: 0;
+	    padding: 0;
+	    border: none;
+	}
+  .Sports .oddsBox .odds>div.type>div{
+    color: #6698d0;
+    padding-left: 0px;
+    margin-left: -18px;
+    margin-bottom: -27px;
+  }
+  .gameList.gameListPowerball{
+    font-size: 14px;
+    letter-spacing: 0px;
+    line-height: 19px;
+    color: #ababab;
+    font-weight: 500;
+    width: 100%;
+    display: block;
+    float: left;
+    padding-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+	}
+  .Charge .rectBox th {
+    width: 60px;
+  }
+  .Charge .rectBox button[type=button], 
+  .Charge .rectBox input[type=button] {
+    width: 80px;
+    margin-top: 5px;
+  }
+
+  #fxtopsubmenu{
+    margin-left: 5px;
+  }
+  .Cart .eqBetAll .btnValue button{
+    /*background: #aaaaaa;
+    color: #000000;*/
+    background: linear-gradient(180deg, rgba(128,163,217) 0%, rgba(17,81,131) 44%, rgba(12,29,80) 100%);
+    border: 1px solid #273a4b;
+    color: #FFFFFF;
+  }
+
+  .Cart .btnBig{
+    /*background: #f2c93d;*/
+    color: #f4d33b;
+    background: linear-gradient(180deg, rgba(71,102,150) 0%, rgba(11,50,81) 44%, rgba(4,10,26) 100%);
+  }
+	.gameList.gameListPowerball span{
+    width: 30.33%;
+    float: left;
+    /*background: #464646;*/
+    /*background: #2e2e2e;*/
+    background: #215683;
+    line-height: unset;
+    margin: 1%;
+    padding: 10px;
+    padding-top: 12.5px !important;
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 10px !important;
+    -webkit-tap-highlight-color: transparent;
+    color: #ffffff;
+	}
+  .Games .gameListPowerball span.on{
+    border:unset !important;
+    padding: 10px;
+    padding-bottom: 10px !important;
+    padding-left: 0px;
+    padding-right: 0px;
+    -webkit-tap-highlight-color: transparent;
+    /*color: #ff7800 !important;*/
+    background: #086dce;
+    color: #ffffff !important;
+  }
+  #mgtopsubmenu.gameList.gameListPowerball span{
+     width: 23%;
+  }
+  #mgtopsubmenu.gameList.gameListPowerball span.vsoc{
+    width: 31.2%;
+    display: none;
+  }
+  .vsportsgame div.oddsBox{
+    clear: both;
+  }
+  .vsportsgame iframe{
+    transform: scale(1);
+  }
+  #top{
+    opacity: 0.7;
+    color: white;
+    top: 700px;
+  }
+  #vstopsubmenu{
+   margin-left: 5px;
+  }
+  #pbtpm.gameList.gameListPowerball span.vsoc5{
+    width: 46.5%;
+  }
+  #pbtpm.gameList.gameListPowerball{
+      margin-left: 5px;
+  }
+  #mgmbody iframe{
+     transform: scale(1.0) !important;
+     margin-top: 12px;
+  }
+  .minigame_result {
+      width: 100% !important;
+  }
+
+  #live_wrap{
+    clear: both;
+    /*padding-top: 17px;*/
+    padding-top: 0px;
+  }
+	.header .hLeft {
+        float: left;
+        margin-left: 0px;
+        height: auto;
+        width: 100%;
+        line-height:unset;
+        margin-top: -5px;
+
+	}
+
+  .right-content.wide {
+    width: 100%
+  }
+
+  .hLeft li {
+     position: relative;
+  }
+  .badge-msg,
+  .badge  {
+    position: absolute;
+    top: -15px;
+    padding: unset;
+    left: unset;
+    right: -10px;
+  }
+	.topWrap{
+		min-width: unset;
+	}
+	div.header{
+		height: auto;
+	}
+
+   .gnb li img {
+    padding: 8px 0 0px;
+    position: relative;
+    z-index: 1;
+    height: 45px;
+   }
+
+   .menu {
+    position: relative;
+    z-index: 1;
+    font-size: 14px;
+    top: 0px;
+    font-weight: 800;
+}
+.mMenu.cur.icon{
+  font-size: 35px;
+  position: absolute;
+  left: 5px;
+  top: 28px;
+}
+
+.mMenu.logoff{
+  font-size: 35px;
+  position: absolute;
+  right: 5px;
+  top: 28px;
+}
+
+
+    .right-content {
+      width: 100%;
+      margin-bottom: 0px;
+    }
+    .container{
+    	padding-right: 0px !important;
+    	/*overflow: auto !important;*/
+    }
+  .col-md-12.col-xsssssss-12{
+    clear: both;
+  }
+  .GrayTab-Contents.gray-result{
+    margin-bottom: 20px;
+  }
+
+   #topMenu{
+    width: 100%;
+    position: absolute;
+    z-index: 100000;
+    overflow: hidden;
+   }
+   .mvdt,
+   .mbrnd,
+   .bernms{
+    display: none;
+   }
+   #betingoddsarea td span{
+    font-size: 10px;
+   }
+   .power_table_area table tbody td:nth-child(1) {
+        width: auto;
+   }
+   /*.hammer-odds .start-bet{
+     width: 100px !important;
+   }
+   
+   .holly-odds .start-bet,
+   .panty-odds .start-bet,
+   .boobs-odds .start-bet{
+      width:150px !important;
+   }*/
+   #betingoddsarea.hammer-odds td:nth-child(1){
+      width: 10%;
+  }
+  
+  #betingoddsarea.hammer-odds td:nth-child(3){
+    width: 30%;
+  }
+  #betingoddsarea.hammer-odds td:nth-child(4){
+    width: 30%;
+  }
+  #betingoddsarea.hammer-odds td:nth-child(5){
+    width: 30%;
+  }
+  #betingoddsarea.penalty-odds td:nth-child(1),
+  #betingoddsarea.boobs-odds td:nth-child(1),
+  #betingoddsarea.bra-odds td:nth-child(1),
+  #betingoddsarea.robin-odds td:nth-child(1),
+  #betingoddsarea.holly-odds td:nth-child(1),
+  #betingoddsarea.panty-odds td:nth-child(1){
+      width: 20%;
+  }
+  #betingoddsarea.penalty-odds td:nth-child(2){
+     
+  }
+  #betingoddsarea.penalty-odds td:nth-child(3),
+  #betingoddsarea.boobs-odds td:nth-child(3),
+  #betingoddsarea.bra-odds td:nth-child(3),
+  #betingoddsarea.robin-odds td:nth-child(3),
+  #betingoddsarea.holly-odds td:nth-child(3),
+  #betingoddsarea.panty-odds td:nth-child(3){
+    width: 35%;
+  }
+  #betingoddsarea.penalty-odds td:nth-child(4),
+  #betingoddsarea.boobs-odds td:nth-child(4),
+  #betingoddsarea.bra-odds td:nth-child(4),
+  #betingoddsarea.robin-odds td:nth-child(4),
+  #betingoddsarea.holly-odds td:nth-child(4),
+  #betingoddsarea.panty-odds td:nth-child(4){
+    width: 10%;
+  }
+  #betingoddsarea.penalty-odds td:nth-child(5),
+  #betingoddsarea.bra-odds td:nth-child(5),
+  #betingoddsarea.boobs-odds td:nth-child(5),
+  #betingoddsarea.robin-odds td:nth-child(5),
+  #betingoddsarea.holly-odds td:nth-child(5),
+  #betingoddsarea.panty-odds td:nth-child(5){
+    width: 35%;
+  }
+
+   #depositRequest #charge_money,
+   #withdrawRequest .exchange_money,
+   #withdrawRequest #accountPassword{
+    display: block;
+   }
+   .udname{
+      width: unset !important;
+   }
+   .iframe-container{
+    border: none !important;
+   }
+
+   div#calendar ul.dates li label {
+    font-size: 10px !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: inline-block !important;
+    margin: 35px 0 0 !important;
+    line-height: 32px !important;
+  }
+  .passins{
+    display: block;
+    margin-top: 10px;
+  }
+  th.wpl{
+    text-align: center !important;
+    line-height: 15px;
+  }
+  #withdrawRequest th.wpl{
+    vertical-align: top;
+  }
+  #depositRequest button.btnAddMoney,
+  #withdrawRequest button.btnAddMoney{
+    width: 27.33%;
+    padding-top: 7px;
+  }
+
+  #depositRequest .tltitle,
+  #withdrawRequest .tltitle{
+    padding-top: 45px;
+    vertical-align: top;
+  }
+  .GrayTab-Contents form#filtersportsd .serchss{
+    width: auto;
+  }
+}
+.passins{
+  color:#c01b1f;
+  font-weight: 700;
+}
+
+.udname{
+  width: 170px;
+  display: inline-block;
+  color: #2c2c2c;
+  font-weight: bold;
+}
+
+button.delete_cooki,
+button.dPowerBallBet{
+  color:#989898;
+  font-size: 16px;
+  outline: none !important;
+  background: transparent !important;
+  border: unset !important;
+  right: 7px !important;
+}
+
+
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+/* Styles */
+    .gnbWrap{
+    	overflow: scroll;
+    }
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+/* Styles */
+   .gnbWrap{
+    	overflow: scroll;
+    }
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+/* Styles */
+}
+/**********
+iPad 3
+**********/
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
+/* Styles */
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
+/* Styles */
+}
+/* Desktops and laptops ----------- */
+@media only screen  and (min-width : 1224px) {
+/* Styles */
+  .topto100 .powerball-bet{
+    background: #2e4467;
+  }
+  #betingoddsarea.hammer-odds td:nth-child(3){
+    width: 20% !important;
+  }
+  #betingoddsarea.hammer-odds td:nth-child(4){
+    width: 20%;
+  }
+  #betingoddsarea.hammer-odds td:nth-child(5){
+    width: 20%;
+  }
+  #betingoddsarea.penalty-odds td:nth-child(3),
+  #betingoddsarea.panty-odds td:nth-child(3),
+  #betingoddsarea.boobs-odds td:nth-child(3),
+  #betingoddsarea.holly-odds td:nth-child(3){
+    width: 30% !important;
+  }
+  
+  #betingoddsarea.penalty-odds td:nth-child(5),
+  #betingoddsarea.panty-odds td:nth-child(5),
+  #betingoddsarea.boobs-odds td:nth-child(5),
+  #betingoddsarea.holly-odds td:nth-child(5){
+    width: 30%;
+  }
+
+}
+
+@media only screen and (max-width: 360px) {
+  body > header > div > div > img {
+    margin-top: -18px !important;
+    height: 55px !important;
+  }
+}

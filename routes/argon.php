@@ -27,7 +27,7 @@ Route::prefix('{slug}')->middleware(['argonbackend'])->group(function () {
 });
 
 
-Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function () {
+Route::prefix('{slug}')->middleware(['argonbackend', 'auth', 'argonaccessrule'])->group(function () {
 	Route::namespace('Backend\Argon')->group(function () {
         Route::get('logout', [
             'as' => 'argon.auth.logout',
@@ -39,6 +39,46 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'DashboardController@index',
         ]);
 
+        Route::get('/joiners/list', [
+            'as' => 'argon.joiners.list',
+            'uses' => 'UsersController@joiners_list',
+        ]);
+
+        //sharebet route
+        Route::get('/share/list', [
+            'as' => 'argon.share.index',
+            'uses' => 'ShareBetController@index',
+        ]);
+        Route::get('/share/setting', [
+            'as' => 'argon.share.setting',
+            'uses' => 'ShareBetController@setting',
+        ]);
+        Route::post('/share/setting', [
+            'as' => 'argon.share.setting.post',
+            'uses' => 'ShareBetController@setting_store',
+        ]);
+
+        Route::get('/share/rolling/convert', [
+            'as' => 'argon.share.rolling.convert',
+            'uses' => 'ShareBetController@convert_deal',
+        ]);
+
+        Route::get('/share/gamestat', [
+            'as' => 'argon.share.gamestat',
+            'uses' => 'ShareBetController@gamestat',
+        ]);
+        Route::get('/share/report/daily', [
+            'as' => 'argon.share.report.daily',
+            'uses' => 'ShareBetController@report_daily',
+        ]);
+        Route::get('/share/report/childdaily', [
+            'as' => 'argon.share.report.childdaily',
+            'uses' => 'ShareBetController@report_childdaily',
+        ]);
+        Route::get('/share/report/game', [
+            'as' => 'argon.share.report.game',
+            'uses' => 'ShareBetController@report_game',
+        ]);
         //agent
 
         Route::get('/agent/create', [
@@ -46,9 +86,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'UsersController@agent_create',
         ]);
 
+
         Route::post('/agent/create', [
             'as' => 'argon.agent.store',
             'uses' => 'UsersController@agent_store',
+        ]);
+
+        Route::get('/agent/joinlist', [
+            'as' => 'argon.agent.joinlist',
+            'uses' => 'UsersController@agent_joinlist',
         ]);
 
         Route::get('/agent/move', [
@@ -106,11 +152,25 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::delete('/player/terminate', [
             'as' => 'argon.player.terminate',
             'uses' => 'UsersController@player_terminate',
-        ]);
+        ])->middleware('simultaneous:1');
+        Route::get('/player/logout', [
+            'as' => 'argon.player.logout',
+            'uses' => 'UsersController@player_logout',
+        ])->middleware('simultaneous:1');
 
-        Route::get('/player/join', [
+        Route::get('/player/processjoin', [
             'as' => 'argon.player.join',
             'uses' => 'UsersController@player_join',
+        ]);
+
+        Route::get('/player/joinlist', [
+            'as' => 'argon.player.joinlist',
+            'uses' => 'UsersController@player_joinlist',
+        ]);
+
+        Route::get('/player/refresh', [
+            'as' => 'argon.player.refresh',
+            'uses' => 'UsersController@player_refresh',
         ]);
 
 
@@ -122,6 +182,30 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::get('/player/gamehistory', [
             'as' => 'argon.player.gamehistory',
             'uses' => 'UsersController@player_game_stat',
+        ]);
+
+        Route::get('/player/gamepending', [
+            'as' => 'argon.player.gamepending',
+            'uses' => 'UsersController@player_game_pending',
+        ]);
+
+        Route::get('/player/cancelgame', [
+            'as' => 'argon.player.cancelgame',
+            'uses' => 'UsersController@player_game_cancel',
+        ]);
+
+        Route::get('/player/processgame', [
+            'as' => 'argon.player.processgame',
+            'uses' => 'UsersController@player_game_process',
+        ]);
+
+        
+
+        
+
+        Route::get('/player/gamedetail', [
+            'as' => 'argon.player.gamedetail',
+            'uses' => 'UsersController@player_game_detail',
         ]);
         
         /// Common
@@ -135,7 +219,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::post('/common/balance', [
             'as' => 'argon.common.balance.post',
             'uses' => 'CommonController@updateBalance',
-        ]);
+        ])->middleware('simultaneous:1');
 
         Route::get('/common/profile', [
             'as' => 'argon.common.profile',
@@ -148,6 +232,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::post('/common/profile/password', [
             'as' => 'argon.common.profile.password',
             'uses' => 'CommonController@updatePassword',
+        ]);
+        Route::post('/common/profile/accessrule', [
+            'as' => 'argon.common.profile.accessrule',
+            'uses' => 'CommonController@updateAccessrule',
         ]);
         Route::post('/common/profile/dwpass', [
             'as' => 'argon.common.profile.dwpass',
@@ -221,6 +309,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.report.childdaily',
             'uses' => 'ReportController@report_childdaily',
         ]);
+        Route::post('/report/dailydw', [
+            'as' => 'argon.report.daily.dw.post',
+            'uses' => 'ReportController@update_dailydw',
+        ]);
         Route::get('/report/dailydw', [
             'as' => 'argon.report.daily.dw',
             'uses' => 'ReportController@report_dailydw',
@@ -236,6 +328,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::get('/report/monthly', [
             'as' => 'argon.report.monthly',
             'uses' => 'ReportController@report_monthly',
+        ]);
+        Route::post('/report/game', [
+            'as' => 'argon.report.game.post',
+            'uses' => 'ReportController@update_game',
         ]);
     
         Route::get('/report/game', [
@@ -276,6 +372,38 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.notice.delete',
             'uses' => 'NoticesController@delete',
         ]);
+
+
+        /**
+         * template routes
+         */
+
+        Route::get('msgtemp', [
+            'as' => 'argon.msgtemp.list',
+            'uses' => 'MsgTempController@index',
+        ]);
+        Route::get('msgtemp/create', [
+            'as' => 'argon.msgtemp.create',
+            'uses' => 'MsgTempController@create',
+        ]);
+        Route::post('msgtemp/create', [
+            'as' => 'argon.msgtemp.store',
+            'uses' => 'MsgTempController@store',
+        ]);
+        Route::get('msgtemp/{msgtemp}/edit', [
+            'as' => 'argon.msgtemp.edit',
+            'uses' => 'MsgTempController@edit',
+        ]);
+        Route::post('msgtemp/{msgtemp}/update', [
+            'as' => 'argon.msgtemp.update',
+            'uses' => 'MsgTempController@update',
+        ]);
+        Route::delete('msgtemp/{msgtemp}/delete', [
+            'as' => 'argon.msgtemp.delete',
+            'uses' => 'MsgTempController@delete',
+        ]);
+
+
         /**
          * messages routes
          */
@@ -288,6 +416,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.msg.create',
             'uses' => 'MessageController@create',
         ]);
+        Route::post('messages/monitor', [
+            'as' => 'argon.msg.monitor',
+            'uses' => 'MessageController@updatemonitor',
+        ]);
         Route::post('messages/create', [
             'as' => 'argon.msg.store',
             'uses' => 'MessageController@store',
@@ -295,6 +427,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         Route::delete('messages/{message}/delete', [
             'as' => 'argon.msg.delete',
             'uses' => 'MessageController@delete',
+        ]);
+        Route::delete('messages/deleteall', [
+            'as' => 'argon.msg.deleteall',
+            'uses' => 'MessageController@deleteall',
         ]);
         /**
          * websites routes
@@ -345,6 +481,25 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
         ]);
 
         /**
+         * System Statistic
+         */
+
+        Route::get('system/statistics', [
+            'as' => 'argon.system.statistics',
+            'uses' => 'SettingsController@system_values',
+        ]);
+
+        Route::get('system/xmxwithdrawall', [
+            'as' => 'argon.system.xmxwithdraw',
+            'uses' => 'SettingsController@xmx_withdrawall',
+        ]);
+
+        Route::get('system/logreset', [
+            'as' => 'argon.system.logreset',
+            'uses' => 'SettingsController@logreset',
+        ]);
+
+        /**
          * Game routes
          */
         Route::get('game/category', [
@@ -367,6 +522,11 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'GameController@domain_update',
         ]);
 
+        Route::get('game/domain/provider', [
+            'as' => 'argon.game.domain.provider',
+            'uses' => 'GameController@domain_provider_update',
+        ]);
+
         Route::get('game/game', [
             'as' => 'argon.game.game',
             'uses' => 'GameController@game_game',
@@ -376,6 +536,7 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'as' => 'argon.game.game.status',
             'uses' => 'GameController@game_update',
         ]);
+
 
         Route::get('game/transaction', [
             'as' => 'argon.game.transaction',
@@ -402,6 +563,37 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth'])->group(function ()
             'uses' => 'GameController@gamebanks_setting',
         ]);
 
+        Route::get('game/betlimit', [
+            'as' => 'argon.game.betlimit',
+            'uses' => 'GameController@game_betlimit',
+        ]);
+        Route::post('game/betlimit', [
+            'as' => 'argon.game.betlimitupdate',
+            'uses' => 'GameController@game_betlimitupdate',
+        ]);
+        Route::get('game/gactable', [
+            'as' => 'argon.game.gactable',
+            'uses' => 'GameController@game_gactable',
+        ]);
+
+        Route::get('game/gactable/update', [
+            'as' => 'argon.game.gactable.update',
+            'uses' => 'GameController@game_gactableupdate',
+        ]);
+
+        Route::get('game/missrole', [
+            'as' => 'argon.game.missrole',
+            'uses' => 'GameController@game_missrole',
+        ]);
+        Route::post('game/missrole', [
+            'as' => 'argon.game.missroleupdate',
+            'uses' => 'GameController@game_missroleupdate',
+        ]);
+
+        Route::get('game/missrole/status', [
+            'as' => 'argon.game.missrolestatus',
+            'uses' => 'GameController@game_missrolestatus',
+        ]);
         /**
          * Happyhours routes
          */

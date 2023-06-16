@@ -7,6 +7,16 @@
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@if (auth()->user()->hasRole('admin'))
+<style>
+    .bw-btn {
+        display: none;
+      }
+    .bw-title:hover .bw-btn {
+        display: inline-block;
+      }
+</style>
+@endif
 @endpush
 
 @section('content-header')
@@ -69,7 +79,7 @@
                 <div class="row">
                     <div class="col ">
                         <h3 class="card-title text-info mb-0 ">롤링 합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($totalsummary[0]->totaldeal)}}</span>
+                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($totalsummary[0]->total_deal)}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -107,11 +117,11 @@
                             <div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
                                 </div>
-                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
+                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                                 <div class="col-md-3">
                                     <select class="form-control" id="role" name="role">
                                         <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
@@ -129,6 +139,14 @@
                                 <label for="player" class="col-md-2 col-form-label form-control-label text-center">게임사이름</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('game')}}" id="game"  name="game">
+                                </div>
+                                <label for="gametype" class="col-md-2 col-form-label form-control-label text-center">게임타입</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="gametype" name="gametype">
+                                        <option value="" @if (Request::get('gametype') == '') selected @endif>@lang('app.all')</option>
+                                        <option value="live" @if (Request::get('gametype') == 'live') selected @endif>카지노</option>
+                                        <option value="slot" @if (Request::get('gametype') == 'slot') selected @endif>슬롯</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-1">
                                 </div>
@@ -171,11 +189,12 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>기간내 합계</th>
-                                <th>에이전트이름</th>
+                                <th>파트너이름</th>
                                 <th>게임사이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
-								<th>벳윈</th>
+								<th>벳윈금</th>
+                                <th>죽장금</th>
 								<th>롤링금</th>
                             </tr>
                         </thead>
@@ -183,13 +202,41 @@
                             @if (count($totalstatics) > 0)
                                 @foreach ($totalstatics as $stat)
                                     @if ($loop->index == 0)
-                                        <tr><td rowspan="{{count($totalstatics)}}" style="border-right: 1px solid rgb(233 236 239);"></td>
+                                        <tr><td rowspan="{{count($totalstatics)+count($totalbyType)}}" style="border-right: 1px solid rgb(233 236 239);"></td>
                                     @else
                                         <tr>
                                     @endif
                                     @include('backend.argon.report.partials.row_game', ['total' => true])
                                     </tr>
                                 @endforeach
+
+                                @foreach ($totalbyType as $k => $stat)
+                                    @if ($loop->index == 0)
+                                        <tr><td rowspan="{{count($totalbyType)}}" style="border-right: 1px solid rgb(233 236 239);"><span class="text-red">타입별 합계</span></td>
+                                    @else
+                                        <tr>
+                                    @endif
+                                    <td>{{__($k)}}</td>
+                                    <td>{{number_format($stat['totalbet'])}}</td>
+                                    <td>{{number_format($stat['totalwin'])}}</td>
+                                    <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>총죽장 : {{ number_format($stat['total_ggr'])}}</li>
+                                            <li>하부죽장 : {{ number_format($stat['total_ggr_mileage'])}}</li>
+                                            <li>본인죽장 : {{ number_format($stat['total_ggr']-$stat['total_ggr_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>총롤링 : {{ number_format($stat['total_deal'])}}</li>
+                                            <li>하부롤링 : {{ number_format($stat['total_mileage'])}}</li>
+                                            <li>본인롤링 : {{ number_format($stat['total_deal']-$stat['total_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                @endforeach
+
                             @else
                                 <tr><td colspan="6">{{__('No Data')}}</td></tr>
                             @endif
@@ -199,11 +246,12 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>날짜</th>
-                                <th>에이전트이름</th>
+                                <th>파트너이름</th>
                                 <th>게임사이름</th>
 								<th>배팅금</th>
 								<th>당첨금</th>
-								<th>벳윈</th>
+								<th>벳윈금</th>
+                                <th>죽장금</th>
 								<th>롤링금</th>
                             </tr>
                         </thead>

@@ -26,6 +26,11 @@ namespace VanguardLTE
         {
             parent::boot();
         }
+        
+        public function game()
+        {
+            return $this->belongsTo('VanguardLTE\Game');
+        }
     }
 
 }

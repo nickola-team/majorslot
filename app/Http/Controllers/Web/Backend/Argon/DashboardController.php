@@ -14,28 +14,86 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function index()
         {
+            $user = auth()->user();
             $ids = auth()->user()->hierarchyUsersOnly();
             $availableShops = auth()->user()->availableShops();
             $start_date = date("Y-m-d", strtotime("-30 days"));
             $end_date = date("Y-m-d");
+            $this_date = date("Y-m-1");
             $todayprofit = 0;
             $todaybetwin = 0;
-            $online = 0;
+            $mtbet = 0;
+            $mtwin = 0;
+            $mtin = 0;
+            $mtout = 0;
+            $monthrtp = 0;
+            $monthpayout = 0;
             $monthsummary = null;
+            $thismonthsummary = null;
+            $monthcategory = null;
+            $todayInOut = null;
+
             if (count($availableShops) > 0){
                 $monthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->get();
+                $thismonthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $this_date)->get();
+
+                $totalQuery = 'SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+                $totalQuery = $totalQuery . "w_category_summary.date>=\"$start_date\" AND w_category_summary.date<=\"$end_date\" ";
+                $totalQuery = $totalQuery . "AND w_category_summary.user_id=$user->id ";
+                $totalQuery = $totalQuery . "GROUP BY w_category_summary.category_id ORDER BY totalbet desc limit 5";
+                if (!auth()->user()->hasRole('admin'))
+                {
+                    $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin,  a.parent AS category_id, b.trans_title as title FROM ($totalQuery) a JOIN w_categories_trans_kr as b on b.category_id=a.parent  GROUP BY a.parent ORDER BY totalbet desc";
+                }
+                else
+                {
+                    $totalQuery = "SELECT a.totalbet AS totalbet, a.totalwin AS totalwin,  a.parent AS category_id, b.trans_title as title FROM ($totalQuery) a JOIN w_categories_trans_kr as b on b.category_id=a.parent  ORDER BY totalbet desc";
+                }
+                $monthcategory = \DB::select($totalQuery);
+
+                // $monthcategory = \VanguardLTE\CategorySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('category_id')->selectRaw('category_id, sum(totalbet) as bet, sum(totalwin) as win')->orderby('bet','desc')->limit(5)->get();
                 $todaysummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', $end_date)->first();
                 if ($todaysummary){
                     $todaybetwin = $todaysummary->totalbet - $todaysummary->totalwin;
-                    $todayprofit = $todaysummary->totalin - $todaysummary->totalout;
+                    $todayInOut = $todaysummary->calcInOut();
+                    $todayprofit = $todayInOut['totalin'] - $todayInOut['totalout'];
+                }
+                if ($thismonthsummary->count() > 0)
+                {
+                    $mtbet = $thismonthsummary->sum('totalbet');
+                    $mtwin = $thismonthsummary->sum('totalwin');
+                    $mtin = $thismonthsummary->sum('totalin');
+                    $mtout = $thismonthsummary->sum('totalout');
+                    if ($todaysummary)
+                    {
+                        $mtin = $mtin - $todaysummary->totalin + $todayInOut['totalin'];
+                        $mtout = $mtout - $todaysummary->totalout + $todayInOut['totalout'];
+                    }
+                    $monthprofit = $mtbet - $mtwin ;
+                    if ($mtbet > 0){
+                        $monthrtp = $mtwin / $mtbet  ; 
+                    }
+                    $monthbetwin = $mtin - $mtout;
+                    if ($mtin > 0){
+                        $monthpayout = $mtout / $mtin;
+                    }
                 }
             }
+            
             $stats = [
                 'todaydw' => $todayprofit,
                 'todaybetwin' => $todaybetwin,
-                
+                'todayin' => $todayInOut?$todayInOut['totalin']:0,
+                'todayout' => $todayInOut?$todayInOut['totalout']:0,
+
+                'monthbet' => $mtbet,
+                'monthwin' => $mtwin,
+                'monthrtp' => $monthrtp * 100,
+                'monthin' => $mtin,
+                'monthout' => $mtout,
+                'monthpayout' => $monthpayout * 100,
             ];
-            return view('backend.argon.dashboard.admin', compact('monthsummary', 'stats'));
+            return view('backend.argon.dashboard.admin', compact('monthsummary', 'monthcategory', 'todaysummary','stats'));
         }
     }
 

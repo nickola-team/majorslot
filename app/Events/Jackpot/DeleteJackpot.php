@@ -2,7 +2,7 @@
 
 namespace VanguardLTE\Events\Jackpot;
 
-use VanguardLTE\Jackpot;
+use VanguardLTE\HappyHourUser;
 
 class DeleteJackpot
 {
@@ -11,7 +11,7 @@ class DeleteJackpot
      */
     protected $DeleteJackpot;
 
-    public function __construct(Jackpot $DeleteJackpot)
+    public function __construct(HappyHourUser $DeleteJackpot)
     {
         $this->DeleteJackpot = $DeleteJackpot;
     }

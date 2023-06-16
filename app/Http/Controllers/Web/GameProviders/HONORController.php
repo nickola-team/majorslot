@@ -111,8 +111,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getUserBalance($href, $user, $prefix=self::HONOR_PROVIDER) {
             $url = config('app.honor_api') . '/user';
             $token = config('app.honor_key');
-    
-            $str_param = '?username=' . $prefix . sprintf("%04d",$user->id);
+
+            $param = [
+                'username' => $prefix . sprintf("%04d",$user->id)
+            ];
             $balance = -1;
 
             try {                   
@@ -120,7 +122,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->get($url . $str_param);
+                    ])->get($url . $param);
                 if ($response->getStatusCode() == 200) {
                     $res = $response->json();
         
@@ -149,8 +151,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getUserToken($href, $user, $prefix=self::HONOR_PROVIDER) {
             $url = config('app.honor_api') . '/user/refresh-token';
             $token = config('app.honor_key');
+
+            $param = [
+                'username' => $prefix . sprintf("%04d",$user->id)
+            ];
     
-            $str_param = '?username=' . $prefix . sprintf("%04d",$user->id);
             $usertoken = '';
 
             try {                   
@@ -158,16 +163,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->patch($url . $str_param);
+                    ])->patch($url . $param);
                 if ($response->getStatusCode() == 200) {
                     $res = $response->json();
         
-                    if (!isset($res['errors'])) {
+                    if (isset($res['token']) && $res['token'] != '') {
                         $usertoken = $res['token'];
                     }
                     else
                     {
-                        Log::error('HONORgetusertoken : return failed. ' . $res['message']);
+                        Log::error('HONORgetusertoken : return failed. ' . json_encode($res));
                     }
                 }
                 else
@@ -199,15 +204,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = config('app.honor_api') . '/game-list';
             $token = config('app.honor_key');
 
-
-            $str_param = '?vendor=' . $category['vendor'];
+            $param = [
+                'vendor' => $category['vendor']
+            ];
 
     
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
-                ])->get($url . $str_param);
+                ])->get($url . $param);
             if ($response->getStatusCode() != 200)
             {
                 return [];
@@ -234,8 +240,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'enname' => $game['title'],
                     'name' => preg_replace('/\s+/', '', $game['title']),
                     'title' => $korname,
-                    'icon' => array_values($game['thumbnails'])[0],
-                    'type' => $game['type'],
+                    'icon' => $game['thumbnail'],
+                    'type' => ($game['type']=='slot')?'slot':'table',
                     'view' => $view
                 ]);
             }
@@ -267,14 +273,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $usertoken = HONORController::getUserToken($href, $user, $prefix);
             //Create Game link
             $category = HONORController::HONOR_GAME_IDENTITY[$href];
-            $str_param = '?game_id=' . $gamecode . '&token=' . $usertoken . '&vendor=' . $category['vendor'];
+            $param = [
+                'game_id' => $gamecode,
+                'token' => $usertoken,
+                'vendor' => $category['vendor']
+            ];
 
             $url = config('app.honor_api') . '/get-game-url';
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
-                ])->get($url . $str_param);
+                ])->get($url . $param);
             if ($response->getStatusCode() != 200)
             {
                 Log::error('HONORGetLink : Game url request failed. status=' . $response->status());
@@ -283,9 +293,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $data = $response->json();
-            if ($data==null || isset($data['eerrors']))
+            if ($data==null || isset($data['errors']))
             {
-                Log::error('HONORGetLink : Game url result failed. ' . ($data==null?'null':$data['eerrors']['token']));
+                Log::error('HONORGetLink : Game url result failed. ' . ($data==null?'null':json_encode($data)));
                 return null;
             }
             $url = $data['link'];
@@ -322,7 +332,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $data = $response->json();
                     if ($data==null || isset($data['message']))
                     {
-                        Log::error('HONORWithdraw : subtractMemberPoint result failed. PARAMS=' . json_encode($params));
+                        Log::error('HONORWithdraw : subtractMemberPoint result failed. PARAMS=' . $str_param);
                         Log::error('HONORWithdraw : subtractMemberPoint result failed. ' . ($data==null?'null':$data['message']));
                         return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
                     }
@@ -330,7 +340,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 catch (\Exception $ex)
                 {
                     Log::error('HONORWithdraw : subtractMemberPoint Exception. Exception=' . $ex->getMessage());
-                    Log::error('HONORWithdraw : subtractMemberPoint Exception. PARAMS=' . json_encode($params));
+                    Log::error('HONORWithdraw : subtractMemberPoint Exception. PARAMS=' .$str_param);
                     return ['error'=>true, 'amount'=>0, 'msg'=>'exception'];
                 }
             }
@@ -339,22 +349,360 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function makelink($gamecode, $userid)
         {
+            $token = config('app.honor_key');
+
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                Log::error('HONORMakeLink : Does not find user ' . $userid);
+                return null;
+            }
+
+            $game = HONORController::getGameObj($gamecode);
+            if ($game == null)
+            {
+                Log::error('HONORMakeLink : Game not find  ' . $gamecode);
+                return null;
+            }
+
+
+            $alreadyUser = 1;
+            $username = self::HONOR_PROVIDER . sprintf("%04d",$user->id);
+
+            try
+            {
+                $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $token
+                    ])->get(config('app.honor_api') . '/user?username='.$username);
+                if ($response->getStatusCode() != 200)
+                {
+                    Log::error('HONORmakelink : checkUser request failed. ' . $response->body());
+                    $alreadyUser = 0;
+                }
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('HONORcheckuser : checkUser Exception. Exception=' . $ex->getMessage());
+                Log::error('HONORcheckuser : checkUser Exception. PARAMS=' . $username);
+                return null;
+            }
+            if ($alreadyUser == 0){
+                //create honor account
+                try
+                {
+
+                    $url = config('app.honor_api') . '/user/create';
+                    $str_param = '?username='.$username.'&nickname='.$username;
+                    $response = Http::withHeaders([
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'Bearer ' . $token
+                        ])->post($url . $str_param);
+                    if ($response->getStatusCode() != 200)
+                    {
+                        Log::error('HONORmakelink : createAccount request failed. ' . $response->body());
+                        return null;
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    Log::error('HONORcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
+                    Log::error('HONORcheckuser : createAccount Exception. PARAMS=' . $str_param);
+                    return null;
+                }
+            }
+
+            $balance = HONORController::getuserbalance(null, $user);
+            if ($balance == -1)
+            {
+                return null;
+            }
+
+            if ($balance != $user->balance)
+            {
+                //withdraw all balance
+                $data = HONORController::withdrawAll(null, $user);
+                if ($data['error'])
+                {
+                    return null;
+                }
+                //Add balance
+
+            
+                //addMemberPoint
+                $str_param = '?amount=' . floatval($user->balance) . '&username=' . $username;
+                try {
+                    $url = config('app.honor_api') . '/user/add-balance';
+                    $response = Http::withHeaders([
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'Bearer ' . $token
+                        ])->post($url . $str_param);
+                    if ($response->getStatusCode() != 200)
+                    {
+                        Log::error('HONORmakelink : addMemberPoint result failed. ' . $response->body());
+                        return null;
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    Log::error('HONORmakelink : addMemberPoint Exception. exception=' . $ex->getMessage());
+                    Log::error('HONORmakelink : addMemberPoint PARAM. PARAM=' . $str_param);
+                    return null;
+                }
+            }
+            return '/followgame/'.HONORController::HONOR_PROVIDER.'/'.$gamecode;
             
         }
 
         public static function getgamelink($gamecode)
         {
-            
+            return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [HONORController::HONOR_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($lastid, $pageIdx)
+        public static function gamerounds($pageIdx, $startDate, $endDate)
         {
-            
+            $token = config('app.honor_key');
+            $params = [
+                'start' => $startDate,
+                'end' => $endDate,
+                'perPage' => 1000,
+                'page' => $pageIdx,
+                'withDetails' => 1
+            ];
+            try
+            {
+                $url = config('app.honor_api') . '/transactions';
+                $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $token
+                    ])->post($url . $params);
+                if (!$response->ok())
+                {
+                    Log::error('HONORgamerounds : getBetWinHistoryAll request failed. PARAMS= ' . json_encode($params));
+                    Log::error('HONORgamerounds : getBetWinHistoryAll request failed. ' . $response->body());
+
+                    return null;
+                }
+                $data = $response->json();
+                if ($data==null)
+                {
+                    Log::error('HONORgamerounds : getBetWinHistoryAll result failed. PARAMS=' . json_encode($params));
+                    Log::error('HONORgamerounds : getBetWinHistoryAll result failed. ');
+                    return null;
+                }
+
+                return $data;
+            }
+            catch (\Exception $ex)
+            {
+                Log::error('HONORgamerounds : getBetWinHistoryAll Excpetion. exception= ' . $ex->getMessage());
+                Log::error('HONORgamerounds : getBetWinHistoryAll Excpetion. PARAMS= ' . json_encode($params));
+            }
+            return null;
         }
 
-        public static function processGameRound($frompoint=-1, $checkduplicate=false)
+        public static function processGameRound($from='', $to='')
         {
+            return;
+            $count = 0;
+
+
+            $category = \VanguardLTE\Category::where([
+                'provider'=> XMXController::XMX_PROVIDER,
+                'href' => $catname,
+                'shop_id' => 0,
+                'site_id' => 0,
+                ])->first();
+
+            $roundfrom = '';
+            $roundto = '';
+
+            if ($from == '')
+            {
+                $roundfrom = date('Y-m-d H:i:s',strtotime('-12 hours'));
+                $lastround = \VanguardLTE\StatGame::where('category_id', $category->original_id)->orderby('date_time', 'desc')->first();
+                if ($lastround)
+                {
+                    $d = strtotime($lastround->date_time);
+                    if ($d > strtotime("-12 hours"))
+                    {
+                        $roundfrom = date('Y-m-d H:i:s',strtotime($lastround->date_time. ' +1 seconds'));
+                    }
+                }
+            }
+            else
+            {
+                $roundfrom = $from;
+            }
+
+            if ($to == '')
+            {
+                $roundto = date('Y-m-d H:i:s');
+            }
+            else
+            {
+                $roundto = $to;
+            }
+
+            $start_timeStamp = strtotime($roundfrom);
+            $end_timeStamp = strtotime($roundto);
+            if ($end_timeStamp < $start_timeStamp)
+            {
+                Log::error('XMX processGameRound : '. $roundto . '>' . $roundfrom);
+                return [0, 0];
+            }
+
+            do
+            {
+                $curend_timeStamp = $start_timeStamp + 3600; // 1hours
+                if ($curend_timeStamp > $end_timeStamp)
+                {
+                    $curend_timeStamp = $end_timeStamp;
+                }
+
+                $curPage = 1;
+                $data = null;
+                do
+                {
+                    $data = HONORController::gamerounds($thirdId, $curPage, date('Y-m-d H:i:s', $start_timeStamp), date('Y-m-d H:i:s', $curend_timeStamp));
+                    if ($data == null)
+                    {
+                        Log::error('XMX gamerounds failed : '. date('Y-m-d H:i:s', $start_timeStamp) . '~' . date('Y-m-d H:i:s', $curend_timeStamp));
+                        sleep(60);
+                        continue;
+                    }
+                    
+                    if (isset($data['totalDataSize']) && $data['totalDataSize'] > 0)
+                    {
+                        foreach ($data['history'] as $round)
+                        {
+                            $bet = 0;
+                            $win = 0;
+                            $gameName = $round['gameID'];
+                            if ($catname == 'xmx-cq9')
+                            {
+                                if ($round['transType'] == 'BET')
+                                {
+                                    continue;
+                                }
+                                $betdata = json_decode($round['history'],true);
+                                $bet = $betdata['bet'];
+                                $win = $betdata['win'];
+                                $balance = $betdata['balance'];
+                            }
+                            else if ($catname == 'xmx-bng' || $catname == 'xmx-playson')
+                            {
+                                if ($round['transType'] == 'WIN')
+                                {
+                                    continue;
+                                }
+
+                                $betdata = json_decode($round['history'],true);
+                                $bet = $betdata['bet']??0;
+                                $win = $betdata['win'];
+                                $balance = $betdata['balance_after'];
+                                if ($bet==0 && $win==0)
+                                {
+                                    continue;
+                                }
+                            }
+                            else if ($catname == 'xmx-hbn')
+                            {
+                                if ($round['transType'] == 'BET')
+                                {
+                                    continue;
+                                }
+
+                                $betdata = json_decode($round['history'],true);
+                                $bet = $betdata['stake'];
+                                $win = $betdata['payout'];
+                                $balance = -1;
+                                $gameName = $betdata['gameKeyName'];
+                            }
+                            else if ($catname == 'xmx-pp')
+                            {
+                                if ($round['transType'] == 'WIN')
+                                {
+                                    continue;
+                                }
+
+                                $betdata = explode(',', $round['history']);
+                                $bet = $betdata[9];
+                                $win = $betdata[10];
+                                $balance = -1;
+                            }
+                            else
+                            {
+                                if ($round['transType'] == 'BET')
+                                {
+                                    $bet = $round['amount'];
+                                }
+                                else
+                                {
+                                    $win = $round['amount'];
+                                }
+
+                                $balance = -1;
+                            }
+                            if (is_null($win))
+                            {
+                                $win = 0;
+                            }
+                            $time = $round['transTime'];
+
+                            $userid = intval(preg_replace('/'. self::XMX_PROVIDER .'(\d+)/', '$1', $round['userID'])) ;
+                            $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+
+                            if ($checkduplicate)
+                            {
+                                $checkGameStat = \VanguardLTE\StatGame::where([
+                                    'user_id' => $userid, 
+                                    'bet' => $bet, 
+                                    'win' => $win, 
+                                    'date_time' => $time,
+                                    'roundid' => $round['gameID'] . '_' . $round['roundID'],
+                                ])->first();
+                                if ($checkGameStat)
+                                {
+                                    continue;
+                                }
+                            }
+
+                            \VanguardLTE\StatGame::create([
+                                'user_id' => $userid, 
+                                'balance' => $balance, 
+                                'bet' => $bet, 
+                                'win' => $win, 
+                                'game' =>$gameName . '_xmx', 
+                                'type' => 'slot',
+                                'percent' => 0, 
+                                'percent_jps' => 0, 
+                                'percent_jpg' => 0, 
+                                'profit' => 0, 
+                                'denomination' => 0, 
+                                'date_time' => $time,
+                                'shop_id' => $shop?$shop->shop_id:0,
+                                'category_id' => isset($category)?$category->id:0,
+                                'game_id' => $catname,
+                                'roundid' => $round['gameID'] . '_' . $round['roundID'],
+                            ]);
+                            $count = $count + 1;
+                        }
+                    }
+                    $curPage = $curPage + 1;
+                } while ($data!=null && $curPage <= $data['totalPageSize']);
+
+                $start_timeStamp = $curend_timeStamp;
+
+            }while ($start_timeStamp<$end_timeStamp);
+
             
+            
+            return [$count, 0];
         }
 
 

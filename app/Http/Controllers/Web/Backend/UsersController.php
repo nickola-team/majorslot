@@ -235,7 +235,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                                 'user_id' => $distr->id,
                                 'name' => $partner[1],
                                 'alias' => $partner[0],
-                                'percent' => 90,
+                                'percent' => 97,
                                 'frontend' => 'Default',
                                 'currency' => 'KRW',
                                 'orderby' => 'AZ',
@@ -462,7 +462,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'name' => $partner->username,
                         'balance' => $shop->balance,
                         'profit' => $shop->deal_balance - $shop->mileage,
-                        'ggr_profit' => $shop->ggr_balance - $shop->ggr_mileage - ($shop->count_deal_balance - $shop->count_mileage),
                         'deal_percent' => $shop->deal_percent,
                         'table_deal_percent' => $shop->table_deal_percent,
                         'ggr_percent' => $shop->ggr_percent,
@@ -490,7 +489,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                         'name' => $partner->username,
                         'balance' => $partner->balance,
                         'profit' => $partner->deal_balance - $partner->mileage,
-                        'ggr_profit' => $partner->ggr_balance - $partner->ggr_mileage - ($partner->count_deal_balance - $partner->count_mileage),
                         'deal_percent' => $partner->deal_percent,
                         'table_deal_percent' => $partner->table_deal_percent,
                         'ggr_percent' => $partner->ggr_percent,
@@ -1281,23 +1279,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend
                 return redirect()->back()->withErrors([$result['message']]);
             }
             //currently user is playing games with balance transfer mode.
-            if ($user->playing_game != null)
-            {
-                if ($data['type'] == 'add')
-                {
-                    $summ = abs($summ);
-                }
-                else
-                {
-                    $summ = -abs($summ);
-                }
-                $data = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::transfer($user->id, $summ);
-                if ($data['error'] == -1) //밸런스 전송시 오류, 게임사게임 종료시킬것
-                {
-                    \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::terminate($user->id);
-                    $user->update(['playing_game' => null]);
-                }
-            }
+            
             return redirect()->back()->withSuccess($result['message']);
         }
         public function statistics(\VanguardLTE\User $user, \Illuminate\Http\Request $request)

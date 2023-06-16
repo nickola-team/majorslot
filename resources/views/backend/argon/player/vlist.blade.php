@@ -2,11 +2,12 @@
         'parentSection' => 'player',
         'elementName' => 'player-list'
     ])
-@section('page-title',  '개인플레이어 목록')
+@section('page-title',  $title??'개인유저 목록')
 <?php 
     $statuses = \VanguardLTE\Support\Enum\UserStatus::lists(); 
     $status_class = \VanguardLTE\Support\Enum\UserStatus::bgclass(); 
 ?>
+@if ($total)
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -14,7 +15,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-success mb-0 ">총 플레이어</h3>
+                        <h3 class="card-title text-success mb-0 ">총 유저</h3>
                         <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['count'])}}</span>
                     </div>
                     <div class="col-auto">
@@ -26,6 +27,7 @@
             </div>
         </div>
     </div>
+    
     <div class="col-xl-3 col-lg-3">
         <div class="card card-stats  mb-xl-0">
             <div class="card-body">
@@ -46,6 +48,7 @@
 
 </div>
 @endsection
+@endif
 @section('content')
 <div class="container-fluid">
 
@@ -63,7 +66,7 @@
                 <tr>
                 <th scope="col">번호</th>
                 <th scope="col">이름</th>
-                <th scope="col">추천인</th>
+                <th scope="col">상위</th>
                 <th scope="col">연락처</th>
                 <th scope="col">계좌정보</th>
                 <th scope="col">신청시간</th>
@@ -104,7 +107,7 @@
                 <tr>
                 <th scope="col">번호</th>
                 <th scope="col">이름</th>
-                <th scope="col">추천인</th>
+                <th scope="col">상위</th>
                 <th scope="col">연락처</th>
                 <th scope="col">계좌정보</th>
                 <th scope="col">신청시간</th>
@@ -131,6 +134,7 @@
 </div>
 </div>
 
+@if ($users)
     <!-- Search -->
 <div class="row">
     <div class="col">
@@ -152,7 +156,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">플레이어이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">유저이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
@@ -184,7 +188,7 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">개인플레이어 목록</h3>
+        <h3 class="mb-0">개인유저 목록</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush" id="datalist">
@@ -224,4 +228,32 @@
     </div>
 </div>
 </div>
+@endif
 @stop
+
+@push('js')
+<script>
+    function refreshPlayerBalance(userid)
+    {
+        $('#uid_' + userid).text('머니요청중...');
+        $.ajax({
+            url: "{{argon_route('argon.player.refresh')}}",
+            type: "GET",
+            data: {id:  userid},
+            dataType: 'json',
+            success: function (data) {
+                if (data.error)
+                {
+                    alert(data.msg);
+                }
+                else
+                {
+                    $('#uid_' + userid).text(data.balance);
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+</script>
+@endpush

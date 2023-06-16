@@ -11,6 +11,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('permission:access.admin.panel');
             $this->users = $users;
         }
+        public function joiners_list(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+
+            $joinusers = \VanguardLTE\User::where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN])->whereIn('users.id', $partner_users)->orderby('role_id', 'desc')->get();
+
+            $goto = argon_route('argon.player.vlist');
+            foreach ($joinusers as $joiner)
+            {
+                if ($joiner->role_id > 1)
+                {
+                    $goto = argon_route('argon.agent.joinlist');
+                    break;
+                }
+                else if ($joiner->email == '')
+                {
+                    $goto = argon_route('argon.player.joinlist');
+                    break;
+                }
+            }
+            return redirect()->to($goto);
+        }
         
         public function agent_move(\Illuminate\Http\Request $request)
         {
@@ -41,18 +63,32 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['상위에이전트를 찾을수 없습니다']);
             }
-            $deal_percent = $user->deal_percent;
-            $table_deal_percent = $user->tabe_deal_percent;            
-            if ($user->hasRole('manager'))
+            // $deal_percent = $user->deal_percent;
+            // $table_deal_percent = $user->tabe_deal_percent;            
+            // if ($user->hasRole('manager'))
+            // {
+            //     $deal_percent = $user->shop->deal_percent;
+            //     $table_deal_percent = $user->shop->tabe_deal_percent;            
+            // }
+            $check_deals = [
+                'deal_percent',
+                'table_deal_percent',
+                'pball_single_percent',
+                'pball_comb_percent'
+            ];
+            foreach ($check_deals as $dealtype)
             {
-                $deal_percent = $user->shop->deal_percent;
-                $table_deal_percent = $user->shop->tabe_deal_percent;            
+                if ($parent->{$dealtype} < $user->{$dealtype})
+                {
+                    return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+                }
             }
+            
 
-            if ($deal_percent > $parent->deal_percent || $table_deal_percent > $parent->table_deal_percent)
-            {
-                return redirect()->back()->withErrors(['롤링은 상위에이전트보다 클수 없습니다.']);
-            }
+            // if ($deal_percent > $parent->deal_percent || $table_deal_percent > $parent->table_deal_percent)
+            // {
+            //     return redirect()->back()->withErrors(['롤링은 상위에이전트보다 클수 없습니다.']);
+            // }
 
             if ($user->hasRole('manager'))
             {
@@ -84,7 +120,22 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $users = \VanguardLTE\User::where('parent_id', $child_id)->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->get();
             }
-            return view('backend.argon.agent.partials.childs', compact('users', 'child_id'));
+
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if ($user->isInOutPartner())
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+            return view('backend.argon.agent.partials.childs', compact('users', 'child_id','moneyperm'));
         }
 
         public function agent_create(\Illuminate\Http\Request $request)
@@ -108,19 +159,39 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $role = \jeremykenedy\LaravelRoles\Models\Role::find($request->role_id);
             $data['parent_id'] = $parent->id;
 
+            $check_deals = [
+                'deal_percent',
+                'table_deal_percent',
+                'ggr_percent',
+                'table_ggr_percent'
+            ];
+            foreach ($check_deals as $dealtype)
+            {
+                if (isset($data[$dealtype]) && $parent!=null &&  $parent->{$dealtype} < $data[$dealtype])
+                {
+                    return redirect()->back()->withErrors(['롤링이나 죽장은 상위에이전트보다 클수 없습니다']);
+                }
+            }
 
-            if (isset($data['deal_percent']) && $parent!=null &&  $parent->deal_percent < $data['deal_percent'])
+            $comaster = auth()->user();
+            while ($comaster && !$comaster->isInOutPartner())
             {
-                return redirect()->back()->withErrors(['딜비는 상위에이전트보다 클수 없습니다']);
+                $comaster = $comaster->referral;
             }
-            if (isset($data['table_deal_percent']) && $parent!=null && $parent->table_deal_percent < $data['table_deal_percent'])
+            $manualjoin = 0; //default 0
+            if (auth()->user()->isInOutPartner())
             {
-                return redirect()->back()->withErrors(['라이브딜비는 상위에이전트보다 클수 없습니다']);
+                $manualjoin = 0;
             }
-            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['죽장퍼센트는 상위에이전트보다 클수 없습니다']);
-            // }
+            else if (isset($comaster->sessiondata()['manualjoin']))
+            {
+                $manualjoin = $comaster->sessiondata()['manualjoin'];
+            }
+
+            if ($manualjoin == 1)
+            {
+                $data['status'] = \VanguardLTE\Support\Enum\UserStatus::JOIN;
+            }
 
             $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();
@@ -180,7 +251,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 event(new \VanguardLTE\Events\Shop\ShopCreated($shop));
 
             }
-            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]));
+            if ($manualjoin == 1)
+            {
+                return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['파트너생성이 신청되었습니다. 승인될때까지 기다려주세요']);
+            }
+
+            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['파트너가 생성되었습니다']);
+        }
+        public function agent_joinlist(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+            $users = null;
+            $total = null;
+            $joinusers = [];
+            $confirmusers = [];
+            $title = '신규가입파트너';
+            if (count($partner_users) > 0){
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN])->where('role_id','>', 1)->where('email', '')->whereIn('users.id', $partner_users)->get();
+
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED])->where('role_id','>', 1)->where('email','')->whereIn('users.id', $partner_users)->get();
+            }
+
+            $moneyperm = 0;
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total','moneyperm','title'));
         }
 
         public function agent_list(\Illuminate\Http\Request $request)
@@ -190,12 +283,40 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $childPartners = $user->hierarchyPartners();
             }
+            else if ($request->status == \VanguardLTE\Support\Enum\UserStatus::BANNED && $request->role == '')
+            {
+                $childPartners = $user->hierarchyPartners();
+            }
             else
             {
                 $childPartners = $user->childPartners();
             }
-
-            $users = \VanguardLTE\User::whereIn('id', $childPartners)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if ($user->isInOutPartner())
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+            
+            $status = [];
+            if ($request->status == '')
+            {
+                $status = [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED];
+            }
+            else
+            {
+                $status = [$request->status];
+            }
+            
+            $users = \VanguardLTE\User::whereIn('id', $childPartners)->whereIn('status', $status);
 
             if ($request->user != '')
             {
@@ -208,23 +329,33 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             $usersum = (clone $users)->get();
-            $sum = 0;
+            $childsum = 0;
+            $balancesum = 0;
             $count = 0;
             foreach ($usersum as $u)
             {
-                $sum = $sum + $u->childBalanceSum();
-                $count = $count + count($u->hierarchyPartners());
+                $childsum = $childsum + $u->childBalanceSum();
+                if ($u->role_id > 3)
+                {
+                    $count = $count + count($u->hierarchyPartners());
+                    $balancesum = $balancesum + $u->balance;
+                }
+                else if ($u->role_id==3)
+                {
+                    $balancesum = $balancesum + $u->shop->balance;
+                }
             }
 
             $total = [
                 'count' => $users->count() + $count,
-                'balance' => $users->sum('balance'),
-                'childbalance' => $sum
+                'balance' => $balancesum,
+                'childbalance' => $childsum
             ];
+
             
 
             $users = $users->paginate(20);
-            return view('backend.argon.agent.list', compact('users','total'));
+            return view('backend.argon.agent.list', compact('users','total', 'moneyperm'));
         }
 
         public function agent_deal_stat(\Illuminate\Http\Request $request)
@@ -242,6 +373,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 // $dates = explode(' - ', $request->dates);
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            if (strtotime($end_date) - strtotime($start_date) >= 90000)
+            {
+                return redirect()->back()->withErrors(['검색시간을 24시간 이내로 설정해주세요.']);
             }
             $statistics = $statistics->where('deal_log.date_time', '>=', $start_date);
             $statistics = $statistics->where('deal_log.date_time', '<=', $end_date );
@@ -373,20 +508,43 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $data['parent_id'] = $parent->id;
 
             $shop = $parent->shop;
-            if (isset($data['deal_percent']) && $shop!=null &&  $shop->deal_percent < $data['deal_percent'])
+            $check_deals = [
+                'deal_percent',
+                'table_deal_percent',
+                'pball_single_percent',
+                'pball_comb_percent'
+            ];
+            foreach ($check_deals as $dealtype)
             {
-                return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
+                if (isset($data[$dealtype]) && $shop!=null &&  $shop->{$dealtype} < $data[$dealtype])
+                {
+                    return redirect()->back()->withErrors(['딜비는 매장보다 클수 없습니다']);
+                }
             }
-            if (isset($data['table_deal_percent']) && $shop!=null && $shop->table_deal_percent < $data['table_deal_percent'])
-            {
-                return redirect()->back()->withErrors(['라이브딜비는 매장보다 클수 없습니다']);
-            }
-            // if ($data['role_id'] > 1 && $parent!=null && !$parent->isInoutPartner() && $parent->ggr_percent < $data['ggr_percent'])
-            // {
-            //     return redirect()->back()->withErrors(['죽장퍼센트는 매장보다 클수 없습니다']);
-            // }
+
             $data['shop_id'] = $shop->id;
             $data['role_id'] = $role->id;
+
+            $comaster = auth()->user();
+            while ($comaster && !$comaster->isInOutPartner())
+            {
+                $comaster = $comaster->referral;
+            }
+            $manualjoin = 0; //default 0
+            if (auth()->user()->isInOutPartner())
+            {
+                $manualjoin = 0;
+            }
+            else if (isset($comaster->sessiondata()['manualjoin']))
+            {
+                $manualjoin = $comaster->sessiondata()['manualjoin'];
+            }
+
+            if ($manualjoin == 1)
+            {
+                $data['status'] = \VanguardLTE\Support\Enum\UserStatus::JOIN;
+            }
+
             $user = \VanguardLTE\User::create($data);
             $user->detachAllRoles();
             $user->attachRole($role);
@@ -396,21 +554,74 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'shop_id' => $shop->id, 
                 'user_id' => $user->id
             ]);
-           return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어가 생성되었습니다']);
+            if ($manualjoin == 1)
+            {
+                return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어생성이 신청되었습니다. 승인될때까지 기다려주세요']);
+            }
+            return redirect()->to(argon_route('argon.common.profile', ['id' => $user->id]))->withSuccess(['플레이어가 생성되었습니다']);
+        }
+        public function player_joinlist(\Illuminate\Http\Request $request)
+        {
+            $partner_users = auth()->user()->availableUsers();
+            $users = null;
+            $total = null;
+            $joinusers = [];
+            $confirmusers = [];
+            $title = '신규가입유저';
+            if (count($partner_users) > 0){
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN, 'role_id' => 1])->where('email', '')->whereIn('users.id', $partner_users)->get();
+
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED, 'role_id' => 1])->where('email','')->whereIn('users.id', $partner_users)->get();
+            }
+
+            $moneyperm = 0;
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total','moneyperm','title'));
         }
 
         public function vplayer_list(\Illuminate\Http\Request $request)
         {
             $partner_users = auth()->user()->availableUsers();
+            $parent = auth()->user();
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if (auth()->user()->isInOutPartner() || auth()->user()->hasRole('manager'))
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+
             $users = [];
             $joinusers = [];
             $confirmusers = [];
             if (count($partner_users) > 0){
-                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::JOIN)->whereIn('users.id', $partner_users)->get();
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN, 'role_id' => 1])->where('email','<>', '')->whereIn('users.id', $partner_users)->get();
 
-                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED)->whereIn('users.id', $partner_users)->get();
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED, 'role_id' => 1])->where('email','<>', '')->whereIn('users.id', $partner_users)->get();
 
                 $users = \VanguardLTE\User::orderBy('username', 'ASC')->where('status', \VanguardLTE\Support\Enum\UserStatus::ACTIVE)->where('role_id',1)->where('email','<>', '')->whereIn('id', $partner_users);
+
+                
+                if ($request->user != '')
+                {
+                    $users = $users->where('username', 'like', '%' . $request->user . '%');
+                }
+                if ($request->shop != '')
+                {
+                    $shops = \VanguardLTE\Shop::where('name', 'like', '%'.$request->shop.'%')->whereIn('id', auth()->user()->availableShops())->pluck('id')->toArray();
+                    if (count($shops) > 0){
+                        $users = $users->whereIn('shop_id',$shops);
+                    }
+                    else
+                    {
+                        $users = $users->where('shop_id',-1); //show nothing
+                    }
+                }
                 $total = [
                     'count' => $users->count(),
                     'balance' => $users->sum('balance'),
@@ -419,7 +630,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             }
 
-            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total'));
+
+            return view('backend.argon.player.vlist',compact('users', 'joinusers','confirmusers', 'total','moneyperm'));
         }
 
         public function player_join(\Illuminate\Http\Request $request)
@@ -441,7 +653,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
                 if ($onlineShop) //it is online users
                 {
-                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $admin = \VanguardLTE\User::where('role_id', 9)->first();
                     $user->addBalance('add',$onlineShop->join_bonus, $admin);
                 }
             }
@@ -461,6 +673,21 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $user = auth()->user();
             $availableUsers = $user->hierarchyUsersOnly();
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $moneyperm = 0;
+            if ($user->isInOutPartner() || $user->hasRole('manager'))
+            {
+                $moneyperm = 1;
+            }
+            else if (isset($parent->sessiondata()['moneyperm']))
+            {
+                $moneyperm = $parent->sessiondata()['moneyperm'];
+            }
+
 
             $users = \VanguardLTE\User::whereIn('id', $availableUsers)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
 
@@ -480,14 +707,61 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $users = $users->where('shop_id',-1); //show nothing
                 }
             }
+            if ($request->balance == 1)
+            {
+                $users = $users->orderby('balance', 'desc');
+            }
+            else if ($request->balance == 2)
+            {
+                $users = $users->orderby('balance', 'asc');
+            }
+
+            if ($request->ordername == 1)
+            {
+                $users = $users->orderby('username', 'asc');
+            }
+            else if ($request->ordername == 2)
+            {
+                $users = $users->orderby('username', 'desc');
+            }
+
+            $usersId = (clone $users)->pluck('id')->toArray();
+
+            $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
+            $validTime = date('Y-m-d H:i:s', strtotime("-5 minutes"));
+            $onlineUsers = \VanguardLTE\Session::whereIn('user_id', $usersId)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
+            $onlineUserByGame = \VanguardLTE\StatGame::whereIn('user_id', $usersId)->where('date_time', '>=', $validTime)->pluck('user_id')->toArray();
+            
+            $onlineUsers = array_unique($onlineUsers);
+            $onlineUserByGame = array_unique($onlineUserByGame);
+            
+            $onlineUsers = array_merge_recursive($onlineUsers, $onlineUserByGame);
+
+            if ($request->online == 1)
+            {
+                $users = $users->whereIn('id',$onlineUsers);
+            }
+
+            if ($request->join != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->join[0]);
+                $end_date = preg_replace('/T/',' ', $request->join[1]);
+                $users = $users->where('created_at', '>', $start_date)->where('created_at', '<', $end_date);
+            }
+
+            $today = date('Y-m-d 0:0:0');
+            $newusers = (clone $users)->where('created_at', '>', $today)->get();
 
             $total = [
                 'count' => $users->count(),
                 'balance' => $users->sum('balance'),
+                'online' => count($onlineUsers),
+                'new' => count($newusers)
             ];
             
             $users = $users->paginate(20);
-            return view('backend.argon.player.list', compact('users','total'));
+            return view('backend.argon.player.list', compact('users','total','moneyperm'));
         }
         public function player_terminate(\Illuminate\Http\Request $request)
         {
@@ -502,16 +776,42 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
             }
-            if ($user->playing_game == 'pp') //프라그마틱게임 종료
+            //대기중의 게임입장큐 삭제
+            \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->delete();
+            $b = $user->withdrawAll('playerterminate');
+            if (!$b)
             {
-                PPController::terminate($user->id);
-            }
-            else if ($user->playing_game == 'tp') //TheplusGame
-            {
-                $user->update(['playing_game' => 'tpexit']);
+                return redirect()->back()->withSuccess(['게임종료시 오류가 발생했습니다.']);
             }
 
+            event(new \VanguardLTE\Events\User\TerminatedByAdmin($user));
+
             return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);
+        }
+
+        public function player_logout(\Illuminate\Http\Request $request,  \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
+        {
+            $userid = $request->id;
+            $availableUsers = auth()->user()->hierarchyUsersOnly();
+            if (!in_array($userid, $availableUsers))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+            }
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
+            }
+            \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->delete();
+            $b = $user->withdrawAll('playerlogout');
+
+            $user->update(['api_token' => null]);
+
+            $sessionRepository->invalidateAllSessionsForUser($user->id);
+
+            event(new \VanguardLTE\Events\User\TerminatedByAdmin($user));
+
+            return redirect()->back()->withSuccess(['플레이어를 로그아웃시켰습니다.']);
         }
         
 
@@ -583,6 +883,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
             }
+            if (strtotime($end_date) - strtotime($start_date) >= 90000)
+            {
+                return redirect()->back()->withErrors(['검색시간을 24시간 이내로 설정해주세요.']);
+            }
             $statistics = $statistics->where('stat_game.date_time', '>=', $start_date);
             $statistics = $statistics->where('stat_game.date_time', '<=', $end_date );
 
@@ -620,13 +924,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $statistics = $statistics->where('stat_game.win', '<=', $request->win_to);
             }
+            if( $request->gametype != '' ) 
+            {
+                $statistics = $statistics->where('stat_game.type', $request->gametype);
+            }
+
+            if( $request->has('categories') && count($request->categories) > 0 ) 
+            {
+
+                $statistics = $statistics->whereIn('stat_game.category_id', $request->categories);
+            }
 
             $total = [
                 'bet' => (clone $statistics)->sum('bet'),
                 'win' => (clone $statistics)->sum('win'),
             ];
 
-            $statistics = $statistics->paginate(20);
+            $statistics = $statistics->paginate(50);
 
             //check if evolution+gameartcasino
             $master = $user;
@@ -635,7 +949,176 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $master = $master->referral;
             }
             $gacmerge = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::mergeGAC_EVO($master->id);
-            return view('backend.argon.player.game', compact('statistics', 'total', 'gacmerge'));
+            $categories = null;
+            $website = \VanguardLTE\WebSite::where('adminid', $master->id)->first();
+            if ($website)
+            {
+                $categories = $website->categories->where('parent', 0)->where('view', 1);
+            }
+            else
+            {
+                $categories = \VanguardLTE\Category::where(['site_id' => 0, 'shop_id' => 0,'view' => 1])->orderby('position', 'desc')->get();
+            }
+            return view('backend.argon.player.game', compact('statistics', 'total', 'gacmerge', 'categories'));
+        }
+
+        public function player_game_pending(\Illuminate\Http\Request $request)
+        {
+            $user = auth()->user();
+            $availableUsers = $user->hierarchyUsersOnly();
+            if (count($availableUsers) == 0)
+            {
+                return redirect()->back()->withErrors(['유저가 없습니다']);
+            }
+
+
+            $statistics = \VanguardLTE\GACTransaction::whereIn('user_id', $availableUsers)->where(['gactransaction.type'=>1,'gactransaction.status'=>0])->orderBy('date_time', 'ASC');
+
+
+            $statistics = $statistics->paginate(20);
+
+
+            return view('backend.argon.player.pending', compact('statistics'));
+        }
+
+        public function player_game_cancel(\Illuminate\Http\Request $request)
+        {
+            $gacid = $request->id;
+            if (!auth()->user()->hasRole('admin'))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 접근입니다.']);
+            }
+
+
+            \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::cancelResult($gacid);
+
+            return redirect()->back()->withSuccess(['취소처리 되었습니다']);
+
+        }
+
+        public function player_game_process(\Illuminate\Http\Request $request)
+        {
+            $gacid = $request->id;
+            if (!auth()->user()->hasRole('admin'))
+            {
+                return redirect()->back()->withErrors(['허용되지 않은 접근입니다.']);
+            }
+
+            $result = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::processResult($gacid);
+            if ($result['error'] == false)
+            {
+                return redirect()->back()->withSuccess([$result['win'] . '원의 당첨금 결과처리되었습니다']);
+            }
+            else
+            {
+                \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::cancelResult($gacid);
+
+                return redirect()->back()->withSuccess(['취소처리 되었습니다']);
+            }
+        }
+
+        public function player_refresh(\Illuminate\Http\Request $request)
+        {
+            $userid = $request->id;
+            $availableUsers = auth()->user()->hierarchyUsersOnly();
+            if (!in_array($userid, $availableUsers))
+            {
+                return response()->json(['error'=>true, 'msg'=> '유저를 찾을수 없습니다']);
+            }
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                return response()->json(['error'=>true, 'msg'=> '유저를 찾을수 없습니다']);
+            }
+            //게임사 연동 위해 대기중이면 머니동기화 하지 않기
+            $launchRequests = \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->get();
+            if (count($launchRequests) > 0)
+            {
+                return response()->json(['error'=>false, 'balance'=> number_format($user->balance)]);
+            }
+            $balance = \VanguardLTE\User::syncBalance($user, 'playerrefresh');
+            if ($balance < 0)
+            {
+                return response()->json(['error'=>true, 'msg'=> '게임사머니 연동오류']);
+            }
+            else
+            {
+                return response()->json(['error'=>false, 'balance'=> number_format($balance)]);
+            }        
+
+        }
+
+        public function player_game_detail(\Illuminate\Http\Request $request)
+        {
+            $statid = $request->statid;
+            $statgame = \VanguardLTE\StatGame::where('id', $statid)->first();
+            if (!$statgame)
+            {
+                abort(404);
+            }
+            $ct = $statgame->category;
+            $res = null;
+            
+            if ($ct->provider != null)
+            {
+                if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
+                {
+                    $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
+                }
+                else
+                {
+                    
+                }
+            }
+            else //local game
+            {
+                $game = $statgame->game_item;
+                if ($game)
+                {
+                    //check game category
+                    $gameCats = $game->categories;
+                    foreach ($gameCats as $gcat)
+                    {
+                        if ($gcat->category->href == 'pragmatic') //pragmatic game history
+                        {
+                            if ($statgame->user)
+                            {
+                                return redirect('/gs2c/lastGameHistory.do?symbol='.$game->label.'&token='.$statgame->user->id.'-'.$statgame->id);
+                            }
+                        }
+                        else if ($gcat->category->href == 'bngplay') // booongo game history
+                        {
+                            if ($statgame->user)
+                            {
+                                return redirect("op/major/history.html?session_id=68939e9a5d134e78bfd9993d4a2cc34e#player_id=".$statgame->user->id."&brand=*&show=transactions&game_id=".$statgame->game_id."&tz=0&start_date=&end_date=&per_page=100&round_id=".$statgame->roundid."&currency=KRW&mode=REAL&report_type=GGR&header=0&totals=1&info=0&exceeds=0&lang=ko");
+                            }
+                        }
+                    }
+
+                    $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
+                    if (!class_exists($object))
+                    {
+                        abort(404);
+                    }
+                    $gameObject = new $object();
+                    if (method_exists($gameObject, 'gameDetail'))
+                    {
+                        $res = $gameObject->gameDetail($statgame);
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+                else
+                {
+                    abort(404);
+                }
+
+            }
+            return view('backend.argon.player.gamedetail', compact('res'));
+
+            
         }
 
     }

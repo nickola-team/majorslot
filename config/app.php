@@ -185,13 +185,66 @@ return [
     'dg_token' => env('DG_TOKEN', 'test'),
 
     /*
-    DreamGaming Auth key
+    HPCCasion Auth key
     */
     'hpc_api' => env('HPC_API', ''),
     'hpc_key' => env('HPC_KEY', ''),
 
+    /*
+    NSEVolution Auth key
+    */
+    'nsevo_api' => env('NSEVO_API', ''),
+    'nsevo_key' => env('NSEVO_KEY', ''),
+
+/*
+    KUZA Auth key
+    */
+    'kuza_api' => env('KUZA_API', ''),
+    'kuza_key' => env('KUZA_KEY', ''),
+
+    /*
+    BANANA Auth key
+    */
+    'bnn_api' => env('BNN_API', ''),
+    'bnn_key' => env('BNN_KEY', ''),
+
+
+    /*
+    XIMAX Auth key
+    */
+    'xmx_api' => env('XMX_API', ''),
+    'xmx_key' => env('XMX_KEY', ''),
+    'xmx_op' => env('XMX_OP', ''),
+    'xmx_prefix' => env('XMX_PREFIX', ''),
+
+    /*
+    KTEN Auth key
+    */
+    'kten_api' => env('KTEN_API', ''),
+    'kten_op' => env('KTEN_OP', ''),
+    'kten_key' => env('KTEN_KEY', ''),
+
+    /*
+    SPOGAME Auth key
+    */
+    'spg_api' => env('SPG_API', ''),
+    'spg_secret' => env('SPG_SECRET', ''),
+    'spg_key' => env('SPG_KEY', ''),
+
+    /*
+    TAISHAN Auth key
+    */
+    'taishan_api' => env('TAISHAN_API', ''),
+    'taishan_op' => env('TAISHAN_OP', ''),
+    'taishan_pass' => env('TAISHAN_PASS', ''),
+    'taishan_token' => env('TAISHAN_TOKEN', ''),
+
+
+
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -234,14 +287,6 @@ return [
     'salt' => '9748104773',
     'cipher' => 'AES-256-CBC',
 
-    /*
-    KTEN Auth key
-    */
-    'kten_api' => env('KTEN_API', ''),
-    'kten_op' => env('KTEN_OP', ''),
-    'kten_key' => env('KTEN_KEY', ''),
-    /*
-    
     /*
     HONOR Auth key
     */

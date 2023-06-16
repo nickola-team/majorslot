@@ -38,7 +38,56 @@ namespace VanguardLTE
 
         public function prevDay()
         {
-            return $this->hasOne('VanguardLTE\DailySummary', 'user_id', 'user_id')->where('date', date('Y-m-d', strtotime("$this->date -1 days")));        }
+            return $this->hasOne('VanguardLTE\DailySummary', 'user_id', 'user_id')->where('date', date('Y-m-d', strtotime("$this->date -1 days")));        
+        }
+
+        public function calcInOut()
+        {
+            $adj = [
+                'totalin' => 0,
+                'totalout' => 0,
+                'moneyin' => 0,
+                'moneyout' => 0,
+            ];
+            $childPartners = $this->user->hierarchyPartners();
+            $childPartners[] = $this->user->id;
+            $availableUsers = $this->user->availableUsers();
+            $availableUsers[] = $this->user->id; //include self in/out
+
+            $from = $this->date . ' 0:0:0';
+            $to = $this->date . ' 23:59:59';
+            $query = 'SELECT SUM(summ) as totalin FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NOT NULL';
+            $user_in_out = \DB::select($query);
+            $adj['totalin'] = $adj['totalin'] + $user_in_out[0]->totalin??0;
+
+            $query = 'SELECT SUM(summ) as totalout FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NOT NULL';
+            $user_in_out = \DB::select($query);
+            $adj['totalout'] = $adj['totalout'] + $user_in_out[0]->totalout??0;
+
+            if (!$this->user->hasRole('admin'))
+            {
+
+                $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
+                $user_in_out = \DB::select($query);
+                $adj['moneyin'] = $adj['moneyin'] + $user_in_out[0]->moneyin??0;
+
+                $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id NOT IN ('.implode(',', $childPartners).')';
+                $user_in_out = \DB::select($query);
+                $adj['moneyout'] = $adj['moneyout'] + $user_in_out[0]->moneyout??0;
+            }
+            else
+            {
+                $query = 'SELECT SUM(summ) as moneyin FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="add" AND request_id IS NULL AND payeer_id = ' . $this->user->id;
+                $user_in_out = \DB::select($query);
+                $adj['moneyin'] = $adj['moneyin'] + $user_in_out[0]->moneyin??0;
+
+                $query = 'SELECT SUM(summ) as moneyout FROM w_transactions WHERE user_id in ('.implode(',', $availableUsers).') AND created_at <="'.$to .'" AND created_at>="'. $from. '" AND type="out" AND request_id IS NULL AND payeer_id = ' . $this->user->id;
+                $user_in_out = \DB::select($query);
+                $adj['moneyout'] = $adj['moneyout'] + $user_in_out[0]->moneyout??0;
+            }
+
+            return $adj;
+        }
 
         public static function adjustment($user_id, $from, $to)
         {
@@ -322,7 +371,14 @@ namespace VanguardLTE
                     $in_out = \DB::select($query);
                     $adj['ggrout'] = $adj['ggrout'] + $in_out[0]->ggrout;
 
-                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    if ($user->isInoutPartner() && count($childusers) > 0)
+                    {
+                        $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage, 0 as total_ggr, SUM(ggr_profit) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',', $childusers) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    }
+                    else
+                    {
+                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    }
 
                     $deal_logs = \DB::select($query);
                     $adj['total_deal'] = $deal_logs[0]->total_deal??0;
@@ -421,15 +477,17 @@ namespace VanguardLTE
                 foreach ($childusers as $c)
                 {
                     $childAdj = DailySummary::summary_today($c);
-                    $adj['totalin'] = $adj['totalin'] + $childAdj['totalin'];
-                    $adj['totalout'] = $adj['totalout'] + $childAdj['totalout'];
-                    // $adj['moneyin'] = $adj['moneyin'] + $childAdj['moneyin'];
-                    // $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
-                    $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
-                    $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
-                    $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
-                    $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
-                    $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
+                    if ($childAdj){
+                        $adj['totalin'] = $adj['totalin'] + $childAdj['totalin'];
+                        $adj['totalout'] = $adj['totalout'] + $childAdj['totalout'];
+                        // $adj['moneyin'] = $adj['moneyin'] + $childAdj['moneyin'];
+                        // $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
+                        $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
+                        $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
+                        $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
+                        $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
+                        $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
+                    }
                 }
 
                 if (!$user->hasRole('admin'))

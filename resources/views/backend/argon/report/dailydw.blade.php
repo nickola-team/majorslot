@@ -2,11 +2,21 @@
         'parentSection' => 'report',
         'elementName' => 'report-dailydw'
     ])
-@section('page-title',  '일별충환전')
+@section('page-title',  '일별정산')
 
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@if (auth()->user()->hasRole('admin'))
+<style>
+    .bw-btn {
+        display: none;
+      }
+    .bw-title:hover .bw-btn {
+        display: inline-block;
+      }
+</style>
+@endif
 @endpush
 
 @section('content-header')
@@ -107,11 +117,17 @@
                             <div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
-                                <div class="col-md-3">
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                                <div class="col-md-3" style="display:flex;">
+                                    <div class="col-md-8">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
+                                    </div>
+                                    <div class="custom-control custom-checkbox mt-2">
+                                    <input class="custom-control-input" id="includename" name="includename" type="checkbox" {{Request::get('includename')=='on'?'checked':''}}>   <label class="custom-control-label" for="includename">포함된이름</label>
+
+                                    </div>
                                 </div>
-                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
+                                <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                                 <div class="col-md-3">
                                     <select class="form-control" id="role" name="role">
                                         <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
@@ -154,20 +170,88 @@
         <div class="col">
             <div class="card mt-4">
                 <div class="card-header border-0">
-                    <h3 class="mb-0">일별충환전</h3>
+                    <h3 class="mb-0">일별정산</h3>
                 </div>
                 <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="dailydwtotal">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">이름</th>
+                                <th scope="col">기간내 합계</th>
+                                <th scope="col">계좌충환전</th>
+                                <th scope="col">수동충환전</th>
+                                <th scope="col">롤링전환</th>
+                                <th scope="col">배팅/당첨금</th>
+                                <th scope="col">벳윈수익</th>
+                                <th scope="col">죽장금</th>
+                                <th scope="col">롤링금</th>
+                                <th scope="col">총보유금</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                                @if ($total['id'] != '')
+                                <tr data-tt-id="{{$total['user_id'] }}~{{$total['daterange']}}" data-tt-parent-id="{{$total['user_id']}}" data-tt-branch="{{$total['role_id']>3?'true':'false'}}">
+                                @else
+                                <tr>
+                                @endif
+                                    <td>{{$total['id']}}</td>
+                                    <td>{{$total['daterange']}}</td>
+                                    <td><ul>
+                                        <li>
+                                            <span class='text-green'>충전 : {{number_format($total['totalin'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>환전 : {{number_format($total['totalout'])}}</span>
+                                        </li>
+                                    </ul></td>
+                                    <td><ul>
+                                        <li>
+                                            <span class='text-green'>충전 : {{number_format($total['moneyin'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>환전 : {{number_format($total['moneyout'])}}</span>
+                                        </li>
+                                    </ul></td>
+                                    <td>{{number_format($total['dealout'])}}</td>
+                                    <td><ul>
+                                        <li>
+                                            <span class='text-green'>배팅 : {{number_format($total['totalbet'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>당첨 : {{number_format($total['totalwin'])}}</span>
+                                        </li>
+                                    </ul></td>
+                                    <td>{{number_format($total['totalbet']-$total['totalwin'])}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>총죽장 : {{ number_format($total['total_ggr'])}}</li>
+                                            <li>하부죽장 : {{ number_format($total['total_ggr_mileage'])}}</li>
+                                            <li>본인죽장 : {{ number_format($total['total_ggr']-$total['total_ggr_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>총롤링 : {{ number_format($total['total_deal'])}}</li>
+                                            <li>하부롤링 : {{ number_format($total['total_mileage'])}}</li>
+                                            <li>본인롤링 : {{ number_format($total['total_deal']-$total['total_mileage'])}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>{{number_format($total['balance']+$total['childsum'])}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <table class="table align-items-center table-flush" id="dailydwlist">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">이름</th>
                                 <th scope="col">날짜</th>
-                                <th scope="col">계좌충전</th>
-                                <th scope="col">계좌환전</th>
-                                <th scope="col">수동충전</th>
-                                <th scope="col">수동환전</th>
+                                <th scope="col">계좌충환전</th>
+                                <th scope="col">수동충환전</th>
                                 <th scope="col">롤링전환</th>
+                                <th scope="col">배팅/당첨금</th>
                                 <th scope="col">벳윈수익</th>
+                                <th scope="col">죽장금</th>
+                                <th scope="col">롤링금</th>
                                 <th scope="col">총보유금</th>
                                 @if (auth()->user()->hasRole('admin'))
                                 <th scope="col">전날대비 마진금</th>
@@ -214,6 +298,28 @@
                 }).done(function(html) {
                     var rows = $(html).filter("tr");
                     table.treetable("loadBranch", node, rows);
+                    $('#waitAjax').hide();
+            });
+        }
+    });
+
+    var table1 = $("#dailydwtotal");
+    $("#dailydwtotal").treetable({ 
+        expandable: true ,
+        onNodeCollapse: function() {
+            var node = this;
+            table1.treetable("unloadBranch", node);
+        },
+        onNodeExpand: function() {
+            var node = this;
+            table1.treetable("unloadBranch", node);
+            $('#waitAjax').show();
+            $.ajax({
+                async: true,
+                url: "{{argon_route('argon.report.childdaily.dw', 'dw')}}?id="+node.id
+                }).done(function(html) {
+                    var rows = $(html).filter("tr");
+                    table1.treetable("loadBranch", node, rows);
                     $('#waitAjax').hide();
             });
         }

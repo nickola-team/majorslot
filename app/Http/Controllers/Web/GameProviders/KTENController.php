@@ -95,7 +95,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    Log::error('KTENgetuserbalance : response is not okay. ' . $response->body());
+                    Log::error('KTENgetuserbalance : response is not okay. ' . json_encode($params) . '===body==' . $response->body());
                 }
             }
             catch (\Exception $ex)
@@ -148,6 +148,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             $gameList = [];
 
+            $pp_exgames = ['cs5moneyroll', 'sc7piggiesai', 'scpandai'];
+
             foreach ($data as $game)
             {
                 if (strtolower($game['game_type']) == $type) 
@@ -181,6 +183,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if ($korname == '')
                     {
                         $korname = $game['cp_game_name_en'];
+                    }
+                    if (in_array($game['game_id'], $pp_exgames))
+                    {
+                        continue;
                     }
 
                     array_push($gameList, [
@@ -313,7 +319,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $game = KTENController::getGameObj($gamecode);
             if ($game == null)
             {
-                Log::error('KTENMakeLink : Game not find  ' . $game);
+                Log::error('KTENMakeLink : Game not find  ' . $gamecode);
                 return null;
             }
 
@@ -390,7 +396,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             
-            $balance = KTENController::getuserbalance($gamecode, $user);
+            $balance = KTENController::getuserbalance(null, $user);
             if ($balance == -1)
             {
                 return null;
@@ -399,7 +405,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance != $user->balance)
             {
                 //withdraw all balance
-                $data = KTENController::withdrawAll($gamecode, $user);
+                $data = KTENController::withdrawAll(null, $user);
                 if ($data['error'])
                 {
                     return null;
@@ -523,6 +529,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $curPage = 1;
             $data = null;
             $newtimepoint = $timepoint;
+            $totalCount = 0;
             do
             {
                 $data = KTENController::gamerounds($timepoint, $curPage);
@@ -651,7 +658,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         //     }
                         //     if (!isset($round['details']))
                         //     {
-                        //         Log::error('KTEN PP round : '. json_encode($round));
+                        //         Log::error('KTEN PP round has no details : '. json_encode($round));
                         //         continue;
                         //     }
 
@@ -737,19 +744,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'profit' => 0, 
                             'denomination' => 0, 
                             'date_time' => $time,
-                            'shop_id' => $shop?$shop->shop_id:0,
+                            'shop_id' => $shop?$shop->shop_id:-1,
                             'category_id' => $category?$category->original_id:0,
                             'game_id' =>  $gameObj['gamecode'],
                             'roundid' => $round['gameId'] . '#' . $round['roundID'] . '#' . $round['id'],
                         ]);
                         $count = $count + 1;
                     }
-                    $newtimepoint = $data['lastid'];
+                    if (isset($data['lastid']))
+                    {
+                        $newtimepoint = $data['lastid'];
+                    }
+                    
 
                 }
                 $curPage = $curPage + 1;
+                if (isset($data['totalPageSize']))
+                {
+                    $totalPage = $data['totalPageSize'];
+                }
             }
-            while ($curPage <= $data['totalPageSize']);
+            while ($curPage <= $totalPage);
 
             $timepoint = $newtimepoint;
 
@@ -808,6 +823,43 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return -1;
             }
 
+        }
+
+        public static function getgamedetail(\VanguardLTE\StatGame $stat)
+        {
+            $betrounds = explode('#',$stat->roundid);
+            if (count($betrounds) < 3)
+            {
+                return null;
+            }
+            $betId = $betrounds[2];
+            
+            $data = KTENController::gamerounds($betId, 1);
+            if ($data==null || $data['errorCode'] != 0)
+            {
+                return null;
+            }
+
+
+            $betdetails = null;
+            $gametype = 'slot';
+            $result = null;
+            foreach ($data['data'] as $bet)
+            {
+                if (isset($bet['id']) && ($bet['id'] == $betId))
+                {
+                    $gametype = $bet['gameType'];
+                    $betdetails = $bet['details'];
+                    break;
+                }
+            }
+
+            return [
+                'type' => $gametype,
+                'result' => $result,
+                'bets' => $betdetails,
+                'stat' => $stat
+            ];
         }
 
         public static function syncpromo()
@@ -1119,14 +1171,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }else{
                     $gamecode = $game->label;
                 }
-            }
-
-            ///////////////////////<--- User Balance Transfer --->/////////////////////////
-            $balance = KTENController::getuserbalance($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
-            if ($balance == -1)
-            {
-                $this->ppverifyLog($gamecode, $user->id, 'UserBalance => ' . $balance);
-                return redirect($failed_url);
             }
 
             if ($stat_game != null)

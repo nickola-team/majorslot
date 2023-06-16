@@ -2,6 +2,13 @@
     <td>{{$notice->title}}</td>
 	<td>{{ $notice->date_time }}</td>
     <td>
+            @if ($notice->popup==null)
+            일반
+            @else
+            {{\VanguardLTE\Notice::popups()[$notice->popup]}}
+            @endif
+    </td>
+    <td>
         {{\VanguardLTE\Notice::lists()[$notice->type]}}
     </td>
     <td>{{ $notice->active==1?'활성':'비활성' }} </td>

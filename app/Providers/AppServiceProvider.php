@@ -20,7 +20,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\URL;
 use VanguardLTE\Http\Middleware\ThrottleSimultaneousRequests;
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (env('FORCE_HTTPS') == true)
+        {
+            URL::forceScheme('https');
+            // $this->app['request']->server->set('HTTPS','on');
+        }
         Carbon::setLocale(config('app.locale'));
         config(['app.name' => settings('app_name')]);
         \Illuminate\Database\Schema\Builder::defaultStringLength(191);

@@ -19,21 +19,21 @@
                 @if (auth()->user()->isInoutPartner())
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-primary" href="{{argon_route('argon.player.vlist')}}">
+                        <a class="nav-link btn btn-primary" href="{{argon_route('argon.joiners.list')}}">
                             신규가입<span id="join_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addmanage')}}">
+                        <a class="nav-link  btn btn-success" href="{{argon_route('argon.dw.addmanage')}}">
                             충전관리<span id="in_newmark" style="color:red;">(0건)</span>
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outmanage')}}">
+                        <a class="nav-link  btn btn-warning" href="{{argon_route('argon.dw.outmanage')}}">
                             환전관리<span id="out_newmark" style="color:white;">(0건)</span>
                         </a>
                         </div>
@@ -60,14 +60,14 @@
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">
+                        <a class="nav-link btn btn-success" href="{{argon_route('argon.dw.addrequest')}}">
                             충전신청
                         </a>
                         </div>
                     </li>
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
-                        <a class="nav-link text-dark btn btn-warning" href="{{argon_route('argon.dw.outrequest')}}">
+                        <a class="nav-link btn btn-warning" href="{{argon_route('argon.dw.outrequest')}}">
                             환전신청
                         </a>
                         </div>
@@ -84,11 +84,25 @@
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block ml-lg-4">
-                    <a class="nav-link text-dark" href="#">
+                    <a class="nav-link text-dark" href="{{argon_route('argon.player.list', ['balance' => 1])}}">
                         하부 총 보유금 {{number_format(auth()->user()->childBalanceSum())}}
                     </a>
                 </li>
                 @endif
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link" id="msgbutton" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bell tada text-dark" style="font-size:16px"></i>
+                        <span class="badges" id="unreadmsgcount">{{count($unreadmsgs)}}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
+                        <!-- Dropdown header -->
+                        <div class="px-3 py-3">
+                            <h6 class="text-sm text-muted m-0"><strong class="text-primary">{{count($unreadmsgs)}}</strong> 개의 새로운 쪽지가 있습니다</h6>
+                        </div>
+                        <!-- View all -->
+                        <a href="{{argon_route('argon.msg.list', ['type'=>$msgtype])}}" class="dropdown-item text-center text-primary font-weight-bold py-3">모두보기</a>
+                    </div>
             </ul>
             <ul class="navbar-nav align-items-center ml-auto ml-md-0">
                 <li class="nav-item dropdown">

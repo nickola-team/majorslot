@@ -25,12 +25,12 @@
                             <td>{{$stat->id}}</td>
                             @if($stat->type == 'add')
                             <td><span class="text-success">{{number_format($stat->sum,0)}}</span></td>
-                            <td><span class="text-success">{{__($stat->type)}}</span></td>
+                            <td><span class="text-success">충전</span></td>
                             @else
                             <td><span class="text-warning">{{number_format($stat->sum,0)}}</span></td>
-                            <td><span class="text-warning">{{__($stat->type)}}</span></td>
+                            <td><span class="text-warning">환전</span></td>
                             @endif
-                            <td>{{$stat->bankInfo()}}</td>
+                            <td>{{$stat->bankInfo(!auth()->user()->isInOutPartner())}}</td>
                             <td>{{$stat->created_at}}</td>
                             <td>{{\VanguardLTE\WithdrawDeposit::statMsg()[$stat->status]}}</td>
                         </tr>

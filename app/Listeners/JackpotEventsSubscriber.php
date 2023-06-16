@@ -21,11 +21,18 @@ class JackpotEventsSubscriber
         $this->logger = $logger;
     }
 
-    public function onNewJackpot(NewJackpot $event)
+    public function onNewJackPot(NewJackPot $event)
     {
-        $jackpot = $event->getNewJackpot();
+        $jp = $event->getNewJackpot();
+        $text = 'New HappyUser / ' . $jp->user->username . ' / ' . $jp->total_bank;
+        $this->logger->log($text);
+    }
 
-        $this->logger->log('New Jackpot / ' . $jackpot->name . ', Shop ' . $jackpot->shop_id);
+    public function onDeleteJackPot(DeleteJackpot $event)
+    {
+        $jp = $event->getDeleteJackpot();
+        $text = 'Delete HappyUser / ' .( $jp->user?$jp->user->username:'Unknown') . ' / ' . $jp->total_bank;
+        $this->logger->log($text);
     }
 
     public function onJackpotEdited(JackpotEdited $event)
@@ -47,13 +54,6 @@ class JackpotEventsSubscriber
         $text = trim($text, ',');
 
         $this->logger->log($text);
-    }
-
-    public function onDeleteJackpot(DeleteJackpot $event)
-    {
-        $jackpot = $event->getDeleteJackpot();
-
-        $this->logger->log('Delete Jackpot / ' . $jackpot->name . ', Shop ' . $jackpot->shop_id);
     }
 
     /**

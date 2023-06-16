@@ -7,18 +7,24 @@ namespace VanguardLTE\Console
     use GuzzleHttp\Psr7\Request;
     use GuzzleHttp\Psr7\Response;
     use \VanguardLTE\Http\Controllers\Web\GameProviders\PPController;
+    use Illuminate\Support\Facades\Crypt;
+
+
     class Kernel extends \Illuminate\Foundation\Console\Kernel
     {
         protected $commands = [
-            \VanguardLTE\Console\Commands\TheplusLaunch::class,
-            \VanguardLTE\Console\Commands\TheplusSync::class,
-            \VanguardLTE\Console\Commands\TheplusTerminate::class,
 
-            \VanguardLTE\Console\Commands\DreamGamingSync::class,
+            \VanguardLTE\Console\Commands\GameLaunchCommand::class,
+            \VanguardLTE\Console\Commands\GameSyncCommand::class,
+            \VanguardLTE\Console\Commands\GameTerminateCommand::class,
+            \VanguardLTE\Console\Commands\GameWithdrawAll::class,
 
-            \VanguardLTE\Console\Commands\HPCLaunch::class,
-            \VanguardLTE\Console\Commands\HPCSync::class,
-            \VanguardLTE\Console\Commands\HPCTerminate::class,
+            \VanguardLTE\Console\Commands\MonitorBetWin::class,
+            \VanguardLTE\Console\Commands\GameRTPMonitor::class,
+
+            \VanguardLTE\Console\Commands\XMXWithdrawAll::class,
+            \VanguardLTE\Console\Commands\KDiorUsers::class,
+            
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
         {
@@ -50,41 +56,68 @@ namespace VanguardLTE\Console
                 \VanguardLTE\ATATransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\EVOTransaction::where('timestamp', '<', $_daytime)->delete();
                 \VanguardLTE\DGTransaction::where('timestamp', '<', $_daytime)->delete();
+                \VanguardLTE\PNGTransaction::where('timestamp', '<', $_daytime)->delete();
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
-                \VanguardLTE\PPGameLog::where('time', '<', $start_date)->delete();
+                
                 
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
                 \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
-                \VanguardLTE\PPGameFreeStackLog::where('created_at', '<', $start_date)->delete();
 
                 
                 $start_date = date("Y-m-d H:i:s",strtotime("-3 days"));
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
+                \VanguardLTE\GACTransaction::where('date_time', '<', $start_date)->delete();
+                \VanguardLTE\PPGameLog::where('time', '<', $start_date)->delete();
+                \VanguardLTE\BNGGameLog::where('c_at', '<', $start_date)->delete();
+
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-90 days"));
                 \VanguardLTE\ShopStat::where('date_time', '<', $start_date)->delete();
                 \VanguardLTE\Transaction::where('created_at', '<', $start_date)->delete();
                 \VanguardLTE\WithdrawDeposit::where('created_at', '<', $start_date)->delete();
 
+
+                $start_date = date("Y-m-d H:i:s",strtotime("-1 hours"));
+                \VanguardLTE\GameLaunch::where('created_at', '<', $start_date)->delete();
+
+                $start_date = date("Y-m-d",strtotime("-7 days")) . 'T00:00:00';
+                \VanguardLTE\GPGameTrend::where('sDate','<', $start_date)->delete();
+
+                $start_date = date("Y-m-d",strtotime("-90 days"));
+                \VanguardLTE\DailySummary::where('date', '<', $start_date)->delete();
+                \VanguardLTE\CategorySummary::where('date', '<', $start_date)->delete();
+                \VanguardLTE\GameSummary::where('date', '<', $start_date)->delete();
+                
+
                 // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
             })->dailyAt('08:00');
 
             $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
+            $schedule->command('daily:sharesummary')->dailyAt('02:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
 
-            $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
+            // $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
+
+            $schedule->command('gp:genTrend')->dailyAt('08:00')->runInBackground();
+
+            // $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
 
-            $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
+            $schedule->command('gac:processpending')->everyMinute()->withoutOverlapping()->runInBackground();
+
+            $schedule->command('monitor:betwin')->cron('0 * * * *'); //every hour
+            // $schedule->command('monitor:rtp')->dailyAt('12:00')->runInBackground();
+
+            // $schedule->command('dg:sync')->everyMinute()->withoutOverlapping()->runInBackground();
             
             if (env('SWITCH_PP', false) == true){
                 $schedule->command('daily:ppgames')->cron('15 */2 * * *');
@@ -123,7 +156,12 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Session::where('user_id', 'NULL')->delete();
                 \VanguardLTE\Session::where('user_id', '')->delete();
                 \VanguardLTE\Task::where('finished', 1)->delete();
+
+                $start_date = date("Y-m-d H:i:s", strtotime("-2 hours")) ;
+                \VanguardLTE\PPGameFreeStackLog::where('created_at' , '<=', $start_date)->delete();
             })->everyMinute();
+
+
             $schedule->call(function()
             {
                 $task = \VanguardLTE\Task::where([
@@ -233,7 +271,21 @@ namespace VanguardLTE\Console
                             $newGame = $game->replicate();
                             $newGame->original_id = $game->id;
                             $newGame->shop_id = $shop->id;
+                            //random generate win10, bonus10
+                            if ($game->game_win)
+                            {
+                                $win = explode(',', $game->game_win->winline10);
+                                $number = rand(0, count($win) - 1);
+                                $newGame->winline10 = $win[$number];
+
+                                $bonus = explode(',', $game->game_win->winbonus10);
+                                $number = rand(0, count($bonus) - 1);
+
+                                $newGame->winbonus10 = $bonus[$number];
+                            }
                             $newGame->save();
+                            
+
                             $categories = \VanguardLTE\GameCategory::where('game_id', $game->id)->get();
                             if( count($categories) && count($superCategories) ) 
                             {
@@ -247,34 +299,103 @@ namespace VanguardLTE\Console
                             }
                         }
                     }
+                    //miss role
+                    //direct find master
+                    $masterid = $shop->getUsersByRole('master');
+                    $master = \VanguardLTE\User::whereIn('id',$masterid)->first();
+                    if ($master)
+                    {
+                        $comaster = $master->referral;
+                        if ($comaster)
+                        {
+                            $info = $comaster->info;
+                            $slotinf = null;
+                            $tableinf = null;
+
+                            foreach ($info as $inf)
+                            {
+                                if ($inf->roles =='slot')
+                                {
+                                    $slotinf = $inf;
+                                }
+                                if ($inf->roles =='table')
+                                {
+                                    $tableinf = $inf;
+                                }
+                            }
+                            if ($slotinf)
+                            {
+                                $shopslotinf = \VanguardLTE\Info::create(
+                                    [
+                                        'link' => $slotinf->link,
+                                        'title' => $slotinf->title,
+                                        'roles' => 'slot',
+                                        'text' => implode(',', rand_region_numbers($slotinf->title,$slotinf->link)),
+                                        'user_id' => $comaster->id
+                                    ]
+                                    );
+                                \VanguardLTE\InfoShop::create(
+                                    [
+                                        'shop_id' => $shop->id,
+                                        'info_id' => $shopslotinf->id
+                                    ]
+                                    );
+                                if ($slotinf->link>0)
+                                {
+                                    $shop->update(['slot_miss_deal' => 1]);
+                                }
+                            }
+                            if ($tableinf)
+                            {
+                                $shoptableinf = \VanguardLTE\Info::create(
+                                    [
+                                        'link' => $tableinf->link,
+                                        'title' => $tableinf->title,
+                                        'roles' => 'table',
+                                        'text' => implode(',', rand_region_numbers($tableinf->title,$tableinf->link)),
+                                        'user_id' => $comaster->id
+                                    ]
+                                    );
+                                \VanguardLTE\InfoShop::create(
+                                    [
+                                        'shop_id' => $shop->id,
+                                        'info_id' => $shoptableinf->id
+                                    ]
+                                    );
+                                if ($tableinf->link>0)
+                                {
+                                    $shop->update(['table_miss_deal' => 1]);
+                                }
+                            }
+                        }
+
+                    }
                     $shop->update(['pending' => 0]);
                 }
             })->everyMinute();
             $schedule->call(function()
             {
                 $date_time = date('Y-m-d 0:0:0', strtotime("-1 days"));
-                $tasks = \VanguardLTE\Task::where([
+                $task = \VanguardLTE\Task::where([
                     'finished' => 0, 
                     'category' => 'user', 
                     'action' => 'delete'
-                ])->where('created_at', '<=', $date_time)->get();
-                if( count($tasks) > 0 ) 
+                ])->where('created_at', '<=', $date_time)->first();
+                if( $task != null ) 
                 {
-                    foreach ($tasks as $task){
-                        $task->update(['finished' => 1]);
-                        $user = \VanguardLTE\User::find($task->item_id);
-                        if ($user){
-                            $user->detachAllRoles();
-                            //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
-                            \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
-                            //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
-                            \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
-                            \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
-                            \VanguardLTE\Session::where('user_id', $user->id)->delete();
-                            \VanguardLTE\Info::where('user_id', $user->id)->delete();
-                            $user->delete();
-                        }
+                    $user = \VanguardLTE\User::find($task->item_id);
+                    if ($user){
+                        $user->detachAllRoles();
+                        //\VanguardLTE\Transaction::where('user_id', $user->id)->delete();
+                        \VanguardLTE\ShopUser::where('user_id', $user->id)->delete();
+                        //\VanguardLTE\StatGame::where('user_id', $user->id)->delete();
+                        \VanguardLTE\GameLog::where('user_id', $user->id)->delete();
+                        \VanguardLTE\UserActivity::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Session::where('user_id', $user->id)->delete();
+                        \VanguardLTE\Info::where('user_id', $user->id)->delete();
+                        $user->delete();
                     }
+                    $task->update(['finished' => 1]);
                 }
             })->everyMinute();
             $schedule->call(function()
@@ -402,32 +523,75 @@ namespace VanguardLTE\Console
         protected function commands()
         {
             require(base_path('routes/console.php'));
-
-            \Artisan::command('daily:gamesummary {date=today}', function ($date) {
-                $this->info("Begin daily game summary adjustment.");
-
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
-                foreach ($admins as $admin)
+            \Artisan::command('daily:sharesummary {date=today}', function ($date) {
+                $this->info("Begin daily share summary adjustment.");
+                $groups = \VanguardLTE\User::where('role_id',8)->get();
+                foreach ($groups as $g)
                 {
                     if ($date == 'today') {
-                        \VanguardLTE\CategorySummary::summary($admin->id);
+                        \VanguardLTE\ShareBetSummary::summary($g->id);
                     }
                     else{
-                        \VanguardLTE\CategorySummary::summary($admin->id, $date);
+                        \VanguardLTE\ShareBetSummary::summary($g->id, $date);
                     }
                 }
                 if ($date == 'today') {
                     $day = date("Y-m-d", strtotime("-1 days"));
-                    \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $day])->delete();
-                    \VanguardLTE\GameSummary::where(['type' => 'today', 'date' => $day])->delete();
+                    \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $day])->delete();
                 }
+                $this->info("End daily share summary adjustment.");
+            });
+
+            \Artisan::command('daily:gamesummary {date=today} {partnerid=0}', function ($date, $partnerid) {
+                $this->info("Begin daily game summary adjustment.");
+                if ($partnerid == 0)
+                {
+                    $admins = \VanguardLTE\User::where('role_id',9)->get();
+                    foreach ($admins as $admin)
+                    {
+                        if ($date == 'today') {
+                            \VanguardLTE\CategorySummary::summary($admin->id);
+                        }
+                        else{
+                            \VanguardLTE\CategorySummary::summary($admin->id, $date);
+                        }
+                    }
+                    if ($date == 'today') {
+                        $day = date("Y-m-d", strtotime("-1 days"));
+                        \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $day])->delete();
+                        \VanguardLTE\GameSummary::where(['type' => 'today', 'date' => $day])->delete();
+                    }
+                }
+                else
+                {
+                    $partner = \VanguardLTE\User::find($partnerid);
+                    if (!$partner)
+                    {
+                        $this->error('Not found partnerid');
+                        return;
+                    }
+                    if ($date == 'today') {
+                        \VanguardLTE\CategorySummary::summary($partnerid);
+                    }
+                    else{
+                        \VanguardLTE\CategorySummary::summary($partnerid, $date);
+                    }
+                    if ($date == 'today') {
+                        $availablePartners = $partner->hierarchyPartners();
+                        $availablePartners[] = $partnerid;
+                        $day = date("Y-m-d", strtotime("-1 days"));
+                        \VanguardLTE\CategorySummary::where(['type' => 'today', 'date' => $day])->whereIn('user_id', $availablePartners)->delete();
+                        \VanguardLTE\GameSummary::where(['type' => 'today', 'date' => $day])->whereIn('user_id', $availablePartners)->delete();
+                    }
+                }
+                
                 $this->info("End daily game summary adjustment.");
             });
             \Artisan::command('today:gamesummary', function () {
                 set_time_limit(0);
                 $this->info("Begin today's game adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     \VanguardLTE\CategorySummary::summary_today($admin->id);
@@ -439,7 +603,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin summary daily adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     if ($date == 'today') {
@@ -460,7 +624,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin today's adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     \VanguardLTE\DailySummary::summary_today($admin->id);
@@ -472,7 +636,7 @@ namespace VanguardLTE\Console
                 set_time_limit(0);
                 $this->info("Begin summary monthly adjustment.");
 
-                $admins = \VanguardLTE\User::where('role_id',8)->get();
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
                 foreach ($admins as $admin)
                 {
                     if ($month == 'today') {
@@ -488,7 +652,7 @@ namespace VanguardLTE\Console
             \Artisan::command('daily:promo', function () {
                 set_time_limit(0);
                 $this->info("Begin pp game promotions");
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\TPController::syncpromo();
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::syncpromo();
                 $this->info($res['msg']);
             });
 
@@ -517,6 +681,60 @@ namespace VanguardLTE\Console
                         if ($cat){
                             \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$cat->id]);
                         }
+                    }
+                }
+                $this->info('End');
+            });
+
+            \Artisan::command('daily:bulknewgame {categoryid} {startid} {endid}', function ($categoryid, $startid, $endid) {
+                set_time_limit(0);
+                $this->info("Begin adding bulk new game to all shop");
+                
+                for ($originalid = $startid; $originalid<$endid; $originalid++){
+                    $this->info("creating  " . $originalid . " game..");
+                    $buffgame = \VanguardLTE\Game::where('id', $originalid)->first();
+                    if (!$buffgame)
+                    {
+                        $this->error('Can not find original game of new game');
+                        continue;
+                    }
+                    $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
+                    $data = $buffgame->toArray();
+                    foreach ($shop_ids as $id)
+                    {
+                        $game = \VanguardLTE\Game::where(['shop_id'=> $id, 'original_id' => $originalid])->first();
+                        if ($game)
+                        {
+                            $this->info("Game already exist in " . $id . " shop");
+                        }
+                        else{
+                            $this->info("=== creating  game at " . $id . " shop");
+                            $data['shop_id'] = $id;
+                            if ($buffgame->game_win)
+                            {
+                                $win = explode(',', $buffgame->game_win->winline10);
+                                $number = rand(0, count($win) - 1);
+                                $data['winline10'] = $win[$number];
+
+                                $bonus = explode(',', $buffgame->game_win->winbonus10);
+                                $number = rand(0, count($bonus) - 1);
+
+                                $data['winbonus10'] = $bonus[$number];
+                            }
+                            $game = \VanguardLTE\Game::create($data);
+                            
+                            
+                        }
+                        $this->info("=== creating  gamecategory at " . $id . " shop");
+                        $cat = \VanguardLTE\Category::where(['shop_id' => $id, 'original_id' => $categoryid])->first();
+                        if ($cat){
+                            $gcat = \VanguardLTE\GameCategory::where(['game_id'=>$game->id, 'category_id'=>$cat->id])->first();
+                            if (!$gcat)
+                            {
+                                $gcat = \VanguardLTE\GameCategory::create(['game_id'=>$game->id, 'category_id'=>$cat->id]);
+                            }
+                        }
+                        $this->info("=== done");
                     }
                 }
                 $this->info('End');
@@ -858,41 +1076,175 @@ namespace VanguardLTE\Console
             });
             \Artisan::command('hourly:reset_bank {masterid=0}', function ($masterid) {
                 $this->info('Begin reset game bank');
-                $minslot = \VanguardLTE\Settings::where('key', 'minslot')->first();
-                $maxslot = \VanguardLTE\Settings::where('key', 'maxslot')->first();
-                $minbonus = \VanguardLTE\Settings::where('key', 'minbonus')->first();
-                $maxbonus = \VanguardLTE\Settings::where('key', 'maxbonus')->first();
+                $minslot1 = \VanguardLTE\Settings::where('key', 'minslot1')->first();
+                $maxslot1 = \VanguardLTE\Settings::where('key', 'maxslot1')->first();
+                $minslot2 = \VanguardLTE\Settings::where('key', 'minslot2')->first();
+                $maxslot2 = \VanguardLTE\Settings::where('key', 'maxslot2')->first();
+                $minslot3 = \VanguardLTE\Settings::where('key', 'minslot3')->first();
+                $maxslot3 = \VanguardLTE\Settings::where('key', 'maxslot3')->first();
+                $minslot4 = \VanguardLTE\Settings::where('key', 'minslot4')->first();
+                $maxslot4 = \VanguardLTE\Settings::where('key', 'maxslot4')->first();
+                $minslot5 = \VanguardLTE\Settings::where('key', 'minslot5')->first();
+                $maxslot5 = \VanguardLTE\Settings::where('key', 'maxslot5')->first();
+
+                $minbonus1 = \VanguardLTE\Settings::where('key', 'minbonus1')->first();
+                $maxbonus1 = \VanguardLTE\Settings::where('key', 'maxbonus1')->first();
+                $minbonus2 = \VanguardLTE\Settings::where('key', 'minbonus2')->first();
+                $maxbonus2 = \VanguardLTE\Settings::where('key', 'maxbonus2')->first();
+                $minbonus3 = \VanguardLTE\Settings::where('key', 'minbonus3')->first();
+                $maxbonus3 = \VanguardLTE\Settings::where('key', 'maxbonus3')->first();
+                $minbonus4 = \VanguardLTE\Settings::where('key', 'minbonus4')->first();
+                $maxbonus4 = \VanguardLTE\Settings::where('key', 'maxbonus4')->first();
+                $minbonus5 = \VanguardLTE\Settings::where('key', 'minbonus5')->first();
+                $maxbonus5 = \VanguardLTE\Settings::where('key', 'maxbonus5')->first();
                 // $reset_bank = \VanguardLTE\Settings::where('key', 'reset_bank')->first();
                 $gamebanks = \VanguardLTE\GameBank::all();
                 foreach ($gamebanks as $bank)
                 {
-                    $admin = \VanguardLTE\User::where('role_id', 8)->first();
+                    $admin = \VanguardLTE\User::where('role_id', 9)->first();
                     try {
-                        $old = $bank->slots;
-                        if ($minslot && $bank->slots < $minslot->value)
+                        $shop = \VanguardLTE\Shop::where('id', $bank->shop_id)->first();
+                        $game = $bank->game;
+                        $old1 = $bank->slots_01;
+                        if ($minslot1 && $bank->slots_01 < $minslot1->value)
                         {
-                            $bank->slots = $minslot->value;
+                            $bank->slots_01 = $minslot1->value;
                         }
-                        if ($maxslot && $bank->slots > $maxslot->value)
+                        if ($maxslot1 && $bank->slots_01 > $maxslot1->value)
                         {
-                            $bank->slots = $maxslot->value;
+                            $bank->slots_01 = $maxslot1->value;
                         }
-                        if ($old != $bank->slots){
-                            $shop = \VanguardLTE\Shop::where('id', $bank->shop_id)->first();
-                            if ($shop){
-                                $name = $shop->name;
-                                $bank->save();
-                                \VanguardLTE\BankStat::create([
-                                    'name' => 'Slot' . "[$name]", 
-                                    'user_id' => $admin->id, 
-                                    'type' => ($old<$bank->slots)?'add':'out', 
-                                    'sum' => abs($old - $bank->slots), 
-                                    'old' => $old, 
-                                    'new' => $bank->slots, 
-                                    'shop_id' => $bank->shop_id
-                                ]);
+                        if ($shop && $old1 != $bank->slots_01){
+                            $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
                             }
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot1' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old1<$bank->slots_01)?'add':'out', 
+                                'sum' => abs($old1 - $bank->slots_01), 
+                                'old' => $old1, 
+                                'new' => $bank->slots_01, 
+                                'shop_id' => $bank->shop_id
+                            ]);
                         }
+
+                        $old2 = $bank->slots_02;
+
+                        if ($minslot2 && $bank->slots_02 < $minslot2->value)
+                        {
+                            $bank->slots_02 = $minslot2->value;
+                        }
+                        if ($maxslot2 && $bank->slots_02 > $maxslot2->value)
+                        {
+                            $bank->slots_02 = $maxslot2->value;
+                        }
+
+                        if ($shop && $old2 != $bank->slots_02){
+                            $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot2' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old2<$bank->slots_02)?'add':'out', 
+                                'sum' => abs($old2 - $bank->slots_02), 
+                                'old' => $old2, 
+                                'new' => $bank->slots_02, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+
+                        $old3 = $bank->slots_03;
+
+                        if ($minslot3 && $bank->slots_03 < $minslot3->value)
+                        {
+                            $bank->slots_03 = $minslot3->value;
+                        }
+                        if ($maxslot3 && $bank->slots_03 > $maxslot3->value)
+                        {
+                            $bank->slots_03 = $maxslot3->value;
+                        }
+
+                        if ($shop && $old3 != $bank->slots_03){
+                            $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot3' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old3<$bank->slots_03)?'add':'out', 
+                                'sum' => abs($old3 - $bank->slots_03), 
+                                'old' => $old3, 
+                                'new' => $bank->slots_03, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+
+                        $old4 = $bank->slots_04;
+
+                        if ($minslot4 && $bank->slots_04 < $minslot4->value)
+                        {
+                            $bank->slots_04 = $minslot4->value;
+                        }
+                        if ($maxslot4 && $bank->slots_04 > $maxslot4->value)
+                        {
+                            $bank->slots_04 = $maxslot4->value;
+                        }
+
+                        if ($shop && $old4 != $bank->slots_04){
+                            $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot4' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old4<$bank->slots_04)?'add':'out', 
+                                'sum' => abs($old4 - $bank->slots_04), 
+                                'old' => $old4, 
+                                'new' => $bank->slots_04, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+
+                        $old5 = $bank->slots_05;
+
+                        if ($minslot5 && $bank->slots_05 < $minslot5->value)
+                        {
+                            $bank->slots_05 = $minslot5->value;
+                        }
+                        if ($maxslot5 && $bank->slots_05 > $maxslot5->value)
+                        {
+                            $bank->slots_05 = $maxslot5->value;
+                        }
+
+                        if ($shop && $old5 != $bank->slots_05){
+                            $name = $shop->name;
+                            if ($game)
+                            {
+                                $name = $name . '-' . $game->name;
+                            }
+                            \VanguardLTE\BankStat::create([
+                                'name' => 'Slot5' . "[$name]", 
+                                'user_id' => $admin->id, 
+                                'type' => ($old5<$bank->slots_05)?'add':'out', 
+                                'sum' => abs($old5 - $bank->slots_05), 
+                                'old' => $old5, 
+                                'new' => $bank->slots_05, 
+                                'shop_id' => $bank->shop_id
+                            ]);
+                        }
+                        
+                        $bank->save();
+
                     }
                     catch (Exception $ex)
                     {
@@ -905,37 +1257,163 @@ namespace VanguardLTE\Console
                 {
                     try {
                         if ($bank->game && $bank->game->advanced == 'modern'){
-                            $old = $bank->bank;
-                            if ($minbonus && $bank->bank < $minbonus->value)
+                            $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
+                            $old1 = $bank->bank_01;
+                            if ($minbonus1 && $bank->bank_01 < $minbonus1->value)
                             {
-                                $bank->bank = $minbonus->value;
+                                $bank->bank_01 = $minbonus1->value;
                             }
-                            if ($maxbonus && $bank->bank > $maxbonus->value)
+                            if ($maxbonus1 && $bank->bank_01 > $maxbonus1->value)
                             {
-                                $bank->bank = $maxbonus->value;
+                                $bank->bank_01 = $maxbonus1->value;
                             }
-                            if ($old != $bank->bank){
-                                $master = \VanguardLTE\User::where('id', $bank->master_id)->first();
+                            if ($old1 != $bank->bank_01){
                                 if ($master)
                                 {
                                     $name = $master->username;
-                                    $bank->save();
                                     $game = 'General';
                                     if ($bank->game_id!=0)
                                     {
                                         $game = $bank->game->title;
                                     }
                                     \VanguardLTE\BankStat::create([
-                                        'name' => 'Bonus' . "[$name]-$game", 
+                                        'name' => 'Bonus1' . "[$name]-$game", 
                                         'user_id' => $admin->id, 
-                                        'type' => ($old<$bank->bank)?'add':'out', 
-                                        'sum' => abs($old - $bank->bank), 
-                                        'old' => $old, 
-                                        'new' => $bank->bank, 
+                                        'type' => ($old1<$bank->bank_01)?'add':'out', 
+                                        'sum' => abs($old1 - $bank->bank_01), 
+                                        'old' => $old1, 
+                                        'new' => $bank->bank_01, 
                                         'shop_id' => 0
                                     ]);
                                 }
                             }
+
+                            //2
+                            $old2 = $bank->bank_02;
+                            if ($minbonus2 && $bank->bank_02 < $minbonus2->value)
+                            {
+                                $bank->bank_02 = $minbonus2->value;
+                            }
+                            if ($maxbonus2 && $bank->bank_02 > $maxbonus2->value)
+                            {
+                                $bank->bank_02 = $maxbonus2->value;
+                            }
+                            if ($old2 != $bank->bank_02){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus2' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old2<$bank->bank_02)?'add':'out', 
+                                        'sum' => abs($old2 - $bank->bank_02), 
+                                        'old' => $old2, 
+                                        'new' => $bank->bank_02, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            //3
+                            $old3 = $bank->bank_03;
+                            if ($minbonus3 && $bank->bank_03 < $minbonus3->value)
+                            {
+                                $bank->bank_03 = $minbonus3->value;
+                            }
+                            if ($maxbonus3 && $bank->bank_03 > $maxbonus3->value)
+                            {
+                                $bank->bank_03 = $maxbonus3->value;
+                            }
+                            if ($old3 != $bank->bank_03){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus3' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old3<$bank->bank_03)?'add':'out', 
+                                        'sum' => abs($old3 - $bank->bank_03), 
+                                        'old' => $old3, 
+                                        'new' => $bank->bank_03, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            //4
+                            $old4 = $bank->bank_04;
+                            if ($minbonus4 && $bank->bank_04 < $minbonus4->value)
+                            {
+                                $bank->bank_04 = $minbonus4->value;
+                            }
+                            if ($maxbonus4 && $bank->bank_04 > $maxbonus4->value)
+                            {
+                                $bank->bank_04 = $maxbonus4->value;
+                            }
+                            if ($old4 != $bank->bank_04){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus4' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old4<$bank->bank_04)?'add':'out', 
+                                        'sum' => abs($old4 - $bank->bank_04), 
+                                        'old' => $old4, 
+                                        'new' => $bank->bank_04, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            //5
+                            $old5 = $bank->bank_05;
+                            if ($minbonus5 && $bank->bank_05 < $minbonus5->value)
+                            {
+                                $bank->bank_05 = $minbonus5->value;
+                            }
+                            if ($maxbonus5 && $bank->bank_05 > $maxbonus5->value)
+                            {
+                                $bank->bank_05 = $maxbonus5->value;
+                            }
+                            if ($old5 != $bank->bank_05){
+                                if ($master)
+                                {
+                                    $name = $master->username;
+                                    $game = 'General';
+                                    if ($bank->game_id!=0)
+                                    {
+                                        $game = $bank->game->title;
+                                    }
+                                    \VanguardLTE\BankStat::create([
+                                        'name' => 'Bonus5' . "[$name]-$game", 
+                                        'user_id' => $admin->id, 
+                                        'type' => ($old5<$bank->bank_05)?'add':'out', 
+                                        'sum' => abs($old5 - $bank->bank_05), 
+                                        'old' => $old5, 
+                                        'new' => $bank->bank_05, 
+                                        'shop_id' => 0
+                                    ]);
+                                }
+                            }
+
+                            $bank->save();
+
                         }
                     }
                     catch (Exception $ex)
@@ -951,254 +1429,7 @@ namespace VanguardLTE\Console
                 \DB::statement('DROP TABLE IF EXISTS w_shops_snapshot');
                 \DB::statement('CREATE TABLE w_shops_snapshot AS SELECT * FROM w_shops');
             });
-            \Artisan::command('daily:reset_ggr {masterid=0}', function ($masterid) {
-                $this->info('Begin reset calculation');
-                if ($masterid>0)
-                {
-                    $reset_masters = \VanguardLTE\User::where('id', $masterid)->get();
-                }
-                else
-                {
-                    $reset_masters = \VanguardLTE\User::whereRaw('`last_reset_at` < NOW()  - INTERVAL `reset_days` DAY')->where('role_id', 6)->where('ggr_percent', '>', 0)->get();
-                }
-                if (count($reset_masters) > 0)
-                {
-                    foreach ($reset_masters as $master)
-                    {
-                        $partner_users = $master->availableUsers() + [$master->id];
-                        $level = $master->level();
-                        $childpartners = \VanguardLTE\User::lockForUpdate()->whereIn('role_id', range(4,$level))->whereIn('id', $partner_users)->get();
-                        foreach ($childpartners as $user){
-                            $ggr = $user->ggr_balance - $user->ggr_mileage - ($user->count_deal_balance - $user->count_mileage);
-                            if ($ggr > 0)
-                            {
-                                //add ggr
-                                $summ = $ggr;
-                                if ($summ > 0) {
-                                    //out balance from master
-                                    $comaster = $user->referral;
-                                    while ($comaster!=null && !$comaster->isInoutPartner())
-                                    {
-                                        $comaster = $comaster->referral;
-                                    }
-
-                                    if ($comaster == null)
-                                    {
-                                        $this->warn('Can not find comaster');
-                                        continue ;
-                                    }
-                                    
-                                    if ($comaster->balance < $summ )
-                                    {
-                                        $this->warn('CoMasters balance is not enough');
-                                        continue ;
-                                    }
-                                    $comaster->update(
-                                        ['balance' => $comaster->balance - $summ]
-                                    );
-                                    
-                                    $old = $user->balance;
-
-                                    $user->balance = $user->balance + $summ;
-                                    $user->save();
-                                    $user = $user->fresh();
-
-                                    $comaster = $comaster->fresh();
-
-                                    \VanguardLTE\Transaction::create([
-                                        'user_id' => $user->id,
-                                        'payeer_id' => $comaster->id,
-                                        'system' => $user->username,
-                                        'type' => 'ggr_out',
-                                        'summ' => $summ,
-                                        'old' => $old,
-                                        'new' => $user->balance,
-                                        'balance' => $comaster->balance,
-                                        'shop_id' => 0
-                                    ]);
-                                }
-                            }
-
-                            //convert all deal balances
-                            $real_deal_balance = $user->deal_balance - $user->mileage;
-                            $summ = $real_deal_balance;
-                            if ($summ > 0) {
-                                //out balance from master
-                                $comaster = $user->referral;
-                                while ($comaster!=null && !$comaster->isInoutPartner())
-                                {
-                                    $comaster = $comaster->referral;
-                                }
-
-                                if ($comaster == null)
-                                {
-                                    $this->warn('Can not find comaster');
-                                    continue ;
-                                }
-                                
-                                if ($comaster->balance < $summ )
-                                {
-                                    $this->warn('Masters balance is not enough');
-                                    continue ;
-                                }
-                                $comaster->update(
-                                    ['balance' => $comaster->balance - $summ]
-                                );
-                                
-                                $old = $user->balance;
-
-                                $user->balance = $user->balance + $summ;
-                                $user->deal_balance = 0;
-                                $user->mileage = 0;
-                                
-                                $user->save();
-                                $user = $user->fresh();
-
-                                $comaster = $comaster->fresh();
-
-                                \VanguardLTE\Transaction::create([
-                                    'user_id' => $user->id,
-                                    'payeer_id' => $comaster->id,
-                                    'system' => $user->username,
-                                    'type' => 'deal_out',
-                                    'summ' => $summ,
-                                    'old' => $old,
-                                    'new' => $user->balance,
-                                    'balance' => $comaster->balance,
-                                    'shop_id' => 0
-                                ]);
-                            }
-
-                            $user->ggr_balance = 0;
-                            $user->ggr_mileage = 0;
-                            //reset count deal balances
-                            $user->count_deal_balance = 0;
-                            $user->count_mileage = 0;
-                            $user->last_reset_at = date('Y-m-d');
-                            $user->save();
-                        }
-                    }
-                    
-                    $partner_shops = $master->availableShops();
-                    $reset_shops = \VanguardLTE\Shop::lockForUpdate()->whereIn('id', $partner_shops)->get();
-                    if (count($reset_shops) > 0)
-                    {
-                        foreach ($reset_shops as $shop)
-                        {
-                            $ggr = $shop->ggr_balance - $shop->ggr_mileage - ($shop->count_deal_balance - $shop->count_mileage);
-                            if ($ggr > 0)
-                            {
-                                //add ggr
-                                $summ = $ggr;
-                                if ($summ > 0) {
-                                    //out balance from master
-                                    $master = $shop->creator;
-                                    while ($master!=null && !$master->isInoutPartner())
-                                    {
-                                        $master = $master->referral;
-                                    }
-
-                                    if ($master == null)
-                                    {
-                                        $this->warn('Can not find master');
-                                        return ;
-                                    }
-                                    
-                                    if ($master->balance < $summ )
-                                    {
-                                        $this->warn('Masters balance is not enough');
-                                        return ;
-                                    }
-                                    $master->update(
-                                        ['balance' => $master->balance - $summ]
-                                    );
-                                    
-                                    $old = $shop->balance;
-
-                                    $shop->balance = $shop->balance + $summ;
-
-                                    $shop->save();
-                                    $shop = $shop->fresh();
-
-                                    $master = $master->fresh();
-
-                                    \VanguardLTE\ShopStat::create([
-                                        'user_id' => $master->id,
-                                        'type' => 'ggr_out',
-                                        'sum' => $summ,
-                                        'old' => $old,
-                                        'new' => $shop->balance,
-                                        'balance' => $master->balance,
-                                        'shop_id' => $shop->id,
-                                        'date_time' => \Carbon\Carbon::now()
-                                    ]);
-                                }
-                            }
-
-                            //convert all deal balances
-                            $real_deal_balance = $shop->deal_balance - $shop->mileage;
-                            $summ = $real_deal_balance;
-                            if ($summ > 0) {
-                                //out balance from master
-                                $master = $shop->creator;
-                                while ($master!=null && !$master->isInoutPartner())
-                                {
-                                    $master = $master->referral;
-                                }
-
-                                if ($master == null)
-                                {
-                                    $this->warn('Can not find master');
-                                    return ;
-                                }
-                                
-                                if ($master->balance < $summ )
-                                {
-                                    $this->warn('Masters balance is not enough');
-                                    return ;
-                                }
-                                $master->update(
-                                    ['balance' => $master->balance - $summ]
-                                );
-                                
-                                $old = $shop->balance;
-
-                                $shop->balance = $shop->balance + $summ;
-                                $shop->deal_balance = $real_deal_balance - $summ;
-                                $shop->mileage = 0;
-                                
-                                
-                                $shop->save();
-                                $shop = $shop->fresh();
-
-                                $master = $master->fresh();
-
-                                \VanguardLTE\ShopStat::create([
-                                    'user_id' => $master->id,
-                                    'type' => 'deal_out',
-                                    'sum' => $summ,
-                                    'old' => $old,
-                                    'new' => $shop->balance,
-                                    'balance' => $master->balance,
-                                    'shop_id' => $shop->id,
-                                    'date_time' => \Carbon\Carbon::now()
-                                ]);
-                            }
-                            $shop->ggr_balance = 0;
-                            $shop->ggr_mileage = 0;
-                            //reset count deal balances
-                            $shop->count_deal_balance = 0;
-                            $shop->count_mileage = 0;
-                            $shop->last_reset_at = date('Y-m-d');
-                            $shop->save();
-
-                        }
-                    }
-                }
-
-                
-                $this->info('End reset calculation');
-            });
+            
             \Artisan::command('game:genfreestack {gameid}', function ($gameid) {
                 $this->info('Gen freestack');
                 $game = \VanguardLTE\Game::where('id', $gameid)->first();
@@ -1389,6 +1620,93 @@ namespace VanguardLTE\Console
                 $res = \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::verify_bet();
                 $this->info($res['msg']);
             });
+
+            \Artisan::command('gp:genTrend {date=next} {p=0}', function ($date, $p) {
+                set_time_limit(0);
+                $today = $date;
+                if ($date == 'next')
+                {
+                    $today = date('Y-m-d', strtotime("+1 days"));
+                }
+                $Oldtoday = date('Y-m-d', strtotime("-7 days"));
+                $this->info("Begin genTrend of " . $today);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::generateGameTrend($today, $p);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
+                $this->info("End genTrend");
+            });
+
+            \Artisan::command('gp:processTrend {p=0}', function ($p) {
+                set_time_limit(0);
+                $this->info("Begin processTrend");
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\GamePlayController::processOldTrends($p);
+                $this->info("End processTrend");
+            });
+            \Artisan::command('xmx:omitted {from} {to}', function ($from, $to) {
+
+                $this->info("Begin xmx rounds : $from ~ $to");
+
+                $this->info("Getting omitted history from " . $from);
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\XMXController::processGameRound($from, $to,true);
+                $this->info("Proceed omitted records count = " . $res[0]);
+            });  
+
+            \Artisan::command('kten:omitted {from} {to}', function ($from, $to) {
+
+                $this->info("Begin kten rounds : $from ~ $to");
+
+                while ($from <= $to)
+                {
+                    $this->info("Getting omitted history from " . $from);
+                    $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::processGameRound($from, true);
+                    $this->info("Proceed omitted records count = " . $res[0]);
+                    if ($from == $res[1])
+                    {
+                        $this->info("No more history after " . $from);
+                        break;
+                    }
+                    $from = $res[1];
+                }
+                $this->info("End kten rounds. last id = " . $from);
+            });            
+
+            \Artisan::command('session:cookie {session}', function ($session) {
+
+                $this->info("Begin");
+                
+                $base64_key = env('APP_KEY');
+                $payload = json_decode(base64_decode(urldecode($session)), true);
+                $iv = base64_decode($payload['iv']);
+                $key = base64_decode(substr($base64_key, 7));
+                $sessionId = openssl_decrypt($payload['value'],  'AES-256-CBC', $key, 0, $iv);
+                $this->info($sessionId);
+                $this->info("End");
+            });            
+
+            \Artisan::command('gac:processpending', function () {
+
+                $this->info("Begin");
+                $warningtime = date('Y-m-d H:i:s', strtotime("-5 minutes"));
+                $pendings = \VanguardLTE\GACTransaction::where(['gactransaction.type'=>1,'gactransaction.status'=>0])->where('date_time', '<', $warningtime)->get();
+                $this->info('pending bet count = '. count($pendings));
+                $prcCount = 0;
+                $cancelCount = 0;
+                foreach ($pendings as $bet)
+                {
+                    $result = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::processResult($bet->id);
+                    if ($result['error'] == false)
+                    {
+                        $prcCount = $prcCount + 1;
+                    }
+                    else
+                    {
+                        \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::cancelResult($bet->id);
+                        $cancelCount = $cancelCount + 1;
+                    }
+                }
+                $this->info("Proceed $prcCount, Cancel $cancelCount");
+                $this->info("End");
+            });         
+
         }
     }
 

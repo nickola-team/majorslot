@@ -1,6 +1,14 @@
 {
-    "add" : "충전",
-    "out" : "환전",
+    "add" : "지급",
+    "out" : "회수",
     "deal_out" : "롤링전환",
-    "ggr_out" : "벳윈전환"
+    "ggr_out" : "벳윈전환",
+    "baccarat" : "바카라",
+    "Baccarat_Player" : "플레이어",
+    "Baccarat_Banker" : "뱅커",
+    "Baccarat_Tie" : "타이",
+    "Baccarat_PlayerPair" : "플레이어패어",
+    "Baccarat_BankerPair" : "뱅커패어",
+    "slot" : "슬롯",
+    "live" : "라이브"
 }

@@ -57,7 +57,7 @@ wss.on('connection', function connection(ws) {
 var request = require('request');
 
 var gameName='';
-
+message = message + '';
 if(message.split(":::")[1]!=undefined){
 try{	
 var param=JSON.parse(message.split(":::")[1]);
@@ -113,7 +113,7 @@ request(options, function (err, res, body) {
   if(body!=undefined){
 	  
 	try{  
-	  
+	  body = body + '';
   var allReq=body.split("------");
   
 }catch(e){

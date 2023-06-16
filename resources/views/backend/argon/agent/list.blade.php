@@ -3,7 +3,7 @@
         'parentSection' => 'agent',
         'elementName' => 'agent-list'
     ])
-@section('page-title',  '에이전트 목록')
+@section('page-title',  '파트너 목록')
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
@@ -16,7 +16,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-success mb-0 ">총 에이전트</h3>
+                        <h3 class="card-title text-success mb-0 ">총 파트너</h3>
                         <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['count'])}}</span>
                     </div>
                     <div class="col-auto">
@@ -71,11 +71,11 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">에이전트이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">에이전트 레벨</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="role" name="role">
                                     <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
@@ -85,6 +85,18 @@
                                 </select>
                             </div>
                             <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="status" class="col-md-2 col-form-label form-control-label text-center">상태</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="status" name="status">
+                                    <option value="" @if (Request::get('status') == '') selected @endif>@lang('app.all')</option>
+									<option value="{{\VanguardLTE\Support\Enum\UserStatus::ACTIVE}}" @if (Request::get('status') == \VanguardLTE\Support\Enum\UserStatus::ACTIVE) selected @endif>활성</option>
+                                    <option value="{{\VanguardLTE\Support\Enum\UserStatus::BANNED}}" @if (Request::get('status') == \VanguardLTE\Support\Enum\UserStatus::BANNED) selected @endif>차단</option>
+                                </select>
                             </div>
                         </div>
                             
@@ -108,19 +120,19 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
-        <h3 class="mb-0">에이전트 목록</h3>
+        <h3 class="mb-0">파트너 목록</h3>
     </div>
     <div class="table-responsive">
             <table class="table align-items-center table-flush" id="agentlist">
             <thead class="thead-light">
                 <tr>
-                <th scope="col">에이전트</th>
+                <th scope="col">파트너</th>
                 <th scope="col">번호</th>
                 <th scope="col">레벨</th>
                 <th scope="col">보유금</th>
                 <th scope="col">롤링금</th>
                 <th scope="col">롤링%</th>
-                <th scope="col">라이브롤링%</th>
+                <th scope="col">죽장%</th>
                 <th scope="col">가입날짜</th>
                 <th></th>
                 </tr>
@@ -158,7 +170,7 @@
             $('#waitAjax').show();
             $.ajax({
                 async: true,
-                url: "{{argon_route('argon.agent.child')}}?id="+node.id
+                url: "{{argon_route('argon.agent.child')}}?id="+node.id+"status="+"{{Request::get('status')}}"
                 }).done(function(html) {
                     var rows = $(html).filter("tr");
                     table.treetable("loadBranch", node, rows);

@@ -24,10 +24,13 @@ public/socket_config0.json
 public/socket_config1.json
 public/socket_config2.json
 public/socket_live_config.json
+public/socket_config_gp.json
 resources/lang/ko.zip
 public/frontend/Major.zip
 app/Games/Games.zip
 /PTWebSocket/node_modules
+/PTWebSocket/package-lock.json
+/PTWebSocket/bower_components
 bootstrap/cache/packages.php
 composer.lock
 bootstrap/cache/routes-v7.php

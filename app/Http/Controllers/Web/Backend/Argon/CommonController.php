@@ -39,6 +39,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function updateBalance(\Illuminate\Http\Request $request)
         {
+            \DB::beginTransaction();
             $data = $request->all();
             if( !array_get($data, 'type') ) 
             {
@@ -47,37 +48,41 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user = \VanguardLTE\User::lockForUpdate()->find($request->user_id);
             if (!$user)
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
 
             if (!in_array($user->id, auth()->user()->availableUsers()))
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
 
             if ($user->playing_game != null )
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
             }
 
             $summ = abs(str_replace(',','',$request->amount));
             if ($summ == 0 && $request->all != '1' )
             {
+                \DB::commit();
                 return redirect()->back()->withErrors(['유효하지 않은 금액입니다']);
             }
 
             if ($user->hasRole('manager')) // add shop balance
             {
 
-                if( \Auth::user()->hasRole([
-                    'master', 
-                    'agent', 
-                    'distributor', 
-                    'manager'
-                ]) && $data['type'] == 'out') 
-                {
-                    return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
-                }
+                // if( \Auth::user()->hasRole([
+                //     'master', 
+                //     'agent', 
+                //     'distributor', 
+                //     'manager'
+                // ]) && $data['type'] == 'out') 
+                // {
+                //     return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+                // }
 
                 $shop = $user->shop;
                 if( $request->all && $request->all == '1' ) 
@@ -87,6 +92,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $payer = auth()->user();
                 if( $data['type'] == 'add' && (!$payer->hasRole('admin') && $payer->balance < $summ  ) )
                 {
+                    \DB::commit();
                     return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_user_balance', [
                         'name' => $user->username, 
                         'balance' => $user->balance
@@ -94,6 +100,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 if( $data['type'] == 'out' && $shop->balance < $summ  ) 
                 {
+                    \DB::commit();
                     return redirect()->back()->withErrors([trans('app.not_enough_money_in_the_shop', [
                         'name' => $shop->name, 
                         'balance' => $shop->balance
@@ -156,14 +163,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     $summ = $user->balance;
                 }
+
                 $result = $user->addBalance($data['type'], abs($summ), false, 0, null, isset($data['reason'])?$data['reason']:null);
             
                 $result = json_decode($result, true);
                 if( $result['status'] == 'error' ) 
                 {
+                    \DB::commit();
                     return redirect()->back()->withErrors([$result['message']]);
                 }
             }
+            \DB::commit();
             return redirect($request->url)->withSuccess(['조작이 성공했습니다.']);
         }
 
@@ -189,8 +199,72 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->to(argon_route('argon.dashboard'))->withErrors(['삭제된 유저입니다.']);
             }
-            $userActivities = $activities->getLatestActivitiesForUser($user->id, 10);
-            return view('backend.argon.common.profile', compact('user', 'userActivities'));
+            $userActivities = $activities->getLatestActivitiesForUser($user->id, 20);
+            $rtppercent = 0;
+            if ($user->isInOutPartner())
+            {
+                $shopIds = $user->availableShops();
+                if (count($shopIds) > 0)
+                {
+                    $rtppercent = \VanguardLTE\Shop::whereIn('id', $shopIds)->avg('percent');
+                }
+            }
+            $parent = auth()->user();
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            $deluser = 1;
+            if (auth()->user()->isInOutPartner())
+            {
+                $deluser = 1;
+            }
+            else if (isset($parent->sessiondata()['deluser']))
+            {
+                $deluser = $parent->sessiondata()['deluser'];
+            }
+            return view('backend.argon.common.profile', compact('user', 'userActivities', 'rtppercent', 'deluser'));
+        }
+        public function updateAccessrule(\Illuminate\Http\Request $request)
+        {
+            $user_id = $request->id;
+            $user = \VanguardLTE\User::find($user_id);
+            $users = auth()->user()->hierarchyPartners();
+            if( !$user || (count($users) && !in_array($user_id, $users) )) 
+            {
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다']);
+            }
+            $data = $request->all();
+            if ($user->accessrule)
+            {
+                if ($data['ip_address'] == '' && isset($data['allow_ipv6']) && $data['allow_ipv6']=='on' && $request->check_cloudflare == '')
+                {
+                    $user->accessrule->delete();
+                }
+                $user->accessrule->update([
+                    'ip_address' => $data['ip_address'],
+                    'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0,
+                    'check_cloudflare' => (isset($data['check_cloudflare']) && $data['check_cloudflare']=='on')?1:0,
+                ]);
+            }
+            else
+            {
+                if ($data['ip_address'] == '' && isset($data['allow_ipv6']) && $data['allow_ipv6']=='on' && $request->check_cloudflare == '')
+                {
+                }
+                else
+                {
+                    \VanguardLTE\AccessRule::create([
+                        'user_id' => $user->id,
+                        'ip_address' => $data['ip_address'],
+                        'allow_ipv6' => (isset($data['allow_ipv6']) && $data['allow_ipv6']=='on')?1:0,
+                        'check_cloudflare' => (isset($data['check_cloudflare']) && $data['check_cloudflare']=='on')?1:0,
+                    ]);
+                }
+            }
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'ipaddress'));
+            return redirect()->back()->withSuccess(['접근 설정을 업데이트 했습니다.']);
+
         }
         public function updatePassword(\VanguardLTE\Http\Requests\User\UpdateDetailsRequest $request)
         {
@@ -208,7 +282,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 unset($data['id']);
                 $user->update($data);
             }
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'password'));
             return redirect()->back()->withSuccess(trans('app.login_updated'));
         }
 
@@ -235,7 +309,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $data['confirmation_token'] = \Illuminate\Support\Facades\Hash::make($data['confirmation_token']);
                 $user->update($data);
             }
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'depositinfo'));
             return redirect()->back()->withSuccess(['환전비번을 업데이트했습니다']);
         }
 
@@ -263,6 +337,52 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
             
             $data = $request->all();
+            $customesettings = [
+                'gameOn' => 0,
+                'moneyperm' => 0,
+                'deluser' => 0,
+                'manualjoin' => 0
+            ];
+            foreach ($customesettings as $setting => $value)
+            {
+                if (isset($data[$setting]) && $data[$setting]=='on')
+                {
+                    $customesettings[$setting] = 1;
+                    unset($data[$setting]);
+                }
+            }
+
+            $data['session'] = json_encode($customesettings);
+
+
+            if (isset($data['gamertp']))
+            {
+                if ($data['gamertp'] >= 90 && $data['gamertp'] <= 100)
+                {
+                    if( $user->isInOutPartner())
+                    {
+                        $shopIds = $user->availableShops();
+                        if (count($shopIds) > 0)
+                        {
+                            $rtppercent = \VanguardLTE\Shop::whereIn('id', $shopIds)->update(['percent' => $data['gamertp']]);
+                        }
+                    }
+                }
+                else
+                {
+                    return redirect()->back()->withErrors(['환수율은 90~100사이에 설정되어야 합니다.']);
+                }
+                
+                unset($data['gamertp']);
+
+            }
+            // if (isset($data['account_no']) || isset($data['recommender']))
+            // {
+            //     if (($user->account_no != $data['account_no']) || ($user->recommender != $data['recommender']))
+            //     {
+            //         return redirect()->back()->withErrors(['임시 계좌설정을 할수 없습니다']);
+            //     }
+            // }
             
             if( !$user->isInOutPartner())
             {
@@ -273,15 +393,44 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 else{
                     $parent = $user->referral;
                 }
-
-                if ($parent!=null &&  isset($data['deal_percent']) && $parent->deal_percent < $data['deal_percent'])
+                $check_deals = [
+                    'deal_percent',
+                    'table_deal_percent',
+                    'ggr_percent',
+                    'table_ggr_percent'
+                ];
+                foreach ($check_deals as $dealtype)
                 {
-                    return redirect()->back()->withErrors(['딜비는 상위파트너보다 클수 없습니다']);
+                    if ($parent!=null &&  isset($data[$dealtype]) && $parent->{$dealtype} < $data[$dealtype])
+                    {
+                        return redirect()->back()->withErrors(['롤링이나 죽장은 상위에이전트보다 클수 없습니다']);
+                    }
                 }
-
-                if ($parent!=null &&  isset($data['table_deal_percent']) && $parent->table_deal_percent < $data['table_deal_percent'])
+            }
+            if (!$user->hasRole('user'))
+            {
+                $childs = $user->childPartners();
+                if (count($childs) > 0)
                 {
-                    return redirect()->back()->withErrors(['라이브딜비는 상위파트너보다 클수 없습니다']);
+                    $check_deals = [
+                        'deal_percent',
+                        'table_deal_percent',
+                        'ggr_percent',
+                        'table_ggr_percent'
+                    ];
+                    foreach ($check_deals as $dealtype)
+                    {
+                        if (isset($data[$dealtype]))
+                        {
+                            $highRateUsers = \VanguardLTE\User::whereIn('id', $childs)->where($dealtype, '>', $data[$dealtype])->get();
+
+                            if (count($highRateUsers) > 0)
+                            {
+                                $firstUser = $highRateUsers->first();
+                                return redirect()->back()->withErrors([$firstUser->username . '을 포함한 ' . count($highRateUsers) . '명의 하위파트너 롤링이나 죽장이 설정하려는 값보다 큽니다']);
+                            }
+                        }
+                    }
                 }
             }
             if ($user->hasRole('manager'))
@@ -312,7 +461,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     ]);
                 }
             }
-            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user));
+            event(new \VanguardLTE\Events\User\UpdatedByAdmin($user, 'profile'));
 
             if( $this->userIsBanned($user, $request) ) 
             {
