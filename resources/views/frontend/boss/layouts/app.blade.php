@@ -141,7 +141,7 @@
     @endforeach
     </div>
 @if( $detect->isMobile() || $detect->isTablet() ) 
-@else
+@elseif (isset($telegram) && $telegram!='')
 <div class="customizer-tele">
 	<span class="tele" onclick="window.open('https://t.me/{{$telegram??'Boss텔레'}}');" style="cursor:pointer;"><img src="/frontend/boss/V/quick_customer2.png"></span>
 </div>
