@@ -199,14 +199,14 @@ namespace VanguardLTE\Games\WildCelebrityBusMegawaysPM
                         $strOtherResponse = $strOtherResponse . '&sty=' . $str_sty;
                     }
                     if($strWinLine != ''){
-                        $arr_lines = explode('&', $strWinLine);
+                        $arr_lines = explode(';', $strWinLine);
                         for($k = 0; $k < count($arr_lines); $k++){
                             $arr_sub_lines = explode('~', $arr_lines[$k]);
                             $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
                             $arr_lines[$k] = implode('~', $arr_sub_lines);
                         }
-                        $strWinLine = implode('&', $arr_lines);
-                        $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
+                        $strWinLine = implode(';', $arr_lines);
+                        $strOtherResponse = $strOtherResponse . '&wlc_v=' . $strWinLine;
                     }
                     $strOtherResponse = $strOtherResponse . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 || $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') > 0)
