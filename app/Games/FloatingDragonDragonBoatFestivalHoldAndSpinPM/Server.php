@@ -621,6 +621,9 @@ namespace VanguardLTE\Games\FloatingDragonDragonBoatFestivalHoldAndSpinPM
                     }
                 }
                 if($rs_t > 0){
+                    if($slotEvent['slotEvent'] != 'freespin'){
+                        $spinType = 'c';
+                    }
                     $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t . '&rs_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinWin');
                 }
                 if($rs_iw > 0){
