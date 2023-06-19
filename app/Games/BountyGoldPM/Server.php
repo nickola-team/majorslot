@@ -403,6 +403,10 @@ namespace VanguardLTE\Games\BountyGoldPM
                 }
                 $reels = [];
                 $moneyCount = 0;
+                $specialMoneyCount = 0;
+                $special_motv = 0;
+                $arr_stf = [];
+                $arr_mo_wpos = [];
                 if($slotEvent['slotEvent'] == 'freespin'){
                     if($rs_t > 0){
                         foreach($arr_g as $key => $item){
@@ -424,12 +428,18 @@ namespace VanguardLTE\Games\BountyGoldPM
                         }
                     }
                 }else{
+                    $arr_mo = explode(',', $str_mo);
                     for($i = 0; $i < 5; $i++){
                         $reels[$i] = [];
                         for($j = 0; $j < 3; $j++){
                             $reels[$i][$j] = $lastReel[$j * 5 + $i];
                             if($lastReel[$j * 5 + $i] == 11){
                                 $moneyCount++;   
+                            }else if($lastReel[$j * 5 + $i] == 12){
+                                $specialMoneyCount++;
+                                $special_motv = $arr_mo[$j * 5 + $i];
+                                $arr_mo_wpos[] = $j * 5 + $i;
+                                $arr_stf[] = '11~12~' . ($j * 5 + $i);
                             }
                         }
                     }
@@ -477,6 +487,9 @@ namespace VanguardLTE\Games\BountyGoldPM
                                 break;
                             }
                         }
+                    }
+                    if($special_motv > 0){
+                        $totalWin = $totalWin + $special_motv * $betline;
                     }
                 }
                 $spinType = 's';
@@ -556,6 +569,9 @@ namespace VanguardLTE\Games\BountyGoldPM
                 }
                 if($pw > 0){
                     $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
+                }
+                if($special_motv > 0){
+                    $strOtherResponse = $strOtherResponse . '&mo_tv=' . $special_motv . '&mo_wpos='. implode(',', $arr_mo_wpos) .'&mo_c=1&mo_tw=' . ($special_motv * $betline) . '&stf=fiery_mo:' . implode(';', $arr_stf);
                 }
                 if($apv != 0){
                     $arr_apv = explode(',', $apv);
