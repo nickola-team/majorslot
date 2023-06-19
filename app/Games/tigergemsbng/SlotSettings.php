@@ -694,14 +694,14 @@ namespace VanguardLTE\Games\tigergemsbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerGemsStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 48000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 108000);
+                    $index = mt_rand(0, 68000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 20);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

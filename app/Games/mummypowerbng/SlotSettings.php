@@ -648,7 +648,7 @@ namespace VanguardLTE\Games\mummypowerbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameGrabTheGoldStack::where('id', 996)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameMummyPowerStack::where('id', 10903)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -671,14 +671,14 @@ namespace VanguardLTE\Games\mummypowerbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameMummyPowerStack::where('spin_type', 0);
                 }
-                $index = 0; // mt_rand(0, 28000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 68000);
+                    $index = mt_rand(0, 58000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 50);    
+                        $stacks = $stacks->where('odd', '<=', 25);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
