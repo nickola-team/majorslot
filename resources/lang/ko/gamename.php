@@ -1197,5 +1197,6 @@ return [
         "moremagicapple" => "모어 매직 애플",
         "grabthegold" => "그랩 더 골드",
 
-
+        "mummypower" => "머미 파워",
+        "tigergems" => "타이거 잼스",
 ];
