@@ -1269,6 +1269,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'url' => $url
                 ], 200);
             }
+            else if ($master->bank_name == 'WORLDPAY') //월드페이 가상계좌
+            {
+                $paramete=$master->account_no.'||'.$user->username.'||'.$user->recommender.'||'.$user->bank_name.'||'.$user->account_no;
+                
+                $url = 'http://1one-pay.com/api_mega/?token='.rawurlencode($paramete);
+                return response()->json([
+                    'error' => false, 
+                    'msg' => '팝업창에서 입금계좌신청을 하세요',
+                    'url' => $url
+                ], 200);
+            }
             else if ($master->bank_name == 'MESSAGE') //계좌를 쪽지방식으로 알려주는 총본사
             {
                 $date_time = date('Y-m-d H:i:s', strtotime("-2 minutes"));

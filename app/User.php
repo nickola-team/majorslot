@@ -123,6 +123,7 @@ namespace VanguardLTE
                 '신협',
                 'PAYWIN',
                 'JUNCOIN',
+                'WORLDPAY',
                 'MESSAGE'
             ],
             'reset_days' => [
