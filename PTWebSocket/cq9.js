@@ -103,13 +103,14 @@ wss.on('connection', function connection(ws) {
 			headers: {
 				'Connection': 'keep-alive',
 				"Content-Type": "application/json",
-				// 'Content-Length': paramStr.length,
+				 'Content-Length': paramStr.length,
 				'Cookie': ck
 			}
 		}
+		console.log("Option Url : " + JSON.stringify(options));
 		request(options, function(err, res, body) {
 			if(err) {
-				console.log('Error :', err)
+				console.log('Error Request :', err)
 				return
 			}
 			if(body != undefined) {
@@ -117,7 +118,7 @@ wss.on('connection', function connection(ws) {
 					body = body + '';
 					var allReq = body.toString().split("------");
 				} catch(e) {
-					console.log('Error :', e)
+					console.log('Error body :', e)
 					return;
 				}
 				console.log('-------  message  ----------');

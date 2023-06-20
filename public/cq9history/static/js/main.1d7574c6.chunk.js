@@ -67,7 +67,7 @@
                 C = n(16),
                 z = n.n(C),
                 N = window.location.host,
-                B = ~N.indexOf(":") ? "proxy/api" : "//".concat(N, "/api");
+                B = ~N.indexOf(":") ? "/api" : "//".concat(N, "/api");
             z.a.defaults.withCredentials = !0;
             var M = window.location.protocol,
                 L = function (e) {
