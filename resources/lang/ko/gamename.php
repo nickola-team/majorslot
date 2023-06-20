@@ -1113,7 +1113,7 @@ return [
 
         "ZeusvsHadesGodsofWar" => "제우스 vs 하데스",
 
-        "FloatingDragonDragonBoatFestivalHoldAndSpin" => "플로팅 드래곤",
+        "FloatingDragonDragonBoatFestivalHoldAndSpin" => "플로팅 드래곤 보트페스티벌",
         "StickyBees" => "스티키 비즈",
         "FrogsAndBugs" => "프로그스 & 버그스",
         "LampofInfinity" => "램프 오브 인피니티",
