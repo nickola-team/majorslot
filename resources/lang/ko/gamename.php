@@ -1113,11 +1113,14 @@ return [
 
         "ZeusvsHadesGodsofWar" => "제우스 vs 하데스",
 
-        "FloatingDragonDragonBoatFestivalHoldAndSpin" => "플로팅 드래곤",
+        "FloatingDragonDragonBoatFestivalHoldAndSpin" => "플로팅 드래곤 보트페스티벌",
         "StickyBees" => "스티키 비즈",
         "FrogsAndBugs" => "프로그스 & 버그스",
         "LampofInfinity" => "램프 오브 인피니티",
         "RobberStrike" => "라버 스트라이크",
+        "FatPanda" => "팻 판다",
+        "JewelRush" => "쥬얼 러시",
+        "PiratesPub" => "파이럿스 펍",
 
         //Booongo
         "tigerstone" => "타이거 스톤",

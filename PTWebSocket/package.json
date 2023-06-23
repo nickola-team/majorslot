@@ -7,6 +7,8 @@
     "request": "^2.88.2",
     "request-cookies": "^1.1.0",
     "signalrjs": "^0.2.2",
-    "sync-request": "^6.1.0"
+    "sync-request": "^6.1.0",
+    "websocket": "^1.0.34",
+    "ws": "^8.13.0"
   }
 }
