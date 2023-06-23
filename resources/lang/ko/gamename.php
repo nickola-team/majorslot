@@ -1118,6 +1118,9 @@ return [
         "FrogsAndBugs" => "프로그스 & 버그스",
         "LampofInfinity" => "램프 오브 인피니티",
         "RobberStrike" => "라버 스트라이크",
+        "FatPanda" => "팻 판다",
+        "JewelRush" => "쥬얼 러시",
+        "PiratesPub" => "파이럿스 펍",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
