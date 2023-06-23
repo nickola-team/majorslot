@@ -8,8 +8,7 @@
  * Copyright (c) ionCube Ltd. 2002-2018
  */
 
-
- 
+use SebastianBergmann\Environment\Console;
 
 define ('ERROR_UNKNOWN_OS',1);
 define ('ERROR_UNSUPPORTED_OS',2);
