@@ -370,14 +370,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getGameObj', $gamecode);
                 if ($gameobj && $gameobj['href'] == $ct->href)
                 {
-                    $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
-                    if ($res['error'] == false)
+                    //check if game is visible
+                    if (isset($gameobj['view']) && $gameobj['view'] == 1)
                     {
-                        if ($ct->status == 0)
+                        $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
+                        if ($res['error'] == false)
                         {
-                            return response()->view('errors.maintenance', [], 200)->header('Content-Type', 'text/html');
+                            if ($ct->status == 0)
+                            {
+                                return response()->view('errors.maintenance', [], 200)->header('Content-Type', 'text/html');
+                            }
+                            return redirect($res['data']['url']);
                         }
-                        return redirect($res['data']['url']);
                     }
                 }
             }
