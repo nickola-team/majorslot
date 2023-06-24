@@ -14,6 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //==== CASINO ====
             'gold-evo' => ['thirdname' =>'EVOLUTION','type' => 'casino'],
             'gold-dg' => ['thirdname' =>'DREAMGAME','type' => 'casino'],
+            'gold-micro' => ['thirdname' =>'MICRO','type' => 'casino'],
         ];
         public static function getGameObj($uuid)
         {
