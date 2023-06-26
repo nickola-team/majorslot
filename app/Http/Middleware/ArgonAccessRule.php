@@ -45,7 +45,7 @@ namespace VanguardLTE\Http\Middleware
                         }
                         if (!$bIsCloud)
                         {
-                            $response = \Response::json(['error' => '허용되지 않은 접근입니다'], 401, []);
+                            $response = \Response::json(['error' => '허용되지 않은 접근입니다. CLOUDIP=' . $remote_addr], 401, []);
                             $response->header('Content-Type', 'application/json');
                             return $response;
                         }
@@ -62,7 +62,7 @@ namespace VanguardLTE\Http\Middleware
                     }
                     else
                     {
-                        $response = \Response::json(['error' => '허용되지 않은 접근입니다'], 401, []);
+                        $response = \Response::json(['error' => '허용되지 않은 접근입니다. IPADDRESS='. $ip_address], 401, []);
                         $response->header('Content-Type', 'application/json');
                         return $response;
                     }
