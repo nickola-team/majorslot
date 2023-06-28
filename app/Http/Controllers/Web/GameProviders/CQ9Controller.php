@@ -1631,7 +1631,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function toggle(\Illuminate\Http\Request $request)
         {
-            $data = '{"code":0,"message":"Success","data":{"memberSystem":["7","9","10","15","24","26","31","50","52","64","67","69","79","83","89","99","105","115","117","138","140","152","153","160","179","182","183","186","188"],"xda":true}}';
+            $data = '{"code": 0,"message": "Success","data": {"help": ["1","2","3","4","5","7","8","9","10","12","13","15","16","17","19","20","21","22","23","24","26","27","29","31","32","33","34","35","38","39","42","44","46","47","49","50","51","52","54","55","57","58","59","64","66","67","68","69","70","72","74","76","77","78","79","80","81","83","92","95","96","98","171","1067","5009","GB2","GB3","GB5","GB6","GB8","GB9","GB12","GB13","GB15","GB16","89","99","105","108","109","111","112","113","115","116","117","118","121","122","123","125","127","128","129","130","131","132","133","135","136","137","138","139","140","142","144","146","150","153","155","156","161","171","179","180","182","183","184","185","186","187","188","189","190","191","192","193","194","195","197","199","201","202","203","204","205","223","225","226","227","231","241","242","243","1074"],"memberSystem": ["7","9","10","15","24","26","31","50","52","64","67","69","79","83","89","99","105","115","117","138","140","152","153","160","179","182","183","186","188"],"ptdLink": {"bag": "utm_source=ingame\u0026utm_medium=bag","mission": "utm_source=ingame\u0026utm_medium=mission","setting": "utm_source=ingame\u0026utm_medium=setting"},"xda": false}}';
             return  response($data, 200)->header('Content-Type', 'application/json');
 
         }
@@ -1674,11 +1674,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $timezoneName = timezone_name_from_abbr("", -4*3600, false);
                 $date->setTimezone(new \DateTimeZone($timezoneName));
                 $time= $date->format(DATE_RFC3339_EXTENDED);
-                $code = $game->game_id;
-                if ($game->category->href == 'cq9play')
-                {
-                    $code = CQ9Controller::gamenametocode($game->game_item->title);
-                }
+                $code = $game->game_item->label;
                 $freegame = 0;
                 if (strpos($game->game, ' FG') !== false)
                 {
@@ -1760,7 +1756,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]
             ];
-            
             return response()->json($data);
         }
 
