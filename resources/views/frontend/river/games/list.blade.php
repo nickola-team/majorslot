@@ -1,4 +1,4 @@
-@extends('frontend.newworld.layouts.app', ['logo' => 'bigwin'])
+@extends('frontend.venus.layouts.app', ['logo' => 'river'])
 @section('page-title', $title)
 
 @section('content')
