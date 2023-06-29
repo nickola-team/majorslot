@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\MummysTreasureCQ9
+namespace VanguardLTE\Games\TheChickenHouseCQ9
 {
     class SlotSettings
     {
@@ -446,11 +446,11 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
             else
             {
             //------- *** -------//
-                // if( $_obf_bonus_systemmoney > 0 ) 
-                // {
-                //     $sum -= $_obf_bonus_systemmoney;
-                //     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                // }
+                if( $_obf_bonus_systemmoney > 0 ) 
+                {
+                    $sum -= $_obf_bonus_systemmoney;
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -857,27 +857,43 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-        public function GetReelStrips($winType, $bet, $bomb_value)
+        public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMummysTreasureStack::where('id', 769)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('id', 1549)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
-            $winAvaliableMoney = $this->GetBank('');
-            $limitOdd = floor($winAvaliableMoney / $bet);
+            if($winType == 'bonus'){
+                $winAvaliableMoney = $this->GetBank('bonus');
+            }else if($winType == 'win'){
+                $winAvaliableMoney = $this->GetBank('');
+            }else{
+                $winAvaliableMoney = 0;
+            }
+            $limitOdd = 0;
+            if($winType != 'none'){
+                $limitOdd = floor($winAvaliableMoney / $bet);
+            }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
                 'user_id' => $this->playerId,
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMummysTreasureStack::where('pur_level', $bomb_value)->whereNotIn('id', $existIds);
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                }else{
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                }
                 $index = 0; //mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 15);    
+                    }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
@@ -887,12 +903,23 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if ($this->happyhouruser)
-                        {
-                            $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
-                        }
-                        else
-                        {
+                        if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                $miniOdd = $limitOdd / mt_rand(2,4);
+                                if($miniOdd > 30){
+                                    $miniOdd = 30;
+                                }
+                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                            }
+                            if ($this->happyhouruser)
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                            }
+                            else
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                            }
+                        }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                         }
                     }

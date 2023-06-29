@@ -125,6 +125,16 @@ namespace VanguardLTE\Games\caishenwealthbng
                     ]
                 ];
                 if( $LASTSPIN !== NULL ) {
+                    $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? [2, 0];
+                    if($currentHill[0] > 9){
+                        $currentHill = [9, 0];
+                        if(isset($LASTSPIN->context) && isset($LASTSPIN->context->spins)){
+                            $LASTSPIN->context->spins->bac = $currentHill;
+                        }
+                        if(isset($LASTSPIN->context) && isset($LASTSPIN->context->freespins)){
+                            $LASTSPIN->context->freespins->bac = $currentHill;
+                        }
+                    }
                     if(isset($LASTSPIN->context)){
                         // if(isset($LASTSPIN->context->spins)){
                         //     $LASTSPIN->context->spins->board = $LASTSPIN->context->spins->feature_board;
