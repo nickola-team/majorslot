@@ -208,7 +208,7 @@ namespace VanguardLTE\Games\CashElevatorPM
                         }
                     }
                     if($pw > 0){
-                        $pw = $pw / $original_bet * $bet;
+                        $pw = str_replace(',', '', $pw) / $original_bet * $bet;
                         $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
                     }
                     if($mo_tv > 0){
@@ -653,7 +653,7 @@ namespace VanguardLTE\Games\CashElevatorPM
                     $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
                 }
                 if($pw > 0){
-                    $pw = $pw / $original_bet * $betline;
+                    $pw = str_replace(',', '', $pw) / $original_bet * $betline;
                     $strOtherResponse = $strOtherResponse . '&pw=' . $pw;
                 }
                 if($mo_tv > 0){
