@@ -40,7 +40,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             // $paramData = trim(file_get_contents('php://input'));
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
-            $originalbet = 1;
+            $originalbet = 3;
             $slotSettings->SetBet();
             if(isset($paramData['req'])){
                 if($paramData['req'] == 1){ // init
@@ -135,14 +135,21 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                         }else if($packet_id == 31 || $packet_id == 42){
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                $lines = $gameData->PlayLine;
+                                $lines = 20;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
+                                $lines = 20;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
                             }else{
+                                $pur_level = -1;
+                                for($k = 0; $k < count($gameData->ReelSelected); $k++){
+                                    if($gameData->ReelSelected[$k] == 1){
+                                        $pur_level = $k;
+                                        break;
+                                    }
+                                }
                                 $slotEvent['slotEvent'] = 'bet';
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -152,12 +159,22 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', ($betline /  $this->demon));
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 50);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 20);
                                 $slotSettings->SetBet();
-                                $slotSettings->SetBalance(-1 * ($betline /  $this->demon) * $lines, $slotEvent['slotEvent']);
-                                $_sum = ($betline /  $this->demon) * $lines / 100 * $slotSettings->GetPercent();
-                                $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
+                                $allBet = ($betline /  $this->demon) * $lines;
+                                $isBuyFreespin = false;
+                                if($pur_level == 0){
+                                    $allBet = $allBet * 200;
+                                    $isBuyFreespin = true;
+                                }else if($pur_level == 1){
+                                    $allBet = $allBet * 120;
+                                    $isBuyFreespin = true;
+                                }
+                                $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
+                                $_sum = $allBet / 100 * $slotSettings->GetPercent();
+                                $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent'], $isBuyFreespin);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
@@ -224,7 +241,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        $lines = 20;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -255,20 +272,18 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline /  $this->demon) * $lines, $lines);
-            $winType = $_spinSettings[0];
-            $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
-            // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
-
             if($slotEvent == 'freespin'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                
-                
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline /  $this->demon) * $lines);
+                $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline /  $this->demon) * $lines, $lines);
+                $winType = $_spinSettings[0];
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
+                    $winType = 'bonus';
+                }
+
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -329,8 +344,6 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                 $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin / $this->demon);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
             }
-
-            $result_val['Multiple'] = 0;
             if($freespinNum > 0){
                 $isTriggerFG = true;
                 if($slotEvent != 'freespin'){                    
@@ -350,7 +363,14 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
-            $slotSettings->SaveLogReport(json_encode($gamelog), ($betline /  $this->demon) * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+            if($isState == true){
+                $allBet = ($betline /  $this->demon) * $lines;
+                $pur_mul = [200, 120];
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
+                    $allBet = $allBet * $pur_mul[$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin')];
+                }
+                $slotSettings->SaveLogReport(json_encode($gamelog),$allBet ,$lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+            }
 
             if($slotEvent != 'freespin' && $freespinNum > 0){
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
@@ -383,8 +403,15 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             }
             $proof['next_s_table']              = $result_val['NextSTable'];
             $proof['extend_feature_by_game']    = [];
-            $proof['extend_feature_by_game2']   = $result_val['ExtendFeatureByGame2'];
-
+            $proof['extend_feature_by_game2']   = [];
+            foreach($result_val['ExtendFeatureByGame2'] as $item){
+                $newItem = [];
+                $newItem['name'] = $item['Name'];
+                if(isset($item['Value'])){
+                    $newItem['value'] = $item['Value'];
+                }
+                $proof['extend_feature_by_game2'][] = $newItem;
+            }
             foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
             {
                 $lineData = [];
@@ -412,7 +439,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
 
                 $sub_log = [];
                 $sub_log['sub_no']              = $result_val['CurrentSpinTimes'];
-                $sub_log['game_type']           = 50;
+                $sub_log['game_type']           = 51;
                 $sub_log['rng']                 = $result_val['RngData'];
                 $sub_log['multiple']            = $result_val['Multiple'];
                 $sub_log['win']                 = $result_val['TotalWin'] /  $this->demon;
@@ -442,7 +469,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = 'GB15';
+                $wager['game_id']               = '241';
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;

@@ -92,7 +92,7 @@ namespace VanguardLTE\Games\TreeofRichesPM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[200.00,400.00,600.00,800.00,1000.00,2000.00,3000.00,4000.00,5000.00,7500.00,10000.00,20000.00,30000.00,40000.00,50000.00,60000.00,70000.00,80000.00,90000.00,100000.00]; 
             $this->Balance = $user->balance;

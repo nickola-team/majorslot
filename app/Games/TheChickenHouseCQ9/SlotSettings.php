@@ -857,10 +857,10 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('id', 1549)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTheChickenHouseStack::where('id', 6576)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -881,9 +881,15 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameTheChickenHouseStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameTheChickenHouseStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                }
+                if($pur >= 0){
+                    $stacks = $stacks->where('pur_level', $pur);
+                }else{
+                    $purs = [-1, 1];
+                    $stacks = $stacks->whereIn('pur_level', $purs);
                 }
                 $index = 0; //mt_rand(0, 28000);
                 if($winType == 'win'){

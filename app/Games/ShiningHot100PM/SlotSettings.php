@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\ShiningHot100PM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[2.50,5.00,7.50,10.00,12.50,20.00,30.00,40.00,50.00,75.00,100.00,150.00,250.00,500.00,750.00,1000.00]; 
             $this->Balance = $user->balance;
