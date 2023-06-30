@@ -99,7 +99,7 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[5.00,10.00,20.00,30.00,40.00,50.00,100.00,200.00,400.00,800.00,1200.00,2000.00,2500.00]; 
             $this->Balance = $user->balance;

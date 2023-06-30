@@ -106,7 +106,7 @@ namespace VanguardLTE\Games\_7PiggiesPM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[30.00,60.00,90.00,120.00,250.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00,6000.00,7000.00,8000.00,9000.00,10000.00,11500.00,13000.00,14500.00]; 
             $this->Balance = $user->balance;

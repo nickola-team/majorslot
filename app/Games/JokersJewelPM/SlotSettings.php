@@ -215,7 +215,7 @@ namespace VanguardLTE\Games\JokersJewelPM
             $this->slotFreeMpl = 3;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->gameLine = [
                 1, 

@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\SuperJokerPM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[40.00,80.00,120.00,250.00,500.00,750.00,1000.00,1500.00,2500.00,5000.00,7500.00,10000.00,12500.00,15000.00,17500.00,20000.00]; 
             $this->Balance = $user->balance;

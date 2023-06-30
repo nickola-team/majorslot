@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\Fire88PM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[30.00,60.00,90.00,150.00,300.00,500.00,750.00,1000.00,2500.00,3500.00,5000.00,6000.00,7500.00,8500.00,10000.00,12500.00,15000.00]; 
             $this->Balance = $user->balance;
