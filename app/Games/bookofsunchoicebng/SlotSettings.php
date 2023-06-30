@@ -153,7 +153,7 @@ namespace VanguardLTE\Games\bookofsunchoicebng
             $this->freespinCount = 10;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[4, 8, 10, 16, 20, 40, 50, 80, 100, 160, 200, 400, 500, 800, 1000]; 
             $this->Balance = $user->balance;
