@@ -273,11 +273,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $total = null;
             $joinusers = [];
             $confirmusers = [];
-            $title = '신규가입파트너';
+            $title = '신규가입 리스트';
             if (count($partner_users) > 0){
-                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN])->where('role_id','>', 1)->where('email', '')->whereIn('users.id', $partner_users)->get();
+                $joinusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::JOIN])->where('email', '')->whereIn('users.id', $partner_users)->get();
 
-                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED])->where('role_id','>', 1)->where('email','')->whereIn('users.id', $partner_users)->get();
+                $confirmusers = \VanguardLTE\User::orderBy('username', 'ASC')->where(['status' => \VanguardLTE\Support\Enum\UserStatus::UNCONFIRMED])->where('email','')->whereIn('users.id', $partner_users)->get();
             }
 
             $moneyperm = 0;
