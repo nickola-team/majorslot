@@ -154,7 +154,7 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '578' . substr($roundstr, 3, 9);
+                                $roundstr = '130' . substr($roundstr, 3, 7);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }else{
                                 
@@ -181,7 +181,7 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                                 $slotSettings->SetBank('', -1 * $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') / $this->demon);
                             }  
                             $gamelog = $slotSettings->GetGameData($slotSettings->slotId . 'GameLog');
-                            $slotSettings->SaveLogReport(json_encode($gamelog), $totalBet, 1, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, 'bet', $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), true);
+                            $slotSettings->SaveLogReport(json_encode($gamelog), $totalBet, 1, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, 'bet', 'GB' . $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), true);
                             $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                         }
                         array_push($result_vals, count($result_vals) + 1);
@@ -215,7 +215,7 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                         }
                         $totalBet = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet') * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                         $gamelog = $slotSettings->GetGameData($slotSettings->slotId . 'GameLog');
-                        $slotSettings->SaveLogReport(json_encode($gamelog), $totalBet, 1, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, 'bet', $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), true);
+                        $slotSettings->SaveLogReport(json_encode($gamelog), $totalBet, 1, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, 'bet', 'GB' . $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), true);
                     }
                 }
             }else if(isset($paramData['irq']) && $paramData['irq'] == 1){
@@ -547,7 +547,7 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                 array_push($log['actionlist'], $win_action);
 
                 $wager= [];
-                $wager['seq_no']                = $result_val['GamePlaySerialNumber'];
+                $wager['seq_no']                = 'GB' . $result_val['GamePlaySerialNumber'];
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
@@ -570,8 +570,8 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                 $wager['wager_type']            = 0;
                 $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon;
                 $wager['win_line_count']        = $result_val['WinLineCount'];
-                $wager['bet_tid']               =  'pro-bet-' . $result_val['GamePlaySerialNumber'];
-                $wager['win_tid']               =  'pro-win-' . $result_val['GamePlaySerialNumber'];
+                $wager['bet_tid']               =  'pro-bet-' . 'GB' . $result_val['GamePlaySerialNumber'];
+                $wager['win_tid']               =  'pro-win-' . 'GB' . $result_val['GamePlaySerialNumber'];
                 $wager['proof']                 = $proof;
                 $wager['sub']                   = [];
                 $wager['pick']                  = [];
