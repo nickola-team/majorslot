@@ -2,7 +2,7 @@
         'parentSection' => 'agent',
         'elementName' => 'agent-transaction'
     ])
-@section('page-title',  '파트너 지급내역')
+@section('page-title',  '지급내역')
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -58,23 +58,6 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats  mb-xl-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col ">
-                        <h3 class="card-title text-info mb-0 ">벳윈전환합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($total['ggr_out'])}}</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 @section('content')
@@ -100,7 +83,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">받는 유저이름</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
@@ -139,10 +122,11 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">받는 유저레벨</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="role" name="role">
                                     <option value="" @if (Request::get('role') == '') selected @endif>@lang('app.all')</option>
+                                    <option value="1" @if (Request::get('role') == 1) selected @endif> {{\VanguardLTE\Role::find(1)->description}}</option>
                                     @for ($level=3;$level<=auth()->user()->role_id;$level++)
 									<option value="{{$level}}" @if (Request::get('role') == $level) selected @endif> {{\VanguardLTE\Role::find($level)->description}}</option>
                                     @endfor
@@ -189,7 +173,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">파트너</th>
+                <th scope="col">받는 유저이름</th>
                 <th scope="col">지급자</th>
                 <th scope="col">지급자보유금</th>
                 <th scope="col">변동전 금액</th>

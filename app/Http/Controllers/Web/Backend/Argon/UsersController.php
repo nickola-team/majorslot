@@ -434,7 +434,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $statistics = \VanguardLTE\Transaction::select('transactions.*')->orderBy('transactions.created_at', 'DESC');
             $user = auth()->user();
-            $availablePartners = $user->hierarchyPartners();
+            $availablePartners = $user->availableUsers();
             $availablePartners[] = $user->id;
             $statistics = $statistics->whereIn('user_id', $availablePartners);
 
