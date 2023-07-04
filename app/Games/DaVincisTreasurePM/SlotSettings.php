@@ -106,7 +106,7 @@ namespace VanguardLTE\Games\DaVincisTreasurePM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,50.00,75.00,125.00,200.00,250.00,350.00,500.00,1000.00,1500.00,2000.00,2500.00,3000.00,3500.00,4000.00]; 
             $this->Balance = $user->balance;
