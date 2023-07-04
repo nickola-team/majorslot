@@ -179,7 +179,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '578' . substr($roundstr, 3, 9);
+                                $roundstr = '6587' . substr($roundstr, 3, 8);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 

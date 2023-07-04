@@ -1,0 +1,51 @@
+:root {
+    --slot-item-height: 35px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--1 {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.TmbWinInfo {
+    width: 50px;
+    height: 43px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 5px 5px 0
+}
+
+.TmbWinInfo__Value {
+    width: 45px;
+    margin-bottom: 10px
+}
+
+.TmbCountMs .MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+.WinLines-Block .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

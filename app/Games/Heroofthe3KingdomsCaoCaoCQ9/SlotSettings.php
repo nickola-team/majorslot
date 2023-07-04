@@ -127,7 +127,7 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
             $this->Balance = $user->balance;
@@ -860,7 +860,7 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('id', 1549)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('id', 111513)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -885,14 +885,14 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameHeroofthe3KingdomsCaocaoStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
