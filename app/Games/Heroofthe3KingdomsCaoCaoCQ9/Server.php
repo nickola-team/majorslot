@@ -174,12 +174,11 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
                             $result_val['FGContext'] = [["EwIPnGsT0HGisv4FpCrlheU2HV2G2sNUYoGE4sXxy1PU5PLRpRH6IFd+GEl44EkHwjik3jwj7HPnO/nstuHIZZ+du5x3arkyM3KQ3rMN79KjkuSwOypQIRQOPeFRy1xntEjxcZ2x79AyUyenXj8GiIlzRDGQHQLffhW7cIHPi0RyqZUXx3e1i2bKfgSyj2CXd3F47wVW1PvMoSXIAoFV8ICZ9LQpUjK9cRM3q5rm6unCVGQG6nmJT+AOiQcyUZByGBR8axZ26tNIUO7Km7V8Bl07w7QaNrDQomtnS+bjJ3hMh91DdERCEDNstaI=","0y0iebCIRxhtYKbTcuBArI0HMqq6B3J0rTtUeR0sbYxuFRVYctPncWGLEtCzYO4QZnLv3+hU1IEEThsFnRjjKXvdDxXPHuOL08C8IVuyTyZlb6IMx7Vr/GzwTBNravo5YJjVyKwNGvtSgIFXQZto682/xsRs7A644JDK23UtFP9QFFA3WEMbiXNXvHmBV1vG8YJ0zNvX+EYu+6vLN5YeLdpoIGpwiWNkIHXgWfPulFKjHguDH6ypt4fpqGCZEEzTCcXqo79Qgc+VN9HvkAbgmmJCp+WEXVc7DZ5HZ81vpLwuw3rRlqZ52hLCeiY=","pNKNYKbSpR2oBgRl5gB57oSN7rz2EgH6ZwCuSQdUuh3QJEiRNULRq5S74j2uIDLC55tWCB18HS2Jwh6p9tFhSLRD1TNWFUn/uJGYy7cCeN1dkNE3O5ruY1E2fc9q/ZhAY28z1df3rZeCaDhpi5SjPWHLrerH7xCQXb4XnSHBUWx0hTMbGd2BS0fADI9Kj3qm4U7IRiCDC6l+zm+CuQOzznUAqzAI7ssYcwv9D1fTK26IqHvkC0d3TO38uX2bhzPhRtBDuRlQ44yw1qM3DVSQkWnOT93JhyUnvf/JP0XRHlHfo2dwovn4UMeHsuY=","7ICJ3WL6e9cPmYluCmoTXfS6w8OWL6Yf44piJg4Xyp7DmCek33R8W2nTH4hmOJEWuG4JcpJqojtuQzJdwSOEKu7VD1DeOTfM6ZM5Zp7OU0/cRzuFRXh/N7MjK+ZLiViuxO4N4GIwywsE4MR2M2ZfBZXwSlBRPlhVkIGZlCcV3oaESyK9thKj4RltwlDUhyCzCm6s8HLUY44Jur0CJkQ8D96fAoIt3/kbYTo+qJ2/9oxKbKzk2vuCe1DiKRaMZnYmSOi6pE9oqAmdq2bONFKetFZoGed241KcmAa51BNdRS38/l1Ih8N/ndp/Rco=","DJegIqKacPsoNcZoGQjfEskPXzYI5DCDuggugSmhOWIRj43FDfG6bnxhihjpmtYwqMDsRfcSzHTP1P8FejLhN6z5LyNN3p9Dqi/AHGcav+YOJbqphMrLwORuEfX+fR0O8aE66Qv9Gz/2vR8Qlrjij3+vgoFgIgnxaIRet7CQLKKTZ/yPEm5dkjOqphntBObj0QytfcLSHyd81OANx6Ukm93DKYs9xbHYuwvjhesuEO67c+uHR2nowmT1ftxDOds6R2sBcWQNve3KsHqDQ6IotUb3+mnKwZnUCLX3BqGdjdfp707MXQasZWHclf8="]];
                         }else if($packet_id == 31 || $packet_id == 42){
+                            $lines = 50;
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                $lines = $gameData->PlayLine;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
@@ -203,7 +202,7 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '578' . substr($roundstr, 3, 9);
+                                $roundstr = '130' . substr($roundstr, 3, 7);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 
@@ -265,7 +264,7 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        $lines = 50;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -392,7 +391,7 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline /  $this->demon) * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline /  $this->demon) * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, $slotEvent, 'GB' . $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
 
             if($slotEvent != 'freespin' && $freespinNum > 0){
@@ -481,7 +480,7 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
                 array_push($log['actionlist'], $win_action);
 
                 $wager= [];
-                $wager['seq_no']                = $result_val['GamePlaySerialNumber'];
+                $wager['seq_no']                = 'GB' . $result_val['GamePlaySerialNumber'];
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
@@ -504,8 +503,8 @@ namespace VanguardLTE\Games\Heroofthe3KingdomsCaoCaoCQ9
                 $wager['wager_type']            = 0;
                 $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon;
                 $wager['win_line_count']        = $result_val['WinLineCount'];
-                $wager['bet_tid']               =  'pro-bet-' . $result_val['GamePlaySerialNumber'];
-                $wager['win_tid']               =  'pro-win-' . $result_val['GamePlaySerialNumber'];
+                $wager['bet_tid']               =  'pro-bet-' . 'GB' . $result_val['GamePlaySerialNumber'];
+                $wager['win_tid']               =  'pro-win-' . 'GB' . $result_val['GamePlaySerialNumber'];
                 $wager['proof']                 = $proof;
                 $wager['sub']                   = [];
                 $wager['pick']                  = [];
