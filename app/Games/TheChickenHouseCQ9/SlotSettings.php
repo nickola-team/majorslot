@@ -127,7 +127,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
             $this->Balance = $user->balance;
@@ -860,7 +860,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTheChickenHouseStack::where('id', 6576)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTheChickenHouseStack::where('id', 15652)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -891,7 +891,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                     $purs = [-1, 1];
                     $stacks = $stacks->whereIn('pur_level', $purs);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
