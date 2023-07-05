@@ -34,6 +34,7 @@
     </li>
 </ul></td>
 <td>{{ number_format($adjustment->dealout,0) }}</td>
+@if (auth()->user()->isInoutPartner())
 <td><ul>
     <li class="bw-title">
         <span class='text-green'>배팅 : {{number_format($adjustment->totalbet)}}</span>
@@ -59,8 +60,40 @@
         </div>
         @endif
     </li>
+    <li>
+        벳윈 : {{ number_format($adjustment->totalbet-$adjustment->totalwin,0) }}
+    </li>
 </ul></td>
-<td>{{ number_format($adjustment->totalbet-$adjustment->totalwin,0) }}</td>
+@endif
+<td><ul>
+    <li class="bw-title">
+        <span class='text-green'>배팅 : {{number_format($adjustment->totaldealbet)}}</span>
+        @if (auth()->user()->hasRole('admin'))
+        <div class="bw-btn ">
+            <form method="POST">
+                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
+                <input type='text' name="totaldealbet" value="{{$adjustment->totaldealbet}}" style="width:80px;">
+                <button type="submit" class="btn-sm btn-warning">수정</button>
+            </form>
+        </div>    
+        @endif
+    </li>
+    <li class="bw-title">
+        <span class='text-red'>당첨 : {{number_format($adjustment->totaldealwin)}}</span>
+        @if (auth()->user()->hasRole('admin'))
+        <div class="bw-btn ">
+            <form method="POST">
+                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
+                <input type='text' name="totaldealwin"  value="{{$adjustment->totaldealwin}}" style="width:80px;">
+                <button type="submit"class="btn-sm btn-warning">수정</button>
+            </form>
+        </div>
+        @endif
+    </li>
+    <li>
+        벳윈 : {{ number_format($adjustment->totaldealbet-$adjustment->totaldealwin,0) }}
+    </li>
+</ul></td>
 <td>
     <ul>
     <li>총죽장 : {{ number_format($adjustment->total_ggr,0)}}</li>
@@ -75,7 +108,22 @@
     <li>본인롤링 : {{ number_format($adjustment->total_deal-$adjustment->total_mileage,0)}}</li>
     </ul>
 </td>
-<td>{{ number_format($adjustment->balance+$adjustment->childsum,0)}}</td>
+<td>
+    <ul>
+    <li>총보유금 : {{ number_format($adjustment->balance+$adjustment->childsum,0)}}</li>
+    <li>본인 보유금 : {{ number_format($adjustment->balance,0)}}</li>
+    <li>유저 보유금 : {{ number_format($adjustment->user_sum,0)}}</li>
+    <li>파트너 보유금 : {{ number_format($adjustment->partner_sum,0)}}</li>
+    </ul>
+</td>
+<td>
+    <ul>
+    <li>총롤링금 : {{ number_format($adjustment->deal_balance - $adjustment->deal_mileage + $adjustment->partner_dealsum + $adjustment->user_dealsum,0)}}</li>
+    <li>본인 롤링금 : {{ number_format($adjustment->deal_balance - $adjustment->deal_mileage,0)}}</li>
+    <li>유저 롤링금 : {{ number_format($adjustment->user_dealsum,0)}}</li>
+    <li>파트너 롤링금 : {{ number_format($adjustment->partner_dealsum,0)}}</li>
+    </ul>
+</td>
 @if (isset($sumInfo) && $sumInfo!='')
 @else
 @if (auth()->user()->hasRole('admin'))
