@@ -31,7 +31,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if (count($param) > 2)
             {
                 $enddate = $param[2];
-                $summary = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $date)->where('date', '<=', $enddate)->whereIn('user_id', $users)->selectRaw('sum(totalin) as totalin, sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, user_id, "" as date')->get();            
+                $summary = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $date)->where('date', '<=', $enddate)->whereIn('user_id', $users)->selectRaw('sum(totalin) as totalin, sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(totaldealbet) as totaldealbet,sum(totaldealwin) as totaldealwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, user_id, "" as date')->get();            
                 $sumInfo = $date .'~' .$enddate;
             }
             else
@@ -141,6 +141,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $eventString .= '당첨금 / ' . $summary->totalwin . '=>' . $request->totalwin;
                 $summary->update(['totalwin' => $request->totalwin]);
             }
+
+            if ($request->has('totaldealbet'))
+            {
+                $eventString .= '공베팅금 / ' . $summary->totaldealbet . '=>' . $request->totaldealbet;
+                $summary->update(['totaldealbet' => $request->totaldealbet]);
+            }
+
+            if ($request->has('totaldealwin'))
+            {
+                $eventString .= '공당첨금 / ' . $summary->totaldealwin . '=>' . $request->totaldealwin;
+                $summary->update(['totaldealwin' => $request->totaldealwin]);
+            }
+
             event(new \VanguardLTE\Events\GeneralEvent($eventString));
             return redirect()->back()->withSuccess(['정산데이터를 수정했습니다']);
         }
@@ -261,6 +274,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'dealout' => $summary->sum('dealout'),
                 'totalbet' => $summary->sum('totalbet'),
                 'totalwin' => $summary->sum('totalwin'),
+                'totaldealbet' => $summary->sum('totaldealbet'),
+                'totaldealwin' => $summary->sum('totaldealwin'),
                 'total_deal' => $summary->sum('total_deal'),
                 'total_mileage' => $summary->sum('total_mileage'),
                 'total_ggr' => $summary->sum('total_ggr'),
