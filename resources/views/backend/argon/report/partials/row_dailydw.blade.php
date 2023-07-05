@@ -61,7 +61,7 @@
         @endif
     </li>
     <li>
-        벳윈 : {{ number_format($adjustment->totalbet-$adjustment->totalwin,0) }}
+        정산금 : {{ number_format($adjustment->totalbet-$adjustment->totalwin-$adjustment->total_deal,0) }}
     </li>
 </ul></td>
 @endif
@@ -91,7 +91,7 @@
         @endif
     </li>
     <li>
-        벳윈 : {{ number_format($adjustment->totaldealbet-$adjustment->totaldealwin,0) }}
+        정산금 : {{ number_format($adjustment->totaldealbet-$adjustment->totaldealwin-$adjustment->total_deal,0) }}
     </li>
 </ul></td>
 <td>

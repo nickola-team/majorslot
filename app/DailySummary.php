@@ -182,8 +182,16 @@ namespace VanguardLTE
 
                 $query = 'SELECT SUM(bet) as totaldealbet, SUM(win) as totaldealwin, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $shop->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
                 $deal_logs = \DB::select($query);
-                $adj['totaldealbet'] = $deal_logs[0]->totaldealbet??0;
-                $adj['totaldealwin'] = $deal_logs[0]->totaldealwin??0;
+                if ($shop->deal_percent > 0)
+                {
+                    $adj['totaldealbet'] = $deal_logs[0]->totaldealbet??0;
+                    $adj['totaldealwin'] = $deal_logs[0]->totaldealwin??0;
+                }
+                else
+                {
+                    $adj['totaldealbet'] = $adj['totalbet'];
+                    $adj['totaldealwin'] = $adj['totalwin'];
+                }
                 $adj['total_deal'] = $deal_logs[0]->total_deal??0;
                 $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
                 $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
