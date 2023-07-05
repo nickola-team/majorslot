@@ -226,7 +226,7 @@
                                             <span class='text-red'>당첨 : {{number_format($total['totalwin'])}}</span>
                                         </li>
                                         <li>
-                                            벳윈 : {{number_format($total['totalbet']-$total['totalwin'])}}
+                                        정산금 : {{number_format($total['totalbet']-$total['totalwin'] - $total['total_deal'])}}
                                         </li>
                                     </ul></td>
                                     @endif
@@ -238,7 +238,7 @@
                                             <span class='text-red'>당첨 : {{number_format($total['totaldealwin'])}}</span>
                                         </li>
                                         <li>
-                                            벳윈 : {{number_format($total['totaldealbet']-$total['totaldealwin'])}}
+                                            정산금 : {{number_format($total['totaldealbet']-$total['totaldealwin'] - $total['total_deal'])}}
                                         </li>
                                     </ul></td>
                                     <td>
