@@ -201,8 +201,8 @@ namespace VanguardLTE
                 // $in_out = \DB::select($query);
                 // $adj['balance'] =  $in_out[0]->balance??0;
                 $adj['balance'] = $shop->balance;
-                $adj['deal_balance'] = $shop->deal_balance;
-                $adj['deal_mileage'] = $shop->deal_mileage;
+                $adj['deal_balance'] = $shop->deal_balance??0;
+                $adj['deal_mileage'] = $shop->mileage??0;
                 $adj['shop_id'] = $shop->id;
                 $adj['name'] = $shop->name;
                 $adj['role_id'] = $user->role_id;
@@ -307,11 +307,11 @@ namespace VanguardLTE
                     $adj['user_dealsum'] = $in_out[0]->dealsum??0;
                     $adj['partner_dealsum'] = 0;
 
-                    $query = 'SELECT balance, deal_balance, deal_mileage FROM w_shops_snapshot WHERE id=' . $user->shop_id;
+                    $query = 'SELECT balance, deal_balance, mileage FROM w_shops_snapshot WHERE id=' . $user->shop_id;
                     $in_out = \DB::select($query);
                     $adj['balance'] =  $in_out[0]->balance??0;
                     $adj['deal_balance'] =  $in_out[0]->deal_balance??0;
-                    $adj['deal_mileage'] =  $in_out[0]->deal_mileage??0;
+                    $adj['deal_mileage'] =  $in_out[0]->mileage??0;
                 }
                 $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
@@ -461,11 +461,11 @@ namespace VanguardLTE
                     $adj['moneyout'] = $adj['moneyout'] + $in_out[0]->moneyout;
                 }
 
-                $query = 'SELECT balance,deal_balance,deal_mileage FROM w_users_snapshot WHERE id=' . $user->id;
+                $query = 'SELECT balance,deal_balance,mileage FROM w_users_snapshot WHERE id=' . $user->id;
                 $in_out = \DB::select($query);
                 $adj['balance'] =  $in_out[0]->balance??0;
                 $adj['deal_balance'] =  $in_out[0]->deal_balance??0;
-                $adj['deal_mileage'] =  $in_out[0]->deal_mileage??0;
+                $adj['deal_mileage'] =  $in_out[0]->mileage??0;
 
                 $dailysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->first();
                 if ($dailysumm)
@@ -637,8 +637,8 @@ namespace VanguardLTE
                 }
 
                 $adj['balance'] =  $user->balance;
-                $adj['deal_balance'] =  $user->deal_balance;
-                $adj['deal_mileage'] =  $user->deal_mileage;
+                $adj['deal_balance'] =  $user->deal_balance??0;
+                $adj['deal_mileage'] =  $user->mileage??0;
             }
 
             $adj['date'] = $day;
