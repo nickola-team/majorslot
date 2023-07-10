@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\FireCBCQ9
+namespace VanguardLTE\Games\Thor2CQ9
 {
     class SlotSettings
     {
@@ -571,34 +571,6 @@ namespace VanguardLTE\Games\FireCBCQ9
         public function GetSpinSettings($garantType = 'bet', $bet, $lines)
         {
             $_obf_linecount = 10;
-            switch( $lines ) 
-            {
-                case 10:
-                    $_obf_linecount = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_linecount = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_linecount = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_linecount = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_linecount = 3;
-                    break;
-                case 1:
-                    $_obf_linecount = 1;
-                    break;
-                default:
-                    $_obf_linecount = 10;
-                    break;
-            }
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -659,6 +631,13 @@ namespace VanguardLTE\Games\FireCBCQ9
                     'win', 
                     $_obf_currentbank
                 ];
+                if( $_obf_currentbank < 0) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
@@ -677,34 +656,6 @@ namespace VanguardLTE\Games\FireCBCQ9
         public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $_obf_linecount = 10;
-            switch( $lines ) 
-            {
-                case 10:
-                    $_obf_linecount = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_linecount = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_linecount = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_linecount = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_linecount = 3;
-                    break;
-                case 1:
-                    $_obf_linecount = 1;
-                    break;
-                default:
-                    $_obf_linecount = 10;
-                    break;
-            }
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -894,10 +845,22 @@ namespace VanguardLTE\Games\FireCBCQ9
             ];
             return $data;
         }
-        public function GetReelStrips($winType, $bet)
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'RealBet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'RealBet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+        public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFireCBStack::where('id', 772)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameThor2Stack::where('id', 4083)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -918,18 +881,21 @@ namespace VanguardLTE\Games\FireCBCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFireCBStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameThor2Stack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFireCBStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameThor2Stack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                if($pur >= 0){
+                    $stacks = $stacks->where('pur_level', $pur);
+                }
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
