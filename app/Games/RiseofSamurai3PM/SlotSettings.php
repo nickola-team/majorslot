@@ -745,16 +745,11 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }else if($winType == 'bonus'){
-                    if($pur < 0){
-                        if(mt_rand(0, 100) <= 80){
-                            $pur = 0;
-                        }
-                    }
                     $stacks = $stacks->where('pur_level', $pur);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 10);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
