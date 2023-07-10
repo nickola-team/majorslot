@@ -1121,6 +1121,7 @@ return [
         "FatPanda" => "팻 판다",
         "JewelRush" => "쥬얼 러시",
         "PiratesPub" => "파이럿스 펍",
+        "WisdomofAthena" => "위즈덤 오브 아테나",
 
         //Booongo
         "tigerstone" => "타이거 스톤",

@@ -99,7 +99,7 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
@@ -745,16 +745,11 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }else if($winType == 'bonus'){
-                    if($pur < 0){
-                        if(mt_rand(0, 100) <= 80){
-                            $pur = 0;
-                        }
-                    }
                     $stacks = $stacks->where('pur_level', $pur);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 10);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
