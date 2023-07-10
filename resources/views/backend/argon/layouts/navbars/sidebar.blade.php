@@ -95,7 +95,7 @@
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{{argon_route('argon.agent.joinlist')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                <span class="nav-link-text text-white">신규가입파트너</span>
+                                <span class="nav-link-text text-white">신규가입리스트</span>
                             </a>
                         </li>
                         @endif
