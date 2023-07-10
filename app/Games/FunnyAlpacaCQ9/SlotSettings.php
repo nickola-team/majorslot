@@ -865,8 +865,8 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFunnyAlpacaStack::where('id', 107780)->first();
-                //   return json_decode($stack->spin_stack, true);
+                  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFunnyAlpacaStack::where('id', 999)->first();   //4310,999
+                  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -890,7 +890,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFunnyAlpacaStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 38000);
+                $index = 0;// mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

@@ -631,7 +631,7 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                     'win', 
                     $_obf_currentbank
                 ];
-                if( $_obf_currentbank < 0) 
+                if( $_obf_currentbank < $bet) 
                 {
                     $return = [
                         'none', 
@@ -876,7 +876,7 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
             while(true){
                 $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMummysTreasureStack::where('pur_level', $bomb_value)->whereNotIn('id', $existIds);
                 $index = mt_rand(0, 48000);
-                if($winType == 'win'){
+                if($winType == 'win' && $isLowBank == false){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
