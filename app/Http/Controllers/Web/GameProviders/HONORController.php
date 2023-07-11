@@ -694,7 +694,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             catch (\Exception $ex)
             {
                 Log::error('HONORAgentBalance : agentbalance Exception. Exception=' . $ex->getMessage());
-                Log::error('HONORAgentBalance : agentbalance Exception. PARAMS=' . json_encode($params));
+                Log::error('HONORAgentBalance : agentbalance Exception. PARAMS=');
                 return -1;
             }
 

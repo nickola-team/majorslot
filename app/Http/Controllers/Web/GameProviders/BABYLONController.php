@@ -51,8 +51,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $param['agentid'] = $op;
             $param['apikey'] = $token;
             try {
+                if ($header){
+                    $response = Http::withHeaders($header)->get($url, $param);
+                }
+                else
+                {
+                    $response = Http::get($url, $param);
+                }
                 
-                $response = Http::withHeaders($header)->get($url, $param);
                 
                 if ($response->ok()) {
                     $res = $response->json();
@@ -153,7 +159,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'title' => $game['name_kor'],
                         'type' => 'table',
                         'icon' => $game['img_1'],
-                        'view' => 0
+                        'view' => $view
                     ]);
                 }
 
@@ -178,9 +184,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function makegamelink($gamecode, $user) 
         {
-
+            $gameObj = BABYLONController::getGameObj($gamecode);
+            if (!$gameObj)
+            {
+                return null;
+            }
+            $thirdpartycode = BABYLONController::BABYLON_GAME_IDENTITY[$gameObj['href']];
             $params = [
-                'thirdpartycode' => 'game_launch',
+                'thirdpartycode' => $thirdpartycode['thirdname'],
                 'userid' => self::BABYLON_PROVIDER . sprintf("%04d",$user->id),
                 "gamecode" =>  $gamecode,
                 'platform' => 'pc'
@@ -219,7 +230,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $header = [
                             'Authorization' => 'Bearer ' . $access_token
                         ];
-                        $data = BABYLONController::sendRequest('/money/withdrawal', null, $header);
+                        $param = [
+                            'amount' => $balance
+                        ];
+                        $data = BABYLONController::sendRequest('/money/withdrawal', $param, $header);
                         if ($data==null || $data['result'] != 1)
                         {
                             return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
@@ -355,7 +369,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($from == '')
             {
-                $roundfrom = date('Y-m-d H:i:s',strtotime('-2 hours'));
+                $roundfrom = date('Y-m-d H:i:s',strtotime('-12 hours'));
                 $lastround = \VanguardLTE\StatGame::whereIn('category_id', $category_ids)->orderby('date_time', 'desc')->first();
                 if ($lastround)
                 {
@@ -420,11 +434,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $bet = 0;
                             $win = 0;
                             $balance = -1;
-                            if ($round['type'] == 'betting')
+                            if ($round['actions'] == 'betting')
                             {
                                 $bet = abs($round['amount']);
                             }
-                            else if ($round['type'] == 'win')
+                            else if ($round['actions'] == 'win')
                             {
                                 $win = abs($round['amount']);
                                 if ($win == 0)
@@ -447,6 +461,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $category = \VanguardLTE\Category::where('provider', self::BABYLON_PROVIDER)->where('href', $game['href'])->where(['shop_id'=>0, 'site_id'=>0])->first();
 
                             $userid = intval(preg_replace('/'. self::BABYLON_PROVIDER .'(\d+)/', '$1', $round['userid']));
+                            if ($userid == 0)
+                            {
+                                continue;
+                            }
                             $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
 
                             $checkGameStat = \VanguardLTE\StatGame::where([
@@ -488,52 +506,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     $curPage = $curPage + 1;
                 } while ($data!=null);
-                sleep(60);
+                // sleep(60);
                 $start_timeStamp = $curend_timeStamp;
             }while ($start_timeStamp<$end_timeStamp);
             return [$count, 0];
         }
 
-        public static function getgamedetail(\VanguardLTE\StatGame $stat)
-        {
-            $betrounds = explode('#',$stat->roundid);
-            if (count($betrounds) < 3)
-            {
-                return null;
-            }
-            $txn_no = $betrounds[2];
-            
-            $data = BABYLONController::gamerounds($txn_no, 0);
-            if ($data==null || $data['status'] != 1)
-            {
-                return null;
-            }
-
-
-            $betdetails = null;
-            $gametype = 'gold';
-            $result = null;
-            foreach ($data['data'] as $bet)
-            {
-                if ($bet['txn_type'] == 'CREDIT' && $bet['txn_no'] == $txn_no)
-                {
-                    $gametype = $bet['type'];
-                    $betdetails = json_decode($bet['detail'], true);
-                    $betdetails['betType'] = $bet['type'];
-                    $betdetails['bet_money'] = $bet['bet_money'];
-                    $betdetails['win_money'] = $bet['win_money'];
-                    $betdetails = json_encode($betdetails);
-                    break;
-                }
-            }
-
-            return [
-                'type' => $gametype,
-                'result' => $result,
-                'bets' => $betdetails,
-                'stat' => $stat
-            ];
-        }
+        
 
 
         public static function getAgentBalance()
@@ -541,11 +520,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $balance = -1;
 
-            $data = BABYLONController::moneyInfo(null);
+            $data = BABYLONController::sendRequest('/money/agentinfo',null);
 
-            if ($data && $data['status'] == 1)
+            if ($data && $data['result'] == 1)
             {
-                $balance = $data['agent']['balance'];
+                $balance = $data['data']['account'];
             }
             return intval($balance);
         }
