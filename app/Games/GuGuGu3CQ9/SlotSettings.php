@@ -991,7 +991,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             return \VanguardLTE\Http\Controllers\Web\GameProviders\CQ9Controller::getRecommendList($this->shop_id, $this->slotDBId);
         }
         public function GetNewGameLink($game_label){
-            $game = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => $this->shop_id, 'label' => $game_label])->first();
+            $game = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => $this->shop_id, 'label' => $game_label])->whereRaw('name like "%CQ9"')->first();
             if($game == null){
                 return "";
             }else{
