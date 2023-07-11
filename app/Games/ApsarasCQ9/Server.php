@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\TheChickenHouseCQ9
+namespace VanguardLTE\Games\ApsarasCQ9
 {
     class Server
     {
@@ -40,7 +40,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             // $paramData = trim(file_get_contents('php://input'));
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
-            $originalbet = 3;
+            $originalbet = 1;
             $slotSettings->SetBet();
             if(isset($paramData['req'])){
                 if($paramData['req'] == 1){ // init
@@ -79,14 +79,14 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                             $result_val['BetButton'] = $betButtons;
                             $result_val['DefaultDenomIdx'] = 3;
                             $result_val['MaxBet'] = $slotSettings->Bet[count($slotSettings->Bet) - 4] * $this->demon;
-                            $result_val['MaxLine'] = 20;
+                            $result_val['MaxLine'] = 1;
                             $result_val['WinLimitLock'] = 300000000;
                             $result_val['DollarSignId'] = 4;
                             $result_val['EmulatorType'] = $emulatorType;
                             $result_val['GameExtraDataCount'] = 0;
                             $result_val['ExtraData'] = null;
                             $result_val['ExtendFeatureByGame'] = null;
-                            $result_val['ExtendFeatureByGame2'] = [["name" => "FG1_MinBet","value" => "4000"],["name" => "FG2_MinBet","value" => "2400"]];
+                            $result_val['ExtendFeatureByGame2'] = null;
                             $result_val['GameFlowBranch'] = 0;
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                             $result_val['FreeSpinLeftTimesInfoList'] = null;
                             $result_val['RecommendList'] = $slotSettings->getRecommendList();
                             $result_val['MemberSystemInfo'] = ["lobby"=>"","mission"=>"","playerInterfaceURL"=>"","item"=>["freeTicket"=>false,"payAdditionCard"=>false]];
-                            $result_val['Tag'] = ["g"=>"241","s"=>"5.27.1.0","l"=>"1.1.60","si"=>"34"];
+                            $result_val['Tag'] = ["g"=>"39","s"=>"5.27.1.0","l"=>"2.5.2.5","si"=>"38"];
                         }else if($packet_id == 12){
                             $result_val['BGStripStartID'] = 0;
                             $result_val['FGStripStartID'] = 50;
@@ -109,47 +109,30 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                             // $result_val['BGContext'] = [[implode(',', $slotSettings->reelStrip1) , implode(',', $slotSettings->reelStrip2), implode(',', $slotSettings->reelStrip3), implode(',', $slotSettings->reelStrip4), implode(',', $slotSettings->reelStrip5)]];
                             $result_val['BGContext'] = [
                                 [
-                                    "ObGHTJ5BCwsQHYfhJTXpu08DM5Bak0dIRsqVpGYx4a8+hMqSYV/phMPL24xUZ1JlSpQVe/cYenw4k/JkspIEE7z64zQx3vN0j+ZAqaL0HlvFwTxhIQqf6pLgIxyVao9s3iCExI0iyDr2ZQruGXYWqfmBUQl+oiDZqeHDM/gJx3Clzmvfr7h148GOn0+BiLBR6+Ncir843PtjncClMz89iuHCO81pdqcTMpFYZ+jVfZiq84T3AzokBoCllc8OVwA1Mmj+X3M3GkLnyQ8ciLHUulliCX2qmRKqOTfoPM/unEKbht5NxHftnqvyXBunXhZudFvjMCFCWytKYCY0/sTOUGJb34Ezer0ZZwfpwnHOAd2n0IjqJ2kwodU8LnqwWbV/1devMz7zcr6ss4FvL9CiJTDyC1qGkY5qGduJ+yzakp4LGsocY31POCfGdIrLiCyx92LSvgUzytqt8MSKedCQ9ZK/6RSFMLsgIEU92oNr6fUEGin7sZ6nXjSqNdf9pqyt7WM0FGK+8msOlJriHccqtKVE+iYVbvcFRqwPIJixYccW9c1+jzB/RNghoeM=",
-                                    "CaZGpttDRijH2iJfttZ1zY5dy2pUc0bmc4q8QWzOS4kvoaEDT/Pg67fxwbneX31Lj4sfgil7Fs1yj7e3f59DA2GeKARJ8M3TBeOsHvq+rbRSirRS+feq78Q7D/li6HeHGU73EgjtUPbgiXcE4NPHMIw4yalmy47tGuSMNuVE9Fo78hX3Kgw/mpp6iXaNWlKDmwmDXIIkEbjWuHttn6ZjxNDWkoiwv9vl+VXXs489zf/JkesLd0/0GhVHdBakfVSDed+79KrIvjEWHBaQqFQnMFS9zaPb35d/evlCWrO+OcnPcf/eVfqknWuMPxxwgSWNLOg0AJjLLfcs+ycrjE6PltpMhVB7EvauphkoFSgW6B1gafo6fRlhbiaAPwM4qsTrnSrxZHI8ItRiF/moW+c4wavum/49g1DRIygaaNjqIPF800BZhBafF3Y39WVll2CExYU331zHfkImHxnmejJySqe0Ak/CwBKSq2J/4lNb6GPqOFJqHvmiMTuke5bFhbZbzXqJCOW0dlvulmx3nbuPCNQLf+I8SS57h+9HJnUqz5O8qsJYdCgVCkd3LzQ=",
-                                    "b1ExTfS8RQAMEyvVu8S332NBGDBTEykoH8gZtk6qpD2q3O2FWK8Bp9r4cDobQhPgsVwA/Dx6nJdW7BCYYNOLnWILiZ53D4l9kzvFp9f04yHguX/+FaC8yz4sgmNlOpgo4zZEDwtVEGGRwVGz15q87yix3un35XFRtQJUlbFKy3Ml63VsPcAWO/CITpHX3kJpw32uDgqu8AvEs2ZgWGql9IixLWMNd9IdNOJmP6EDld5HF1rI34GvcUXK4kekGB+SfLBhYp29IrdmP8DftWVmXRNbBNbP3BwPwRh5V/0ztLwYFUE84zMqaWzIvPIb+flxGf4HQewKmyyXlPMEqzIrIzHMS65SqGYXbZerpvZf8d7uLG/s5Tmx+vnCO9TmsY4JSRDqTVdHWlT80pL/WNZE84RuXXlO16dxqDAytznzbnAkT3Cm8TiUZVbJdBZuQh8XEXemnG/CgJZfyVzoLdZhDHm4xgRdVKRt4+7o7yncn2r2gXJT/dCp/1UNMtUxpGJU0jeoFefkaEFf+ZtZW6gyWRq9fQ+YgnA6lcHkfg==",
-                                    "GRq7A7dFwcbXUdtV6XT3aOgLvqcqag5lrJeVV7OOAb0He2H2oWX4HDmWkUMzxhqmA06z7nB+pWfbuh3guxiMsmTpFp3jBdqytiD3DXymbYr602fwFfjMYbQuei19hj4dK/E+9FT+rIOyc2gAeWZFO4PV31/mvaKfWv7DN3qny8dVk0JWk+k6QrGX79Lm0DPRw8n8uVUQGADgrL5ocbJqpi75Xdhl4mpvZDzfm9u2qOE+5syp72No6UzZJ9a8IoT2VOligSGlk5RrcjG061V+pBcQdkfYRW0fiFjCDPRT1sECZyvYukLihIK5waIixjfu7nuhMUKRU2D5HEAyP39WhEY/5DrxoPmjJYLEWlmlOqDIlNWFpdMGJU/CZQGDo6nnK7YiU6TVnEwGdxO4vsxd/Xzti7hqL+iQ82COENL6y9nCjN0IdLdrxQddE30gOQ2oceAmw2aLv4pPbx0lZC/H2fZzV3i2BxXNRZVX1mLAdFqyFeLDWBB/1dthfPr6IKoCY6pSytNomwsR+i7L2xX/I41jStV8LZzri1vQYJvwk0kdREvvXbcrC1EXjPQ=",
-                                    "WMFWKsh9RakkCfZu2SwKa5MuDy8/jy9yh8bPuf4Xm4oqsIUOdMMVlprBcf8TxoR6eZEZxBQphsfkMdj1RA+xGKANXW63WIZDBy9DmFPtZNT+4PvUuqxRxoqQ4k4FqcuPAk1JD9P5g/RFZaCtbEyEzZ14BLQFmHrVlXBgbDAtr6J3TZ6G5NxWdUcwzh9iMP/n63ucSnGelEiUh2gA7RZiok9pp8wgrBaaHQRKOeqapoqlTlAXxd+J5q0JmeF8O3iwFTYniCz//YCbYnM86NqINlFhd9EdSzxnNNU6LE6/WPLovgfQ3LBHa8/ZJKdJlXrNR7sj4GaGPScR2O+1k7Qxf/SbZkWQ8qtd0/D6zuykx8HKJ8sEuxI7mjFB4YdxB24MwGv+2xqJOhiTajnorlNhlbT56HpkqP2X0NVfrXYge1ZTrKLTjG2oK9F7gYAiHfN40Nf4eOJfS31uawBw8qcSu/vxQ28XlqZxp0+TIwk3uZjEb+TeMO3AzcJnIG6ar93OsigHHGFFL/D+IoWe533X8/N3XxVoCT0rviiGbXxv+xu21L8PmPQFxlcuSO0K+fh04gUEw9vMaC5ICZID"
+                                    "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"
                                 ]
                             ];
-                            $result_val['FGStripCount'] = 2;
-                            $result_val['FGContext'] = [[
-                                "t5CjRDQnWe455ZEdkyytTEzzWjhCn8MZt6q423lh0/02a8KlJazZ3VWdClZrP6pYrwsT+CQolSsE6NoHqDau3YH5ZYwI1EgjFtICjR8dltE7oAX4tIDCIv8XzL3QVZhydYvYOhCAtVCUJfTSHi8RAuORkIIBdq6NC+kiq9LD8/V0XIAO2i5pz9mRIDprYGT4p6K/68xFbJKRS5eF5QM6F/iFWVyqITEfe5cu1O4EmJHsy99NuKBlrhhHcOk0AgJvoNRE3VZstJ0QtMaxCr5JRKFc/6JAhCMr40Xz/jq+d3ppQw0XAm/ZlAgcuS4M+StQUvz1nzaZoyU3/9nH",
-                                "0OpPICg9kiQ28QERHlGSREVx6KnhTpqg3DyRnP8dlJYrQuNPsKAXQ7Avue0H+ByU2lj2yz+MwSWC9p60XcK7gx1cUu4B88xo7Yq7tikcBVZ08u6jAU4OkTmEoksLNioYo29QphgdZ9MLc2rXroiKmk/yJUVPBFh+DLrBdqo1296Ef/wWTLvNsr8045jx2vb5zvgjMX1HsQMCAr8r9vO/wzZWzjaJSs9qrHXlHLOXjS9oMR5ab3D4+rY481KZOSuK/8ZQF8hiXrAeQ6CFA+ksTPOOtH0RkNWDCHz7n4A5eYT9At4ibpAkXsXZCiONetg3iGA53ipUrWMee6f8l56BC3GhW6m9Ea0/lzyyX+bEdhIlIGpHgtqtuXJxcfEXCGDn3KdQTllVB1ZygiWU",
-                                "2QbTsQDDzeY2cD4OmjbI1Iu6bjsl6IC7yF7M8vtl5RUgRXWX7b/po68mVjFOIPj2a6eOBX4jyUVVbi9SoVrsNalml4Y9gqtv4RiAD2NFqXT0avSBOlAU56ctKcEXKPwtPx2Qij6H8ivuPP4z9xJwHBBV3Yd/EmwD7u2vA2zCjJSZxbkFDJLnaXUdSg3FrHYiX+iaHc5xU5IKss6CbRkuTxq9o0AU5jXLlS5eqgWx1FHz+6sAn+2fNiLug47E8vC1y6keanI96GsNZv6IxzY8rfUqSAVEwdUbm/1/SGdtLraQNLiyCjUHezPpzg7r3wovanQs0Woa6PW40uoFNdxdwzDjbrIdoADNOdMMt3OGAxxDdeOdQ4jTTwQGBbYcZv9gRWze4Bq7KovuCjxxL9qXzLkZBU7l1QzsGcyVTA0wXt+vgttrHOnXWVRdVa92GiffzeAVXmANbkdl586r",
-                                "0akcfKz7v2d0ovf464IeFjme2Il96cAB0xPW7NrP7/K9+cLskxzzkc/A36Gpf5BTOAcpm6fAqmYaBhGg+atdybyDS9lRsxdXY7tXh8V0z0hcoRbgBL7R+CfYGJ+WjWDtHhr7FbwFiJkBISNGii9RsU7ED235mDTD2poxTG/Yy+OK5uRGzn43j4p9czwsjONQcn6Zh8CcfAGxryInuOdhLFFLQ7HQUeM5/iYjY9bTDYYNKFgm31H/zi+F6GZ6usoEzbL01PdUEndLgEQeNk7K4jj7RMiukNgPMmYANTRSpo7m5iQ9B/G9FTx0jb1WT50wZKvukuDWTMBjvlG9B8SdGj7n+MWgKcwhkGhN3GuOiniSuBA0xwOuLlpewNkSm78XJG9Npn/MzwXtTtByAtUIp/DGfF9hcpLRttZe98tOhgBZhSsL/GtTqSLMGEt25KHJ4EUhNF45SxTLjp6OeEPPtK/6/ouLvpBswJgLHw==",
-                                "LSO7lzSTljnoVKfZnc41pl13UJf0VVaB00b1Exw8PEiJTmNeTy0oQC950w5rHp27bLcNyYP+UzbcYaEgcAYseYV+ZhscZED4V4CsFtOqTGQ+kGA7cLOvK4MsJ/jtmTL3MBykBRYKYIeMekNEqNu8Iz6zjVEdixKpA2z9UWvcD8k4NwHeLVYJgDW5zSV0zDqvcIcWTeoJcpOQ2dhtrzsnTvAOoB2AIL01OC2ftCON1MT5LXbbe/9vRqszCL2RyBp1z8nKJ9RqQs0K8CwfZfxE8eRd36zGLlhFKcEa86trkWJ1t3M+EA0kelzqVzdocY9gTMToxElxqvyMV8RlYAgvlWWG/2il6HQNRvWk0M4UNM7Ew3bZZScjBe9mA+ldymy2tvAnLiq13eej9t9KLhw4ec0/W703KWkivwm0kTFB7pDVNm0C83XfRnlY4R4M8A4XeIIJR8p7j5JWbZtbvFs4bazg5jiRrU2juoGLbHMr3LHG7OXO9I6tPQ3mglU="
-                            ],
-                            [
-                                "HAtJmQv3Lr9e8OQjDUxW/Ot5jXx7BuPebWDD6C8VpXyuuftHOSi8uDfYEQ7ZKA2W9D03LXzYQOMl4vTBek9QlGQxpXQyP2QIi4M4LqE55Vbntf89+88QPQdvqE4Ny/WQp8443JXpLOef+t7YVIA1qNvdR47uV6LkzR2RvQDP9paTX5U3TtCoFAHSRuWMhYadPERzDlX2Qh3bX6N5tzsJn9cpzlRlTRo60j9TbIqXhk+1Qq0qc2o4hY7MEFmJzrcN7gPiEzRc7L+31HGruNtLOI2aE+vAonbPHnA7ZCftyh+tztC642pDdUlDw+7xIF3tbmE3DUXoP9kCu3tX",
-                                "5WWX4i0YYfJaCFqGu7+pVvoJmzHMQ2nby8hAEpannc5ixP3bB/WaqkbvrNgzelKKfOG/BC/aIaAbdzug3DNtdwHSu0eykSZwDJc+Ka6Vt8H+QkDBPJo51RXqZYRBH+C5+IJbStSuzU7YWA80k7kZmFlZAy8UxfPCHxwjOHusIL9qOP0N1XaC9mIDl94ovq3FzOOyf91yYt3PD1pcDh8iptO9+ppHG02hYRlSpY2wR+kne2BfBnEQMxoM0ddXMrvEZnx+aEleGgM/JdevgeN7JqOMQJQf7IEJsF2ScdsqanPEgDu2XJmzFAW646cdEyJv3nbk2dZW0m0E418O16JRvFP8TCGNG9ehUwQEmgHCvHMN00amDQv4aDHf2ocT6ucRC2i6+fYyRoxQRWZj",
-                                "zPkBUfT4sSPaFCreZObG9SZ4cDE8J+Fm7JFbQQ4EQOlVqCWQA8COGqflUsDP3gZ/i1UAeT94WKovCcH20K0DdjUjkiH2DuTz8DeG8GyNB7Th664BUpGYfQx3zgTsODiwJ0nWQzzkOnyT6sxBnxoNECy21oZI3GXduNcKiKCp9TkrJxPvR6/YNm4nuHlHE2JPf/qRyhXS6003yS8C+H/U2ActF38SyxBaMiVVKCnZhcyU0Ox33wdvsPG74erNPAvxFrrhNy9pLpitghfBu0GPVWLn6icT9z9R+mY2V+whKbbAsSnf8DEX7nrT2OOibGmka3lV1k51bfj1SkffZI6OEAN7P8EN1etlcJ+/tl+rhrPi1fKGXiy5kbompkLt5A86wDVw/FJQvKo5n0qR3EceS0GT0WQuBK2G2Ayg7LesolLpKUSGnkYwIJnIHiG6kG7DnAjRoDVe3s0kfX9FyiuhNOohDO4yPLypNPiWQg==",
-                                "GkFLHaVzepZ06k9KXU+XMJPLwg5Bpke+1UvPGZDoGrAOrnpDfWgrl2XmKHbzVh/yx6ZsEqWiO0VgaaVZHEgav8ohd+xqdNH2M4kshHUnTOyAMV+xqlWPVZnsw81gQj90dGGeGVT2nWvVvTyABycGTKrrzR760FFPl1vQM8MoY4xl0lDaPAUqWGSyyYVQGq931R+Zlq5GhkJEEmZn0X/N5+wPMIpoLEGtPmFF6Ox15WDFk7lutzETO/OwFwKRKJbUAWAEPZF+OKnv5Tj63qApi4Wwk+GqzrrrBYQ4Qr47CMYfXggGDF04KRP68Dk8BSgyQNPHTcWACuP28LJ+f0k4mpKcKyJNpt9/Gd8uc01IktmJZo/V3tXPzJco1M4i7/3/dP4LvcBwJfOvHFrA1EgqIC3FRMc+w5T/P4s1HH5AweXqJX8FTkek+tl/w+a0Py2Cfk5z/aCGEiYDMNbpogejfGqW8X4jMJKP+ukbO+7Bw9otyqox9V9krTVEombEFHsMLFeAZoFL+csR11O3",
-                                "csgcQ0DboCptqB9dlvJN3vvnnd3Q15gimVRSQG/fN6SjMhb6dAbeiUsC7TMKpvdbFEN9qCC/piepgJAIIAMjNwZOkEmtkNz4HQrTzgB3iGQDjzfxAbRUHhBSRLyNfnOjpP73eRyWXK8gkwmQonyjSecAFS6BtXli5HKfMypAFLzVgJ9fm9GaUiInFc3Z+y6P1qOplosDkCad9WX9ESlg6X1sp6AMvZScchCLGmUm8BvIXTrnxnC50s1ukOUfjho55yn3SwKImdLVwMkQ0HMLN/cvypIri0LTPBS3CvyGwr5TfPdT2moWR8TgMoQxBuJfqg5aC2l0stEtjL2ZpZT7hFXjcMMe/bp99A/fDUPncsmJaT1v92LWM41catoxLM/WJ7UUTxpFq1DpLWupxp7ZXQbu1uVEAxshuIo4rReM2MR3rbIIEIjSMuxulh8="
-                            ]
-                        ];
+                            $result_val['FGStripCount'] = 1;
+                            $result_val['FGContext'] = [
+                                [
+                                    "015qqwjan88UQhgNdJ6CBm99q1AHVgJCqRlstRYmaX0iOKDDrIImlA/a8i2JHi9XP39npnZNvCzj7AURbKkaggGpsAU4xXImsvT+TvoRWvVl2/8CLfXz2d294w0U3huCY6jqWL0h+x0wWeCmfEYtEZE0XFZhenanu71EqjJM9BOaMye8ck534A6tGtT5Me2gCo5MJIu4iumbQWnvER0wbBiXNmY+niiJD6w1UJdjHxe0CA1ZQla/R4JkTvrMJc5AnyeMoQyj2istlCfCyIzpGjbHgUEgOt7QWcSFLUsSKPUm6FHFrraumdGViyDD6RMAf4WQFkI/eFAcdxeuh/Df6s47aEqEoOEUw3FK/XhZM2JH2mp1yC+epZWpcTGaEuM6+4HdZkCRw1vQ5/uYeubqAyhyQcaIVBrZL0dcHd0kcM8bITdqRo2d73GVI6E9AmFH2AJHIt4Vf4BpbhlqbQe/jUKk8XTtOuw4xJQRdy72JV9OKQSo8s5M6wYwMX3ZIcMIv9CImOif+kPKMZuDnyd9Bw7GwSSRvsR4rSbxetEo4cJgjztwIWAw6uu7KAHF/3vY6yCJFLEFVjkJoqlW+jLCsvPaljxpgUplchLQeUEXjZxXoB2Qskn6TsJPdL6qGdgpWkxp+Kci4k+hG7iJe6nr11QoXZiejGxwSukI0/1x4ocLHs20YQqUVodYH1vuHQ1ESFwxsxb4IkaNl418l+ndEbwU6JR92ooRGv/IsI/i0lcJjx/AL80Gbq3gWu+l61+UbJMeSO3/J7y4Ksy3",
+                                    "ikubKwePqbSvmHv2V8qxLlEeS7LNUACvcrE/ugrotAEzXJWrJayA0VtMUk1SVqNysY3iTbeufGJkCVBynPs6aT4v9vwK8v8NcfLqTBYpZw2ZvnxgJ/WiiEAYo6nDVFp1o+Hs6piBEKNxi0PIGgCVeocT0dFhgOjuqJzdB0ddghpGGUD3r64k9e1S3wTlIorjl9KRejUUHs0RqX50S0qEzJ8Yefhqb+k/W+zfspaiM6iSLP61YEDk1MdhKK7g3zpOprILj4EoOCYjq3kHdHf0q9rB1kvz5AQ655FXWWb8IQi3qm9LwEx0knhqR49BWBFvGbrvffvxjHktEWdSs3bmiX7RaVIeZ+JQCpPS76+RWXMglYLNsdBrs/Uza/8N2nP+6mUmHgj1y7l1zzZDYlZm8gPeG9wUORZLq+STJrFiZvTFhlBicRREpSRuE9Sn69+a3rDRRLpAPHCclCkdHS2WSIxu9ESk4Eq3bnzwFOPc9UpsOM0BiR4rq80UOr2i/teYRrY0KbNSe834x4xjeTpkowYPib8EVnQIJRowYTNOIylDiqprn5BBPQzk3KQOp4mNODj6DU7qcA4vohD4C2ikZsc6syGrPQ2Jt4BZ3/EWqys+n2ytwIUpuk1cAO/p6pEFbO793qLXeBatVBvY+iI8eBhRVJt8LhKBqf38qm1KRc7Cz+iq3tG7efU1ySVGnTopnmFRheHoq2fBK52Q9NG+ooOhPN3jdIpOPOrDK0q1C0Xc9ARUIGXKWclnxtPYRB2hNcD+/VzhZFKGfb2H3s0fmeV5nyxF0Rc0cKWsUQ==",
+                                    "YIov3TselaAzIyvU1fassbrhx7uC/F0JQAElc6naYCtsOfyiP88CoTc1HpuvmwCo/9RJzAaFb//TQrTTdsgzT9GGBlV7Z4jELMkUW3UQ7ChW48B66DvTvvBJ8aElB2dzHa/3HXCvzspOTkIZ7jfLp7vGH3ZcJSo0hr60ZSLzusoCV1Cn/kmexDttOgg6Z50o2q9oZEGdNeA2VuHJ7jEESLfmTI/5c1SlksMtkLCqM8amJIder4dO1l9De2/XY4H5z/JgeayDDhHvDDXekN2kT+/Ws9kj+FzR989p4jjLRnUps8HHjvHMtxCS6aArkbB13InJM/3rIvbREhs4/aBQPTrcouf8p41Dmx6x+vg9sfXUahgKtWL8kW5U/ZYlxnp8a+nq8vc0UEeeFt1rO2Bq6fVR0voavtOW/NWSQ7mRnz1/Jxs2AKgPpyC+1odsS7fjEaNXT1W9GNF9muu2IUUfI/Wffy1L25/DQxgkxzea0LqKt0FrnUvw3he2cyuNsl8CC9rKIASG06ZnrAfEpqOzdPFfbpvopC58uw6DK5RGEZItti5CbdfD6gKOHkxjxeSCjdsOL2dlbPCC+2Nz9if44PT00hM0KMsaBSvY2Kkzzcj0VBtTnTif343bLYpg0aIpiy5OGdWnJnOED7ERS31DlQj4uf/UwwrNi8iM/6jDNorPSpIxB+3uOM4hnMOQBlW0pr5HLWp5xsUWrNtGx/cnvc5p35txiFHnr7VzzA==",
+                                    "WE0rZcNknY0vEOdrfU8CZmKLhrL+jFzZkx93x2r6CEpJMcIZFaRiJtv8M2sGvOny3WV5Xnjn/ClqYZd4gHrJm82fCrR5B+Y9XoMe4PzGaJ4Vd2i2PpOH42/qWrE/fK3zQ+xOtGT7sUjQx7O87Llsnv3wgfcbkM+kuOeBKWpas6DzRQKc7UENWAHPvYiU3Dpcv+kZcVSUrQNZTT4g1/T5EJUHEwv8Ge7qxgeM8FMqULKvwLvVisdYaD9HDr3QkPr7Oktlg9ae98OScY290to8mMOTGxQF0hxAdkCsDPT1EhTspFSJBJiyGbyFAwMJulfcx+Fh3F/ucODMSKzEpZhDAgkfgc3CHEOiO5Y72UX7Oe12SjgpfBcPQXgmHhdkH5o+NWYmlr1AgaAhlfzA/w7YS8PmzV+1bNeshr+gMvXgWRMgqGFvBP3wVo8aYIdJnJDTOfpk24PsE5FWDkqf+yaC5cO1ktFfiMZfKjAVMHN71TJ0HcnaLn1f3pPsOKkWHrOdAgU8SRXRVPIw1dIu07TFeRsAgMZU3LCbDA/++jVJuYGBm3lup6RlYod4f50HCoHsMf24SSEeGPCfmib6xmbGaL9QlhBonOBbnefMKpoC7DRSJgeHBU4hYDipnIo0AORKGR6wEHvZGNyBDh3zluo3GyuzNgigqUeqmp0ILo6QMxA2HI+C304v4SXyOuKEU6XjGsAqRbnXIovd5lA9jFaeLM7RUib93TtHmJY48p/SIMkfSsDMss1TTnT/5/M=",
+                                    "ccRilf4y8XqIFMezVkYAiVoo4a3yj2f+zI/K3Y9l7u9Fa84zG1gVesI8IZoeNzWaKMVEViKoWlUiDd8XdLbM5VLGXnkwJcLEM8A1lGuLA/FHqzM+iJ5kVew1OADMuk+wZ+X7Gaqz1nsP72GIQfLt+M/x2z5iO6831SdpFh+anNftQXBdhCFdVRfrizK/RJE1RP1S23FkIT4TIGZTgCnjKTFozU/v+26FYinZc68896bcpVYeN1ohyU648uEPzKhRcw+MA7gSFz2f686KprAfY+ysbRHHwFzdS9HS271sdPEOXsucpyogIbILeTqe2a3BkbuK/fdFTyiOrKZ4eJFDcGboTKO9kd0I6kNW03cYZIECUwP5QN53PbwFLpirZUjJnKBwiS1SFGL0JQkOcZAYrf+9QdBdw6mvD6MvbvASa6Q4ENkfCDSBofy5QS8F4cj1r2W5O2n19pORzmp8yp8VNyjCmotP41MK1vLWSif6NHC7XaMQiWzN1Oj4f/MksCGZbWvEj1p9ZhuDW9XI9dMnty0bTYkU68pZuFZe50MKtCo6kubiULwbQJIODCqED9aZrqLxo1bdag5HwVR+u8MDuO4Ifcfp5V3MOTAT4ykhWZlo4+uP2vBpnseKBwvUI0Ogx0fvAVT75dTAuBOLWvlnVTeGWQU2potdSTWFu6ydyDPej9/XZwDqjsmZKvNMI+IX5xco3spoHptQVJkX0Q8qQYHR/2o4WcSJjGm1+w==",
+                                ]
+                            ];
                         }else if($packet_id == 31 || $packet_id == 42){
+                            $lines = 50;
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                $lines = 20;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 20;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
                             }else{
                                 $pur_level = -1;
-                                for($k = 0; $k < count($gameData->ReelSelected); $k++){
-                                    if($gameData->ReelSelected[$k] == 1){
-                                        $pur_level = $k;
-                                        break;
-                                    }
-                                }
                                 $slotEvent['slotEvent'] = 'bet';
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -161,17 +144,10 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', ($betline /  $this->demon));
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 20);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();
                                 $allBet = ($betline /  $this->demon) * $lines;
                                 $isBuyFreespin = false;
-                                if($pur_level == 0){
-                                    $allBet = $allBet * 200;
-                                    $isBuyFreespin = true;
-                                }else if($pur_level == 1){
-                                    $allBet = $allBet * 120;
-                                    $isBuyFreespin = true;
-                                }
                                 $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                                 $_sum = $allBet / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent'], $isBuyFreespin);
@@ -241,7 +217,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 20;
+                        $lines = 50;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -314,6 +290,9 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
                 $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
             }
+            if(isset($stack['SpecialAward']) && $stack['SpecialAward'] > 0){
+                $stack['SpecialAward'] = $stack['SpecialAward'] / $originalbet * $betline;
+            }
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
@@ -365,10 +344,10 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
                 $allBet = ($betline /  $this->demon) * $lines;
-                $pur_mul = [200, 120];
-                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
-                    $allBet = $allBet * $pur_mul[$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin')];
-                }
+                // $pur_mul = [200, 120];
+                // if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
+                //     $allBet = $allBet * $pur_mul[$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin')];
+                // }
                 $slotSettings->SaveLogReport(json_encode($gamelog),$allBet ,$lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
 
@@ -379,12 +358,6 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
         }
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines){
             $currentTime = $this->getCurrentTime();
-            $allBet = ($betline /  $this->demon) * $lines;
-            if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
-                $allBet = $allBet * 200;
-            }else if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 1){
-                $allBet = $allBet * 120;
-            }
             $proof = [];
             $proof['win_line_data']             = [];
             $proof['symbol_data']               = $result_val['SymbolResult'];
@@ -410,13 +383,15 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
             $proof['next_s_table']              = $result_val['NextSTable'];
             $proof['extend_feature_by_game']    = [];
             $proof['extend_feature_by_game2']   = [];
-            foreach($result_val['ExtendFeatureByGame2'] as $item){
-                $newItem = [];
-                $newItem['name'] = $item['Name'];
-                if(isset($item['Value'])){
-                    $newItem['value'] = $item['Value'];
+            if(isset($result_val['ExtendFeatureByGame2'])){
+                foreach($result_val['ExtendFeatureByGame2'] as $item){
+                    $newItem = [];
+                    $newItem['name'] = $item['Name'];
+                    if(isset($item['Value'])){
+                        $newItem['value'] = $item['Value'];
+                    }
+                    $proof['extend_feature_by_game2'][] = $newItem;
                 }
-                $proof['extend_feature_by_game2'][] = $newItem;
             }
             foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
             {
@@ -461,7 +436,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = $allBet;
+                $bet_action['amount']           = ($betline /  $this->demon) * $lines;
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
@@ -475,13 +450,13 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = '241';
+                $wager['game_id']               = '39';
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = $allBet;
+                $wager['play_bet']              = ($betline /  $this->demon) * $lines;
                 $wager['play_denom']            = 100;
                 $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];

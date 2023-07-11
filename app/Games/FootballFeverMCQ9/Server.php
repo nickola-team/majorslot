@@ -333,7 +333,7 @@ namespace VanguardLTE\Games\FootballFeverMCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound']){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }
@@ -342,7 +342,11 @@ namespace VanguardLTE\Games\FootballFeverMCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline /  $this->demon) * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, $slotEvent, 'GB' . $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $allBet = ($betline /  $this->demon) * $lines;
+                if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                    $allBet = $allBet * 90;
+                }
+                $slotSettings->SaveLogReport(json_encode($gamelog), $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon, $slotEvent, 'GB' . $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
 
             if($slotEvent != 'freespin' && $freespinNum > 0){
@@ -352,6 +356,10 @@ namespace VanguardLTE\Games\FootballFeverMCQ9
         }
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines){
             $currentTime = $this->getCurrentTime();
+            $allBet = ($betline /  $this->demon) * $lines;
+            if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                $allBet = $allBet * 90;
+            }
             $proof = [];
             $proof['win_line_data']             = [];
             $proof['symbol_data']               = $result_val['SymbolResult'];
@@ -429,7 +437,7 @@ namespace VanguardLTE\Games\FootballFeverMCQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = ($betline /  $this->demon) * $lines;
+                $bet_action['amount']           = $allBet;
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
@@ -449,7 +457,7 @@ namespace VanguardLTE\Games\FootballFeverMCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = ($betline /  $this->demon) * $lines;
+                $wager['play_bet']              = $allBet;
                 $wager['play_denom']            = 100;
                 $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];
