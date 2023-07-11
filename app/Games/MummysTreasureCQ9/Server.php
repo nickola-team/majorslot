@@ -197,6 +197,10 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                     if(($packet_id == 34) && $type == 3){
                         $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetGameData($slotSettings->slotId . 'CurrentBalance').'],"evt": 1}');
                     }
+                }else if($paramData['req'] == 202){
+                    $gameDatas = $this->parseMessage($paramData['vals']);
+                    $game_id = json_decode($gameDatas[0])->GameID;
+                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
                     if($slotSettings->GetGameData($slotSettings->slotId . 'RespinGames') > 0){
                         // FreeSpin Balance add

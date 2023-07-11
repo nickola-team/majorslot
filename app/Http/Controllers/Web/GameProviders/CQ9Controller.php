@@ -1786,6 +1786,49 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return response($data, 200)->header('Content-Type', 'application/json');
         }
+        public static function getRecommendList($shop_id, $game_id)
+        {
+            $games = \VanguardLTE\Game::where(['shop_id' => $shop_id, 'view' => 1])->whereNotIn('id', [$game_id])->whereRaw('name like "%CQ9" and label regexp "^[0-9]+"')->inRandomOrder()->take(20)->get();
+            $recommendGameList = [];
+            $hotRankingGameList = [];
+            $bets = [100, 200, 600, 1000, 2000];
+            $count = 0;
+            for($k = 0; $k < count($games); $k++){
+                $mul = mt_rand(200, 500);
+                $bet = $bets[mt_rand(0, 3)];
+                $recommendGameList[] = [
+                    'type' => 1,
+                    'gameCode' => $games[$k]->label,
+                    'maxScore' => $bet * $mul,
+                    'maxMultiplier' => $mul,
+                    'iconURL' => "/frontend/Default/ico/cq9/lobby/". $games[$k]->label .".png",
+                    'backgroundURL' => "https://images.cq9web.com/cherry/background/sdfFHq1qiM5.jpg"
+                ];
+                $count++;
+                if($count == 10){
+                    break;
+                }
+            }
+            if($count == 10 && count($games) > 10){
+                for($k = 10; $k < count($games); $k++){
+                    $mul = mt_rand(300, 500);
+                    $bet = $bets[mt_rand(0, 3)];
+                    $hotRankingGameList[] = [
+                        'type' => 1,
+                        'gameCode' => $games[$k]->label,
+                        'maxScore' => $bet * $mul,
+                        'maxMultiplier' => $mul,
+                        'iconURL' => "/frontend/Default/ico/cq9/lobby/". $games[$k]->label .".png",
+                        'backgroundURL' => "https://images.cq9web.com/cherry/background/sdfFHq1qiM5.jpg"
+                    ];
+                    $count++;
+                    if($count == 20){
+                        break;
+                    }
+                }   
+            }
+            return ['recommendGameList' => $recommendGameList, 'hotRankingGameList' => $hotRankingGameList];
+        }
     }
 
 }

@@ -697,156 +697,23 @@ namespace VanguardLTE\Games\DiscoNightCQ9
             return $promo_data;
         }
         public function getRecommendList(){
-            $data = [
-                "recommendGameList" => [
-                    [
-                        "type"=>1,
-                        "gameCode"=>"105",
-                        "maxScore"=>"44808687",
-                        "maxMultiplier"=>716,
-                        "iconURL"=>"https://images.cq9web.com/cherry/icon/zY84kunx.png",
-                        "backgroundURL"=>"https://images.cq9web.com/cherry/background/SrsBNYRk.jpg"
-                    ],
-                    [
-                        "type"=>1,
-                        "gameCode"=>"111",
-                        "maxScore"=>"3492826",
-                        "maxMultiplier"=>968,
-                        "iconURL"=>"https://images.cq9web.com/cherry/icon/7MT32Iqd.png",
-                        "backgroundURL"=>"https://images.cq9web.com/cherry/background/hZDNRBVe.jpg"
-                    ],
-                    [
-                        "type"=>1,
-                        "gameCode"=>"138",
-                        "maxScore"=>"1408868",
-                        "maxMultiplier"=>3476,
-                        "iconURL"=>"https://images.cq9web.com/cherry/icon/NMA5c7qp.png",
-                        "backgroundURL"=>"https://images.cq9web.com/cherry/background/MN36xTTs.jpg"
-                    ],
-                    [
-                        "type"=>1,
-                        "gameCode"=>"205",
-                        "maxScore"=>"1228133",
-                        "maxMultiplier"=>390,
-                        "iconURL"=>"https://images.cq9web.com/cherry/icon/jR7hDhP5.png",
-                        "backgroundURL"=>"https://images.cq9web.com/cherry/background/hHHxPmdg.jpg"
-                    ],
-                    [
-                        "type"=>1,
-                        "gameCode"=>"108",
-                        "maxScore"=>"1653628",
-                        "maxMultiplier"=>1024,
-                        "iconURL"=>"https://images.cq9web.com/cherry/icon/kbjO17xw.png",
-                        "backgroundURL"=>"https://images.cq9web.com/cherry/background/mbGQPEum.jpg"
-                    ],
-                    [
-                        "type"=>1,
-                        "gameCode"=>"130",
-                        "maxScore"=>"481849",
-                        "maxMultiplier"=>279,
-                        "iconURL"=>"https://images.cq9web.com/cherry/icon/2LfJumfY.png",
-                        "backgroundURL"=>"https://images.cq9web.com/cherry/background/K9hp2Kqo.jpg"
-                    ],
-                    ["type"=>1,
-                    "gameCode"=>"199",
-                    "maxScore"=>"25342",
-                    "maxMultiplier"=>96,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/93i7A6P9.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/6y8O1A0H.jpg"],
-                    ["type"=>1,
-                    "gameCode"=>"183",
-                    "maxScore"=>"297613",
-                    "maxMultiplier"=>412,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/0gSkYuoB.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/r3tXqed6.jpg"],
-                    [
-                        "type"=>1,
-                        "gameCode"=>"79",
-                        "maxScore"=>"305449",
-                        "maxMultiplier"=>330,
-                        "iconURL"=>"https://images.cq9web.com/cherry/icon/FFRRdPcq.png",
-                        "backgroundURL"=>"https://images.cq9web.com/cherry/background/I0hId8i0.jpg"],
-                    ["type"=>1,
-                    "gameCode"=>"42",
-                    "maxScore"=>"206745",
-                    "maxMultiplier"=>273,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/17tEE26p.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/QxSleZ5Y.jpg"]
-                ],
-                "hotRankingGameList" => [
-                    ["type"=>2,
-                    "gameCode"=>"1",
-                    "maxScore"=>"579886",
-                    "maxMultiplier"=>583,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/M5k8fcBE.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/wsSyajSg.jpg",
-                    "difficulty"=>2],
-                    ["type"=>2,
-                    "gameCode"=>"184",
-                    "maxScore"=>"204244",
-                    "maxMultiplier"=>607,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/8zz928W9.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/TGabac0s.jpg",
-                    "difficulty"=>5],
-                    ["type"=>2,
-                    "gameCode"=>"153",
-                    "maxScore"=>"315619",
-                    "maxMultiplier"=>267,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/h58qXy8j.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/OeT9w0uP.jpg",
-                    "difficulty"=>4],
-                    ["type"=>2,
-                    "gameCode"=>"173",
-                    "maxScore"=>"177067",
-                    "maxMultiplier"=>624,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/R52AT7g9.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/W83Ldtqf.jpg",
-                    "difficulty"=>3],
-                    ["type"=>2,
-                    "gameCode"=>"221",
-                    "maxScore"=>"150723",
-                    "maxMultiplier"=>201,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/rnxFXz4M.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/VTdn9rz8.jpg",
-                    "difficulty"=>4],
-                    ["type"=>2,
-                    "gameCode"=>"138",
-                    "maxScore"=>"1408868",
-                    "maxMultiplier"=>3476,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/NMA5c7qp.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/MN36xTTs.jpg",
-                    "difficulty"=>4],
-                    ["type"=>2,
-                    "gameCode"=>"195",
-                    "maxScore"=>"128382",
-                    "maxMultiplier"=>690,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/guLGMUxR.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/gQzljMB1.jpg",
-                    "difficulty"=>4],
-                    ["type"=>2,
-                    "gameCode"=>"99",
-                    "maxScore"=>"1362017",
-                    "maxMultiplier"=>502,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/jbrmZ3l9.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/jIlFq0qY.jpg",
-                    "difficulty"=>4],
-                    ["type"=>2,
-                    "gameCode"=>"212",
-                    "maxScore"=>"182902",
-                    "maxMultiplier"=>347,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/ACqGmHvE.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/W1K1Onbb.jpg",
-                    "difficulty"=>5],
-                    ["type"=>2,
-                    "gameCode"=>"201",
-                    "maxScore"=>"1192786",
-                    "maxMultiplier"=>214,
-                    "iconURL"=>"https://images.cq9web.com/cherry/icon/fJKqA2ev.png",
-                    "backgroundURL"=>"https://images.cq9web.com/cherry/background/pOO2rrfE.jpg",
-                    "difficulty"=>3]
-                ]
-            ];
-            return $data;
+            return \VanguardLTE\Http\Controllers\Web\GameProviders\CQ9Controller::getRecommendList($this->shop_id, $this->slotDBId);
+        }
+        public function GetNewGameLink($game_label){
+            $game = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => $this->shop_id, 'label' => $game_label])->first();
+            if($game == null){
+                return "";
+            }else{
+                $fakeparams = [
+                    'jackpotid' => 0,
+                    'exitGame' => 1,
+                    'extra' => 0,
+                    'mjckey' => uniqid('AUTH@') . uniqid('~style@'),
+                    'game' => $game->name, //this is real param
+                    'lobbyUrl' => 'js://window.close();',
+                ];
+                return route('frontend.game.startgame',$fakeparams);
+            }
         }
 
         public function SetBet() 
