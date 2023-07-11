@@ -865,8 +865,8 @@ namespace VanguardLTE\Games\DragonTreasureCQ9
         public function GetReelStrips($winType, $bet)
         {
             // // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonTreasureStack::where('id', 54017)->first();
-                //   return json_decode($stack->spin_stack, true);
+                  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonTreasureStack::where('id', 79641)->first();
+                  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');

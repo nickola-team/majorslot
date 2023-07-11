@@ -96,11 +96,11 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                             $result_val['FGContext'] = [["jaChFNgAemhnMuwcYET6+MhQ31Y5PmsKHWxDLjuBx+N7pW+cSMXsYmsvAtBcNUAuR3AafxNyV2PnbVW4pNoAUODayIhysCU10FGHuYr40kNgVuH8gTWyCAYp/lwXpU8Wcday0Tg0VaseXMkR","ipreJUBIR77pmesyJ4FrGBQKDP7PJ6S6cGTmoP0y8kuHyRPd+Oz2pTdmtRjGudWNgidk3D2maAMyvCixN2wh+fl1uSpcq2CPtZv7n9t4KjCHcng27q1IVMEvfusdFdXyrvt/xfAGZU+UwFIP","Ju4iszh4umf2HXsS+vzRFbt493pjanPsYRTUCXva0zT4JCwiOdTiQD8/DJNlmBaSEu1k+beMisR+RKH3/pA41bZF35xRVNeW25ssmzNTqK0l0W7pmZc0Mu1xHTWym+KOA6EfPnbdWJ0AKMULh+rjutrHgpnqLBlZrNEskZNueE/jkVAVEPVDcx23uSONJOgVDtYRVQbx3D342w3v","FJTw7R2xU2zNEsE2HYd9IjK/Jvc+/H7D9csJIf4zqpwu7xeM/hM2IxNUJvirNHJKUEhHPbzx1r5qgZ9SNBx/8e98xkEDK19OE0FCC2/fT5tw7RXpWiLkigkwF4McWMoFHeRxRVTD3eruDkJquge15jcDEoFyg+FqRDZklA==","jvSmkc0qdoXPUae6PIY+OxeWiG0B7yGTHnFUR64i+u9skMqLD9cNPbiTNEB59u8cVvGma6YHvIyF/IZwAptMjjOKokU2Bkdm9Cav310tWwMmiUkFpHHhxUqbyDIt+F72AopA4MG513M8+VGLDCr0CMGV63RM7i2zFpaPTA=="]];
                         }else if($packet_id == 31 || $packet_id == 42){
                             if($packet_id == 31){
-                                 $betline = $gameData->PlayBet * 2;// * $gameData->MiniBet;
+                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
                                  $lines = $gameData->PlayLine;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
+                                $lines = 5;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
@@ -117,8 +117,8 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
                                 $slotSettings->SetBet();    
-                                $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
-                                $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
+                                $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet * 2), $slotEvent['slotEvent']);
+                                $_sum = ($betline * $lines * $gameData->MiniBet * 2) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -129,8 +129,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                             }
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
-                            $result_val['EmulatorType'] = $emulatorType;
-
+                            $result_val['EmulatorType'] = $emulatorType;                            
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
@@ -164,7 +163,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                             $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                            $result_val['TotalWinAmt'] = ($stack['TotalWinAmt'] / $originalbet * $betline) / (3);
+                            $result_val['TotalWinAmt'] = ($stack['TotalWinAmt'] / $originalbet * $betline) / (3 * 10);
                             $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline) / (3);
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";                           
@@ -246,21 +245,15 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                 $stack['GamePlaySerialNumber'] = $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber');
             }
             if(isset($stack['BaseWin']) && $stack['BaseWin'] > 0){
-                $stack['BaseWin'] = ($stack['BaseWin'] / $originalbet * $betline) / (3 * 2);
+                $stack['BaseWin'] = ($stack['BaseWin'] / $originalbet * $betline) / 3;
             }
             $totalWin = 0;
             if(isset($stack['TotalWin']) && $stack['TotalWin'] > 0){
-                if($slotEvent == 'freespin'){
-                    $stack['TotalWin'] = ($stack['TotalWin'] / $originalbet * $betline) / (3 * 2);
-                    $totalWin = $stack['TotalWin'];
-                }else{
-                    $stack['TotalWin'] = ($stack['TotalWin'] / $originalbet * $betline) / (3 * 20);
-                    $totalWin = $stack['TotalWin'] * 10;
-                }
-                
+                $stack['TotalWin'] = ($stack['TotalWin'] / $originalbet * $betline) / (3 * 10);
+                $totalWin = $stack['TotalWin'] * 10;
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
-                $stack['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline) / (3);
+                $stack['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline) / (3 * 10);
             }
             if(isset($stack['AccumlateJPAmt']) && $stack['AccumlateJPAmt'] > 0){
                 $stack['AccumlateJPAmt'] = ($stack['AccumlateJPAmt'] / $originalbet * $betline) / (3);
@@ -276,7 +269,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
             }
             foreach($stack['udsOutputWinLine'] as $index => $value){
                 if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline) / (3 * 2);
+                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline) / (3);
                 }
                 $stack['udsOutputWinLine'][$index] = $value;
             }
@@ -322,7 +315,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * 2, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
