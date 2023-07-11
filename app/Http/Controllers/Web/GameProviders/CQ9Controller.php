@@ -1746,7 +1746,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 "log_id" => "",
                 "result" => [
                     "data" => [
-                        "link" => url('/playerodh5/?token=' . base64_encode($user->id .'-' .$roundid)),
+                        "link" => config('app.cq9history') . '/playerodh5/?token=' . base64_encode($user->id .'-' .$roundid),
                     ],
                     "status" => [
                         "code" => "0",
