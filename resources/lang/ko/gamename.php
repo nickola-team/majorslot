@@ -1205,7 +1205,12 @@ return [
         "tigergems" => "타이거 잼스",
 
         // CQ9
-        "FireChibiM" => "파이어치비",
+        "Double Fly" => "더블 플라이",
+        "Zeus" => "제우스",
+        "CricketFever" => "크리켓 피버",
+        "Thor" => "토르",
+        "GuGuGu3" => "Gu Gu Gu 3",
+        "FireChibiM" => "파이어치비M",
         "Xmas" => "Xmas",
         "DiscoNight" => "디스코나이트",
         "ZumaWild" => "캔디주마",
