@@ -90,7 +90,7 @@ namespace VanguardLTE\Games\TheChickenHouseCQ9
                             $result_val['GameFlowBranch'] = 0;
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
-                            $result_val['PlayerOrderURL'] = config('app.cq9history') . '/?gametoken=' . auth()->user()->api_token;
+                            $result_val['PlayerOrderURL'] = config('app.cq9history') . '/platform/?gametoken=' . auth()->user()->api_token;
                             $result_val['PromotionData'] = null; //$slotSettings->getPromotionData();
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
