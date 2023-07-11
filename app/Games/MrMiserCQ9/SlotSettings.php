@@ -865,7 +865,7 @@ namespace VanguardLTE\Games\MrMiserCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMrMiserStack::where('id', 928)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMrMiserStack::where('id', 50)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

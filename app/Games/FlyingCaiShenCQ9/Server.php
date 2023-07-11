@@ -127,7 +127,6 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                                 }
                                 
                                 $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
-                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
