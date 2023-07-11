@@ -865,7 +865,7 @@ namespace VanguardLTE\Games\ZumaWildCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameZumaWildStack::where('id', 57094)->first();//16755,,5745
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameZumaWildStack::where('id', 14)->first();//16755,,5745
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

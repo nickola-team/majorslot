@@ -865,7 +865,7 @@ namespace VanguardLTE\Games\ZeusCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameZeusMStack::where('id', 51284)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameZeusMStack::where('id', 5)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
