@@ -239,6 +239,13 @@ return [
     'taishan_pass' => env('TAISHAN_PASS', ''),
     'taishan_token' => env('TAISHAN_TOKEN', ''),
 
+    /*
+    BABYLON Auth key
+    */
+    'babylon_api' => env('BABYLON_API', ''),
+    'babylon_op' => env('BABYLON_OP', ''),
+    'babylon_key' => env('BABYLON_KEY', ''),
+
 
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
