@@ -32,7 +32,7 @@ class GameLaunchCommand extends Command
         'TAISHAN',
         'HONOR',
         'GOLD',
-        'BABYLON'
+        // 'BABYLON'
     ];
 
     /**
