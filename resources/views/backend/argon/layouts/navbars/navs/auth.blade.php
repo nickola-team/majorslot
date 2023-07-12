@@ -1,5 +1,5 @@
 <!-- Top navbar -->
-<nav class="navbar navbar-top navbar-expand border-bottom shadow {{ $navClass ?? 'navbar-dark bg-white' }}">
+<nav class="navbar navbar-top navbar-expand border-bottom shadow {{ $navClass ?? 'navbar-dark' }}">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             

@@ -6,7 +6,7 @@
     }
 ?>
 
-<nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-blue sidenav-bg" id="sidenav-main">
+<nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs sidenav-bg" id="sidenav-main">
     <div class="scrollbar-inner scroll-scrollx_visible">
         <div class="sidenav-header d-flex align-items-center">
             <a class="navbar-brand" href="#">
