@@ -1122,6 +1122,13 @@ return [
         "JewelRush" => "쥬얼 러시",
         "PiratesPub" => "파이럿스 펍",
         "WisdomofAthena" => "위즈덤 오브 아테나",
+        "BigBassAmazonXtreme" => "빅 베스 아마존 익스트림",
+        "HeistfortheGoldenNuggets" => "하이스트 포 골든 너겟",
+        "HellvisWild" => "헬비스 와일드",
+        "JokerRace" => "조커 레이스",
+        "SpellbindingMystery" => "스펠 바인딩 미스테",
+        "RiseofSamuraiMegaways" => "라이즈 오브 사무라이 메가웨이즈",
+        "AztecKingMegeways" => "아즈텍 킹 메가웨이즈",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1203,4 +1210,50 @@ return [
 
         "mummypower" => "머미 파워",
         "tigergems" => "타이거 잼스",
+
+        // CQ9
+        "Double Fly" => "더블 플라이",
+        "Zeus" => "제우스",
+        "CricketFever" => "크리켓 피버",
+        "Thor" => "토르",
+        "GuGuGu3" => "Gu Gu Gu 3",
+        "FireChibiM" => "파이어치비M",
+        "Xmas" => "Xmas",
+        "DiscoNight" => "디스코나이트",
+        "ZumaWild" => "캔디주마",
+        "ZeusM" => "제우스M",
+        "MrMiser" => "재물광 요정",
+        "DaHongZhong" => "Da Ha Zhong",
+        "OrientalBeauty" => "오리엔탈뷰",
+        "HappyRichYear" => "해피리치이어",
+        "DragonTreasure" => "용의 보물",
+        "Heroofthe3KingdomsCaoCao" => "삼국지 영웅-조조",
+        "MummysTreasure" => "미라의 보물",
+        "TheChickenHouse" => "치킨 하우스",
+        "StrikerWild" => "태국전사",
+        "FootballFeverM" => "축구 열풍 M",
+        "Apsaras" => "압사라스",
+        "NightCity" => "불야성",
+        "AllWild" => "올 와일드",
+        "JumpHigh" => "점프 하이",
+        "Thor2" => "토르 2",
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
