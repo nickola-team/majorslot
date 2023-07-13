@@ -181,11 +181,15 @@
                                 <th scope="col">계좌충환전</th>
                                 <th scope="col">수동충환전</th>
                                 <th scope="col">롤링전환</th>
+                                @if (auth()->user()->isInOutPartner())
                                 <th scope="col">배팅/당첨금</th>
-                                <th scope="col">벳윈수익</th>
+                                <th scope="col">공배팅/당첨금</th>
+                                @else
+                                <th scope="col">배팅/당첨금</th>
+                                @endif
                                 <th scope="col">죽장금</th>
                                 <th scope="col">롤링금</th>
-                                <th scope="col">총보유금</th>
+                                <th scope="col">보유금</th>
                             </tr>
                             </thead>
                             <tbody class="list">
@@ -213,6 +217,7 @@
                                         </li>
                                     </ul></td>
                                     <td>{{number_format($total['dealout'])}}</td>
+                                    @if (auth()->user()->isInOutPartner())
                                     <td><ul>
                                         <li>
                                             <span class='text-green'>배팅 : {{number_format($total['totalbet'])}}</span>
@@ -220,8 +225,22 @@
                                         <li>
                                             <span class='text-red'>당첨 : {{number_format($total['totalwin'])}}</span>
                                         </li>
+                                        <li>
+                                        정산금 : {{number_format($total['totalbet']-$total['totalwin'] - $total['total_mileage'])}}
+                                        </li>
                                     </ul></td>
-                                    <td>{{number_format($total['totalbet']-$total['totalwin'])}}</td>
+                                    @endif
+                                    <td><ul>
+                                        <li>
+                                            <span class='text-green'>배팅 : {{number_format($total['totaldealbet'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>당첨 : {{number_format($total['totaldealwin'])}}</span>
+                                        </li>
+                                        <li>
+                                            정산금 : {{number_format($total['totaldealbet']-$total['totaldealwin'] - $total['total_mileage'])}}
+                                        </li>
+                                    </ul></td>
                                     <td>
                                         <ul>
                                             <li>총죽장 : {{ number_format($total['total_ggr'])}}</li>
@@ -248,13 +267,18 @@
                                 <th scope="col">계좌충환전</th>
                                 <th scope="col">수동충환전</th>
                                 <th scope="col">롤링전환</th>
+                                @if (auth()->user()->isInOutPartner())
                                 <th scope="col">배팅/당첨금</th>
-                                <th scope="col">벳윈수익</th>
+                                <th scope="col">공배팅/당첨금</th>
+                                @else
+                                <th scope="col">배팅/당첨금</th>
+                                @endif
                                 <th scope="col">죽장금</th>
                                 <th scope="col">롤링금</th>
-                                <th scope="col">총보유금</th>
+                                <th scope="col">보유금</th>
+                                <th scope="col">롤링보유금</th>
                                 @if (auth()->user()->hasRole('admin'))
-                                <th scope="col">전날대비 마진금</th>
+                                <th scope="col">마진금</th>
                                 @endif
                                 @if(auth()->user()->isInoutPartner())
                                 <th>이익금</th>

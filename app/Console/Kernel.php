@@ -99,8 +99,8 @@ namespace VanguardLTE\Console
 
             $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
             $schedule->command('daily:sharesummary')->dailyAt('02:00')->runInBackground();
-            $schedule->command('daily:summary')->dailyAt('08:10')->runInBackground();
-            $schedule->command('daily:gamesummary')->dailyAt('08:30')->runInBackground();
+            $schedule->command('daily:summary')->dailyAt('01:00')->runInBackground();
+            $schedule->command('daily:gamesummary')->dailyAt('01:30')->runInBackground();
 
             // $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
 
@@ -974,6 +974,8 @@ namespace VanguardLTE\Console
                 $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
                 foreach ($shop_ids as $id)
                 {
+                    $default_cat = \VanguardLTE\Category::where(['shop_id'=> $id])->first();
+                    $data['site_id'] = $default_cat->site_id;
                     if (\VanguardLTE\Category::where(['shop_id'=> $id, 'href' => $cat->href, 'provider' => $cat->provider])->first())
                     {
                         $this->info("Category already exist in " . $id . " shop");

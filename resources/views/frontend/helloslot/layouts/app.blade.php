@@ -38,7 +38,7 @@
 			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'helloslot', 'live'=>'disabled', 'hotel' => 'disabled'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'helloslot'])
+			@include('frontend.kdior.layouts.partials.header', ['logo' => 'helloslot', 'live'=>'disabled', 'hotel' => 'disabled'])
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
