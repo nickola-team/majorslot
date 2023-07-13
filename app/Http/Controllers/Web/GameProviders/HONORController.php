@@ -612,6 +612,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $balance = $round['before'] + $round['amount'];
                             $gameId = 'honor_' . $round['details']['game']['id'] . '_' . $round['details']['game']['vendor'];
                             $game = HONORController::getGameObj($gameId);
+                            if (!$game)
+                            {
+                                Log::error('HONOR could not find game  : '. $gameId);
+                                continue;
+                            }
                             
                             
                             $time = date('Y-m-d H:i:s',strtotime($round['processed_at']));
@@ -694,7 +699,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             catch (\Exception $ex)
             {
                 Log::error('HONORAgentBalance : agentbalance Exception. Exception=' . $ex->getMessage());
-                Log::error('HONORAgentBalance : agentbalance Exception. PARAMS=' . json_encode($params));
+                Log::error('HONORAgentBalance : agentbalance Exception. PARAMS=');
                 return -1;
             }
 
