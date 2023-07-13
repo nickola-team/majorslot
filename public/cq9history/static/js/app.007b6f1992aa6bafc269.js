@@ -11751,12 +11751,12 @@ webpackJsonp([0], [, , , function(e, t, a) {
         },
         c = function(e, t, a, n) {
             var o, i = (o = {
-                pachinko: "./goapi/go-detailapi/pachinko/wager/detail?token=" + a + "&gameid=" + t,
-                battle: "./btapi/go-detailapi/battle/wager/detail?token=" + a + "&gameid=" + t,
-                chess: "./chapi/go-detailapi/chess/wager/detail?token=" + a + "&gameid=" + t,
+                pachinko: "/goapi/go-detailapi/pachinko/wager/detail?token=" + a + "&gameid=" + t,
+                battle: "/btapi/go-detailapi/battle/wager/detail?token=" + a + "&gameid=" + t,
+                chess: "/chapi/go-detailapi/chess/wager/detail?token=" + a + "&gameid=" + t,
                 coinpusher: location.origin + "/coinpusher/api/go-detailapi/coinpusher/wager/detail?token=" + a + "&gameid=" + t,
                 goChess: location.origin + location.pathname.replace(/[\/]$/, "chess") + "/gochessapi/go-detailapi/wager/detail?token=" + a + "&gamecode=GO03",
-                slotGame: "./api/inquire/v1/db/wager?token=" + a
+                slotGame: "/api/inquire/v1/db/wager?token=" + a
             }, r()(o, "goChess", location.origin + location.pathname.replace(/[\/]$/, "chess") + "/gochessapi/go-detailapi/wager/detail?token=" + a + "&gamecode=GO03"), r()(o, "gb", "./gbapi/ginplayerhistory/inquire/v1/db/wager?token=" + a), o);
             return n[0].match("qt") ? m(n, a) : i[e]
         },
