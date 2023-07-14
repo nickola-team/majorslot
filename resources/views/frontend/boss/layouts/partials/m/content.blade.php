@@ -101,6 +101,6 @@
 
 <div class="footer main">
     <button class="pull-left btn footer-btn btn-primary btn-bottom-left btn-lg" style="width: 26%;" onclick="navClick('page-popup');mydepositlist();setTab('deposit-set','#page-popup > div.ngdialog-content > div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope > ul > li:nth-child(1)')"><strong>입금 신청</strong></button>
-    <span class="btn btn-primary btn-live footer-btn live-chat" style="color: #ffffff; _opacity: 0;" onclick="window.open('https://t.me/Boss텔레');"><img src="/frontend/boss/assets/images/telegram-logo.png" height="100%" border="0" alt=""><strong>Boss텔레</strong></span>
+    <span class="btn btn-primary btn-live footer-btn live-chat" style="color: #ffffff; _opacity: 0;" onclick="window.open('https://t.me/{{$telegram??'Boss텔레'}}');"><img src="/frontend/boss/assets/images/telegram-logo.png" height="100%" border="0" alt=""><strong></strong></span>
     <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 26%;" onclick="navClick('page-popup');setTab('withdraw-set','#page-popup &gt; div.ngdialog-content &gt; div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');mywithdrawlist();"><strong>출금 신청</strong></button>
 </div>
