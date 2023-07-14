@@ -10,7 +10,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         const KTEN_PROVIDER = 'kten';
-        const KTEN_PREFIX = 'ktmj';
+        const KTEN_PREFIX = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
         const KTEN_PPVERIFY_PROVIDER = 'vrf';
         const KTEN_GAME_IDENTITY = [
