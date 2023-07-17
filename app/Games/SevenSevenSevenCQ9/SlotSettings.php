@@ -446,11 +446,11 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
             else
             {
             //------- *** -------//
-                if( $_obf_bonus_systemmoney > 0 ) 
+                /*if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
                 {
                     $sum -= $_obf_bonus_systemmoney;
                     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }
+                }*/
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }

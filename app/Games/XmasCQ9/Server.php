@@ -432,8 +432,8 @@ namespace VanguardLTE\Games\XmasCQ9
             $proof['extend_feature_by_game'] = [];
             foreach($result_val['ExtendFeatureByGame'] as $item){
                 $proof['extend_feature_by_game'][] = [
-                    'name' => $item['Name'],
-                    'value' => $item['Value']
+                    'name' => $item['name'],
+                    'value' => $item['value']
                 ];
             }
             $proof['extend_feature_by_game2']   = [];

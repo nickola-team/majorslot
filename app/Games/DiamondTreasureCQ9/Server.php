@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\FiveGodBeastsCQ9
+namespace VanguardLTE\Games\DiamondTreasureCQ9
 {
 
     use Dotenv\Loader\Value;
@@ -28,7 +28,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             $slotSettings->SetBet();  
             if(isset($paramData['req'])){
                 if($paramData['req'] == 1){ // init
-                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 7}],"msg": null}');
+                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 2}],"msg": null}');
                     $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetBalance().'],"evt": 1}');                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                     
@@ -38,11 +38,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
 
-                    $slotSettings->SetGameData($slotSettings->slotId. 'GameRounds',1);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount',0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
-
-                    $slotSettings->SetGameData($slotSettings->slotId . 'LastLevelSpinCount',0);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
                     $response_packet = [];
@@ -68,14 +64,14 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             $result_val['DenomDefine'] = $denomDefine;
                             $result_val['BetButton'] = $betButtons;
                             $result_val['DefaultDenomIdx'] = 3;
-                            $result_val['MaxBet'] = 2000;
+                            $result_val['MaxBet'] = 1200;
                             $result_val['MaxLine'] = 1;
                             $result_val['WinLimitLock'] = 300000000;
                             $result_val['DollarSignId'] = 4;
                             $result_val['EmulatorType'] = $emulatorType;
                             $result_val['GameExtraDataCount'] = 0;
                             $result_val['ExtraData'] = null;
-                            $result_val['ExtendFeatureByGame'] = [["name"=>"AccumulateUpCount","value"=>0],["name"=>"LevelUpCount","value"=>3],["name"=>"CurrentLevel","value"=>1],["name"=>"NextLevel","value"=>2]];
+                            $result_val['ExtendFeatureByGame'] = [["name"=>"addWildCount","value"=>0]];
                             $result_val['ExtendFeatureByGame2'] = null;
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
@@ -88,15 +84,21 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             $result_val['FreeTicketList'] = null;
                             $result_val['DenomMultiple'] = $initDenom;
                             $result_val['RecommendList'] = $slotSettings->getRecommendList();
+                            $result_val['Tag'] = [
+                                "g" => "144",
+                                "s" => "5.27.1.0",
+                                "l" => "2.4.34.3",
+                                "si" => "35"
+                            ];
                         }else if($packet_id == 12){
                             $result_val['BGStripStartID'] = 0;
                             $result_val['FGStripStartID'] = 50;
-                            $result_val['BGStripCount'] = 5;
+                            $result_val['BGStripCount'] = 1;
                             // $result_val['BGContext'] = [[implode(',', $slotSettings->reelStrip1) , implode(',', $slotSettings->reelStrip2), implode(',', $slotSettings->reelStrip3), implode(',', $slotSettings->reelStrip4), implode(',', $slotSettings->reelStrip5)]];
-                            $result_val['BGContext'] = [["cSsYgfEdEFRFIcqc8KpceIhsAZtHo71OejbGaQ2xHtGMJPjfhpFak0w802kgmrlDjDy4ZmEShKPnD8SrJmnP3fZRcZpDwCkULuRUORKlk9lv8/kBypf5+PC5GF/ID0o5VKBcyx68yHd/CEcGSGBXh3XjsaH3Ueq8abV5dkOBJLakpqloW6udNu8PflPIIIo7vqjMaDImd8r+FLoFjtEkb/KN2i06MGLzMIcpRI/Bj7WnWtGUNt5H9zIl9+RuZ9NAl8yD3ac+PfgxvO80/W8yYVcjYAVclOjODdsgZutpOXtecR5xLYxk0E0DeN2fnqc7xiBEw99ZHuIKvdF59c+aeE5Erplg3Hi9U/9Xuqav2Dh5VpdGgIRxMWDRipo=","eF0F5AXKZAzHH2mCMWdzvGQpPBatp5Jw+U4h8/G7OYM68IT8pIVq2zp6y9UUElFhs4kIT4EbNlLz2YBCvkz1AqEh+Ajw5G9x2gRjFHgjzqM2WPDqeI2Bm+WjsywhxtIEEdLAEJ184EHzCHuxUgDK9rPqBouK3MIiYxI50aQkVTno923WtscDF2c5gr9ZYz4t2njTB+nL6nK/260iW6UwI2rqWHv7rcqCvys1l2H0AepjdRV3KQBjhpJxBJDh0XVl9OfbY94PetYxerZeb+S1AIqBbjV8k6EXiJ2xE9d5itZ8Ouk5TQLerWqloOsZREhP2N5S5iC8lTeTu0c6oP/k0aK8tUxVpjOiAT7Abi4qd3J+lu+xDarm7Cd1V0U=","R24Af1aWcS60Bzqe5Mn1P3J7wnYm6Ysbzq46pFxPRV7KhuY737s3rerAS+LPbJmOxss2+WBzVbQhQ3DdyOtQU97aEbGs748NEZ4+RNe7vRaWo0+dEZsPlAJ0WIV8FAueD6lGukrJ//ZMp1KoqGjJJG/f8WSv2ZmFRET0DKjn1/4xhw3iOxmJ7a0SolToGWPcl/GL4gMROEw6uEXCiY6yIr4XWHhhh50R+W8a/O52oaSYPG2X5+UBADuNR4Jnngq07lYwXUTLbg2XgTHlmqTkAFoU58pT/t2/z5hiAcAjcD7Ov0ur8YheZvxJX8RtvVtVRiL9C84DmcYgHznxK376USjL2mOE/m5VeiwyE9BpgO2o3thktHoJpzmF7khWlP+1pgZLhv8D7d2HNAWjWzmRpzivi32YJ6PxtXAm9Tmv3DMbiHzXNpfVwbDSeRpD+WyCErLx9ukwQxbzfEzGPrLlHHIVSThSDTEVPhxwVTmhVPUQ1qWIOUbo9Zac+Z0=","2FK6D2LN8LYwFqmdn9al9HdU7VftEoL4NiAMtcV2VErkBorMSI4EKZclQrFeiUdKkZ3n51bUA+XCqcVjkAU/xGSFKqIXwy35YEFQjsEUkwxWq6Re6knDaLT9z7pb13JPfYFTRE876yhLj8TTM9dWUsQddblQiAj//opuu+vtNo6YjIH+mrx+r8YkC77Fe5r7VUEq0KtIiWYHRMWtKhbC03IffLF9qxtKMSXT7AV9rCaueCPLgI5q9ueAxoKpBfNH0OlrIBUH95mJw2Q63O5wzeMJHobuYozRCYGGDF1VHg+XI6X1S9wd6n9EAnainIwlShKseMj8+boNqmmqQyFQzYPxIzvFzMh5KygzN0JD+hftSCFHKllHohnCpimw8FynSqlmV1jSQqTxzKMpJwwaK0IDexoYupqvUS3gfRDJjwgUa6ag8DRuoy3Tyc4jQ5gejZZb8mMdD0I8jFhdHGVhtpQlbxS4sdVVbjgM6rzpuDbV5tVfwnE/5tcD8fyKMWQGSne+6a16Fn138YQB","LdB3G3vyC1w58v7SK7wGN2/PNq97Oryux6Uw9bgTYN+iw3PMo0efeoIrtvGHCzv68ZrkKAfjZYo7/UNfIpoy2in2fmwRedUfRmc1QN+xfKWhDko5ZazLnhiK4Csb61jRR2Hz/h2vtNCOeKnEHDO8awCMNSa1PnLX/5Gsn36dDHfG3nb3TZID6JWnZnETZ8Cvy0WyoaaHNM2oI/k7DEQZiiSrSaL2gc3zbnyEJCMJMTcL+aIo5ZZgP9H+DttLtdj5A8inpxtVcFRn4cUQJdD/MfVc8U7IJ1Q8luY7FFMPAYLFhyYiyivsRz8KrXG1Rz+9oFzVDelDx3kNt9xd6SaI4czXA9uTSBK9Hu4hCqctkHpGdeNn7ZGcd3beMOb7w97fthhsJUi+6qVHEjwL1vnw7BQcPQ0lSHd4X0jTGfQhrTKxgj6Jxtd0HEkz8hzLr95R3qrC1Naj/B0cESu42fztMjdT9SC4mLy+5Or2vRLHQ9eLnPRi3+pnhSId8AhiaRJcjETXIQXliFLzobyZ"],["t6qS9aQvTzQ2aJ7GCYq6scLQ2mREv8eN51GRlhMwrnWM8rfgTG+1M9yPr4SLic8G8xFjNjm+OjVc6weXq7TVifA7OWFn7fpJFQVwqM8NxSyYXK4cAhSJxI64/ptjMwWnLwsR9o5ypak1YD1v/v1/AE8OvC6jiIfQWmI9YeOWKHVYu8FkZcUYr8zH/6GoVoRd12DyVUY/zX2Gz5Mu7AuuKaIUkKsSAX5m+kqegrzLfPokAWC+w9Ow+3LYlK/bCyy3HwjA/9Y4S79K6Wk7FAa/LJnr6npHuNRAOdb4Z4Zc26viVdHAe9eo+t66ZCk=","nYTDm8VUjhSUVS65PZ4r8B5rqLsDJ8BAvMWk9GukWkedSkUQzPUd5uhj+rN8YDP4dNXkzSSdLIJYWQJx3e3Dkc7og5KR+XKUmt6jcC3qAMiJKc16ukyPE157N3QnVYuBHs3SgeMbupqoPtleokCQhqnRST7U6x39zDTS2pwRaWvf3TGDaVLuw3K3s2ZEyERWeVKE7yBBfZnQ+O6lkZCYiz6powcc8u7EX/MtFjRQd+0m+kncdOcK5Yo3cJgpqtaNiasvTwRRpGD/m1kklzeucRs9p5/V/i0vWt+1QA==","cufECY1QLobHB1YBgF8gLwTPp2HBCg/Qq9VCiPVkN1p3MUmTufdOonpT3ekRvKnIfx3ENjEi8fO8xJV+W0W5I52JsQ+X6sB3PEuE7kspOHVLhJOYfY27nKxZH4qdohdhDbqLkfVGomlZEq1lj/bPYI6N3rM2E3vy+Mb24rgLdNIqVu9YyeBT52g1ZtVncxn5DcRncsN/OPZJk/9mnP3onTAqWJAfTrSL3Y7eXfEXmlfyfBRkcoVGRWF0T02z0617E6Cbsfqm4C+tZiXG3B2HXghRc1sk69FMrdIT6ezXJoyFebJWnR5wtsjzN6q6fEMM559haFojH+IJ/XOANsw7N37d6EvYNWDzuF/ClrezgnVvUoSeioaddpzQSdY9w7wXaBMXFp08A5f9c8lIUGIM7PQhIhakRyeXgd4z3L5Bn9UNlDemcrJ0iDNqfwZMz27GRMvhuz2fniCEZl0z1T0iP+D1bb7IzHKQOK8Iug==","HsrmDdReBG4FUKLXsTSFigqQw3ITlw2aj9a+moVrUSVXEuTcQOWyf6I7PywwmX4oxTzhyAdVafzcs1uvHxMpDsVOt9XajO0ky10sXJfO+zJ2LNgYLgH+soDYmPts/GfmKEn83OaFQ/H+eMMgSMRWROBPV+5FxsvIupDdREupaqUMnZKUerhJ5AYP1OrgY8xRoaN7EoSpN6xWFihr/PkMpkdyZ8dohTxNFJ8bwMJBTCLhePmkvoBpkvu9uiT9QJcmQgS5pIOgV7gPpRKMCQabTQ5Yfm3a9P3+STbbkUzILuAtVAgaIIv75600x8GdWwaz3lCA5Ssu6HHu40Gp","7lWRoewvhhvXSwULAr1WnaHtd68liDfrCkMWidOVGUoft5vlSLsXZMNf95rkLutrBsvCYcMzsAsN3jd5DK3ZcX5Bzg/5C3ZBnZGJ39x+WmPihv6ufROdmEObmb0l1SwgVMnKw+mFAYPjzyVRjrXVQpdHSvjWhurcKjHYKzpdgHBneb1zwyiEJJMNGLMaMNCczMx4JhBdQtptBDGeVAgMJiSGkG3///x6bctVROJ5KhDu7s5YHLCYF+EKefdZDGspWGRaSp3luDLL3/cYoxX9LGPz377fIrGSqJq/2XAV2Fj8QF1ftzuT8tzYGpF7JkR3Y7ZZTt++zWEJ3C7D"],["7hkIUrojgvmjG0e9ddL1fjsh8bscvO8WCz9tgtBlylEV7P0fdPKIrjfy666WXDYvaYx1CkncfQx/ZSopX/j0+0y7HqUPtLVWU4u7QfhYR3poIFhR28X0IVbeUL8NFpdBR4wDOo6KZ1prwzD8FRM+YDB63yIiL3jE7ukChL3ooLBPhilVEf+81QkVPEQXKBR3TXt7/AwzYiUL+VnqQc41JFsdrGS0Hl3/pj62fjCYCI1ioWBXiu9VZzlakgPeKIaM0J9sdkR7VddKjKdY","td4uSZsrud56VuEazCVj/2ytSGvJMARgY/lzd2kO3w0k0bf/jIMof11WEK30pMIObn4WfPVwn0IqHraOGInvK3HOcly/avfASwV1fywwUBZjAQk4EW5pZ7+BTDFjchXQNizjCdbSycwX1BxNa+OXo5F/KVYpmBCh1GoG6WEpZL5E9y2RmGv2PXXSBuMOHyYqkx4iSGMFTViPLROSbBeiRgbTEFMI7cEdnbwW1pyiM/Be3ms/gzByWqZqAaE=","slG10DNv6CE15xE7LsQCO89sC3zWS5+o6FjDGC17z2ZjwbC2o2QAcyZ+O7cAR9vIOhdk3GEQdL7kCWAlA5zjZScUr4v3s3eTF/8nDtH3SYT0I62YlCg3HxFEeDasM0HAhC69JBMcCiTJSMMjqRm+Rsd4EBZEyG6IOqAOkEZxBnZ5bRHLVYPP0QzsKgDQK5SiPd5uczAEJGWtB8jgWbLtKrouAwQabjU6tqUV21GatRyaDFVx4Kg2GfElPlpRuOKmKwygHfeEXCuWKufuYEvZD9pCXzpS6mfUkn4pi7YJ+ZrgslUUgC3vPbjaT/qBGqYVcqkjhuz5rdytoSmnrWazXDriVPKuBo5YDLTtzmd4mPwJmpRsLc8vNdFHuUhblnPdXy8RYeZCHnnbuzlXMMOt/lqhjslAVzVYJHwFSQ==","iPqPV105FWavzykVFGvUPSGDYLN2o/+1U3qeC2iBlYLddmuy/ay/5y9KTwNJ/o+OTtMj/SylHPXqkrb/xfOKJPVOdRNovDMVLZsOt7TLDw9OgzegngAXkeD9T47Rnn6gcXy4f7sbIbvZdPLaG3pzyexaANV4pPk+gp1mOmbH6HR9KddiWtTY7f92IaI8ETA4YilTv+hTi+jd6UKRTGiRGXnMkRpNqdl/LWSqZxB4Y+lNSxaYJrRxEAH12aZDK656o7EvZaPxq2ROgmObrsqVLWSTiLOxFkOYAsFsRA==","wuKhTqIaSFtAvq8nelUbpvUpT9dZhpFw0nRHT/mWXCH4BxSRNL4DJ5KQ5brfO/OMizcX852M90i7lx5JNJZURaF+76mJK08exjfNOM3+7QjkLzw0vW25aFsit4zFx8838K2c7cO2hSpSlnk0AEsGtsYXwGKtbi8W7qV3NMRrrcCILrfLFEjIq+cLIGIGSfMFKFb1XhtCaAYxnz0u3VrRPZU7w/t0rKgDCFjXrYN28/QC0ZLSm4U2b6IccxZew9WWd4/HkcKzPqXsrlwk42g4//y3FUJUe5J/akr+7g=="],["rjBfTFUwku0GCTuvHV+7S7mz6Er5v7f6mGIjf63/WHLt3H3AzSYvJ8peay7lKprximtoTrZoGHkP/ceTaK2Lgf8PiuuOSugCr10l83f0PZsXowctv2lnmYJ6nlvYrgk0udf8FExXDnL4fYMZrQil8esp0JHrjXYNJPxmRemdkerN4Deawj/S5xXbpsGj1DCaHjdB/n4iiLnXRDo7wXs86iGVqIKPttj6KN3Tr5rsFVLOdodiJGsL+z/eyvw67lVggMW/ARngomZuGGo3xGR7+YSyxxvGTeIzKmCd7Q==","hIbbdt5qIHc8eCTR/V0FI5ACa0PxS+p5tiXgfgsCYUc9/Mnpx4wN2Zw89bq+3E1c29L6/QxGbTTltQRO1BEcGNhbdmAIy7GDI55p+QfnsMZHtDdsmSZDiY1uY0B1bu3nox8ycIIYr60vjypxSM+tdCBiDqjPO5RHvhwDOG8VggwckKjh0DCYD/GjImowOxhPXP4OCfEFU2txVutYXt4n92jzEK2+1/R2mpWj42eZrmVNzbp0FYEXpe/zopSoOX9KmNmfI8S++V0HPITRNJH1Z28y0Y+DM6mQtrlCcQ==","ECAx6TGCMc6btFVKXQBK1AXCKa/EzM9FVOaQPO15jBexjeMdjaBSBt8T6MA0Hsucr3t0MDpHcu5cRFFuwmTnGPyIFDGc8hjUMavmRQ5eGRT9Mo18OeD7IUZ0tTwlLK4lxpoFDYlSXDEPGHOqJrahCEXlTjwgIO9f77wBxOsuNjdz/2SM334oD3CAH25w1bZYzzM/ZbfawaVS0J+e9SEZ+Y9lbBJvBe+WebC3fdU6eBIX9wYXpP59gRUiOcMMZtbzq0QU+Gp3lQXUY35DtrIHNWkA+LNLHiManQiimtOHEb2AMzjYeueHlBvymzlFB4W8Nq4Ya2J/aL2bBG+RoxVADfvMhJNBAaXwnAM0LsG0e6vZBpRGi40OkeHf17GelwSZ4VAEdU/PuGA870yqS/PSgsw6I3h1Hi/uBgcaPb6caRJa7rSfss5Wd4zk2+jUzkOPZfuQ4oNN6nIbnMxCtpqO3VCAwi5CSQ1RWI6N1Q==","dw01pMSLpJGIFHZYrQDMoA4FNSmbjUW4QrU2w4OSLZ+QTQN+WNkgyIq9bpeXRW1qgWWfv78Foo82JsWgT3JnXPX+2TpXbPghJzC60vEsBSoY4MGGot1u/L2pIdN+0dqYW1drWqxl2Vex1F8iBXyFQrtgFtZ5FCdz0jS2qcOv7dda9rVksLMoWU4EXkHdbUO7b8X3OPAvJtxnhuzC/y4D/W3nXHxnbRApHlkHPVjy0jBzyoXHCCg0+wkCJR9ydC0/3tOuJumG6zI2nxE7cJCBvy5qCXK7783Vl14m15KrD69YH8sPQiSBT1Js4x1Ct6fJ3RNQ+elozez01b4On0s5CFX4fybC2D13nPL9EA==","0HxHpZ2NXmvKAUlnCOu+Xiu8EVJloHqtWxmArxaZkdKJRR4/yogJxPDWl6mP3KrHfph6R74rdcoMttns1LGWWtiFzNoFLZLTGSjsA5gm1xNuy47y3BbTc4e0rW0Bd9GGaZpk0wwi+gI41VqC1nmuTMje9Q9DheDaN/o0l++rpKISSqyqq7kpn5PU0Z/IO/A+OAOBOUOIEoETKwrHDueMcTIxvko/cmV+LGRtU8IgVlTq9LEwpkQH/JIvCemkAEbDQxVD5D0Xz3SWL90NnpRLcGmTkxdwRwtX3kvbMVwMuF8ZOFSeH7MN43F1TOg="],["pajCQam7dZYwYFqz+9igF0Sn3GHWaFSbPnaGp1jKns9S3gKNh64HYrI2Bj4UisHfsk9hpcCTlrcxXNMwi4CuDxxhJHvp3dBpO2DhAVeDOn8jEzNRQAhRAF9U39Xp7sudEtaGE3yRNx1AZD1c5NGrHAZVIf99rdX0Wc4TvhEFBHe2q2DrzRS6zwvddpMfFH0p8ckaq7bzb+G7OAzx7a+97YxBX8Y/17MmbrCKLA==","kuls90CB83zNIdNTQJJFh+y0pBWJ6hm9XJTpCZX9zzc8FmS8XP1ySWH2vQRL56ghsA8oUI2fdPqMdmewgyqwKza2XU9VbeA2DfYsMrA1CvmWLqpXyzgau2JbchkYQtaTThh39ZZMWjbAxwJv57Z4sA/LmNCSE5qq3/ajixh1URqqEWx5DxdIuONdMLHa3YbLDtL0RVQgCWjwGP3TTnvRRIGD4osKzJ+2jKbKrD+LK3jlDGQfE97xJE394Es=","TrTg7Z7tUpj9VRSBBsBgMjX9UC8EqyAN70rVaPA8NlFNNWh+k21PMh23+uuipy576PpYLq9NCmyuvtsZjrznsSoZjn9UkZ+0H0wmj8FsnLc1ozQg3qHe5KOTWPAOb3lEt/GDU/1F5OFKKKJg/qHU+vf/fYbXKRgn6WmAR2Q/bT661BmvX/QYCr28VPhWLHB8E41lmb4pCYOo9HI5","2LL2SovWG7TATshfgq/HvI6GHGbu9Hpp8kDT+jaKNE+y93UbyYed75gNsAQ9imyGEkvJLaoJMY7hN3vinjZaieCIVR8FH6jR07zS7afO+Y5Oc6OVImsVM5eS2BnlW+TfX9Ad7iusP3aIpeQVyWW2Pi1YnT4IQhWXvpnXwKKnTXKzHH6VfVH/JVByxQD9+fMLhUdjLz7U91dIOY8+6RH62pbz/dt5qwH5j9fGDqVMsk1L0GdGu2aQITKQyZ4eTGf4JUIw7CIKart5gq09Tl2+nJfyjSWEKZ/SnHYM1A==","sfPclx8UFdBp6mtWIrhFBaxBy2uP7ILvJhgI+p9aHU3Iif/45SA5ft/ML6VjgzhYYNzdF7jzDtDTikBztNVwPVXK5YLQ1KjjuRPyB+cWTsHjrf9hfBrbODyRVqznct7eT2z7rtGRSwf2Rx8swGMIw2RBofUf8WreV9bacPQQX9k6+Ny84RCa/0lFMU+C2N5F6sUm6k8Zg6H/hUDe7tJXFFTWwzYmy7ZT/DYc++g8hrKOdOg4r/5IQQFt0Ro="]];
-                            $result_val['FGStripCount'] = 5;
+                            $result_val['BGContext'] = [["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"]];
+                            $result_val['FGStripCount'] = 3;
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
-                            $result_val['FGContext'] = [["UPhIMOITnlxobGBlpE/S5aOjCD+dv0VbdiLn7tfkGFK7eSpT2yT+XetQW2Ag4T1ESCJ84wWnsmz9N2C6GH9klc413ZEyt7xhg+UE5cPI7hclwbD+RxOP6uWN9ouL5X2uIcD085eInJhTjB1SL0PcJDAUe9hcmGVHcwFYBVvCS8ZUUINH95EJtpR7UJRSfe6FCM4XmFeySr6MPCkbOwqWWNGOyAIoTO1x6JHcyX2jwrmhXlWpdh5ZMZ5BnQBa7Mjp2T1L4JQCZFlwanfj","oOUnsFgcBmI9pNxbxIw2iqETJCNDxZdQtXwYNp3n3nJ893D4mDflu8jtaZxoIfwz+Xqyft80VDRPEVNTMIJNEWyHctKApl7qAQmSg6wbIzINm+6kNnn+BfQsFoHX3VziY8ysnebDBha8KzyRbL/TsZR1YX3RxGW315rxkMMByBUw3iKNFDEq4BDhoW9ccaivib0OvWGFWaGaLpOngXxRnCcG189eYO3bLFF/Ys0lQdK8UBLJkuZWY7Cn95/02WFAPRmeP68OeCAYEIbvmZFCYBoMRy2IG2ygaqFhbA==","zhJlPp7SZPZpddYz8//hPHsQFCQjIxW0zEjId/cMmyryhPcL3CddhTX5MmTjfKCL5IQENwpdUTgmUwi/7MlL6YoGjqFvEmX1M0LJXDY6bGcje4LT0FEHTmNia6q2RFyZUxiumj1GdfXi18FouTzJxP49GrNgPLrQ236TABMR0wiRdZ2mjplzsBbe8Va+JaDbtLubVYGLyuHaKRALViWYIn0+wAuRRyqeXFM4VHNImJXV0iGl0zzZLMMP5z0K77nxNHT18i7cuUa8k9o2","wmBYkPxkq8oSIp1Qb9Ymzhdtpn3YeSpjwVtHL7h25vo0HDwWed8T14+ckpQo5U0M21XRFrYT6zwyzjOzTwZKRnsDU64CsFKOWNOwVBXVHYoEDHJJJ+qsx5GNGSgIJvRAzn3rLYdlmQ2WRj4wzVKkuSOHhHiosIBHoMD7zSbhPnuEfdw8vGULrpPOWD308WDDYWOMPsDVuneHT2Dve1pxIB7mT2GTPWYSdiN4aZpTovuEoQXK+JrGkRXxvZGkwibq2c17Ccy7Y2X2/iH2AShlZYMeXz7apZTvMThpcl3P8Al2AfGb33SaWX2iMf+vYeplW2pgVICRytPmUUbr+MCPNbX4K776KPYbJZK5xA==","YboBKBG3K5gtWgexB3leH9y+AW2rLofLU6SH621QHO7eHYxoK48hHOUUJ3gZsqUkU9cjyI4mCXA3QHWnGEUl9aMEJwtcG8oEVwlbYlEy/sf8AGwh9m1fSnwTuUFTvUsk/foSy0U5XLFmhu+2ela3F7DvXqYCknDLjcn7y3OHL1EZZ5yZueMpgqyJL0Z+K+p0J3ULHeXvuY2v4FhKd8PjHyEIRwRSQ3E/vJMnSfstcimIv3YstoSzNK/dy2a1CsF+b1oTulFNoTZv7TfTDqLB/tZR7G2NOwVOlU8E2xxlFvO1rENDS+Z5OHN38b0="],["qlCIlkMUGG5O6Frul2RpILEBvv3zRBABRyuhXd/or+mUdo6FSXGp2cTvGDFx0D2iBFqb4sipImEAYKbPfFi8LuXK+JlocGiaU7wEAvethuc7mNnCe39mWMi2VBiu4XolAEoseMS6cu6Ty+dJlgbGCSY3K16lXiQ/+EjQ2sg3meGL3NkPzIRHTo+0HcAI27Yg0/Ht8W0qAR5w6vG0GBTWWacD5uy5kIPt6t3GguxdVJ6be/sxJ2nVbR65P9I=","WwMe0k3gDkmC949nit4a5htTEiWy+EfUHRfkZqT+rsGfjGaO5q2UI6L7rEQHfBvMPLrVx6cvLd9rr2ydIeImB/8e4EdQruebNc6s3yJNLkQ5mTjV4jn7epuI0hgo9I9puW7ygj2DFAgPs01EV0Fa3TtRuADejiFYlKr3fi5VJ6VCw0dVjvmMqXQ4Ra+2U3MrDB55hkDN0vxWDyATLLo4/sCnc9QBRumhRROLNluSUPlxDdUNrYtB9pOOq/s=","VTe7qgDPvAeb5WnUe4st/T4/TheyJLurAQ8kxY/1P+RA7nCO6tnT1xnocEqA74Fmg+0zRF0v6A66bbIgGrx5S40/Z6QfBy22S2xGNoFiuQsgy22rIhFjjtIhjgZ8TBmYnV37eA7zHI4H0PznEtPubW8VjOci+RLsePf2AAPCZjWrOdLqQykqWfoD7HyVMUNzKPoYlNVVnn6388+5sXleXh7TY5VGvTXVs0YxJD23p5jVOwvacUqEW5rV3slwPoZ0NHxnaZEStPksq1l1","FiMKFCqRaelaK3ciL2teBsIh/+KIV4hYgxhgAUg+jp7M5y0RgMFU82oacjW7VNqy5pTDxE4BgGBt8Hmc8H+nPpztvDHxMbzuc7/c1XkOcsInv8aSttvva/t+VXmb9lagxoxJ1zcIBcEx76nc+/B1+dDiKfr6uIdHyw4H5smL0+JjAiPZOs+ty6qf65MT1+bVXptYKj7C2/J6wPiNs+4UQlCY3OYNFTcBIR1gDWWLKQmgEH2Ac7sm9HF0x6uHU6P3MxUHNls1CE6r65uvusmTU1tFUI1+4nVBjAL+FRTQqA8W6s0ESoGDhyPQqHA=","BHMeOxXWYzCwblNPXW1QdPvyVpGAYgvFVBXbH/se+4XwDmQ2Vkl7YtvbDXNidmuEuTyjRpF1nSPv8HpLbzM4hfEh4q2YjuYD1qN4ZJ4MTbsGayW27SH9ht9siAGVgmzXLWCqsD5naVWkUCi5XHa07kR08b1AbpPwVdFdXAQ+5WMPL+Efj6/sG1Q08IhlBByNGyU+Qm2NsxEkGe6CiJWrsWeNL+fT+LJWA2+1oi0Nib64xY64tf82NXPo85CCaGwWVoie4wf/m/rSg4RZrea9ZhHEiuD6BizI1Ro+8Wz3GeloV4P1XbnC8smsndMUw+BfkvJbHLh7UVnmoRfNUJX7GT2/vNz/dg1BPpIUd9ivLwv2IRFsWma4dchG2BGyVtQVWHz0M5igPDoc4ZF5IjvXGRZTyJ23rHO+txWBfQ=="],["HR9Upw77V1EsIjyst/so9wX0VlNze27+qW7sKalfAhWE3gKBoF6K2vF0oBH+PihSp1MYez42Unf4dRi6zoMFViDk/R2OvHLJSKQ+bxlhBd7jU5Iys1A47eAf2kF/2WxqUarysGEkrPRMzlBqpPEe/v8sMp/zt43Fytb+cYYDrFvDngcl9ZPl50MXUpREhB/WjMu+oUZCCJbp3IKw/5aj4bnIe6nAvVfhkKOa04kXds8X5wIhN6kah/XNBQI=","LlO4pVBqPsmenilJe5HAbEUZ0O0meZjs4RLqAUI2BMRDaDAiyUU7RvdHbR5374yxxuCG4DuGFXlKndXBSLNji4Oqbg6JThK3XEMO0a9K+Rs4MgjcLNDc6WhLB2VwFOy88uGA7ei9nxREv8i22/qzh6EnzGHMPyUsUbRILsruEgtNYQCuPVlrvBnnY7HM16UqiGPUwPqoixi66vdk96ZimV+cXLYG+lPRj+rBlIB2yeT7xiNqSiaIkafxQLjWaxzNlMkPkuzaQ9G6ndCx","mX3vtK5R1LWNkHwOVK4RSVy4NzkyUQ+m9Bmk4uYIfNdARVAUj04LVTR2Pvv7PMF41uL78ZQIgV0+tjwJPzELtuFzgrCmyc9q5YLKc5D3qN/K5QRofweayjlaWsoOcaegRZbrJ+Fa5sTJuHqg6KKDVL3H/KHYomgREXT2/llYR3MMkrqSGJiqHM9kBIQyfVn/cJhtmxuf9OlsiNyRr6WlZNwcK1bIPYAwEbj9PsN+maWL1yXvz3Mv0G+atjdQSGn8gqds8M7KUArhsN9T","BmySLLlhyk9jTcyoXipKPlfK4G7f3HtazrlT0wkR9enj/YPf364dtlI5nuSHqIMq5HnArSlQXvi/e9Zb642+2FLJGd1tT4wsIG4mSi9s39na6hDyHnOqjY1pQ+Kkk9fkOL/gU/dr4r+tWlaJF4RHNfTsTV4jcYc5IIBr2ocdLrF2qE1Funfq14znwdbpmcts4vfgzq4FrcBwNAI9SrcCfTs84qpQlXX9yZOKpo1M2TOQrZWlg2fq4A/MzXD+CxrV5mrBL5Uo51JvDoRs","GaPUgiVdcIM5wSE6HX141aaA9Upj62sc1jq925JpBbhyop5B6kQtKr1jXFVtwr+8+EAOH0o2zkOHCx7XovILJ/c+ofamRd5EpsIclbRlWwGWhpAmQbM+e6LgEqD86wsjRsJmRsb0i7WxWOOk2GspI29hgTVCd+ZB3HtTLSnmgyNJq8eDFoWQJRmDJaspY2uawlytOHndZlszGQtIigEY1/iuD5KEs6b1oZsV9yRMp+Q0VGjjrdz26bMLbW8="],["gSF8VWkxhC6oKcYzVd/IG2Iqvlbpq51AQk/CUuEHIxj5slmrkldoNL9HGu+fGPX3LJS0ClnXXcuAlS9VzgKSaF0jmZ4ctLUlrkNhL+IkeUNAYkJ3q9oESea7+pra0c+bFVQghlwe/3mb40DEp7L/3OimA9OGRFJQd61b+gsRzmoy5Zvd4ojBIEbfo4zc6X/mNp6p/wJM+NEmcvRhWWF0p50zTRiJKpkqtV4qcOVGznco0zH64CkfD57P8A4=","caho3iKEcsPGaILMo5EKlyPxpUg9K0zIq3LZz7KjPCeoO+nbgKN/yXuf0Qje7a30RHATsBolDZv1SyiGwhU5S1FXk8KxSHKtDJ/Ubabd3UnMnei2Izh/L3EJYpfikkuhgn6gTm+tiQpl7QWo/+ZkBuE8CTzBhtiR38DSkiq9mjlipICd9yOla4R8mnvlem62N1pCwd9E3g8VrLxKXzfQfowgKplGdrF9yBGFS6Up5G7smsmsH1ie0axeelVAu8a3mdsjQfkTydSCDKZo","D5mgeiO3smhwLoXIsn/d25beGaEhibEk4eb9FHrE1xsSz+sjRADfpRctQJv1dayLG2q/y77DIIMWFgSoHUxPuqukw7g+rE/eeESRjHlmnEhaBqBYM8etj8vmtskQP3G1DVHhH8UfYr1WpuWHG4cOA7MBcr+ym0ZE79imnBnIyimx7rBM9u9LHKGuLHb4mqqVCarIUxIBSUgYcksRdcUCl0ghDEAmo+LkTAQW25o0vktRFdpSJnR4A4chK0JwDejZOAgmEzXT6iTCXb/O+IoEtrcWH67RmEobgahh6w==","8kY9hHXulfhVhxFelO14g38GjiP0S+GqOX8nr8DMVmMfsJWWpp4YV1xi36fh1siGCAEg2XksFHLDnfKpmNFJrjCXt3jd7vQHj7GXKQN+vnETriIbLjYwgb597HsKJxjBv5/iNB6MoAQW5aRe2RmhaQUROm1oVYQvvryHrk6RrXMWj5fG1chMmQ3kugGcznRiibQduhiqfwWZvPiWJrz/XAnmsP+KutIQ4b+GYWRMPg10a9LjZYdlP3cn7QvxfiuoYjLoUwSLSQJhZ+YWMIb/ZmoKkgN25cgP+UJreQ==","8HsDt1bBF5AgU8BFdsvaHSWmlX4lTa+ILhviU31pmVoW1bgfeYaGBZ5oZX5mE9fPVV4ns+EulgxN1akVQoqg8hW4by5sEczMMM5S/SugXoDbgXeZSRaw6+kbR3Pqr2lGhzMjYM5/Fn4TkjEyizdQKKUuyYtTZNFptye1nnpNqkZcUNk1fMXqrHtsJclx2qDJtxlXsuTq7IE7G62fbsPWOxEj3xA9o4yGsjCcWaovBq0uOebCYtm8zaEQmDU="],["uiYunHwBCdi0VtPxsKB0kCtcIRYlu9JSWPBbvs3z9LbfXKKK5ijLoteihmgPFsfHg0ou6VVOIa7mBCzqKm2YmIm3B4dLgVCknrQkhhdiqHvC7UFQjrHAESKPGhPEorl+4KRWJWZuG8H2kS06O3RXooyRGTP0nIyw3FY5trSX2+Bx4qkyEmxUSLghoE5ZNnB9XPnnJzRcVY0Y2b4KeYTmlHobO2+5hybxmDFGbu7DUtlnXQ5kSBkYwepjB5vzOylIalQgz7xwUjKiNxAw","cEXZ8ym1YqbMNAMo32pysCi3uQWeeVn1Yukk4WM/Yp7o2gGxQdk4QnS2s/zRrQFSEz3l5cW8hCrwIynyu9O5QHkx3zQL5i1kNu6fStE8FMl4lbQGAcfTcjssZ4/Mo3o0G2EguF+pnOaYpkhDVZMf/PjcKut1xS0mUFhCWKz01CEqHDJ8Z8C7e8t1/C3lyb1jHELBuy2WflwcOZWLQECBIo9Yz57tsVcd5fOQ4kDEi3Ua7lZVxl2WrTTxZ7765mKcqDXnsRWDIXG9dJ0AUo3MyUQsIqpkfDZuQ9y21YhVWFko/oHQ+spSupCyHk80VZUoUyGnOGXzc28JkSMa","gx1YQ2mrSgGdaFlflDNpO7QRzPi3rYalEu5pI0kwGHXM/P1Tu3KYKtVZuAkdze+DH+5CchKq+PBR+sDmPKP6+hlRiO+DiB2br63Vv+DUpc/GnfmsACMmCz1oYEnQ5QP+PqILNfF+hE6T8A/ij55yNtFZtM49Hc1F0gpGQWklVrN5v1a9cHjQEk96U8y7ltfDjydP0+qKFaBOUF64Rudwm759MdpueGEy2l3RtrJJKh+3scptfPGb+xGmBHgoRtkVu/Gq4eKBbja8Q1kO5+nLf9WP9KUZVglowdYFDShoBPRujZi87A3Icn130qw=","6moAauUGuJtoANuXZbs+0Xph/GvijGITzclmuPSpIlGUrDVPZ2LZCjTfAf8JD6m5qErhHYEb/D0O28ivAe3MC++g5rpfJvNUMnjDdmDE5ZvfekYkcPuqbEvlI6H/8n8ZhMBuxGZF3D+3qc3vkQLAFfl11GcDHDBwrLDIkE5dU2tyaXwKk+LQRZxjbURMyk9wrTFzatfyXi5ON6PVIxY3lkqmXwnxVDXI8dsrI+Hok/BBPAGdGc+BxbpVNavondetxAiixtQuvr2uXqKDTKWQxY3qnWKgcxznBXczNxyKUmf4/iYIy3Si2LsFxRp986b3kCupRvc7h+DFAbo7HUCFs6Xg2hVBfdeHS1C4n3Lo0Jgvz9PM5E9iR5+8xAOm/vEeWSAQFGPAU6aaE1q1p+CFUOIv2Mmj8B9gRiICkgbo57NW0RruOCRb4KOe7t6gFOYQsnSkDqfjyInmf/vs","G3wxzoWihp4rjkp2zxlNR5ly2ksgE1OTY5tXlfJFxLOCEhaJebsLeECJ7iIHvlG8o89Yb7BHzohgHS7KT1/rR+QYbLd8T+XwgOUtFyAExkD8EDSI9CLZ+ZICwOGCJAwtXwANYeQ26r94cUmjWImf1intp/U7hDoezD4FEe1hqwZuxq/RbwXXazy8nGNWQYb+Xzpw6Wk60tseSmsCVE9YbmKawZ4A+xYuVK0KHJpuDhrjKV9l+MM7WPVU/vg="]];
+                            $result_val['FGContext'] = [["oKbE5FXBMAoMgtuGO9jFuvGyE5GjTDsRg1g3uUKpScgSkRuF6XRsnm4cTHOvLc7CgW/OOoKJnhYgg/WyYdY7EL+wiN8FD3xTOWMiQCZiFSHAnsM45Dmhx/xhtCOe5ICcV13JY94DhXm1C4ccnepbWip6xDdFPsjJsZPem2bYX2tcDxxzusW6t9w5WzRfXuQR6WdlYRuYpQEC26KtCFIqWnXLynONEHSxlq5/lPQO4fB7zsP1Jm4QbSWgRAxNbQ5f609mc1qunFWIaE8A3mCNY8N3B47hU2i8JSx7jdx6aUAZZOd1PVG2d/CYZ+A2UWHKO23sV12uSZm8vMi/","3OihuuhTynVNG7K8Y/aMcluzDMhsASP5I/74djZwqEn/FGKvmzM7/eyvTE1kyhq+Oc2FsJrzazliPxCXgTFmbyZnpQ0nzxeLTmCAarzmtSYidHYTtUJwoC0nnrYtv1pHVzfSqtY5D6jr9cyQpGa69itt6YkZghr03QZ0p53Wu2751iOJd8kmg8q0WpDrW0+Fqo/tSjXLJ+8TCmMzfO2QHVPShX//fm2/0YASyQM/IAnNKw0+fHGYtNrqRWW5af+8b80mp6BFT20dB2yYQ+yZDpQC/0SiVruT4jN2iQ==","ni9Pqk0B0XpGGlg9HDQUU/xrbzvGaFK0Dwrgy7PHdyjo1dHfTgbk/Y2GbznCGgC8KtpiDpO5dodjJ0kElALlfVLcjME2CQt+IM8Peq8Q8S5cDQYFXIbJ0RxgczGKW7UkGWcf9LM3/opWzLFtRlQZTE0mTI9QpI1tJwsnJqX98hmUedhWBXKLG/micwLkC0XXD/+pYjs6X+i4Tq9S2BvRC3b8+dCH+rpe+boLHs7s0H9hKk9ko4j5piix38NE70qxRqxkqyTdymASqlrJ2bKqG9firSZcI87hFe0dpcKUoUSVpayLa/jTog3CP0LqAlJo70j1Mt9OHL0M+ALcc+Weaz/pGMxUb0usCDBqkxp+HXKVFPIWUpUfLXRY+x4N5qyz1eNtDM0TF5Gaez5pbjgxfVF6IYOO0mM/DMK7DrxtWkB7FwsjHNbgHeInCOE=","huEZFhOQ9xAKb19ZWoY4mpzpcfL+wEoewMDIxUJlxTzKX/WQSvfN9Qt2lFB4hKI0QhH09lFSGu6nDTxtg+sRYZ5LZ7Pu64LWQnX9k0fF5mJJxrviMoHFEh4sZdlClWHEfG+67qu0el/c30CryH95h/iPpHZyD2dZCu1PD30oEQBnEWbMowK5Aswc+NZbnG2owzMvLz/V+gtOmfuKRC6opiLtGKJRGtc5DUGVXLGN9+zepxr+zlgqlpS0JGgyY53L7eBkdtH8MShkFx4QbZdXebTmJcZ74s0HCZCpAZ71seBVW0a91IxXOltFadfRlZcnHVCcee5kMuiwWjqyb5fYndVquAp0CpqDYpQtiQ==","SCHMxAbEL8wOzK8G5dOTgjjbtEPVRqlb3Qd8oYmdBleBJHaDjTGHyO+oh7eSwmiTQx+9eQ2WQLgFbf8U97jLIosOitt7VL+UE1zrtvxvLC1tTJvAaYVEGwOnINSbWYrKW3Ka6l4RntwyJbbA036dhQ/3FK6O7Mxz6DJNB34jwE4l87HT7+UdjgwQ67+Wj0INtJdTj4WQPdmoewE449l6RNhNntPm1Y7F/iZLBk8bYMDHHBzixTxuKikBaNAUC8SgUn7G3eW0orEZMoFQjud2gEtRmD9+8JwKClw6bmh1TaXl6E6DPxYlXGxBIPpd9HAO9TaNlQWfqCebyrOW"],["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"],["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"]];
                         }else if($packet_id == 31 || $packet_id == 42){
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
@@ -108,10 +110,6 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
                             }else{
-                                if($packet_id == 31){
-                                    $slotSettings->SetGameData($slotSettings->slotId. 'GameRounds',$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds'));
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount',$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'));
-                                }
                                 $slotEvent['slotEvent'] = 'bet';
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -129,29 +127,26 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                                 if(isset($gameData->MiniBet)){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
-                                }                                
+                                } 
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
-                                
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){
-                                    //$slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                                     if(isset($gameData->MiniBet)){
                                         $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
                                     }
                                     
                                 }
-
+                                
                                 $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 if(isset($gameData->MiniBet)){
                                     $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
                                 }
-                                
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '657' . substr($roundstr, 3, 9);
+                                $roundstr = '647' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 
@@ -194,31 +189,11 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                                 
                                 $result_val['AwardSpinTimes'] = $stack['AwardSpinTimes'];
                                 $result_val['Multiple'] = 0;
+                                $result_val['ExtendFeatureByGame'] = $stack['ExtendFeatureByGame'];
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
-                                if($packet_id == 32){
-                                    if($slotSettings->GetGameData($slotSettings->slotId . 'NextRoundAction') == 1){
-                                        $slotSettings->SetGameData($slotSettings->slotId . 'GameRounds', $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1);
-                                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount') - 3);
-                                        /*if($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') > 3){
-                                            $slotSettings->SetGameData($slotSettings->slotId . 'GameRounds', 1);
-                                            $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
-                                        }*/
-                                        
-                                        //$stack['ExtraData'] = [$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'),15,0];
-                                        $nextRoundAction = false;
-                                        $slotSettings->SetGameData($slotSettings->slotId . 'NextRoundAction', 0);
-                                    }
-                                    if($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') == 5){
-                                        $slotSettings->SetGameData($slotSettings->slotId . 'LastLevelSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'LastLevelSpinCount') + 1);
-                                        if($slotSettings->GetGameData($slotSettings->slotId . 'LastLevelSpinCount') >= 1000){
-                                            $slotSettings->SetGameData($slotSettings->slotId . 'GameRounds', 1);
-                                            $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
-                                            $slotSettings->SetGameData($slotSettings->slotId . 'LastLevelSpinCount',0);
-                                        }
-                                    }
-                                }
+                               
                             }
                         }else if($packet_id == 44){
                             $slotEvent['slotEvent'] = 'bet';
@@ -262,7 +237,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             $result_val['NextModule'] = 20;
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                            //$slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            
                             $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
@@ -337,7 +312,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -348,6 +323,9 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 1);
                     $stack = $tumbAndFreeStacks[0];
                 }
+            }
+            if(isset($stack['PlayerBet'])){
+                $stack['PlayerBet'] = $betline;
             }
             $isState = true;
             $isTriggerFG =false;
@@ -373,50 +351,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             }
 
 
-            //$slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 13);
-            $newExtraSymbolCount = 0; 
-            if(isset($stack['SymbolResult'])){
-                $gameRound = $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds');
-                if($slotEvent == 'freespin'){
 
-                }else{
-                    //if()
-                    for($i = 2; $i < 5;$i++){
-                        $tempSymbol = $stack['SymbolResult'][$i];
-                        if(str_contains($tempSymbol,'W1') ){
-                            $newExtraSymbolCount += 1; 
-                        }
-                    }
-                    if($newExtraSymbolCount > 0){
-                        for($i = 0;$i<2;$i++){
-                            $tempSymbol = $stack['SymbolResult'][$i];
-                            if(str_contains($tempSymbol,'W1') ){
-                                $newExtraSymbolCount += 1; 
-                            }
-                        }
-                    }
-                }
-                
-            }
-
-
-            if($newExtraSymbolCount > 0){
-                $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount') + $newExtraSymbolCount);
-            }
-            $stack['ExtraData'][0] = $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount');
-            
-            $stack['ExtendFeatureByGame'] = [["Name"=>"AccumulateUpCount","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount')],["Name"=>"LevelUpCount","Value"=>15],["Name"=>"CurrentLevel","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["Name"=>"NextLevel","Value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1)]];
-            $stack['NextSTable'] = 0;
-            if($slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount') == 3){   
-                /*if($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1 > 3){
-                    $stack['ExtendFeatureByGame'][3]['Value'] = 1;
-                }else{
-                    $stack['ExtraData'][3]['Value'] = $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1;
-                }*/
-                $stack['NextSTable'] = 1;
-                //$stack['SpecialAward'] = 1;
-                $slotSettings->SetGameData($slotSettings->slotId . 'NextRoundAction', 1);
-            }
 
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
@@ -539,14 +474,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             }
             
             //$proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
-            $proof['extend_feature_by_game'][0]['name']    = $result_val['ExtendFeatureByGame'][0]['Name'];
-            $proof['extend_feature_by_game'][0]['value']    = $result_val['ExtendFeatureByGame'][0]['Value'];
-            $proof['extend_feature_by_game'][1]['name']    = $result_val['ExtendFeatureByGame'][1]['Name'];
-            $proof['extend_feature_by_game'][1]['value']    = $result_val['ExtendFeatureByGame'][1]['Value'];
-            $proof['extend_feature_by_game'][2]['name']    = $result_val['ExtendFeatureByGame'][2]['Name'];
-            $proof['extend_feature_by_game'][2]['value']    = $result_val['ExtendFeatureByGame'][2]['Value'];
-            $proof['extend_feature_by_game'][3]['name']    = $result_val['ExtendFeatureByGame'][3]['Name'];
-            $proof['extend_feature_by_game'][3]['value']    = $result_val['ExtendFeatureByGame'][3]['Value'];
+            $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
             $proof['extend_feature_by_game2']   = [];
             $proof['denom_multiple'] = 100;
             $proof['l_v']                       = "2.4.32.1";
@@ -627,7 +555,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = 117;
+                $wager['game_id']               = 144;
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;
