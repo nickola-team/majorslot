@@ -534,6 +534,46 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'played_at' => time(),
                 ]);
             }
+            else if ($provider == 'honor')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\HONORController::getGameObj($gamecode);
+                if (!$game)
+                {
+                    abort(404);
+                }
+                if ($game['href'] == 'honor-cq9') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'CQ9';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'cq9play',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $fakeparams = [
+                            'token' => uniqid(''),
+                            'language' => 'ko',
+                            'dollarsign' => 'Y',
+                            'app' => 'N',
+                            'detect' => 'N',
+                            'game' => $gamename, //this is real param
+                        ];
+                        return redirect(route('frontend.game.startgame',$fakeparams));
+                    }
+                }
+                $user->update([
+                    'playing_game' => $game['href'],
+                    'played_at' => time(),
+                ]);
+            }
             else //if ($provider == 'honor')
             {
                 if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller','getGameObj'))

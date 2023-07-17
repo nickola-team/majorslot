@@ -104,6 +104,7 @@ namespace VanguardLTE
             else
             {
                 $adj = ShareBetSummary::adjustment($user_id, $from, $to);
+                $adj['date'] = $day;
             }
 
             $dailysumm = ShareBetSummary::where(['user_id'=> $user_id, 'date' => $day])->first();
