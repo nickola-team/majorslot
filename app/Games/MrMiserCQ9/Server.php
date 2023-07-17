@@ -399,11 +399,15 @@ namespace VanguardLTE\Games\MrMiserCQ9
             $proof['fg_rounds']                 = floor($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') / 8);
             $proof['next_s_table']              = $result_val['NextSTable'];
             $proof['extend_feature_by_game']    = [];
-            $proof['extend_feature_by_game2']   = $result_val['ExtendFeatureByGame2'];
-            $proof['extend_feature_by_game2'][0]['name'] = $result_val['ExtendFeatureByGame2'][0]['name'];
-            $proof['extend_feature_by_game2'][0]['value'] = $result_val['ExtendFeatureByGame2'][0]['value'];
-            $proof['extend_feature_by_game2'][1]['name'] = $result_val['ExtendFeatureByGame2'][1]['name'];
-            $proof['extend_feature_by_game2'][1]['value'] = $result_val['ExtendFeatureByGame2'][1]['value'];
+            $proof['extend_feature_by_game2']   = [];
+            foreach($result_val['ExtendFeatureByGame2'] as $item){
+                $newItem = [];
+                $newItem['name'] = $item['Name'];
+                if(isset($item['Value'])){
+                    $newItem['value'] = $item['Value'];
+                }
+                $proof['extend_feature_by_game2'][] = $newItem;
+            }
             $proof['l_v']                       = "1.2.6";
             $proof['s_v']                       = "5.27.1.0";
 
