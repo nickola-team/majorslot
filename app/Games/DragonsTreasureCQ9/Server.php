@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DragonTreasureCQ9
+namespace VanguardLTE\Games\DragonsTreasureCQ9
 {
     class Server
     {
