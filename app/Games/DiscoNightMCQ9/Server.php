@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\HappyRichYearCQ9
+namespace VanguardLTE\Games\DiscoNightMCQ9
 {
     class Server
     {
@@ -21,11 +21,11 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
             // $paramData = trim(file_get_contents('php://input'));
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
-            $originalbet = 3;
-            $slotSettings->SetBet();  
+            $originalbet = 1;
+            $slotSettings->SetBet();
             if(isset($paramData['req'])){
                 if($paramData['req'] == 1){ // init
-                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 8}],"msg": null}');
+                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 0}],"msg": null}');
                     $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetBalance().'],"evt": 1}');                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                     
@@ -59,7 +59,7 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                             $result_val['DenomDefine'] = $denomDefine;
                             $result_val['BetButton'] = $betButtons;
                             $result_val['DefaultDenomIdx'] = 3;
-                            $result_val['MaxBet'] = 5000;
+                            $result_val['MaxBet'] = 2500;
                             $result_val['MaxLine'] = 1;
                             $result_val['WinLimitLock'] = 300000000;
                             $result_val['DollarSignId'] = 4;
@@ -77,17 +77,33 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                             $result_val['FeedbackURL'] = null;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['FreeTicketList'] = null;
+                            $result_val['Currency'] = "KRW";
                             $result_val['DenomMultiple'] = $initDenom;
+                            $result_val['FreeSpinLeftTimesInfoList'] = null;
                             $result_val['RecommendList'] = $slotSettings->getRecommendList();
+                            $result_val['Tag'] = [
+                                "g" => "137",
+                                "s" => "5.27.1.0",
+                                "l" => "2.5.1.1",
+                                "si" => "32"
+                            ];
                         }else if($packet_id == 12){
                             $result_val['BGStripStartID'] = 0;
                             $result_val['FGStripStartID'] = 50;
                             $result_val['BGStripCount'] = 1;
                             // $result_val['BGContext'] = [[implode(',', $slotSettings->reelStrip1) , implode(',', $slotSettings->reelStrip2), implode(',', $slotSettings->reelStrip3), implode(',', $slotSettings->reelStrip4), implode(',', $slotSettings->reelStrip5)]];
-                            $result_val['BGContext'] = [["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"]];
+                            $result_val['BGContext'] = [["iYOooRXXVIHcnU6DTTRB+W4+1t/LtZySZ9CXBwlvqnClfsRaG3jxi4arl7RyNAUdVOYSaMwmZI3wf0x7Y3LTqWcxB+mxcrTC3cav0dtQR5zAT/rLroQqcokampvN7y3uAe+qYSlj7CzrNtF1tAXqxNsiEYBKq9ERkVsp03T9GButXoyYdK+quu1miqgcpLvOFq9SpJJAJIbTq4hQb66Oj6a79jpHdFc/c4Hqv/LJUrnnkqmPowzrKONROXqDFT6S9HGo6rCdvTvUwy+uhkdgdSLztZpttdJQn3xi7TFMIVExsyqylAWRcmzIv/UAiBaA/Vep0waNEQZMRy19YwN2DL6mxxqmC3DQDrFQxGq/UikkOZfkuNQxohnBKTa0sR1KyhDzV0oLF3waJGyAHvtAWwuAnGUWI2Cr6IkhK4KkMwUmTR95M/LnF+1evQxyUoUzockVDHa46Wm81oLobzwqaOU+1wC3Y4cZduIrwqywtu7fUVLwnHaEIwM9HCQ=",
+                            "c5303o3G8eSG1H8TkhwW+/EETMbiDlLbTtI+L1KEaDOXUjqBM7RjvLUv/01c+kYRmo2euDtiWdcdB/3hJxpQr+Ms4h2FvY2C2uovHe6LaU5jY3L0Z81eidyOrRXN3x63+6+CLJ35xIckGqYpRRa56OGCOv+YHAX4hhYC8WIIkjUYW7NEHbEa/ov5IF668GpxawY/tP9fL5xObM2ikAjLB84mlAeLORD4PZYlmx/E7ChtK29+Ek1x5mbwxRpnW+85Vt4p7+u6RODVkfykpt3KM0sXt9EXJ+p/INCE7sM6wGnYfiOKb2XZ5Z3mixmXCHb1pQb9dL23Lg4O9Bua54b4BqZRFzqKN0eswVeUGlzPyLEDfK5oBA2Ahny0GzH2qC9fnsHdrOqOIItUUJGi0e6LYtqVxFnIKS+AHnGeq3YpW2Rp2HLcClpFU34IqUarO6Ot/WuUYYqdSff/2i13pji8fD2rlJu9N9V7mfD9Dw==",
+                            "0BVyHoJxToLbKXYwGWScG7sOwXGXZFAW6+PSA9+lVFbkyRBMX4ZGqM7Alkx0dT/EfWk0keqPPYcPgKbvqom48UkN2YRsGJBSLeolWJ1dF2o8zxb4VIaJipHcsK9b+LgFZAYpQgAmOaGFD3P9+be3U3JIumKbJmeGzR7nffEASVLfDIPyxDojlFxafRxZkJhV4dfQHVsGCjXiF49q6UmeS0xt61yXTDuwsYBEztIJKLta506o7uU4sFJnNeB9ydZ8y+M42IQOYqjgb1LSSlGF3uiUDu5phhzB+6sPcaKe/8yc7g8bu+KYXKG70PGW1MSUq9vQrvKQlwoeVVbD1B3WYSh6kVWdOylzfS47/Qa0ijv5wmmgzC9or6QvjE/nvmTdF18VQkyev1xLZAvE2OEuI6DnOdFFb1LnhYZ0e2N0aOIfJt3zowjPElAnJMw6XLA4IfeY5OKrhMx8atHpeuKI/0rP2Y6tnfqBEdS4DjCr/8RLUpYY4oJoQ3FNjzo=",
+                            "jnm7WaTTRf09Tm8jjI0xrmfGYvKcHGrjPtxqMLImxDdPLxA52NQRV5r8sz3A/ZasqOlISUcv2+JQJPij2WIiMsF6HoXVlbcugiw43RxJrvixdk2N5/YH/PlfaMilnMjObWHJ7rMz29ZprZf6VgoCWdQ/jEQGzSahJfP7Z1DdVLZaSA4cvjKndefn/7mK8i6TiWuE5Lp6YHZKxMCivbhfHZVkUa99qb5Dfb2R5uA8rJY5E2ZKfzlvATmCwbavAvJ+GBgxDQKIRVE3RySgx3qhOJUcYb7yxtmpPbeHndsT4LDVfVewCkdP682t5UhbuEUqYw1ZiNnHj2DvFbRYc8XTmZT36s9fsdSd+yz2SeMmZITUeJgcH28DBuU7Zf3holNG0ua9OaqQkC4xwoO8pBVU4L6bs7OAuDqxzAnFVBvRx3uVdyp1ThSND38qFpI=",
+                            "kBRsVTeUx48jr25eQrRsZHSIdTLL6Q7/kaVcoQWP6Ep8AMVUEgiCwLFe4sZN53+scIihh9G15ax/mDku7+p4csFy8XFDOQoUp2gXSQsylJoxEZiDmc1LtePCJvRtWiqR6JINPyQFtjnn0iVjS4C8g8muADzUUE4wU1uw/sVCAlSD6WqL3pBmctE27fPL18Pt7L0h4e9T+Ijs6FANX6O1+bTAbr0m0BYCFSvOci6GKYa3XHth3XX0MmbNSX2Btb2zVc/X+5hTTq9FWqNWnb6nmKS3LjYGrUTSevq1gyXUFvWvLZxEzAfDU95c7RjdlVLeU9XHDxsRtC+1yFUzmIKwu3POGQu5Pq8CjBSwnsUjyBJ9osFN5aAfkY1GiErSkBxPYr2/bmzJLlfkY3DhTZx/q/y9ScpIbyaOIED5Gg=="]];
                             $result_val['FGStripCount'] = 1;
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
-                            $result_val['FGContext'] = [["VTnPx1kuuzoExpziOVDps1kJiwuazRaHlN7mZJRct4r8x0wS5MolYitbJVidVX4M7wKugATidPvgEdvrnoYwQVx+2VEDe3QcCXK9qwfOWblH/U9Pyqe222Ad3TcYNrPm5kE89wypwNhyjjGckMErfXxg9po0cF7JjWdzNEEm0tGsJTgLl+bMqrXldpVO3an43qRxj3LOPkQiklQO","LeLP7TnGr1gsqHv4/mjk25GG4d2kldeYbwJFMBPFSllzQFjdhXWSVewmastZxVLnqHOq7CMw939gjnnrDOWagUHLmnpowblcTYA1amEcT/M+aqhHeQGI88KQgvRF7k5Wp7SFX0v+HPA10B3wOPx9+7rbqv+hR/EATt0FcCiuTWtv0RN4XNYhu1UUddI3A3D7LJtmpVWiqav8UdatxtFh624ALJ6+4CXlJABEzA==","OOsA8oqiL6Vnk0Mp++yAZ62k+NCgS1l0Zg8V/hT9cIVEe2J1RKui0HDkv922O69N2qOf7LOOulF8KBOJFg5IteGW4CoTyYL8oGFRtBZwfACKezM5JUWY48Qtd7H3glzf89KivwQ/5qdMvArjPQqbl+mqTjLt0pLnqBbDwPoM5bZqbZwr+/sO6KEeyNCR5Lq6IXUDDnIvSh9W2IRMnlQ73R3ywrkhN+y6s0E01Aja7IPIzL6bM2UAMlU8XbVgQnTWGzzF87APQxKBUiON","NUlHPEZxUSjDpt3jWYGTq97ONM+Db/7rEOHJ492QgR3pzmgMbmN4p4EjPAErNK3YDS8dV8+G6n0S/jWyLN+hPMkyoAJiEJNNtzy4AUNqo9dfiPewlVy5A0nH5upDxIbHKNtDHxYZwWQ2n3TLoO2blAVYHUvStNzIIeEOuBRizg0CHDF3uX1xE7U2msILCCmfrVNkmUugZ47yaJI8uWHOhniOLxo5mXpgixB/NJyirbQwWU3kHpCxWPLN15Y=","wSw2AVbZu9OI5Igko1N8fXpY2W1f2KhoPlOYRbf4yhV8Lr6Xk5mTFwZ0i6CnxS6AYqml++FwCnXd8q2XO9e//bGymoO/Yg3ywCIRFn08AkSiMC3uy+OkZbIX8jCoq5a7iBYP4ozQ1vTk4WoTqvRTL9hGZwATncwdEdw2uKJGYwvJrGwjOwPHVB/mdpzCVulWIY1EsivjRLickXTWEm9BSEE81QD/7+LW4z+R94ob4Qvysh08aVfkj0wOEeP90GXr+Xh3hNvRGpw59RdB"]];
+                            $result_val['FGContext'] = [["QEab79m9WMHcbYCawLwLop0aJbJQQqATZq040b736MWwxZ2CCHk3K0dvpumPorTYLghgydsnRgwYe9xPVhY3/beqw1KmV+Eq6LsSJjqtf5liSfU6exQyxzCn+1EuUKckhkZen8eYOzietYaQ+x/HPx/2plTKdMIVCVnIzGY/aKZl1T1nI6Vn12OYqOC5Iekl16GE2lYEfd6WF+5gcaNqrh52ji+iMiS/HtRZ13a6c71/r5nmiOAgm27SqURW55lvBBZhUsx6nyRDSSd766Wx/dP49st6awwRokDwmbnlk9IfTRr3ngOs3UvSUgKC1ZGzRCQ4WobgVbaA/SlnC/QQ4JUITt68bzNEO+6WxPwWBaoL0xdUnPkaGqUt3leWOkP3Ur9Ugj9mwOmlOSoYdlW2rjQ5VcjgGwg5WaiPtQ==",
+                            "uUeXejHB0AkiStKSpew78gxI2hiG7wW+u7jeh4JIvqutpd0nvBOgMYRXhrLCBQjKWEZthSvm/sXm3kkeqvoXNM9uWQ/cKK9DVK8N9R6LkPRtyA+qwIaVzXpQaAWn/PNy8tY1OqMdeBmK7jU8S0RiDf+RajM9G7FOsWWVaoSbCh1kBC/WzXYeGoDDajIfrtm11K2kObhD5Y1S4wsgzilWFqRBtO7Yc/IL8x0RkVOjSkWCkAykH/WKl1LQRiUB0J1zWjLcHy0BwlND2XM4YSvk5g+tcjqn8+kj0s+c6zNNbIGYzV2MyS6r8um7ZRqh8zOppPbeT8M3u78VKAh4QcLUCSaPXxxIkXmimOuuebpqyY2lb/4RS0YIjglH+pmvePr6Rp4ry160BpUNdS+uaBoK7euCTAmwptE9+nz9iA==",
+                            "6SzQtooJyCX2JBElK6bwDgn+EoD4w+FR5KJNpU5EIvli6FD4YfIpuT061yD59P6Q4aNrcDPQ62TsXgxMVIoRjin/5KSLR5ddMDe+Hl7CS4hyHyhKHOj9g+XYm2JosL50BQPw3xJXI2h+IPgA+jwkcVtiIAPfnC69Re0zXO0csu+rte/x6Yv+cYhnV4xZVfOgwyP1SioFWzWu1S/5DarR0RNGb0/BehLfPD8H7fkPgLzb4PvEwKbvddBURGwfNSFO2GtCaSv3t1VtN+scoNFHitKYkCqQZlXl3ixO1XuUdaRFSTc917p46Bqmbb9aDq94YY46dErq+wskV7xoVWtQftORLgkMJcUIoXCz/3kTu9/iuKDEWTw4IlxVVEeFxleEeen8Xw9EzhYUxNzqZklj5Aqj0KsItgu7vz/wlg==",
+                            "2fljHKUKQ5ZwN92k0RaiU2h5fRjoKo2I/lXXPwDdRh1Kk3MvNbwT0VxGl6C3K9ijAPlXz74S0/1Uzflfp2seQNkIdlaEpTigZiXZyNh8iTF4xfXAoKeP6k6+JS9de2unyqbP1OGmLpM3y6QKXGYrGGnSTcTNa1PNbvw2LYA0F3qn0jV5nQUdPp6y/dPihKMj2LktcNgdy3vyxETTn1/XWN64litGZRA/CFwPwIT7DwbP58lBhDC+6M1U4kNwZ5T9dUDfgYhpRJt5xRHD+VP4YuA+yLBQSqoI3xq5t6K3l/XpZL8EjazH7V/3wKG1XTF7JwP8ZNG35S7mIHNQrysRAMg8H0vxpXohWh+PMzkNwV/TOmY0KR+uYeDs722oOHdd0ZYQW9S4elbysQhV",
+                            "031RmciBjzMBbKBizc6BGH0sg6YfTF/Vqy3AO1iPwBFl5sToIfai2y9Wej1QL1yJWiIoRXlkJq5ykfzRcqksTHcXUUFxYTEOq9CKQmDSz3CMdO4ZDQQm/xdMwkpgimhtPSnKhCkVdnf0rj4gHfyPasly4naNo8QNWyXDihPhqMSLtRAlaK3wu2O9sQqXYab+vsuNMt6bjuTgRt5YhN3gMocw0swsPfq5/JbLs2KTuCpbY9twcV7GpIeUFSk7ku+v129Y9tfa/dhq1dDvurpoMMmMn4fuS0qoE2pDW/ynFwc/gmu84UpUsFctVJ3briw7PALxJDaLUckCG6MR1DeNrLEOCE800pcW5jm+/Q=="]];
                         }else if($packet_id == 31 || $packet_id == 42){
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
@@ -110,18 +126,15 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
-                                $slotSettings->SetBet();        
-                                if(isset($slotEvent['slotEvent'])){
-                                    $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
-                                }
-                                
+                                $slotSettings->SetBet();    
+                                $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
                                 $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '677' . substr($roundstr, 3, 9);
+                                $roundstr = '658' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 
@@ -142,15 +155,15 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                                $result_val['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline);
+                                $result_val['AccumlateWinAmt'] = $stack['AccumlateWinAmt'] / $originalbet * $betline;
                                 $result_val['AccumlateJPAmt'] = 0;
-                                $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
+                                $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                                 $result_val['MaxRound'] = $stack['MaxRound'];
                                 $result_val['AwardRound'] = $stack['AwardRound'];
                                 $result_val['CurrentRound'] = $stack['CurrentRound'];
                                 $result_val['MaxSpin'] = $stack['MaxSpin'];
                                 $result_val['AwardSpinTimes'] = $stack['AwardSpinTimes'];
-                                $result_val['Multiple'] = 0;
+                                $result_val['Multiple'] = 1;
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -160,8 +173,8 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                             $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                            $result_val['TotalWinAmt'] = ($stack['TotalWinAmt'] / $originalbet * $betline);
-                            $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
+                            $result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                            $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
                         }
@@ -246,21 +259,21 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                 $stack['GamePlaySerialNumber'] = $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber');
             }
             if(isset($stack['BaseWin']) && $stack['BaseWin'] > 0){
-                $stack['BaseWin'] = ($stack['BaseWin'] / $originalbet * $betline);
+                $stack['BaseWin'] = $stack['BaseWin'] / $originalbet * $betline;
             }
             $totalWin = 0;
             if(isset($stack['TotalWin']) && $stack['TotalWin'] > 0){
-                $stack['TotalWin'] = ($stack['TotalWin'] / $originalbet * $betline);
+                $stack['TotalWin'] = $stack['TotalWin'] / $originalbet * $betline;
                 $totalWin = $stack['TotalWin'];
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
-                $stack['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline);
+                $stack['AccumlateWinAmt'] = $stack['AccumlateWinAmt'] / $originalbet * $betline;
             }
             if(isset($stack['AccumlateJPAmt']) && $stack['AccumlateJPAmt'] > 0){
-                $stack['AccumlateJPAmt'] = ($stack['AccumlateJPAmt'] / $originalbet * $betline);
+                $stack['AccumlateJPAmt'] = $stack['AccumlateJPAmt'] / $originalbet * $betline;
             }
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
-                $stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
+                $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
             }
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
@@ -270,7 +283,7 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
             }
             foreach($stack['udsOutputWinLine'] as $index => $value){
                 if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
                 }
                 $stack['udsOutputWinLine'][$index] = $value;
             }
@@ -293,7 +306,7 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
             }
 
-            $result_val['Multiple'] = 0;
+            //$result_val['Multiple'] = 0;
             if($freespinNum > 0)
             {
                 $isTriggerFG = true;
@@ -345,8 +358,12 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
             $proof['fg_times']                  = $result_val['FreeSpin'];
             $proof['fg_rounds']                 = floor($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') / 8);
             $proof['next_s_table']              = $result_val['NextSTable'];
-            $proof['extend_feature_by_game']    = [];
-            $proof['extend_feature_by_game2']   = [];
+            if(isset($proof['extend_feature_by_game'])){
+                $proof['extend_feature_by_game']    = [];
+            }
+            if(isset($proof['extend_feature_by_game2'])){
+                $proof['extend_feature_by_game2']   = [];
+            }
 
             foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
             {
@@ -405,7 +422,7 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = 72;
+                $wager['game_id']               = 137;
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;
