@@ -1122,6 +1122,13 @@ return [
         "JewelRush" => "쥬얼 러시",
         "PiratesPub" => "파이럿스 펍",
         "WisdomofAthena" => "위즈덤 오브 아테나",
+        "BigBassAmazonXtreme" => "빅 베스 아마존 익스트림",
+        "HeistfortheGoldenNuggets" => "하이스트 포 골든 너겟",
+        "HellvisWild" => "헬비스 와일드",
+        "JokerRace" => "조커 레이스",
+        "SpellbindingMystery" => "스펠 바인딩 미스테",
+        "RiseofSamuraiMegaways" => "라이즈 오브 사무라이 메가웨이즈",
+        "AztecKingMegeways" => "아즈텍 킹 메가웨이즈",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
