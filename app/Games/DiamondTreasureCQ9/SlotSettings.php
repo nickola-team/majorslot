@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DiscoNightCQ9
+namespace VanguardLTE\Games\DiamondTreasureCQ9
 {
     class SlotSettings
     {
@@ -632,6 +632,7 @@ namespace VanguardLTE\Games\DiscoNightCQ9
                     'win', 
                     $_obf_currentbank
                 ];
+
                 if( $_obf_currentbank < 0) 
                 {
                     $return = [
@@ -729,19 +730,24 @@ namespace VanguardLTE\Games\DiscoNightCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $selId = -1)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('id', 6144)->first();
-                //   return json_decode($stack->spin_stack, true);
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('id', 268)->first(); 
+                    // return json_decode($stack->spin_stack, true);      
             // }
-            if($winType == 'bonus'){
+            if($selId > -1){
                 $winAvaliableMoney = $this->GetBank('bonus');
-            }else if($winType == 'win'){
-                $winAvaliableMoney = $this->GetBank('');
             }else{
-                $winAvaliableMoney = 0;
+                if($winType == 'bonus'){
+                    $winAvaliableMoney = $this->GetBank('bonus');
+                }else if($winType == 'win'){
+                    $winAvaliableMoney = $this->GetBank('');
+                }else{
+                    $winAvaliableMoney = 0;
+                }
             }
+           
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
@@ -752,12 +758,15 @@ namespace VanguardLTE\Games\DiscoNightCQ9
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                if($selId > -1){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
+                }else if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('spin_type',2)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 48000);
+
+                $index = 0;// mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
@@ -798,7 +807,12 @@ namespace VanguardLTE\Games\DiscoNightCQ9
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     if($isLowBank == true){
-                        $existIds = [0];
+                        if($winType == 'bonus'){
+                            $winType = 'win';
+                            $winAvaliableMoney = $this->GetBank('');
+                        }else{
+                            $existIds = [0];
+                        }
                     }
                     $isLowBank = true;
                 }else{

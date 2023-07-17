@@ -400,10 +400,10 @@ namespace VanguardLTE\Games\MrMiserCQ9
             $proof['next_s_table']              = $result_val['NextSTable'];
             $proof['extend_feature_by_game']    = [];
             $proof['extend_feature_by_game2']   = $result_val['ExtendFeatureByGame2'];
-            $proof['extend_feature_by_game2'][0]['name'] = $result_val['ExtendFeatureByGame2'][0]['Name'];
-            $proof['extend_feature_by_game2'][0]['value'] = $result_val['ExtendFeatureByGame2'][0]['Value'];
-            $proof['extend_feature_by_game2'][1]['name'] = $result_val['ExtendFeatureByGame2'][1]['Name'];
-            $proof['extend_feature_by_game2'][1]['value'] = $result_val['ExtendFeatureByGame2'][1]['Value'];
+            $proof['extend_feature_by_game2'][0]['name'] = $result_val['ExtendFeatureByGame2'][0]['name'];
+            $proof['extend_feature_by_game2'][0]['value'] = $result_val['ExtendFeatureByGame2'][0]['value'];
+            $proof['extend_feature_by_game2'][1]['name'] = $result_val['ExtendFeatureByGame2'][1]['name'];
+            $proof['extend_feature_by_game2'][1]['value'] = $result_val['ExtendFeatureByGame2'][1]['value'];
             $proof['l_v']                       = "1.2.6";
             $proof['s_v']                       = "5.27.1.0";
 
