@@ -83,6 +83,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     return redirect()->to(argon_route('argon.auth.login'))->withErrors(trans('auth.failed'));
                 }
+                if (!$user->isInoutPartner())
+                {
+                    foreach ($site as $web)
+                    {
+                        if ($web->adminid == $admin->id && $web->status == 0)
+                        {
+                            return redirect()->to(argon_route('argon.auth.login'))->withErrors('현재 점검중입니다');
+                        }
+                    }
+                }
 
                 if ($admin->status == \VanguardLTE\Support\Enum\UserStatus::DELETED)
                 {

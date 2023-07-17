@@ -228,16 +228,17 @@
                                     환수금
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="{{argon_route('argon.happyhour.list')}}">
-                                <i class="far fa-circle text-white sub-i"></i>
-                                    콜
-                                </a>
-                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.game.transaction')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     환수금내역
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.happyhour.list')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    콜
                                 </a>
                             </li>
                             @endif
@@ -416,8 +417,7 @@
                     </div>
                 </li>
                 
-
-                @if (auth()->user()->hasRole('admin'))
+                @if (auth()->user()->isInoutPartner())
                 <hr class="my-0 sidebar-hr">
                 <li class="nav-item">
                     <a class="nav-link  {{(isset($parentSection) && $parentSection == 'setting') ? 'active' : '' }}">
@@ -433,6 +433,7 @@
                                     도메인
                                 </a>
                             </li>
+                            @if (auth()->user()->hasRole('admin'))
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.activity.index')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
@@ -446,6 +447,7 @@
                                     시스템상황
                                 </a>
                             </li>
+                            @endif
                             
                         </ul>
                     </div>

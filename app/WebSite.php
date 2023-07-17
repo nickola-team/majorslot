@@ -10,6 +10,7 @@ namespace VanguardLTE
             'frontend', 
             'backend', 
             'adminid',
+            'status',
             'created_at'
         ];
         public $timestamps = false;
