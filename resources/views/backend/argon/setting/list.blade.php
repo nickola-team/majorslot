@@ -11,9 +11,11 @@
         <div class="col">
             <div class="card mt-4">
                 <div class="card-header border-0">
+					@if (auth()->user()->hasRole('admin'))
                     <div class="pull-right">
 						<a href="{{ argon_route('argon.website.create') }}" class="btn btn-primary btn-sm">@lang('app.add')</a>
 					</div>
+					@endif
                     <h3 class="mb-0">도메인</h3>
                 </div>
                 <div class="table-responsive">
@@ -27,6 +29,7 @@
 								<th scope="col">관리자디자인</th>
 								<th scope="col">총본사</th>
 								<th scope="col">작성날짜</th>
+								<th scope="col">상태</th>
 								<th scope="col"></th>
 							</tr>
 						</thead>
