@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DragonTreasureCQ9
+namespace VanguardLTE\Games\DiscoNightMCQ9
 {
     class SlotSettings
     {
@@ -632,7 +632,6 @@ namespace VanguardLTE\Games\DragonTreasureCQ9
                     'win', 
                     $_obf_currentbank
                 ];
-
                 if( $_obf_currentbank < 0) 
                 {
                     $return = [
@@ -732,9 +731,9 @@ namespace VanguardLTE\Games\DragonTreasureCQ9
 
         public function GetReelStrips($winType, $bet)
         {
-            // // if($winType == 'bonus'){
-                  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonTreasureStack::where('id', 79641)->first();
-                  return json_decode($stack->spin_stack, true);
+            // if($winType == 'bonus'){
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('id', 6144)->first();
+                //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -754,18 +753,18 @@ namespace VanguardLTE\Games\DragonTreasureCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonTreasureStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonTreasureStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index =  mt_rand(0, 38000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
