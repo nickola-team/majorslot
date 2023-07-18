@@ -20,7 +20,7 @@ namespace VanguardLTE\Http\Middleware
             "190.93.240.0/20",
             "197.234.240.0/22",
             "198.41.128.0/17",
-            "172.104.96.219"
+            "172.104.96.219/32"
         ];
         public function handle($request, \Closure $next)
         {
