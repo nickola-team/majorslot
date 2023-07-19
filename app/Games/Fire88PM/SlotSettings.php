@@ -349,7 +349,7 @@ namespace VanguardLTE\Games\Fire88PM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $currentpercent = $this->GetPercent();
-                $bonus_percent = 10;
+                $bonus_percent = 30;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 /*if( $count_balance < $_allBets && $count_balance > 0 ) 
