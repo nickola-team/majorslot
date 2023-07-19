@@ -507,7 +507,26 @@ function requestAccount(){
         cache: false,
         async: false,
         success: function (data) {
-            alert(data.msg);
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            if (data.url != null)
+            {
+                var leftPosition, topPosition;
+                width = 600;
+                height = 1000;
+                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                wndGame = window.open(data.url, "Deposit",
+                "status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+                + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+                + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+            }
+            else
+            {
+                alert(data.msg);
+            }
         },
         error: function (err, xhr) {
             alert(err.responseText);

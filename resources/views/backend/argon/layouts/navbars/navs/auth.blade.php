@@ -125,6 +125,10 @@
                             <span>설정 및 정보</span>
                         </a>
                         <div class="dropdown-divider"></div>
+                        <a href="{{argon_route('argon.auth.logout', ['force' => 1])}}" class="dropdown-item">
+                            <i class="ni ni-curved-next"></i>
+                            <span>모든 장치에서 로그아웃</span>
+                        </a>
                         <a href="{{argon_route('argon.auth.logout')}}" class="dropdown-item">
                             <i class="ni ni-curved-next"></i>
                             <span>로그아웃</span>
