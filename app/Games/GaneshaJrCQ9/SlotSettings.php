@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DiamondTreasureCQ9
+namespace VanguardLTE\Games\GaneshaJrCQ9
 {
     class SlotSettings
     {
@@ -127,7 +127,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
             $this->Balance = $user->balance;
@@ -571,7 +571,6 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
         public function GetSpinSettings($garantType = 'bet', $bet, $lines)
         {
             $_obf_linecount = 10;
-            
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -632,7 +631,6 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                     'win', 
                     $_obf_currentbank
                 ];
-
                 if( $_obf_currentbank < 0) 
                 {
                     $return = [
@@ -658,7 +656,6 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
         public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $_obf_linecount = 10;
-            
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -716,7 +713,6 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                 return route('frontend.game.startgame',$fakeparams);
             }
         }
-
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'RealBet') == null) 
@@ -729,25 +725,19 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-
-        public function GetReelStrips($winType, $bet, $selId = -1)
+        public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('id', 15616)->first(); 
-                    // return json_decode($stack->spin_stack, true);      
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGaneshaJrStack::where('id', 48384)->first();
+                //  return json_decode($stack->spin_stack, true);
             // }
-            if($selId > -1){
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
+            }else if($winType == 'win'){
+                $winAvaliableMoney = $this->GetBank('');
             }else{
-                if($winType == 'bonus'){
-                    $winAvaliableMoney = $this->GetBank('bonus');
-                }else if($winType == 'win'){
-                    $winAvaliableMoney = $this->GetBank('');
-                }else{
-                    $winAvaliableMoney = 0;
-                }
+                $winAvaliableMoney = 0;
             }
-           
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
@@ -758,15 +748,15 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($selId > -1){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
-                }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('spin_type',2)->whereNotIn('id', $existIds);
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGaneshaJrStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGaneshaJrStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-
-                $index = mt_rand(0, 38000);
+                if($pur >= 0){
+                    $stacks = $stacks->where('pur_level', $pur);
+                }
+                $index = 0;// mt_rand(0, 43000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
@@ -807,12 +797,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     if($isLowBank == true){
-                        if($winType == 'bonus'){
-                            $winType = 'win';
-                            $winAvaliableMoney = $this->GetBank('');
-                        }else{
-                            $existIds = [0];
-                        }
+                        $existIds = [0];
                     }
                     $isLowBank = true;
                 }else{
