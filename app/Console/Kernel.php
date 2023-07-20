@@ -535,10 +535,6 @@ namespace VanguardLTE\Console
                         \VanguardLTE\ShareBetSummary::summary($g->id, $date);
                     }
                 }
-                if ($date == 'today') {
-                    $day = date("Y-m-d", strtotime("-1 days"));
-                    \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $day])->delete();
-                }
                 $this->info("End daily share summary adjustment.");
             });
 

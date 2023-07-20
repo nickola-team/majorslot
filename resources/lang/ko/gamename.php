@@ -1129,6 +1129,8 @@ return [
         "SpellbindingMystery" => "스펠 바인딩 미스테",
         "RiseofSamuraiMegaways" => "라이즈 오브 사무라이 메가웨이즈",
         "AztecKingMegeways" => "아즈텍 킹 메가웨이즈",
+        "CashBox" => "캐시 박스",
+        "SkyBounty" => "스카이 바운티",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1219,14 +1221,14 @@ return [
         "GuGuGu3" => "Gu Gu Gu 3",
         "FireChibiM" => "파이어치비M",
         "Xmas" => "Xmas",
-        "DiscoNight" => "디스코나이트",
+        "DiscoNightM" => "디스코나이트M",
         "ZumaWild" => "캔디주마",
         "ZeusM" => "제우스M",
         "MrMiser" => "재물광 요정",
         "DaHongZhong" => "Da Ha Zhong",
         "OrientalBeauty" => "오리엔탈뷰",
         "HappyRichYear" => "해피리치이어",
-        "DragonTreasure" => "용의 보물",
+        "DragonsTreasure" => "용의 보물",
         "Heroofthe3KingdomsCaoCao" => "삼국지 영웅-조조",
         "MummysTreasure" => "미라의 보물",
         "TheChickenHouse" => "치킨 하우스",
@@ -1237,6 +1239,16 @@ return [
         "AllWild" => "올 와일드",
         "JumpHigh" => "점프 하이",
         "Thor2" => "토르 2",
+        "FlowerFortunes" => "Flower Fortunes",
+        "DaFaCai" => "Da Fa Cai",
+        "RaveJump" => "레이브점프",
+        "SevenSevenSeven" => "777",
+        "FunnyAlpaca" => "퍼니 알파카",
+        "FaCaiShen2" => "Fa Cai Shen2",
+        "Chameleon" => "카멜레온",
+        "GuGuGuM" => "Gu Gu Gu M",
+        "FireQueen2" => "파이어 퀸 2",
+        "FaCaiShenM" => "재물신 M"
 ];
 
 

@@ -41,6 +41,8 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $slotSettings->SetGameData($slotSettings->slotId. 'GameRounds',1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount',0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
+
+                    $slotSettings->SetGameData($slotSettings->slotId . 'LastLevelSpinCount',0);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
                     $response_packet = [];
@@ -115,8 +117,6 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks  릴배치표 저장
-                                
-                                
                                 if($packet_id == 42){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                                 }else{
@@ -128,37 +128,34 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                                 }
                                 if(isset($gameData->MiniBet)){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
-                                }
-                                
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
-                                if(isset($gameData->MiniBet)){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
-                                }
+                                }                                
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){
+                                    //$slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                                     if(isset($gameData->MiniBet)){
                                         $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
                                     }
                                     
                                 }
+
+                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 if(isset($gameData->MiniBet)){
                                     $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
                                 }
                                 
-                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '689' . substr($roundstr, 3, 9);
+                                $roundstr = '657' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
-                            
-                                $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet,$packet_id);
-                            
-                            
+
+                            $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet,$packet_id);
                             $result_val['EmulatorType'] = $emulatorType;
 
                             $slotSettings->SaveGameData();
@@ -174,7 +171,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                                 $result_val['PlayerBet'] = $betline;
                                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
-                                //$slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                                 if(isset($stack['AccumlateWinAmt'])){
                                     $result_val['AccumlateWinAmt'] = $stack['AccumlateWinAmt'] / $originalbet * $betline;
                                 }
@@ -198,22 +195,28 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                                 $result_val['AwardSpinTimes'] = $stack['AwardSpinTimes'];
                                 $result_val['Multiple'] = 0;
                                 $result_val['GameExtraData'] = "";
-                                $result_val['ExtendFeatureByGame'] = [["vame"=>"AccumulateUpCount","value"=>$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount')],["name"=>"LevelUpCount","value"=>3],["name"=>"CurrentLevel","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["name"=>"NextLevel","value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1)]];
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 if($packet_id == 32){
-                                    //$slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                                     if($slotSettings->GetGameData($slotSettings->slotId . 'NextRoundAction') == 1){
                                         $slotSettings->SetGameData($slotSettings->slotId . 'GameRounds', $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1);
                                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount') - 3);
-                                        if($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') > 5){
+                                        /*if($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') > 3){
                                             $slotSettings->SetGameData($slotSettings->slotId . 'GameRounds', 1);
                                             $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
-                                        }
+                                        }*/
                                         
                                         //$stack['ExtraData'] = [$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'),15,0];
                                         $nextRoundAction = false;
                                         $slotSettings->SetGameData($slotSettings->slotId . 'NextRoundAction', 0);
+                                    }
+                                    if($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') == 5){
+                                        $slotSettings->SetGameData($slotSettings->slotId . 'LastLevelSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'LastLevelSpinCount') + 1);
+                                        if($slotSettings->GetGameData($slotSettings->slotId . 'LastLevelSpinCount') >= 1000){
+                                            $slotSettings->SetGameData($slotSettings->slotId . 'GameRounds', 1);
+                                            $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
+                                            $slotSettings->SetGameData($slotSettings->slotId . 'LastLevelSpinCount',0);
+                                        }
                                     }
                                 }
                             }
@@ -267,7 +270,6 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
-                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',-1);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));
@@ -341,24 +343,17 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     exit( $response );
                 }
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
-                
-                /*if($packetID == 43){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                }*/
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 if($packetID == 31){
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 1);
                     $stack = $tumbAndFreeStacks[0];
                 }
-                
-                //$stack = $tumbAndFreeStacks[0];
             }
             $isState = true;
             $isTriggerFG =false;
             if(isset($stack['GamePlaySerialNumber'])){
                 $stack['GamePlaySerialNumber'] = $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber');
             }
-            $stack['GamePlaySerialNumber'] = $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber');
             if(isset($stack['BaseWin']) && $stack['BaseWin'] > 0){
                 $stack['BaseWin'] = $stack['BaseWin'] / $originalbet * $betline;
             }
@@ -408,10 +403,10 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             if($newExtraSymbolCount > 0){
                 $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount') + $newExtraSymbolCount);
             }
-            $stack['ExtraData'][1] = $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount');
-            $stack['ExtraData'][0] = $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds');
+            $stack['ExtraData'][0] = $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount');
             
-            $stack['ExtendFeatureByGame'] = [["name"=>"AccumulateUpCount","value"=>$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount')],["name"=>"LevelUpCount","value"=>3],["name"=>"CurrentLevel","value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["name"=>"NextLevel","value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1)]];
+            $stack['ExtendFeatureByGame'] = [["Name"=>"AccumulateUpCount","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount')],["Name"=>"LevelUpCount","Value"=>15],["Name"=>"CurrentLevel","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["Name"=>"NextLevel","Value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1)]];
+            $stack['NextSTable'] = 0;
             if($slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount') == 3){   
                 /*if($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1 > 3){
                     $stack['ExtendFeatureByGame'][3]['Value'] = 1;
@@ -419,15 +414,18 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $stack['ExtraData'][3]['Value'] = $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1;
                 }*/
                 $stack['NextSTable'] = 1;
-                $stack['SpecialAward'] = 1;
+                //$stack['SpecialAward'] = 1;
                 $slotSettings->SetGameData($slotSettings->slotId . 'NextRoundAction', 1);
             }
 
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                if(isset($stack['AwardSpinTimes'])){
+                    $awardSpinTimes = $stack['AwardSpinTimes'];    
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];
+                }
+                    
             }
             if(isset($stack['udsOutputWinLine']) && count($stack['udsOutputWinLine'])>0){
                 foreach($stack['udsOutputWinLine'] as $index => $value){
@@ -442,11 +440,11 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 $isTriggerFG = $stack['IsTriggerFG'];
             }
             $freespinNum = 0;
-            /*if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
+            if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
                 $freespinNum = $stack['FreeSpin'][0];
-            }*/
-            if(isset($stack['AwardSpinTimes'])){
-                $freespinNum = $stack['AwardSpinTimes'];
+            }
+            if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                $freespinNum = 15;
             }
             $stack['Type'] = $result_val['Type'];
             $stack['ID'] = $result_val['ID'];
@@ -478,23 +476,11 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }
-            }            
-            /*if($packetID == 42){
-                //$slotEvent = 'freespin';
-                $isState = false;
-                if(isset($stack['AwardSpinTimes'])){
-                    $awardSpinTimes = $stack['AwardSpinTimes'];  
-                    $currentSpinTimes = $stack['CurrentSpinTimes'];  
-                }
-                
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
-                    $isState = true;
-                }
-            }    */
-
+            }
+            
+            
             if($packetID == 44 || $packetID == 45){
-                //$slotEvent = 'freespin';
+                
             }else{
                 $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
                 if($isState == true){
@@ -515,7 +501,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             if(isset($result_val['SymbolResult'])){
                 $proof['symbol_data']               = $result_val['SymbolResult'];
             }
-            $proof['denom_multiple']            = 100;
+            
             $proof['symbol_data_after']         = [];
             $proof['extra_data']                = $result_val['ExtraData'];
             if(isset($result_val['ReellPosChg'])){
@@ -540,23 +526,31 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             if(isset($result_val['SpecialSymbol'])){
                 $proof['special_symbol']            = $result_val['SpecialSymbol'];
             }
-
-            $proof['l_v']                       = "2.4.34.3";
-            $proof['s_v']                       = "5.27.1.0";
             if(isset($result_val['IsRespin'])){
                 $proof['is_respin']                 = $result_val['IsRespin'];
             }
             if(isset($result_val['FreeSpin'])){
                 $proof['fg_times']                  = $result_val['FreeSpin'];
             }
-            $proof['fg_times'] = 0;
-            $proof['fg_rounds']                 = floor($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') / 8);
+            
+            $proof['fg_rounds']                 = floor($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'));
             if(isset($result_val['NextSTable'])){
                 $proof['next_s_table']              = $result_val['NextSTable'];
             }
             
-            $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            //$proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            $proof['extend_feature_by_game'][0]['name']    = $result_val['ExtendFeatureByGame'][0]['Name'];
+            $proof['extend_feature_by_game'][0]['value']    = $result_val['ExtendFeatureByGame'][0]['Value'];
+            $proof['extend_feature_by_game'][1]['name']    = $result_val['ExtendFeatureByGame'][1]['Name'];
+            $proof['extend_feature_by_game'][1]['value']    = $result_val['ExtendFeatureByGame'][1]['Value'];
+            $proof['extend_feature_by_game'][2]['name']    = $result_val['ExtendFeatureByGame'][2]['Name'];
+            $proof['extend_feature_by_game'][2]['value']    = $result_val['ExtendFeatureByGame'][2]['Value'];
+            $proof['extend_feature_by_game'][3]['name']    = $result_val['ExtendFeatureByGame'][3]['Name'];
+            $proof['extend_feature_by_game'][3]['value']    = $result_val['ExtendFeatureByGame'][3]['Value'];
             $proof['extend_feature_by_game2']   = [];
+            $proof['denom_multiple'] = 100;
+            $proof['l_v']                       = "2.4.32.1";
+            $proof['s_v']                       = "5.27.1.0";
             if(isset($result_val['udsOutputWinLine'])){
                 foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
                 {
@@ -589,7 +583,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
 
                 $sub_log = [];
                 $sub_log['sub_no']              = count($log['detail']['wager']['sub']) + 1;
-                $sub_log['game_type']           = 50;
+                $sub_log['game_type']           = 53;
                 if(isset($result_val['RngData'])){
                     $sub_log['rng']                 = $result_val['RngData'];
                 }
@@ -608,22 +602,6 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 
                 $sub_log['proof']               = $proof;
                 array_push($log['detail']['wager']['sub'], $sub_log);
-                $temp = [];
-                $temp['pick_no'] = 1;
-                $temp['multiple'] = "0";
-                $temp['game_type'] = 777;
-                $temp['win'] = 0;
-                $temp['proof']['extend_feature_by_game2'] = [];
-                $temp['proof']['extra_options'] = [];
-                $temp['proof']['fg_rounds'] = 0;
-                $temp['proof']['fg_times'] = 0;
-                $temp['proof']['jp_item_level'] = null;
-                $temp['proof']['jp_item_selected'] = null;
-                $temp['proof']['multiple_options'] = [];
-                $temp['proof']['next_s_table'] = 0;
-                $temp['proof']['player_selected'] = [0];
-                $temp['proof']['spin_times_options'] = [4,6,8,10,12];
-                $temp['proof']['win_options'] = [];
             }else{
                 $log = [];
                 $log['account']                 = $slotSettings->playerId;
@@ -645,7 +623,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 if(isset($result_val['GamePlaySerialNumber'])){
                     $wager['seq_no']                = $result_val['GamePlaySerialNumber'];
                 }
-                $wager['seq_no'] = $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber');
+                
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
@@ -668,7 +646,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 }
                 
                 $wager['win_over_limit_lock']   = 0;
-                $wager['game_type']             = 4;
+                $wager['game_type']             = 0;
                 if(isset($result_val['WinType'])){
                     $wager['win_type']              = $result_val['WinType'];
                 }
@@ -684,8 +662,6 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $wager['bet_tid']               =  'pro-bet-' . $result_val['GamePlaySerialNumber'];
                     $wager['win_tid']               =  'pro-win-' . $result_val['GamePlaySerialNumber'];
                 }
-                $wager['bet_tid']               =  'pro-bet-' . $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber');
-                    $wager['win_tid']               =  'pro-win-' . $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber');
                 
                 $wager['proof']                 = $proof;
                 $wager['sub']                   = [];

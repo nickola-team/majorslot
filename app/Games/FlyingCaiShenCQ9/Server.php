@@ -226,6 +226,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                         }else if($packet_id == 46){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                             $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
+                            $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                             $result_val['PlayerBet'] = $betline;
@@ -314,8 +315,11 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                     exit( $response );
                 }
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 1);
-                $stack = $tumbAndFreeStacks[0];
+                $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                if($packetID == 31){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 1);
+                    $stack = $tumbAndFreeStacks[0];
+                }
             }
             $isState = true;
             $isTriggerFG =false;
@@ -388,8 +392,11 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                if(isset($stack['AwardSpinTimes'])){
+                    $awardSpinTimes = $stack['AwardSpinTimes'];    
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];
+                }
+                    
             }
             if(isset($stack['udsOutputWinLine']) && count($stack['udsOutputWinLine'])>0){
                 foreach($stack['udsOutputWinLine'] as $index => $value){
@@ -499,8 +506,19 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                 $proof['next_s_table']              = $result_val['NextSTable'];
             }
             
-            $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            //$proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            $proof['extend_feature_by_game'][0]['name']    = $result_val['ExtendFeatureByGame'][0]['Name'];
+            $proof['extend_feature_by_game'][0]['value']    = $result_val['ExtendFeatureByGame'][0]['Value'];
+            $proof['extend_feature_by_game'][1]['name']    = $result_val['ExtendFeatureByGame'][1]['Name'];
+            $proof['extend_feature_by_game'][1]['value']    = $result_val['ExtendFeatureByGame'][1]['Value'];
+            $proof['extend_feature_by_game'][2]['name']    = $result_val['ExtendFeatureByGame'][2]['Name'];
+            $proof['extend_feature_by_game'][2]['value']    = $result_val['ExtendFeatureByGame'][2]['Value'];
+            $proof['extend_feature_by_game'][3]['name']    = $result_val['ExtendFeatureByGame'][3]['Name'];
+            $proof['extend_feature_by_game'][3]['value']    = $result_val['ExtendFeatureByGame'][3]['Value'];
             $proof['extend_feature_by_game2']   = [];
+            $proof['denom_multiple'] = 100;
+            $proof['l_v']                       = "2.4.32.1";
+            $proof['s_v']                       = "5.27.1.0";
             if(isset($result_val['udsOutputWinLine'])){
                 foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
                 {

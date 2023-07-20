@@ -429,12 +429,14 @@ namespace VanguardLTE\Games\XmasCQ9
             $proof = [];
             $proof['bonus_type']                = $result_val['BonusType'];
             $proof['denom_multiple']            = 100;
-            $proof['extend_feature_by_game'] = [];
+            $proof['extend_feature_by_game']   = [];
             foreach($result_val['ExtendFeatureByGame'] as $item){
-                $proof['extend_feature_by_game'][] = [
-                    'name' => $item['Name'],
-                    'value' => $item['Value']
-                ];
+                $newItem = [];
+                $newItem['name'] = $item['Name'];
+                if(isset($item['Value'])){
+                    $newItem['value'] = $item['Value'];
+                }
+                $proof['extend_feature_by_game'][] = $newItem;
             }
             $proof['extend_feature_by_game2']   = [];
             $proof['extra_data']                = $result_val['ExtraData'];
