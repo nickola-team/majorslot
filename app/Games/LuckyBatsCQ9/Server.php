@@ -95,12 +95,11 @@ namespace VanguardLTE\Games\LuckyBatsCQ9
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
                             $result_val['FGContext'] = [["yEvSY2Zqwi4apYKRAYKaCy3lc1EHu0SuO8zNNNHQ+MJYMPXwMwAuZg85Qs+lmyjhppJBYsjZq6cRVIVlcWQfvGwZHm95aqVGsj8RNdgL96O0yjrQcw5GXjaHVzwpUUb/gzCH1DyS4ZAXqvkrueDF9eKup6BhRyKf+mCKRg==","PNgS1AITjFKKlmQEobbjfvhCXd3vhLFkv/X6FpDV8wpWNYxpIeddhzjwF1PoLOOxfdQw053DjRyXZiG/r23KYQ6Y5vXBWd19ZQqXtgiSGYhLCowyJo3qJxxr6If3S3Uy6peepJaT9r9nmaz7Bfw92WLvTr15ILTA6om6Uw==","xim1pw9vrHROBCmHNz7X126An8J/Ib+xSz2t9VqxmegCo1nmzfZ80H+MLXMCTy3MZICrwHXLFsUawdtxJfVW2GtjwTtg0eYHOBdUV+7VOyf3YMEi4chV2VIWQQ8xZhtQarV0aiWFsudYDPe9JSkEeDVkEGpd8PHsFg4fg1N2WA9/qZUlwjt3JNG3UXw=","qGPkGwsfpUmmayELeH2eqVFwgnsJWg+EUSGxIwqBw3W8rr7mXab7OMMph/MdKL38kiNu2Q/mtFIQGfWiJsS5irCYJ6kgpyzIobg6qNJMqYGIuRYHCa4K3o4G7BY8IJfTnWoiSq8XIM2/YTrdb419b5cbuP9Sn5qEWvKfkJRBJVlGhIcfFEsoemR3/I8=","tSIoA7CPT1WmYQzTHnOlrCRUKM+oKZFyab0bydZ3XkFqhh4BnNVuxM0fLlbc+kz8x/V5hI+VM7UEANxj/szEpGE18eq+Xfb1TwEQKQfZSboeMNO45mkYx4IUI0qC/+MU0MG51XMLaiuMK+6GkpJIXnNSi5sAKdoCNgygK80VVTC5fFpFCIHo0y9KYqU="]];
                         }else if($packet_id == 31 || $packet_id == 42){
+                            $lines = 55;
                             if($packet_id == 31){
                                  $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                 $lines = $gameData->PlayLine;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
@@ -115,10 +114,10 @@ namespace VanguardLTE\Games\LuckyBatsCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();    
-                                $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
-                                $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
+                                $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
+                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -190,7 +189,7 @@ namespace VanguardLTE\Games\LuckyBatsCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        $lines = 55;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -322,7 +321,7 @@ namespace VanguardLTE\Games\LuckyBatsCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline / $this->demon) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline / $this->demon) * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
