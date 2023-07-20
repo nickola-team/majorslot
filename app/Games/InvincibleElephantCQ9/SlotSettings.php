@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\SkrSkrCQ9
+namespace VanguardLTE\Games\InvincibleElephantCQ9
 {
     class SlotSettings
     {
@@ -730,24 +730,19 @@ namespace VanguardLTE\Games\SkrSkrCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $selId = -1)
+        public function GetReelStrips($winType, $bet)
         {
-            // // if($winType == 'bonus'){
-            //         $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('id', 35)->first(); 
-            //         return json_decode($stack->spin_stack, true);      
+            // if($winType == 'bonus'){
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameInvincibleElephantStack::where('id', 271)->first();
+                //   return json_decode($stack->spin_stack, true);
             // }
-            if($selId > -1){
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
+            }else if($winType == 'win'){
+                $winAvaliableMoney = $this->GetBank('');
             }else{
-                if($winType == 'bonus'){
-                    $winAvaliableMoney = $this->GetBank('bonus');
-                }else if($winType == 'win'){
-                    $winAvaliableMoney = $this->GetBank('');
-                }else{
-                    $winAvaliableMoney = 0;
-                }
+                $winAvaliableMoney = 0;
             }
-           
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
@@ -758,15 +753,12 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($selId > -1){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
-                }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('spin_type',2)->whereNotIn('id', $existIds);
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameInvincibleElephantStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameInvincibleElephantStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-
-                $index =0;// mt_rand(0, 38000);
+                $index = 0;// mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
@@ -807,12 +799,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     if($isLowBank == true){
-                        if($winType == 'bonus'){
-                            $winType = 'win';
-                            $winAvaliableMoney = $this->GetBank('');
-                        }else{
-                            $existIds = [0];
-                        }
+                        $existIds = [0];
                     }
                     $isLowBank = true;
                 }else{
