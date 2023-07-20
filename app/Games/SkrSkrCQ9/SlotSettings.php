@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DiamondTreasureCQ9
+namespace VanguardLTE\Games\SkrSkrCQ9
 {
     class SlotSettings
     {
@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
         public function GetReelStrips($winType, $bet, $selId = -1)
         {
             // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('id', 15616)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('id', 1108)->first(); 
                     // return json_decode($stack->spin_stack, true);      
             // }
             if($selId > -1){
@@ -759,14 +759,14 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($selId > -1){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
                 }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('spin_type',2)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('spin_type',2)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
 
-                $index = mt_rand(0, 38000);
+                $index =0;// mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

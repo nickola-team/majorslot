@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\LuckyBatsCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameLuckyBatsStack::where('id', 544)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameLuckyBatsStack::where('id', 91906)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -758,14 +758,14 @@ namespace VanguardLTE\Games\LuckyBatsCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameLuckyBatsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 21);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

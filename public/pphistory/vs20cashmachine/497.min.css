@@ -1,0 +1,14 @@
+:root {
+    --slot-item-height: 40px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: none
+}
+
+.MoneyScatter .MoneyScatter__LabelWrap {
+    line-height: normal
+}
