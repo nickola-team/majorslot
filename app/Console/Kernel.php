@@ -1426,6 +1426,8 @@ namespace VanguardLTE\Console
                 \DB::statement('CREATE TABLE w_users_snapshot AS SELECT * FROM w_users');
                 \DB::statement('DROP TABLE IF EXISTS w_shops_snapshot');
                 \DB::statement('CREATE TABLE w_shops_snapshot AS SELECT * FROM w_shops');
+                \DB::statement('DROP TABLE IF EXISTS w_happyhour_users_snap');
+                \DB::statement('CREATE TABLE w_happyhour_users_snap AS SELECT * FROM w_happyhour_users WHERE status=1');
             });
             
             \Artisan::command('game:genfreestack {gameid}', function ($gameid) {
