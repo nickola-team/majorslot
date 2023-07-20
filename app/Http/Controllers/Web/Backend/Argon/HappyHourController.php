@@ -9,6 +9,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('permission:access.admin.panel');
             // $this->middleware('permission:happyhours.manage');
             // $this->middleware('shopzero');
+            $this->middleware( function($request,$next) {
+                if (!auth()->user()->isInOutPartner())
+                {
+                    return response('허용되지 않은 접근입니다.', 401);
+                }
+                if (!isset(auth()->user()->sessiondata()['happyuser']) || auth()->user()->sessiondata()['happyuser']==0)
+                {
+                    return response('허용되지 않은 접근입니다.', 401);
+                }
+                return $next($request);
+            }
+            );
         }
         public function index(\Illuminate\Http\Request $request)
         {

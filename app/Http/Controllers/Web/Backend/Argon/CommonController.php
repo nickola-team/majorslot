@@ -341,7 +341,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'gameOn' => 0,
                 'moneyperm' => 0,
                 'deluser' => 0,
-                'manualjoin' => 0
+                'manualjoin' => 0,
+                'happyuser' => 0
             ];
             foreach ($customesettings as $setting => $value)
             {
