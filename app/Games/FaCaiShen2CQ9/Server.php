@@ -234,7 +234,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines);
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );

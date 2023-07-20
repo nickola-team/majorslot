@@ -89,12 +89,11 @@ namespace VanguardLTE\Games\DragonsTreasureCQ9
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
                             $result_val['FGContext'] = [["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"]];
                         }else if($packet_id == 31 || $packet_id == 42){
+                            $lines = 10;
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                $lines = $gameData->PlayLine;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
@@ -109,13 +108,13 @@ namespace VanguardLTE\Games\DragonsTreasureCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){
-                                    $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
+                                    $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                                 }
                                 
-                                $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
+                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -187,7 +186,7 @@ namespace VanguardLTE\Games\DragonsTreasureCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        $lines = 10;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -315,7 +314,7 @@ namespace VanguardLTE\Games\DragonsTreasureCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
