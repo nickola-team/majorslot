@@ -12,7 +12,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function index(\Illuminate\Http\Request $request)
         {
-            $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->where('admin_id', auth()->user()->id)->orderBy('happyhour_users.created_at', 'DESC');
+            $availableUsers = auth()->user()->availableUsers();
+            $availableUsers[] = auth()->user()->id;
+            $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->whereIn('admin_id', $availableUsers)->orderBy('happyhour_users.created_at', 'DESC');
             $happyhours = $happyhours->paginate(10);
             return view('backend.argon.happyhour.list', compact('happyhours'));
         }
@@ -27,18 +29,20 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->to(argon_route('argon.happyhour.create'))->withErrors('유저이름을 입력하세요');
             }
+            $availableUsers = auth()->user()->availableUsers();
             $user = \VanguardLTE\User::where('username', $username)->first();
-            if (!$user)
+            if (!$user || !in_array($user->id, $availableUsers))
             {
                 return redirect()->to(argon_route('argon.happyhour.create'))->withErrors('유저가 없습니다.');
             }
             $uniq = \VanguardLTE\HappyHourUser::where([
                 // 'time' => $request->time, 
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'status' => 1
             ])->count();
             if( $uniq ) 
             {
-                return redirect()->back()->withErrors(['유저 콜이 존재합니다']);
+                return redirect()->back()->withErrors('유저 콜이 존재합니다');
             }
             $data = $request->only([
                 'total_bank', 
@@ -46,14 +50,31 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'time', 
                 'status'
             ]);
-            $data['current_bank'] = $data['total_bank'];
+            $bank = abs($data['total_bank']);
+            $data['current_bank'] = $bank;
             $data['user_id'] = $user->id;
             $data['over_bank'] = 0;
-            if ($data['jackpot'] > 0)
+            if (isset($data['jackpot']) && $data['jackpot'] > 0)
             {
                 $data['progressive'] = mt_rand(2,5);
             }
             $data['admin_id'] = auth()->user()->id;
+            if (!auth()->user()->hasRole('admin'))
+            {
+                if (auth()->user()->balance < $data['total_bank'])
+                {
+                    return redirect()->back()->withErrors('보유금이 충분하지 않습니다.');
+                }
+
+                $admin = \VanguardLTE\User::where('role_id', 9)->first();
+                if (!$admin)
+                {
+                    return redirect()->back()->withErrors('내부오류');
+                }
+
+                auth()->user()->addBalance('out', $bank, $admin, 0, null, '콜 생성');
+
+            }
             $happyhour = \VanguardLTE\HappyHourUser::create($data);
             event(new \VanguardLTE\Events\Jackpot\NewJackpot($happyhour));
             return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['콜이 생성되었습니다']);
@@ -111,10 +132,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             } */
             $happyhour = $request->id;
             $jp = \VanguardLTE\HappyHourUser::where('id', $happyhour)->first();
+            $availableUsers = auth()->user()->hierarchyUsers();
+            $availableUsers[] = auth()->user()->id;
+            if (!in_array($jp->user_id, $availableUsers) || !in_array($jp->admin_id, $availableUsers))
+            {
+                return redirect()->back()->withErrors('비정상적인 접근입니다');
+            }
+
+            $admin = \VanguardLTE\User::where('role_id', 9)->first();
+            if (!$admin)
+            {
+                return redirect()->back()->withErrors('내부오류');
+            }
+
+            $remainbank = $jp->current_bank;
+
+            auth()->user()->addBalance('add', $remainbank, $admin, 0, null, '콜 완료');
+            
+
             event(new \VanguardLTE\Events\Jackpot\DeleteJackpot($jp));
             // $jp->delete();
-            $jp->update(['status' => 2]);
-            return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['유저콜이 삭제되었습니다']);
+            $jp->update(['status' => 2, 'updated_at' => \Carbon\Carbon::now()]);
+            return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['유저콜이 종료되었습니다']);
         }
 
     }

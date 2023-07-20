@@ -43,4 +43,5 @@
 <span class="badge badge-primary">수동</span>
 @endif
 </td>
+<td>{{$stat->reason}}</td>
 <td>{{$stat->created_at}}</td>
