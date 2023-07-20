@@ -1129,6 +1129,8 @@ return [
         "SpellbindingMystery" => "스펠 바인딩 미스테",
         "RiseofSamuraiMegaways" => "라이즈 오브 사무라이 메가웨이즈",
         "AztecKingMegeways" => "아즈텍 킹 메가웨이즈",
+        "CashBox" => "캐시 박스",
+        "SkyBounty" => "스카이 바운티",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1237,6 +1239,16 @@ return [
         "AllWild" => "올 와일드",
         "JumpHigh" => "점프 하이",
         "Thor2" => "토르 2",
+        "FlowerFortunes" => "Flower Fortunes",
+        "DaFaCai" => "Da Fa Cai",
+        "RaveJump" => "레이브점프",
+        "SevenSevenSeven" => "777",
+        "FunnyAlpaca" => "퍼니 알파카",
+        "FaCaiShen2" => "Fa Cai Shen2",
+        "Chameleon" => "카멜레온",
+        "GuGuGuM" => "Gu Gu Gu M",
+        "FireQueen2" => "파이어 퀸 2",
+        "FaCaiShenM" => "재물신 M"
 ];
 
 
