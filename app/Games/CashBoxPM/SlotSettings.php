@@ -737,7 +737,7 @@ namespace VanguardLTE\Games\CashBoxPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameCashBoxStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; // mt_rand(0, 48000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
