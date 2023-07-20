@@ -8,7 +8,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $this->middleware('auth');
             $this->middleware('permission:access.admin.panel');
             // $this->middleware('permission:happyhours.manage');
-            $this->middleware('shopzero');
+            // $this->middleware('shopzero');
         }
         public function index(\Illuminate\Http\Request $request)
         {
