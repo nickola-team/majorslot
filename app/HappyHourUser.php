@@ -52,6 +52,10 @@ namespace VanguardLTE
         {
             return $this->belongsTo('VanguardLTE\User');
         }
+        public function admin()
+        {
+            return $this->belongsTo('VanguardLTE\User', 'admin_id');
+        }
     }
 
 }
