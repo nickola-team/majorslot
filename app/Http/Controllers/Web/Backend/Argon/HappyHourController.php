@@ -27,13 +27,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $username = $request->username;
             if (!$username)
             {
-                return redirect()->to(argon_route('argon.happyhour.create'))->withErrors('유저이름을 입력하세요');
+                return redirect()->back()->withErrors('유저이름을 입력하세요');
             }
             $availableUsers = auth()->user()->availableUsers();
             $user = \VanguardLTE\User::where('username', $username)->first();
             if (!$user || !in_array($user->id, $availableUsers))
             {
-                return redirect()->to(argon_route('argon.happyhour.create'))->withErrors('유저가 없습니다.');
+                return redirect()->back()->withErrors('유저가 없습니다.');
             }
             $uniq = \VanguardLTE\HappyHourUser::where([
                 // 'time' => $request->time, 
