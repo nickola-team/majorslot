@@ -124,7 +124,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '539' . substr($roundstr, 3, 9);
+                                $roundstr = '660' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 
@@ -234,7 +234,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines);
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );

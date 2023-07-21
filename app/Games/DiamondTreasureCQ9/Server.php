@@ -100,12 +100,11 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
                             $result_val['FGContext'] = [["oKbE5FXBMAoMgtuGO9jFuvGyE5GjTDsRg1g3uUKpScgSkRuF6XRsnm4cTHOvLc7CgW/OOoKJnhYgg/WyYdY7EL+wiN8FD3xTOWMiQCZiFSHAnsM45Dmhx/xhtCOe5ICcV13JY94DhXm1C4ccnepbWip6xDdFPsjJsZPem2bYX2tcDxxzusW6t9w5WzRfXuQR6WdlYRuYpQEC26KtCFIqWnXLynONEHSxlq5/lPQO4fB7zsP1Jm4QbSWgRAxNbQ5f609mc1qunFWIaE8A3mCNY8N3B47hU2i8JSx7jdx6aUAZZOd1PVG2d/CYZ+A2UWHKO23sV12uSZm8vMi/","3OihuuhTynVNG7K8Y/aMcluzDMhsASP5I/74djZwqEn/FGKvmzM7/eyvTE1kyhq+Oc2FsJrzazliPxCXgTFmbyZnpQ0nzxeLTmCAarzmtSYidHYTtUJwoC0nnrYtv1pHVzfSqtY5D6jr9cyQpGa69itt6YkZghr03QZ0p53Wu2751iOJd8kmg8q0WpDrW0+Fqo/tSjXLJ+8TCmMzfO2QHVPShX//fm2/0YASyQM/IAnNKw0+fHGYtNrqRWW5af+8b80mp6BFT20dB2yYQ+yZDpQC/0SiVruT4jN2iQ==","ni9Pqk0B0XpGGlg9HDQUU/xrbzvGaFK0Dwrgy7PHdyjo1dHfTgbk/Y2GbznCGgC8KtpiDpO5dodjJ0kElALlfVLcjME2CQt+IM8Peq8Q8S5cDQYFXIbJ0RxgczGKW7UkGWcf9LM3/opWzLFtRlQZTE0mTI9QpI1tJwsnJqX98hmUedhWBXKLG/micwLkC0XXD/+pYjs6X+i4Tq9S2BvRC3b8+dCH+rpe+boLHs7s0H9hKk9ko4j5piix38NE70qxRqxkqyTdymASqlrJ2bKqG9firSZcI87hFe0dpcKUoUSVpayLa/jTog3CP0LqAlJo70j1Mt9OHL0M+ALcc+Weaz/pGMxUb0usCDBqkxp+HXKVFPIWUpUfLXRY+x4N5qyz1eNtDM0TF5Gaez5pbjgxfVF6IYOO0mM/DMK7DrxtWkB7FwsjHNbgHeInCOE=","huEZFhOQ9xAKb19ZWoY4mpzpcfL+wEoewMDIxUJlxTzKX/WQSvfN9Qt2lFB4hKI0QhH09lFSGu6nDTxtg+sRYZ5LZ7Pu64LWQnX9k0fF5mJJxrviMoHFEh4sZdlClWHEfG+67qu0el/c30CryH95h/iPpHZyD2dZCu1PD30oEQBnEWbMowK5Aswc+NZbnG2owzMvLz/V+gtOmfuKRC6opiLtGKJRGtc5DUGVXLGN9+zepxr+zlgqlpS0JGgyY53L7eBkdtH8MShkFx4QbZdXebTmJcZ74s0HCZCpAZ71seBVW0a91IxXOltFadfRlZcnHVCcee5kMuiwWjqyb5fYndVquAp0CpqDYpQtiQ==","SCHMxAbEL8wOzK8G5dOTgjjbtEPVRqlb3Qd8oYmdBleBJHaDjTGHyO+oh7eSwmiTQx+9eQ2WQLgFbf8U97jLIosOitt7VL+UE1zrtvxvLC1tTJvAaYVEGwOnINSbWYrKW3Ka6l4RntwyJbbA036dhQ/3FK6O7Mxz6DJNB34jwE4l87HT7+UdjgwQ67+Wj0INtJdTj4WQPdmoewE449l6RNhNntPm1Y7F/iZLBk8bYMDHHBzixTxuKikBaNAUC8SgUn7G3eW0orEZMoFQjud2gEtRmD9+8JwKClw6bmh1TaXl6E6DPxYlXGxBIPpd9HAO9TaNlQWfqCebyrOW"],["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"],["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"]];
                         }else if($packet_id == 31 || $packet_id == 42){
+                            $lines = 50;
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                $lines = $gameData->PlayLine;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
@@ -126,20 +125,20 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                                 }
                                 if(isset($gameData->MiniBet)){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
+                                    $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 } 
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){
                                     if(isset($gameData->MiniBet)){
-                                        $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
+                                        $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                                     }
                                     
                                 }
                                 
                                 $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 if(isset($gameData->MiniBet)){
-                                    $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
+                                    $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 }
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
@@ -217,8 +216,6 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                             //$result_val['udcDataSet'] = ["SelExtraData"=>[],"SelMultiplier"=>[],"SelSpinTimes"=>[],"SelWin"=>[],"PlayerSelected"=>[0]];
                         }else if($packet_id == 45){
                             $slotEvent['slotEvent'] = 'bet';
-                            //$betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                            //$lines = $gameData->PlayLine;
                             $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []);
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -268,7 +265,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        $lines = 50;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -312,7 +309,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                 
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines,$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -419,7 +416,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
             }else{
                 $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
                 if($isState == true){
-                    $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                    $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
                 }
             }
             

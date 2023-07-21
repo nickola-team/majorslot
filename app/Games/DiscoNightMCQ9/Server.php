@@ -105,12 +105,11 @@ namespace VanguardLTE\Games\DiscoNightMCQ9
                             "2fljHKUKQ5ZwN92k0RaiU2h5fRjoKo2I/lXXPwDdRh1Kk3MvNbwT0VxGl6C3K9ijAPlXz74S0/1Uzflfp2seQNkIdlaEpTigZiXZyNh8iTF4xfXAoKeP6k6+JS9de2unyqbP1OGmLpM3y6QKXGYrGGnSTcTNa1PNbvw2LYA0F3qn0jV5nQUdPp6y/dPihKMj2LktcNgdy3vyxETTn1/XWN64litGZRA/CFwPwIT7DwbP58lBhDC+6M1U4kNwZ5T9dUDfgYhpRJt5xRHD+VP4YuA+yLBQSqoI3xq5t6K3l/XpZL8EjazH7V/3wKG1XTF7JwP8ZNG35S7mIHNQrysRAMg8H0vxpXohWh+PMzkNwV/TOmY0KR+uYeDs722oOHdd0ZYQW9S4elbysQhV",
                             "031RmciBjzMBbKBizc6BGH0sg6YfTF/Vqy3AO1iPwBFl5sToIfai2y9Wej1QL1yJWiIoRXlkJq5ykfzRcqksTHcXUUFxYTEOq9CKQmDSz3CMdO4ZDQQm/xdMwkpgimhtPSnKhCkVdnf0rj4gHfyPasly4naNo8QNWyXDihPhqMSLtRAlaK3wu2O9sQqXYab+vsuNMt6bjuTgRt5YhN3gMocw0swsPfq5/JbLs2KTuCpbY9twcV7GpIeUFSk7ku+v129Y9tfa/dhq1dDvurpoMMmMn4fuS0qoE2pDW/ynFwc/gmu84UpUsFctVJ3briw7PALxJDaLUckCG6MR1DeNrLEOCE800pcW5jm+/Q=="]];
                         }else if($packet_id == 31 || $packet_id == 42){
+                            $lines = 50;
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                $lines = $gameData->PlayLine;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
@@ -125,10 +124,10 @@ namespace VanguardLTE\Games\DiscoNightMCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();    
-                                $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
-                                $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
+                                $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
+                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -200,7 +199,7 @@ namespace VanguardLTE\Games\DiscoNightMCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        $lines = 50;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -328,7 +327,7 @@ namespace VanguardLTE\Games\DiscoNightMCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
