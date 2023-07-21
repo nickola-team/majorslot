@@ -14,7 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     return response('허용되지 않은 접근입니다.', 401);
                 }
-                if (!isset(auth()->user()->sessiondata()['happyuser']) || auth()->user()->sessiondata()['happyuser']==0)
+                if (!auth()->user()->hasRole('admin') && (!isset(auth()->user()->sessiondata()['happyuser']) || auth()->user()->sessiondata()['happyuser']==0))
                 {
                     return response('허용되지 않은 접근입니다.', 401);
                 }
