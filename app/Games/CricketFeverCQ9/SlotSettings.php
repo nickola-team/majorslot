@@ -5,18 +5,6 @@ namespace VanguardLTE\Games\CricketFeverCQ9
     {
         public $playerId = null;
         public $splitScreen = null;
-        public $reelStrip1 = null;
-        public $reelStrip2 = null;
-        public $reelStrip3 = null;
-        public $reelStrip4 = null;
-        public $reelStrip5 = null;
-        public $reelStrip6 = null;
-        public $reelStripBonus1 = null;
-        public $reelStripBonus2 = null;
-        public $reelStripBonus3 = null;
-        public $reelStripBonus4 = null;
-        public $reelStripBonus5 = null;
-        public $reelStripBonus6 = null;
         public $slotId = '';
         public $slotDBId = '';
         public $Line = null;
@@ -90,13 +78,11 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             $this->playerId = $playerId;
             $this->credits = $credits;
             $user = \VanguardLTE\User::lockForUpdate()->find($this->playerId);
-            //------- Happy User -------//
-            // $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
-            //     'user_id' => $user->id, 
-            //     'status' => 1,
-            //     'time' => date('G')
-            // ])->first();
-            //------- *** -------//
+            $this->happyhouruser = \VanguardLTE\HappyHourUser::where([
+                'user_id' => $user->id, 
+                'status' => 1,
+                // 'time' => date('G')
+            ])->first();
             $user->balance = $credits != null ? $credits : $user->balance;
             $this->user = $user;
             $this->shop_id = $user->shop_id;
@@ -128,52 +114,6 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             $this->Paytable['13'] = [0,0,0,7,20,75];
             $this->Paytable['14'] = [0,0,0,5,15,60];
             $this->Paytable['15'] = [0,0,0,5,15,60];
-            $reel = new GameReel();
-            foreach( [
-                'reelStrip1', 
-                'reelStrip2', 
-                'reelStrip3', 
-                'reelStrip4', 
-                'reelStrip5', 
-                'reelStrip6'
-            ] as $reelStrip ) 
-            {
-                if( count($reel->reelsStrip[$reelStrip]) ) 
-                {
-                    $this->$reelStrip = $reel->reelsStrip[$reelStrip];
-                }
-            }
-            foreach( [
-                'reelStripBonus1', 
-                'reelStripBonus2', 
-                'reelStripBonus3', 
-                'reelStripBonus4', 
-                'reelStripBonus5', 
-                'reelStripBonus6'
-            ] as $reelStrip ) 
-            {
-                if( count($reel->reelsStripBonus[$reelStrip]) ) 
-                {
-                    $this->$reelStrip = $reel->reelsStripBonus[$reelStrip];
-                }
-            }
-            $this->slotReelsConfig = [
-                [
-                    266, 
-                    297, 
-                    1
-                ], 
-                [
-                    559, 
-                    297, 
-                    1
-                ], 
-                [
-                    848, 
-                    297, 
-                    1
-                ]
-            ];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -189,50 +129,8 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->gameLine = [
-                1, 
-                2, 
-                3, 
-                4, 
-                5, 
-                6, 
-                7, 
-                8, 
-                9, 
-                10, 
-                11, 
-                12, 
-                13, 
-                14, 
-                15,
-                16,
-                17,
-                18,
-                19,
-                20,
-                21,
-                22,
-                23,
-                24,
-                25
-            ];
             $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
             $this->Balance = $user->balance;
-            $this->SymbolGame = [
-                '0',
-                '1', 
-                '2', 
-                '3', 
-                '4', 
-                '5', 
-                '6', 
-                '7', 
-                '8', 
-                '9', 
-                '10', 
-                '11', 
-                '12'
-            ];
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
             $this->WinGamble = $game->rezerv;
@@ -395,104 +293,14 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             $game->{'jp_' . ($jid + 1)} = sprintf('%01.4f', 0);
             $game->save();
         }
-        public function UpdateJackpots($bet)
-        {
-            $bet = $bet * $this->CurrentDenom;
-            $count_balance = $this->GetCountBalanceUser();
-            $_obf_0D0E13392A1E352D293108251212135B0D022529241422 = [];
-            $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = 0;
-            $type = -1;
-            for( $i = 0; $i < count($this->jpgs); $i++ ) 
-            {
-                if( $count_balance == 0 ) 
-                {
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $this->jpgs[$i]->balance;
-                }
-                else if( $count_balance < $bet ) 
-                {
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $count_balance / 100 * $this->jpgs[$i]->percent + $this->jpgs[$i]->balance;
-                }
-                else
-                {
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $bet / 100 * $this->jpgs[$i]->percent + $this->jpgs[$i]->balance;
-                }
-                if( $this->jpgs[$i]->pay_sum < $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] && $this->jpgs[$i]->pay_sum > 0 ) 
-                {
-                    $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = $this->jpgs[$i]->pay_sum / $this->CurrentDenom;
-                    $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] = $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i] - $this->jpgs[$i]->pay_sum;
-                    $this->SetBalance($this->jpgs[$i]->pay_sum / $this->CurrentDenom);
-                    $type = $i;
-
-                    if( $this->jpgs[$i]->pay_sum > 0 ) 
-                    {
-                        \VanguardLTE\StatGame::create([
-                            'user_id' => $this->playerId, 
-                            'balance' => $this->Balance * $this->CurrentDenom, 
-                            'bet' => 0, 
-                            'win' => $this->jpgs[$i]->pay_sum, 
-                            'game' => $this->game->name . ' JPG ' . $this->jpgs[$i]->id, 
-                            'percent' => 0, 
-                            'percent_jps' => 0, 
-                            'percent_jpg' => 0, 
-                            'profit' => 0, 
-                            'shop_id' => $this->shop_id
-                        ]);
-                    }
-                    if($i <= 3){
-                        $tempjpgs = \VanguardLTE\JPGDuofu::where('shop_id', $this->shop_id)->get();
-                        $tempjpgs[$i]->balance = $this->jpgs[$i]->balance;
-                        $tempjpgs[$i]->save();
-                    }
-                }
-                $this->jpgs[$i]->update(['balance' => $_obf_0D0E13392A1E352D293108251212135B0D022529241422[$i]]);
-                $this->jpgs[$i] = $this->jpgs[$i]->refresh();
-                if( $this->jpgs[$i]->balance < $this->jpgs[$i]->start_balance ) 
-                {
-                    $summ = $this->jpgs[$i]->start_balance;
-                    if( $summ > 0 ) 
-                    {
-                        $this->jpgs[$i]->add_jps(false, $summ);
-                    }
-                }
-            }
-            if( $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 > 0 ) 
-            {
-                $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22 = sprintf('%01.2f', $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22);
-                $this->Jackpots['jackPay'] = $_obf_0D052A14092A1117372103081A331C2C2622010A2D0C22;
-                $this->Jackpots['jackType'] = $type;
-            }
-        }
-        public function getAdminJackpot(){
-            $jackpots = [0, 0, 0, 0];
-            $jackpots[0] = $this->jpgs[0]->balance;
-            $jackpots[1] = $this->jpgs[2]->balance;
-            $jackpots[2] = $this->jpgs[3]->balance;
-            $jackpots[3] = $this->jpgs[4]->balance;
-            return $jackpots;
-        }
-        public function getUpdateJackpot(){
-            $jpgs = \VanguardLTE\JPGDuofu::where('shop_id', $this->shop_id)->get();
-            $diffs = [rand(40, 50), rand(30, 40), rand(10, 20), rand(0, 10)];
-            $jackpots = [0, 0, 0, 0];
-            for($i = 0; $i < count($jpgs); $i++){
-                $jackpots[$i] = $jpgs[$i]->balance + $diffs[$i];
-                if($jackpots[$i] > $jpgs[$i]->pay_sum){
-                    //$jackpots[$i] = $jpgs[$i]->start_balance;
-                    $jackpots[$i] = $this->jpgs[$i]->balance;
-                }
-                $ret = $jpgs[$i]->update(['balance' => $jackpots[$i]]);
-                // $jpgs[$i]->save();
-            }
-            return $jackpots;
-        }
         public function GetBank($slotState = '')
         {
             //------- Happy User -------//
-            // if ($this->happyhouruser)
-            // {
-            //     $this->Bank = $this->happyhouruser->current_bank;
-            //     return $this->Bank / $this->CurrentDenom;
-            // }
+            if ($this->happyhouruser)
+            {
+                $this->Bank = $this->happyhouruser->current_bank;
+                return $this->Bank / $this->CurrentDenom;
+            }
             //------- *** -------//
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -536,7 +344,7 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
             // exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
-        public function SetBank($slotState = '', $sum, $slotEvent = '')
+        public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -548,15 +356,30 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             }
             $sum = $sum * $this->CurrentDenom;
             $game = $this->game;
+            if($isFreeSpin == true){
+                if ($this->happyhouruser)
+                {
+                    $this->happyhouruser->increment('current_bank', $sum);
+                    $this->happyhouruser->save();
+                    return $game;
+                }
+                $_allBets = $sum / $this->GetPercent() * 100;
+                $normal_sum = $_allBets * 10 / 100;
+                $game->set_gamebank($normal_sum, 'inc', '');
+                $sum = $sum - $normal_sum;
+                $game->set_gamebank($sum, 'inc', 'bonus');
+                $game->save();
+                return $game;
+            }
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {                
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
-                    // if ($this->happyhouruser){
-                    //     $this->happyhouruser->increment('over_bank', abs($diffMoney));
-                    // }
-                    // else {                    
+                    if ($this->happyhouruser){
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                    }
+                    else {                    
                     //------- *** -------//
                         $normalbank = $game->get_gamebank('');
                         if ($normalbank + $diffMoney < 0)
@@ -564,7 +387,7 @@ namespace VanguardLTE\Games\CricketFeverCQ9
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
-                    //  }
+                     }
                     $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
@@ -615,13 +438,13 @@ namespace VanguardLTE\Games\CricketFeverCQ9
                 $this->toGameBanks = $sum;
             }
             //------- Happy User -------//
-            // if ($this->happyhouruser)
-            // {
-            //     $this->happyhouruser->increment('current_bank', $sum);
-            //     $this->happyhouruser->save();
-            // }
-            // else
-            // {
+            if ($this->happyhouruser)
+            {
+                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->save();
+            }
+            else
+            {
             //------- *** -------//
                 if( $_obf_bonus_systemmoney > 0 ) 
                 {
@@ -630,7 +453,7 @@ namespace VanguardLTE\Games\CricketFeverCQ9
                 }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
-            // }
+            }
             return $game;
         }
         public function SetBalance($sum, $slotEvent = '')
@@ -688,7 +511,7 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             $this->Balance = $user->balance / $this->CurrentDenom;
             return $this->Balance;
         }
-        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $roundid)
+        public function SaveLogReport($spinSymbols, $bet, $lines, $win, $slotState, $roundid, $isState=true)
         {
             $_obf_slotstate = $this->slotId . ' ' . $slotState;
             if( $slotState == 'freespin' ) 
@@ -727,53 +550,27 @@ namespace VanguardLTE\Games\CricketFeverCQ9
                 'shop_id' => $this->shop_id,
                 'roundid' => $roundid
             ]);
-            \VanguardLTE\StatGame::create([
-                'user_id' => $this->playerId, 
-                'balance' => $this->GetBalance() * $this->CurrentDenom, 
-                'bet' => $bet * $this->CurrentDenom, 
-                'win' => $win * $this->CurrentDenom, 
-                'game' => $_obf_slotstate, 
-                'percent' => $this->toGameBanks, 
-                'percent_jps' => $this->toSysJackBanks, 
-                'percent_jpg' => $this->toSlotJackBanks, 
-                'profit' => $this->betProfit, 
-                'denomination' => $this->CurrentDenom, 
-                'shop_id' => $this->shop_id,
-                'roundid' => $roundid
-            ]);
+            if($isState == true){
+                \VanguardLTE\StatGame::create([
+                    'user_id' => $this->playerId, 
+                    'balance' => $this->GetBalance() * $this->CurrentDenom, 
+                    'bet' => $bet * $this->CurrentDenom, 
+                    'win' => $win * $this->CurrentDenom, 
+                    'game' => $_obf_slotstate, 
+                    'percent' => $this->toGameBanks, 
+                    'percent_jps' => $this->toSysJackBanks, 
+                    'percent_jpg' => $this->toSlotJackBanks, 
+                    'profit' => $this->betProfit, 
+                    'denomination' => $this->CurrentDenom, 
+                    'shop_id' => $this->shop_id,
+                    'roundid' => $roundid,
+                ]);
+            }
         }
 
         public function GetSpinSettings($garantType = 'bet', $bet, $lines)
         {
             $_obf_linecount = 10;
-            switch( $lines ) 
-            {
-                case 10:
-                    $_obf_linecount = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_linecount = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_linecount = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_linecount = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_linecount = 3;
-                    break;
-                case 1:
-                    $_obf_linecount = 1;
-                    break;
-                default:
-                    $_obf_linecount = 10;
-                    break;
-            }
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -834,6 +631,13 @@ namespace VanguardLTE\Games\CricketFeverCQ9
                     'win', 
                     $_obf_currentbank
                 ];
+                if( $_obf_currentbank < 0) 
+                {
+                    $return = [
+                        'none', 
+                        0
+                    ];
+                }
             }
             if( $garantType == 'bet' && $this->GetBalance() <= (1 / $this->CurrentDenom) ) 
             {
@@ -852,34 +656,6 @@ namespace VanguardLTE\Games\CricketFeverCQ9
         public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $_obf_linecount = 10;
-            switch( $lines ) 
-            {
-                case 10:
-                    $_obf_linecount = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_linecount = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_linecount = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_linecount = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_linecount = 3;
-                    break;
-                case 1:
-                    $_obf_linecount = 1;
-                    break;
-                default:
-                    $_obf_linecount = 10;
-                    break;
-            }
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -898,38 +674,6 @@ namespace VanguardLTE\Games\CricketFeverCQ9
             }
             $number = rand(0, count($win) - 1);
             return $win[$number];
-        }
-        public function GetRandomScatterPos($rp, $symbolIndex)
-        {
-            $_obf_scatterposes = [];
-            for( $i = 0; $i < count($rp) - 2; $i++ ) 
-            {
-                if( $rp[$i] == $symbolIndex ) 
-                {
-                    array_push($_obf_scatterposes, $i);
-                }
-            }
-            shuffle($_obf_scatterposes);
-            if( !isset($_obf_scatterposes[0]) ) 
-            {
-                $_obf_scatterposes[0] = rand(2, count($rp) - 3);
-            }
-            return $_obf_scatterposes[0];
-        }
-        public function getScatterCount(){
-            $scatters = [
-                [80, 15, 5],
-                [3, 4, 5]
-            ];
-            $percent = rand(0, 90);
-            $sum = 0;
-            for($i = 0; $i < count($scatters[0]); $i++){
-                $sum = $sum + $scatters[0][$i];
-                if($percent <= $sum){
-                    return $scatters[1][$i];
-                }
-            }
-            return $scatters[1][0];
         }
         public function getPromotionData(){
             $promo_data = [];
@@ -969,154 +713,105 @@ namespace VanguardLTE\Games\CricketFeverCQ9
                 return route('frontend.game.startgame',$fakeparams);
             }
         }
-        public function GetGambleSettings()
+        public function SetBet() 
+        { 
+           if($this->GetGameData($this->slotId . 'RealBet') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'RealBet', 0); 
+           } 
+           if($this->GetGameData($this->slotId . 'Lines') == null) 
+           { 
+               $this->SetGameData($this->slotId . 'Lines', 0); 
+           } 
+           $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
+        } 
+        public function GetReelStrips($winType, $bet, $pur)
         {
-            $spinWin = rand(1, $this->WinGamble);
-            return $spinWin;
-        }
-        public function GetReelStrips($winType, $slotEvent, $defaultScatterCount = 0)
-        {
-            $isScatter = false;
-            $basicSymbolIndex = mt_rand(1, 4);
-            if($slotEvent=='freespin'){
-                if( $winType != 'bonus' ) 
-                {
-                    $_obf_reelStripCounts = [];
-                    foreach( [
-                        'reelStripBonus1', 
-                        'reelStripBonus2', 
-                        'reelStripBonus3', 
-                        'reelStripBonus4', 
-                        'reelStripBonus5', 
-                        'reelStripBonus6'
-                    ] as $index => $reelStrip ) 
-                    {
-                        if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
-                        {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
-                        }
-                    }
-                }
-                else
-                {
-                    $_obf_reelStripNumber = [
-                        1, 
-                        2, 
-                        3, 
-                        4, 
-                        5
-                    ];
-                    for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
-                    {
-                        $isScatter = true;
-                        if( $i > 1 && mt_rand(0, 100) < 50) {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip'. $_obf_reelStripNumber[$i]}, 'W');
-                        }else{
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip'. $_obf_reelStripNumber[$i]}, $basicSymbolIndex);
-                        }
-                    }
-                }
+            // if($winType == 'bonus'){
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameCricketFeverStack::where('id', 1068)->first();
+                //  return json_decode($stack->spin_stack, true);
+            // }
+            if($winType == 'bonus'){
+                $winAvaliableMoney = $this->GetBank('bonus');
+            }else if($winType == 'win'){
+                $winAvaliableMoney = $this->GetBank('');
             }else{
-                if( $winType != 'bonus' ) 
-                {
-                    $_obf_reelStripCounts = [];
-                    foreach( [
-                        'reelStrip1', 
-                        'reelStrip2', 
-                        'reelStrip3', 
-                        'reelStrip4', 
-                        'reelStrip5'
-                    ] as $index => $reelStrip ) 
-                    {
-                        if( is_array($this->$reelStrip) && count($this->$reelStrip) > 0 ) 
-                        {
-                            $_obf_reelStripCounts[$index + 1] = mt_rand(0, count($this->$reelStrip) - 3);
-                        }
-                    }
-                }
-                else
-                {
-                    $_obf_reelStripNumber = [
-                        1, 
-                        2, 
-                        3, 
-                        4, 
-                        5
-                    ];
-                    for( $i = 0; $i < count($_obf_reelStripNumber); $i++ ) 
-                    {
-                        $isScatter = true;
-                        if( $i > 1 && mt_rand(0, 100) < 50) {
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip'. $_obf_reelStripNumber[$i]}, 'W');
-                        }else{
-                            $_obf_reelStripCounts[$_obf_reelStripNumber[$i]] = $this->GetRandomScatterPos($this->{'reelStrip'. $_obf_reelStripNumber[$i]}, $basicSymbolIndex);
-                        }
-                    }
-                }
+                $winAvaliableMoney = 0;
             }
-            
-            $reel = [
-                'rp' => []
-            ];
-            foreach( $_obf_reelStripCounts as $index => $value ) 
-            {
-                $key = $this->{'reelStrip' . $index};
-                if($slotEvent=='freespin'){
-                    $key = $this->{'reelStripBonus' . $index};
-                }
-                $rc = count($key);
-                $key[-1] = $key[$rc - 1];
-                $key[$rc] = $key[0];
-                if($isScatter == false){
-                    $reel['reel' . $index][0] = $key[$value];
-                    $reel['reel' . $index][1] = $key[$value + 1];
-                    $reel['reel' . $index][2] = $key[$value + 2];
+            $limitOdd = 0;
+            if($winType != 'none'){
+                $limitOdd = floor($winAvaliableMoney / $bet);
+            }
+            $isLowBank = false;
+            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
+                'user_id' => $this->playerId,
+                'game_id' => $this->game->original_id
+                ])->pluck('freestack_id');
+            while(true){
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameCricketFeverStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $scatterPos = rand(0, 100);
-                    if($scatterPos < 30){
-                        $scatterPos = 0;
-                    }else if($scatterPos < 60){
-                        $scatterPos = 1;
-                    }else if($scatterPos < 100){
-                        $scatterPos = 2;
-                    }
-                    $value = $value - $scatterPos;
-                    if($value < 0){
-                        $value = 0;
-                    }
-                    $reel['reel' . $index][0] = $key[$value];
-                    $reel['reel' . $index][1] = $key[$value + 1];
-                    $reel['reel' . $index][2] = $key[$value + 2];
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameCricketFeverStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $reel['rp'][$index] = $value + 2;
-            }
-            return $reel;
-        }
-
-        public function GetRandomNumber($num_first=0, $num_last=1, $get_cnt=4){
-            $random = [];
-            $tmp_random = [];
-            $ino = 0;
-            for($i=$num_first;$i<=$num_last;$i++) {
-                $tmp_random[$ino] = $i;
-                $ino++;
-            }
-            $tmp_cnt = count($tmp_random);
-            $tmp_last = $tmp_cnt - 1;
-            for($i=0;$i<$get_cnt;$i++) {
-                $tmp_no=mt_rand(0,$tmp_last);
-                $random[$i] = $tmp_random[$tmp_no];
-                $tno = 0;
-                for($j=0;$j<$tmp_cnt;$j++) {
-                    if($random[$i] != $tmp_random[$j]) {
-                        $tmp_random[$tno] = $tmp_random[$j];               
-                        $tno++;
+                if($pur >= 0){
+                    $stacks = $stacks->where('pur_level', $pur);
+                }
+                $index = mt_rand(0, 38000);
+                if($winType == 'win'){
+                    $stacks = $stacks->where('odd', '>', 0);
+                    // $index = mt_rand(0, 65000);
+                }
+                if($isLowBank == true){
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 20);    
+                    }
+                    $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
+                }else{
+                    if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
+                        $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
+                        $this->game->garant_special_winbonus = 0;
+                        $win = explode(',', $this->game->game_win->special_winbonus);
+                        $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
+                        $this->game->save();
+                    }else{
+                        if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                $miniOdd = $limitOdd / mt_rand(2,4);
+                                if($miniOdd > 30){
+                                    $miniOdd = 30;
+                                }
+                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                            }
+                            if ($this->happyhouruser)
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                            }
+                            else
+                            {
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                            }
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                        }
                     }
                 }
-                $tmp_cnt = $tno;
-                $tmp_last = $tmp_cnt - 1;
+                if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
+                    $isLowBank = true;
+                }else{
+                    break;
+                }
             }
-            return $random;
+            $stack = $stacks[rand(0, count($stacks) - 1)];
+            \VanguardLTE\PPGameFreeStackLog::create([
+                'game_id' => $this->game->original_id, 
+                'user_id' => $this->playerId, 
+                'freestack_id' => $stack->id,
+                'odd' => $stack->odd
+            ]);
+            return json_decode($stack->spin_stack, true);
         }
     }
 
