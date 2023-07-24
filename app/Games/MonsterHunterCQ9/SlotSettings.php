@@ -525,6 +525,8 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
             else if( $slotState == 'slotGamble' ) 
             {
                 $_obf_slotstate = $this->slotId . ' DG';
+            }else if($slotState == 'bonusspin'){
+                $_obf_slotstate = $this->slotId . ' BG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -728,8 +730,8 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                 $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMonsterHunterStack::where('id', 3586)->first();
-                 return json_decode($stack->spin_stack, true);
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMonsterHunterStack::where('id', 2)->first();
+                //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
