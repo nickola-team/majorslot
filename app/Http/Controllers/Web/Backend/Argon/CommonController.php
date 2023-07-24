@@ -214,7 +214,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $parent = $parent->referral;
             }
-            $deluser = 1;
+            $deluser = 0; //default 0, disable deluser
             if (auth()->user()->isInOutPartner())
             {
                 $deluser = 1;

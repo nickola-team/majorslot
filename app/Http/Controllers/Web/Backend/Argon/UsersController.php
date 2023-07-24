@@ -178,7 +178,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $comaster = $comaster->referral;
             }
-            $manualjoin = 0; //default 0
+            $manualjoin = 1; //default 1
             if (auth()->user()->isInOutPartner())
             {
                 $manualjoin = 0;
@@ -538,7 +538,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $comaster = $comaster->referral;
             }
-            $manualjoin = 0; //default 0
+            $manualjoin = 1; //default 0
             if (auth()->user()->isInOutPartner())
             {
                 $manualjoin = 0;
