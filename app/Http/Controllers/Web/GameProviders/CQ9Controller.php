@@ -1675,19 +1675,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $date->setTimezone(new \DateTimeZone($timezoneName));
                 $time= $date->format(DATE_RFC3339_EXTENDED);
                 $code = $game->game_item->label;
-                $freegame = 0;
-                if (strpos($game->game, ' FG') !== false)
+                $detail = [
+                    ['freegame' => 0],
+                    ['luckydraw' => 0],
+                    ['bonus' => 0],
+                ];
+                if (strpos($game->game, ' FG') == true)
                 {
-                    $freegame = 8;
+                    $detail[0]['freegame'] = 1;
+                }
+                else if (strpos($game->game, ' BG') == true)
+                {
+                    $detail[2]['bonus'] = 1;
                 }
                 $record = [
                     'bets' => $game->bet,
                     'createtime' => $time,
-                    'detail' => [
-                        ['freegame' => $freegame],
-                        ['luckydraw' => 0],
-                        ['bonus' => 0],
-                    ],
+                    'detail' => $detail,
                     'gamecode' => $code,
                     'gamename' => $game->game_item->title,
                     'nameset' => [
