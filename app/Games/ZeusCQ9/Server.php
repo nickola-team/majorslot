@@ -89,12 +89,11 @@ namespace VanguardLTE\Games\ZeusCQ9
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
                             $result_val['FGContext'] = [["K3hh8zmBqqCGevxiWozgfPYf79ioQ5Brv7r9TNKC1IcGVLwi+NAhFttVJ2IRLvWrpkRV3Mg2h9MPkpBDON9nNLoFeWljtoPOF70wzgF7yKmbgLSfdH0DFAlv1FwRXbhQ5P0p638T3Umba/nZSDTTfE2QLwpQKmyWIFNGNx6Y79pQl5t6n+m+0TLpMJ0=","UERuTxYyq6XzcoxhYAizntRYYqcQ4loaZhaNwdt7r/vdXpvJ+SWYaaZCiOGN2V1+Ah34xpMusDbg19iA7FdoAJ/t62XuNI+vh+zmdRjUHoz3C7ULIAPyVSzFHVIjw/8g9hSUDadTsefBMlTksZM2OT1uWKZtL1EkbqjMWBa2PLZJw466v43OUh8JyU5LCru2az+L1I2rGi8RqT8M","8OUFXNqlHYfrMKtpqmSw8nqXrSPrOF6mNopCmmczRbPulxWD8/frbMzXBmywFOIl6RzZ971ZPukHaTW3kzyMLwjIqA3Y7Al8iM5oBSeImTeXETkOUBw2BerKw4fRCfkALwc3g+vOULdd1koxkCr5meScl+bLKN5071Ssze4lun2ucZzg3/XbAbZrm9mztv9WgkDpHGxtOBG/s3PIwF0D7zsT2k7+aWz9HknkqLEDlwsSwBaUDV8XoDNdmWU=","Z0qoqPusklgsrdkL/VKNUb3piLZzp0/I5b+jsk+BGukey4MXJzY51shl5D/AYE1KbtQKaZDRmjVLOIdw4KCgQLlEnh8zUK6ONl5QLySvk4VaN3jPbIhl1ccY0Az7NHvv2rKbC+5vvuN0jpAn0oU7p33yGPSv76lpbwDnG3C6fUC8UDMJKW/4TYYfvizH/hbYkE0xvbGAVVVHjMUr6bdBZOBTvfcsU2ggXkyGVw==","u4V2m3srws0yphBYZqpBg+Xhh5ailvjD1ElcMXqdzJUIQ2m2MxNvz+H9fuUmzNFHHWy8bzNBKrnPE6zaXHpZme149tGA1Tq8gg2RMEkd//VKAGoh00zSvYn/zmfs1lYuSBbgn+6DVlJRWw0m428utHn/8PE7tWvzv9GO6TUqM8qNQaeQA5B37DqqIPr4bY5LjgvsawBcq8AQqlaC"]];
                         }else if($packet_id == 31 || $packet_id == 42){
+                            $lines = 88;
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
-                                $lines = $gameData->PlayLine;
                             }else if($packet_id == 42){
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                                $lines = 1;
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
@@ -109,13 +108,13 @@ namespace VanguardLTE\Games\ZeusCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){
-                                    $slotSettings->SetBalance(-1 * ($betline * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);
+                                    $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                                 }
                                 
-                                $_sum = ($betline * $lines * $gameData->MiniBet) / 100 * $slotSettings->GetPercent();
+                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -187,7 +186,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        $lines = 88;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -315,7 +314,7 @@ namespace VanguardLTE\Games\ZeusCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), $betline * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
@@ -391,7 +390,7 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $bet_action['amount']           = $betline * $lines;
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
@@ -405,13 +404,13 @@ namespace VanguardLTE\Games\ZeusCQ9
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = 64;
+                $wager['game_id']               = 125;
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $wager['play_bet']              = $betline * $lines;
                 $wager['play_denom']            = 100;
                 $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];

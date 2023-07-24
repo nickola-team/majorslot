@@ -729,7 +729,7 @@ namespace VanguardLTE\Games\XmasCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameXmasStack::where('id', 3848)->first(); //6039 :  Free,9472 : symbol spin
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameXmasStack::where('id', 1858)->first(); //6039 :  Free,9472 : symbol spin
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameXmasStack::where('id', 2560)->first();
