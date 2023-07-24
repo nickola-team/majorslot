@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFlyingCaiShenStack::where('id', 93696)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFlyingCaiShenStack::where('id', 5376)->first(); 
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFlyingCaiShenStack::where('id', 1049)->first();
