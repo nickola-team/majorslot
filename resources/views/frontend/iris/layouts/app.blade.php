@@ -97,14 +97,17 @@
 </div>
 
 <div class="wrapper">
-    @include('frontend.iris.layouts.partials.header', ['logo' => 'iris'])
+    @if (empty($logo))
+		<?php $logo = 'iris'; ?>
+    @endif
+    @include('frontend.iris.layouts.partials.header')
     @include('frontend.iris.layouts.partials.banner')
     @include('frontend.iris.layouts.partials.category')
     
     @yield('content')
 
     @include('frontend.iris.layouts.partials.board')
-    @include('frontend.iris.layouts.partials.footer', ['logo' => 'iris'])
+    @include('frontend.iris.layouts.partials.footer')
 
     @include('frontend.iris.modals.common')
     @auth()
@@ -113,7 +116,9 @@
     @include('frontend.iris.modals.join')
     @endauth
     @foreach ($noticelist as $ntc)
+    @if ($ntc->popup == 'popup')
       @include('frontend.iris.modals.notice', ['notice' => $ntc])
+    @endif
     @endforeach
 
 <audio src="/frontend/iris/snd/message.wav" id="messageSnd"></audio>

@@ -151,21 +151,36 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors('비정상적인 접근입니다');
             }
 
-            $admin = \VanguardLTE\User::where('role_id', 9)->first();
-            if (!$admin)
-            {
-                return redirect()->back()->withErrors('내부오류');
-            }
-
-            $remainbank = $jp->current_bank;
-
-            auth()->user()->addBalance('add', $remainbank, $admin, 0, null, '콜 완료');
             
+            if ($jp->status == 2)
+            {
+                event(new \VanguardLTE\Events\Jackpot\DeleteJackpot($jp));
+                $jp->delete();
+                return redirect()->back()->withSuccess('유저콜이 삭제되었습니다');
+            }
+            else
+            {
 
-            event(new \VanguardLTE\Events\Jackpot\DeleteJackpot($jp));
-            // $jp->delete();
-            $jp->update(['status' => 2, 'updated_at' => \Carbon\Carbon::now()]);
-            return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['유저콜이 종료되었습니다']);
+                $admin = \VanguardLTE\User::where('role_id', 9)->first();
+                if (!$admin)
+                {
+                    return redirect()->back()->withErrors('내부오류');
+                }
+
+                $remainbank = $jp->current_bank - $jp->over_bank;
+
+                if ($remainbank > 0)
+                {
+                    $jp->admin->addBalance('add', $remainbank, $admin, 0, null, '콜 완료');
+                }
+                else
+                {
+                    $jp->admin->addBalance('out', abs($remainbank), $admin, 0, null, '콜 완료');
+                }
+                $jp->update(['status' => 2, 'updated_at' => \Carbon\Carbon::now()]);
+                return redirect()->back()->withSuccess('유저콜이 종료되었습니다');
+            }
+            
         }
 
     }
