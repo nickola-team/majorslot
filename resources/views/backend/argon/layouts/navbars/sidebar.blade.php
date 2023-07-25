@@ -91,7 +91,7 @@
                             </a>
                         </li>
 
-                        @if (auth()->user()->isInOutPartner() && $manualjoin)
+                        @if (auth()->user()->hasRole('admin') || auth()->user()->isInOutPartner() && $manualjoin)
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{{argon_route('argon.agent.joinlist')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
