@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
+    use Log;
     class RenderingController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function __construct()
@@ -39,6 +40,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 );
                 $requestId = $launchRequest->id;
             }
+            Log::channel('monitor_game')->info('Create gamelaunch | ' . strtoupper($provider) . ':' . $gamecode . ' : ' . auth()->user()->username . '('.auth()->user()->id . ') : ' . $requestId);
             $prompt = true;
             if (count($args) > 0)
             {
@@ -451,6 +453,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404);
             }
+
+            Log::channel('monitor_game')->info('Delete gamelaunch | ' . strtoupper($launchRequest->provider) . ':' . $launchRequest->gamecode . ' : ' . $user->username . '('. $user->id . ') : ' . $launchRequest->id);
 
             $launchRequest->delete();
             $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
