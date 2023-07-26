@@ -428,7 +428,7 @@ namespace VanguardLTE\Games\lotuscharmbng
                             if(isset($stack[$spin_type]['total_win'])){
                                 $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
                             }    
-                            if($slotEvent['slotEvent'] != 'respin' && $slotEvent['slotEvent'] != 'freespin' && $spin_type == 'spins' && isset($stack[$spin_type]['board'])){
+                            if($slotEvent['slotEvent'] != 'respin' && isset($stack[$spin_type]['board']) &&  isset($stack[$spin_type]['is_extra_feature'])){
                                 $is_extra_feature = $stack[$spin_type]['is_extra_feature'];
                                 $wildCount = 0;
                                 for($i = 0; $i < 5; $i++){
@@ -487,9 +487,7 @@ namespace VanguardLTE\Games\lotuscharmbng
                         }
                     }
                     if($wildCount > 0){
-                        if($is_extra_feature == true){
-                            $currentHill = [0, 0];
-                        }else if($totalWin > 0){
+                        if($totalWin > 0){
                             $currentHill[1]++;    
                         }else{
                             $currentHill[0]++;
@@ -498,6 +496,9 @@ namespace VanguardLTE\Games\lotuscharmbng
                             }
                             $currentHill[1] = 0;
                         }
+                    }
+                    if($is_extra_feature == true){
+                        $currentHill = [0, 0];
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
                     if( $totalWin > 0) 
