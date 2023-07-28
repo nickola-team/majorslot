@@ -358,6 +358,26 @@ namespace VanguardLTE\Games\CashBoxPM
                     $str_sa = $stack[0]['sa'];
                     $str_sb = $stack[0]['sb'];
                 }
+                $arr_jackpots = [0,0,0];
+                for($k = 0; $k < 15; $k++){
+                    if($lastReel[$k] == 13){
+                        $arr_jackpots[0]++;
+                    }else if($lastReel[$k] == 14){
+                        $arr_jackpots[1]++;
+                    }else if($lastReel[$k] == 15){
+                        $arr_jackpots[2]++;
+                    }
+                }
+                $arr_apwa = [];
+                $arr_apv = [];
+                $jackpot_muls = [40, 500, 5000];
+                for($k = 0; $k < 3; $k++){
+                    if($arr_jackpots[$k] >= 3){
+                        $arr_apv[] = $jackpot_muls[$k] * $lines;
+                        $arr_apwa[] = $jackpot_muls[$k] * $lines * $betline;
+                        $totalWin = $totalWin + $jackpot_muls[$k] * $lines * $betline;
+                    }
+                }
                 if($strWinLine != ''){
                     $arr_lines = explode('&', $strWinLine);
                     for($k = 0; $k < count($arr_lines); $k++){
@@ -458,6 +478,9 @@ namespace VanguardLTE\Games\CashBoxPM
                     if($mo_c > 0){
                         $strOtherResponse = $strOtherResponse . '&mo_c=' . $mo_c;
                     }
+                }
+                if(count($arr_apv) > 0){
+                    $strOtherResponse = $strOtherResponse . '&apwa=' . implode(';', $arr_apwa) . '&apt=ma&apv=' . implode(';', $arr_apv);
                 }
                 if($str_initReel != ''){
                     $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
