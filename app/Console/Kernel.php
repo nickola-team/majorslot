@@ -1718,7 +1718,7 @@ namespace VanguardLTE\Console
                 $arr_users = explode(',', $userlist);                
                 
                 for($k = 0; $k < count($arr_users); $k++){
-                    $alreadyuser = \VanguardLTE\User::where(['username' => $arr_users[$k], 'role_id' => 1])->first();
+                    $alreadyuser = \VanguardLTE\User::where(['username' => $arr_users[$k]])->first();
                     if($alreadyuser == null){
                         $data = [];
                         $data['username'] = $arr_users[$k];
