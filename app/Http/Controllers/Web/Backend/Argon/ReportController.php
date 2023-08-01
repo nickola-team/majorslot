@@ -99,9 +99,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if (!auth()->user()->hasRole('admin'))
             {
                 $d = strtotime($start_date);
-                if ($d < strtotime("-30 days"))
+                if ($d < strtotime("-31 days"))
                 {
-                    $start_date = date("Y-m-d",strtotime("-30 days"));
+                    $start_date = date("Y-m-d",strtotime("-31 days"));
                 }
             }
 
@@ -247,9 +247,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if (!auth()->user()->hasRole('admin'))
             {
                 $d = strtotime($start_date);
-                if ($d < strtotime("-30 days"))
+                if ($d < strtotime("-31 days"))
                 {
-                    $start_date = date("Y-m-d",strtotime("-30 days"));
+                    $start_date = date("Y-m-d",strtotime("-31 days"));
                 }
             }
 
