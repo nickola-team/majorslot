@@ -98,6 +98,15 @@
                                     <option value="{{\VanguardLTE\Support\Enum\UserStatus::BANNED}}" @if (Request::get('status') == \VanguardLTE\Support\Enum\UserStatus::BANNED) selected @endif>차단</option>
                                 </select>
                             </div>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">보유금순</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="balance" name="balance">
+                                    <option value="" @if (Request::get('balance') == '') selected @endif>순서없음</option>
+									<option value="1" @if (Request::get('balance') == 1) selected @endif> 많은순서</option>
+                                    <option value="2" @if (Request::get('balance') == 2) selected @endif> 작은순서</option>
+                                </select>
+                            </div>
+                            </div>
                         </div>
                             
                         <div class="form-group row">
