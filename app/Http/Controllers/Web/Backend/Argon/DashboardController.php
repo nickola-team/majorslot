@@ -17,7 +17,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $user = auth()->user();
             $ids = auth()->user()->hierarchyUsersOnly();
             $availableShops = auth()->user()->availableShops();
-            $start_date = date("Y-m-d", strtotime("-30 days"));
+            $start_date = date("Y-m-d", strtotime("-31 days"));
             $end_date = date("Y-m-d");
             $this_date = date("Y-m-1");
             $todayprofit = 0;
