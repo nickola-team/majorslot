@@ -335,6 +335,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $users = $users->where('role_id', $request->role);
             }
+
+            if ($request->balance == 1)
+            {
+                $users = $users->orderby('balance', 'desc');
+            }
+            else if ($request->balance == 2)
+            {
+                $users = $users->orderby('balance', 'asc');
+            }
             
             $usersum = (clone $users)->get();
             $childsum = 0;
