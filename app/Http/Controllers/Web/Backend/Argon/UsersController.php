@@ -324,25 +324,43 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $status = [$request->status];
             }
             
-            $users = \VanguardLTE\User::whereIn('id', $childPartners)->whereIn('status', $status);
+            $users = \VanguardLTE\User::select('users.*')->whereIn('users.id', $childPartners)->whereIn('users.status', $status);
 
             if ($request->user != '')
             {
-                $users = $users->where('username', 'like', '%' . $request->user . '%');
+                $users = $users->where('users.username', 'like', '%' . $request->user . '%');
             }
 
             if ($request->role != '')
             {
-                $users = $users->where('role_id', $request->role);
+                $users = $users->where('users.role_id', $request->role);
             }
 
             if ($request->balance == 1)
             {
-                $users = $users->orderby('balance', 'desc');
+                
+                if ($request->role == 3) //shop
+                {
+                    $users = $users->join('shops', 'shops.id', '=', 'users.shop_id');
+                    $users = $users->orderby('shops.balance', 'desc');
+                }
+                else
+                {
+                    $users = $users->orderby('users.balance', 'desc');
+                }
             }
             else if ($request->balance == 2)
             {
-                $users = $users->orderby('balance', 'asc');
+                
+                if ($request->role == 3) //shop
+                {
+                    $users = $users->join('shops', 'shops.id', '=', 'users.shop_id');
+                    $users = $users->orderby('shops.balance', 'asc');
+                }
+                else
+                {
+                    $users = $users->orderby('users.balance', 'asc');
+                }
             }
             
             $usersum = (clone $users)->get();
@@ -770,10 +788,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $today = date('Y-m-d 0:0:0');
             $newusers = (clone $users)->where('created_at', '>', $today)->get();
 
+            $totalusercount = $users->count();
+            $onlinecount = count($onlineUsers);
+            if ($onlinecount > $totalusercount)
+            {
+                $onlinecount = $totalusercount;
+            }
+
             $total = [
-                'count' => $users->count(),
+                'count' => $totalusercount,
                 'balance' => $users->sum('balance'),
-                'online' => count($onlineUsers),
+                'online' => $onlinecount,
                 'new' => count($newusers)
             ];
             
