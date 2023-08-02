@@ -202,7 +202,7 @@
                 <thead class="thead-light">
                     <tr>
                     <th scope="col">번호</th>
-                    <th scope="col">파트너이름</th>
+                    <th scope="col">파트너아이디</th>
                     <th scope="col">게임이름</th>
                     <th scope="col">환수율%</th>
                     <th scope="col">환수금1</th>
@@ -247,7 +247,7 @@
                 <thead class="thead-light">
                     <tr>
                     <th scope="col">번호</th>
-                    <th scope="col">파트너이름</th>
+                    <th scope="col">파트너아이디</th>
                     <th scope="col">게임갯수</th>
                     <th scope="col">환수금 합계</th>
                     </tr>

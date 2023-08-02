@@ -102,7 +102,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">이름</th>
+                <th scope="col">아이디</th>
                 <th scope="col">변동전 금액</th>
                 <th scope="col">변동후 금액</th>
                 <th scope="col">금액</th>

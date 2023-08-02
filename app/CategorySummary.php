@@ -12,6 +12,8 @@ namespace VanguardLTE
             'date',
             'totalbet',
             'totalwin',
+            'totaldealbet',
+            'totaldealwin',
             'totalcount',
             'total_deal',
             'total_mileage',
@@ -46,15 +48,22 @@ namespace VanguardLTE
                 return null;
             }
 
+            if (!$user->hasRole('manager'))
+            {
+                return null;
+            }
+
             foreach ($categories as $cat)
             {
                 $adj = [
                     'user_id' => $user_id,
                     'category_id' => $cat->id,
                     'shop_id' => $user->shop_id,
-                    'category' => $cat->title,
+                    // 'category' => $cat->title,
                     'totalbet' => 0,
                     'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
                     'totalcount' => 0,
                     'total_deal' => 0,
                     'total_mileage' => 0,
@@ -83,6 +92,8 @@ namespace VanguardLTE
                                 'name' => $game['name'],
                                 'totalwin' => 0,
                                 'totalbet' => 0,
+                                'totaldealbet' => 0,
+                                'totaldealwin' => 0,
                                 'totalcount' => 0,
                                 'total_deal' => 0,
                                 'total_mileage' => 0,
@@ -108,6 +119,8 @@ namespace VanguardLTE
                             'name' => $game->name,
                             'totalwin' => 0,
                             'totalbet' => 0,
+                            'totaldealbet' => 0,
+                            'totaldealwin' => 0,
                             'totalcount' => 0,
                             'total_deal' => 0,
                             'total_mileage' => 0,
@@ -120,64 +133,11 @@ namespace VanguardLTE
                 $adjustments[] = $adj;
             }
 
-            $shop_ids = $user->availableShops();
-            if (count($shop_ids) > 0) {
-                $query = 'SELECT game, game_id, category_id, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id in ('. implode(',',$shop_ids) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
-                $stat_games = \DB::select($query);
-            }
-            else
-            {
-                return;
-            }
-            if ($user->hasRole('admin'))
-            {
-                $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage';
-            }
-            else if ($user->hasRole(['comaster','group']))
-            {
-                if (settings('enable_master_deal'))
-                {
-                    $masters = $user->childPartners();
-                    if (count($masters) > 0){
-                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage,  0 as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$masters) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
-                    }
-                    else
-                    {
-                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage,  0 as total_ggr, 0 as total_ggr_mileage';
-                    }
-                }
-                else
-                {
-                    $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                }
-            }
-            else if ($user->hasRole('master'))
-            {
-                if (settings('enable_master_deal'))
-                {
-                    $query = 'SELECT game,game_id, category_id,  SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
-
-                }
-                else
-                {
-                    $agents = $user->childPartners();
-                    if (count($agents) > 0){
-                        $query = 'SELECT game, game_id, category_id, 0 as total_deal, SUM(deal_profit) as total_mileage, 0 as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$agents) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
-                    }
-                    else
-                    {
-                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage, 0 as total_ggr, 0 as total_ggr_mileage';
-                    }
-                }
-            }
-            else if($user->hasRole(['agent','distributor']))
-            {
-                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
-            }
-            else if($user->hasRole('manager'))
-            {
-                $query = 'SELECT game, game_id, category_id, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $user->shop_id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id';
-            }
+            $shop_id = $user->shop_id;
+            $query = 'SELECT game, game_id, category_id, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id ='. $shop_id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
+            $stat_games = \DB::select($query);
+            
+            $query = 'SELECT game, game_id, category_id, SUM(bet) as totaldealbet, SUM(win) as totaldealwin, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $shop_id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
             $deal_logs = \DB::select($query);
 
 
@@ -206,43 +166,45 @@ namespace VanguardLTE
                             break;
                         }
                     }
-                    if ($bfound_cat){ 
+                    if ($bfound_cat){
                         $adjustments[$i] = $adj;
                         break; 
                     }
                 }
             }
 
-            foreach($deal_logs as $deal_log){
-                $bfound_game = false;
+            foreach($deal_logs as $deal_log) {
+                $bfound_cat = false;
                 foreach ($adjustments as $i => $adj)
                 {
+                    if($deal_log->category_id == $adj['category_id'])
+                    {
+                        $adj['totaldealbet'] = $adj['totaldealbet'] + $deal_log->totaldealbet;
+                        $adj['totaldealwin'] = $adj['totaldealwin'] + $deal_log->totaldealwin;
+                        $adj['total_deal'] = $adj['total_deal'] + $deal_log->total_deal;
+                        $adj['total_mileage'] = $adj['total_mileage'] + $deal_log->total_mileage;
+                        $adj['total_ggr'] = $adj['total_ggr'] + $deal_log->total_ggr;
+                        $adj['total_ggr_mileage'] = $adj['total_ggr_mileage'] + $deal_log->total_ggr_mileage;
+                        $bfound_cat = true;
+                    }
+                    $bfound_game = false;
                     foreach ($adj['games'] as $j => $game)
                     {
-                        // $real_gamename = explode(' ', $deal_log->game)[0];
-                        // if (strpos($real_gamename, '_') !== false)
-                        // {
-                        //     $real_gamename = explode('_', $real_gamename)[0];
-                        // }
-                        // if($real_gamename == $game['name'])
-                        if($deal_log->game_id == $game['game_id'] && $deal_log->category_id == $adj['category_id'])
+                        if($deal_log->game_id == $game['game_id'] )
                         {
+                            $game['totaldealbet'] = $game['totaldealbet'] + $deal_log->totaldealbet;
+                            $game['totaldealwin'] = $game['totaldealwin'] + $deal_log->totaldealwin;
                             $game['total_deal'] = $game['total_deal'] + $deal_log->total_deal;
                             $game['total_mileage'] = $game['total_mileage'] + $deal_log->total_mileage;
                             $game['total_ggr'] = $game['total_ggr'] + $deal_log->total_ggr;
                             $game['total_ggr_mileage'] = $game['total_ggr_mileage'] + $deal_log->total_ggr_mileage;
-
-                            $adj['total_deal'] = $adj['total_deal'] + $deal_log->total_deal;
-                            $adj['total_mileage'] = $adj['total_mileage'] + $deal_log->total_mileage;
-                            $adj['total_ggr'] = $adj['total_ggr'] + $deal_log->total_ggr;
-                            $adj['total_ggr_mileage'] = $adj['total_ggr_mileage'] + $deal_log->total_ggr_mileage;
 
                             $bfound_game = true;
                             $adj['games'][$j] = $game;
                             break;
                         }
                     }
-                    if ($bfound_game){
+                    if ($bfound_cat){ 
                         $adjustments[$i] = $adj;
                         break; 
                     }
@@ -256,11 +218,21 @@ namespace VanguardLTE
             {
                 if ($adj['totalbet'] > 0)
                 {
+                    if ($user->deal_percent == 0)
+                    {
+                        $adj['totaldealbet'] = $adj['totalbet'];
+                        $adj['totaldealwin'] = $adj['totalwin'];
+                    }
                     $filtered_games = [];
                     foreach ($adj['games'] as $game)
                     {
                         if ($game['totalbet'] > 0)
                         {
+                            if ($user->deal_percent == 0)
+                            {
+                                $game['totaldealbet'] = $game['totalbet'];
+                                $game['totaldealwin'] = $game['totalwin'];
+                            }
                             $filtered_games[] = $game;
                         }
                     }
@@ -280,7 +252,7 @@ namespace VanguardLTE
             return;
         }
 
-        public static function summary($user_id, $day=null)
+        public static function summary($user_id, $day=null, $start=null, $end=null)
         {
             set_time_limit(0);
             $user = \VanguardLTE\User::where('id', $user_id)->first();
@@ -292,23 +264,183 @@ namespace VanguardLTE
             {
                 $day = date("Y-m-d", strtotime("-1 days"));
             }
-            
             $from =  $day . " 0:0:0";
+            if ($start != null)
+            {
+                $from =  $day . ' ' . $start;
+            }
             $to = $day . " 23:59:59";
+            if ($end != null)
+            {
+                $to =  $day . ' ' . $end;
+            }
+
+            $adj_cats = [];
             if(!$user->hasRole('manager')){
                 //repeat child partners
                 $childusers = $user->childPartners(); //하위 파트너들 먼저 정산
+
                 foreach ($childusers as $c)
                 {
-                    CategorySummary::summary($c, $day);
+                    $childAdj = CategorySummary::summary($c, $day, $start, $end);
+                    $updated_cats = $adj_cats;
+                    foreach ($childAdj as $cadj)
+                    {
+                        $adj = [
+                            'user_id' => $user_id,
+                            'category_id' => $cadj['category_id'],
+                            'shop_id' => 0,
+                            'totalbet' => $cadj['totalbet'],
+                            'totalwin' => $cadj['totalwin'],
+                            'totaldealbet' => $cadj['totaldealbet'],
+                            'totaldealwin' => $cadj['totaldealwin'],
+                            'totalcount' => $cadj['totalcount'],
+                            'total_deal' => 0,
+                            'total_mileage' => 0,
+                            'total_ggr' => 0,
+                            'total_ggr_mileage' => 0,
+                            'games' => $cadj['games']
+                        ];
+
+                        $bfound_cats = false;
+
+                        foreach ($adj_cats as $i => $uadj)
+                        {
+                            if ($uadj['category_id'] == $cadj['category_id'])
+                            {
+                                $adj['totalbet'] = $uadj['totalbet'] + $adj['totalbet'];
+                                $adj['totalwin'] = $uadj['totalwin'] + $adj['totalwin'];
+                                $adj['totaldealbet'] = $uadj['totaldealbet'] + $adj['totaldealbet'];
+                                $adj['totaldealwin'] = $uadj['totaldealwin'] + $adj['totaldealwin'];
+                                $adj['totalcount'] = $uadj['totalcount'] + $adj['totalcount'];
+                                
+
+                                //for games
+                                $updated_games = $uadj['games'];
+                                foreach ($cadj['games'] as $cgame)
+                                {
+                                    $adj_game = [
+                                        'user_id' => $user_id,
+                                        'category_id' => $cadj['category_id'],
+                                        'game_id' => $cgame['game_id'],
+                                        'shop_id' => 0,
+                                        'name' => $cgame['name'],
+                                        'totalwin' => $cgame['totalwin'],
+                                        'totalbet' => $cgame['totalbet'],
+                                        'totaldealbet' => $cgame['totaldealbet'],
+                                        'totaldealwin' => $cgame['totaldealwin'],
+                                        'totalcount' => $cgame['totalcount'],
+                                        'total_deal' => 0,
+                                        'total_mileage' => 0,
+                                        'total_ggr' => 0,
+                                        'total_ggr_mileage' => 0,
+                                    ];
+                                    $bfound_games = false;
+                                    foreach ($uadj['games'] as $j => $ugame)
+                                    {
+                                        if ($ugame['game_id'] == $cgame['game_id'])
+                                        {
+                                            $adj_game['totalbet'] = $ugame['totalbet'] + $adj_game['totalbet'];
+                                            $adj_game['totalwin'] = $ugame['totalwin'] + $adj_game['totalwin'];
+                                            $adj_game['totaldealbet'] = $ugame['totaldealbet'] + $adj_game['totaldealbet'];
+                                            $adj_game['totaldealwin'] = $ugame['totaldealwin'] + $adj_game['totaldealwin'];
+                                            $adj_game['totalcount'] = $ugame['totalcount'] + $adj_game['totalcount'];
+                                            $bfound_games = true;
+                                            $updated_games[$j] = $adj_game;
+                                            break;
+                                        }
+                                    }
+                                    if (!$bfound_games)
+                                    {
+                                        $updated_games[] = $adj_game;
+                                    }
+                                }
+
+                                $adj['games'] = $updated_games;
+                                $bfound_cats = true;
+                                $updated_cats[$i] = $adj;
+                                break;
+                            }
+                        }
+
+                        if (!$bfound_cats) //add new category summary
+                        {
+                            $updated_cats[] = $adj;
+                        }
+                    }
+
+                    $adj_cats = $updated_cats;
+                }
+
+                if ($user->hasRole(['admin','group']))
+                {
+                    $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage, 0 as totaldealbet, 0 as totaldealwin';
+                }
+                else if ($user->hasRole(['comaster']))
+                {
+                    $masters = $user->childPartners();
+                    if (count($masters) > 0){
+                        $query = 'SELECT game, game_id, category_id, SUM(bet) as totaldealbet, SUM(win) as totaldealwin, 0 as total_deal, SUM(deal_profit) as total_mileage,  0 as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id in (' . implode(',',$masters) . ') AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
+                    }
+                    else
+                    {
+                        $query = 'SELECT "" as game, "" as game_id, "" as category_id, 0 as total_deal, 0 as total_mileage,  0 as total_ggr, 0 as total_ggr_mileage, 0 as totaldealbet, 0 as totaldealwin';
+                    }
+                }
+                else
+                {
+                    $query = 'SELECT game, game_id, category_id, SUM(bet) as totaldealbet, SUM(win) as totaldealwin, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="partner" AND partner_id =' . $user->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
+                }
+
+                $deal_logs = \DB::select($query);
+
+                foreach($deal_logs as $deal_log) {
+                    $bfound_cat = false;
+                    foreach ($adj_cats as $i => $adj)
+                    {
+                        if($deal_log->category_id == $adj['category_id'])
+                        {
+                            $adj['total_deal'] = $adj['total_deal'] + $deal_log->total_deal;
+                            $adj['total_mileage'] = $adj['total_mileage'] + $deal_log->total_mileage;
+                            $adj['total_ggr'] = $adj['total_ggr'] + $deal_log->total_ggr;
+                            $adj['total_ggr_mileage'] = $adj['total_ggr_mileage'] + $deal_log->total_ggr_mileage;
+                            $bfound_cat = true;
+                        }
+                        $bfound_game = false;
+                        foreach ($adj['games'] as $j => $game)
+                        {
+                            if($deal_log->game_id == $game['game_id'] )
+                            {
+                                $game['total_deal'] = $game['total_deal'] + $deal_log->total_deal;
+                                $game['total_mileage'] = $game['total_mileage'] + $deal_log->total_mileage;
+                                $game['total_ggr'] = $game['total_ggr'] + $deal_log->total_ggr;
+                                $game['total_ggr_mileage'] = $game['total_ggr_mileage'] + $deal_log->total_ggr_mileage;
+    
+                                $bfound_game = true;
+                                $adj['games'][$j] = $game;
+                                break;
+                            }
+                        }
+                        if ($bfound_cat){ 
+                            $adj_cats[$i] = $adj;
+                            break; 
+                        }
+                    }
                 }
             }
-            $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
-            $catsum = [];
+            else
+            {
+                $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
+            }
+
             if ($user->hasRole(['admin','comaster']))
             {
-                \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
+                if ($start==null && $end == null)
+                {
+                    \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
+                }
             }
+            $catsum = [];
             foreach ($adj_cats as $adj)
             {
                 if ($user->hasRole(['admin','comaster']))
@@ -316,175 +448,116 @@ namespace VanguardLTE
                     $games = [];
                     foreach ($adj['games'] as $adjgame)
                     {
-                        $adjgame['type'] = 'daily';
-                        $adjgame['date'] = $day;
-                        $games[] = $adjgame;
+                        if ($start==null && $end == null)
+                        {
+                            $adjgame['user_id'] = $user->id;
+                            $adjgame['shop_id'] = 0;
+                            $adjgame['type'] = 'daily';
+                            $adjgame['date'] = $day;
+                            $games[] = $adjgame;
+                        }
+                        else //today's game summary
+                        {
+                            $dbgame = \VanguardLTE\GameSummary::where([
+                                'user_id'=> $user->id, 
+                                'date' => $day, 
+                                'type'=>'today', 
+                                'category_id' => $adjgame['category_id'],
+                                'game_id' => $adjgame['game_id']
+                                 ])->first();
+                            if ($dbgame)
+                            {
+                                $dbgame->update([
+                                    'totalwin' => $dbgame->totalwin + $adjgame['totalwin'],
+                                    'totalbet' => $dbgame->totalbet + $adjgame['totalbet'],
+                                    'totaldealbet' => $dbgame->totaldealbet + $adjgame['totaldealbet'],
+                                    'totaldealwin' => $dbgame->totaldealwin + $adjgame['totaldealwin'],
+                                    'totalcount' => $dbgame->totalcount + $adjgame['totalcount'],
+                                    'total_deal' => $dbgame->total_deal + $adjgame['total_deal'],
+                                    'total_mileage' => $dbgame->total_mileage + $adjgame['total_mileage'],
+                                    'total_ggr' => $dbgame->total_ggr + $adjgame['total_ggr'],
+                                    'total_ggr_mileage' => $dbgame->total_ggr_mileage + $adjgame['total_ggr_mileage'],
+                                ]);
+                            }
+                            else
+                            {
+                                $adjgame['user_id'] = $user->id;
+                                $adjgame['shop_id'] = 0;
+                                $adjgame['type'] = 'today';
+                                $adjgame['date'] = $day;
+                                \VanguardLTE\GameSummary::create($adjgame);
+                            }
+                        }
                     }
-                    \VanguardLTE\GameSummary::insert($games);
+                    if (count($games)>0 && $start==null && $end == null)
+                    {
+                        \VanguardLTE\GameSummary::insert($games);
+                    }
                 }
                 unset($adj['games']);
-                unset($adj['category']);
-                $adj['type'] = 'daily';
-                $adj['date'] = $day;
-                $catsum[] = $adj;
+                if ($start==null && $end == null)
+                {
+                    $adj['type'] = 'daily';
+                    $adj['date'] = $day;
+                    $catsum[] = $adj;
+                }
+                else  //today's category summary
+                {
+                    $dbcategory = \VanguardLTE\CategorySummary::where([
+                        'user_id'=> $user->id, 
+                        'date' => $day, 
+                        'type'=>'today', 
+                        'category_id' => $adj['category_id']
+                         ])->first();
+                    if ($dbcategory)
+                    {
+                        $dbcategory->update([
+                            'totalwin' => $dbcategory->totalwin + $adj['totalwin'],
+                            'totalbet' => $dbcategory->totalbet + $adj['totalbet'],
+                            'totaldealbet' => $dbcategory->totaldealbet + $adj['totaldealbet'],
+                            'totaldealwin' => $dbcategory->totaldealwin + $adj['totaldealwin'],
+                            'totalcount' => $dbcategory->totalcount + $adj['totalcount'],
+                            'total_deal' => $dbcategory->total_deal + $adj['total_deal'],
+                            'total_mileage' => $dbcategory->total_mileage + $adj['total_mileage'],
+                            'total_ggr' => $dbcategory->total_ggr + $adj['total_ggr'],
+                            'total_ggr_mileage' => $dbcategory->total_ggr_mileage + $adj['total_ggr_mileage'],
+                            'updated_at' => $to
+                        ]);
+                    }
+                    else
+                    {
+                        $adj['type'] = 'today';
+                        $adj['date'] = $day;
+                        $adj['updated_at'] = $to;
+                        \VanguardLTE\CategorySummary::create($adj);
+                    }
+                }
             }
-            \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
-            \VanguardLTE\CategorySummary::insert($catsum);
-        
+            if (count($catsum) > 0 && $start==null && $end == null)
+            {
+                \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'daily'])->delete();
+                \VanguardLTE\CategorySummary::insert($catsum);
+            }
+            return $adj_cats;
         }
 
         public static function summary_today($user_id)
         {
             set_time_limit(0);
-            $user = \VanguardLTE\User::where('id', $user_id)->first();
-            if (!$user)
-            {
-                return null;
-            }
           
-            if(!$user->hasRole('manager')){
-                    //repeat child partners
-                    $childusers = $user->childPartners(); //하위 파트너들 먼저 정산
-                    foreach ($childusers as $c)
-                    {
-                        CategorySummary::summary_today($c);
-                    }
-            }
-
             $day = date("Y-m-d");
-            $todaysumm = \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->get();
+            $todaysumm = \VanguardLTE\CategorySummary::where(['user_id'=> $user_id, 'date' => $day, 'type'=>'today'])->get();
             if (count($todaysumm) > 0)
             {
-                $from = $todaysumm->first()->updated_at;
+                $from = date("H:i:s", strtotime($todaysumm->first()->updated_at, "+1 seconds"));
             }
             else
             {
-                $from =  $day . " 0:0:0";
+                $from =  "0:0:0";
             }
-            $to =  date("Y-m-d H:i:s");
-
-            $adj_cats = CategorySummary::adjustment($user_id, $from, $to);
-            if (count($adj_cats) > 0) {
-                if (count($todaysumm) > 0){
-                    $catsum = $todaysumm->toArray();
-                }
-                else
-                {
-                    $catsum = [];
-                }
-                foreach ($adj_cats as $adj)
-                {
-                    if ($user->hasRole(['admin','comaster']))
-                    {
-                        $todaygamesumm = \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today', 'category_id' => $adj['category_id']])->get();
-                        if (count($todaygamesumm) > 0){
-                            $gamesum = $todaygamesumm->toArray();
-                        }
-                        else
-                        {
-                            $gamesum = [];
-                        }
-                        foreach ($adj['games'] as $adjgame)
-                        {
-                            $bFound = false;
-                            foreach ($gamesum as $i => $t_gamesum)
-                            {
-                                if ($adjgame['name'] == $t_gamesum['name'])
-                                {
-                                    $adjgame['totalbet'] = $adjgame['totalbet'] + $t_gamesum['totalbet'];
-                                    $adjgame['totalwin'] = $adjgame['totalwin'] + $t_gamesum['totalwin'];
-                                    $adjgame['totalcount'] = $adjgame['totalcount'] + $t_gamesum['totalcount'];
-                                    $adjgame['total_deal'] = $adjgame['total_deal'] + $t_gamesum['total_deal'];
-                                    $adjgame['total_mileage'] = $adjgame['total_mileage'] + $t_gamesum['total_mileage'];
-                                    $adjgame['total_ggr'] = $adjgame['total_ggr'] + $t_gamesum['total_ggr'];
-                                    $adjgame['total_ggr_mileage'] = $adjgame['total_ggr_mileage'] + $t_gamesum['total_ggr_mileage'];
-                                    $gamesum[$i] = $adjgame;
-                                    $bFound = true;
-                                    break;
-                                }
-                            }
-                            if (!$bFound)
-                            {
-                                $gamesum[] = $adjgame;
-                            }
-                        }
-                        $new_games = [];
-                        foreach ($gamesum as $update_game)
-                        {
-                            $new_games[] = [
-                                'user_id' => $update_game['user_id'],
-                                'type' => 'today',
-                                'date' => $day,
-                                'name' => $update_game['name'],
-                                'updated_at' => $to,
-                                'category_id' => $update_game['category_id'],
-                                'game_id' => $update_game['game_id'],
-                                'shop_id' => $update_game['shop_id'],
-                                'totalbet' => $update_game['totalbet'],
-                                'totalwin' => $update_game['totalwin'],
-                                'totalcount' => $update_game['totalcount'],
-                                'total_deal' => $update_game['total_deal'],
-                                'total_mileage' => $update_game['total_mileage'],
-                                'total_ggr' => $update_game['total_ggr'],
-                                'total_ggr_mileage' => $update_game['total_ggr_mileage'],
-                            ]; 
-                        }
-
-                        \VanguardLTE\GameSummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today', 'category_id' => $adj['category_id']])->delete();
-                        \VanguardLTE\GameSummary::insert($new_games);
-                    }
-
-                    unset($adj['games']);
-                    unset($adj['category']);
-
-                    $adj['type'] = 'today';
-                    $adj['date'] = $day;
-                    $adj['updated_at'] = $to;
-                    $bFound = false;
-                    foreach ($catsum as $i => $t_sum)
-                    {
-                        if ($adj['category_id'] == $t_sum['category_id'])
-                        {
-                            $adj['totalbet'] = $adj['totalbet'] + $t_sum['totalbet'];
-                            $adj['totalwin'] = $adj['totalwin'] + $t_sum['totalwin'];
-                            $adj['totalcount'] = $adj['totalcount'] + $t_sum['totalcount'];
-                            $adj['total_deal'] = $adj['total_deal'] + $t_sum['total_deal'];
-                            $adj['total_mileage'] = $adj['total_mileage'] + $t_sum['total_mileage'];
-                            $adj['total_ggr'] = $adj['total_ggr'] + $t_sum['total_ggr'];
-                            $adj['total_ggr_mileage'] = $adj['total_ggr_mileage'] + $t_sum['total_ggr_mileage'];
-                            $catsum[$i] = $adj;
-                            $bFound = true;
-                            break;
-                        }
-                    }
-                    if (!$bFound)
-                    {
-                        $catsum[] = $adj;
-                    }
-                }
-                $new_cat = [];
-                foreach ($catsum as $update_cat)
-                {
-                    $new_cat[] = [
-                         'user_id' => $update_cat['user_id'],
-                         'type' => 'today',
-                         'date' => $update_cat['date'],
-                         'updated_at' => $to,
-                         'category_id' => $update_cat['category_id'],
-                         'shop_id' => $update_cat['shop_id'],
-                         'totalbet' => $update_cat['totalbet'],
-                         'totalwin' => $update_cat['totalwin'],
-                         'totalcount' => $update_cat['totalcount'],
-                         'total_deal' => $update_cat['total_deal'],
-                         'total_mileage' => $update_cat['total_mileage'],
-                         'total_ggr' => $update_cat['total_ggr'],
-                         'total_ggr_mileage' => $update_cat['total_ggr_mileage'],
-                     ]; 
-                }
-
-                \VanguardLTE\CategorySummary::where(['user_id'=> $user->id, 'date' => $day, 'type'=>'today'])->delete();
-                \VanguardLTE\CategorySummary::insert($new_cat);
-            }
+            $to =  date("H:i:s");
+            $adj_cats = CategorySummary::summary($user_id, $day, $from, $to);
+            return;
         }
     }
 

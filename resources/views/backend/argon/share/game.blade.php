@@ -117,7 +117,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">유저이름</label>
+                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">유저아이디</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('player')}}" id="player"  name="player">
                             </div>
@@ -149,7 +149,7 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="partner" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                            <label for="partner" class="col-md-2 col-form-label form-control-label text-center">파트너아이디</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
                             </div>
@@ -196,7 +196,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">유저</th>
-                <th scope="col">파트너이름</th>
+                <th scope="col">파트너아이디</th>
                 <th scope="col">받치기상위</th>
                 <th scope="col">게임사</th>
                 <th scope="col">게임명</th>
