@@ -322,7 +322,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                  
                 //$currentSpinTimes = $stack['CurrentSpinTimes'];    
             }
-            if($packetID !=44 || $packetID != 45){
+            if($packetID ==31){
                 foreach($stack['udsOutputWinLine'] as $index => $value){
                     if($value['LinePrize'] > 0){
                         $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
@@ -491,7 +491,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 
                 $log['detail']['wager']['order_time']   = $currentTime;
                 $log['detail']['wager']['end_time']     = $currentTime;
-                $log['detail']['wager']['total_win']    = $result_val['TotalWin'] /  $this->demon;
+                $log['detail']['wager']['total_win']    = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
 
                 if(isset($result_val['LockPos']))
                 {
@@ -585,7 +585,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                     $wager['wager_type']            = 0;
                 }
                 
-                $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') /  $this->demon;
+                $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 $wager['win_line_count']        = $result_val['WinLineCount'];
                 $wager['bet_tid']               =  'pro-bet-' . 'GB' . $result_val['GamePlaySerialNumber'];
                 $wager['win_tid']               =  'pro-win-' . 'GB' . $result_val['GamePlaySerialNumber'];

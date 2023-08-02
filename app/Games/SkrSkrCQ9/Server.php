@@ -432,7 +432,10 @@ namespace VanguardLTE\Games\SkrSkrCQ9
             }
             
             $proof['symbol_data_after']         = [];
-            $proof['extra_data']                = $result_val['ExtraData'];
+            if(isset($result_val['ExtraData'])){
+                $proof['extra_data']                = $result_val['ExtraData'];
+            }
+            
             if(isset($result_val['ReellPosChg'])){
                 $proof['reel_pos_chg']              = $result_val['ReellPosChg'];
             }

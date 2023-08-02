@@ -129,10 +129,7 @@ namespace VanguardLTE\Games\MrMiserCQ9
                                 if(isset($slotEvent['slotEvent'])){
                                     $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                                 }
-                                if(isset($gameData->MiniBet)){
-                                    $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
-                                }
-                                
+                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
                                 if(isset($slotEvent['slotEvent'])){
                                     $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 }
@@ -147,7 +144,11 @@ namespace VanguardLTE\Games\MrMiserCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
-
+                            if($packet_id == 33){
+                                if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
+                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                                }
+                            }
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
