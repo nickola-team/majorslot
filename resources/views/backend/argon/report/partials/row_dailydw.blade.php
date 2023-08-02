@@ -16,6 +16,7 @@
         $adjustment->moneyin = $inout['moneyin'];
         $adjustment->moneyout = $inout['moneyout'];
     }
+    $betwin = $adjustment->betwin();
 ?>
 <td><ul>
     <li>
@@ -23,6 +24,9 @@
     </li>
     <li>
         <span class='text-red'>환전 : {{number_format($adjustment->totalout)}}</span>
+    </li>
+    <li>
+        정산금 : {{number_format($adjustment->totalin - $adjustment->totalout)}}
     </li>
 </ul></td>
 <td><ul>
@@ -32,81 +36,101 @@
     <li>
         <span class='text-red'>환전 : {{number_format($adjustment->moneyout)}}</span>
     </li>
+    <li>
+        정산금 : {{number_format($adjustment->moneyin - $adjustment->moneyout)}}
+    </li>
 </ul></td>
 <td>{{ number_format($adjustment->dealout,0) }}</td>
 @if (auth()->user()->isInoutPartner())
-<td><ul>
-    <li class="bw-title">
-        <span class='text-green'>배팅 : {{number_format($adjustment->totalbet)}}</span>
-        @if (auth()->user()->hasRole('admin'))
-        <div class="bw-btn ">
-            <form method="POST">
-                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
-                <input type='text' name="totalbet" value="{{$adjustment->totalbet}}" style="width:80px;">
-                <button type="submit" class="btn-sm btn-warning">수정</button>
-            </form>
-        </div>    
-        @endif
-    </li>
-    <li class="bw-title">
-        <span class='text-red'>당첨 : {{number_format($adjustment->totalwin)}}</span>
-        @if (auth()->user()->hasRole('admin'))
-        <div class="bw-btn ">
-            <form method="POST">
-                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
-                <input type='text' name="totalwin"  value="{{$adjustment->totalwin}}" style="width:80px;">
-                <button type="submit"class="btn-sm btn-warning">수정</button>
-            </form>
-        </div>
-        @endif
-    </li>
-    <li>
-        정산금 : {{ number_format($adjustment->totalbet-$adjustment->totalwin-$adjustment->total_mileage,0) }}
-    </li>
-</ul></td>
-@endif
-<td><ul>
-    <li class="bw-title">
-        <span class='text-green'>배팅 : {{number_format($adjustment->totaldealbet)}}</span>
-        @if (auth()->user()->hasRole('admin'))
-        <div class="bw-btn ">
-            <form method="POST">
-                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
-                <input type='text' name="totaldealbet" value="{{$adjustment->totaldealbet}}" style="width:80px;">
-                <button type="submit" class="btn-sm btn-warning">수정</button>
-            </form>
-        </div>    
-        @endif
-    </li>
-    <li class="bw-title">
-        <span class='text-red'>당첨 : {{number_format($adjustment->totaldealwin)}}</span>
-        @if (auth()->user()->hasRole('admin'))
-        <div class="bw-btn ">
-            <form method="POST">
-                <input type='hidden' name="summaryid" value="{{$adjustment->id}}">
-                <input type='text' name="totaldealwin"  value="{{$adjustment->totaldealwin}}" style="width:80px;">
-                <button type="submit"class="btn-sm btn-warning">수정</button>
-            </form>
-        </div>
-        @endif
-    </li>
-    <li>
-        정산금 : {{ number_format($adjustment->totaldealbet-$adjustment->totaldealwin-$adjustment->total_mileage,0) }}
-    </li>
-</ul></td>
 <td>
-    <ul>
-    <li>총죽장 : {{ number_format($adjustment->total_ggr,0)}}</li>
-    <li>하부죽장 : {{ number_format($adjustment->total_ggr_mileage,0)}}</li>
-    <li>본인죽장 : {{ number_format($adjustment->total_ggr-$adjustment->total_ggr_mileage,0)}}</li>
-    </ul>
+@if (isset($sumInfo) && $sumInfo!='')
+    <span class='text-red'>준비중</span>
+@else
+@foreach (['live', 'slot', 'total'] as $type)
+    <div class="d-flex">
+    <div class="d-flex" style="justify-content : center;align-items : center;">
+            {{__($type)}}
+    </div>
+    <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
+        <ul>
+        <li>
+            <span class='text-green'>배팅 : {{number_format($betwin[$type]['totalbet'])}}</span>
+        </li>
+        <li>
+            <span class='text-red'>당첨 : {{number_format($betwin[$type]['totalwin'])}}</span>
+        </li>
+        <li>
+        롤링금 : {{number_format($betwin[$type]['total_mileage'])}}
+        </li>
+        <li>
+        정산금 : {{number_format($betwin[$type]['totalbet']-$betwin[$type]['totalwin'] - $betwin[$type]['total_mileage'])}}
+        </li>
+        </ul>
+    </div>
+    
+    </div>
+    @if ($loop->index < 2)
+    <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
+    @endif
+@endforeach
+@endif
+</td>
+@endif
+<td>
+@if (isset($sumInfo) && $sumInfo!='')
+    <span class='text-red'>준비중</span>
+@else
+@foreach (['live', 'slot', 'total'] as $type)
+    <div class="d-flex">
+    <div class="d-flex" style="justify-content : center;align-items : center;">
+            {{__($type)}}
+    </div>
+    <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
+        <ul>
+        <li>
+            <span class='text-green'>배팅 : {{number_format($betwin[$type]['totaldealbet'])}}</span>
+        </li>
+        <li>
+            <span class='text-red'>당첨 : {{number_format($betwin[$type]['totaldealwin'])}}</span>
+        </li>
+        <li>
+        롤링금 : {{number_format($betwin[$type]['total_mileage'])}}
+        </li>
+        <li>
+        정산금 : {{number_format($betwin[$type]['totaldealbet']-$betwin[$type]['totaldealwin'] - $betwin[$type]['total_mileage'])}}
+        </li>
+        </ul>
+    </div>
+    
+    </div>
+    @if ($loop->index < 2)
+    <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
+    @endif
+@endforeach    
+@endif
 </td>
 <td>
+@if (isset($sumInfo) && $sumInfo!='')
+    <span class='text-red'>준비중</span>
+@else
     <ul>
-    <li>총롤링 : {{ number_format($adjustment->total_deal,0)}}</li>
-    <li>하부롤링 : {{ number_format($adjustment->total_mileage,0)}}</li>
-    <li>본인롤링 : {{ number_format($adjustment->total_deal-$adjustment->total_mileage,0)}}</li>
+    <li>총죽장 : {{ number_format($betwin['total']['total_ggr'],0)}}</li>
+    <li>하부죽장 : {{ number_format($betwin['total']['total_ggr_mileage'],0)}}</li>
+    <li>본인죽장 : {{ number_format($betwin['total']['total_ggr']-$betwin['total']['total_ggr_mileage'],0)}}</li>
     </ul>
+@endif
+</td>
+<td>
+@if (isset($sumInfo) && $sumInfo!='')
+    <span class='text-red'>준비중</span>
+@else
+
+    <ul>
+    <li>총롤링 : {{ number_format($betwin['total']['total_deal'],0)}}</li>
+    <li>하부롤링 : {{ number_format($betwin['total']['total_mileage'],0)}}</li>
+    <li>본인롤링 : {{ number_format($betwin['total']['total_deal']-$betwin['total']['total_mileage'],0)}}</li>
+    </ul>
+@endif
 </td>
 <td>
     <ul>
@@ -116,6 +140,8 @@
     <li>파트너 보유금 : {{ number_format($adjustment->partner_sum,0)}}</li>
     </ul>
 </td>
+@if (isset($sumInfo) && $sumInfo!='')
+@else
 <td>
     <ul>
     <li>총롤링금 : {{ number_format($adjustment->deal_balance - $adjustment->deal_mileage + $adjustment->partner_dealsum + $adjustment->user_dealsum,0)}}</li>
@@ -124,8 +150,7 @@
     <li>파트너 롤링금 : {{ number_format($adjustment->partner_dealsum,0)}}</li>
     </ul>
 </td>
-@if (isset($sumInfo) && $sumInfo!='')
-@else
+
 @if (auth()->user()->hasRole('admin'))
 <td>
     <?php
@@ -151,7 +176,5 @@
     @endif
 </td>
 @endif
-@if(auth()->user()->isInoutPartner())
-    <td>{{ number_format($adjustment->totalin - $adjustment->totalout,0) }}</td>
-@endif
+
 @endif

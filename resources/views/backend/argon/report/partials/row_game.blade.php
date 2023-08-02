@@ -14,9 +14,40 @@
     {{$game}}
 @endif
 </td>
-<td >{{number_format($stat->totalbet)}}</td>
-<td>{{number_format($stat->totalwin)}}</td>
-<td>{{number_format($stat->totalbet-$stat->totalwin)}}</td>
+@if (auth()->user()->isInOutPartner())
+<td>
+    <ul>
+    <li>
+        <span class='text-green'>배팅 : {{number_format($stat->totalbet)}}</span>
+    </li>
+    <li>
+        <span class='text-red'>당첨 : {{number_format($stat->totalwin)}}</span>
+    </li>
+    <li>
+    롤링금 : {{number_format($stat->total_mileage)}}
+    </li>
+    <li>
+    정산금 : {{number_format($stat->totalbet-$stat->totalwin-$stat->total_mileage)}}
+    </li>
+    </ul>
+</td>
+@endif
+<td >
+    <ul>
+    <li>
+        <span class='text-green'>배팅 : {{number_format($stat->totaldealbet)}}</span>
+    </li>
+    <li>
+        <span class='text-red'>당첨 : {{number_format($stat->totaldealwin)}}</span>
+    </li>
+    <li>
+    롤링금 : {{number_format($stat->total_mileage)}}
+    </li>
+    <li>
+    정산금 : {{number_format($stat->totaldealbet-$stat->totaldealwin-$stat->total_mileage)}}
+    </li>
+    </ul>
+</td>
 <td>
     <ul>
         <li>총죽장 : {{ number_format($stat->total_ggr)}}</li>
@@ -50,8 +81,42 @@
     @else
         {{$game}}
     @endif
-    </td>    
-    <td class="bw-title">{{number_format($stat['totalbet'])}}
+    </td>
+    @if (auth()->user()->isInOutPartner())
+    <td>
+        <ul>
+        <li>
+            <span class='text-green'>배팅 : {{number_format($stat['totalbet'])}}</span>
+        </li>
+        <li>
+            <span class='text-red'>당첨 : {{number_format($stat['totalwin'])}}</span>
+        </li>
+        <li>
+        롤링금 : {{number_format($stat['total_mileage'])}}
+        </li>
+        <li>
+        정산금 : {{number_format($stat['totalbet']-$stat['totalwin']-$stat['total_mileage'])}}
+        </li>
+        </ul>
+    </td>
+    @endif
+    <td >
+        <ul>
+        <li>
+            <span class='text-green'>배팅 : {{number_format($stat['totaldealbet'])}}</span>
+        </li>
+        <li>
+            <span class='text-red'>당첨 : {{number_format($stat['totaldealwin'])}}</span>
+        </li>
+        <li>
+        롤링금 : {{number_format($stat['total_mileage'])}}
+        </li>
+        <li>
+        정산금 : {{number_format($stat['totaldealbet']-$stat['totaldealwin']-$stat['total_mileage'])}}
+        </li>
+        </ul>
+    </td>
+    <!-- <td class="bw-title">{{number_format($stat['totalbet'])}}
         @if (auth()->user()->hasRole('admin'))
         <div class="bw-btn ">
             <form method="POST">
@@ -73,7 +138,7 @@
         </div>    
         @endif
     </td>
-    <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>
+    <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td> -->
     <td>
         <ul>
         <li>총죽장 : {{ number_format($stat['total_ggr'])}}</li>

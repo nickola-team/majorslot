@@ -12,6 +12,8 @@ namespace VanguardLTE
             'date',
             'totalbet',
             'totalwin',
+            'totaldealbet',
+            'totaldealwin',
             'totalcount',
             'total_deal',
             'total_mileage',

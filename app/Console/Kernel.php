@@ -583,11 +583,18 @@ namespace VanguardLTE\Console
                 
                 $this->info("End daily game summary adjustment.");
             });
-            \Artisan::command('today:gamesummary', function () {
+            \Artisan::command('today:gamesummary {user_id=0}', function ($user_id) {
                 set_time_limit(0);
                 $this->info("Begin today's game adjustment.");
-
-                $admins = \VanguardLTE\User::where('role_id',9)->get();
+                if ($user_id == 0)
+                {
+                    $admins = \VanguardLTE\User::where('role_id',9)->get();
+                }
+                else
+                {
+                    $admins = \VanguardLTE\User::where('id',$user_id)->get();
+                }
+                
                 foreach ($admins as $admin)
                 {
                     \VanguardLTE\CategorySummary::summary_today($admin->id);
@@ -595,24 +602,46 @@ namespace VanguardLTE\Console
                 $this->info("End today's game adjustment.");
             });
 
-            \Artisan::command('daily:summary {date=today}', function ($date) {
+            \Artisan::command('daily:summary {date=today}  {partnerid=0}', function ($date, $partnerid) {
                 set_time_limit(0);
                 $this->info("Begin summary daily adjustment.");
-
-                $admins = \VanguardLTE\User::where('role_id',9)->get();
-                foreach ($admins as $admin)
+                if ($partnerid == 0)
                 {
+                    $admins = \VanguardLTE\User::where('role_id',9)->get();
+                    foreach ($admins as $admin)
+                    {
+                        if ($date == 'today') {
+                            \VanguardLTE\DailySummary::summary($admin->id);
+                        }
+                        else{
+                            \VanguardLTE\DailySummary::summary($admin->id, $date);
+                        }
+                    }
                     if ($date == 'today') {
-                        \VanguardLTE\DailySummary::summary($admin->id);
+                        $day = date("Y-m-d", strtotime("-1 days"));
+                        \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $day])->delete();
+                    }
+                }
+                else
+                {
+                    $partner = \VanguardLTE\User::find($partnerid);
+                    if (!$partner)
+                    {
+                        $this->error('Not found partnerid');
+                        return;
+                    }
+                    if ($date == 'today') {
+                        \VanguardLTE\DailySummary::summary($partnerid);
                     }
                     else{
-                        \VanguardLTE\DailySummary::summary($admin->id, $date);
+                        \VanguardLTE\DailySummary::summary($partnerid, $date);
+                    }
+                    if ($date == 'today') {
+                        $day = date("Y-m-d", strtotime("-1 days"));
+                        \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $day])->delete();
                     }
                 }
-                if ($date == 'today') {
-                    $day = date("Y-m-d", strtotime("-1 days"));
-                    \VanguardLTE\DailySummary::where(['type' => 'today', 'date' => $day])->delete();
-                }
+
                 $this->info("End summary daily adjustment.");
             });
 
