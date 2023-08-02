@@ -142,7 +142,7 @@
                         <table class="table align-items-center table-flush" id="dailylist">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">이름</th>
+                                <th scope="col">아이디</th>
                                 <th scope="col">날짜</th>
                                 <th scope="col">배팅금</th>
                                 <th scope="col">당첨금</th>

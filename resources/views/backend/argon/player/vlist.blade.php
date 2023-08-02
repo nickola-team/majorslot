@@ -65,7 +65,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">이름</th>
+                <th scope="col">아이디</th>
                 <th scope="col">상위</th>
                 <th scope="col">연락처</th>
                 <th scope="col">계좌정보</th>
@@ -106,7 +106,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">이름</th>
+                <th scope="col">아이디</th>
                 <th scope="col">상위</th>
                 <th scope="col">연락처</th>
                 <th scope="col">계좌정보</th>
@@ -160,7 +160,7 @@
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
-                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">추천인이름</label>
+                            <label for="role" class="col-md-2 col-form-label form-control-label text-center">추천인아이디</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('shop')}}" id="shop" name="shop">
                             </div>
@@ -195,7 +195,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">이름</th>
+                <th scope="col">아이디</th>
                 <th scope="col">추천인</th>
                 <th scope="col">보유금</th>
                 <th scope="col">롤링금</th>
