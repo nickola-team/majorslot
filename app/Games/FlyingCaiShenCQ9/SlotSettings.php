@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFlyingCaiShenStack::where('id', 5376)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFlyingCaiShenStack::where('id', 4201472)->first(); 
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFlyingCaiShenStack::where('id', 1049)->first();
@@ -776,13 +776,13 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
 
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
-                $index =  mt_rand(0, 48000);
+                //$index =  mt_rand(0, 48000);
                 if($gameRound == 1){
-                    $index = mt_rand(0, 4248000);
+                    $index = mt_rand(4592335, 4646500);
                 }else if($gameRound == 2){
-                    $index = mt_rand(0, 220000);
+                    $index = mt_rand(0, 4420000);
                 }else if($gameRound == 3){
-                    $index = mt_rand(0, 300000);
+                    $index = mt_rand(0, 4660000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
@@ -791,7 +791,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
