@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
         public function GetReelStrips($winType, $bet, $selId = -1)
         {
             // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('id', 13059)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiamondTreasureStack::where('id', 92416)->first(); 
                     // return json_decode($stack->spin_stack, true);      
             // }
             if($selId > -1){

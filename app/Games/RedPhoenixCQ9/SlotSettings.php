@@ -733,8 +733,8 @@ namespace VanguardLTE\Games\RedPhoenixCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                    $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameRedPhoenixStack::where('id', 25629)->first();
-                    return json_decode($stack->spin_stack, true);
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameRedPhoenixStack::where('id', 190208)->first();
+                    // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');

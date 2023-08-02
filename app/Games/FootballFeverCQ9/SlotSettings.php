@@ -728,7 +728,7 @@ namespace VanguardLTE\Games\FootballFeverCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFootballFeverMStack::where('id', 17665)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFootballFeverMStack::where('id', 35838)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
