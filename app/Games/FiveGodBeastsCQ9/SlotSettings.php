@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('id', 97792)->first(); //59 :  Free,7971 : symbol spin
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('id', 397989)->first(); //59 :  Free,7971 : symbol spin
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('id', 1049)->first();
@@ -776,7 +776,18 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
 
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
-                $index = 0;// mt_rand(0, 48000);
+                if($gameRound == 1){
+                    $index = mt_rand(0, 220000);
+                }else if($gameRound == 2){
+                    $index = mt_rand(0, 220000);
+                }else if($gameRound == 3){
+                    $index = mt_rand(0, 300000);
+                }else if($gameRound == 4){
+                    $index = mt_rand(0, 280000);
+                }else if($gameRound == 5){
+                    $index = mt_rand(0, 125000);
+                }
+                
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

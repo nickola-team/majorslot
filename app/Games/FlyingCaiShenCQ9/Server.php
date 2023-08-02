@@ -239,6 +239,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',-1);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));

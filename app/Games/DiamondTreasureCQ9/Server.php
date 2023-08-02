@@ -187,6 +187,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
                                
                             }
                         }else if($packet_id == 44){
@@ -430,7 +431,10 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
             }
             
             $proof['symbol_data_after']         = [];
-            $proof['extra_data']                = $result_val['ExtraData'];
+            if(isset($result_val['ExtraData'])){
+                $proof['extra_data']                = $result_val['ExtraData'];
+            }
+            
             if(isset($result_val['ReellPosChg'])){
                 $proof['reel_pos_chg']              = $result_val['ReellPosChg'];
             }
@@ -466,7 +470,10 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
             }
             
             //$proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
-            $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            if(isset($result_val['ExtendFeatureByGame'])){
+                $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            }
+            
             $proof['extend_feature_by_game2']   = [];
             $proof['denom_multiple'] = 100;
             $proof['l_v']                       = "2.4.32.1";

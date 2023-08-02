@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('id', 144222)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('id', 68122)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

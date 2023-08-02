@@ -138,7 +138,12 @@ namespace VanguardLTE\Games\ZumaWildCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
-
+                            if($packet_id == 33){
+                                if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
+                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                                }
+                            }
+                            
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
@@ -294,6 +299,9 @@ namespace VanguardLTE\Games\ZumaWildCQ9
             $freespinNum = 0;
             if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
                 $freespinNum = $stack['FreeSpin'][0];
+            }
+            if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                $freespinNum = 15;
             }
 
             $newRespin = false;
