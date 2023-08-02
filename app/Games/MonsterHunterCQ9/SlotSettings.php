@@ -302,9 +302,9 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 return $this->Bank / $this->CurrentDenom;
             }
             //------- *** -------//
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+            if( $this->isBonusStart || $slotState == 'bonusspin' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
-                $slotState = 'bonus';
+                $slotState = 'bonusspin';
             }
             else
             {
@@ -346,9 +346,9 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
+            if( $this->isBonusStart || $slotState == 'bonusspin' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
-                $slotState = 'bonus';
+                $slotState = 'bonusspin';
             }
             else
             {
@@ -367,13 +367,13 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 $normal_sum = $_allBets * 10 / 100;
                 $game->set_gamebank($normal_sum, 'inc', '');
                 $sum = $sum - $normal_sum;
-                $game->set_gamebank($sum, 'inc', 'bonus');
+                $game->set_gamebank($sum, 'inc', 'bonusspin');
                 $game->save();
                 return $game;
             }
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {                
-                if($slotState == 'bonus'){
+                if($slotState == 'bonusspin'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
@@ -449,7 +449,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 if( $_obf_bonus_systemmoney > 0 ) 
                 {
                     $sum -= $_obf_bonus_systemmoney;
-                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonusspin');
                 }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
@@ -481,18 +481,18 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
             {
                 $user->update([
                     'wager' => 0, 
-                    'bonus' => 0
+                    'bonusspin' => 0
                 ]);
             }
             if( $user->wager == 0 ) 
             {
-                $user->update(['bonus' => 0]);
+                $user->update(['bonusspin' => 0]);
             }
             if( $user->wager < 0 ) 
             {
                 $user->update([
                     'wager' => 0, 
-                    'bonus' => 0
+                    'bonusspin' => 0
                 ]);
             }
             if( $user->count_balance < 0 ) 
@@ -612,10 +612,10 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
-                $garantType = 'bonus';
+                $garantType = 'bonusspin';
                 $_obf_currentbank = $this->GetBank($garantType);
                 $return = [
-                    'bonus', 
+                    'bonusspin', 
                     $_obf_currentbank
                 ];
                 if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
@@ -729,12 +729,12 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
         } 
         public function GetReelStrips($winType, $bet, $pur)
         {
-            // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMonsterHunterStack::where('id', 2)->first();
+            // if($winType == 'bonusspin'){
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMonsterHunterStack::where('id', 37012)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
-            if($winType == 'bonus'){
-                $winAvaliableMoney = $this->GetBank('bonus');
+            if($winType == 'bonusspin'){
+                $winAvaliableMoney = $this->GetBank('bonusspin');
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -750,7 +750,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonus'){
+                if($winType == 'bonusspin'){
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMonsterHunterStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMonsterHunterStack::where('spin_type', 0)->whereNotIn('id', $existIds);
@@ -758,13 +758,13 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 if($pur >= 0){
                     $stacks = $stacks->where('pur_level', $pur);
                 }
-                $index = 0;// mt_rand(0, 43000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus'){
+                    if($winType == 'bonusspin'){
                         $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
@@ -776,7 +776,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus'){
+                        if($winType == 'bonusspin'){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
                                 $miniOdd = $limitOdd / mt_rand(2,4);
                                 if($miniOdd > 30){
