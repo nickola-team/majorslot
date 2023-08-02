@@ -130,16 +130,11 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){
-                                    if(isset($gameData->MiniBet)){
-                                        $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
-                                    }
+                                    $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
                                     
                                 }
                                 
                                 $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
-                                if(isset($gameData->MiniBet)){
-                                    $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
-                                }
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -192,6 +187,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
                                
                             }
                         }else if($packet_id == 44){
@@ -435,7 +431,10 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
             }
             
             $proof['symbol_data_after']         = [];
-            $proof['extra_data']                = $result_val['ExtraData'];
+            if(isset($result_val['ExtraData'])){
+                $proof['extra_data']                = $result_val['ExtraData'];
+            }
+            
             if(isset($result_val['ReellPosChg'])){
                 $proof['reel_pos_chg']              = $result_val['ReellPosChg'];
             }
@@ -471,7 +470,10 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
             }
             
             //$proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
-            $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            if(isset($result_val['ExtendFeatureByGame'])){
+                $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            }
+            
             $proof['extend_feature_by_game2']   = [];
             $proof['denom_multiple'] = 100;
             $proof['l_v']                       = "2.4.32.1";
@@ -535,7 +537,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $bet_action['amount']           = $betline * $lines;
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
@@ -558,7 +560,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $wager['play_bet']              = $betline * $lines;
                 $wager['play_denom']            = 100;
                 $wager['bet_multiple']          = $betline;
                 if(isset($result_val['RngData'])){

@@ -109,7 +109,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
                 3
             ]) && (!$user->shop || $user->shop->is_blocked) ) 
             {
-                return redirect()->to('backend/login' . $to)->withErrors('Your shop is blocked');
+                return redirect()->to('/' . $to)->withErrors('Your shop is blocked');
             }
             if( settings('use_email') && $user->isUnconfirmed() ) 
             {
@@ -152,6 +152,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             if (!$admin->isActive())
             {
                 return response()->json(['error' => true, 'msg' => '계정이 임시 차단되었습니다.']);
+            }
+
+            if (!$user->isInoutPartner())
+            {
+                foreach ($site as $web)
+                {
+                    if ($web->adminid == $admin->id && $web->status == 0)
+                    {
+                        return response()->json(['error' => true, 'msg' => '현재 점검중입니다']);
+                    }
+                }
             }
 
             if( !$user->hasRole('admin') && setting('siteisclosed') ) 

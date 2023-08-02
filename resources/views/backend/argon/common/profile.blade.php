@@ -246,12 +246,18 @@
                                                 <th>파트너간 머니이동</th>
                                                 <th>유저삭제기능</th>
                                                 <th>유저가입 승인</th>
+                                                <th>유저 콜기능</th>
                                             </tr>
                                             <tr>
                                                 <td><label class="custom-toggle"><input type="checkbox" name="gameOn" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="없음" data-label-on="있음"></span></label></td>
+
                                                 <td><label class="custom-toggle"><input type="checkbox" name="moneyperm" {{isset($user->sessiondata()['moneyperm']) && $user->sessiondata()['moneyperm']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="불가능" data-label-on="가능"></span></label></td>
-                                                <td><label class="custom-toggle"><input type="checkbox" name="deluser" {{empty($user->sessiondata()['deluser']) || $user->sessiondata()['deluser']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="불가능" data-label-on="가능"></span></label></td>
-                                                <td><label class="custom-toggle"><input type="checkbox" name="manualjoin" {{isset($user->sessiondata()['manualjoin']) && $user->sessiondata()['manualjoin']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="자동" data-label-on="수동"></span></label></td>
+
+                                                <td><label class="custom-toggle"><input type="checkbox" name="deluser" {{isset($user->sessiondata()['deluser']) && $user->sessiondata()['deluser']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="불가능" data-label-on="가능"></span></label></td>
+
+                                                <td><label class="custom-toggle"><input type="checkbox" name="manualjoin" {{!isset($user->sessiondata()['manualjoin']) || $user->sessiondata()['manualjoin']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="자동" data-label-on="수동"></span></label></td>
+
+                                                <td><label class="custom-toggle"><input type="checkbox" name="happyuser" {{isset($user->sessiondata()['happyuser']) && $user->sessiondata()['happyuser']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="차단" data-label-on="활성"></span></label></td>
                                             </tr>
                                         </table>
                                     </div>

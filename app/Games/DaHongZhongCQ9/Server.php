@@ -393,7 +393,7 @@ namespace VanguardLTE\Games\DaHongZhongCQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $bet_action['amount']           = $betline * $lines;
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
@@ -413,7 +413,7 @@ namespace VanguardLTE\Games\DaHongZhongCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $wager['play_bet']              = $betline * $lines;
                 $wager['play_denom']            = 100;
                 $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];

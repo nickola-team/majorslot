@@ -10,6 +10,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         const KTEN_PROVIDER = 'kten';
+        const KTEN_PREFIX = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
         const KTEN_PPVERIFY_PROVIDER = 'vrf';
         const KTEN_GAME_IDENTITY = [
@@ -66,7 +67,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         
-        public static function getUserBalance($href, $user, $prefix=self::KTEN_PROVIDER) {
+        public static function getUserBalance($href, $user, $prefix=self::KTEN_PREFIX) {
             $url = config('app.kten_api') . '/api/getAccountBalance';
             $op = config('app.kten_op');
             $token = config('app.kten_key');
@@ -222,7 +223,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode, $user, $prefix=self::KTEN_PROVIDER) 
+        public static function makegamelink($gamecode, $user, $prefix=self::KTEN_PREFIX) 
         {
 
             $op = config('app.kten_op');
@@ -259,7 +260,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url;
         }
         
-        public static function withdrawAll($href, $user, $prefix=self::KTEN_PROVIDER)
+        public static function withdrawAll($href, $user, $prefix=self::KTEN_PREFIX)
         {
             $balance = KTENController::getuserbalance($href,$user,$prefix);
             if ($balance < 0)
@@ -330,7 +331,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'agentId' => $op,
                 'token' => $token,
-                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'userId' => self::KTEN_PREFIX . sprintf("%04d",$user->id),
                 'time' => time(),
             ];
             $alreadyUser = 1;
@@ -366,9 +367,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $params = [
                     'agentId' => $op,
                     'token' => $token,
-                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'userId' => self::KTEN_PREFIX . sprintf("%04d",$user->id),
                     'time' => time(),
-                    'email' => self::KTEN_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'email' => self::KTEN_PREFIX . sprintf("%04d",$user->id) . '@masu.com',
                     'password' => '111111'
                 ];
                 try
@@ -419,8 +420,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'amount' => floatval($user->balance),
                         'agentId' => $op,
                         'token' => $token,
-                        'transactionID' => uniqid(self::KTEN_PROVIDER),
-                        'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                        'transactionID' => uniqid(self::KTEN_PREFIX),
+                        'userId' => self::KTEN_PREFIX . sprintf("%04d",$user->id),
                         'time' => time(),
                     ];
                     try {
@@ -707,7 +708,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         $time = $round['trans_time'];
 
-                        $userid = intval(preg_replace('/'. self::KTEN_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
+                        $userid = intval(preg_replace('/'. self::KTEN_PREFIX .'(\d+)/', '$1', $round['mem_id'])) ;
                         if ($userid == 0)
                         {
                             $userid = intval(preg_replace('/'. self::KTEN_PPVERIFY_PROVIDER .'(\d+)/', '$1', $round['mem_id'])) ;
@@ -886,7 +887,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $params = [
                 'agentId' => $op,
                 'token' => $token,
-                'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                'userId' => self::KTEN_PREFIX . sprintf("%04d",$user->id),
                 'time' => time(),
             ];
             $alreadyUser = 1;
@@ -922,9 +923,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $params = [
                     'agentId' => $op,
                     'token' => $token,
-                    'userId' => self::KTEN_PROVIDER . sprintf("%04d",$user->id),
+                    'userId' => self::KTEN_PREFIX . sprintf("%04d",$user->id),
                     'time' => time(),
-                    'email' => self::KTEN_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'email' => self::KTEN_PREFIX . sprintf("%04d",$user->id) . '@masu.com',
                     'password' => '111111'
                 ];
                 try

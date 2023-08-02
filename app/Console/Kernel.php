@@ -1426,6 +1426,8 @@ namespace VanguardLTE\Console
                 \DB::statement('CREATE TABLE w_users_snapshot AS SELECT * FROM w_users');
                 \DB::statement('DROP TABLE IF EXISTS w_shops_snapshot');
                 \DB::statement('CREATE TABLE w_shops_snapshot AS SELECT * FROM w_shops');
+                \DB::statement('DROP TABLE IF EXISTS w_happyhour_users_snap');
+                \DB::statement('CREATE TABLE w_happyhour_users_snap AS SELECT * FROM w_happyhour_users WHERE status=1');
             });
             
             \Artisan::command('game:genfreestack {gameid}', function ($gameid) {
@@ -1704,7 +1706,51 @@ namespace VanguardLTE\Console
                 $this->info("Proceed $prcCount, Cancel $cancelCount");
                 $this->info("End");
             });         
+            \Artisan::command('add:userlist {manager} {userlist} {password}', function ($manager, $userlist, $password) {
 
+                $this->info("Begin");
+                $parent = \VanguardLTE\User::where(['username' => $manager, 'role_id' => 3])->first();
+                if (!$parent)
+                {
+                    $this->info("매장을 찾을수 없습니다");
+                }
+                $role = \jeremykenedy\LaravelRoles\Models\Role::find(1);
+                $arr_users = explode(',', $userlist);                
+                
+                for($k = 0; $k < count($arr_users); $k++){
+                    $alreadyuser = \VanguardLTE\User::where(['username' => $arr_users[$k]])->first();
+                    if($alreadyuser == null){
+                        $data = [];
+                        $data['username'] = $arr_users[$k];
+                        $data['password'] = $password;
+                        $data['status'] = "Active";
+                        $data['parent_id'] = $parent->id;
+                        $shop = $parent->shop;
+                        $check_deals = [
+                            'deal_percent',
+                            'table_deal_percent',
+                            'pball_single_percent',
+                            'pball_comb_percent'
+                        ];
+                        $data['shop_id'] = $shop->id;
+                        $data['role_id'] = $role->id;
+        
+                        $user = \VanguardLTE\User::create($data);
+                        $user->detachAllRoles();
+                        $user->attachRole($role);
+                        // event(new \VanguardLTE\Events\User\Created($user));
+        
+                        \VanguardLTE\ShopUser::create([
+                            'shop_id' => $shop->id, 
+                            'user_id' => $user->id
+                        ]);
+                    }else{
+                        $this->info($arr_users[$k] . "유저가 이미 존재합니다.");
+                    }
+                }
+                
+                $this->info("End");
+            }); 
         }
     }
 

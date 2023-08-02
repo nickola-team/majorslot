@@ -181,6 +181,7 @@
                 <th scope="col">금액</th>
                 <th scope="col">타입</th>
                 <th scope="col">방식</th>
+                <th scope="col">사유</th>
                 <th scope="col">처리 시간</th>
                 </tr>
             </thead>

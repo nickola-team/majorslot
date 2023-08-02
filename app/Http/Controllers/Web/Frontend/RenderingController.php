@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
+    use Log;
     class RenderingController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function __construct()
@@ -39,6 +40,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 );
                 $requestId = $launchRequest->id;
             }
+            Log::channel('monitor_game')->info('Create gamelaunch | ' . strtoupper($provider) . ':' . $gamecode . ' : ' . auth()->user()->username . '('.auth()->user()->id . ') : ' . $requestId);
             $prompt = true;
             if (count($args) > 0)
             {
@@ -452,6 +454,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 abort(404);
             }
 
+            Log::channel('monitor_game')->info('Delete gamelaunch | ' . strtoupper($launchRequest->provider) . ':' . $launchRequest->gamecode . ' : ' . $user->username . '('. $user->id . ') : ' . $launchRequest->id);
+
             $launchRequest->delete();
             $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
             if (!class_exists($object))
@@ -527,6 +531,46 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         $alonegame = 1;
                         $data = null;
                         return view('frontend.Default.games.theplus', compact('url', 'alonegame', 'data'));
+                    }
+                }
+                $user->update([
+                    'playing_game' => $game['href'],
+                    'played_at' => time(),
+                ]);
+            }
+            else if ($provider == 'honor')
+            {
+                $game = \VanguardLTE\Http\Controllers\Web\GameProviders\HONORController::getGameObj($gamecode);
+                if (!$game)
+                {
+                    abort(404);
+                }
+                if ($game['href'] == 'honor-cq9') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'CQ9';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'cq9play',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $fakeparams = [
+                            'token' => uniqid(''),
+                            'language' => 'ko',
+                            'dollarsign' => 'Y',
+                            'app' => 'N',
+                            'detect' => 'N',
+                            'game' => $gamename, //this is real param
+                        ];
+                        return redirect(route('frontend.game.startgame',$fakeparams));
                     }
                 }
                 $user->update([

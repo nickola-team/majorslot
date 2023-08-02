@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\ChameleonCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameChameleonStack::where('id', 19713)->first(); //1852 : normal,19713 : free
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameChameleonStack::where('id', 119157)->first(); //1852 : normal,19713 : free
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

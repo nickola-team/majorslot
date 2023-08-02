@@ -440,6 +440,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth', 'argonaccessrule'])
             'as' => 'argon.website.list',
             'uses' => 'SettingsController@index',
         ]);
+        Route::get('websites/status', [
+            'as' => 'argon.website.status',
+            'uses' => 'SettingsController@status_update',
+        ]);
         Route::get('websites/create', [
             'as' => 'argon.website.create',
             'uses' => 'SettingsController@create',

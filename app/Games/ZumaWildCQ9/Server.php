@@ -138,7 +138,12 @@ namespace VanguardLTE\Games\ZumaWildCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
-
+                            if($packet_id == 33){
+                                if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
+                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                                }
+                            }
+                            
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
@@ -295,6 +300,9 @@ namespace VanguardLTE\Games\ZumaWildCQ9
             if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
                 $freespinNum = $stack['FreeSpin'][0];
             }
+            if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                $freespinNum = 15;
+            }
 
             $newRespin = false;
             if($stack['IsRespin'] == true){
@@ -435,8 +443,7 @@ namespace VanguardLTE\Games\ZumaWildCQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
-                $bet_action['eventtime']        = $currentTime;
+                $bet_action['amount']           = $betline * $lines;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
                 $win_action['action']           = 'win';
@@ -455,7 +462,7 @@ namespace VanguardLTE\Games\ZumaWildCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $wager['play_bet']              = $betline * $lines;
                 $wager['play_denom']            = 100;
                 $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];

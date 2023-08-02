@@ -13,9 +13,30 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function index(\Illuminate\Http\Request $request)
         {
-            $websites = \VanguardLTE\WebSite::all();
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;
+            $websites = \VanguardLTE\WebSite::whereIn('adminid', $availablePartners)->get();
             return view('backend.argon.setting.list', compact('websites'));
         }
+        public function status_update(\Illuminate\Http\Request $request)
+        {
+            $websiteid =$request->website;
+            $status = ($request->status=='1'?1:0);
+
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;
+
+            $websites = \VanguardLTE\WebSite::where('id', $websiteid)->first();
+            if (!$websites || !in_array($websites->adminid, $availablePartners))
+            {
+                return redirect()->back()->withErrors('허용되지 않은 접근입니다');
+            }
+
+            $websites->update(['status' => $status]);
+            return redirect()->to(argon_route('argon.website.list'))->withSuccess(['상태를 업데이트했습니다']);
+
+        }
+
         public function create()
         {
             foreach( glob(resource_path() . '/views/frontend/*', GLOB_ONLYDIR) as $fileinfo ) 

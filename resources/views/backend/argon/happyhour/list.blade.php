@@ -24,11 +24,14 @@
             <thead class="thead-light">
                 <tr>
                 <th>번호</th>
+                <th>작성자</th>
 				<th>회원아이디</th>
 				<th>총 당첨금</th>
 				<th>남은당첨금</th>
 				<th>오버된당첨금</th>
-				<th>잭팟기능</th>
+				<!-- <th>잭팟기능</th> -->
+                <th>작성시간</th>
+                <th>완료시간</th>
 				<th>상태</th>
 				<th></th>
                 </tr>
