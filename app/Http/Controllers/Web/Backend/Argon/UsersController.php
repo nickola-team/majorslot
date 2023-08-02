@@ -287,18 +287,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function agent_list(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();
-            if ($request->user != '' || $request->role != '')
-            {
+            // if ($request->user != '' || $request->role != '')
+            // {
+            //     $childPartners = $user->hierarchyPartners();
+            // }
+            // else if ($request->status == \VanguardLTE\Support\Enum\UserStatus::BANNED && $request->role == '')
+            // {
+            //     $childPartners = $user->hierarchyPartners();
+            // }
+            // else
+            // {
                 $childPartners = $user->hierarchyPartners();
-            }
-            else if ($request->status == \VanguardLTE\Support\Enum\UserStatus::BANNED && $request->role == '')
-            {
-                $childPartners = $user->hierarchyPartners();
-            }
-            else
-            {
-                $childPartners = $user->childPartners();
-            }
+            // }
             $parent = $user;
             while ($parent && !$parent->isInOutPartner())
             {
@@ -328,12 +328,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             if ($request->user != '')
             {
-                $users = $users->where('users.username', 'like', '%' . $request->user . '%');
+                if ($request->includename == 'on')
+                {
+                    $users = $users->where('users.username', 'like', '%' . $request->user . '%');
+                }
+                else
+                {
+                    $users = $users->where('users.username',  $request->user );
+                }
             }
 
             if ($request->role != '')
             {
                 $users = $users->where('users.role_id', $request->role);
+            }
+
+            if ($request->account_no != '')
+            {
+                $users = $users->where('users.account_no', 'like', '%'. $request->account_no .'%');
+            }
+
+            if ($request->recommender != '')
+            {
+                $users = $users->where('users.recommender', 'like', '%'. $request->recommender .'%');
             }
 
             if ($request->balance == 1)
@@ -728,7 +745,23 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             if ($request->user != '')
             {
-                $users = $users->where('username', 'like', '%' . $request->user . '%');
+                if ($request->includename == 'on')
+                {
+                    $users = $users->where('username', 'like', '%' . $request->user . '%');
+                }
+                else
+                {
+                    $users = $users->where('username',  $request->user );
+                }
+            }
+            if ($request->account_no != '')
+            {
+                $users = $users->where('account_no', 'like', '%'. $request->account_no .'%');
+            }
+
+            if ($request->recommender != '')
+            {
+                $users = $users->where('recommender', 'like', '%'. $request->recommender .'%');
             }
 
             if ($request->shop != '')
