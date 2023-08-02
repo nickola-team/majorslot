@@ -433,9 +433,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $statistics = \VanguardLTE\CategorySummary::orderBy('category_summary.date', 'DESC');
         
-            $totalQuery = 'SELECT w_category_summary.id as id, SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(total_deal) as total_deal, SUM(total_mileage) as total_mileage, SUM(total_ggr) as total_ggr, SUM(total_ggr_mileage) as total_ggr_mileage, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title, w_categories.type FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+            $totalQuery = 'SELECT w_category_summary.id as id, SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, SUM(totaldealbet) AS totaldealbet, SUM(totaldealwin) AS totaldealwin, SUM(total_deal) as total_deal, SUM(total_mileage) as total_mileage, SUM(total_ggr) as total_ggr, SUM(total_ggr_mileage) as total_ggr_mileage, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title, w_categories.type FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
 
-            $dateQuery = 'SELECT w_category_summary.id as id, totalbet, totalwin, total_deal,total_mileage, total_ggr, total_ggr_mileage, category_id, date, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title AS title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
+            $dateQuery = 'SELECT w_category_summary.id as id, totalbet, totalwin, totaldealbet, totaldealwin,total_deal,total_mileage, total_ggr, total_ggr_mileage, category_id, date, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title AS title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
 
             $start_date = date("Y-m-1");
             $end_date = date("Y-m-d");
@@ -517,12 +517,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             if (!auth()->user()->hasRole('admin'))
             {
-                $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, SUM(a.total_ggr) as total_ggr, SUM(a.total_ggr_mileage) as total_ggr_mileage, a.parent AS category_id, b.title, b.type  FROM ($totalQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent ORDER BY totalbet desc";
+                $totalQuery = "SELECT SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.totaldealbet) AS totaldealbet, SUM(a.totaldealwin) AS totaldealwin,SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, SUM(a.total_ggr) as total_ggr, SUM(a.total_ggr_mileage) as total_ggr_mileage, a.parent AS category_id, b.title, b.type  FROM ($totalQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent ORDER BY totalbet desc";
 
-                $dateQuery = "SELECT a.id as id, SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, SUM(a.total_ggr) as total_ggr,SUM(a.total_ggr_mileage) as total_ggr_mileage, date, a.parent AS category_id, b.title FROM ($dateQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent, a.date ORDER BY a.date desc";
+                $dateQuery = "SELECT a.id as id, SUM(a.totalbet) AS totalbet, SUM(a.totalwin) AS totalwin, SUM(a.totaldealbet) AS totaldealbet, SUM(a.totaldealwin) AS totaldealwin, SUM(a.total_deal) as total_deal,SUM(a.total_mileage) as total_mileage, SUM(a.total_ggr) as total_ggr,SUM(a.total_ggr_mileage) as total_ggr_mileage, date, a.parent AS category_id, b.title FROM ($dateQuery) a JOIN w_categories as b on b.id=a.parent GROUP BY a.parent, a.date ORDER BY a.date desc";
             }
         
-            $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.total_deal) as total_deal, SUM(c.total_mileage) as total_mileage ,SUM(c.total_ggr) as total_ggr, SUM(c.total_ggr_mileage) as total_ggr_mileage FROM ($totalQuery) c";
+            $sumQuery = "SELECT SUM(c.totalbet) AS totalbet, SUM(c.totalwin) AS totalwin, SUM(c.totaldealbet) AS totaldealbet, SUM(c.totaldealwin) AS totaldealwin,  SUM(c.total_deal) as total_deal, SUM(c.total_mileage) as total_mileage ,SUM(c.total_ggr) as total_ggr, SUM(c.total_ggr_mileage) as total_ggr_mileage FROM ($totalQuery) c";
 
             $totalstatics = \DB::select($totalQuery);
             $totalsummary = \DB::select($sumQuery);
@@ -554,6 +554,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $info['id'] = $cat->id;
                     $info['totalbet'] = $cat->totalbet;
                     $info['totalwin'] = $cat->totalwin;
+                    $info['totaldealbet'] = $cat->totaldealbet;
+                    $info['totaldealwin'] = $cat->totaldealwin;
                     $info['total_deal'] = $cat->total_deal;
                     $info['total_mileage'] = $cat->total_mileage;
                     $info['total_ggr'] = $cat->total_ggr;
@@ -582,34 +584,36 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $gacmerge = \VanguardLTE\Http\Controllers\Web\GameProviders\GACController::mergeGAC_EVO($master->id);
             
             $totalbyType = [
-                'slot' => [
-                    'totalbet' => 0,
-                    'totalwin' => 0,
-                    'total_deal' => 0,
-                    'total_mileage' => 0,
-                    'total_ggr' => 0,
-                    'total_ggr_mileage' => 0,
-                ],
                 'live' => [
                     'totalbet' => 0,
                     'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
                     'total_deal' => 0,
                     'total_mileage' => 0,
                     'total_ggr' => 0,
                     'total_ggr_mileage' => 0,
                 ],
+                'slot' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ]
             ];
 
             foreach ($totalstatics as $total)
             {
                 if (isset($totalbyType[$total->type]))
                 {
-                    $totalbyType[$total->type]['totalbet'] = $totalbyType[$total->type]['totalbet'] + $total->totalbet;
-                    $totalbyType[$total->type]['totalwin'] = $totalbyType[$total->type]['totalwin'] + $total->totalwin;
-                    $totalbyType[$total->type]['total_deal'] = $totalbyType[$total->type]['total_deal'] + $total->total_deal;
-                    $totalbyType[$total->type]['total_mileage'] = $totalbyType[$total->type]['total_mileage'] + $total->total_mileage;
-                    $totalbyType[$total->type]['total_ggr'] = $totalbyType[$total->type]['total_ggr'] + $total->total_ggr;
-                    $totalbyType[$total->type]['total_ggr_mileage'] = $totalbyType[$total->type]['total_ggr_mileage'] + $total->total_ggr_mileage;
+                    foreach ($totalbyType[$total->type] as $key => $value)
+                    {
+                        $totalbyType[$total->type][$key] = $totalbyType[$total->type][$key] + $total->{$key};
+                    }
                 }
             }
             
