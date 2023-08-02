@@ -31,13 +31,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if (count($param) > 2)
             {
                 $enddate = $param[2];
-                $summary = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $date)->where('date', '<=', $enddate)->whereIn('user_id', $users)->selectRaw('sum(totalin) as totalin, sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(totaldealbet) as totaldealbet,sum(totaldealwin) as totaldealwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, user_id, "" as date')->get();            
+                $summary = \VanguardLTE\DailySummary::groupBy('user_id')->where('date', '>=', $date)->where('date', '<=', $enddate)->whereIn('user_id', $users)->selectRaw('sum(totalin) as totalin, sum(totalout) as totalout,sum(moneyin) as moneyin,sum(moneyout) as moneyout,sum(dealout) as dealout,sum(totalbet) as totalbet,sum(totalwin) as totalwin,sum(totaldealbet) as totaldealbet,sum(totaldealwin) as totaldealwin,sum(total_deal) as total_deal,sum(total_mileage) as total_mileage,sum(total_ggr) as total_ggr,sum(total_ggr_mileage) as total_ggr_mileage, user_id, "" as date')->get();
                 $sumInfo = $date .'~' .$enddate;
             }
             else
             {
                 $summary = \VanguardLTE\DailySummary::where('date', '=', $date)->whereIn('user_id', $users);
-            
                 $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'ASC');
                 $summary = $summary->get();
                 $sumInfo = '';
@@ -262,6 +261,39 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $user_id = $summary->first()->user->id;
                 $role_id = $summary->first()->user->role_id;
             }
+            $betwin = [
+                'live' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'slot' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'total' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+            ];
+
             $total = [
                 'id' => (count($users)==1 && $sumuser)?$sumuser->username:'',
                 'user_id' => $user_id,
@@ -272,14 +304,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'moneyin' => $summary->sum('moneyin'),
                 'moneyout' => $summary->sum('moneyout'),
                 'dealout' => $summary->sum('dealout'),
-                'totalbet' => $summary->sum('totalbet'),
-                'totalwin' => $summary->sum('totalwin'),
-                'totaldealbet' => $summary->sum('totaldealbet'),
-                'totaldealwin' => $summary->sum('totaldealwin'),
-                'total_deal' => $summary->sum('total_deal'),
-                'total_mileage' => $summary->sum('total_mileage'),
-                'total_ggr' => $summary->sum('total_ggr'),
-                'total_ggr_mileage' => $summary->sum('total_ggr_mileage'),
+                'betwin' => $betwin,
+                // 'totalbet' => $summary->sum('totalbet'),
+                // 'totalwin' => $summary->sum('totalwin'),
+                // 'totaldealbet' => $summary->sum('totaldealbet'),
+                // 'totaldealwin' => $summary->sum('totaldealwin'),
+                // 'total_deal' => $summary->sum('total_deal'),
+                // 'total_mileage' => $summary->sum('total_mileage'),
+                // 'total_ggr' => $summary->sum('total_ggr'),
+                // 'total_ggr_mileage' => $summary->sum('total_ggr_mileage'),
                 'balance' => $summary->sum('balance'),
                 'childsum' => $summary->sum('childsum'),
             ];
@@ -295,7 +328,24 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $total['moneyin'] = $total['moneyin'] - $su->moneyin + $inout['moneyin'];
                     $total['moneyout'] =$total['moneyout'] - $su->moneyout + $inout['moneyout'];
                 }
+                foreach ($betwin as $type => $tdata)
+                {
+                    if ($type != 'total')
+                    {
+                        $categories = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'type' => $type])->pluck('id')->toArray();
+                        $catsums = $su->categorySummary->whereIn('category_id', $categories);
+                        foreach ($catsums as $csum)
+                        {
+                            foreach ($tdata as $field => $tvalue)
+                            {
+                                $betwin[$type][$field] = $betwin[$type][$field] + $csum->{$field};
+                                $betwin['total'][$field] = $betwin['total'][$field] + $csum->{$field};
+                            }
+                        }
+                    }
+                }
             }
+            $total['betwin'] = $betwin;
             
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
             $summary = $summary->paginate(31);

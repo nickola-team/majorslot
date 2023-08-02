@@ -196,66 +196,112 @@
                                 @if ($total['id'] != '')
                                 <tr data-tt-id="{{$total['user_id'] }}~{{$total['daterange']}}" data-tt-parent-id="{{$total['user_id']}}" data-tt-branch="{{$total['role_id']>3?'true':'false'}}">
                                 @else
-                                <tr>
+                                <tr >
                                 @endif
-                                    <td>{{$total['id']}}</td>
-                                    <td>{{$total['daterange']}}</td>
-                                    <td><ul>
+                                    <td  >{{$total['id']}}</td>
+                                    <td >{{$total['daterange']}}</td>
+                                    <td ><ul>
                                         <li>
                                             <span class='text-green'>충전 : {{number_format($total['totalin'])}}</span>
                                         </li>
                                         <li>
                                             <span class='text-red'>환전 : {{number_format($total['totalout'])}}</span>
                                         </li>
+                                        <li>
+                                            <span >정산금 : {{number_format($total['totalin'] - $total['totalout'])}}</span>
+                                        </li>
                                     </ul></td>
-                                    <td><ul>
+                                    <td ><ul>
                                         <li>
                                             <span class='text-green'>충전 : {{number_format($total['moneyin'])}}</span>
                                         </li>
                                         <li>
                                             <span class='text-red'>환전 : {{number_format($total['moneyout'])}}</span>
                                         </li>
+                                        <li>
+                                            <span >정산금 : {{number_format($total['moneyin'] - $total['moneyout'])}}</span>
+                                        </li>
                                     </ul></td>
-                                    <td>{{number_format($total['dealout'])}}</td>
+                                    <td >{{number_format($total['dealout'])}}</td>
                                     @if (auth()->user()->isInOutPartner())
-                                    <td><ul>
-                                        <li>
-                                            <span class='text-green'>배팅 : {{number_format($total['totalbet'])}}</span>
-                                        </li>
-                                        <li>
-                                            <span class='text-red'>당첨 : {{number_format($total['totalwin'])}}</span>
-                                        </li>
-                                        <li>
-                                        정산금 : {{number_format($total['totalbet']-$total['totalwin'] - $total['total_mileage'])}}
-                                        </li>
-                                    </ul></td>
+                                    <td>
+                                    @foreach (['live', 'slot', 'total'] as $type)
+                                        <div class="d-flex">
+
+                                        <div class="d-flex" style="justify-content : center;align-items : center;">
+                                                {{__($type)}}
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
+                                            <ul>
+                                            <li>
+                                                <span class='text-green'>배팅 : {{number_format($total['betwin'][$type]['totalbet'])}}</span>
+                                            </li>
+                                            <li>
+                                                <span class='text-red'>당첨 : {{number_format($total['betwin'][$type]['totalwin'])}}</span>
+                                            </li>
+                                            <li>
+                                            롤링금 : {{number_format($total['betwin'][$type]['total_mileage'])}}
+                                            </li>
+                                            <li>
+                                            정산금 : {{number_format($total['betwin'][$type]['totalbet']-$total['betwin'][$type]['totalwin'] - $total['betwin'][$type]['total_mileage'])}}
+                                            </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        </div>
+                                        @if ($loop->index < 2)
+                                        <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
+                                        @endif
+
+                                    @endforeach
+                                    </td>
                                     @endif
-                                    <td><ul>
-                                        <li>
-                                            <span class='text-green'>배팅 : {{number_format($total['totaldealbet'])}}</span>
-                                        </li>
-                                        <li>
-                                            <span class='text-red'>당첨 : {{number_format($total['totaldealwin'])}}</span>
-                                        </li>
-                                        <li>
-                                            정산금 : {{number_format($total['totaldealbet']-$total['totaldealwin'] - $total['total_mileage'])}}
-                                        </li>
-                                    </ul></td>
                                     <td>
+                                    @foreach (['live', 'slot', 'total'] as $type)
+                                        <div class="d-flex">
+
+                                        <div class="d-flex" style="justify-content : center;align-items : center;">
+                                                {{__($type)}}
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
+                                            <ul>
+                                            <li>
+                                                <span class='text-green'>배팅 : {{number_format($total['betwin'][$type]['totaldealbet'])}}</span>
+                                            </li>
+                                            <li>
+                                                <span class='text-red'>당첨 : {{number_format($total['betwin'][$type]['totaldealwin'])}}</span>
+                                            </li>
+                                            <li>
+                                            롤링금 : {{number_format($total['betwin'][$type]['total_mileage'])}}
+                                            </li>
+                                            <li>
+                                            정산금 : {{number_format($total['betwin'][$type]['totaldealbet']-$total['betwin'][$type]['totaldealwin'] - $total['betwin'][$type]['total_mileage'])}}
+                                            </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        </div>
+                                        @if ($loop->index < 2)
+                                        <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
+                                        @endif
+
+                                    @endforeach
+                                    </td>
+                                    <td >
+                                            <ul>
+                                                <li>총죽장 : {{ number_format($total['betwin']['total']['total_ggr'])}}</li>
+                                                <li>하부죽장 : {{ number_format($total['betwin']['total']['total_ggr_mileage'])}}</li>
+                                                <li>본인죽장 : {{ number_format($total['betwin']['total']['total_ggr']-$total['betwin']['total']['total_ggr_mileage'])}}</li>
+                                            </ul>
+                                    </td>
+                                    <td >
                                         <ul>
-                                            <li>총죽장 : {{ number_format($total['total_ggr'])}}</li>
-                                            <li>하부죽장 : {{ number_format($total['total_ggr_mileage'])}}</li>
-                                            <li>본인죽장 : {{ number_format($total['total_ggr']-$total['total_ggr_mileage'])}}</li>
+                                            <li>총롤링 : {{ number_format($total['betwin']['total']['total_deal'])}}</li>
+                                            <li>하부롤링 : {{ number_format($total['betwin']['total']['total_mileage'])}}</li>
+                                            <li>본인롤링 : {{ number_format($total['betwin']['total']['total_deal']-$total['betwin']['total']['total_mileage'])}}</li>
                                         </ul>
                                     </td>
-                                    <td>
-                                        <ul>
-                                            <li>총롤링 : {{ number_format($total['total_deal'])}}</li>
-                                            <li>하부롤링 : {{ number_format($total['total_mileage'])}}</li>
-                                            <li>본인롤링 : {{ number_format($total['total_deal']-$total['total_mileage'])}}</li>
-                                        </ul>
-                                    </td>
-                                    <td>{{number_format($total['balance']+$total['childsum'])}}</td>
+                                    <td >{{number_format($total['balance']+$total['childsum'])}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -279,9 +325,6 @@
                                 <th scope="col">롤링보유금</th>
                                 @if (auth()->user()->hasRole('admin'))
                                 <th scope="col">마진금</th>
-                                @endif
-                                @if(auth()->user()->isInoutPartner())
-                                <th>이익금</th>
                                 @endif
                             </tr>
                         </thead>
