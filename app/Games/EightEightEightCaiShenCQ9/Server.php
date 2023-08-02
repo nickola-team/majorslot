@@ -107,9 +107,7 @@ namespace VanguardLTE\Games\EightEightEightCaiShenCQ9
                             }else{
                                 $slotEvent['slotEvent'] = 'bet';
                                 $pur_level = -1;
-                                if($gameData->ReelPay > 0){
-                                    $pur_level = 0;
-                                }
+                                
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
@@ -121,11 +119,20 @@ namespace VanguardLTE\Games\EightEightEightCaiShenCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FeatureMinBet', $gameData->ReelPay);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
+                                
                                 $slotSettings->SetBet();  
                                 $isBuyFreespin = false;
                                 $allBet = ($betline /  $this->demon) * $lines;
-                                if($pur_level == 0){
+                                if($gameData->ReelPay > 0){
+                                    if(($gameData->ReelPay / $allBet) == 70){
+                                        $pur_level = 0;
+                                    }else if(($gameData->ReelPay / $allBet) == 150){
+                                        $pur_level = 1;
+                                    }
+                                    
+                                }
+                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
+                                if($pur_level >= 0){
                                     $allBet = $slotSettings->GetGameData($slotSettings->slotId . 'FeatureMinBet');
                                     $isBuyFreespin = true;
                                 }     
@@ -202,7 +209,7 @@ namespace VanguardLTE\Games\EightEightEightCaiShenCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 55;
+                        $lines = 60;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -338,7 +345,7 @@ namespace VanguardLTE\Games\EightEightEightCaiShenCQ9
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
                 $allBet = ($betline /  $this->demon) * $lines;
-                if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $allBet = $slotSettings->GetGameData($slotSettings->slotId . 'FeatureMinBet');
                 }
                 $slotSettings->SaveLogReport(json_encode($gamelog), $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);

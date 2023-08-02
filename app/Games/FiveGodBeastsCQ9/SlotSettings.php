@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('id', 97792)->first(); //59 :  Free,7971 : symbol spin
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('id', 397989)->first(); //59 :  Free,7971 : symbol spin
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('id', 1049)->first();
