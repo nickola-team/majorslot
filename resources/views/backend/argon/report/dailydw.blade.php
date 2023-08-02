@@ -117,7 +117,7 @@
                             <div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너아이디</label>
                                 <div class="col-md-3" style="display:flex;">
                                     <div class="col-md-8">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
