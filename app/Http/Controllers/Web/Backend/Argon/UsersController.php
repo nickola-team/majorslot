@@ -287,7 +287,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function agent_list(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();
-            if ($request->user != '' || $request->role != '' || $request->account_no != '' || $request->recommender != '' )
+            if ($request->user != '' || $request->role != '' || $request->account_no != '' || $request->recommender != '' || $request->phone != '')
             {
                  $childPartners = $user->hierarchyPartners();
             }
@@ -341,6 +341,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($request->role != '')
             {
                 $users = $users->where('users.role_id', $request->role);
+            }
+
+            if ($request->phone != '')
+            {
+                $users = $users->where('users.phone', 'like', '%'. $request->phone .'%');
             }
 
             if ($request->account_no != '')
@@ -754,6 +759,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $users = $users->where('username',  $request->user );
                 }
             }
+
+            if ($request->phone != '')
+            {
+                $users = $users->where('phone', 'like', '%'. $request->phone .'%');
+            }
+
             if ($request->account_no != '')
             {
                 $users = $users->where('account_no', 'like', '%'. $request->account_no .'%');
