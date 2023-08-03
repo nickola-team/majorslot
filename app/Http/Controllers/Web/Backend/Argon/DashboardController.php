@@ -34,7 +34,14 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $todayInOut = null;
 
             if (count($availableShops) > 0){
-                $monthsummary = \VanguardLTE\CategorySummary::selectRaw('sum(totalbet) as totalbet, sum(totalwin) as totalwin, date')->where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('user_id','date')->get();
+                if (auth()->user()->isInOutPartner())
+                {
+                    $monthsummary = \VanguardLTE\CategorySummary::selectRaw('sum(totalbet) as totalbet, sum(totalwin) as totalwin, date')->where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('user_id','date')->get();
+                }
+                else
+                {
+                    $monthsummary = \VanguardLTE\CategorySummary::selectRaw('sum(totaldealbet) as totalbet, sum(totaldealwin) as totalwin, date')->where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('user_id','date')->get();
+                }
                 // $monthsummary = \VanguardLTE\DailySummary::select('daily_summary.*, sum(w_category_summary.totalbet) as totalb, sum(w_category_summary.totalwin) as totalw')->where('daily_summary.user_id', auth()->user()->id)->where('daily_summary.date', '>=', $start_date)->where('daily_summary.date', '<=', $end_date)->join('category_summary', function($join){
                 //     $join->on('daily_summary.user_id', '=', 'category_summary.user_id');
                 //     $join->on('daily_summary.date', '=', 'category_summary.date');
@@ -58,7 +65,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 // $monthcategory = \VanguardLTE\CategorySummary::where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('category_id')->selectRaw('category_id, sum(totalbet) as bet, sum(totalwin) as win')->orderby('bet','desc')->limit(5)->get();
                 $todaysummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', $end_date)->first();
                 if ($todaysummary){
-                    $todaybetwin = $todaysummary->totalbet - $todaysummary->totalwin;
                     $todayInOut = $todaysummary->calcInOut();
                     $todayprofit = $todayInOut['totalin'] - $todayInOut['totalout'];
                     $betwin = $todaysummary->betwin();
@@ -72,6 +78,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                         $todaysummary->totalbet = $betwin['total']['totaldealbet'];
                         $todaysummary->totalwin = $betwin['total']['totaldealwin'];
                     }
+                    $todaybetwin = $todaysummary->totalbet - $todaysummary->totalwin;
+
                 }
                 if ($thismonthsummary->count() > 0)
                 {
