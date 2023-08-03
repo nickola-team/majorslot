@@ -224,6 +224,19 @@ namespace VanguardLTE\Games\MrMiserCQ9
                             $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                         }
                     }
+
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'IsRespin') > 0){
+                        $slotEvent['slotEvent'] = 'respin';
+                        while($slotSettings->GetGameData($slotSettings->slotId . 'IsRespin') > 0){
+                            $result_val = [];
+                            $result_val['Type'] = 3;
+                            $result_val['ID'] = 133;
+                            $result_val['Version'] = 0;
+                            $result_val['ErrorCode'] = 0;
+                            $result_val['EmulatorType'] = 0;
+                            $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
+                        }
+                    }
                 }
             }else if(isset($paramData['irq']) && $paramData['irq'] == 1){
                 $response = $this->encryptMessage('{"err":0,"irs":1,"vals":[1,-2147483648,2,988435344],"msg":null}');

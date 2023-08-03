@@ -6,6 +6,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
 
     class Server
     {
+        public $demon = 1;
         public $winLines = [];
         public function get($request, $game, $userId) // changed by game developer
         {
@@ -41,6 +42,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $slotSettings->SetGameData($slotSettings->slotId. 'GameRounds',1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount',0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'ScatterGameValue', 0);
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastLevelSpinCount',0);
                 }else if($paramData['req'] == 2){
@@ -51,6 +53,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                         $gameData = json_decode($gameDatas[$i]);
                         $type = $gameData->Type;
                         $packet_id = $gameData->ID;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'PackID', $packet_id);
                         $emulatorType = 0;
                         $result_val = [];
                         $result_val['Type'] = $type;
@@ -225,6 +228,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             }
                             
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                            $slotSettings->SetGameData($slotSettings->slotId . 'ScatterGameValue', $result_val['ScatterPayFromBaseGame']);
                             $result_val['MaxRound'] = $stack['MaxRound'];
                             $result_val['CurrentRound'] = $stack['CurrentRound'];
                             $result_val['udcDataSet']['SelExtraData'] = [];
@@ -248,8 +252,11 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                             $result_val['PlayerBet'] = $betline;
-                            $result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
-                            $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                            //$result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                            //$tempWinAmt = ($stack['TotalWin'])
+                            $result_val['TotalWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                            //$result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                            $result_val['ScatterPayFromBaseGame'] = $slotSettings->GetGameData($slotSettings->slotId . 'ScatterGameValue');
                             $result_val['NextModule'] = 20;
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -257,10 +264,13 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                            $result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
-                            $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                            //$result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                            $result_val['TotalWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                            //$result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                            $result_val['ScatterPayFromBaseGame'] = $slotSettings->GetGameData($slotSettings->slotId . 'ScatterGameValue');
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',-1);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));
@@ -280,11 +290,34 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                    $lines = 88;
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 44 || $slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 45){
+                        $pur_level = -1;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        if($tumbAndFreeStacks == null){
+                            $response = 'unlogged';
+                            exit( $response );
+                        }
+                        $stack = $tumbAndFreeStacks[0];
+                        $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
+                        if(isset($stack['TotalWinAmt'])){
+                            $stack['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                        }
+                        if(isset($stack['ScatterPayFromBaseGame'])){
+                            $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                        }
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ScatterGameValue', $stack['ScatterPayFromBaseGame']);
+                    }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 88;
+                        
+                       
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -354,13 +387,15 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 $totalWin = $stack['TotalWin'];
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
-                $stack['AccumlateWinAmt'] = $stack['AccumlateWinAmt'] / $originalbet * $betline;
+                //$stack['AccumlateWinAmt'] = $stack['AccumlateWinAmt'] / $originalbet * $betline;
+                $stack['AccumlateWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin;
             }
             if(isset($stack['AccumlateJPAmt']) && $stack['AccumlateJPAmt'] > 0){
                 $stack['AccumlateJPAmt'] = $stack['AccumlateJPAmt'] / $originalbet * $betline;
             }
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
-                $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                //$stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                $stack['ScatterPayFromBaseGame'] = $slotSettings->GetGameData($slotSettings->slotId . 'ScatterGameValue');
             }
 
 
@@ -413,8 +448,10 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
                 if(isset($stack['AwardSpinTimes'])){
-                    $awardSpinTimes = $stack['AwardSpinTimes'];    
-                    $currentSpinTimes = $stack['CurrentSpinTimes'];
+                    $awardSpinTimes = $stack['AwardSpinTimes']; 
+                    if(isset($stack['CurrentSpinTimes'])){
+                        $currentSpinTimes = $stack['CurrentSpinTimes'];
+                    }                       
                 }
                     
             }
