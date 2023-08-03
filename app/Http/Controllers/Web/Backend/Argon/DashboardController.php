@@ -81,8 +81,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
                 if ($thismonthsummary->count() > 0)
                 {
-                    $mtbet = $thismonthsummary->sum('totalbet');
-                    $mtwin = $thismonthsummary->sum('totalwin');
+                    foreach ($thismonthsummary as $m)
+                    {
+                        $betwin = $m->betwin();
+                        $mtbet = $mtbet + $betwin['total']['totalbet'];
+                        $mtwin = $mtwin + $betwin['total']['totalwin'];
+                    }
                     $mtin = $thismonthsummary->sum('totalin');
                     $mtout = $thismonthsummary->sum('totalout');
                     if ($todaysummary)
