@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\EightEightEightCaiShenCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameEightEightEightCaiShenStack::where('id', 48932)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameEightEightEightCaiShenStack::where('id', 27648)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

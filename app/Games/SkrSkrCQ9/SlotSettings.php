@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
         public function GetReelStrips($winType, $bet, $selId = -1)
         {
             // // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('id', 17745)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSkrSkrStack::where('id', 3072)->first(); 
                     // return json_decode($stack->spin_stack, true);      
             // }
             if($selId > -1){

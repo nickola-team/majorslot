@@ -6,6 +6,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
 
     class Server
     {
+        public $demon= 1;
         public $winLines = [];
         public function get($request, $game, $userId) // changed by game developer
         {
@@ -47,6 +48,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                         $gameData = json_decode($gameDatas[$i]);
                         $type = $gameData->Type;
                         $packet_id = $gameData->ID;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'PackID', $packet_id);
                         $emulatorType = 0;
                         $result_val = [];
                         $result_val['Type'] = $type;
@@ -258,11 +260,34 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                    $lines = 30;
+                        
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 44 || $slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 45){
+                        $pur_level = 0;
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('freespin', ($betline /  $this->demon) * $lines, 0);
+                        if($tumbAndFreeStacks == null){
+                            $response = 'unlogged';
+                            exit( $response );
+                        }
+                        
+                        $stack = $tumbAndFreeStacks[0];
+                        $freespinNum = 1;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
+                        if(isset($stack['TotalWinAmt'])){
+                            $stack['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                        }
+                        if(isset($stack['ScatterPayFromBaseGame'])){
+                            $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                        }
+                    }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 30;
+                        
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -351,8 +376,11 @@ namespace VanguardLTE\Games\SkrSkrCQ9
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
                 if(isset($stack['AwardSpinTimes'])){
-                    $awardSpinTimes = $stack['AwardSpinTimes'];    
-                    $currentSpinTimes = $stack['CurrentSpinTimes'];
+                    $awardSpinTimes = $stack['AwardSpinTimes'];   
+                    if(isset($stack['CurrentSpinTimes'])) {
+                        $currentSpinTimes = $stack['CurrentSpinTimes'];
+                    }
+                    
                 }
                     
             }
