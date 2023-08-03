@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFireQueen2Stack::where('id', 60929)->first();   
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFireQueen2Stack::where('id', 479744)->first();   
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

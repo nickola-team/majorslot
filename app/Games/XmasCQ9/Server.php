@@ -243,16 +243,30 @@ namespace VanguardLTE\Games\XmasCQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                        $lines = 10;
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 10;
+                        
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
                             $result_val['Type'] = 3;
                             $result_val['ID'] = 142;
+                            $result_val['Version'] = 0;
+                            $result_val['ErrorCode'] = 0;
+                            $result_val['EmulatorType'] = 0;
+                            $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
+                        }
+                    }
+
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'Respin') > 0){
+                        $slotEvent['slotEvent'] = 'respin';
+                        while($slotSettings->GetGameData($slotSettings->slotId . 'Respin') > 0){
+                            $result_val = [];
+                            $result_val['Type'] = 3;
+                            $result_val['ID'] = 133;
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;

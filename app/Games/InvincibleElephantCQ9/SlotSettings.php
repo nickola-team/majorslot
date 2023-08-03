@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\InvincibleElephantCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameInvincibleElephantStack::where('id', 91820)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameInvincibleElephantStack::where('id', 5121)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
