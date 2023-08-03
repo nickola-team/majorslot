@@ -143,6 +143,12 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
+                            
+                            <label for="phone" class="col-md-2 col-form-label form-control-label text-center">전화번호</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('phone')}}" id="phone" name="phone">
+                            </div>
+
                             <label for="user" class="col-md-2 col-form-label form-control-label text-center">상태</label>
                             <div class="col-md-3">
                                 <select class="form-control" id="online" name="online">
@@ -150,14 +156,7 @@
 									<option value="1" @if (Request::get('online') == 1) selected @endif> 온라인</option>
                                 </select>
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">보유금순</label>
-                            <div class="col-md-3">
-                                <select class="form-control" id="balance" name="balance">
-                                    <option value="" @if (Request::get('balance') == '') selected @endif>순서없음</option>
-									<option value="1" @if (Request::get('balance') == 1) selected @endif> 많은순서</option>
-                                    <option value="2" @if (Request::get('balance') == 2) selected @endif> 작은순서</option>
-                                </select>
-                            </div>
+
                             <div class="col-md-1">
                             </div>
                         </div>
@@ -171,6 +170,14 @@
                                     <option value="" @if (Request::get('ordername') == '') selected @endif>순서없음</option>
 									<option value="1" @if (Request::get('ordername') == 1) selected @endif>A-Z순</option>
                                     <option value="2" @if (Request::get('ordername') == 2) selected @endif>Z-A순</option>
+                                </select>
+                            </div>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">보유금순</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="balance" name="balance">
+                                    <option value="" @if (Request::get('balance') == '') selected @endif>순서없음</option>
+									<option value="1" @if (Request::get('balance') == 1) selected @endif> 많은순서</option>
+                                    <option value="2" @if (Request::get('balance') == 2) selected @endif> 작은순서</option>
                                 </select>
                             </div>
                         </div>
