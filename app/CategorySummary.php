@@ -549,7 +549,7 @@ namespace VanguardLTE
             $todaysumm = \VanguardLTE\CategorySummary::where(['user_id'=> $user_id, 'date' => $day, 'type'=>'today'])->get();
             if (count($todaysumm) > 0)
             {
-                $from = date("H:i:s", strtotime($todaysumm->first()->updated_at, "+1 seconds"));
+                $from = date("H:i:s", strtotime($todaysumm->first()->updated_at . " +1 seconds"));
             }
             else
             {
