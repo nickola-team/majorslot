@@ -29,6 +29,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $monthrtp = 0;
             $monthpayout = 0;
             $monthsummary = null;
+            $monthInout = null;
             $thismonthsummary = null;
             $monthcategory = null;
             $todayInOut = null;
@@ -42,10 +43,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 {
                     $monthsummary = \VanguardLTE\CategorySummary::selectRaw('sum(totaldealbet) as totalbet, sum(totaldealwin) as totalwin, date')->where('user_id', auth()->user()->id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->groupby('user_id','date')->get();
                 }
-                // $monthsummary = \VanguardLTE\DailySummary::select('daily_summary.*, sum(w_category_summary.totalbet) as totalb, sum(w_category_summary.totalwin) as totalw')->where('daily_summary.user_id', auth()->user()->id)->where('daily_summary.date', '>=', $start_date)->where('daily_summary.date', '<=', $end_date)->join('category_summary', function($join){
-                //     $join->on('daily_summary.user_id', '=', 'category_summary.user_id');
-                //     $join->on('daily_summary.date', '=', 'category_summary.date');
-                // }  )->get();
+                $monthInout = \VanguardLTE\DailySummary::where('daily_summary.user_id', auth()->user()->id)->where('daily_summary.date', '>=', $start_date)->where('daily_summary.date', '<=', $end_date)->get();
                 $thismonthsummary = \VanguardLTE\DailySummary::where('user_id', auth()->user()->id)->where('date', '>=', $this_date)->get();
 
                 $totalQuery = 'SELECT SUM(totalbet) AS totalbet, SUM(totalwin) AS totalwin, category_id, if (w_categories.parent>0, w_categories.parent, w_categories.id) AS parent, w_categories.title as title FROM w_category_summary JOIN w_categories ON w_categories.id=w_category_summary.category_id WHERE ';
@@ -116,7 +114,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'monthout' => $mtout,
                 'monthpayout' => $monthpayout * 100,
             ];
-            return view('backend.argon.dashboard.admin', compact('monthsummary', 'monthcategory', 'todaysummary','stats'));
+            return view('backend.argon.dashboard.admin', compact('monthsummary', 'monthInout', 'monthcategory', 'todaysummary','stats'));
         }
     }
 
