@@ -128,6 +128,18 @@
                             <div class="col-md-1">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="phone" class="col-md-2 col-form-label form-control-label text-center">전화번호</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('phone')}}" id="phone" name="phone">
+                            </div>
+                            
+                            <div class="col-md-1">
+                            </div>
+                        </div>
                             
                         <div class="form-group row">
                             <div class="col-md-1">

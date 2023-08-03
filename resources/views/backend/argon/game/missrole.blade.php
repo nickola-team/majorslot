@@ -119,16 +119,26 @@
                 <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                     <tr>
-                    <th scope="col">번호</th>
-                    <th scope="col">매장이름</th>
-                    <th scope="col">슬롯롤링%</th>
-                    <th scope="col">라이브롤링%</th>
+                    <th scope="col" rowspan="2">번호</th>
+                    <th scope="col" rowspan="2">매장이름</th>
+                    <th scope="col" rowspan="2">슬롯롤링%</th>
+                    <th scope="col" rowspan="2">라이브롤링%</th>
                     @if (auth()->user()->hasRole('admin'))
-                    <th scope="col">슬롯난수</th>
-                    <th scope="col">카지노난수</th>
+                    <th scope="col" rowspan="2">슬롯난수</th>
+                    <th scope="col" rowspan="2">카지노난수</th>
                     @endif
                     <th scope="col">슬롯공배팅상태</th>
                     <th scope="col">라이브공배팅상태</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">
+                            <a class="btn btn-success  btn-sm" style="color:white;" href="{{argon_route('argon.game.missrolestatus', ['type'=>'slot','id'=>0,'status'=>1])}}">일괄적용</a>
+                            <a  class="btn btn-warning btn-sm" style="color:white;" href="{{argon_route('argon.game.missrolestatus', ['type'=>'slot','id'=>0,'status'=>0])}}">일괄금지</a>
+                        </th>
+                        <th scope="col">
+                            <a class="btn btn-success  btn-sm" style="color:white;" href="{{argon_route('argon.game.missrolestatus', ['type'=>'table','id'=>0,'status'=>1])}}">일괄적용</a>
+                            <a  class="btn btn-warning btn-sm" style="color:white;" href="{{argon_route('argon.game.missrolestatus', ['type'=>'table','id'=>0,'status'=>0])}}">일괄금지</a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="list">
