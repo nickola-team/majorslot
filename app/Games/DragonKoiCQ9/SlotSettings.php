@@ -728,7 +728,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonKoiStack::where('id', 29661)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonKoiStack::where('id', 5633)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

@@ -733,8 +733,8 @@ namespace VanguardLTE\Games\OoGaChaKaCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameOoGaChaKaStack::where('id', 1418)->first();
-                  return json_decode($stack->spin_stack, true);
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameOoGaChaKaStack::where('id', 1418)->first();
+                //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
