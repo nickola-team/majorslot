@@ -65,6 +65,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $str_mo = '';
@@ -84,6 +85,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $lastEvent->serverResponse->BuyFreeSpin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ScatterCount', $lastEvent->serverResponse->ScatterCount);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FSOPT', $lastEvent->serverResponse->FSOPT);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $lastEvent->serverResponse->TotalSpinCount);
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
