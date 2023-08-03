@@ -287,18 +287,18 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function agent_list(\Illuminate\Http\Request $request)
         {
             $user = auth()->user();
-            // if ($request->user != '' || $request->role != '')
-            // {
-            //     $childPartners = $user->hierarchyPartners();
-            // }
-            // else if ($request->status == \VanguardLTE\Support\Enum\UserStatus::BANNED && $request->role == '')
-            // {
-            //     $childPartners = $user->hierarchyPartners();
-            // }
-            // else
-            // {
-                $childPartners = $user->hierarchyPartners();
-            // }
+            if ($request->user != '' || $request->role != '' || $request->account_no != '' || $request->recommender != '' )
+            {
+                 $childPartners = $user->hierarchyPartners();
+            }
+            else if ($request->status == \VanguardLTE\Support\Enum\UserStatus::BANNED && $request->role == '')
+            {
+                 $childPartners = $user->hierarchyPartners();
+            }
+            else
+            {
+                $childPartners = $user->childPartners();
+            }
             $parent = $user;
             while ($parent && !$parent->isInOutPartner())
             {
