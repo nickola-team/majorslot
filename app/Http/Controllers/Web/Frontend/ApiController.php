@@ -1290,6 +1290,73 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'url' => $url
                 ], 200);
             }
+            else if ($master->bank_name == 'OSSCOIN') //OSS코인 가상계좌
+            {
+                $url = 'https://testapi.osscoin.net';
+                $publicKey = $master->account_no; //WGJzUHM1UEZRMmRCb3JuRjJxLzM1UT09
+                $agent = $master->recommender; // tposeidon
+                $ossbanks = ['국민은행' => 0,'우리은행' => 1,'신한은행' => 2,'하나은행' => 3,'SC 제일은행' => 4,'씨티은행' => 5,'기업은행' => 6,'농협중앙회' => 7,'단위농협' => 8,'새마을금고' => 9,'케이뱅크' => 10,'카카오뱅크' => 11,'수협' => 12,'신협' => 13,'산림조합' => 14,'상호저축은행' => 15,'부산은행' => 16,'경남은행' => 17,'광주은행' => 18,'대구은행' => 19,'전북은행' => 20,'제주은행' => 21,'우체국' => 22,'한국투자증권' => 23,'토스뱅크' => 24,'뱅크오브아메리카' => 25,'bnp 파리바' => 26,'jp 모간' => 27,'동양증권' => 28,'현대증권' => 29,'미래에셋증권' => 30,'대우증권' => 31,'삼성증권' => 32,'우리투자증권' => 33,'교보증권' => 34,'하이투자증권' => 35,'HMC 투자증권' => 36,'키움증권' => 37,'이트레이드증권' => 38,'대신증권' => 39,'아이엠투자증권' => 40,'한화투자증권' => 41,'하나대투증권' => 42,'신한금융투자' => 43,'동부증권' => 44,'유진투자증권' => 45,'메리츠증권' => 46,'부국증권' => 47,'신영증권' => 48,'LIG 투자증권' => 49,'유안타증권' => 50,'이베스트투자증권' => 51,'NH 농협투자증권' => 52,'KB 증권' => 53,'SK 증권' => 54,'SBI 저축은행' => 55,'카카오페이증권' => 56,'IBK 투자증권' => 57,'산업은행' => 58,'모건스탠리' => 59,'중국공상은행' => 60,'케이티비투자증권' => 61,'BNK 투자증권' => 63,'BOA 은행' => 64,'HSBC 은행' => 65,'도이치은행' => 66,'미쓰비시도쿄 UFJ 은행' => 67,'미즈호은행' => 68,'피엔피파리팡느행' => 69,'중국은행' => 70,'한국포스증권' => 71,'현대차증권' => 72];
+                // 회원조회
+                $data = [
+                    'agent' => $agent,
+                    'userAccount' => $user->username
+                ];
+                $response = Http::withHeaders([
+                    'PublicKey' => $publicKey
+                    ])->post(config('app.osscoin_url') . '/api_user', $data);
+                if (!$response->ok())
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                        'code' => 001
+                    ], 200);
+                }
+                $data = $response->json();
+                if ($data['code'] != 0)
+                {
+                    $bank_id = 99;
+                    foreach($ossbanks as $bankname => $id){
+                        if($bankname == $user->bank_name){
+                            $bank_id = $id;
+                        }
+                    }
+                    // 회원가입
+                    $data = [
+                        'agent' => $agent,
+                        'userAccount' => $user->username,
+                        'userName' => $user->username,
+                        'userBank' => $bank_id,
+                        'userBankaccount' => $user->account_no
+                    ];
+                    $response = Http::withHeaders([
+                        'PublicKey' => $publicKey
+                        ])->post(config('app.osscoin_url') . '/api_join', $data);
+                    if (!$response->ok())
+                    {
+                        return response()->json([
+                            'error' => true, 
+                            'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                            'code' => 001
+                        ], 200);
+                    }
+                    $data = $response->json();
+                }
+                if(($data['code'] == 0 || $data['code'] == 5) && isset($data['token'])){
+                    $url = config('app.osscoin_user_url') . '/?token='.$data['token'];
+                    return response()->json([
+                        'error' => false, 
+                        'msg' => '팝업창에서 입금계좌신청을 하세요',
+                        'url' => $url
+                    ], 200);
+                }else{
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                        'code' => 001
+                    ], 200);
+                }
+            }
             else if ($master->bank_name == 'MESSAGE') //계좌를 쪽지방식으로 알려주는 총본사
             {
                 $date_time = date('Y-m-d H:i:s', strtotime("-2 minutes"));

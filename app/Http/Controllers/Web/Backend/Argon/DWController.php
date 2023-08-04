@@ -342,6 +342,55 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             else // for partners
             {
                 if($type == 'add'){
+                    if($user->bank_name == 'OSSCOIN') //OSS코인 가상계좌만 가능
+                    {
+                        if ($amount % 10000 != 0)
+                        {
+                            return redirect()->back()->withErrors('만원단위만 가능합니다');
+                        }
+                        if($user->balance < $amount ) 
+                        {
+                            return redirect()->back()->withErrors(trans('app.not_enough_money_in_the_user_balance', [
+                                'name' => $user->name, 
+                                'balance' => $user->balance
+                            ]));
+                        }
+                        $data = [
+                            'agent' => $user->recommender,
+                            'userAccount' => $requestuser->username
+                        ];
+                        $response = \Illuminate\Support\Facades\Http::withHeaders([
+                            'PublicKey' => $user->account_no
+                            ])->post(config('app.osscoin_url') . '/api_coin', $data);
+                        if (!$response->ok())
+                        {
+                            return redirect()->back()->withErrors('OSS코인조회가 실패하였습니다. 다시 시도해주세요');
+                        }
+                        $data = $response->json();
+                        if($data['code'] == 0)
+                        {
+                            $data = [
+                                'agent' => $user->recommender,
+                                'userAccount' => $requestuser->username,
+                                'coinAmount' => '' . floor($amount / 10000)
+                            ];
+                            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                                'PublicKey' => $user->account_no
+                                ])->post(config('app.osscoin_url') . '/api_charge', $data);
+                            if (!$response->ok())
+                            {
+                                return redirect()->back()->withErrors('OSS코인전환이 실패하였습니다. 다시 시도해주세요');
+                            }
+                            $data = $response->json();
+                            if($data['code'] != 0){
+                                return redirect()->back()->withErrors($data['result']);    
+                            }
+                        }
+                        else
+                        {
+                            return redirect()->back()->withErrors($data['result']);
+                        }
+                    }
                     $result = $requestuser->addBalance('add', $amount, $user, 0, $transaction->id);
                     $result = json_decode($result, true);
                     if ($result['status'] == 'error')

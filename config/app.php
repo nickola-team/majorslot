@@ -246,7 +246,11 @@ return [
     'babylon_op' => env('BABYLON_OP', ''),
     'babylon_key' => env('BABYLON_KEY', ''),
 
-
+    /*
+    OSSCOIN 
+    */
+    'osscoin_url' => env('OSSCOIN_URL', 'https://testapi.osscoin.net'),
+    'osscoin_user_url' => env('OSSCOIN_USER_URL', 'https://test.osscoin.net'),
 
     'admin_ip' => env('ADMINIP', '127.0.0.1'),
     'checkadmip' => env('CHECKADMIP', false),
