@@ -124,6 +124,7 @@ namespace VanguardLTE
                 'PAYWIN',
                 'JUNCOIN',
                 'WORLDPAY',
+                'OSSCOIN',
                 'MESSAGE'
             ],
             'reset_days' => [
