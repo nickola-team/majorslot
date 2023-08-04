@@ -160,11 +160,11 @@
         {
             if ($adjustment->user->isInoutPartner())
             {
-                $margin = ($adjustment->balance+$adjustment->childsum) - ($prevDay->balance + $prevDay->childsum + $adjustment->moneyin - $adjustment->moneyout - ($adjustment->totalbet-$adjustment->totalwin));
+                $margin = ($adjustment->balance+$adjustment->childsum) - ($prevDay->balance + $prevDay->childsum + $adjustment->moneyin - $adjustment->moneyout - ($betwin['total']['totalbet']-$betwin['total']['totalwin']));
             }
             else
             {
-                $margin = ($adjustment->balance+$adjustment->childsum) - ($prevDay->balance + $prevDay->childsum + $adjustment->totalin - $adjustment->totalout + $adjustment->moneyin - $adjustment->moneyout + $adjustment->dealout - ($adjustment->totalbet-$adjustment->totalwin));
+                $margin = ($adjustment->balance+$adjustment->childsum) - ($prevDay->balance + $prevDay->childsum + $adjustment->totalin - $adjustment->totalout + $adjustment->moneyin - $adjustment->moneyout + $adjustment->dealout - ($betwin['total']['totalbet']-$betwin['total']['totalwin']));
             }
         }
         
