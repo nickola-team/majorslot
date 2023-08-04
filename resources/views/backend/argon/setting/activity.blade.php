@@ -36,6 +36,17 @@
                                 <div class="col-md-1">
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                </div>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">@lang('app.ip')</label>
+                                <div class="col-md-7">
+									<input type="text" class="form-control" name="ip" value="{{ Request::get('ip') }}" placeholder="">
+                                </div>
+                                <div class="col-md-1">
+                                </div>
+                            </div>
+                            
 							<div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
@@ -46,16 +57,7 @@
                                 <div class="col-md-1">
                                 </div>
                             </div>
-							<div class="form-group row">
-                                <div class="col-md-1">
-                                </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">@lang('app.ip')</label>
-                                <div class="col-md-7">
-									<input type="text" class="form-control" name="ip" value="{{ Request::get('ip') }}" placeholder="">
-                                </div>
-                                <div class="col-md-1">
-                                </div>
-                            </div>
+							
                                 
                             <div class="form-group row">
                                 <div class="col-md-1">

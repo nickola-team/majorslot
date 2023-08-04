@@ -409,6 +409,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
 
+            //for owner games
+            
+
             $game = \VanguardLTE\Game::where(['shop_id' => $user->shop_id, 'original_id' => $gamecode])->first();
             if (!$game)
             {
@@ -418,8 +421,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->view('system.pages.gameisclosed', [], 200)->header('Content-Type', 'text/html');
             }
-            $url = '/game/' . $game->name;
-            return view('frontend.Default.games.apigame',compact('url'));
+            $fakeparams = [
+                'jackpotid' => 0,
+                'exitGame' => 1,
+                'extra' => 0,
+                'mjckey' => uniqid('AUTH@') . uniqid('~style@'),
+                'game' => $game->name, //this is real param
+                'lobbyUrl' => 'js://window.close();',
+            ];
+            return redirect(route('frontend.game.startgame',$fakeparams));
         }
 
         public function server(\Illuminate\Http\Request $request, $game)
