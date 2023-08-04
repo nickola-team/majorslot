@@ -39,7 +39,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $username = $request->username;
             if (!$username)
             {
-                return redirect()->back()->withErrors('유저이름을 입력하세요');
+                return redirect()->back()->withErrors('아이디를 입력하세요');
             }
             $availableUsers = auth()->user()->availableUsers();
             $user = \VanguardLTE\User::where('username', $username)->first();
@@ -104,7 +104,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $username = $request->username;
             if (!$username)
             {
-                return redirect()->back()->withErrors('유저이름을 입력하세요');
+                return redirect()->back()->withErrors('아이디를 입력하세요');
             }
             $user = \VanguardLTE\User::where('username', $username)->first();
             if (!$user)

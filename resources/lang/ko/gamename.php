@@ -1132,6 +1132,8 @@ return [
         "CashBox" => "캐시 박스",
         "SkyBounty" => "스카이 바운티",
         "PowerofMerlinMegaways" => "파워 오브 멀린",
+        "3BuzzingWilds" => "3 버징 와일즈",
+        "StarlightPrincess1000" => "스타라이트 프리세스 1000",
 
         //Booongo
         "tigerstone" => "타이거 스톤",

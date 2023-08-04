@@ -868,19 +868,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function game_missrolestatus(\Illuminate\Http\Request $request)
         {
-            $shopId = $request->id;
+            $shopIds = [$request->id];
             $status = $request->status;
             $type = $request->type;
-            $shop = \VanguardLTE\Shop::where('id', $shopId)->first();
-            $availableShops = auth()->user()->availableShops();
-            if (!in_array($shopId, $availableShops) || !$shop)
+            $availableShops = auth()->user()->shops_array(true);
+            if ($request->id == 0)
             {
-                return redirect()->back()->withErrors(['매장을 찾을수 없습니다']);
+                $shopIds = $availableShops;
             }
-            $shop->update([
-                $type . '_miss_deal' => $status,
-                $type . '_garant_deal' => 0,
-            ]);
+            else
+            {
+                if (!in_array($request->id, $availableShops))
+                {
+                    return redirect()->back()->withErrors(['매장을 찾을수 없습니다']);
+                }
+            }
+            $shops = \VanguardLTE\Shop::whereIn('id', $shopIds)->update(
+                [
+                    $type . '_miss_deal' => $status,
+                    $type . '_garant_deal' => 0,
+                ]
+            );
+
             return redirect()->back()->withSuccess(['매장의 공배팅상태를 업데이트했습니다']);
         }
 

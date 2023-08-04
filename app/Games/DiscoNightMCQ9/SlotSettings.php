@@ -732,7 +732,7 @@ namespace VanguardLTE\Games\DiscoNightMCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('id', 102155)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDiscoNightStack::where('id', 68096)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

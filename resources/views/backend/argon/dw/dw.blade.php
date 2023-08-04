@@ -30,7 +30,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-5 text-center">
-                            신청자 이름
+                            신청자 아이디
                         </div>
                         <div class="col-7">
                             @if ($in_out->user)

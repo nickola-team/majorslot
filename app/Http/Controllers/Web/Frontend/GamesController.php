@@ -354,11 +354,34 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 event(new \VanguardLTE\Events\User\LoggedIn());
             }
             
+            //regenerate api token so that other user can not enter game with old token.
+            $api_token = $user->generateCode(36);
+            $tryCount = 0;
+            $bToken = false;
+            do{
+                $alreadyUser = \VanguardLTE\User::where('api_token', $api_token)->first();
+                if (!$alreadyUser)
+                {
+                    $bToken = true;
+                    break;
+                }
+                $api_token = $user->generateCode(36);
+                $tryCount = $tryCount + 1;
+            }
+            while ($tryCount < 20);
+            if ($bToken){
+                $user->update([
+                    'playing_game' => null,
+                    'api_token' => $api_token,
+                    'remember_token' => $api_token
 
-            $user->update([
-                'playing_game' => null,
-                'remember_token' => $user->api_token
-            ]);
+                ]);
+            }
+            else
+            {
+                abort(404);
+            }
+
       
             // $sessionRepository->invalidateAllSessionsForUser($user->id);
 
@@ -386,6 +409,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
 
+            //for owner games
+            
+
             $game = \VanguardLTE\Game::where(['shop_id' => $user->shop_id, 'original_id' => $gamecode])->first();
             if (!$game)
             {
@@ -395,8 +421,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->view('system.pages.gameisclosed', [], 200)->header('Content-Type', 'text/html');
             }
-            $url = '/game/' . $game->name;
-            return view('frontend.Default.games.apigame',compact('url'));
+            $fakeparams = [
+                'jackpotid' => 0,
+                'exitGame' => 1,
+                'extra' => 0,
+                'mjckey' => uniqid('AUTH@') . uniqid('~style@'),
+                'game' => $game->name, //this is real param
+                'lobbyUrl' => 'js://window.close();',
+            ];
+            return redirect(route('frontend.game.startgame',$fakeparams));
         }
 
         public function server(\Illuminate\Http\Request $request, $game)

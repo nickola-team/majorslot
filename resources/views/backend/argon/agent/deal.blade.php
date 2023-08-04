@@ -100,12 +100,12 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너아이디</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')??auth()->user()->username}}" id="user" name="user">
                             </div>
 
-                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">유저이름</label>
+                            <label for="player" class="col-md-2 col-form-label form-control-label text-center">유저아이디</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('player')}}" id="player"  name="player">
                             </div>

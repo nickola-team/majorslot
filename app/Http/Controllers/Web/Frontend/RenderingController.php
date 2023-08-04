@@ -40,6 +40,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 );
                 $requestId = $launchRequest->id;
             }
+
+            $b = auth()->user()->withdrawAll('waiting');
+            if (!$b)
+            {
+                Log::channel('monitor_game')->info('Create gamelaunch failed | ' . strtoupper($provider) . ':' . $gamecode . ' : ' . auth()->user()->username . '('.auth()->user()->id . ') : ' . $requestId);
+                abort(404);
+            }
+
             Log::channel('monitor_game')->info('Create gamelaunch | ' . strtoupper($provider) . ':' . $gamecode . ' : ' . auth()->user()->username . '('.auth()->user()->id . ') : ' . $requestId);
             $prompt = true;
             if (count($args) > 0)

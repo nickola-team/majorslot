@@ -14,14 +14,16 @@ namespace VanguardLTE
             'moneyout', //manual withdraw
             'dealout',
             'ggrout',
-            'totalbet',
-            'totalwin',
-            'totaldealbet',
-            'totaldealwin',
-            'total_deal',
-            'total_mileage',
-            'total_ggr',
-            'total_ggr_mileage',
+            //
+            'totalbet', // not use this field, use categorysummary's filed instead of this
+            'totalwin', // not use this field, use categorysummary's filed instead of this
+            'totaldealbet', // not use this field, use categorysummary's filed instead of this
+            'totaldealwin', // not use this field, use categorysummary's filed instead of this
+            'total_deal', // not use this field, use categorysummary's filed instead of this
+            'total_mileage', // not use this field, use categorysummary's filed instead of this
+            'total_ggr', // not use this field, use categorysummary's filed instead of this
+            'total_ggr_mileage', // not use this field, use categorysummary's filed instead of this
+            //
             'balance',
             'deal_balance',
             'deal_mileage',
@@ -47,6 +49,64 @@ namespace VanguardLTE
         public function prevDay()
         {
             return $this->hasOne('VanguardLTE\DailySummary', 'user_id', 'user_id')->where('date', date('Y-m-d', strtotime("$this->date -1 days")));        
+        }
+
+        public function categorySummary()
+        {
+            return $this->hasMany('VanguardLTE\CategorySummary','user_id', 'user_id')->where('date', $this->date);
+        }
+
+        public function betwin()
+        {
+            $betwin = [
+                'live' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'slot' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'total' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+            ];
+            foreach ($betwin as $type => $tdata)
+            {
+                if ($type != 'total')
+                {
+                    $categories = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'type' => $type])->pluck('id')->toArray();
+                    $catsums = $this->categorySummary->whereIn('category_id', $categories);
+                    foreach ($catsums as $csum)
+                    {
+                        foreach ($tdata as $field => $tvalue)
+                        {
+                            $betwin[$type][$field] = $betwin[$type][$field] + $csum->{$field};
+                            $betwin['total'][$field] = $betwin['total'][$field] + $csum->{$field};
+                        }
+                    }
+                }
+            }
+            return $betwin;
         }
 
         public function calcInOut()
@@ -175,27 +235,27 @@ namespace VanguardLTE
                     $adj['partner_dealsum'] = 0;
                 }
 
-                $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                $game_bet = \DB::select($query);
-                $adj['totalbet'] = $game_bet[0]->totalbet??0;
-                $adj['totalwin'] = $game_bet[0]->totalwin??0;
+                // $query = 'SELECT SUM(bet) as totalbet, SUM(win) as totalwin FROM w_stat_game WHERE shop_id='.$shop->id.' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                // $game_bet = \DB::select($query);
+                // $adj['totalbet'] = $game_bet[0]->totalbet??0;
+                // $adj['totalwin'] = $game_bet[0]->totalwin??0;
 
-                $query = 'SELECT SUM(bet) as totaldealbet, SUM(win) as totaldealwin, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $shop->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                $deal_logs = \DB::select($query);
-                if ($shop->deal_percent > 0)
-                {
-                    $adj['totaldealbet'] = $deal_logs[0]->totaldealbet??0;
-                    $adj['totaldealwin'] = $deal_logs[0]->totaldealwin??0;
-                }
-                else
-                {
-                    $adj['totaldealbet'] = $adj['totalbet'];
-                    $adj['totaldealwin'] = $adj['totalwin'];
-                }
-                $adj['total_deal'] = $deal_logs[0]->total_deal??0;
-                $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
-                $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
-                $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                // $query = 'SELECT SUM(bet) as totaldealbet, SUM(win) as totaldealwin, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $shop->id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                // $deal_logs = \DB::select($query);
+                // if ($shop->deal_percent > 0)
+                // {
+                //     $adj['totaldealbet'] = $deal_logs[0]->totaldealbet??0;
+                //     $adj['totaldealwin'] = $deal_logs[0]->totaldealwin??0;
+                // }
+                // else
+                // {
+                //     $adj['totaldealbet'] = $adj['totalbet'];
+                //     $adj['totaldealwin'] = $adj['totalwin'];
+                // }
+                // $adj['total_deal'] = $deal_logs[0]->total_deal??0;
+                // $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
+                // $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
+                // $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
 
                 // $query = 'SELECT balance FROM w_shops WHERE id=' . $shop->id;
                 // $in_out = \DB::select($query);
@@ -214,61 +274,7 @@ namespace VanguardLTE
         }
         public static function summary_month($user_id, $month=null)
         {
-            set_time_limit(0);
-            $user = \VanguardLTE\User::where('id', $user_id)->first();
-            if (!$user)
-            {
-                return;
-            }
-            if (!$month)
-            {
-                $month = date("Y-m", strtotime("-1 days"));
-            }
-            
-            $from =  $month . "-01";
-            $to = $month . "-31";
-
-            $childusers = $user->childPartners(); //하위 파트너들 먼저 정산하고, 그다음 해당 파트너들의 정산을 이용해서 계산
-            foreach ($childusers as $c)
-            {
-                DailySummary::summary_month($c, $month);
-            }
-
-            $d_summary = \VanguardLTE\DailySummary::where('date', '>=', $from)->where('date', '<=', $to)->where(['type' => 'daily', 'user_id' => $user_id]);
-            
-            $adj['user_id']=$user_id;
-            $adj['shop_id']=$user->shop_id;
-            $adj['date']=$from;
-            $adj['totalin']=$d_summary->sum('totalin');
-            $adj['totalout']=$d_summary->sum('totalout');
-            $adj['moneyin']=$d_summary->sum('moneyin');
-            $adj['moneyout']=$d_summary->sum('moneyout');
-            $adj['dealout']=$d_summary->sum('dealout');
-            $adj['ggrout']=$d_summary->sum('ggrout');
-            $adj['totalbet']=$d_summary->sum('totalbet');
-            $adj['totalwin']=$d_summary->sum('totalwin');
-            $adj['total_deal']=$d_summary->sum('total_deal');
-            $adj['total_mileage']=$d_summary->sum('total_mileage');
-            $adj['total_ggr']=$d_summary->sum('total_ggr');
-            $adj['total_ggr_mileage']=$d_summary->sum('total_ggr_mileage');
-            $adj['balance']=0;
-            $adj['deal_balance']=0;
-            $adj['deal_mileage']=0;
-            $adj['childsum']=0;
-            $adj['user_sum'] = 0;
-            $adj['partner_sum'] = 0;
-            $adj['user_dealsum'] = 0;
-            $adj['partner_dealsum'] = 0;
-            $adj['type']='monthly';
-            $monthlysumm = \VanguardLTE\DailySummary::where(['user_id'=> $user_id, 'date' => $from, 'type'=>'monthly'])->first();
-            if ($monthlysumm)
-            {
-                $monthlysumm->update($adj);
-            }
-            else
-            {
-                \VanguardLTE\DailySummary::create($adj);
-            }
+            return;
 
         }
 
@@ -337,14 +343,14 @@ namespace VanguardLTE
                     'moneyout' => 0, //manual withdraw
                     'dealout' => 0,
                     'ggrout' => 0,
-                    'totalbet' => 0,
-                    'totalwin' => 0,
-                    'totaldealbet' => 0,
-                    'totaldealwin' => 0,
-                    'total_deal' => 0,
-                    'total_mileage' => 0,
-                    'total_ggr' => 0,
-                    'total_ggr_mileage' => 0,
+                    // 'totalbet' => 0,
+                    // 'totalwin' => 0,
+                    // 'totaldealbet' => 0,
+                    // 'totaldealwin' => 0,
+                    // 'total_deal' => 0,
+                    // 'total_mileage' => 0,
+                    // 'total_ggr' => 0,
+                    // 'total_ggr_mileage' => 0,
                     'balance' => 0,
                     'deal_balance' => 0,
                     'deal_mileage' => 0,
@@ -365,10 +371,10 @@ namespace VanguardLTE
                     // $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
                     $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
                     $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
-                    $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
-                    $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
-                    $adj['totaldealbet'] = $adj['totaldealbet'] + $childAdj['totaldealbet'];
-                    $adj['totaldealwin'] = $adj['totaldealwin'] + $childAdj['totaldealwin'];
+                    // $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
+                    // $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
+                    // $adj['totaldealbet'] = $adj['totaldealbet'] + $childAdj['totaldealbet'];
+                    // $adj['totaldealwin'] = $adj['totaldealwin'] + $childAdj['totaldealwin'];
                     $adj['childsum'] = $adj['childsum'] + $childAdj['balance'] + $childAdj['childsum'];
                     $adj['user_sum'] = $adj['user_sum'] +$childAdj['user_sum'];
                     $adj['partner_sum'] = $adj['partner_sum'] + $childAdj['balance'];
@@ -425,20 +431,20 @@ namespace VanguardLTE
                     $in_out = \DB::select($query);
                     $adj['ggrout'] = $adj['ggrout'] + $in_out[0]->ggrout;
 
-                    if ($user->isInoutPartner() && count($childusers) > 0)
-                    {
-                        $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage, 0 as total_ggr, SUM(ggr_profit) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',', $childusers) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                    }
-                    else
-                    {
-                        $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
-                    }
+                    // if ($user->isInoutPartner() && count($childusers) > 0)
+                    // {
+                    //     $query = 'SELECT 0 as total_deal, SUM(deal_profit) as total_mileage, 0 as total_ggr, SUM(ggr_profit) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id in ('. implode(',', $childusers) .') AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    // }
+                    // else
+                    // {
+                    //     $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    // }
 
-                    $deal_logs = \DB::select($query);
-                    $adj['total_deal'] = $deal_logs[0]->total_deal??0;
-                    $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
-                    $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
-                    $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                    // $deal_logs = \DB::select($query);
+                    // $adj['total_deal'] = $deal_logs[0]->total_deal??0;
+                    // $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
+                    // $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
+                    // $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
                 }
                 else //admin
                 {
@@ -512,14 +518,14 @@ namespace VanguardLTE
                 'moneyout' => 0, //manual withdraw
                 'dealout' => 0,
                 'ggrout' => 0,
-                'totalbet' => 0,
-                'totalwin' => 0,
-                'totaldealbet' => 0,
-                'totaldealwin' => 0,
-                'total_deal' => 0,
-                'total_mileage' => 0,
-                'total_ggr' => 0,
-                'total_ggr_mileage' => 0,
+                // 'totalbet' => 0,
+                // 'totalwin' => 0,
+                // 'totaldealbet' => 0,
+                // 'totaldealwin' => 0,
+                // 'total_deal' => 0,
+                // 'total_mileage' => 0,
+                // 'total_ggr' => 0,
+                // 'total_ggr_mileage' => 0,
                 'balance' => 0,
                 'deal_balance' => 0,
                 'deal_mileage' => 0,
@@ -548,10 +554,10 @@ namespace VanguardLTE
                         // $adj['moneyout'] = $adj['moneyout'] + $childAdj['moneyout'];
                         $adj['dealout'] = $adj['dealout'] + $childAdj['dealout'];
                         $adj['ggrout'] = $adj['ggrout'] + $childAdj['ggrout'];
-                        $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
-                        $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
-                        $adj['totaldealbet'] = $adj['totaldealbet'] + $childAdj['totaldealbet'];
-                        $adj['totaldealwin'] = $adj['totaldealwin'] + $childAdj['totaldealwin'];
+                        // $adj['totalbet'] = $adj['totalbet'] + $childAdj['totalbet'];
+                        // $adj['totalwin'] = $adj['totalwin'] + $childAdj['totalwin'];
+                        // $adj['totaldealbet'] = $adj['totaldealbet'] + $childAdj['totaldealbet'];
+                        // $adj['totaldealwin'] = $adj['totaldealwin'] + $childAdj['totaldealwin'];
                         $adj['childsum'] = $adj['childsum'] +$childAdj['balance'] + $childAdj['childsum'];
                         $adj['user_sum'] = $adj['user_sum'] +$childAdj['user_sum'];
                         $adj['partner_sum'] = $adj['partner_sum'] + $childAdj['balance'];
@@ -607,13 +613,13 @@ namespace VanguardLTE
                     $in_out = \DB::select($query);
                     $adj['ggrout'] = $adj['ggrout'] + $in_out[0]->ggrout;
 
-                    $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
+                    // $query = 'SELECT SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage  FROM w_deal_log WHERE type="partner" AND partner_id='. $user->id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '"';
 
-                    $deal_logs = \DB::select($query);
-                    $adj['total_deal'] = $deal_logs[0]->total_deal??0;
-                    $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
-                    $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
-                    $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
+                    // $deal_logs = \DB::select($query);
+                    // $adj['total_deal'] = $deal_logs[0]->total_deal??0;
+                    // $adj['total_mileage'] = $deal_logs[0]->total_mileage??0;
+                    // $adj['total_ggr'] = $deal_logs[0]->total_ggr??0;
+                    // $adj['total_ggr_mileage'] = $deal_logs[0]->total_ggr_mileage??0;
                 }
                 else //admin
                 {
@@ -655,14 +661,14 @@ namespace VanguardLTE
                 $adj['moneyout']+=$todaysumm->moneyout;
                 $adj['dealout']+=$todaysumm->dealout;
                 $adj['ggrout']+=$todaysumm->ggrout;
-                $adj['totalbet']+=$todaysumm->totalbet;
-                $adj['totalwin']+=$todaysumm->totalwin;
-                $adj['totaldealbet']+=$todaysumm->totaldealbet;
-                $adj['totaldealwin']+=$todaysumm->totaldealwin;
-                $adj['total_deal']+=$todaysumm->total_deal;
-                $adj['total_mileage']+=$todaysumm->total_mileage;
-                $adj['total_ggr']+=$todaysumm->total_ggr;
-                $adj['total_ggr_mileage']+=$todaysumm->total_ggr_mileage;
+                // $adj['totalbet']+=$todaysumm->totalbet;
+                // $adj['totalwin']+=$todaysumm->totalwin;
+                // $adj['totaldealbet']+=$todaysumm->totaldealbet;
+                // $adj['totaldealwin']+=$todaysumm->totaldealwin;
+                // $adj['total_deal']+=$todaysumm->total_deal;
+                // $adj['total_mileage']+=$todaysumm->total_mileage;
+                // $adj['total_ggr']+=$todaysumm->total_ggr;
+                // $adj['total_ggr_mileage']+=$todaysumm->total_ggr_mileage;
                 $todaysumm->update($adj);
             }
             else

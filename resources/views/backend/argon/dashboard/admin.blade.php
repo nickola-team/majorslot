@@ -208,10 +208,17 @@
         $label = date("m-d", strtotime($stat->date));
         if( isset($wins[$label]) ){
             $wins[$label] += $stat->totalwin;
-            $totalin[$label] += $stat->totalin;
         }
         if( isset($bets[$label]) ){
             $bets[$label] += $stat->totalbet;
+        }
+    }
+    foreach($monthInout AS $stat){
+        $label = date("m-d", strtotime($stat->date));
+        if( isset($totalin[$label]) ){
+            $totalin[$label] += $stat->totalin;
+        }
+        if( isset($totalout[$label]) ){
             $totalout[$label] += $stat->totalout;
         }
     }

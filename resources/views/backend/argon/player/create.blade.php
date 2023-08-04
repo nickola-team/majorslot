@@ -21,8 +21,15 @@
                             @csrf
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="username">이름</label>
-                                    <input type="text" name="username" id="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="" required>
+                                    <label class="form-control-label" for="username">아이디</label>
+                                    <div class="d-flex">
+                                        <div class="col-md-10">
+                                            <input type="text" name="username" id="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="" required>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-warning" id="btncheckId">중복확인</button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group{{ $errors->has('parent') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="parent">매장이름</label>
@@ -85,3 +92,36 @@
 
     </div>
 @stop
+
+@push('js')
+<script>
+$('#btncheckId').click(function () {
+    userid = $('#username').val();
+    $.ajax({
+            url: "/api/checkid",
+            type: "POST",
+            data: {id:  userid},
+            dataType: 'json',
+            success: function (data) {
+                if (data.error)
+                {
+                    alert('오류가 발생했습니다');
+                }
+                else
+                {
+                    if (data.ok == 1)
+                    {
+                        alert('사용가능한 아이디입니다');
+                    }
+                    else
+                    {
+                        alert('이미 사용중인 아이디입니다');
+                    }
+                }
+            },
+            error: function () {
+            }
+        });
+});
+</script>
+@endpush

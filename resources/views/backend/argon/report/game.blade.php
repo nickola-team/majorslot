@@ -117,7 +117,7 @@
                             <div class="form-group row">
                                 <div class="col-md-1">
                                 </div>
-                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
+                                <label for="player" class="col-md-2 col-form-label form-control-label text-center">파트너아이디</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="text" value="{{Request::get('partner')}}" id="partner"  name="partner">
                                 </div>
@@ -189,11 +189,14 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>기간내 합계</th>
-                                <th>파트너이름</th>
+                                <th>파트너아이디</th>
                                 <th>게임사이름</th>
-								<th>배팅금</th>
-								<th>당첨금</th>
-								<th>벳윈금</th>
+                                @if (auth()->user()->isInoutPartner())
+								<th>배팅/당첨금</th>
+								<th>공배팅/당첨금</th>
+                                @else
+                                <th>배팅/당첨금</th>
+                                @endif
                                 <th>죽장금</th>
 								<th>롤링금</th>
                             </tr>
@@ -217,9 +220,40 @@
                                         <tr>
                                     @endif
                                     <td>{{__($k)}}</td>
-                                    <td>{{number_format($stat['totalbet'])}}</td>
-                                    <td>{{number_format($stat['totalwin'])}}</td>
-                                    <td>{{number_format($stat['totalbet']-$stat['totalwin'])}}</td>
+                                    @if (auth()->user()->isInoutPartner())
+                                    <td>
+                                        <ul>
+                                        <li>
+                                            <span class='text-green'>배팅 : {{number_format($totalbyType[$k]['totalbet'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>당첨 : {{number_format($totalbyType[$k]['totalwin'])}}</span>
+                                        </li>
+                                        <li>
+                                        롤링금 : {{number_format($totalbyType[$k]['total_mileage'])}}
+                                        </li>
+                                        <li>
+                                        정산금 : {{number_format($totalbyType[$k]['totalbet']-$totalbyType[$k]['totalwin'] - $totalbyType[$k]['total_mileage'])}}
+                                        </li>
+                                        </ul>    
+                                    </td>
+                                    @endif
+                                    <td>
+                                        <ul>
+                                        <li>
+                                            <span class='text-green'>배팅 : {{number_format($totalbyType[$k]['totaldealbet'])}}</span>
+                                        </li>
+                                        <li>
+                                            <span class='text-red'>당첨 : {{number_format($totalbyType[$k]['totaldealwin'])}}</span>
+                                        </li>
+                                        <li>
+                                        롤링금 : {{number_format($totalbyType[$k]['total_mileage'])}}
+                                        </li>
+                                        <li>
+                                        정산금 : {{number_format($totalbyType[$k]['totaldealbet']-$totalbyType[$k]['totaldealwin'] - $totalbyType[$k]['total_mileage'])}}
+                                        </li>
+                                        </ul>    
+                                    </td>
                                     <td>
                                         <ul>
                                             <li>총죽장 : {{ number_format($stat['total_ggr'])}}</li>
@@ -246,11 +280,14 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>날짜</th>
-                                <th>파트너이름</th>
+                                <th>파트너아이디</th>
                                 <th>게임사이름</th>
-								<th>배팅금</th>
-								<th>당첨금</th>
-								<th>벳윈금</th>
+								@if (auth()->user()->isInoutPartner())
+								<th>배팅/당첨금</th>
+								<th>공배팅/당첨금</th>
+                                @else
+                                <th>배팅/당첨금</th>
+                                @endif
                                 <th>죽장금</th>
 								<th>롤링금</th>
                             </tr>

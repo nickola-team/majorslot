@@ -71,9 +71,14 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너이름</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">파트너아이디</label>
+                            <div class="col-md-3 d-flex">
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
+                                </div>
+                                <div class="custom-control custom-checkbox mt-2">
+                                    <input class="custom-control-input" id="includename" name="includename" type="checkbox" {{Request::get('includename')=='on'?'checked':''}}>   <label class="custom-control-label" for="includename">포함된이름</label>
+                                </div>
                             </div>
                             <label for="role" class="col-md-2 col-form-label form-control-label text-center">파트너 레벨</label>
                             <div class="col-md-3">
@@ -97,6 +102,42 @@
 									<option value="{{\VanguardLTE\Support\Enum\UserStatus::ACTIVE}}" @if (Request::get('status') == \VanguardLTE\Support\Enum\UserStatus::ACTIVE) selected @endif>활성</option>
                                     <option value="{{\VanguardLTE\Support\Enum\UserStatus::BANNED}}" @if (Request::get('status') == \VanguardLTE\Support\Enum\UserStatus::BANNED) selected @endif>차단</option>
                                 </select>
+                            </div>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">보유금순</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="balance" name="balance">
+                                    <option value="" @if (Request::get('balance') == '') selected @endif>순서없음</option>
+									<option value="1" @if (Request::get('balance') == 1) selected @endif> 많은순서</option>
+                                    <option value="2" @if (Request::get('balance') == 2) selected @endif> 작은순서</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="account_no" class="col-md-2 col-form-label form-control-label text-center">계좌번호</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('account_no')}}" id="account_no" name="account_no">
+                            </div>
+                            <label for="recommender" class="col-md-2 col-form-label form-control-label text-center">예금주이름</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('recommender')}}" id="recommender" name="recommender">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                            </div>
+                            <label for="phone" class="col-md-2 col-form-label form-control-label text-center">전화번호</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" value="{{Request::get('phone')}}" id="phone" name="phone">
+                            </div>
+                            
+                            <div class="col-md-1">
                             </div>
                         </div>
                             

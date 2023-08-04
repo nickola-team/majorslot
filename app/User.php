@@ -91,7 +91,7 @@ namespace VanguardLTE
                 '상호저축은행중앙회', 
                 '뱅크오브아메리카', 
                 '케이뱅크', 
-                '카카오', 
+                '카카오뱅크', 
                 '제이피모간체이스', 
                 '비엔피파리바', 
                 'NH투자증권', 
@@ -124,6 +124,7 @@ namespace VanguardLTE
                 'PAYWIN',
                 'JUNCOIN',
                 'WORLDPAY',
+                'OSSCOIN',
                 'MESSAGE'
             ],
             'reset_days' => [

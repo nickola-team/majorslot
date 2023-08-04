@@ -83,12 +83,12 @@
                         <div class="form-group row">
                             <div class="col-md-1">
                             </div>
-                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">받는 유저이름</label>
+                            <label for="user" class="col-md-2 col-form-label form-control-label text-center">받는 유저아이디</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('user')}}" id="user" name="user">
                             </div>
 
-                            <label for="admin" class="col-md-2 col-form-label form-control-label text-center">지급자이름</label>
+                            <label for="admin" class="col-md-2 col-form-label form-control-label text-center">지급자아이디</label>
                             <div class="col-md-3">
                                 <input class="form-control" type="text" value="{{Request::get('admin')}}" id="admin"  name="admin">
                             </div>
@@ -173,7 +173,7 @@
             <thead class="thead-light">
                 <tr>
                 <th scope="col">번호</th>
-                <th scope="col">받는 유저이름</th>
+                <th scope="col">받는 유저아이디</th>
                 <th scope="col">지급자</th>
                 <th scope="col">지급자보유금</th>
                 <th scope="col">변동전 금액</th>
