@@ -66,6 +66,9 @@ namespace VanguardLTE\Games\DiamondStrikePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Wins', []);
+                $slotSettings->SetGameData($slotSettings->slotId . 'Status', []);
+                $slotSettings->SetGameData($slotSettings->slotId . 'WinsMask', []);
                 $stack = null;
                 if( $lastEvent != 'NULL' ) 
                 {
@@ -80,6 +83,9 @@ namespace VanguardLTE\Games\DiamondStrikePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Wins', explode(',', $lastEvent->serverResponse->Wins));
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Status', explode(',', $lastEvent->serverResponse->Status));
+                    $slotSettings->SetGameData($slotSettings->slotId . 'WinsMask', explode(',', $lastEvent->serverResponse->WinsMask));
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
