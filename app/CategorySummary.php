@@ -546,7 +546,7 @@ namespace VanguardLTE
             set_time_limit(0);
           
             $day = date("Y-m-d");
-            $todaysumm = \VanguardLTE\CategorySummary::where(['user_id'=> $user_id, 'date' => $day, 'type'=>'today'])->get();
+            $todaysumm = \VanguardLTE\CategorySummary::where(['user_id'=> $user_id, 'date' => $day, 'type'=>'today'])->orderBy('updated_at', 'desc')->get();
             if (count($todaysumm) > 0)
             {
                 $from = date("H:i:s", strtotime($todaysumm->first()->updated_at . " +1 seconds"));
