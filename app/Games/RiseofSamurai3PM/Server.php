@@ -65,6 +65,7 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                 $str_mo = '';
                 $strOtherResponse = '';
                 $stack = null;
@@ -80,6 +81,7 @@ namespace VanguardLTE\Games\RiseofSamurai3PM
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $lastEvent->serverResponse->BuyFreeSpin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $lastEvent->serverResponse->TotalSpinCount);
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
