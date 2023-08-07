@@ -616,8 +616,7 @@ namespace VanguardLTE\Games\moremagicapplebng
                     $isEndFreeSpin = false;
                     $isState = true;
                     if($stack['actions'][0] == 'bonus_init'){
-                        $currentHill = [0, 0];
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', [0, 0]);
                     }
                     if($stack['bonus'] != ''){
                         $objRes['context']['bonus'] = $stack['bonus'];
