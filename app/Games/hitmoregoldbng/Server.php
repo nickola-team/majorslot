@@ -200,10 +200,6 @@ namespace VanguardLTE\Games\hitmoregoldbng
                     }else{
                         return '';
                     }
-                    if($action['name'] == 'bonus_spins_stop'){
-                        $currentHill = [1, 0];
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
-                    }
                     $Counter = 0;
                     $spin_types = ['spins', 'freespins', 'bonus'];
                     for($k = 0; $k < 3; $k++){
@@ -227,9 +223,6 @@ namespace VanguardLTE\Games\hitmoregoldbng
                                 if(isset($stack[$spin_type]['bac'])){
                                     $stack[$spin_type]['bac'] = $currentHill;
                                 }
-                                if(isset($stack[$spin_type]['bac_win'])){
-                                    $stack[$spin_type]['bac_win'] = false;
-                                } 
                                 if(isset($stack[$spin_type]['bs'])){
                                     for($i = 0; $i < count($stack[$spin_type]['bs']); $i++){
                                         if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs'][$i]['value']))){
@@ -461,10 +454,7 @@ namespace VanguardLTE\Games\hitmoregoldbng
                             }
                             if(isset($stack[$spin_type]['boost_win'])){
                                 $stack[$spin_type]['boost_win'] = str_replace(',', '', $stack[$spin_type]['boost_win']) * $betline * $DENOMINATOR;
-                            }
-                            if(isset($stack[$spin_type]['bac_win'])){
-                                $stack[$spin_type]['bac_win'] = false;
-                            }                            
+                            }                        
                             if(isset($stack[$spin_type]['total_win_state'])){
                                 $stack[$spin_type]['total_win_state'] = str_replace(',', '', $stack[$spin_type]['total_win_state']) * $betline * $DENOMINATOR;
                             }
@@ -484,6 +474,15 @@ namespace VanguardLTE\Games\hitmoregoldbng
                                         // if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]))){
                                         //     $stack[$spin_type]['bs_values'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_values'][$i][$j]) * $betline * $DENOMINATOR;
                                         // }
+                                    }
+                                }
+                            }
+                            if(isset($stack[$spin_type]['orig_board'])){
+                                for($i = 0; $i < count($stack[$spin_type]['orig_board']['bs_v']); $i++){
+                                    for($j = 0; $j < 4; $j++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['orig_board']['bs_v'][$i][$j]))){
+                                            $stack[$spin_type]['orig_board']['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['orig_board']['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
+                                        }
                                     }
                                 }
                             }
@@ -623,6 +622,9 @@ namespace VanguardLTE\Games\hitmoregoldbng
                     ];
                     $isEndFreeSpin = false;
                     $isState = true;
+                    if($stack['actions'][0] == 'bonus_init' && ((isset($stack['freespins']['bac_win']) && $stack['freespins']['bac_win']== true) || (isset($stack['spins']['bac_win']) && $stack['spins']['bac_win']== true))){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', [1, 0]);
+                    }
                     if($stack['bonus'] != ''){
                         $objRes['context']['bonus'] = $stack['bonus'];
                     }
@@ -676,9 +678,6 @@ namespace VanguardLTE\Games\hitmoregoldbng
                         
                         if($stack['actions'][0] == 'freespin_init' || $stack['actions'][0] == 'bonus_init'){
                             $objRes['context']['round_finished'] = false;
-                            if($stack['actions'][0] == 'bonus_init' && $currentHill[0] >= 10){
-                                $objRes['context']['spins']['bac_win'] = true;
-                            }
                             $isState = false;
                         }
                     }
