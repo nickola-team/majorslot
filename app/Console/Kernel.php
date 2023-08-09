@@ -1780,6 +1780,18 @@ namespace VanguardLTE\Console
                 
                 $this->info("End");
             }); 
+            \Artisan::command('export:userlist {user_id}', function ($user_id) {
+
+                $this->info("Begin");
+                if( file_exists(storage_path('logs/') . 'UserList.log') ) 
+                {
+                    $strinternallog = file_get_contents(storage_path('logs/') . 'UserList.log');
+                }
+                $strlog = "번호###이름###상위유저번호###등급###폰번호###은행이름###예금주###계좌번호\n";      
+                file_put_contents(storage_path('logs/') . 'UserList.log', $strlog);          
+                $userlist = \VanguardLTE\User::exportcsv($user_id);
+                $this->info("End");
+            }); 
         }
     }
 
