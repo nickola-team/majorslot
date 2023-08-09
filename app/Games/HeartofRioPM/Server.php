@@ -517,6 +517,7 @@ namespace VanguardLTE\Games\HeartofRioPM
                             $isState = true;
                             $strOtherResponse = $strOtherResponse . '&mo_c=1&rs_t=1&rs_win='. $totalWin;
                         }else{
+                            $isState = false;
                             $strOtherResponse = $strOtherResponse . '&rs=t&rs_p=0&rs_c=1&rs_m=1';
                         }
                     }
