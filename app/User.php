@@ -1443,8 +1443,21 @@ namespace VanguardLTE
             }
             
         }
-
-
+        public static function exportcsv($user_id){
+            $user = \VanguardLTE\User::where('id', $user_id)->first();         
+            $strlog =  $user->id . "###".$user->username."###".$user->parent_id."###".$user->role_id."###".$user->phone."###".$user->bank_name."###".$user->recommender."###".$user->account_no."\n";
+            if( file_exists(storage_path('logs/') . '') ) 
+            {
+                $strinternallog = file_get_contents(storage_path('logs/') .'UserList.log');
+            }
+            file_put_contents(storage_path('logs/') . 'UserList.log', $strinternallog . $strlog);
+            if($user->role_id > 1){
+                $childUsers = User::where('parent_id', $user->id)->get();
+                for($i = 0; $i < count($childUsers); $i++){
+                    User::exportcsv($childUsers[$i]->id);
+                }
+            }
+        }
     }
 
 }
