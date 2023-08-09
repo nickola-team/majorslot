@@ -215,6 +215,9 @@
     <!-- Light table -->
     <!-- Card header -->
     <div class="card-header border-0">
+        <div class="pull-right">
+			<a href="{{ argon_route('argon.player.exportcsv') }}" class="btn btn-primary btn-sm">CSV로 내보내기</a>
+		</div>
         <h3 class="mb-0">유저 목록</h3>
     </div>
     <div class="table-responsive">
