@@ -287,6 +287,29 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 ],
             ];
 
+            $total = [
+                'id' => '',
+                'user_id' => 0,
+                'role_id' => 0,
+                'daterange' => "$start_date~$end_date",
+                'totalin' => $summary->sum('totalin'),
+                'totalout' => $summary->sum('totalout'),
+                'moneyin' => $summary->sum('moneyin'),
+                'moneyout' => $summary->sum('moneyout'),
+                'dealout' => $summary->sum('dealout'),
+                'betwin' => $betwin,
+                // 'totalbet' => $summary->sum('totalbet'),
+                // 'totalwin' => $summary->sum('totalwin'),
+                // 'totaldealbet' => $summary->sum('totaldealbet'),
+                // 'totaldealwin' => $summary->sum('totaldealwin'),
+                // 'total_deal' => $summary->sum('total_deal'),
+                // 'total_mileage' => $summary->sum('total_mileage'),
+                // 'total_ggr' => $summary->sum('total_ggr'),
+                // 'total_ggr_mileage' => $summary->sum('total_ggr_mileage'),
+                'balance' => $summary->sum('balance'),
+                'childsum' => $summary->sum('childsum'),
+            ];
+
             
             $sumuser = null;
             $user_id = -1;
@@ -323,28 +346,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     }
                 }
             }
-            $total = [
-                'id' => (count($users)==1 && $sumuser)?$sumuser->username:'',
-                'user_id' => $user_id,
-                'role_id' => $role_id,
-                'daterange' => "$start_date~$end_date",
-                'totalin' => $summary->sum('totalin'),
-                'totalout' => $summary->sum('totalout'),
-                'moneyin' => $summary->sum('moneyin'),
-                'moneyout' => $summary->sum('moneyout'),
-                'dealout' => $summary->sum('dealout'),
-                'betwin' => $betwin,
-                // 'totalbet' => $summary->sum('totalbet'),
-                // 'totalwin' => $summary->sum('totalwin'),
-                // 'totaldealbet' => $summary->sum('totaldealbet'),
-                // 'totaldealwin' => $summary->sum('totaldealwin'),
-                // 'total_deal' => $summary->sum('total_deal'),
-                // 'total_mileage' => $summary->sum('total_mileage'),
-                // 'total_ggr' => $summary->sum('total_ggr'),
-                // 'total_ggr_mileage' => $summary->sum('total_ggr_mileage'),
-                'balance' => $summary->sum('balance'),
-                'childsum' => $summary->sum('childsum'),
-            ];
+            $total['betwin'] = $betwin;
+            $total['id'] = (count($users)==1 && $sumuser)?$sumuser->username:'';
+            $total['user_id'] = $user_id;
+            $total['role_id'] = $role_id;
+
+            
             
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
             $summary = $summary->paginate(31);
