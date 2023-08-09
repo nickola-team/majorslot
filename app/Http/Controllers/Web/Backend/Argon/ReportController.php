@@ -253,14 +253,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
-            $sumuser = null;
-            $user_id = -1;
-            $role_id = -1;
-            if ($summary->first()){
-                $sumuser = $summary->first()->user;
-                $user_id = $summary->first()->user->id;
-                $role_id = $summary->first()->user->role_id;
-            }
+            
             $betwin = [
                 'live' => [
                     'totalbet' => 0,
@@ -294,32 +287,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 ],
             ];
 
-            $total = [
-                'id' => (count($users)==1 && $sumuser)?$sumuser->username:'',
-                'user_id' => $user_id,
-                'role_id' => $role_id,
-                'daterange' => "$start_date~$end_date",
-                'totalin' => $summary->sum('totalin'),
-                'totalout' => $summary->sum('totalout'),
-                'moneyin' => $summary->sum('moneyin'),
-                'moneyout' => $summary->sum('moneyout'),
-                'dealout' => $summary->sum('dealout'),
-                'betwin' => $betwin,
-                // 'totalbet' => $summary->sum('totalbet'),
-                // 'totalwin' => $summary->sum('totalwin'),
-                // 'totaldealbet' => $summary->sum('totaldealbet'),
-                // 'totaldealwin' => $summary->sum('totaldealwin'),
-                // 'total_deal' => $summary->sum('total_deal'),
-                // 'total_mileage' => $summary->sum('total_mileage'),
-                // 'total_ggr' => $summary->sum('total_ggr'),
-                // 'total_ggr_mileage' => $summary->sum('total_ggr_mileage'),
-                'balance' => $summary->sum('balance'),
-                'childsum' => $summary->sum('childsum'),
-            ];
-
+            
+            $sumuser = null;
+            $user_id = -1;
+            $role_id = -1;
+            
             $todaySumm = (clone $summary)->get();
             foreach ($todaySumm as $su)
             {
+                $sumuser = $su->user;
+                $user_id = $su->user->id;
+                $role_id = $su->user->role_id;
                 if ($su->date == date('Y-m-d'))
                 {
                     $inout = $su->calcInOut();
@@ -345,7 +323,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     }
                 }
             }
-            $total['betwin'] = $betwin;
+            $total = [
+                'id' => (count($users)==1 && $sumuser)?$sumuser->username:'',
+                'user_id' => $user_id,
+                'role_id' => $role_id,
+                'daterange' => "$start_date~$end_date",
+                'totalin' => $summary->sum('totalin'),
+                'totalout' => $summary->sum('totalout'),
+                'moneyin' => $summary->sum('moneyin'),
+                'moneyout' => $summary->sum('moneyout'),
+                'dealout' => $summary->sum('dealout'),
+                'betwin' => $betwin,
+                // 'totalbet' => $summary->sum('totalbet'),
+                // 'totalwin' => $summary->sum('totalwin'),
+                // 'totaldealbet' => $summary->sum('totaldealbet'),
+                // 'totaldealwin' => $summary->sum('totaldealwin'),
+                // 'total_deal' => $summary->sum('total_deal'),
+                // 'total_mileage' => $summary->sum('total_mileage'),
+                // 'total_ggr' => $summary->sum('total_ggr'),
+                // 'total_ggr_mileage' => $summary->sum('total_ggr_mileage'),
+                'balance' => $summary->sum('balance'),
+                'childsum' => $summary->sum('childsum'),
+            ];
             
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
             $summary = $summary->paginate(31);
