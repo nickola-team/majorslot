@@ -202,7 +202,10 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth', 'argonaccessrule'])
         
 
         
-
+        Route::get('/player/exportcsv', [
+            'as' => 'argon.player.exportcsv',
+            'uses' => 'UsersController@exportCSV',
+        ]);
         Route::get('/player/gamedetail', [
             'as' => 'argon.player.gamedetail',
             'uses' => 'UsersController@player_game_detail',
