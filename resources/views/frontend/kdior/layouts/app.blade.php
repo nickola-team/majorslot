@@ -66,6 +66,7 @@
 	@foreach ($noticelist as $ntc)
 	@include('frontend.kdior.modals.notice', ['notice' => $ntc])
 	@endforeach
+	@include('frontend.kdior.modals.message')
 </body>
 </html>
 
