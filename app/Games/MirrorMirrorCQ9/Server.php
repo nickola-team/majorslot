@@ -109,9 +109,9 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
-                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',1);
+                                //$slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',1);
                             }else if($packet_id == 33 && $slotSettings->GetGameData($slotSettings->slotId . 'Respin') > 0){
-                                $slotEvent['slotEvent'] = 'respin';
+                                $slotEvent['slotEvent'] = 'respin';                               
                             }else{
                                 if($packet_id == 31){
                                     $slotEvent['slotEvent'] = 'bet';
@@ -161,11 +161,11 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
-                            /*if($packet_id == 33){
-                                if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                                }
-                            }*/
+                            // if($packet_id == 33){
+                            //     if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
+                            //         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            //     }
+                            // }
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
@@ -225,11 +225,12 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                        $lines = 20;
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 20;
+                        
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -242,9 +243,9 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                         }
                     }
 
-                    if($slotSettings->GetGameData($slotSettings->slotId . 'IsRespin') > 0){
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'Respin') > 0){
                         $slotEvent['slotEvent'] = 'respin';
-                        while($slotSettings->GetGameData($slotSettings->slotId . 'IsRespin') > 0){
+                        while($slotSettings->GetGameData($slotSettings->slotId . 'Respin') > 0){
                             $result_val = [];
                             $result_val['Type'] = 3;
                             $result_val['ID'] = 133;
@@ -342,20 +343,31 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
             $freespinNum = 0;
             if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
                 $freespinNum = $stack['FreeSpin'][0];
+            }else{
+                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                        $freespinNum = 10;
+                    }
             }
 
             $newRespin = false;
-            if($stack['IsRespin'] == true){
-                $newRespin = true;
-                $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
-            }else{
-                $newRespin = false;
-                $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
-                /*if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1 );
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 1);
-                }*/
+
+            if($slotEvent != 'freespin'){
+                if($stack['IsRespin'] == true){
+                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == false){
+                        $newRespin = true;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
+                        //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 12);
+                    }
+                }else{
+                    $newRespin = false;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+                    /*if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1 );
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 1);
+                    }*/
+                }
             }
+            
 
             $stack['Type'] = $result_val['Type'];
             $stack['ID'] = $result_val['ID'];
@@ -380,9 +392,14 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                 }
                 $isState = false;
             }
+            if($slotEvent == "respin"){
+                if(($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
+                }
+            }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $newRespin == false){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }
@@ -406,8 +423,14 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                 
             }
 
-            if($slotEvent != 'freespin' && $freespinNum > 0){
+            if($slotEvent != 'freespin' && $stack['WinType'] <2){
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+                // if($slotEvent == 'respin' && ($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
+
+                // }else{
+                //     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+                // }
+                
             }
             return $result_val;
         }
@@ -526,12 +549,12 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = "'" . $allBet. "'";
+                $wager['play_bet']              = $allBet;
                 $wager['play_denom']            = "100";
-                $wager['bet_multiple']          = "'" . $betline . "'";
+                $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = $result_val['Multiple'];
-                $wager['base_game_win']         = "'" . $result_val['TotalWin'] . "'";
+                $wager['base_game_win']         = $result_val['TotalWin'];
                 $wager['win_over_limit_lock']   = 0;
                 $wager['game_type']             = 0;
                 $wager['win_type']              = $result_val['WinType'];
