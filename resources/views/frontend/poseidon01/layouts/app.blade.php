@@ -79,6 +79,7 @@
 		@include('frontend.kdior.modals.notice', ['notice' => $ntc])
 	@endif
 	@endforeach
+	@include('frontend.kdior.modals.message')
 </body>
 </html>
 
