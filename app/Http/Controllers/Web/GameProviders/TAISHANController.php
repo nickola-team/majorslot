@@ -130,7 +130,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     else
                     {
                         Log::error('TAISAHNgetuserbalance : return failed. ' . $response->body());
-                        if (isset($data['code']) && $data['code']=='OAUTH007')
+                        if (isset($data['code']))
                         {
                             TAISHANController::refreshToken();
                         }
@@ -215,7 +215,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($data==null || $data['result'] != 'success')
             {
                 Log::error('TAISAHNGetLink : Game url result failed. ' . $response->body());
-                if (isset($data['code']) && $data['code']=='OAUTH007')
+                if (isset($data['code']))
                 {
                     TAISHANController::refreshToken();
                 }
@@ -271,7 +271,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         Log::error('TAISAHNWithdraw : subtractMemberPoint result failed. PARAMS=' . json_encode($params));
                         Log::error('TAISAHNWithdraw : subtractMemberPoint result failed. ' . $response->body());
-                        if (isset($data['code']) && $data['code']=='OAUTH007')
+                        if (isset($data['code']))
                         {
                             TAISHANController::refreshToken();
                         }
@@ -338,7 +338,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($data==null || ($data['result'] != 'success' && $data['result'] != 'exist'))
                 {
                     Log::error('TAISAHNmakelink : createAccount result failed. '  . $response->body());
-                    if (isset($data['code']) && $data['code']=='OAUTH007')
+                    if (isset($data['code']))
                     {
                         TAISHANController::refreshToken();
                     }
@@ -470,7 +470,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     Log::error('TAISHANgamerounds : getBetWinHistoryAll result failed. ' . $response->body());
                     return null;
                 }
-                if (isset($data['code']) && $data['code']=='OAUTH007')
+                if (isset($data['code']))
                 {
                     TAISHANController::refreshToken();
                 }
