@@ -116,10 +116,14 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                             }else{
                                 if($packet_id == 34){
                                     $slotEvent['slotEvent'] = 'bet';
+                                }else{
+                                    
                                 }
                                 $pur_level = -1;
                                 if($gameData->IsExtraBet > 0){
                                     $pur_level = 0;
+                                }else{
+                                    $pur_level = -1;
                                 }
                                 if(isset($gameData->PlayBet)){
                                     $betvalue = $gameData->PlayBet;
@@ -143,12 +147,11 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet',($betline *  $this->demon) * $gameData->MiniBet * $betvalue[0]);
-                                
                                 $slotSettings->SetBet(); 
                                 $isBuyFreespin = false;
                                 
                                 $allBet = ($betline *  $this->demon) * $lines * $gameData->MiniBet * $betvalue[0];
-                                if($pur_level == 0){
+                                if($pur_level >= 0){
                                     //$allBet = $allBet * 10;
                                     $isBuyFreespin = true;
                                 }       
@@ -171,18 +174,9 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
-                            /*if($packet_id == 33){
-                                if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                                }
-                            }*/
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
-                            // if($type == 3){
-
-                            //     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin'));
-                            // }
                             if($packet_id == 41){
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -270,12 +264,13 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
+            $betValue = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
             // $winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
-            $betValue = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+            
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
@@ -345,7 +340,7 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
             }
 
             $newRespin = false;
-            if($stack['IsRespin'] == true){
+            if($stack['IsRespin'] == true && ($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0)){
                 $newRespin = true;
                 $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
             }else{
@@ -437,7 +432,7 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                 $proof['special_symbol']            = $result_val['SpecialSymbol'];
             }
             $proof['special_symbol'] = 0;
-            $proof['denom_multiple'] =         100000;
+            $proof['denom_multiple'] =         10000;
             $proof['is_respin']                 = $result_val['IsRespin'];
             if(isset($result_val['FreeSpin'])){
                 $proof['fg_times']                  = $result_val['FreeSpin'];
@@ -559,7 +554,7 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                 $wager['bet_multiple']          = '[1]';
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = "0";
-                $wager['base_game_win']         = "'" . $result_val['TotalWin'] * $this->demon . "'";
+                $wager['base_game_win']         = $result_val['TotalWin'] * $this->demon;
                 $wager['win_over_limit_lock']   = 0;
                 if($result_val['IsRespin'] == true){
                     $wager['game_type']             = 1;

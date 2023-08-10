@@ -22,11 +22,11 @@ namespace VanguardLTE\Games\BigWolfCQ9
             // $paramData = trim(file_get_contents('php://input'));
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
-            $originalbet = 8;
+            $originalbet = 2;
             $slotSettings->SetBet();  
             if(isset($paramData['req'])){
                 if($paramData['req'] == 1){ // init
-                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 5}],"msg": null}');
+                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 2}],"msg": null}');
                     $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetBalance().'],"evt": 1}');                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                     
@@ -115,8 +115,8 @@ namespace VanguardLTE\Games\BigWolfCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();    
-                                $slotSettings->SetBalance(-1 * ($betline * $lines), $slotEvent['slotEvent']);
-                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
+                                $slotSettings->SetBalance(-1 * ($betline * $this->demon * $lines), $slotEvent['slotEvent']);
+                                $_sum = ($betline * $this->demon * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -252,7 +252,7 @@ namespace VanguardLTE\Games\BigWolfCQ9
             $totalWin = 0;
             if(isset($stack['TotalWin']) && $stack['TotalWin'] > 0){
                 $stack['TotalWin'] = ($stack['TotalWin'] / $originalbet * $betline) / $this->demon;
-                $totalWin = $stack['TotalWin'] / $this->demon;
+                $totalWin = $stack['TotalWin'] * $this->demon;
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
                 $stack['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline) / $this->demon;
@@ -317,7 +317,7 @@ namespace VanguardLTE\Games\BigWolfCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline / $this->demon) * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline) * $lines, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
@@ -338,7 +338,7 @@ namespace VanguardLTE\Games\BigWolfCQ9
             if(isset($result_val['ReelPay'])){
                 $proof['reel_pay']                  = $result_val['ReelPay'];
             }
-            
+            $proof['denom_multiple']            =  10000;
             $proof['respin_reels']              = $result_val['RespinReels'];
             $proof['bonus_type']                = $result_val['BonusType'];
             $proof['special_award']             = $result_val['SpecialAward'];
@@ -393,7 +393,7 @@ namespace VanguardLTE\Games\BigWolfCQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = ($betline / $this->demon) * $lines;
+                $bet_action['amount']           = ($betline) * $lines;
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
@@ -413,12 +413,12 @@ namespace VanguardLTE\Games\BigWolfCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = ($betline / $this->demon) * $lines;
-                $wager['play_denom']            = 100;
+                $wager['play_bet']              = ($betline) * $lines;
+                $wager['play_denom']            = "100000";
                 $wager['bet_multiple']          = $betline/ $this->demon;
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = $result_val['Multiple'];
-                $wager['base_game_win']         = $result_val['TotalWin']/ $this->demon;
+                $wager['base_game_win']         = $result_val['TotalWin'] * $this->demon;
                 $wager['win_over_limit_lock']   = 0;
                 $wager['game_type']             = 0;
                 $wager['win_type']              = $result_val['WinType'];

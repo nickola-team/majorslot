@@ -680,6 +680,14 @@ namespace VanguardLTE\Games\_15goldeneggsbng
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }
+            }
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){                    

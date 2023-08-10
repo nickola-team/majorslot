@@ -11,7 +11,8 @@ namespace VanguardLTE\CQ9GameStackModel;
             'spin_stack', 
             'spin_type',         
             'pur_level',
-            'free_count'
+            'free_count',
+            'symbol_count'
         ];
         
         public static function boot()

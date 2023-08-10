@@ -519,8 +519,7 @@ namespace VanguardLTE\Games\tigerjunglebng
                         }
                     }else if($respinNum > 0){
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $respinNum);
-                        $currentHill = [0, 0];
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', [0, 0]);
                     }
                     $stack['spins']['hill'] = $currentHill;
                     if($stack['bonus'] != ''){

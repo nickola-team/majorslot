@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMirrorMirrorStack::where('id', 74243)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMirrorMirrorStack::where('id', 2465)->first();    //17660,195,1076,1336,1986,2113,2465
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -746,6 +746,14 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
+            }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }
             }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
