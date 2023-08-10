@@ -299,6 +299,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->route('frontend.game.list');
             }
+
+            
             $envID = $game->original_id;
             $styleName = config('app.stylename');
             $replayUrl = config('app.replayurl');
@@ -317,6 +319,20 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $parent = $parent->referral;
             }
             $pagelang = $parent->language;
+
+            $cats = $game->categories;
+            if ($cats){
+                foreach ($cats as $ct)
+                {
+                    if ($ct->category->type == 'mini')
+                    {
+                        //here you must go to mini game blade file
+                        return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
+                    }
+
+                }
+            }
+
             return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
         }
         public function startGameWithiFrame(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
