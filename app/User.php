@@ -1062,12 +1062,12 @@ namespace VanguardLTE
                 $gameInfo = $stat_game->game_item;
                 if ($gameInfo)
                 {
-                    $object = '\VanguardLTE\Games\\' . $gameInfo->name . '\Server';
+                    $object = '\VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall\\' . $gameInfo->name;
                     if (!class_exists($object))
                     {
                         return;
                     }
-                    $gameObject = new $object();
+                    $gameObject = new $object($gameInfo->original_id);
                     if (method_exists($gameObject, 'gameDetail'))
                     {
                         $res = $gameObject->gameDetail($stat_game);
@@ -1085,7 +1085,7 @@ namespace VanguardLTE
                 {
                     $betMoney = $bet->amount;
                     $winMoney = $bet->win;
-                    if (($bet->rt >=1 && $bet->rt<=4) || ($bet->rt >=9 && $bet->rt<=12))
+                    if ($bet->rt_rate < 2)
                     {
                         $type = 'pbsingle';
                     }

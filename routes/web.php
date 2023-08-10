@@ -1612,3 +1612,15 @@ Route::get('/REST/TrialPromo/GetTrialPromotionInfo', 'GameProviders\GamePlayCont
 Route::post('/REST/GameCore/trendInfo', 'GameProviders\GamePlayController@processCurrentTrend');
 
 Route::get('/GamePlay/WinPowerBall', 'GameProviders\GamePlayController@powerball');
+
+
+//for powerballs
+
+Route::group(['prefix' => '/api/pbgame',], function () {
+	Route::post('/userinfo', 'GameParsers\PowerBall\PowerBallController@userInfo');
+    Route::post('/history', 'GameParsers\PowerBall\PowerBallController@historyBet');
+    Route::post('/round', 'GameParsers\PowerBall\PowerBallController@currentRound');
+    Route::post('/recent_rounds', 'GameParsers\PowerBall\PowerBallController@recentRounds');
+    Route::post('/placebet', 'GameParsers\PowerBall\PowerBallController@placeBet');
+    Route::post('/results', 'GameParsers\PowerBall\PowerBallController@results');
+});
