@@ -1219,10 +1219,7 @@ namespace VanguardLTE
             {
                 return true;
             }
-            if ($this->hasRole('master') && !settings('enable_master_deal'))
-            {
-                return true;
-            }
+            
             return false;
         }
 
