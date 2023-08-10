@@ -38,8 +38,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
 
             $currTime = time();
             $endTime = strtotime($currentRound->e_time);
+
+            $gameobj = \VanguardLTE\Game::where('id', $game_id)->first();
+            if (!$gameobj)
+            {
+                return response()->json([
+                    'error' => true,
+                    'bet_id' => '',
+                    'msg' => '알수없는 게임'
+                ], 200);
+            }
+            $object = '\VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall\\' . $gameobj->name;
+            if (!class_exists($object))
+            {
+                return response()->json([
+                    'error' => true,
+                    'bet_id' => '',
+                    'msg' => '알수없는 게임'
+                ], 200);
+            }
+            $parser = new $object($gameobj->original_id);
             
-            if ($this->LAST_LIMIT_TIME>0 && $endTime - $currTime  < $this->LAST_LIMIT_TIME)
+            if ($parser->LAST_LIMIT_TIME>0 && $endTime - $currTime  < $parser->LAST_LIMIT_TIME)
             {
                 return response()->json([
                     'error' => true,
