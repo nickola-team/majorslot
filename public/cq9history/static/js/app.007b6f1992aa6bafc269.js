@@ -11757,7 +11757,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 coinpusher: location.origin + "/coinpusher/api/go-detailapi/coinpusher/wager/detail?token=" + a + "&gameid=" + t,
                 goChess: location.origin + location.pathname.replace(/[\/]$/, "chess") + "/gochessapi/go-detailapi/wager/detail?token=" + a + "&gamecode=GO03",
                 slotGame: "/api/inquire/v1/db/wager?token=" + a
-            }, r()(o, "goChess", location.origin + location.pathname.replace(/[\/]$/, "chess") + "/gochessapi/go-detailapi/wager/detail?token=" + a + "&gamecode=GO03"), r()(o, "gb", "./gbapi/ginplayerhistory/inquire/v1/db/wager?token=" + a), o);
+            }, r()(o, "goChess", location.origin + location.pathname.replace(/[\/]$/, "chess") + "/gochessapi/go-detailapi/wager/detail?token=" + a + "&gamecode=GO03"), r()(o, "gb", "./playerodh5/gbapi/ginplayerhistory/inquire/v1/db/wager?token=" + a), o);
             return n[0].match("qt") ? m(n, a) : i[e]
         },
         d = function(e) {
