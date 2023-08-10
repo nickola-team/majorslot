@@ -524,8 +524,7 @@ namespace VanguardLTE\Games\sunofegyptbng
                         ]
                     ];
                     if($stack['actions'][0] == 'bonus_init'){
-                        $currentHill = [0, 0];
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', [0, 0]);
                     }
                     $isEndFreeSpin = false;
                     $isState = true;

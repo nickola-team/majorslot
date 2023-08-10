@@ -121,7 +121,7 @@ namespace VanguardLTE\Games\OoGaChaKaCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();    
                                 $slotSettings->SetBalance(-1 * (($betline * $this->demon) * $lines), $slotEvent['slotEvent']);
-                                $_sum = ($betline * $lines) / 100 * $slotSettings->GetPercent();
+                                $_sum = (($betline * $this->demon) * $lines) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -280,7 +280,7 @@ namespace VanguardLTE\Games\OoGaChaKaCQ9
             if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
                 foreach($stack['udsOutputWinLine'] as $index => $value){
                     if($value['LinePrize'] > 0){
-                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline) * $this->demon;
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
                     }
                     $stack['udsOutputWinLine'][$index] = $value;
                 }
@@ -383,7 +383,7 @@ namespace VanguardLTE\Games\OoGaChaKaCQ9
                 $lineData = [];
                 $lineData['line_extra_data']    = $outWinLine['LineExtraData'];
                 $lineData['line_multiplier']    = $outWinLine['LineMultiplier'];
-                $lineData['line_prize']         = $outWinLine['LinePrize'] / $this->demon;
+                $lineData['line_prize']         = $outWinLine['LinePrize'];
                 $lineData['line_type']          = $outWinLine['LineType'];
                 $lineData['symbol_id']          = $outWinLine['SymbolId'];
                 $lineData['symbol_count']       = $outWinLine['SymbolCount'];
