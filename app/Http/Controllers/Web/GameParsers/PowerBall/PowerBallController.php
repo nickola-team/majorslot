@@ -39,7 +39,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
             $currTime = time();
             $endTime = strtotime($currentRound->e_time);
 
-            $gameobj = \VanguardLTE\Game::where('id', $game_id)->first();
+            $gameobj = \VanguardLTE\Game::where(['original_id' => $game_id, 'shop_id' => $user->shop_id])->first();
             if (!$gameobj)
             {
                 return response()->json([
