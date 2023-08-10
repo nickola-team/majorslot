@@ -660,6 +660,10 @@ namespace VanguardLTE\Games\_3coinsbng
             }else{
                 $winAvaliableMoney = 0;
             }
+            $limitOdd = 0;
+            if($winType != 'none'){
+                $limitOdd = floor($winAvaliableMoney / $bet);
+            }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
