@@ -1222,6 +1222,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $currentUser = auth()->user();
             if($currentUser == null){
                 return redirect()->back()->withErrors(trans('app.logout'));
+            }else if($currentUser->isInOutPartner() == false){
+                return redirect()->back()->withErrors('허용되지 않은 조작입니다.');
             }
             $currentUser->export_csvUserList = [];
             $userlist = $currentUser->getCSVUserList($currentUser->id);
