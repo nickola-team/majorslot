@@ -683,6 +683,14 @@ namespace VanguardLTE\Games\aztecfirebng
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }
+            }
             $isLowBank = false;
             $limitBonusOdd = 15;
             while(true){

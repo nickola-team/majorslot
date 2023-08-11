@@ -253,14 +253,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $summary = \VanguardLTE\DailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->whereIn('user_id', $users);
-            $sumuser = null;
-            $user_id = -1;
-            $role_id = -1;
-            if ($summary->first()){
-                $sumuser = $summary->first()->user;
-                $user_id = $summary->first()->user->id;
-                $role_id = $summary->first()->user->role_id;
-            }
+            
             $betwin = [
                 'live' => [
                     'totalbet' => 0,
@@ -295,9 +288,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             ];
 
             $total = [
-                'id' => (count($users)==1 && $sumuser)?$sumuser->username:'',
-                'user_id' => $user_id,
-                'role_id' => $role_id,
+                'id' => '',
+                'user_id' => 0,
+                'role_id' => 0,
                 'daterange' => "$start_date~$end_date",
                 'totalin' => $summary->sum('totalin'),
                 'totalout' => $summary->sum('totalout'),
@@ -317,9 +310,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'childsum' => $summary->sum('childsum'),
             ];
 
+            
+            $sumuser = null;
+            $user_id = -1;
+            $role_id = -1;
+            
             $todaySumm = (clone $summary)->get();
             foreach ($todaySumm as $su)
             {
+                $sumuser = $su->user;
+                $user_id = $su->user->id;
+                $role_id = $su->user->role_id;
                 if ($su->date == date('Y-m-d'))
                 {
                     $inout = $su->calcInOut();
@@ -346,6 +347,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
             $total['betwin'] = $betwin;
+            $total['id'] = (count($users)==1 && $sumuser)?$sumuser->username:'';
+            $total['user_id'] = $user_id;
+            $total['role_id'] = $role_id;
+
+            
             
             $summary = $summary->orderBy('user_id', 'ASC')->orderBy('date', 'desc');
             $summary = $summary->paginate(31);

@@ -120,6 +120,7 @@ namespace VanguardLTE
                 '중국공상', 
                 '펀드온라인코리아', 
                 '케이티비투자증권',
+                '토스뱅크',
                 '신협',
                 'PAYWIN',
                 'JUNCOIN',
@@ -1443,8 +1444,32 @@ namespace VanguardLTE
             }
             
         }
-
-
+        public $export_csvUserList = [];
+        public function getCSVUserList($user_id){
+            $user = \VanguardLTE\User::where('id', $user_id)->first();   
+            $parent_name = '';
+            if($user->parent_id > 0){
+                $parent_name = $user->referral->username;
+            }
+            $this->export_csvUserList[] = [
+                'id' => $user->id,
+                'username' => $user->username,
+                'parent_id' => $parent_name,
+                'role_id' => $user->role->description,
+                'phone' => $user->phone,
+                'bank_name' => $user->bank_name,
+                'recommender' => $user->recommender,
+                'account_no' => $user->account_no,
+                'balance' => $user->balance
+            ];
+            if($user->role_id > 1){
+                $childUsers = User::where('parent_id', $user->id)->get();
+                for($i = 0; $i < count($childUsers); $i++){
+                    $this->getCSVUserList($childUsers[$i]->id);
+                }
+            }
+            return $this->export_csvUserList;
+        }
     }
 
 }

@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <p class="mt-3 mb-0 text-sm">
-                    <a href="{{argon_route('argon.report.daily')}}" class="text-nowrap text-white font-weight-600">보고서보기</a>
+                    <a href="{{argon_route('argon.report.daily.dw')}}" class="text-nowrap text-white font-weight-600">보고서보기</a>
                     <!-- <a class="text-nowrap text-white font-weight-600">게임RTP&nbsp;&nbsp;&nbsp;{{number_format($stats['monthrtp'],2)}}%</a> -->
                 </p>
             </div>

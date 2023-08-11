@@ -1215,6 +1215,8 @@ return [
 
         "mummypower" => "머미 파워",
         "tigergems" => "타이거 잼스",
+        "forestspirit" => "포레스트 스피리트",
+        "ladyfortune" => "레이디 포츈",
 
         // CQ9
         "Double Fly" => "더블 플라이",

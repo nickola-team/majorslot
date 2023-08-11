@@ -1206,7 +1206,41 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             
         }
+        public function exportCSV(\Illuminate\Http\Request $request)
+        {
+            $fileName = '유저목록.csv';
+            $headers = array(
+                "Content-type"        => "text/csv;charset=UTF-8",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0",
+                "Content-Transfer-Encoding" => "binary"
+            );
 
+            $columns = array('번호', '이름', '상위유저', '등급', '폰번호', '은행이름', '예금주', '계좌번호', '보유금');
+            $currentUser = auth()->user();
+            if($currentUser == null){
+                return redirect()->back()->withErrors(trans('app.logout'));
+            }else if($currentUser->isInOutPartner() == false){
+                return redirect()->back()->withErrors('허용되지 않은 조작입니다.');
+            }
+            $currentUser->export_csvUserList = [];
+            $userlist = $currentUser->getCSVUserList($currentUser->id);
+            $callback = function() use($userlist, $columns) {
+                echo "\xEF\xBB\xBF"; 
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+
+                foreach ($userlist as $sub_user) {
+                    fputcsv($file, array($sub_user['id'], $sub_user['username'], $sub_user['parent_id'], $sub_user['role_id'], $sub_user['phone'], $sub_user['bank_name'], $sub_user['recommender'], $sub_user['account_no'], $sub_user['balance']));
+                }
+
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        }
     }
 
 }

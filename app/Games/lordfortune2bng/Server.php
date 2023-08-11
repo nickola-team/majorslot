@@ -565,8 +565,7 @@ namespace VanguardLTE\Games\lordfortune2bng
                     $isEndFreeSpin = false;
                     $isState = true;
                     if($stack['actions'][0] == 'bonus_init' && $selectedMode == ''){
-                        $currentHill = [0, 0];
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', [0, 0]);
                     }
                     if($stack['bonus'] != ''){
                         $objRes['context']['bonus'] = $stack['bonus'];
