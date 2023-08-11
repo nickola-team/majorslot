@@ -647,6 +647,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
 
                             $betdata = json_decode($round['details'],true);
+                            if (!$betdata)
+                            {
+                                Log::error('KTEN PLAYNGO round : '. json_encode($round));
+                                continue;
+                            }
                             $bet = $betdata['RoundLoss'];
                             $win = $betdata['Amount'];
                             $balance = $betdata['Balance'];

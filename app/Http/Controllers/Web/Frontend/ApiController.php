@@ -853,16 +853,30 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'code' => '001'
                 ], 200);
             }
-
-            if ($user->hasRole('user') && $user->playing_game != null)
+            if ($user->hasRole('user'))
             {
-                \DB::commit();
-                return response()->json([
-                    'error' => true, 
-                    'msg' => '게임중에 딜비전환을 할수 없습니다.',
-                    'code' => '002'
-                ], 200);
+                $b = $user->withdrawAll('convertDealBalance');
+                if (!$b)
+                {
+                    \DB::commit();
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '게임사 머니 회수중 오류가 발생했습니다.',
+                        'code' => '002'
+                    ], 200);
+                }
             }
+
+
+            // if ($user->hasRole('user') && $user->playing_game != null)
+            // {
+            //     \DB::commit();
+            //     return response()->json([
+            //         'error' => true, 
+            //         'msg' => '게임중에 딜비전환을 할수 없습니다.',
+            //         'code' => '002'
+            //     ], 200);
+            // }
 
             $summ = str_replace(',','',$request->summ);
             $shop = \VanguardLTE\Shop::lockForUpdate()->where('id',$user->shop_id)->first();           
@@ -1603,14 +1617,25 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($user->hasRole('user'))
             {
-                if ($user->playing_game != null)
+                $b = $user->withdrawAll('withdrawRequest');
+                if (!$b)
                 {
+                    \DB::commit();
                     return response()->json([
                         'error' => true, 
-                        'msg' => '게임중에 환전신청을 할수 없습니다.',
+                        'msg' => '게임사 머니 회수중 오류가 발생했습니다.',
                         'code' => '002'
                     ], 200);
                 }
+
+                // if ($user->playing_game != null)
+                // {
+                //     return response()->json([
+                //         'error' => true, 
+                //         'msg' => '게임중에 환전신청을 할수 없습니다.',
+                //         'code' => '002'
+                //     ], 200);
+                // }
                 // $user->update([
                 //     'recommender' => $request->accountName,
                 //     'bank_name' => $request->bank,
@@ -1756,10 +1781,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
             }
-            if ($requestuser->hasRole('user') && $requestuser->playing_game != null)
+            if ($requestuser->hasRole('user') )
             {
-                return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
+                $b = $requestuser->withdrawAll('allowInOut');
+                if (!$b)
+                {
+                    return redirect()->back()->withErrors(['게임사 머니 회수중 오류가 발생했습니다.']);
+                }
             }
+            // if ($requestuser->hasRole('user') && $requestuser->playing_game != null)
+            // {
+            //     return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
+            // }
             
             if ($requestuser->hasRole('manager')) // for shops
             {
