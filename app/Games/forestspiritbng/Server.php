@@ -540,9 +540,23 @@ namespace VanguardLTE\Games\forestspiritbng
                                     }
                                 }
                             }
+                            if(isset($stack[$spin_type]['us_orig_bs_v_2'])){
+                                for($i = 0; $i < count($stack[$spin_type]['us_orig_bs_v_2']); $i++){
+                                    for($j = 0; $j < 3; $j++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_orig_bs_v_2'][$i][$j]))){
+                                            $stack[$spin_type]['us_orig_bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['us_orig_bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
+                                        }
+                                    }
+                                }
+                            }
                             if(isset($stack[$spin_type]['us_win']) && isset($stack[$spin_type]['us_win']['v'])){
                                 if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_win']['v']))){
                                     $stack[$spin_type]['us_win']['v'] = str_replace(',', '', $stack[$spin_type]['us_win']['v']) * $betline * $DENOMINATOR;
+                                }
+                            }
+                            if(isset($stack[$spin_type]['us_win_2']) && isset($stack[$spin_type]['us_win_2']['v'])){
+                                if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_win_2']['v']))){
+                                    $stack[$spin_type]['us_win_2']['v'] = str_replace(',', '', $stack[$spin_type]['us_win_2']['v']) * $betline * $DENOMINATOR;
                                 }
                             }
                             if($spin_type != 'bonus'){

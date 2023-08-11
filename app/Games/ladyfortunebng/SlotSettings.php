@@ -698,18 +698,24 @@ namespace VanguardLTE\Games\ladyfortunebng
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameLadyFortuneStack::where('spin_type', 1);
                     if($pur >= 0){
                         $stacks = $stacks->where('pur_level', $pur);
+                    }else{
+                        $stacks = $stacks->where('pur_level', '<', 1);
                     }
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameLadyFortuneStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 48000);
+                $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 78000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        if($pur < 1){
+                            $stacks = $stacks->where('odd', '<=', 15);    
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', 30);    
+                        }
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
