@@ -1391,6 +1391,8 @@ namespace VanguardLTE
                     if ($data['error'] == false){
                         Log::channel('monitor_game')->info('Withdraw from ' . $lockUser->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider . ' | reason = ' . $reason);
                         $lockUser->update(['playing_game' => null, 'balance' => $data['amount']]);
+                        $this->balance = $data['amount']; //update current object's vale
+                        $this->playing_game = null; //update current object's vale
                         \DB::commit();
                         return true;
                     }
