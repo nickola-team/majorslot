@@ -586,7 +586,7 @@ namespace VanguardLTE\Games\forestspiritbng
                             }
                         }
                     }
-                    $subHill = [0, 7, 9, 14, 24, 34, 44];
+                    $subHill = [0, 7, 9, 14, 24, 34, 44, 0];
                     for($k = 0; $k < 3; $k++){
                         if($moneyCounts[$k] > 0){
                             $currentHill['' . ($k + 1)][1]++;
