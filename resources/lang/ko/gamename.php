@@ -1274,4 +1274,14 @@ return [
         "LuckyTigers" => "럭키 타이거",
         "LuckyBoxes" => "럭키 박스",
         "RedPhoenix" => "레드 포닉스",      
+        "Hercules" => "Hercules",
+        "YuanBao" => "금원보",
+        "BigWolf" => "빅 울프",
+        "HotDJ" => "핫 DJ",
+        "OoGaChaKa" => "OoGaChaKa",
+        "JumpingMobile" => "점핑 모바일",
+        "SummerMood" => "섬머 무드",
+        "TreasureIsland" => "보물섬",
+        "Apollo" => "아폴로",
+        "CoinSpinner" => "코인 스피너"
 ];
