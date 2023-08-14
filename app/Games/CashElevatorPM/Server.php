@@ -165,7 +165,7 @@ namespace VanguardLTE\Games\CashElevatorPM
                         $str_wins = $slotSettings->GetGameData($slotSettings->slotId . 'Wins');
                         $str_wins_mask = $slotSettings->GetGameData($slotSettings->slotId . 'Wins_Mask');
                         $str_status = $slotSettings->GetGameData($slotSettings->slotId . 'Status');
-                        $strOtherResponse = $strOtherResponse . '&wins=' . $str_wins . '&wins_mask=' . $str_wins_mask . '&status=' . $str_status;
+                        $strOtherResponse = $strOtherResponse . '&wins=' . $str_wins . '&wins_mask=' . $str_wins_mask . '&status=' . $str_status . '&rw=0.00';
                     }
                     
                     if($str_initReel != ''){

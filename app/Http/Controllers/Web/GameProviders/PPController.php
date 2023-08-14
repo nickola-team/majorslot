@@ -1438,6 +1438,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return response($data, 200)->header('Content-Type', 'application/json');
         }
+        public function promofrbavailable(\Illuminate\Http\Request $request)
+        {
+            $data = [
+                "error" => 0,
+                "description" => "OK"
+            ];
+            return response($data, 200)->header('Content-Type', 'application/json');
+        }
         public function announcementsunread(\Illuminate\Http\Request $request)
         {
             $data = [
