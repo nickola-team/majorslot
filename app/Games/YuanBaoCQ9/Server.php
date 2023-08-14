@@ -312,7 +312,7 @@ namespace VanguardLTE\Games\YuanBaoCQ9
                 //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
                 //$result_val['Multiple'] = "3";
                 $result_val['Multiple'] = $stack['Multiple'];
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['RetriggerAddSpins'] == 0){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

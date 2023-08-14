@@ -1421,6 +1421,7 @@ Route::get('api/player_betting/search_time', 'GameProviders\CQ9Controller@search
 Route::get('api/player_betting/detail_link', 'GameProviders\CQ9Controller@detailLink');
 Route::get('api/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
 Route::get('playerodh5/gbapi/ginplayerhistory/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
+Route::get('gbapi/ginplayerhistory/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
 
 
 /**

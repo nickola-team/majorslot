@@ -127,7 +127,7 @@ namespace VanguardLTE\Games\BigWolfCQ9
             $this->slotFreeMpl = 1;
             $this->slotViewState = ($game->slotViewState == '' ? 'Normal' : $game->slotViewState);
             $this->hideButtons = [];
-            $this->jpgs = \VanguardLTE\JPG::where('shop_id', $this->shop_id)->lockForUpdate()->get();
+            $this->jpgs = [];
             $this->Line = [1];
             $this->Bet = explode(',', $game->bet); //[0.01,0.02,0.05,0.10,0.25,0.50,1.00,3.00,5.00]; 
             $this->Balance = $user->balance;
@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\BigWolfCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameBigWolfStack::where('id', 32772)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameBigWolfStack::where('id', 98835)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

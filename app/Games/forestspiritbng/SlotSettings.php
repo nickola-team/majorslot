@@ -691,7 +691,7 @@ namespace VanguardLTE\Games\forestspiritbng
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 40);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
