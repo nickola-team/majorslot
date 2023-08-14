@@ -655,6 +655,9 @@ namespace VanguardLTE\Games\tigerjunglebng
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
                 $spintype = 1;
+                if(mt_rand(0, 100) > 50){
+                    $spintype = 2;
+                }
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -679,7 +682,7 @@ namespace VanguardLTE\Games\tigerjunglebng
                     if($currentHill[0] * 10 + $currentHill[1] >= 55){
                         $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type', 2);
                     }else{
-                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type','>', 0);
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type', $spintype);
                     }
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameTigerJungleStack::where('spin_type', 0);
@@ -691,7 +694,7 @@ namespace VanguardLTE\Games\tigerjunglebng
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
