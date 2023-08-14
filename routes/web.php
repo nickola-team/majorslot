@@ -1458,6 +1458,7 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('/promo/race/v2/winners', 'GameProviders\PPController@promoracewinners');
     Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
     Route::get('/promo/tournament/v3/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
+    Route::get('/promo/frb/available', 'GameProviders\PPController@promofrbavailable');  
     Route::get('/announcements/unread', 'GameProviders\PPController@announcementsunread');
     Route::get('/promo/tournament/scores', 'GameProviders\PPController@promotournamentscores');
     Route::get('/minilobby/games.json', 'GameProviders\PPController@minilobby_games_json');
@@ -1467,7 +1468,7 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('api/history/v2/play-session/last-items', 'GameProviders\PPController@last_items');
     Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');    
     Route::get('session/play-verify/{gamecode}', 'GameProviders\PPController@verify');    
-    Route::get('session/verify/{gamecode}', 'GameProviders\KTENController@ppverify');    
+    Route::get('session/verify/{gamecode}', 'GameProviders\KTENController@ppverify');  
 });
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
