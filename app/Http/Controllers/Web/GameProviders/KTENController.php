@@ -149,7 +149,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             $gameList = [];
 
-            $pp_exgames = ['cs5moneyroll', 'sc7piggiesai', 'scpandai'];
+            $pp_exgames = ['cs5moneyroll', 'sc7piggiesai', 'scpandai','SMG_bikiniParty_Microgaming'];
 
             foreach ($data as $game)
             {
