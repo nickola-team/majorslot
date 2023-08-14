@@ -739,7 +739,7 @@ namespace VanguardLTE\Games\ApolloCQ9
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
             }else if($winType == 'win'){
-                $winAvaliableMoney = $this->GetBank('');
+            $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
             }

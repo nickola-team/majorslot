@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\TreasureIslandCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTreasureIslandStack::where('id', 1)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTreasureIslandStack::where('id', 114419)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -765,7 +765,7 @@ namespace VanguardLTE\Games\TreasureIslandCQ9
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
