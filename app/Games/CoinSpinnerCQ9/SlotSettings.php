@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonusspin'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameCoinSpinnerStack::where('id', 85969)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameCoinSpinnerStack::where('id', 47160)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonusspin'){

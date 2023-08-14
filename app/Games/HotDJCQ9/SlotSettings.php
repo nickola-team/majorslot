@@ -728,7 +728,7 @@ namespace VanguardLTE\Games\HotDJCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHotDJStack::where('id', 118790)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHotDJStack::where('id', 57193)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
