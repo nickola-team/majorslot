@@ -336,7 +336,7 @@ namespace VanguardLTE\Games\moremagicapplebng
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $currentpercent = $this->GetPercent();
-                $bonus_percent = 10;
+                $bonus_percent = $currentpercent / 3;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 /*if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -648,7 +648,7 @@ namespace VanguardLTE\Games\moremagicapplebng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameMoreMagicAppleStack::where('id', 23542)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameMoreMagicAppleStack::where('id', 155)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
