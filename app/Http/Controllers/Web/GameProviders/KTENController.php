@@ -149,7 +149,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             $gameList = [];
 
-            $pp_exgames = ['cs5moneyroll', 'sc7piggiesai', 'scpandai'];
+            $pp_exgames = ['cs5moneyroll', 'sc7piggiesai', 'scpandai','SMG_bikiniParty_Microgaming'];
 
             foreach ($data as $game)
             {
@@ -647,6 +647,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
 
                             $betdata = json_decode($round['details'],true);
+                            if (!$betdata)
+                            {
+                                Log::error('KTEN PLAYNGO round : '. json_encode($round));
+                                continue;
+                            }
                             $bet = $betdata['RoundLoss'];
                             $win = $betdata['Amount'];
                             $balance = $betdata['Balance'];

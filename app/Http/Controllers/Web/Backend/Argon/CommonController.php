@@ -57,12 +57,19 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
-
-            if ($user->playing_game != null )
+            
+            $b = $user->withdrawAll('updateBalance');
+            if (!$b)
             {
                 \DB::commit();
-                return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
+                return redirect()->back()->withErrors(['게임사 머니 회수중 오류가 발생했습니다.']);
             }
+
+            // if ($user->playing_game != null )
+            // {
+            //     \DB::commit();
+            //     return redirect()->back()->withErrors(['게임중에는 충환전을 할수 없습니다.']);
+            // }
 
             $summ = abs(str_replace(',','',$request->amount));
             if ($summ == 0 && $request->all != '1' )
