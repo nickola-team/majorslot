@@ -308,7 +308,7 @@ namespace VanguardLTE\Games\BigWolfCQ9
             if($slotEvent == 'freespin'){                
                 $isState = false;
                 $result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['RetriggerAddSpins'] == 0){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

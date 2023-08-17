@@ -275,6 +275,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     'total_ggr' => 0,
                     'total_ggr_mileage' => 0,
                 ],
+                'pball' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
                 'total' => [
                     'totalbet' => 0,
                     'totalwin' => 0,
@@ -601,6 +611,16 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     'total_ggr_mileage' => 0,
                 ],
                 'slot' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'pball' => [
                     'totalbet' => 0,
                     'totalwin' => 0,
                     'totaldealbet' => 0,

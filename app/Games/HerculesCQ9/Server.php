@@ -390,15 +390,15 @@ namespace VanguardLTE\Games\HerculesCQ9
 
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $newRespin == false){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }
             }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0){
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
-                $slotEvent = 'freespin';
-                $isState = true;
+                $slotEvent = 'freespin';                
+                $isState = false;
             }else if($newRespin == true){
                 $isState = false;
             }

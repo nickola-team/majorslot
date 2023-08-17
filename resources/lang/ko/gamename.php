@@ -1217,6 +1217,8 @@ return [
 
         "mummypower" => "머미 파워",
         "tigergems" => "타이거 잼스",
+        "forestspirit" => "포레스트 스피리트",
+        "ladyfortune" => "레이디 포츈",
 
         // CQ9
         "Double Fly" => "더블 플라이",
@@ -1274,4 +1276,14 @@ return [
         "LuckyTigers" => "럭키 타이거",
         "LuckyBoxes" => "럭키 박스",
         "RedPhoenix" => "레드 포닉스",      
+        "Hercules" => "Hercules",
+        "YuanBao" => "금원보",
+        "BigWolf" => "빅 울프",
+        "HotDJ" => "핫 DJ",
+        "OoGaChaKa" => "OoGaChaKa",
+        "JumpingMobile" => "점핑 모바일",
+        "SummerMood" => "섬머 무드",
+        "TreasureIsland" => "보물섬",
+        "Apollo" => "아폴로",
+        "CoinSpinner" => "코인 스피너"
 ];

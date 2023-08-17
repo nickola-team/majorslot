@@ -39,7 +39,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
             $currTime = time();
             $endTime = strtotime($currentRound->e_time);
 
-            $gameobj = \VanguardLTE\Game::where('id', $game_id)->first();
+            $gameobj = \VanguardLTE\Game::where(['original_id' => $game_id, 'shop_id' => $user->shop_id])->first();
             if (!$gameobj)
             {
                 return response()->json([
@@ -58,7 +58,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
                 ], 200);
             }
             $parser = new $object($gameobj->original_id);
-            
+
             if ($parser->LAST_LIMIT_TIME>0 && $endTime - $currTime  < $parser->LAST_LIMIT_TIME)
             {
                 return response()->json([
@@ -73,6 +73,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
                     'error' => true,
                     'bet_id' => '',
                     'msg' => '베팅금액을 입력하세요'
+                ], 200);
+            }
+            if ($gameobj->rezerv <= $amount)
+            {
+                return response()->json([
+                    'error' => true,
+                    'bet_id' => '',
+                    'msg' => '베팅한도가 초과되었습니다'
                 ], 200);
             }
 

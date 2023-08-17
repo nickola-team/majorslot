@@ -224,14 +224,28 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withErrors(['본사를 찾을수 없습니다.']);
             }
+            if (!$requestuser)
+            {
+                return redirect()->back()->withErrors(['신청한 유저를 찾을수 없습니다.']);
+            }
             if ($transaction->status!=\VanguardLTE\WithdrawDeposit::REQUEST && $transaction->status!=\VanguardLTE\WithdrawDeposit::WAIT )
             {
                 return redirect()->back()->withErrors(['이미 처리된 신청내역입니다.']);
             }
-            if ($requestuser->hasRole('user') && $requestuser->playing_game != null)
+
+            if ($requestuser->hasRole('user') )
             {
-                return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
+                $b = $requestuser->withdrawAll('processDW');
+                if (!$b)
+                {
+                    return redirect()->back()->withErrors(['게임사 머니 회수중 오류가 발생했습니다.']);
+                }
             }
+
+            // if ($requestuser->hasRole('user') && $requestuser->playing_game != null)
+            // {
+            //     return redirect()->back()->withErrors(['해당 유저가 게임중이므로 충환전처리를 할수 없습니다.']);
+            // }
             if ($requestuser->hasRole('manager')) // for shops
             {
                 $shop = \VanguardLTE\Shop::lockforUpdate()->where('id', $transaction->shop_id)->get()->first();

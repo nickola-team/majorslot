@@ -52,7 +52,7 @@ class GameRoundGen extends Command
         
 
 
-        $categories = \VanguardLTE\Category::where(['shop_id' => 0,'site_id'=>0,'type' => 'mini'])->get();
+        $categories = \VanguardLTE\Category::where(['shop_id' => 0,'site_id'=>0,'type' => 'pball'])->get();
         foreach ($categories as $cat)
         {
             $games = $cat->games;
