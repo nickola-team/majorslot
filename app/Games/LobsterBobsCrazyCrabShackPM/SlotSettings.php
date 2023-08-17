@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\moremagicapplebng
+namespace VanguardLTE\Games\LobsterBobsCrazyCrabShackPM
 {
     class SlotSettings
     {
@@ -73,6 +73,21 @@ namespace VanguardLTE\Games\moremagicapplebng
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
+            $this->Paytable[1] = [0,0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,20,40,200,500,1000];
+            $this->Paytable[4] = [0,0,0,20,40,50,100];
+            $this->Paytable[5] = [0,0,0,6,10,20,50];
+            $this->Paytable[6] = [0,0,0,6,10,16,40];
+            $this->Paytable[7] = [0,0,0,4,8,12,30];
+            $this->Paytable[8] = [0,0,0,4,8,12,30];
+            $this->Paytable[9] = [0,0,0,4,8,12,30];
+            $this->Paytable[10] = [0,0,0,2,4,8,20];
+            $this->Paytable[11] = [0,0,0,2,4,8,20];
+            $this->Paytable[12] = [0,0,0,2,4,8,20];
+            $this->Paytable[13] = [0,0,0,0,0,0,0];
+            $this->Paytable[14] = [0,0,0,0,0,0,0];
+            $this->Paytable[15] = [0,0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -87,11 +102,11 @@ namespace VanguardLTE\Games\moremagicapplebng
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 10,000,000.00
+            // $game->rezerv => 8,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -215,8 +230,11 @@ namespace VanguardLTE\Games\moremagicapplebng
             foreach( $history as $log ) 
             {
                 $jsonLog = json_decode($log->str);
-                $this->lastEvent = $jsonLog;
-                break;
+                if( $jsonLog->responseEvent != 'gambleResult' ) 
+                {
+                    $this->lastEvent = $log->str;
+                    break;
+                }
             }
             if( isset($jsonLog) ) 
             {
@@ -302,6 +320,10 @@ namespace VanguardLTE\Games\moremagicapplebng
                     $this->happyhouruser->save();
                     return $game;
                 }
+                $_allBets = $sum / $this->GetPercent() * 100;
+                $normal_sum = $_allBets * 10 / 100;
+                $game->set_gamebank($normal_sum, 'inc', '');
+                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -445,9 +467,9 @@ namespace VanguardLTE\Games\moremagicapplebng
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'respin' ) 
+            else if( $slotState == 'slotGamble' ) 
             {
-                $slotstate = $this->slotId . ' doRespin';
+                $slotstate = $this->slotId . ' DG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -490,24 +512,72 @@ namespace VanguardLTE\Games\moremagicapplebng
                 ]);
             }
         }
-        public function SaveBNGLogReport($model){
-            \VanguardLTE\BNGGameLog::create($model);
+        public function saveGameLog($strLog, $roundID){
+            \VanguardLTE\PPGameLog::create([
+                'game_id' => $this->slotDBId, 
+                'user_id' => $this->playerId, 
+                'str' => $strLog, 
+                'shop_id' => $this->shop_id,
+                'roundid' => $roundID
+            ]);
         }
-        public function GetSpinSettings($garantType = 'bet', $bet, $lines, $isdoublechance = 0)
+        public function GetFreeStack($betLine)
         {
-            $linecount = 10;
-            if(isset($this->game->divBanks)){
-                if(isset($this->game->divBanks[0]) && $bet <= $this->game->divBanks[0]){
-                    $linecount = 1;
-                }else if(isset($this->game->divBanks[1]) && $bet <= $this->game->divBanks[1]){
-                    $linecount = 5;
-                }else if(isset($this->game->divBanks[2]) && $bet <= $this->game->divBanks[2]){
-                    $linecount = 7;
-                }else if(isset($this->game->divBanks[3]) && $bet <= $this->game->divBanks[3]){
-                    $linecount = 9;
+            $winAvaliableMoney = $this->GetBank('bonus');
+            $limitOdd = 35;
+            if ($this->happyhouruser)
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine);
+            }
+            else
+            {
+                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
+                if($limitOdd < 35){
+                    $limitOdd = 35;
+                }else if($limitOdd > 100){
+                    $limitOdd = 100;
                 }
             }
-            if( $garantType != 'bet' ) 
+            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                $this->game->original_id, 
+                $limitOdd,
+                $this->playerId
+            ])->get();
+            if(count($freeStacks) > 0){
+                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
+            }else{
+                \VanguardLTE\PPGameFreeStackLog::where([
+                    'user_id' => $this->playerId,
+                    'game_id' => $this->game->original_id
+                    ])->where('odd', '<=', $limitOdd)->delete();
+                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
+                        $this->game->original_id, 
+                        $limitOdd,
+                        $this->playerId
+                    ])->get();
+                    if (count($freeStacks) > 0) {
+                        $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
+                    }else{
+                        $freeStack = null;
+                    }
+            }
+            if($freeStack){
+                \VanguardLTE\PPGameFreeStackLog::create([
+                    'game_id' => $this->game->original_id, 
+                    'user_id' => $this->playerId, 
+                    'freestack_id' => $freeStack->id, 
+                    'odd' => $freeStack->odd, 
+                    'free_spin_count' => $freeStack->free_spin_count
+                ]);
+                return json_decode($freeStack->free_spin_stack, true);
+            }else{
+                return [];
+            }
+        }
+        public function GetSpinSettings($garantType = 'doSpin', $bet, $lines, $isdoublechance = 0)
+        {
+            $linecount = 10;
+            if( $garantType != 'doSpin' ) 
             {
                 $granttype = '_bonus';
             }
@@ -524,7 +594,7 @@ namespace VanguardLTE\Games\moremagicapplebng
             $winline_count = $game->{'winline' . $granttype . $linecount};
             $grantwin_count++;
             if($isdoublechance == 1){
-                $grantbonus_count+=2;
+                $grantbonus_count++;
             }else{
                 $grantbonus_count++;
             }
@@ -566,7 +636,7 @@ namespace VanguardLTE\Games\moremagicapplebng
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < (5 * $bet)) 
+                if( $currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 
@@ -581,7 +651,7 @@ namespace VanguardLTE\Games\moremagicapplebng
                     'win', 
                     $currentbank
                 ];
-                if( $currentbank < 0) 
+                if( $currentbank < $bet / 2) 
                 {
                     $return = [
                         'none', 
@@ -603,10 +673,10 @@ namespace VanguardLTE\Games\moremagicapplebng
             }
             return $return;
         }
-        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
+        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'doSpin')
         {
             $linecount = 10;
-            if( $garantType != 'bet' ) 
+            if( $garantType != 'doSpin' ) 
             {
                 $granttype = '_bonus';
             }
@@ -625,12 +695,6 @@ namespace VanguardLTE\Games\moremagicapplebng
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        
-        public function GetPurMul($pur)
-        {
-            $purmuls = [100];
-            return $purmuls[$pur];
-        }
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'Bet') == null) 
@@ -647,14 +711,12 @@ namespace VanguardLTE\Games\moremagicapplebng
 
         public function GetReelStrips($winType, $bet)
         {
-            // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameMoreMagicAppleStack::where('id', 155)->first();
+            // if($fsmax > 0){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameLobsterBobsCrazyCrabShackStack::where('id', 125)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
-            $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
-                $spintype = 1;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -673,21 +735,19 @@ namespace VanguardLTE\Games\moremagicapplebng
                 }
             }
             $isLowBank = false;
+            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
+                'user_id' => $this->playerId,
+                'game_id' => $this->game->original_id
+                ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
-                    if($currentHill[0] >= 8 && $currentHill[1] >= 10){
-                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameMoreMagicAppleStack::where('spin_type', 2);
-                    }else{
-                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameMoreMagicAppleStack::where('spin_type','>', 0);
-                    }
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameLobsterBobsCrazyCrabShackStack::where('spin_type', 1)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameMoreMagicAppleStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameLobsterBobsCrazyCrabShackStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 28000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 68000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
@@ -703,6 +763,13 @@ namespace VanguardLTE\Games\moremagicapplebng
                         $this->game->save();
                     }else{
                         if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                $miniOdd = $limitOdd / mt_rand(2,4);
+                                if($miniOdd > 30){
+                                    $miniOdd = 30;
+                                }
+                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                            }
                             if ($this->happyhouruser)
                             {
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
@@ -717,13 +784,22 @@ namespace VanguardLTE\Games\moremagicapplebng
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
                     $isLowBank = true;
                 }else{
                     break;
                 }
             }
-            $stack = $stacks[rand(0, count($stacks) - 1)]->spin_stack;
-            return json_decode($stack, true);
+            $stack = $stacks[rand(0, count($stacks) - 1)];
+            \VanguardLTE\PPGameFreeStackLog::create([
+                'game_id' => $this->game->original_id, 
+                'user_id' => $this->playerId, 
+                'freestack_id' => $stack->id,
+                'odd' => $stack->odd
+            ]);
+            return json_decode($stack->spin_stack, true);
         }
     }
 }
