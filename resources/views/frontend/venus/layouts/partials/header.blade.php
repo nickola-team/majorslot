@@ -18,6 +18,13 @@
                     class="casino_2_open"
                     @endif
                     ><img src="/frontend/kdior/images/gnb4.png?v=202301301150"></a></li>
+                    <li><a href="#" 
+                    @if (isset($mini) && $mini=='disabled')
+                    onclick="alert('점검중입니다');"
+                    @else
+                    class="casino_4_open"
+                    @endif
+                    ><img src="/frontend/kdior/images/gnb5.png?v=202301301150"></a></li>
                     
                 </ul>
             </div>

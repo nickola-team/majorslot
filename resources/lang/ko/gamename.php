@@ -796,8 +796,10 @@ return [
     "TaiXiu" => "타이시유",
     "xocdia" => "소크디아",
     "winpowerball" => "Win파워볼",
-    "eospowerball5" => "EOS 5분파워볼",
-    "eospowerball3" => "EOS 3분파워볼",
+    "EOS5min" => "EOS 5분파워볼",
+    "EOS3min" => "EOS 3분파워볼",
+    "Ntry5minPB" => "엔트리 5분파워볼",
+    "Pow8885minPB" => "파워888 5분파워볼",
 
         //pragmatic
         "GreatRhino" => "그레이트라이노",

@@ -127,6 +127,7 @@
       @include('frontend.boss.modals.msg')      
       @include('frontend.boss.modals.casino')
       @include('frontend.boss.modals.slot')
+      @include('frontend.boss.modals.minis')
       
     @endif
     @foreach ($noticelist as $ntc)
