@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\StarlightChristmasPM
+namespace VanguardLTE\Games\SupermaniaPM
 {
     class Server
     {

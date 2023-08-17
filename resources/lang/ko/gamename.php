@@ -1134,6 +1134,9 @@ return [
         "PowerofMerlinMegaways" => "파워 오브 멀린",
         "3BuzzingWilds" => "3 버징 와일즈",
         "StarlightPrincess1000" => "스타라이트 프리세스 1000",
+        "Supermania" => "슈퍼마니아",
+        "DiamondCascade" => "다이아몬드 캐스캐이드",
+        "LobsterBobsCrazyCrabShack" => "랍스타 밥스",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
