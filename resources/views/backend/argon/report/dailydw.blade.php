@@ -225,7 +225,7 @@
                                     <td >{{number_format($total['dealout'])}}</td>
                                     @if (auth()->user()->isInOutPartner())
                                     <td>
-                                    @foreach (['live', 'slot', 'total'] as $type)
+                                    @foreach ($total['betwin'] as $type => $bt)
                                         <div class="d-flex">
 
                                         <div class="d-flex" style="justify-content : center;align-items : center;">
@@ -234,22 +234,22 @@
                                         <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
                                             <ul>
                                             <li>
-                                                <span class='text-green'>배팅 : {{number_format($total['betwin'][$type]['totalbet'])}}</span>
+                                                <span class='text-green'>배팅 : {{number_format($bt['totalbet'])}}</span>
                                             </li>
                                             <li>
-                                                <span class='text-red'>당첨 : {{number_format($total['betwin'][$type]['totalwin'])}}</span>
+                                                <span class='text-red'>당첨 : {{number_format($bt['totalwin'])}}</span>
                                             </li>
                                             <li>
-                                            롤링금 : {{number_format($total['betwin'][$type]['total_mileage'])}}
+                                            롤링금 : {{number_format($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage'])}}
                                             </li>
                                             <li>
-                                            정산금 : {{number_format($total['betwin'][$type]['totalbet']-$total['betwin'][$type]['totalwin'] - $total['betwin'][$type]['total_mileage'])}}
+                                            정산금 : {{number_format($bt['totalbet']-$bt['totalwin'] - ($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage']))}}
                                             </li>
                                             </ul>
                                         </div>
                                         
                                         </div>
-                                        @if ($loop->index < 2)
+                                        @if ($loop->index < count($total['betwin'])-1)
                                         <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
                                         @endif
 
@@ -257,7 +257,7 @@
                                     </td>
                                     @endif
                                     <td>
-                                    @foreach (['live', 'slot', 'total'] as $type)
+                                    @foreach ($total['betwin'] as $type => $bt)
                                         <div class="d-flex">
 
                                         <div class="d-flex" style="justify-content : center;align-items : center;">
@@ -266,22 +266,22 @@
                                         <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
                                             <ul>
                                             <li>
-                                                <span class='text-green'>배팅 : {{number_format($total['betwin'][$type]['totaldealbet'])}}</span>
+                                                <span class='text-green'>배팅 : {{number_format($bt['totaldealbet'])}}</span>
                                             </li>
                                             <li>
-                                                <span class='text-red'>당첨 : {{number_format($total['betwin'][$type]['totaldealwin'])}}</span>
+                                                <span class='text-red'>당첨 : {{number_format($bt['totaldealwin'])}}</span>
                                             </li>
                                             <li>
-                                            롤링금 : {{number_format($total['betwin'][$type]['total_mileage'])}}
+                                            롤링금 : {{number_format($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage'])}}
                                             </li>
                                             <li>
-                                            정산금 : {{number_format($total['betwin'][$type]['totaldealbet']-$total['betwin'][$type]['totaldealwin'] - $total['betwin'][$type]['total_mileage'])}}
+                                            정산금 : {{number_format($bt['totaldealbet']-$bt['totaldealwin'] -($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage']))}}
                                             </li>
                                             </ul>
                                         </div>
                                         
                                         </div>
-                                        @if ($loop->index < 2)
+                                        @if ($loop->index < count($total['betwin'])-1)
                                         <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
                                         @endif
 
