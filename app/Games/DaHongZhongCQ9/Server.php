@@ -151,7 +151,8 @@ namespace VanguardLTE\Games\DaHongZhongCQ9
                                 $result_val['CurrentRound'] = $stack['CurrentRound'];
                                 $result_val['MaxSpin'] = $stack['MaxSpin'];
                                 $result_val['AwardSpinTimes'] = $stack['AwardSpinTimes'];
-                                $result_val['Multiple'] = 0;
+                                // $result_val['Multiple'] = 0; 
+                                $result_val['Multiple'] = $stack['Multiple'];                                
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
