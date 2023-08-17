@@ -33,12 +33,15 @@
 
 <body>
 	<!-- ★메인★ -->
+	@if (empty($logo))
+	<?php $logo = 'natural'; ?>
+	@endif
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'natural'])
+			@include('frontend.kdior.layouts.partials.m.header')
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'natural'])
+			@include('frontend.kdior.layouts.partials.header')
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
