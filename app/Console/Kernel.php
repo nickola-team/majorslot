@@ -1697,7 +1697,24 @@ namespace VanguardLTE\Console
                 }
                 $this->info("End kten rounds. last id = " . $from);
             });            
+            \Artisan::command('honor:omitted {from} {to}', function ($from, $to) {
 
+                $this->info("Begin kten rounds : $from ~ $to");
+
+                while ($from <= $to)
+                {
+                    $this->info("Getting omitted history from " . $from);
+                    $res = \VanguardLTE\Http\Controllers\Web\GameProviders\HONORController::processGameRound($from, $to);
+                    $this->info("Proceed omitted records count = " . $res[0]);
+                    if ($from == $res[1])
+                    {
+                        $this->info("No more history after " . $from);
+                        break;
+                    }
+                    $from = $res[1];
+                }
+                $this->info("End kten rounds. last id = " . $from);
+            }); 
             \Artisan::command('session:cookie {session}', function ($session) {
 
                 $this->info("Begin");
