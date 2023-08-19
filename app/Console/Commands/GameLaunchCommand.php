@@ -28,11 +28,11 @@ class GameLaunchCommand extends Command
 
     const GAME_PROVIDERS = [
         'XMX',
-        'KTEN',
         'TAISHAN',
         'HONOR',
         'GOLD',
-        'BABYLON'
+        'BABYLON',
+        'KTEN'
     ];
 
     /**
