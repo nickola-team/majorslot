@@ -677,7 +677,7 @@ namespace VanguardLTE\Console
             \Artisan::command('daily:promo', function () {
                 set_time_limit(0);
                 $this->info("Begin pp game promotions");
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::syncpromo();
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\HONORController::syncpromo();
                 $this->info($res['msg']);
             });
 
