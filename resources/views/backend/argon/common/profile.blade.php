@@ -197,14 +197,14 @@
                                         <tr>
                                             <th>슬롯롤링%</th>
                                             <th>라이브롤링%</th>
-                                            <th style="width:25%"></th>
-                                            <th style="width:25%"></th>
+                                            <th style="width:25%">파워볼 단폴롤링%</th>
+                                            <th style="width:25%">파워볼 조합롤링%</th>
                                         </tr>
                                         <tr>
                                             <td style="padding:3px;"><input type="text" name="deal_percent" id="deal_percent" class="form-control" value="{{$user->deal_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
                                             <td style="padding:3px;"><input type="text" name="table_deal_percent" id="table_deal_percent" class="form-control" value="{{$user->table_deal_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
-                                            <td style="padding:3px;"></td>
-                                            <td style="padding:3px;"></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_single_percent" id="pball_single_percent" class="form-control" value="{{$user->pball_single_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
+                                            <td style="padding:3px;"><input type="text" name="pball_comb_percent" id="pball_comb_percent" class="form-control" value="{{$user->pball_comb_percent??0}}" {{$user->id==auth()->user()->id?'disabled':''}}></td>
                                         </tr>
                                     </table>
                                 </div>

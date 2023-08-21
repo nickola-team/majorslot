@@ -46,7 +46,7 @@
 @if (isset($sumInfo) && $sumInfo!='')
     <span class='text-red'>준비중</span>
 @else
-@foreach (['live', 'slot', 'total'] as $type)
+@foreach ($betwin as $type => $bt)
     <div class="d-flex">
     <div class="d-flex" style="justify-content : center;align-items : center;">
             {{__($type)}}
@@ -54,22 +54,22 @@
     <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
         <ul>
         <li>
-            <span class='text-green'>배팅 : {{number_format($betwin[$type]['totalbet'])}}</span>
+            <span class='text-green'>배팅 : {{number_format($bt['totalbet'])}}</span>
         </li>
         <li>
-            <span class='text-red'>당첨 : {{number_format($betwin[$type]['totalwin'])}}</span>
+            <span class='text-red'>당첨 : {{number_format($bt['totalwin'])}}</span>
         </li>
         <li>
-        롤링금 : {{number_format($betwin[$type]['total_mileage'])}}
+        롤링금 : {{number_format($bt['total_mileage'])}}
         </li>
         <li>
-        정산금 : {{number_format($betwin[$type]['totalbet']-$betwin[$type]['totalwin'] - $betwin[$type]['total_mileage'])}}
+        정산금 : {{number_format($bt['totalbet']-$bt['totalwin'] - $bt['total_mileage'])}}
         </li>
         </ul>
     </div>
     
     </div>
-    @if ($loop->index < 2)
+    @if ($loop->index < count($betwin)-1)
     <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
     @endif
 @endforeach
@@ -80,7 +80,7 @@
 @if (isset($sumInfo) && $sumInfo!='')
     <span class='text-red'>준비중</span>
 @else
-@foreach (['live', 'slot', 'total'] as $type)
+@foreach ($betwin as $type => $bt)
     <div class="d-flex">
     <div class="d-flex" style="justify-content : center;align-items : center;">
             {{__($type)}}
@@ -88,22 +88,22 @@
     <div class="d-flex flex-column justify-content-center" style="margin-left:1.6rem">
         <ul>
         <li>
-            <span class='text-green'>배팅 : {{number_format($betwin[$type]['totaldealbet'])}}</span>
+            <span class='text-green'>배팅 : {{number_format($bt['totaldealbet'])}}</span>
         </li>
         <li>
-            <span class='text-red'>당첨 : {{number_format($betwin[$type]['totaldealwin'])}}</span>
+            <span class='text-red'>당첨 : {{number_format($bt['totaldealwin'])}}</span>
         </li>
         <li>
-        롤링금 : {{number_format($betwin[$type]['total_mileage'])}}
+        롤링금 : {{number_format($bt['total_mileage'])}}
         </li>
         <li>
-        정산금 : {{number_format($betwin[$type]['totaldealbet']-$betwin[$type]['totaldealwin'] - $betwin[$type]['total_mileage'])}}
+        정산금 : {{number_format($bt['totaldealbet']-$bt['totaldealwin'] - $bt['total_mileage'])}}
         </li>
         </ul>
     </div>
     
     </div>
-    @if ($loop->index < 2)
+    @if ($loop->index < count($betwin)-1)
     <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
     @endif
 @endforeach    

@@ -35,14 +35,14 @@
 	<!-- ★메인★ -->
 	<div id="wrap">
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'helloslot', 'live'=>'disabled', 'hotel' => 'disabled'])
+			@include('frontend.kdior.layouts.partials.m.header', ['logo' => 'helloslot', 'live'=>'disabled', 'hotel' => 'disabled','mini' => 'disabled'])
 			@include('frontend.kdior.layouts.partials.m.content')
 		@else
-			@include('frontend.kdior.layouts.partials.header', ['logo' => 'helloslot', 'live'=>'disabled', 'hotel' => 'disabled'])
+			@include('frontend.kdior.layouts.partials.header', ['logo' => 'helloslot', 'live'=>'disabled', 'hotel' => 'disabled','mini' => 'disabled'])
 			@include('frontend.kdior.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
-					@include('frontend.kdior.layouts.partials.category', ['live'=>'disabled', 'hotel' => 'disabled'])
+					@include('frontend.kdior.layouts.partials.category', ['live'=>'disabled', 'hotel' => 'disabled','mini' => 'disabled'])
 					@include('frontend.kdior.layouts.partials.board')
 				</div>
 			</div>

@@ -24,6 +24,10 @@ namespace VanguardLTE\Console
 
             \VanguardLTE\Console\Commands\XMXWithdrawAll::class,
             \VanguardLTE\Console\Commands\KDiorUsers::class,
+
+            \VanguardLTE\Console\Commands\PowerBall\GameRoundGen::class,
+            \VanguardLTE\Console\Commands\PowerBall\GameRoundProcess::class,
+            \VanguardLTE\Console\Commands\PowerBall\GameList::class,
             
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
@@ -105,6 +109,7 @@ namespace VanguardLTE\Console
             // $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
 
             $schedule->command('gp:genTrend')->dailyAt('08:00')->runInBackground();
+            $schedule->command('pbgame:genround')->dailyAt('22:00')->runInBackground();
 
             // $schedule->command('monthly:summary')->monthlyOn(1, '9:00')->runInBackground();
 
