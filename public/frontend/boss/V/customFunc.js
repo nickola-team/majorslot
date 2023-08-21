@@ -134,7 +134,7 @@ function startGameByProvider(provider, gamecode) {
 			alert(data.msg);
 			return;
 		}
-		window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+		window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
 	}
 	});
 	
