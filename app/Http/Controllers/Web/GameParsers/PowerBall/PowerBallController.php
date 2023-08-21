@@ -169,6 +169,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
                     'game_id' => $game_id,
                 ])->orderby('created_at', 'desc')->limit(20)->get();
             }
+            foreach($userHistory as $history)
+            {
+                $game = \VanguardLTE\Game::where('id',$history->game_id)->first();
+                $history->gameName = \Lang::get('gamename.'.$game->title);
+            }
             return response()->json([
                 'error' => false,
                 'bets'  => $userHistory
@@ -207,8 +212,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
         {
             $game_id = $request->game_id;
             $from_sl = date('Y-m-d H:i:s');
+            $game = \VanguardLTE\Game::where(['id' => $game_id])->first();
+            $object =  'VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall\\'.$game->name;
+            if(!class_exists($object))
+            {
+                return response()->json([
+                    'error' => true,
+                    'round'  => null
+                ], 200);
+            }
+            $gameInfo = new $object($game->original_id);
+            $pre_from_sl = date('Y-m-d H:i:s', strtotime("-".$gameInfo->GAME_PERIOD." seconds"));
+            $pre_round = \VanguardLTE\PowerBallModel\PBGameRound::where('e_time','>=', $pre_from_sl)->where(['game_id' => $game_id, 'status' => 1])->orderby('id', 'asc')->first();
             $round = \VanguardLTE\PowerBallModel\PBGameRound::where('e_time','>=', $from_sl)->where(['game_id' => $game_id, 'status' => 0])->orderby('id', 'asc')->first();
-            if (!$round)
+            if (!$round || !$pre_round)
             {
                 return response()->json([
                     'error' => true,

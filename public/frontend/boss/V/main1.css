@@ -52,6 +52,10 @@
   background: url("/frontend/boss/V/mini.png?ver=1.01") no-repeat;
 }
 
+.main-page .content .game-buttons.comming{
+    background: url("/frontend/boss/V/comming.png?ver=1.01") no-repeat;
+  }
+
 .main-page .content .game-buttons.poker{
   background: url("/frontend/boss/V/idn-button.jpg") no-repeat;
 }

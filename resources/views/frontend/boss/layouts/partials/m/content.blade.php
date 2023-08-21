@@ -33,7 +33,7 @@
         </div>
     </div>
     <!-- <div class="game-buttons ng-scope poker" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">IDN 포커</span></div></div><div class="game-buttons ng-scope slot" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">슬롯</span></div></div> -->
-    <div class="game-buttons ng-scope others" onclick=
+    <div class="game-buttons ng-scope mini" onclick=
         @auth 
             {{$isMini = false}} 
             @foreach($categories AS $index=>$category)

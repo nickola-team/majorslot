@@ -210,18 +210,19 @@
                                                     <col width="10%">
                                                     <col width="15%">
                                                     <col width="10%">
+                                                    <col width="10%">
                                                     <col>
                                                 </colgroup>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">배팅일시</th>
+                                                        <th scope="col">게임</th>
                                                         <th scope="col">진행회차</th>
                                                         <th scope="col">배팅대상</th>
                                                         <th scope="col">배팅금</th>
                                                         <th scope="col">당첨배당</th>
                                                         <th scope="col">당첨금</th>
                                                         <th scope="col">상태</th>
-                                                        <th scope="col">***</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="bet_list">
@@ -279,7 +280,7 @@
                 slippos = 0;
             } else if ($('body').attr('class') == 'pc' && $("#game_player").css(
                     'display') == 'block') {
-                slippos -= 210;
+                slippos -= 260;
             }
             if (slippos < 0) slippos = 0;
             if (slippos > height) slippos = height;
@@ -397,6 +398,7 @@
                 success: function (jsonData) {
                     if (!jsonData.error) {
                         var left_time = jsonData.round.remindtime;
+                        left_time -= {{$gameInfo->LAST_LIMIT_TIME}};
                         let rountNum = parseInt(jsonData.round.dround_no);
                         $('#cur_round').html('[ ' + ' (' + rountNum + ')회 ]');
                         $('#round').val(jsonData.round.ground_no);
@@ -412,7 +414,7 @@
                             }
                         }
 
-                        if (left_time > {{$gameInfo->GAME_PERIOD}} -20 && left_time < {{$gameInfo->GAME_PERIOD}})
+                        if (jsonData.round.remindtime > {{$gameInfo->GAME_PERIOD}} -30 && jsonData.round.remindtime < {{$gameInfo->GAME_PERIOD}})
                         {
                             betHistoryList();
                             initUserInfo();
@@ -426,7 +428,7 @@
                                 '<span style="top: 80px; position: relative;">다음회차 준비중</span>');
                             $('#betlock').addClass('bet_lock');
                             $('#betlock').css('display', 'block');
-                        } else if (left_time > {{$gameInfo->LAST_LIMIT_TIME}}) {
+                        } else if (left_time > 0) {
                             if (!init_betlist) {
                                 init_betlist = true;
                             }
@@ -444,6 +446,17 @@
                             $('#betlock').addClass('bet_lock');
                             $('#betlock').css('display', 'block');
                         }
+                    }else{
+                        wait(true);
+                        clearInterval(timer);
+                        Swal.fire({
+                        icon: 'info',
+                        title: '알림',
+                        html: '게임사와의 연결이 끊어 졋습니다.잠시후 다시 시도해보세요.',
+                        confirmButtonText: '확인',
+                        }).then(result =>{
+                            window.top.close();
+                        });
                     }
                 },
                 error: function (error) {
@@ -451,7 +464,7 @@
                 }
             });
         }
-        setInterval(onTimer, 1000);
+        var timer = setInterval(onTimer, 1000);
 
         function selectbtn(obj) {
             if ($('#marcket_info').val() != '')
@@ -488,7 +501,7 @@
             Swal.fire({
                 icon: 'info',
                 title: '알림',
-                html: '최대금액은 배팅 가능한 최대금액이 배팅됩니다. 의도하신것이 맞습니까?',
+                html: '최대금액은 배팅 가능한 최대금액 (' +insertComma('{{$betMax}}')+ ' 원) 이 배팅됩니다. 의도하신것이 맞습니까?',
                 showCancelButton: true,
                 confirmButtonText: '확인',
                 cancelButtonText: '취소',
@@ -503,7 +516,7 @@
                         Swal.fire({
                             icon: 'info',
                             title: '알림',
-                            html: '보유금액을 충전 하세요.',
+                            html: '잔액이 부족합니다. 잔액을 충전 하세요.',
                             confirmButtonText: '확인'
                         });
                     } else {
@@ -595,7 +608,7 @@
         {
             var formData = new FormData();
             formData.append('token', token);
-            formData.append('game_id', '{{$gameInfo->game}}');
+            formData.append('game_id', 0);
             $.ajax({
                 type: 'POST',
                 url: apiURL + '/api/pbgame/history',
@@ -613,6 +626,7 @@
                             let betTime = new Date(bet.created_at);
                             strHtml += '<tr>';
                             strHtml += '<td align="center">' + betTime.yyyymmdd() + '</td>';
+                            strHtml += '<td align="center">' + bet.gameName + '</td>';
                             strHtml += '<td align="center">' + parseInt(bet.ground_no.substring(bet.ground_no.length - 3,bet.ground_no.length)) + '회차</td>';
                             strHtml += '<td align="center">';
                             strHtml += '<span class="left" style="padding-left:10px;">' + $('#' + bet.result).attr('bet_title') + '</span>';

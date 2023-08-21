@@ -66,7 +66,7 @@
             @else
                 class="casino_2_open"
             @endif
-            ><img src="/frontend/kdior/images/m_main_game4.png?v=202302021619" width="100%"></a></li>
+            ><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></li>
             <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></li>                    
             <li><a href="#" 
             @if (isset($mini) && $mini=='disabled')

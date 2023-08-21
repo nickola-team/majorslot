@@ -104,7 +104,7 @@ var front = {
 
             if (front.winW > mobileWidth && !$("body").hasClass("pc")) {
                 front.isDevice = "pc";
-
+                $(".target0").removeAttr("style");
                 $("body").addClass("pc");
                 $("body").removeClass("mobile");
             }
@@ -336,9 +336,10 @@ var front = {
                 var margin_left = get_attr(target1, "o_margin_left") * ratio;
                 var margin_top = get_attr(target1, "o_margin_top") * ratio;
 
-                $(target0).css("width", width).css("height", height);
+                //$(target0).css("width", width).css("height", height);
+                $(target0).css("height", height);
                 $(target1).css("margin-left", margin_left).css("margin-top", margin_top);
-                $(target2).css("-webkit-transform", "scale(" + ratio + ")");
+                //$(target2).css("-webkit-transform", "scale(" + ratio + ")");
             }
 
             var is_live_iframe = $(".contract_game").length;

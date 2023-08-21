@@ -102,21 +102,37 @@
 		<div class="popup_wrap_1360">   
 			<div class="close_box"><a href="#" class="casino_4_close"><img src="/frontend/kdior/images/popup_close.png?v=202301301150"></a></div>
 			<div class="popupbox">
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
-				{{-- <div class="title1"><img src="/frontend/kdior/images/title04.png?v=202301301150"></div><!-- 타이틀 --> --}}
+				
+				<div class="title1"><img src="/frontend/kdior/images/title05.png?v=202301301150"></div><!-- 타이틀 -->
 				<div class="game">
-					<ul   class="gamelist">
+					<ul class="gamelist">
+						{{$status = 0}}
+						@foreach($categories AS $index=>$category)
+							@if ($category->type =='pball')
+								@if ($category->status == 0)
+									{{$status = 1}}
+								@else
+									{{$status = 2}}
+								@endif
+							@endif
+						@endforeach
 
 						@foreach($pbgames AS $pbgame)
 						<li>
 							<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
 							@auth 
-								onclick="startGameByProvider(null, '{{$pbgame['name']}}');"
+								@switch($status)
+									@case(0)
+										onclick="alert('지원하지 않는 게임입니다.');"
+										@break
+									@case(1)
+										onclick="alert('점검중입니다');"
+										@break
+									@case(2)
+										onclick="startGameByProvider(null, '{{$pbgame['name']}}');"
+										@break
+									@default
+								@endswitch
 							@endif
 							>
 							<img src="/frontend/Default/ico/{{$pbgame['name']}}.jpg">
@@ -125,7 +141,6 @@
 							</a>
 						</li>
 						@endforeach
-
 					</ul>
 				</div>    
 			</div>

@@ -335,12 +335,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
         {
             $rounds = explode('_',$stat->roundid);
             $dno = $rounds[1];
-            $userbets = \VanguardLTE\PBGameBet::where([
+            $userbets = \VanguardLTE\PowerBallModel\PBGameBet::where([
                 'game_id' => $this->game,
                 'ground_no' => $dno,
                 'user_id' => $stat->user_id
             ])->get();
-            $trend = \VanguardLTE\PBGameRound::where(
+            $trend = \VanguardLTE\PowerBallModel\PBGameRound::where(
                 [
                     'game_id' => $this->game,
                     'ground_no' => $dno

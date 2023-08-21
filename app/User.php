@@ -880,7 +880,9 @@ namespace VanguardLTE
             ];
             $ggr_field = [
                 'slot' => 'ggr_percent',
-                'table' => 'table_ggr_percent'
+                'table' => 'table_ggr_percent',
+                'pbsingle' => 'table_ggr_percent',
+                'pbcomb' => 'table_ggr_percent'
             ];
 
             $shop = $this->shop;

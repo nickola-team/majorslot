@@ -61,35 +61,46 @@
             @endif
         </div>
         <div class="cs-casino-slot mini">
-            @if ($categories && count($categories))
-                @foreach($categories AS $index=>$category)
-                    @if ($category->type =='pball')
-                        @foreach($pbgames AS $pbgame)
-                            <a href="javascript:void(0)" 
-                            @if ($category->status == 0)
-                                onclick="mustSignIn('점검중입니다.')"
-                            @else
-                                @auth 
-                                    onclick="startGameByProvider(null, '{{$pbgame['name']}}');"
-                                @endauth
-                                @guest
-                                    onclick="mustSignIn('로그인이 필요한 메뉴입니다.')"
-                                @endguest
-                            @endif
-                            class="cs-btn" >
-                                <div class="img-cont">
-                                    <div class="main-img">
-                                        <img src="/frontend/Default/ico/{{$pbgame['name']}}.jpg"  class="bgImg">                              
-                                        <img class="on" src="/frontend/iris/theme/sp/images/game/game_slot_frame_fix2.png">
-                                        <div class="text-cont">
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-						@endforeach
+            {{$status = 0}}
+            @foreach($categories AS $index=>$category)
+                @if ($category->type =='pball')
+                    @if ($category->status == 0)
+                        {{$status = 1}}
+                    @else
+                        {{$status = 2}}
                     @endif
-                @endforeach
-            @endif
+                @endif
+            @endforeach
+            @foreach($pbgames AS $pbgame)
+                <a href="javascript:void(0)" 
+                @auth 
+                    @switch($status)
+                        @case(0)
+                            onclick="alert('지원하지 않는 게임입니다.');"
+                            @break
+                        @case(1)
+                            onclick="alert('점검중입니다');"
+                            @break
+                        @case(2)
+                            onclick="startGameByProvider(null, '{{$pbgame['name']}}');"
+                            @break
+                        @default
+                    @endswitch
+                @endauth
+                @guest
+                    onclick="mustSignIn('로그인이 필요한 메뉴입니다.')"
+                @endguest
+                class="cs-btn" >
+                    <div class="img-cont">
+                        <div class="main-img">
+                            <img src="/frontend/Default/ico/{{$pbgame['name']}}.jpg"  class="bgImg">                              
+                            <img class="on" src="/frontend/iris/theme/sp/images/game/game_slot_frame_fix2.png">
+                            <div class="text-cont">
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
         </div>                       
     </div>
     </div>
