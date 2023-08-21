@@ -144,8 +144,9 @@
                                 <div class="col-md-3">
                                     <select class="form-control" id="gametype" name="gametype">
                                         <option value="" @if (Request::get('gametype') == '') selected @endif>@lang('app.all')</option>
-                                        <option value="live" @if (Request::get('gametype') == 'live') selected @endif>카지노</option>
+                                        <option value="live" @if (Request::get('gametype') == 'live') selected @endif>라이브</option>
                                         <option value="slot" @if (Request::get('gametype') == 'slot') selected @endif>슬롯</option>
+                                        <option value="slot" @if (Request::get('gametype') == 'pball') selected @endif>파워볼</option>
                                     </select>
                                 </div>
                                 <div class="col-md-1">

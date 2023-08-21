@@ -30,7 +30,13 @@
 .main-page .content .game-buttons:nth-child(-n+2){
   margin-right: 8px;
 }
+.main-page .content .game-buttons:nth-of-type(3){
+    margin-right: 8px;
+  }
 .main-page .content .game-buttons:nth-of-type(4){
+    margin-right: 8px;
+  }
+.main-page .content .game-buttons:nth-of-type(5){
   width: 100%;
 }
 
@@ -41,6 +47,14 @@
 .main-page .content .game-buttons.others{
   background: url("/frontend/boss/V/slot.png?ver=1.01") no-repeat;
 }
+
+.main-page .content .game-buttons.mini{
+  background: url("/frontend/boss/V/mini.png?ver=1.01") no-repeat;
+}
+
+.main-page .content .game-buttons.comming{
+    background: url("/frontend/boss/V/comming.png?ver=1.01") no-repeat;
+  }
 
 .main-page .content .game-buttons.poker{
   background: url("/frontend/boss/V/idn-button.jpg") no-repeat;
