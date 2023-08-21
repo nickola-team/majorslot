@@ -68,11 +68,11 @@ function minisGame(category, title){
 				{
 					if (data.games[i].provider)
 					{
-						htmldoc += `<a href="#" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');" class="hg-btn"><div class="img-cont"><img class="main-img" src="${data.games[i].icon}" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
+						htmldoc += `<a href="#" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}',true);" class="hg-btn"><div class="img-cont"><img class="main-img" src="${data.games[i].icon}" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
 					}
 					else
 					{
-						htmldoc += `<a href="#" onclick="startGameByProvider(null, '${data.games[i].name}');"  class="hg-btn"><div class="img-cont"><img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
+						htmldoc += `<a href="#" onclick="startGameByProvider(null, '${data.games[i].name}',true);"  class="hg-btn"><div class="img-cont"><img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
 					}
                     htmldoc += `<div class="overlay">
                             <p><i class="glyphicon glyphicon-log-in"></i> 게임하기</p>
@@ -117,7 +117,7 @@ function casinoGameStart(category){
 	   });
  }
 
-function startGameByProvider(provider, gamecode) {
+function startGameByProvider(provider, gamecode,max = false) {
 	var formData = new FormData();
 	formData.append("provider", provider);
 	formData.append("gamecode", gamecode);
@@ -134,7 +134,12 @@ function startGameByProvider(provider, gamecode) {
 			alert(data.msg);
 			return;
 		}
-		window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+        if (max)
+       {
+         window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+       }else{
+         window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+       }
 	}
 	});
 	

@@ -22,7 +22,9 @@
 
 <div class="game-buttons click-disable ng-scope mini" onclick=
 @auth
-    {{$isMini = false}}
+    @php
+      $isMini = false;
+    @endphp
     @foreach($categories AS $index=>$category)
         @if ($category->type =='pball')
             @if ($category->view == 0)
@@ -32,7 +34,9 @@
             @else
                 "minisGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');"
             @endif
-                {{$isMini = true}}
+                @php
+                    $isMini = true;
+                @endphp
             @break
         @endif
     @endforeach

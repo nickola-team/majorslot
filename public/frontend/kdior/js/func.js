@@ -834,7 +834,7 @@ function casinoGameStart(category){
 	   });
  }
 
-function startGameByProvider(provider, gamecode) {
+function startGameByProvider(provider, gamecode,max = false) {
 	var formData = new FormData();
 	formData.append("provider", provider);
 	formData.append("gamecode", gamecode);
@@ -851,7 +851,12 @@ function startGameByProvider(provider, gamecode) {
 			alert(data.msg);
 			return;
 		}
-		window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+		if (max)
+       {
+         window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+       }else{
+         window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+       }
 	}
 	});
 	
