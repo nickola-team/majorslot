@@ -12,7 +12,7 @@
 .top1_box {margin:0px auto; width:1400px; position:relative;}
 .top2_box {margin:0px auto; width:1400px;}
 
-.gnb_left {float:left; margin:34px 0 0 0;}
+.gnb_left {float:left; margin:34px 0 0 -93px;}
 .gnb_left ul li {float:left; margin:0 5px 0 0;}
 
 .logo {position:absolute; left:50%; top:10px; margin-left:-57px;}
@@ -73,9 +73,11 @@
 /*-------------------------------------------------------------------------------------*
  *  Main                                                                               *
  *-------------------------------------------------------------------------------------*/
-.con1{float:left; width:100%; margin:89px 0 0 0;}
-.con1 li{float:left; margin:0 25px 0 0; perspective:300px;}
+ .con1{float:left; width:70%; margin:89px 0 0 235px;}
+ .con1 li{float:left; margin:0 25px 10px 0; perspective:300px;}
 .con1 li:last-child{margin:0 0 0 0;}
+.con1 li:nth-child(2){float: right;}
+.con1 li:nth-child(4){float: right;margin: 0 25px 0 0;}
 .con1 li .item{display:block; backface-visibility:hidden; transition:0.3s;}
 .con1 li .item.front{position:absolute;transform:rotateY(0deg);}
 .con1 li .item.back{transform:rotateY(-180deg);}

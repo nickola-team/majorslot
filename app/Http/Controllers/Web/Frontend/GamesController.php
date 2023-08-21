@@ -82,6 +82,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $hotgames = [];
+            $pbgames = [];
             $detect = new \Detection\MobileDetect();
             $devices = [];
             if( $detect->isMobile() || $detect->isTablet() ) 
@@ -98,7 +99,19 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     2
                 ];
             }
-
+            //add pbgames
+            $pbgameLst = \VanguardLTE\Category::where(['href'=> 'minigame', 'shop_id'=>0, 'site_id'=>0])->first();
+            if ($pbgameLst)
+            {
+                $gamecats = $pbgameLst->games()->orderby('game_id', 'desc')->get();
+                foreach ($gamecats as $gc)
+                {
+                    if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
+                    {
+                        $pbgames[] = ['name' => $gc->game->name, 'title' => \Illuminate\Support\Facades\Lang::has('gamename.'.$gc->game->title)? __('gamename.'.$gc->game->title):$gc->game->title];
+                    }
+                }
+            }
             //add virtualtech games
             $virtualtech = \VanguardLTE\Category::where(['href'=> 'virtualtech', 'shop_id'=>0, 'site_id'=>0])->first();
             if ($virtualtech)
@@ -183,7 +196,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
              }
 
-            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'noticelist','msgs','unreadmsg', 'ppgames', 'trhistory'));
+            return view('frontend.' . $frontend . '.games.list', compact('categories', 'hotgames', 'livegames', 'title', 'notice', 'noticelist','msgs','unreadmsg', 'ppgames', 'trhistory','pbgames'));
         }
         public function setpage(\Illuminate\Http\Request $request)
         {
@@ -299,6 +312,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return redirect()->route('frontend.game.list');
             }
+
+            
             $envID = $game->original_id;
             $styleName = config('app.stylename');
             $replayUrl = config('app.replayurl');
@@ -317,6 +332,30 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $parent = $parent->referral;
             }
             $pagelang = $parent->language;
+
+            $cats = $game->categories;
+            if ($cats){
+                foreach ($cats as $ct)
+                {
+                    if ($ct->category->type == 'pball')
+                    {
+                        //here you must go to mini game blade file
+                        $object =  'VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall\\'.$game->name;
+                        if(!class_exists($object))
+                        {
+                            abort(404);
+                        }
+                        $gameInfo = new $object($game->original_id);
+                        $pbGameResults = \VanguardLTE\PowerBallModel\PBGameResult::where('game_id',$game->original_id)->get();
+                        $token = $user->api_token;
+                        $gameName = $game->title;
+                        $betMax = $game->rezerv;
+                        return view('frontend.games.list.PowerBall', compact('pbGameResults', 'gameInfo', 'token','gameName','betMax'));
+                    }
+
+                }
+            }
+
             return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
         }
         public function startGameWithiFrame(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)

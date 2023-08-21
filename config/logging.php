@@ -70,6 +70,11 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/monitor.log'),
         ],
+
+        'powerball_game' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/powerball.log'),
+        ],
     ],
 
     
