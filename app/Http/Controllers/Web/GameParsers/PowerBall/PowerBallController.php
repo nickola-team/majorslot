@@ -222,7 +222,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
                 ], 200);
             }
             $gameInfo = new $object($game->original_id);
-            $pre_from_sl = date('Y-m-d H:i:s', strtotime("-".$gameInfo->GAME_PERIOD." seconds"));
+            $pre_from_sl = date('Y-m-d H:i:s', strtotime("-".($gameInfo->GAME_PERIOD*2)." seconds"));
             $pre_round = \VanguardLTE\PowerBallModel\PBGameRound::where('e_time','>=', $pre_from_sl)->where(['game_id' => $game_id, 'status' => 1])->orderby('id', 'asc')->first();
             $round = \VanguardLTE\PowerBallModel\PBGameRound::where('e_time','>=', $from_sl)->where(['game_id' => $game_id, 'status' => 0])->orderby('id', 'asc')->first();
             if (!$round || !$pre_round)
