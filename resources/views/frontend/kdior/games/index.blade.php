@@ -106,13 +106,19 @@
 				<div class="title1"><img src="/frontend/kdior/images/title05.png?v=202301301150"></div><!-- 타이틀 -->
 				<div class="game">
 					<ul class="gamelist">
-						{{$status = 0}}
+						@php
+							$status = 0;
+						@endphp 
 						@foreach($categories AS $index=>$category)
 							@if ($category->type =='pball')
 								@if ($category->status == 0)
-									{{$status = 1}}
+									@php
+										$status = 1;
+									@endphp 
 								@else
-									{{$status = 2}}
+									@php
+										$status = 2;
+									@endphp 
 								@endif
 							@endif
 						@endforeach
@@ -129,7 +135,7 @@
 										onclick="alert('점검중입니다');"
 										@break
 									@case(2)
-										onclick="startGameByProvider(null, '{{$pbgame['name']}}');"
+										onclick="startGameByProvider(null, '{{$pbgame['name']}}',true);"
 										@break
 									@default
 								@endswitch
