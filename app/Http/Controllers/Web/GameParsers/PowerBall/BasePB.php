@@ -346,11 +346,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
                     'ground_no' => $dno
                 ]
             )->first();
+            $gameObj = \VanguardLTE\Game::where('id', $this->game)->first();
             return [
                 'type' => 'powerball',
                 'result' => $trend,
                 'bets' => $userbets,
-                'stat' => $stat
+                'stat' => $stat,
+                'game_name' => $gameObj->title
             ];
         }
 

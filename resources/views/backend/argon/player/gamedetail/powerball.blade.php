@@ -69,21 +69,21 @@
 ?>
 <tr>
     <td>시작시간</td>
-    <td>{{$res['result']?$res['result']->sDate:'Unknown'}}</td>
+    <td>{{$res['result']?$res['result']->s_time:'Unknown'}}</td>
 </tr>
                         
 <tr>
     <td>종료시간</td>
-    <td>{{$res['result']?$res['result']->eDate:'Unknown'}}</td>
+    <td>{{$res['result']?$res['result']->e_time:'Unknown'}}</td>
 </tr>
 
 <tr>
     <td>게임이름</td>
-    <td>{{$res['result']?$res['result']->game_id:'Unknown'}}</td>
+    <td>@lang('gamename.'.$res['game_name'])</td>
 </tr>
 <tr>
     <td>게임회차</td>
-    <td>{{$res['result']?substr($res['result']->dno, -3):'---'}}회차</td>
+    <td>{{$res['result']?substr($res['result']->dround_no, -3):'---'}}회차</td>
 </tr>
 
 <tr>
@@ -93,7 +93,7 @@
         <?php
             if ($res['result'])
             {
-                $balls = explode('|', $res['result']->rno);
+                $balls = explode('|', $res['result']->balls);
                 foreach ($balls as $i=>$b)
                 {
                     $class = '';
@@ -122,7 +122,7 @@
         <?php
             if ($res['result'])
             {
-                $rts = explode('|', $res['result']->rt);
+                $rts = explode('|', $res['result']->result);
                 foreach ($rts as $i=>$r)
                 {
                     $class = '';
@@ -165,8 +165,8 @@
             @foreach ($res['bets'] as $bet)
             <tr>
                 <td>{{$bet->bet_id}}</td>
-                <td>{{$bet_string[$bet->rt]}}</td>
-                <td>{{$bet->o}}</td>
+                <td>{{$bet_string[$bet->result]}}</td>
+                <td>{{$bet->rate}}</td>
                 <td>{{$bet->amount}}</td>
                 <td>{{$bet->win}}</td>
                 <td>

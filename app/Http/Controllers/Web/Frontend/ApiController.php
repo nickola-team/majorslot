@@ -607,6 +607,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             else //local game
             {
                 $game = $statgame->game_item;
+                $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
+                $isMini = false;
                 if ($game)
                 {
                     //check game category
@@ -630,16 +632,27 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                                     'href' => "/op/major/history.html?session_id=68939e9a5d134e78bfd9993d4a2cc34e#player_id=".$statgame->user->id."&brand=*&show=transactions&game_id=".$statgame->game_id."&tz=0&start_date=&end_date=&per_page=100&round_id=".$statgame->roundid."&currency=KRW&mode=REAL&report_type=GGR&header=0&totals=1&info=0&exceeds=0&lang=ko"
                                 ]]);
                             }
+                        }else if ($gcat->category->href == 'minigame')
+                        {
+                            $object = '\VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall\\' . $game->name;
+                            $isMini = true;
+                            break;        
                         }
                     }
 
 
-                    $object = '\VanguardLTE\Games\\' . $game->name . '\Server';
+                    
                     if (!class_exists($object))
                     {
                         return response()->json(['error' => true, 'res' => null]);
                     }
-                    $gameObject = new $object();
+                    if ($isMini)
+                    {
+                        $gameObject = new $object($game->id);
+                    }else
+                    {
+                        $gameObject = new $object();
+                    }
                     if (method_exists($gameObject, 'gameDetail'))
                     {
                         $res = $gameObject->gameDetail($statgame);

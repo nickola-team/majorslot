@@ -71,7 +71,7 @@ function goSlot(title, category, isConst) {
         var formData = new FormData();
         formData.append("_token", $("#_token").val());
         formData.append("category", category);
-    
+        let categoryTemp = category;
         $.ajax({
             type: "POST",
             url: "/api/getgamelist",
@@ -118,7 +118,7 @@ function goSlot(title, category, isConst) {
                         else
                         {
                             strHtml += `
-                            <div class="gamelist" onClick="startGame('${data.games[i].name}');">
+                            <div class="gamelist" onClick="startGame('${data.games[i].name}',` + (categoryTemp == 'minigame'?'true':'false') + `);">
                                 <img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg" alt="thumbnail">
                                 <div class="foot">
                                     <p style="word-break: break-all;font-size:18px;">${data.games[i].title}</p>
@@ -159,11 +159,11 @@ function goSlot(title, category, isConst) {
     }
 }
 
-function startGame(gamename) {
-    startGameByProvider(null, gamename);
+function startGame(gamename,max = false) {
+    startGameByProvider(null, gamename,max);
 }
 
-function startGameByProvider(provider, gamecode) {
+function startGameByProvider(provider, gamecode,max = false) {
         var formData = new FormData();
         formData.append("provider", provider);
         formData.append("gamecode", gamecode);
@@ -180,7 +180,12 @@ function startGameByProvider(provider, gamecode) {
                 alert(data.msg);
                 return;
             }
-            window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+            if (max)
+            {
+              window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+            }else{
+              window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+            }
         }
         });
         
