@@ -104,7 +104,39 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">슬롯게임</p>
                     <p class="ng-binding" style="font-size: 10px;">SLOT GAME</p>
                   </li>
-
+                  <li onclick=
+                  @auth
+                    {{$isMini = false}}
+                    @foreach($categories AS $index=>$category)
+                      @if ($category->type =='pball')
+                        @if ($category->view == 0)
+                            "swal('지원하지 않는 게임입니다.');"
+                        @elseif ($category->status == 0)
+                            "swal('점검중입니다');"
+                        @else
+                            "minisGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');"
+                        @endif
+                        {{$isMini = true}}
+                        @break
+                      @endif
+                    @endforeach
+                    @if(!$isMini)
+                      "swal('지원하지 않는 게임입니다.');"
+                    @endif
+                  @else
+                    "navClick('login-popup')"
+                  @endif
+                   class="ng-scope">
+                    <p ng-show="$index == 1" class="ng-hide">
+                      <i class="fa fa-mobile"></i>
+                    </p>
+                    <p class="ng-binding" style="margin-bottom: 0px;">미니게임</p>
+                    <p class="ng-binding" style="font-size: 10px;">MINI GAME</p>
+                  </li>
+                </ul>
+              </div>
+              <div class="links">
+                <ul class="list-inline click-disable">
                   <li onclick="
                   @auth
                     navClick('page-popup');
@@ -118,24 +150,6 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">마이페이지</p>
                     <p class="ng-binding" style="font-size: 10px;">MY PAGE</p>
                   </li>
-                </ul>
-              </div>
-              <div class="links">
-                <ul class="list-inline click-disable">
-                  <li onclick="
-                  @auth
-                    navClick('msg-popup');
-                  @else
-                    navClick('login-popup');
-                  @endif
-                  setTab('event-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(2)')" class="ng-scope">
-                    <p ng-show="$index == 1" class="ng-hide">
-                      <i class="fa fa-mobile"></i>
-                    </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">이벤트</p>
-                    <p class="ng-binding" style="font-size: 10px;">EVENT</p>
-                  </li>
-			
                   <li onclick="
                   @auth
                     navClick('page-popup');

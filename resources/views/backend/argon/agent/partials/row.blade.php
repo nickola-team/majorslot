@@ -11,6 +11,8 @@
     <ul>
     <li>슬롯 : {{ number_format($user->shop->deal_percent,2) }}</li>
     <li>라이브 : {{ number_format($user->shop->table_deal_percent,2) }}</li>
+    <li>단폴(파워볼) : {{ number_format($user->shop->pball_single_percent,2) }}</li>
+    <li>조합(파워볼) : {{ number_format($user->shop->pball_comb_percent,2) }}</li>
     </ul>
 </td>
 <td>
@@ -25,6 +27,8 @@
 <td><ul>
     <li>슬롯 : {{ number_format($user->deal_percent,2) }}</li>
     <li>라이브 : {{ number_format($user->table_deal_percent,2) }}</li>
+    <li>단폴(파워볼) : {{ number_format($user->pball_single_percent,2) }}</li>
+    <li>조합(파워볼) : {{ number_format($user->pball_comb_percent,2) }}</li>
     </ul>
 </td>
 <td><ul>
