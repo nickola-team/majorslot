@@ -103,7 +103,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $pbgameLst = \VanguardLTE\Category::where(['href'=> 'minigame', 'shop_id'=>0, 'site_id'=>0])->first();
             if ($pbgameLst)
             {
-                $gamecats = $pbgameLst->games()->orderby('game_id', 'desc')->get();
+                $gamecats = $pbgameLst->games()->orderby('game_id', 'asc')->get();
                 foreach ($gamecats as $gc)
                 {
                     if ($gc->game->view == 1 && in_array($gc->game->device, $devices))
