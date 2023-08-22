@@ -13,7 +13,7 @@
 
 .my_wrap  {float:left; width:100%; min-height:52px; line-height:20px; background:#1c150a; border-top:1px solid rgba(0,0,0,0.5); text-align:center; padding:15px 0 15px 0;}
 .top_menu  {float:left; width:100%; min-height:50px; line-height:20px; text-align:center; padding:5px 0 5px 0;}
-.top_menu ul li {float:left; width:33.333333333%; margin:0 0 0 0;padding:3px;}
+.top_menu ul li {float:left; width:50%; margin:0 0 0 0;padding:3px;}
 
 .login {float:left; width:100%; background:url("../../images/btn1.jpg") center center no-repeat; background-size:cover; height:56px; padding:0px 3px 0px 5px; border-bottom:solid 1px rgba(0,0,0,0.7); border-top:solid 1px rgba(0,0,0,0.7); z-index:1;}
 .login ul li {float:left; padding:0 2px 0 0; margin:10px 0 0 0;}

@@ -2358,6 +2358,10 @@ fieldset label span {
   background: url("/frontend/boss/V/slot.png") top center / 100% no-repeat;
 }
 
+.game-buttons.mini{
+  background: url("/frontend/boss/V/mini.png") top center / 100% no-repeat;
+}
+
 .game-buttons.poker{
   background: url("/frontend/boss/V/mobile-IDN-button.jpg") top center / 100% no-repeat;
 }

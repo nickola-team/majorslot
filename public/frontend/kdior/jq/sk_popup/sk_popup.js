@@ -23,6 +23,11 @@ $(document).ready(function () {
 	  scrolllock: true
 	});
 
+    $('#casino_4').popup({ // �뚯썙蹂�
+        transition: 'all 0.3s',
+        scrolllock: true
+      });
+
 	$('#sub_pop1').popup({
 	  transition: 'all 0.3s',
 	  scrolllock: true

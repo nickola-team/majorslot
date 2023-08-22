@@ -22,24 +22,33 @@
 				<div class="aside2_box2" style="margin:10px 0 0 0;">
 					<div class="con_box10">
 						<table width="100%" border="0" align="center" cellspacing="2" cellpadding="0">
-							<tbody><tr>
-								<td width="10%" align="center"><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></td>
-								<td width="10%" align="center"><a href="#" 
-								@if (isset($live) && $live=='disabled')
-								onclick="alert('점검중입니다');"
-								@else
-								class="casino_1_open"
-								@endif
-								><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></a></td>
-								<td width="10%" align="center"><a href="#" 
-								@if (isset($hotel) && $hotel=='disabled')
-								onclick="alert('점검중입니다');"
-								@else
-								class="casino_2_open"
-								@endif
-								><img src="/frontend/kdior/images/m_main_game4.png?v=202302021619" width="100%"></a></td>
-								
-							</tr>                                
+							<tbody>
+								<tr>
+									<td width="10%" align="center"><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/m_main_game3.png?v=202302021619" width="100%"></a></td>
+									<td width="10%" align="center"><a href="#" 
+									@if (isset($live) && $live=='disabled')
+									onclick="alert('점검중입니다');"
+									@else
+									class="casino_1_open"
+									@endif
+									><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></a></td>
+								</tr>
+								</tr>	
+									<td width="10%" align="center"><a href="#" 
+									@if (isset($hotel) && $hotel=='disabled')
+									onclick="alert('점검중입니다');"
+									@else
+									class="casino_2_open"
+									@endif
+									><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></td>
+									<td width="10%" align="center"><a href="#" 
+									@if (isset($mini) && $mini=='disabled')
+									onclick="alert('점검중입니다');"
+									@else
+									class="casino_4_open"
+									@endif
+									><img src="/frontend/kdior/images/m_main_game4.png?v=202302021619" width="100%"></a></td>
+								</tr>                                
 						</tbody></table>                 	
 					</div>                                    
 					<div class="con_box10">

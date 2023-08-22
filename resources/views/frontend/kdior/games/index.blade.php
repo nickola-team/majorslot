@@ -97,3 +97,59 @@
 		</div>
 	</div>
 
+	<!-- 미니게임 -->
+	<div id="casino_4" class="popup_style04 popup_none">
+		<div class="popup_wrap_1360">   
+			<div class="close_box"><a href="#" class="casino_4_close"><img src="/frontend/kdior/images/popup_close.png?v=202301301150"></a></div>
+			<div class="popupbox">
+				
+				<div class="title1"><img src="/frontend/kdior/images/title05.png?v=202301301150"></div><!-- 타이틀 -->
+				<div class="game">
+					<ul class="gamelist">
+						@php
+							$status = 0;
+						@endphp 
+						@foreach($categories AS $index=>$category)
+							@if ($category->type =='pball')
+								@if ($category->status == 0)
+									@php
+										$status = 1;
+									@endphp 
+								@else
+									@php
+										$status = 2;
+									@endphp 
+								@endif
+							@endif
+						@endforeach
+
+						@foreach($pbgames AS $pbgame)
+						<li>
+							<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" 
+							@auth 
+								@switch($status)
+									@case(0)
+										onclick="alert('지원하지 않는 게임입니다.');"
+										@break
+									@case(1)
+										onclick="alert('점검중입니다');"
+										@break
+									@case(2)
+										onclick="startGameByProvider(null, '{{$pbgame['name']}}',true);"
+										@break
+									@default
+								@endswitch
+							@endif
+							>
+							<img src="/frontend/Default/ico/{{$pbgame['name']}}.jpg">
+							<img src="/frontend/Default/ico/{{$pbgame['name']}}.jpg" class="mouseover3 casino_4_close etc_pop2_open" style="display:none;">
+							<br>{{$pbgame['title']}}
+							</a>
+						</li>
+						@endforeach
+					</ul>
+				</div>    
+			</div>
+		</div>
+	</div>
+

@@ -872,6 +872,10 @@ p {margin: 0;}
 	background-image: url(/frontend/iris/theme/sp/images/game/ico_casino_off.png);
 	margin-left: 20px;
 }
+.category-main .category-center a .icon_mini{
+	background-image: url(/frontend/iris/theme/sp/images/game/ico_mini_off.png);
+	margin-left: 20px;
+}
 .category-main .category-center a:hover{
 
 }
@@ -886,6 +890,10 @@ p {margin: 0;}
 }
 .category-main .category-center a.active .icon_casino{
 	background-image: url(/frontend/iris/theme/sp/images/game/ico_casino_on.png);
+}
+
+.category-main .category-center a.active .icon_mini{
+	background-image: url(/frontend/iris/theme/sp/images/game/ico_mini_on.png);
 }
 
 @media(max-width:1200px){
@@ -933,7 +941,7 @@ p {margin: 0;}
 		background-size: 900px 60px;
 	}
 	.category-main .category-center a{
-		width: 150px;
+		width: 32%;
 		margin-top: 14px;
 		padding-top: 2px;
 	}
