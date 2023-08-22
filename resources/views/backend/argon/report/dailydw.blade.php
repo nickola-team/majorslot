@@ -284,7 +284,7 @@
                                             <li>
                                             정산금 : {{number_format($bt['totaldealbet']-$bt['totaldealwin'] -($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage']))}}
                                             </li>
-                                            </ul>
+                                            </ul>   
                                         </div>
                                         
                                         </div>
