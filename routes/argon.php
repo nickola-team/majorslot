@@ -347,6 +347,15 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth', 'argonaccessrule'])
             'uses' => 'ReportController@report_game_details',
         ]);
 
+        Route::get('/report/user', [
+            'as' => 'argon.report.user',
+            'uses' => 'ReportController@report_user',
+        ]);
+
+        Route::get('/report/userdetails', [
+            'as' => 'argon.report.user.details',
+            'uses' => 'ReportController@report_user_details',
+        ]);
         /**
          * notices routes
          */
