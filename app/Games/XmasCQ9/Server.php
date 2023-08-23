@@ -257,6 +257,9 @@ namespace VanguardLTE\Games\XmasCQ9
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;
+                            if($slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') == 1){
+                                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            }
                             $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                         }
                     }
@@ -295,7 +298,7 @@ namespace VanguardLTE\Games\XmasCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
+             //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
@@ -335,6 +338,7 @@ namespace VanguardLTE\Games\XmasCQ9
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
                 $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
             }
+
             // $slotSettings->SetGameData($slotSettings->slotId . 'GameRounds', 2);
             // $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 13);
             $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',$stack['Multiple']);

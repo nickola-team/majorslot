@@ -1288,5 +1288,15 @@ return [
         "SummerMood" => "섬머 무드",
         "TreasureIsland" => "보물섬",
         "Apollo" => "아폴로",
-        "CoinSpinner" => "코인 스피너"
+        "CoinSpinner" => "코인 스피너",
+        "DiscoNight" => "디스코 나이트",
+        "WanbaoDino" => "완바오 다이너소어",
+        "FruitKing" => "후르츠 킹",
+        "KingKongShake" => "King Kong Shake",
+        "WorldCupRussia2018" => "2018 러시아 월드컵",
+        "RaveHigh" => "레이브 하이",
+        "GoldenEggs" => "골든 에그",
+        "EightEightEight" => "888",
+        "SakuraLegend" => "사쿠라 레전드",
+        "ZhongKui" => "종규"
 ];

@@ -60,10 +60,10 @@
             <span class='text-red'>당첨 : {{number_format($bt['totalwin'])}}</span>
         </li>
         <li>
-        롤링금 : {{number_format($bt['total_mileage'])}}
+        롤링금 : {{number_format($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage'])}}
         </li>
         <li>
-        정산금 : {{number_format($bt['totalbet']-$bt['totalwin'] - $bt['total_mileage'])}}
+        정산금 : {{number_format($bt['totalbet']-$bt['totalwin'] - ($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage']))}}
         </li>
         </ul>
     </div>
@@ -94,10 +94,10 @@
             <span class='text-red'>당첨 : {{number_format($bt['totaldealwin'])}}</span>
         </li>
         <li>
-        롤링금 : {{number_format($bt['total_mileage'])}}
+        롤링금 : {{number_format($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage'])}}
         </li>
         <li>
-        정산금 : {{number_format($bt['totaldealbet']-$bt['totaldealwin'] - $bt['total_mileage'])}}
+        정산금 : {{number_format($bt['totaldealbet']-$bt['totaldealwin'] - ($bt['total_deal']>0?$bt['total_deal']:$bt['total_mileage']))}}
         </li>
         </ul>
     </div>

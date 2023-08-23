@@ -725,7 +725,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $token = config('app.honor_key');
     
-            $username = self::HONOR_PROVIDER . sprintf("%04d",$user->id);
+            $username = self::HONOR_PP_HREF . sprintf("%04d",$user->id);
             $alreadyUser = 1;
             try
             {

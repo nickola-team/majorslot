@@ -95,7 +95,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\DailySummary::where('date', '<', $start_date)->delete();
                 \VanguardLTE\CategorySummary::where('date', '<', $start_date)->delete();
                 \VanguardLTE\GameSummary::where('date', '<', $start_date)->delete();
-                
+                \VanguardLTE\UserDailySummary::where('date', '<', $start_date)->delete();
 
                 // \VanguardLTE\Http\Controllers\Web\GameProviders\PPController::syncpromo();
 
@@ -105,6 +105,7 @@ namespace VanguardLTE\Console
             $schedule->command('daily:sharesummary')->dailyAt('02:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('01:00')->runInBackground();
             $schedule->command('daily:gamesummary')->dailyAt('01:30')->runInBackground();
+            $schedule->command('daily:usersummary')->dailyAt('01:00')->runInBackground();
 
             // $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
 
@@ -116,6 +117,7 @@ namespace VanguardLTE\Console
             $schedule->command('today:summary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('daily:promo')->everyTenMinutes()->withoutOverlapping()->runInBackground();
             $schedule->command('today:gamesummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
+            $schedule->command('today:usersummary')->everyTenMinutes()->withoutOverlapping()->runInBackground();
 
             $schedule->command('gac:processpending')->everyMinute()->withoutOverlapping()->runInBackground();
 
@@ -649,6 +651,45 @@ namespace VanguardLTE\Console
 
                 $this->info("End summary daily adjustment.");
             });
+            \Artisan::command('today:usersummary {user_id=0}', function ($user_id) {
+                set_time_limit(0);
+                $this->info("Begin today's user adjustment.");
+                if ($user_id == 0)
+                {
+                    $admins = \VanguardLTE\User::where('role_id',9)->get();
+                }
+                else
+                {
+                    $admins = \VanguardLTE\User::where('id',$user_id)->get();
+                }
+                
+                foreach ($admins as $admin)
+                {
+                    \VanguardLTE\UserDailySummary::summary_today($admin->id);
+                }
+                $this->info("End today's user adjustment.");
+            });
+
+            \Artisan::command('daily:usersummary {date=today}', function ($date) {
+                set_time_limit(0);
+                $this->info("Begin summary user daily adjustment.");
+                $admins = \VanguardLTE\User::where('role_id',9)->get();
+                foreach ($admins as $admin)
+                {
+                    if ($date == 'today') {
+                        \VanguardLTE\UserDailySummary::summary($admin->id);
+                    }
+                    else{
+                        \VanguardLTE\UserDailySummary::summary($admin->id, $date);
+                    }
+                }
+                if ($date == 'today') {
+                    $day = date("Y-m-d", strtotime("-1 days"));
+                    \VanguardLTE\UserDailySummary::where(['type' => 'today', 'date' => $day])->delete();
+                }
+
+                $this->info("End summary user daily adjustment.");
+            });
 
             \Artisan::command('today:summary', function () {
                 set_time_limit(0);
@@ -682,7 +723,7 @@ namespace VanguardLTE\Console
             \Artisan::command('daily:promo', function () {
                 set_time_limit(0);
                 $this->info("Begin pp game promotions");
-                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\KTENController::syncpromo();
+                $res = \VanguardLTE\Http\Controllers\Web\GameProviders\HONORController::syncpromo();
                 $this->info($res['msg']);
             });
 
@@ -1702,7 +1743,24 @@ namespace VanguardLTE\Console
                 }
                 $this->info("End kten rounds. last id = " . $from);
             });            
+            \Artisan::command('honor:omitted {from} {to}', function ($from, $to) {
 
+                $this->info("Begin kten rounds : $from ~ $to");
+
+                while ($from <= $to)
+                {
+                    $this->info("Getting omitted history from " . $from);
+                    $res = \VanguardLTE\Http\Controllers\Web\GameProviders\HONORController::processGameRound($from, $to);
+                    $this->info("Proceed omitted records count = " . $res[0]);
+                    if ($from == $res[1])
+                    {
+                        $this->info("No more history after " . $from);
+                        break;
+                    }
+                    $from = $res[1];
+                }
+                $this->info("End kten rounds. last id = " . $from);
+            }); 
             \Artisan::command('session:cookie {session}', function ($session) {
 
                 $this->info("Begin");

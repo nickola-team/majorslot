@@ -732,8 +732,121 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             return view('backend.argon.report.game_details', compact('totalsummary', 'categories', 'totalstatics','statistics','user'));
+        }
+        public function report_user(\Illuminate\Http\Request $request)
+        {
+            if (!auth()->user()->isInoutPartner())
+            {
+                return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
+            }
+            $users = [auth()->user()->id];
+            $user = null;
+            if ($request->user != '')
+            {
+                $availableUsers = auth()->user()->availableUsers();
+                $subUsers = \VanguardLTE\User::where('username', 'like', '%' . $request->user . '%')->whereIn('id', $availableUsers)->pluck('id')->toArray();
+                if (count($subUsers) == 0)
+                {
+                    return redirect()->back()->withErrors('유저를 찾을수 없습니다.');
+                }
+                $users = $subUsers;
+            }else{
+                $users = auth()->user()->availableUsers();
+            }
+            $start_date = date("Y-m-d");
+            $end_date = date("Y-m-d");
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            // $statistics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date);
+            $fieldtype = 'totalbet';
+            if($request->fieldtype != ''){
+                if($request->fieldtype == 'bet'){
+                    $fieldtype = 'totalbet';
+                }else if($request->fieldtype == 'win'){
+                    $fieldtype = 'totalwin';
+                }else{
+                    $fieldtype = '(totalbet - totalwin)';
+                }
+            }
+            $fieldsort = 'desc';
+            if($request->fieldsort != ''){
+                $fieldsort = $request->fieldsort;
+            }
 
-
+            $totalstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
+            $tablestatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'table')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
+            $slotstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'slot')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
+            $pballstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'pball')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
+            return view('backend.argon.report.user', compact('totalstatics', 'tablestatics', 'slotstatics', 'pballstatics'));
+        }
+        public function report_user_details(\Illuminate\Http\Request $request)
+        {
+            $user_id = $request->user_id;
+            $start_date = date("Y-m-d");
+            $end_date = date("Y-m-d");
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $statistics = \VanguardLTE\UserDailySummary::where('user_id', $user_id)->where('date', '>=', $start_date)->where('date', '<=', $end_date)->orderBy('date', 'desc')->get();
+            $dailyinfos = [];
+            $totalsummary = [
+                'totalbet' => 0,
+                'totalwin' => 0,
+            ];
+            if ($statistics)
+            {
+                $last_date = null;
+                $date_info = null;
+                foreach ($statistics as $daily)
+                {
+                    if ($daily->date != $last_date)
+                    {
+                        if ($date_info)
+                        {
+                            $dailyinfos[] = $date_info;
+                        }
+                        $last_date = $daily->date;
+                        $date_info = [
+                            'date' => $daily->date,
+                            'user' => $daily->user,
+                            'tablebet' => 0,
+                            'tablewin' => 0,
+                            'slotbet' => 0,
+                            'slotwin' => 0,
+                            'pballbet' => 0,
+                            'pballwin' => 0,
+                            'allbet' => 0,
+                            'allwin' => 0,
+                        ];
+                    }
+                    if($daily->gametype == 'table'){
+                        $date_info['tablebet'] += $daily->totalbet;
+                        $date_info['tablewin'] += $daily->totalwin;
+                    }else if($daily->gametype == 'slot'){
+                        $date_info['slotbet'] += $daily->totalbet;
+                        $date_info['slotwin'] += $daily->totalwin;
+                    }else if($daily->gametype == 'pball'){
+                        $date_info['pballbet'] += $daily->totalbet;
+                        $date_info['pballwin'] += $daily->totalwin;
+                    }
+                    $date_info['allbet'] += $daily->totalbet;
+                    $date_info['allwin'] += $daily->totalwin;
+                    $totalsummary['totalbet'] += $daily->totalbet;
+                    $totalsummary['totalwin'] += $daily->totalwin;
+                }
+                if ($date_info)
+                {
+                    $dailyinfos[] = $date_info;
+                }
+            }
+            return view('backend.argon.report.user_details', compact('dailyinfos', 'totalsummary'));
         }
     }
 }

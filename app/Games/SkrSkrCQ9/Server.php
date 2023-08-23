@@ -38,7 +38,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
-
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
@@ -122,6 +122,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                                 }
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                                 if(isset($gameData->PlayBet)){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 }
@@ -284,6 +285,17 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                             $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                         }
                     }
+
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 31 && $slotSettings->GetGameData($slotSettings->slotId . 'TriggerFree')>0){
+                        //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        $stack = $tumbAndFreeStacks[0];
+                        $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
+                    }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
@@ -292,7 +304,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
                             $result_val['Type'] = 3;
-                            $result_val['ID'] = 142;
+                            $result_val['ID'] = 145;
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;
@@ -321,7 +333,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
+             //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -370,7 +382,9 @@ namespace VanguardLTE\Games\SkrSkrCQ9
             }
 
 
-
+            if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 1);
+            }
 
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
