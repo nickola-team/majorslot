@@ -446,11 +446,11 @@ namespace VanguardLTE\Games\EightEightEightCQ9
             else
             {
             //------- *** -------//
-                if( $_obf_bonus_systemmoney > 0 ) 
+                /*if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
                 {
                     $sum -= $_obf_bonus_systemmoney;
-                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonusspin');
-                }
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
+                }*/
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\EightEightEightCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonusspin'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameEightEightEightStack::where('id', 141312)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameEightEightEightStack::where('id', 81456)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonusspin'){
@@ -758,14 +758,14 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                 if($pur >= 0){
                     $stacks = $stacks->where('pur_level', $pur);
                 }
-                $index = 0;// mt_rand(0, 48000);
+                $index =  mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonusspin'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

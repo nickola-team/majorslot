@@ -33,6 +33,7 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
@@ -42,6 +43,7 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
                         $gameData = json_decode($gameDatas[$i]);
                         $type = $gameData->Type;
                         $packet_id = $gameData->ID;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'PackID', $packet_id);
                         $emulatorType = 0;
                         $result_val = [];
                         $result_val['Type'] = $type;
@@ -110,6 +112,7 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks  릴배치표 저장
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
@@ -184,11 +187,20 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                        $lines = 10;
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 31 && $slotSettings->GetGameData($slotSettings->slotId . 'TriggerFree')>0){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
+                        $freespinNum = 10;
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bonus', $betline * $lines);
+                        $stack = $tumbAndFreeStacks[0];
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 2);
+                    }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 10;
+                        
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -265,6 +277,9 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
             }
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
                 $stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
+            }
+            if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 1);
             }
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;

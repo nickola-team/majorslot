@@ -446,11 +446,11 @@ namespace VanguardLTE\Games\FruitKingCQ9
             else
             {
             //------- *** -------//
-                if( $_obf_bonus_systemmoney > 0 ) 
+                /*if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
                 {
                     $sum -= $_obf_bonus_systemmoney;
                     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }
+                }*/
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\FruitKingCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruitKingStack::where('id', 1418)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruitKingStack::where('id', 35222)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -758,7 +758,7 @@ namespace VanguardLTE\Games\FruitKingCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFruitKingStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
