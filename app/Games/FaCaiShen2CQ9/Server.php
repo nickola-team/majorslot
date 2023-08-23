@@ -195,11 +195,12 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                        $lines = 1;
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 1;
+                        
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -208,6 +209,9 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;
+                            if($slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') == 1){
+                                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            }
                             $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline* $this->demon, $lines, $originalbet);
                         }
                     }
@@ -233,7 +237,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
+             //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             // $originalbet = 38 / $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             // $originalbet = round($originalbet,2);
@@ -280,6 +284,8 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 $stack['ScatterPayFromBaseGame'] = (($stack['ScatterPayFromBaseGame'] / $originalbet * $betline ) / $this->demon);
                 $stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
+
+
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
@@ -376,7 +382,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 $lineData = [];
                 $lineData['line_extra_data']    = $outWinLine['LineExtraData'];
                 $lineData['line_multiplier']    = $outWinLine['LineMultiplier'];
-                $lineData['line_prize']         = $outWinLine['LinePrize'];
+                $lineData['line_prize']         = round($outWinLine['LinePrize'],2);
                 $lineData['line_type']          = $outWinLine['LineType'];
                 $lineData['symbol_id']          = $outWinLine['SymbolId'];
                 $lineData['symbol_count']       = $outWinLine['SymbolCount'];
@@ -392,7 +398,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 
                 $log['detail']['wager']['order_time']   = $currentTime;
                 $log['detail']['wager']['end_time']     = $currentTime;
-                $log['detail']['wager']['total_win']    = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $log['detail']['wager']['total_win']    = floor($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
 
                 $proof['lock_position']         = $result_val['LockPos'];
 
@@ -401,7 +407,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 $sub_log['game_type']           = 50;
                 $sub_log['rng']                 = $result_val['RngData'];
                 $sub_log['multiple']            = $result_val['Multiple'];
-                $sub_log['win']                 = $result_val['TotalWin'];
+                $sub_log['win']                 = round($result_val['TotalWin'],2);
                 $sub_log['win_line_count']      = $result_val['WinLineCount'];
                 $sub_log['win_type']            = $result_val['WinType'];
                 $sub_log['proof']               = $proof;
@@ -414,12 +420,12 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = ($betline / $this->demon) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                $bet_action['amount']           = round(($betline / $this->demon) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'),2);
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
                 $win_action['action']           = 'win';
-                $win_action['amount']           = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $win_action['amount']           = floor($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                 $win_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $win_action);
 
@@ -439,13 +445,13 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 $wager['bet_multiple']          = ($betline / $this->demon);
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = $result_val['Multiple'];
-                $wager['base_game_win']         = $result_val['TotalWin'] / $this->demon;
+                $wager['base_game_win']         = round($result_val['TotalWin'] / $this->demon,2);
                 $wager['win_over_limit_lock']   = 0;
                 $wager['game_type']             = 0;
                 $wager['win_type']              = $result_val['WinType'];
                 $wager['settle_type']           = 0;
                 $wager['wager_type']            = 0;
-                $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $wager['total_win']             = round($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'),2);
                 $wager['win_line_count']        = $result_val['WinLineCount'];
                 $wager['bet_tid']               =  'pro-bet-' . $result_val['GamePlaySerialNumber'];
                 $wager['win_tid']               =  'pro-win-' . $result_val['GamePlaySerialNumber'];

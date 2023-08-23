@@ -733,8 +733,8 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                 $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSakuraLegendStack::where('id', 2297)->first();
-                 return json_decode($stack->spin_stack, true);
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSakuraLegendStack::where('id', 7269)->first();
+                //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -761,7 +761,7 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                 if($pur >= 0){
                     $stacks = $stacks->where('pur_level', $pur);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

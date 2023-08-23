@@ -32,7 +32,7 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
@@ -181,6 +181,8 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
+                        $lines = 25;
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
@@ -194,6 +196,9 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;
+                            if($slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') == 1){
+                                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            }
                             $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                         }
                     }
@@ -219,7 +224,7 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
+             //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -260,6 +265,8 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
                 $stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
             }
+
+
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
