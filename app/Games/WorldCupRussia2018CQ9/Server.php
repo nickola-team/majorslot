@@ -222,6 +222,9 @@ namespace VanguardLTE\Games\WorldCupRussia2018CQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline * $this->demon) * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
+            if($winType == 'bonus'){
+                $winType = 'win'; 
+            }
             // $winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 

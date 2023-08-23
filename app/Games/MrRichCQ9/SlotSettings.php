@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GoldenEggsCQ9
+namespace VanguardLTE\Games\MrRichCQ9
 {
     class SlotSettings
     {
@@ -446,11 +446,11 @@ namespace VanguardLTE\Games\GoldenEggsCQ9
             else
             {
             //------- *** -------//
-                /*if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
+                if( $_obf_bonus_systemmoney > 0 ) 
                 {
                     $sum -= $_obf_bonus_systemmoney;
                     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }*/
+                }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -733,13 +733,13 @@ namespace VanguardLTE\Games\GoldenEggsCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoldenEggsStack::where('id', 18828)->first();
-                //   return json_decode($stack->spin_stack, true);
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMrRichStack::where('id', 37981)->first();
+                    // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
             }else if($winType == 'win'){
-                $winAvaliableMoney = $this->GetBank('');
+            $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
             }
@@ -754,11 +754,11 @@ namespace VanguardLTE\Games\GoldenEggsCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoldenEggsStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMrRichStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoldenEggsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMrRichStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 38000);
+                $index = 0;// mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
