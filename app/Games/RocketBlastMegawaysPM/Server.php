@@ -52,6 +52,7 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                 $lastEvent = $slotSettings->GetHistory();
                 $_obf_StrResponse = '';
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', -1);
@@ -78,6 +79,7 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', $lastEvent->serverResponse->TumbWin);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $lastEvent->serverResponse->totalFreeGames);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $lastEvent->serverResponse->currentFreeGames);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $lastEvent->serverResponse->totalWin);
@@ -315,6 +317,7 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent']);
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', -1);
@@ -446,6 +449,9 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                 $strOtherResponse = '';
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($rs_p > 0){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin') + $totalWin);
+                }
                 if( $slotEvent['slotEvent'] == 'freespin' ) 
                 {
                     $spinType = 's';
@@ -482,9 +488,13 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                 }
                 if($rs_p >= 0){
                     $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_c='. $rs_c .'&rs_m=' . $rs_m;
+                    if($rs_p > 0){
+                        $strOtherResponse = $strOtherResponse . '&rs_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin');
+                    }
                 }
                 if($rs_t > 0){
                     $strOtherResponse = $strOtherResponse.'&rs_t='.$rs_t;
+                    $strOtherResponse = $strOtherResponse . '&rs_win=' . $slotSettings->GetGameData($slotSettings->slotId . 'TumbWin');
                 }
                 if($str_rs != ''){
                     $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;
@@ -550,6 +560,9 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                     if($wmv > 1){
                         $strOtherResponse = $strOtherResponse . '&gwm=' . $wmv;
                     }
+                }
+                if($rs_p <= 0){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                 }
                 $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse  .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType.'&reel_set='. $currentReelSet .'&stime=' . floor(microtime(true) * 1000).'&st=rect&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='. $strLastReel.'&sa='. $str_sa .'&sb='. $str_sb . '&sh=7&sw=6&w='.$totalWin;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)  && $rs_p < 0) 
