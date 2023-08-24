@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\RocketBlastMegawaysPM
+namespace VanguardLTE\Games\PubKingsPM
 {
     class SlotSettings
     {
@@ -102,11 +102,11 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 500,000.00
+            // $game->rezerv => 8,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -695,25 +695,6 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        
-        public function BonusWinChance($currentIndex, $bet)
-        {
-            $winAvaliableMoney = $this->GetBank('bonus');
-            $limitOdd = floor($winAvaliableMoney / $bet);
-            $fsChance = [63, 69, 73, 50, 50, 50]; // [10, 14, 18, 22, 26]
-            $percent = mt_rand(0, 100);
-            if($currentIndex == 1 && $limitOdd < 25){
-                return false;
-            }else if($currentIndex == 2 && $limitOdd < 50){
-                return false;
-            }else if($currentIndex == 3 && $limitOdd < 100){
-                return false;
-            }else if($fsChance[$currentIndex] > $percent){
-                return true;
-            }else{
-                return false;
-            }
-        }
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'Bet') == null) 
@@ -728,28 +709,15 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
         } 
 
 
-        public function GetReelStrips($winType, $fsmax, $bet, $ind = -1)
+        public function GetReelStrips($winType, $bet)
         {
             // if($fsmax > 0){
-            //     $id = 45137;
-            //     if($fsmax == 6){
-            //         $id = 9308;
-            //     }else if($fsmax == 8){
-            //         $id = 53959;
-            //     }else if($fsmax == 10){
-            //         $id = 36393;
-            //     }else if($fsmax == 12){
-            //         $id = 13692;
-            //     }
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameRocketBlastMegawaysStack::where([
-                //     'spin_type' => 1,
-                //     'id' => 250893
-                // ])->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGamePubKingsStack::where('id', 8)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
-            if($fsmax > 0){
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
-            }else if($winType == 'win' || ($winType == 'bonus' && $fsmax == 0)){
+            }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -772,36 +740,19 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($fsmax > 0){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameRocketBlastMegawaysStack::where([
-                        'fsmax' => $fsmax,
-                        'spin_type' => 1
-                    ]);
-                }else if($fsmax == 0 && $winType == 'bonus'){
-                    if($limitOdd < 20){
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameRocketBlastMegawaysStack::where('spin_type', 2)->where('fsmax', '<', 15)->whereNotIn('id', $existIds);
-                    }else{
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameRocketBlastMegawaysStack::where('spin_type', 2)->whereNotIn('id', $existIds);
-                    }
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGamePubKingsStack::where('spin_type', 1)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameRocketBlastMegawaysStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGamePubKingsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 28000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 55000);
+                    // $index = mt_rand(0, 28000);
                 }
                 if($isLowBank == true){
-                    if($fsmax >= 35){
-                        $stacks = $stacks->where('odd', '<=', 100);    
-                    }else if($fsmax >= 25){
-                        $stacks = $stacks->where('odd', '<=', 50);    
-                    }else if($fsmax >= 20){
-                        $stacks = $stacks->where('odd', '<=', 25);    
-                    }else if($fsmax >= 10){
+                    if($winType == 'bonus'){
                         $stacks = $stacks->where('odd', '<=', 15);    
-                    }else if($winType == 'bonus' && $fsmax == 0){
-                        $stacks = $stacks->where('odd', '<=', 0); 
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -812,7 +763,7 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($fsmax > 0){
+                        if($winType == 'bonus'){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
                                 $miniOdd = $limitOdd / mt_rand(2,4);
                                 if($miniOdd > 30){
