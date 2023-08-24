@@ -1139,7 +1139,13 @@ return [
         "Supermania" => "슈퍼마니아",
         "DiamondCascade" => "다이아몬드 캐스캐이드",
         "LobsterBobsCrazyCrabShack" => "랍스타 밥스",
+        "MustangTrail" => "머스탱 트레일",
+        "RocketBlastMegaways" => "로켓 블라스트",
+        "ForgeofOlympus" => "포지 오브 올림푸스",
+        "PiggyBankers" => "피기뱅커스",
+        "PubKings" => "펍 킹스",
 
+        
         //Booongo
         "tigerstone" => "타이거 스톤",
 
