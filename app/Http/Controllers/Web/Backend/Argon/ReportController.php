@@ -777,10 +777,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $fieldsort = $request->fieldsort;
             }
 
-            $totalstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
-            $tablestatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'table')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
-            $slotstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'slot')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
-            $pballstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'pball')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy($fieldtype, $fieldsort)->paginate(50);
+            $totalstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy(\DB::raw($fieldtype), $fieldsort)->paginate(50);
+            $tablestatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'table')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy(\DB::raw($fieldtype), $fieldsort)->paginate(50);
+            $slotstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'slot')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy(\DB::raw($fieldtype), $fieldsort)->paginate(50);
+            $pballstatics = \VanguardLTE\UserDailySummary::where('date', '>=', $start_date)->where('date', '<=', $end_date)->where('gametype', 'pball')->selectRaw('user_id, SUM(totalbet) as totalbet, SUM(totalwin) as totalwin')->groupBy('user_id')->orderBy(\DB::raw($fieldtype), $fieldsort)->paginate(50);
             return view('backend.argon.report.user', compact('totalstatics', 'tablestatics', 'slotstatics', 'pballstatics'));
         }
         public function report_user_details(\Illuminate\Http\Request $request)
