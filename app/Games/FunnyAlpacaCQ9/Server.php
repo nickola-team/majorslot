@@ -229,7 +229,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+            //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -325,7 +325,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
             if($slotEvent == 'freespin'){                
                 $isState = false;
                 //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound']){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }
